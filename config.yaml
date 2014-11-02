@@ -43,5 +43,6 @@ commands:
   customCommands:
     - N98\Magento\Command\System\InfoCommand
     - N98\Magento\Command\System\Store\ListCommand
+    - N98\Magento\Command\System\Website\ListCommand
 
   aliases: []
