@@ -3,6 +3,7 @@
 namespace N98\Magento\Command;
 
 use Composer\Package\PackageInterface;
+use Magento\Framework\ObjectManager;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -56,6 +57,11 @@ abstract class AbstractMagentoCommand extends Command
     protected $_websiteCodeMap = array();
 
     /**
+     * @var ObjectManager
+     */
+    protected $_objectManager = null;
+
+    /**
      * Initializes the command just after the input has been validated.
      *
      * This is mainly useful when a lot of commands extends one main command
@@ -67,6 +73,14 @@ abstract class AbstractMagentoCommand extends Command
     protected function initialize(InputInterface $input, OutputInterface $output)
     {
         $this->checkDeprecatedAliases($input, $output);
+    }
+
+    /**
+     * @return ObjectManager
+     */
+    protected function getObjectManager()
+    {
+        return $this->getApplication()->getObjectManager();
     }
 
     /**
@@ -341,54 +355,6 @@ abstract class AbstractMagentoCommand extends Command
     {
         if (isset($this->_deprecatedAlias[$input->getArgument('command')])) {
             $output->writeln('<error>Deprecated:</error> <comment>' . $this->_deprecatedAlias[$input->getArgument('command')] . '</comment>');
-        }
-    }
-
-    /**
-     * Magento 1 / 2 switches
-     *
-     * @param string $mage1code Magento 1 class code
-     * @param string $mage2class Magento 2 class name
-     * @return \Mage_Core_Model_Abstract
-     */
-    protected function _getModel($mage1code, $mage2class)
-    {
-        if ($this->_magentoMajorVersion == self::MAGENTO_MAJOR_VERSION_2) {
-            return \Mage::getModel($mage2class);
-        } else {
-            return \Mage::getModel($mage1code);
-        }
-    }
-
-    /**
-     * Magento 1 / 2 switches
-     *
-     * @param string $mage1code Magento 1 class code
-     * @param string $mage2class Magento 2 class name
-     * @return \Mage_Core_Model_Abstract
-     */
-    protected function _getResourceModel($mage1code, $mage2class)
-    {
-        if ($this->_magentoMajorVersion == self::MAGENTO_MAJOR_VERSION_2) {
-            return \Mage::getResourceModel($mage2class);
-        } else {
-            return \Mage::getResourceModel($mage1code);
-        }
-    }
-
-    /**
-     * Magento 1 / 2 switches
-     *
-     * @param string $mage1code Magento 1 class code
-     * @param string $mage2class Magento 2 class name
-     * @return \Mage_Core_Model_Abstract
-     */
-    protected function _getResourceSingleton($mage1code, $mage2class)
-    {
-        if ($this->_magentoMajorVersion == self::MAGENTO_MAJOR_VERSION_2) {
-            return \Mage::getResourceSingleton($mage2class);
-        } else {
-            return \Mage::getResourceSingleton($mage1code);
         }
     }
 

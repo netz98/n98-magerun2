@@ -42,5 +42,6 @@ event:
 commands:
   customCommands:
     - N98\Magento\Command\System\InfoCommand
+    - N98\Magento\Command\System\Store\ListCommand
 
   aliases: []

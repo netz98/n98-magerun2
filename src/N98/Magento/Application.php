@@ -2,6 +2,7 @@
 
 namespace N98\Magento;
 
+use Magento\Framework\ObjectManager;
 use N98\Magento\Command\ConfigurationLoader;
 use N98\Magento\EntryPoint\Magerun as MagerunEntryPoint;
 use N98\Util\ArrayFunctions;
@@ -110,6 +111,11 @@ class Application extends BaseApplication
      * @var bool
      */
     protected $_directRootDir = false;
+
+    /**
+     * @var ObjectManager
+     */
+    protected $_objectManager = null;
 
     /**
      * @param \Composer\Autoload\ClassLoader $autoloader
@@ -383,7 +389,7 @@ class Application extends BaseApplication
     public function initMagento()
     {
         if ($this->getMagentoRootFolder() !== null) {
-                $this->_initMagento2();
+            $this->_initMagento2();
 
             return true;
         }
@@ -671,7 +677,10 @@ class Application extends BaseApplication
         $bootstrap = \Magento\Framework\App\Bootstrap::create(BP, $params);
         /** @var \Magento\Framework\App\Cron $app */
         $app = $bootstrap->createApplication('N98\Magento\Framework\App\Magerun', []);
+        /* @var $app \N98\Magento\Framework\App\Magerun */
         $app->launch();
+
+        $this->_objectManager = $app->getObjectManager();
     }
 
     /**
@@ -731,5 +740,13 @@ class Application extends BaseApplication
     {
         $output->getFormatter()->setStyle('debug', new OutputFormatterStyle('magenta', 'white'));
         $output->getFormatter()->setStyle('warning', new OutputFormatterStyle('red', 'yellow', array('bold')));
+    }
+
+    /**
+     * @return ObjectManager
+     */
+    public function getObjectManager()
+    {
+        return $this->_objectManager;
     }
 }

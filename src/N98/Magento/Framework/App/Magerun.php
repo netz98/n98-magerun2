@@ -3,12 +3,21 @@
 namespace N98\Magento\Framework\App;
 
 use Magento\Framework\App;
+use Magento\Framework\ObjectManager;
 
 class Magerun implements \Magento\Framework\AppInterface
 {
+    /**
+     * @var ObjectManager
+     */
+    protected $objectManager;
+
+    /**
+     * @param ObjectManager $objectManager
+     */
     public function __construct(\Magento\Framework\ObjectManager $objectManager)
     {
-        //var_dump($objectManager);
+        $this->objectManager = $objectManager;
     }
 
     /**
@@ -19,6 +28,14 @@ class Magerun implements \Magento\Framework\AppInterface
     public function launch()
     {
         // TODO: Implement launch() method.
+    }
+
+    /**
+     * @return ObjectManager
+     */
+    public function getObjectManager()
+    {
+        return $this->objectManager;
     }
 
     /**
