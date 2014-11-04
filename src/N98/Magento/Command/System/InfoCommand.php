@@ -45,15 +45,44 @@ class InfoCommand extends AbstractMagentoCommand
 
         $this->initMagento();
 
-        $table = array(
-            array(
-                'name'  => 'Version',
-                'value' => \Magento\Framework\AppInterface::VERSION,
-            )
-        );
+        $this->infos['Version'] = \Magento\Framework\AppInterface::VERSION;
+        $this->infos['Edition'] = 'Community'; // @TODO Where can i obtain this info?
+
+        $sessionConfig = $this->getObjectManager()->get('Magento\Framework\Session\Config');
+        $this->infos['Session'] = $sessionConfig->getSaveHandler();
+
+        //var_dump($this->getObjectManager()->create('Magento\Framework\App\Arguments\ArgumentInterpreter', array('Magento\Framework\Encryption\Encryptor::PARAM_CRYPT_KEY'))->evaluate()); die;
+        $this->infos['Crypt Key'] = ''; // @TODO Implement
+        $this->infos['Install Date'] = ''; // @TODO Implement
+
+        $this->_addCacheInfos();
+
+        $table = array();
+        foreach ($this->infos as $key => $value) {
+            $table[] = array($key, $value);
+        }
 
         $this->getHelper('table')
             ->setHeaders(array('name', 'value'))
             ->renderByFormat($output, $table, $input->getOption('format'));
+    }
+
+    protected function _addCacheInfos()
+    {
+        $cachePool = $this->getObjectManager()->get('Magento\Framework\App\Cache\Type\FrontendPool');
+        $cacheConfig = $this->getObjectManager()->get('Magento\Framework\App\Cache\Type\Config');
+
+        $this->infos['Cache Backend'] = get_class($cachePool->get('config')->getBackend());
+
+        switch (get_class($cachePool->get('config')->getBackend())) {
+            case 'Zend_Cache_Backend_File':
+            case 'Cm_Cache_Backend_File':
+                // @TODO Where are the cache options?
+                //$cacheDir = $cachePool->get('config')->getBackend()->getOptions()->getCacheDir();
+                //$this->infos['Cache Directory'] = $cacheDir;
+                break;
+
+            default:
+        }
     }
 }
