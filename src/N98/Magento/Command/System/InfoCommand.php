@@ -51,7 +51,10 @@ class InfoCommand extends AbstractMagentoCommand
         $sessionConfig = $this->getObjectManager()->get('Magento\Framework\Session\Config');
         $this->infos['Session'] = $sessionConfig->getSaveHandler();
 
-        //var_dump($this->getObjectManager()->create('Magento\Framework\App\Arguments\ArgumentInterpreter', array('Magento\Framework\Encryption\Encryptor::PARAM_CRYPT_KEY'))->evaluate()); die;
+/*        $constInterpreter = new \Magento\Framework\Data\Argument\Interpreter\Constant();
+        $interpreter = new \Magento\Framework\App\Arguments\ArgumentInterpreter($constInterpreter);
+        var_dump($interpreter->evaluate(array('value' => 'Magento\Framework\Encryption\Encryptor::PARAM_CRYPT_KEY')));
+*/
         $this->infos['Crypt Key'] = ''; // @TODO Implement
         $this->infos['Install Date'] = ''; // @TODO Implement
 
@@ -70,7 +73,6 @@ class InfoCommand extends AbstractMagentoCommand
     protected function _addCacheInfos()
     {
         $cachePool = $this->getObjectManager()->get('Magento\Framework\App\Cache\Type\FrontendPool');
-        $cacheConfig = $this->getObjectManager()->get('Magento\Framework\App\Cache\Type\Config');
 
         $this->infos['Cache Backend'] = get_class($cachePool->get('config')->getBackend());
 
