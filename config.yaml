@@ -75,6 +75,10 @@ commands:
     - N98\Magento\Command\Developer\TemplateHintsCommand
     - N98\Magento\Command\Developer\Theme\ListCommand
     - N98\Magento\Command\Generation\FlushCommand
+    - N98\Magento\Command\GiftCard\Pool\GenerateCommand
+    - N98\Magento\Command\GiftCard\CreateCommand
+    - N98\Magento\Command\GiftCard\InfoCommand
+    - N98\Magento\Command\GiftCard\RemoveCommand
     - N98\Magento\Command\OpenBrowserCommand
     - N98\Magento\Command\Script\Repository\ListCommand
     - N98\Magento\Command\Script\Repository\RunCommand
