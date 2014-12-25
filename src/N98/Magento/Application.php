@@ -258,14 +258,30 @@ class Application extends BaseApplication
             foreach ($this->config['commands']['customCommands'] as $commandClass) {
                 if (is_array($commandClass)) { // Support for key => value (name -> class)
                     $resolvedCommandClass = current($commandClass);
+                    if ($this->isCommandDisabled($resolvedCommandClass)) {
+                        continue;
+                    }
                     $command = new $resolvedCommandClass();
                     $command->setName(key($commandClass));
                 } else {
+                    if ($this->isCommandDisabled($commandClass)) {
+                        continue;
+                    }
                     $command = new $commandClass();
                 }
+
                 $this->add($command);
             }
         }
+    }
+
+    /**
+     * @param string $class
+     * @return bool
+     */
+    protected function isCommandDisabled($class)
+    {
+        return in_array($class, $this->config['commands']['disabled']);
     }
 
     /**

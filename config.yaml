@@ -46,4 +46,7 @@ commands:
     - N98\Magento\Command\System\Website\ListCommand
     - N98\Magento\Command\Indexer\ListCommand
 
+  disabled:
+    - dummy
+
   aliases: []
