@@ -45,8 +45,52 @@ commands:
     - N98\Magento\Command\System\Store\ListCommand
     - N98\Magento\Command\System\Website\ListCommand
     - N98\Magento\Command\Indexer\ListCommand
+    - N98\Magento\Command\Installer\InstallCommand
 
   disabled:
     - dummy
 
   aliases: []
+
+  N98\Magento\Command\Installer\InstallCommand:
+    magento-packages:
+      - name: ce-2.0.0.0-dev-beta1
+        version: 0.1.0-beta1
+        source:
+          url: https://github.com/magento/magento2.git
+          type: git
+          reference: master
+        extra:
+          sample-data:
+            magento/sample-data: "0.42.0-beta1"
+            magento/sample-data-media: "0.42.0-beta1"
+
+    installation:
+      pre-check:
+        php:
+          extensions:
+            - pdo_mysql
+            - spl
+            - dom
+            - simplexml
+            - mcrypt
+            - hash
+            - curl
+            - iconv
+            - ctype
+            - gd
+
+      defaults:
+        currency: EUR
+        locale: de_DE
+        timezone: Europe/Berlin
+        use_secure: no
+        use_rewrites: yes
+        session_save: files
+        admin_username: admin
+        admin_firstname: John
+        admin_lastname: Doe
+        admin_password: password123
+        admin_frontname: admin
+        admin_email: john.doe@example.com
+        encryption_key:
