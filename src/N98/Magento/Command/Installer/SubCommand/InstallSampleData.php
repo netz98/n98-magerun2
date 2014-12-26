@@ -94,32 +94,37 @@ class InstallSampleData extends AbstractSubCommand
                 $this->config['composer_bin'],
                 'require',
                 $extraPackageName . ':' . $extraPackageVersion,
-                '--no-update',
                 '--dev'
             )
         );
 
         $process = $processBuilder->getProcess();
-        $process->run();
+        $process->setTimeout(86400);
+        $process->start();
+        $process->wait(function ($type, $buffer) {
+            if (Process::ERR === $type) {
+                $this->output->write('<error>sample-data > ' . $buffer . '</error>');
+            } else {
+                $this->output->write('sample-data > ' . $buffer, false);
+            }
+        });
     }
 
     protected function runSampleDataInstaller()
     {
-        if (OperatingSystem::isWindows()) {
-            $php = 'php';
-        } else {
-            $php = '/usr/bin/env php';
-        }
-
         $installationArgs = $this->config->getArray('installation_args');
 
         $processBuilder = new ProcessBuilder(
             array(
-                $php,
+                'php',
                 'dev/tools/Magento/Tools/SampleData/install.php',
                 '--admin_username=' . $installationArgs['admin_username']
             )
         );
+
+        if (!OperatingSystem::isWindows()) {
+            $processBuilder->setPrefix('/usr/bin/env');
+        }
 
         $process = $processBuilder->getProcess();
         $process->setTimeout(86400);

@@ -13,6 +13,15 @@ class PreCheckPhp extends AbstractSubCommand
      */
     public function execute()
     {
+        $this->checkExtensions();
+        $this->checkXDebug();
+    }
+
+    /**
+     * @return array
+     */
+    protected function checkExtensions()
+    {
         $extensions = $this->commandConfig['installation']['pre-check']['php']['extensions'];
         $missingExtensions = array();
         foreach ($extensions as $extension) {
@@ -25,6 +34,19 @@ class PreCheckPhp extends AbstractSubCommand
             throw new \RuntimeException(
                 'The following PHP extensions are required to start installation: ' . implode(',', $missingExtensions)
             );
+        }
+    }
+
+    /**
+     * @param $missingExtensions
+     */
+    protected function checkXDebug($missingExtensions)
+    {
+        if (extension_loaded('xdebug') && xdebug_is_enabled() && ini_get('xdebug.max_nesting_level') < 200) {
+            $errorMessage = 'Please change PHP ini setting "xdebug.max_nesting_level". '
+                          . 'Please change it to a value >= 200. '
+                          . 'Your current value is ' . ini_get('xdebug.max_nesting_level');
+            throw new \RuntimeException($errorMessage);
         }
     }
 }
