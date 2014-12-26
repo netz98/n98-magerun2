@@ -149,7 +149,6 @@ class InstallMagento extends AbstractSubCommand
             'db_host'                    => $this->_prepareDbHost(),
             'db_name'                    => $this->config->getString('db_name'),
             'db_user'                    => $this->config->getString('db_user'),
-            'db_pass'                    => $this->config->getString('db_pass'),
             'base_url'                   => $baseUrl,
             'use_rewrites'               => true,
             'use_secure'                 => false,
@@ -164,6 +163,11 @@ class InstallMagento extends AbstractSubCommand
             'backend_frontname'          => $adminFrontname,
             'currency'                   => $currency,
         );
+
+        $dbPass = $this->config->getString('db_pass');
+        if (!empty($dbPass)) {
+            $argv['db_pass'] = $dbPass;
+        }
 
         if ($useDefaultConfigParams) {
             if (strlen($defaults['encryption_key']) > 0) {
