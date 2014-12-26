@@ -3,19 +3,19 @@
 namespace N98\Magento\Framework\App;
 
 use Magento\Framework\App\Bootstrap;
-use Magento\Framework\ObjectManager\ObjectManager;
+use \Magento\Framework\ObjectManagerInterface;
 
 class Magerun implements \Magento\Framework\AppInterface
 {
     /**
-     * @var ObjectManager
+     * @var ObjectManagerInterface
      */
     protected $objectManager;
 
     /**
-     * @param ObjectManager $objectManager
+     * @param ObjectManagerInterface $objectManager
      */
-    public function __construct(ObjectManager $objectManager)
+    public function __construct(ObjectManagerInterface $objectManager)
     {
         $this->objectManager = $objectManager;
     }
@@ -31,7 +31,7 @@ class Magerun implements \Magento\Framework\AppInterface
     }
 
     /**
-     * @return ObjectManager
+     * @return ObjectManagerInterface
      */
     public function getObjectManager()
     {
