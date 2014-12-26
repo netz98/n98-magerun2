@@ -27,7 +27,11 @@ class SetDirectoryPermissions extends AbstractSubCommand
             }
             @chmod($varCacheFolder, 0777);
 
-            $mediaFolder = $installationFolder . DIRECTORY_SEPARATOR . 'media';
+            $mediaFolder = $installationFolder
+                         . DIRECTORY_SEPARATOR
+                         . 'pub'
+                         . DIRECTORY_SEPARATOR
+                         . 'media';
             if (!is_dir($mediaFolder)) {
                 @mkdir($mediaFolder);
             }
