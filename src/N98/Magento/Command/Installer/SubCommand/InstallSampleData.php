@@ -4,6 +4,7 @@ namespace N98\Magento\Command\Installer\SubCommand;
 
 use N98\Magento\Command\SubCommand\AbstractSubCommand;
 use N98\Util\OperatingSystem;
+use Symfony\Component\Process\Process;
 use Symfony\Component\Process\ProcessBuilder;
 
 class InstallSampleData extends AbstractSubCommand
