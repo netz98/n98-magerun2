@@ -2,8 +2,8 @@
 
 namespace N98\Magento\Framework\App;
 
-use Magento\Framework\App;
-use Magento\Framework\ObjectManager;
+use Magento\Framework\App\Bootstrap;
+use Magento\Framework\ObjectManager\ObjectManager;
 
 class Magerun implements \Magento\Framework\AppInterface
 {
@@ -15,7 +15,7 @@ class Magerun implements \Magento\Framework\AppInterface
     /**
      * @param ObjectManager $objectManager
      */
-    public function __construct(\Magento\Framework\ObjectManager $objectManager)
+    public function __construct(ObjectManager $objectManager)
     {
         $this->objectManager = $objectManager;
     }
@@ -45,11 +45,11 @@ class Magerun implements \Magento\Framework\AppInterface
      * - true: exception has been handled, no additional action is needed
      * - false: exception has not been handled - pass the control to Bootstrap
      *
-     * @param App\Bootstrap $bootstrap
+     * @param Bootstrap $bootstrap
      * @param \Exception $exception
      * @return bool
      */
-    public function catchException(App\Bootstrap $bootstrap, \Exception $exception)
+    public function catchException(Bootstrap $bootstrap, \Exception $exception)
     {
         // TODO: Implement catchException() method.
     }

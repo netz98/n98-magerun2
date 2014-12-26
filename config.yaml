@@ -54,7 +54,7 @@ commands:
 
   N98\Magento\Command\Installer\InstallCommand:
     magento-packages:
-      - name: ce-2.0.0.0-dev-beta1
+      - name: magento-ce-2.0.0.0-dev-beta1
         version: 0.1.0-beta1
         source:
           url: https://github.com/magento/magento2.git

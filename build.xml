@@ -1,0 +1,107 @@
+<?xml version="1.0"?>
+<!--
+
+Phing build file to create a executable phar file by defined src.
+
+@see http://www.phing.info/
+
+Build phar with:
+
+    phing dist
+
+-->
+<project name="n98-magerun2" default="dist">
+    <taskdef name="patched-pharpackage" classname="dev.build.tasks.PatchedPharPackageTask" />
+
+    <fileset dir="." id="root_folder">
+        <include name="config.yaml" />
+        <include name="MIT-LICENSE.txt" />
+    </fileset>
+    <fileset dir="src"  id="src_folder">
+        <include name="**/**" />
+    </fileset>
+    <fileset dir="res" id="res_folder">
+        <include name="**/**" />
+    </fileset>
+    <fileset dir="vendor" id="vendor_folder">
+        <include name="**/**" />
+
+        <!-- VCS -->
+        <exclude name=".git/**" />
+        <exclude name=".svn/**" />
+
+        <!-- Docs -->
+        <exclude name="**/doc/**" />
+        <exclude name="**/docs/**" />
+
+        <!-- unused libs -->
+        <exclude name="fzaninotto/faker/src/Faker/ORM" />
+
+        <!-- Tests -->
+        <exclude name="**/Tests/**" />
+        <exclude name="**/tests/**" />
+        <exclude name="twig/twig/test/**" />
+        <exclude name="twig/twig/ext/**" />
+
+        <!-- Test utils -->
+        <exclude name="phpunit/**" />
+        <exclude name="mikey179/**" />
+    </fileset>
+
+    <target name="dist">
+        <exec command="composer.phar install --no-dev" dir="${project.basedir}" passthru="true" />
+        <phingcall target="dist_unix">
+            <property name="compression" value="bzip2" />
+        </phingcall>
+
+        <!-- Revert dev settings -->
+        <exec command="composer.phar install --dev" dir="${project.basedir}" passthru="true" />
+    </target>
+
+    <target name="dist_hhvm">
+        <exec command="composer.phar install" dir="${project.basedir}" passthru="true" />
+        <phingcall target="dist_unix">
+            <property name="compression" value="none" />
+        </phingcall>
+
+        <!-- Revert dev settings -->
+        <exec command="composer.phar install --dev" dir="${project.basedir}" passthru="true" />
+    </target>
+
+    <target name="dist_unix">
+        <patched-pharpackage basedir="./" stub="dev/build/_cli_stub.php" signature="sha512" compression="${compression}" destfile="./n98-magerun.phar">
+            <metadata>
+                <element name="version" value="1.0.0" />
+                <element name="authors">
+                    <element name="Christian Münch">
+                        <element name="e-mail" value="c.muench@netz98.de" />
+                    </element>
+                </element>
+            </metadata>
+            <fileset refid="root_folder" />
+            <fileset refid="src_folder" />
+            <fileset refid="res_folder" />
+            <fileset refid="vendor_folder" />
+        </patched-pharpackage>
+
+        <!-- make phar executable -->
+        <exec command="git config core.filemode true" />
+        <exec command="git update-index --chmod=+x n98-magerun2.phar" />
+        <chmod file="./n98-magerun2.phar" mode="775" />
+        <exec command="git add ./n98-magerun2.phar" />
+    </target>
+
+    <target name="install">
+        <exec command="sudo cp ${project.basedir}/n98-magerun2.phar /usr/local/bin/n98-magerun2.phar;" />
+        <exec command="sudo chmod a+x /usr/local/bin/n98-magerun.phar;" />
+    </target>
+
+    <target name="test">
+        <exec command="vendor/bin/phpunit --debug --coverage-html ${project.basedir}/reports/coverage" passthru="true" />
+    </target>
+
+    <target name="apigen">
+        <apigen source="src" destination="doc/api" title="n98-magerun API" deprecated="true" todo="true" />
+    </target>
+
+</project>

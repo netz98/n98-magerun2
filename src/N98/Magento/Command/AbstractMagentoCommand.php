@@ -3,7 +3,7 @@
 namespace N98\Magento\Command;
 
 use Composer\Package\PackageInterface;
-use Magento\Framework\ObjectManager;
+use Magento\Framework\ObjectManager\ObjectManager;
 use N98\Magento\Command\SubCommand\ConfigBag;
 use N98\Magento\Command\SubCommand\SubCommandFactory;
 use Symfony\Component\Console\Command\Command;

@@ -29,6 +29,10 @@ if (!class_exists('N98_Magerun_Bootstrap')) {
 }
 
 try {
+    if (version_compare(PHP_VERSION, '5.4.11', '<')) {
+        throw new \ErrorException('PHP Version is lower than 5.4.11. Please upgrade your runtime.');
+    }
+
     $loader = \N98_Magerun_Bootstrap::getLoader();
     $application = new \N98\Magento\Application($loader);
 

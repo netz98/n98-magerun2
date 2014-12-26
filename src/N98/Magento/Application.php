@@ -2,7 +2,7 @@
 
 namespace N98\Magento;
 
-use Magento\Framework\ObjectManager;
+use Magento\Framework\ObjectManager\ObjectManager;
 use N98\Magento\Command\ConfigurationLoader;
 use N98\Magento\EntryPoint\Magerun as MagerunEntryPoint;
 use N98\Util\ArrayFunctions;
