@@ -8,6 +8,11 @@ use N98\Magento\Command\PHPUnit\TestCase;
 
 class DatabaseHelperTest extends TestCase
 {
+    protected function setUp()
+    {
+        $this->markTestSkipped('Reactivate if db commands are available.');
+    }
+
     protected function getHelper()
     {
         $command = $this->getApplication()->find('db:info');
