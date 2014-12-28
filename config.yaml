@@ -41,6 +41,17 @@ event:
 
 commands:
   customCommands:
+    - N98\Magento\Command\Database\ConsoleCommand
+    - N98\Magento\Command\Database\CreateCommand
+    - N98\Magento\Command\Database\DropCommand
+    - N98\Magento\Command\Database\DumpCommand
+    - N98\Magento\Command\Database\ImportCommand
+    - N98\Magento\Command\Database\InfoCommand
+    - N98\Magento\Command\Database\QueryCommand
+    - N98\Magento\Command\Database\VariablesCommand
+    - N98\Magento\Command\Database\StatusCommand
+    - N98\Magento\Command\Database\Maintain\CheckTablesCommand
+    - N98\Magento\Command\Database\InfoCommand
     - N98\Magento\Command\System\InfoCommand
     - N98\Magento\Command\System\Store\ListCommand
     - N98\Magento\Command\System\Website\ListCommand
@@ -51,6 +62,48 @@ commands:
     - dummy
 
   aliases: []
+
+  N98\Magento\Command\Database\DumpCommand:
+    table-groups:
+      - id: log
+        description: Log tables
+        tables: log_url log_url_info log_visitor log_visitor_info log_visitor_online report_event report_compared_product_index report_viewed_*
+
+      - id: sessions
+        description: Database session tables
+        tables: core_session
+
+      - id: stripped
+        description: Standard definition for a stripped dump (logs, sessions)
+        tables: @log @sessions
+
+      - id: sales
+        description: Sales data (orders, invoices, creditmemos etc)
+        tables: sales_order* sales_recurring_* sales_refunded_* sales_payment_* enterprise_sales_* enterprise_customer_sales_* sales_bestsellers_*
+
+      - id: customers
+        description: Customer data - Should not be used without @sales
+        tables: customer_address* customer_entity*
+
+      - id: trade
+        description: Current trade data (customers and orders). You usally do not want those in developer systems.
+        tables: @customers @sales
+
+      - id: development
+        description: Removes logs and trade data so developers do not have to work with real customer data
+        tables: @trade @stripped @search
+
+      - id: ee_changelog
+        description: Changelog tables of new indexer since EE 1.13
+        tables: "*_cl"
+
+      - id: search
+        description: Search related tables
+        tables: "catalogsearch_*"
+
+      - id: idx
+        description: Tables with _idx suffix
+        tables: "*_idx"
 
   N98\Magento\Command\Installer\InstallCommand:
     magento-packages:
