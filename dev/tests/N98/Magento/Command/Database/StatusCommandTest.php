@@ -65,7 +65,7 @@ class StatusCommandTest extends TestCase
             'search'     => '%size%',
         ));
         $this->assertRegExp(
-            '~Innodb_page_size,[0-9\.]+KB,~',
+            '~Innodb_page_size,"[0-9\.]+\sKB",~',
             $commandTester->getDisplay()
         );
     }

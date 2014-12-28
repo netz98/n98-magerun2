@@ -2,8 +2,6 @@
 
 namespace N98\Util;
 
-use N98\Util\Filesystem;
-
 /**
  * Class FilesystemTest
  * @package N98\Util
@@ -198,11 +196,11 @@ class FilesystemTest extends \PHPUnit_Framework_TestCase
     public static function convertedBytesProvider()
     {
         return array(
-            array(20000000,     2,  '19.07M'),
-            array(20000000,     3,  '19.073M'),
-            array(2000000000,   2,  '1.86G'),
-            array(2,            2,  '2.00B'),
-            array(2048,         2,  '2.00K'),
+            array(20000000,     2,  '19.07 MB'),
+            array(20000000,     3,  '19.073 MB'),
+            array(2000000000,   2,  '1.86 GB'),
+            array(2,            2,  '2.00 B'),
+            array(2048,         2,  '2.00 KB'),
         );
     }
 }
