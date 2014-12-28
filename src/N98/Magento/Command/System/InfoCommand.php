@@ -55,8 +55,8 @@ class InfoCommand extends AbstractMagentoCommand
         $interpreter = new \Magento\Framework\App\Arguments\ArgumentInterpreter($constInterpreter);
         var_dump($interpreter->evaluate(array('value' => 'Magento\Framework\Encryption\Encryptor::PARAM_CRYPT_KEY')));
 */
-        $this->infos['Crypt Key'] = ''; // @TODO Implement
-        $this->infos['Install Date'] = ''; // @TODO Implement
+        $this->infos['Crypt Key'] = '<NOT IMPLEMENTED NOW>'; // @TODO Implement
+        $this->infos['Install Date'] = '<NOT IMPLEMENTED NOW>'; // @TODO Implement
 
         $this->_addCacheInfos();
 
