@@ -101,9 +101,13 @@ HELP;
         $this->commandConfig = $this->getCommandConfig();
         $this->writeSection($output, 'Magento 2 Installation');
 
-        $subCommandFactory = $this->createSubCommandFactory($input, $output);
-        // load commands from config
+        $subCommandFactory = $this->createSubCommandFactory(
+            $input,
+            $output,
+            'N98\Magento\Command\Installer\SubCommand' // sub-command namespace
+        );
 
+        // @todo load commands from config
         $subCommandFactory->create('PreCheckPhp')->execute();
         $subCommandFactory->create('SelectMagentoVersion')->execute();
         $subCommandFactory->create('ChooseInstallationFolder')->execute();

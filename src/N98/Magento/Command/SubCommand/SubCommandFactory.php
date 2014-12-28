@@ -9,6 +9,11 @@ use Symfony\Component\Console\Output\OutputInterface;
 class SubCommandFactory
 {
     /**
+     * @var string
+     */
+    protected $baseNamespace;
+
+    /**
      * @var InputInterface
      */
     protected $input;
@@ -35,6 +40,7 @@ class SubCommandFactory
 
     /**
      * @param AbstractMagentoCommand $command
+     * @param string $baseNamespace
      * @param InputInterface  $input
      * @param OutputInterface $output
      * @param array $commandConfig
@@ -42,11 +48,13 @@ class SubCommandFactory
      */
     public function __construct(
         AbstractMagentoCommand $command,
+        $baseNamespace,
         InputInterface $input,
         OutputInterface $output,
         array $commandConfig,
         ConfigBag $config
     ) {
+        $this->baseNamespace = $baseNamespace;
         $this->command = $command;
         $this->input = $input;
         $this->output = $output;
@@ -55,12 +63,15 @@ class SubCommandFactory
     }
 
     /**
-     * @param string $relativeClassName
+     * @param string $className
+     * @param bool $userBaseNamespace
      * @return SubCommandInterface
      */
-    public function create($relativeClassName)
+    public function create($className, $userBaseNamespace = true)
     {
-        $className = '\N98\Magento\Command\Installer\SubCommand\\' . $relativeClassName;
+        if ($userBaseNamespace) {
+            $className = rtrim($this->baseNamespace, '\\') . '\\' . $className;
+        }
 
         $subCommand = new $className();
         if (! $subCommand instanceof SubCommandInterface) {
