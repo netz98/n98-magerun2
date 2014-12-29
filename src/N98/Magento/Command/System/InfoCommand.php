@@ -14,7 +14,17 @@ class InfoCommand extends AbstractMagentoCommand
     /**
      * @var array
      */
-    protected $infos;
+    protected $infos = [];
+
+    public function hasInfo()
+    {
+        return ! empty($this->infos);
+    }
+
+    public function getInfo($key)
+    {
+        return isset($this->infos[$key]) ? $this->infos[$key] : null;
+    }
 
     protected function configure()
     {
@@ -45,18 +55,18 @@ class InfoCommand extends AbstractMagentoCommand
 
         $this->initMagento();
 
+        $deploymentConfig = $this->getObjectManager()->get('\Magento\Framework\App\DeploymentConfig');
+
         $this->infos['Version'] = \Magento\Framework\AppInterface::VERSION;
         $this->infos['Edition'] = 'Community'; // @TODO Where can i obtain this info?
-
-        $sessionConfig = $this->getObjectManager()->get('Magento\Framework\Session\Config');
-        $this->infos['Session'] = $sessionConfig->getSaveHandler();
+        $this->infos['Session'] = $deploymentConfig->get('session/save');
+        $this->infos['Crypt Key'] = $deploymentConfig->get('crypt/key');
+        $this->infos['Install Date'] = $deploymentConfig->get('install/date');
 
 /*        $constInterpreter = new \Magento\Framework\Data\Argument\Interpreter\Constant();
         $interpreter = new \Magento\Framework\App\Arguments\ArgumentInterpreter($constInterpreter);
         var_dump($interpreter->evaluate(array('value' => 'Magento\Framework\Encryption\Encryptor::PARAM_CRYPT_KEY')));
 */
-        $this->infos['Crypt Key'] = '<NOT IMPLEMENTED NOW>'; // @TODO Implement
-        $this->infos['Install Date'] = '<NOT IMPLEMENTED NOW>'; // @TODO Implement
 
         $this->_addCacheInfos();
 
