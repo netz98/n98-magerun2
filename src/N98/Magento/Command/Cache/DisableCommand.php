@@ -1,38 +1,38 @@
 <?php
 namespace N98\Magento\Command\Cache;
 
-use Magento\Framework\App\Cache\Type\ConfigSegment;
+use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
-use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
 
-class EnableCommand extends AbstractModifierCommand
+class DisableCommand extends AbstractModifierCommand
 {
-    const INVALID_TYPES_MESSAGE = '<error>The following cache types do not exist or are already enabled: %s</error>';
+    const INVALID_TYPES_MESSAGE = '<error>The following cache types do not exist or are already disabled: %s</error>';
 
     const ABORT_MESSAGE = '<info>Nothing to do!</info>';
 
     const EXCEPTION_MESSAGE = '<error>Something went wrong: %s</error>';
 
-    const SUCCESS_MESSAGE = '<info>The following cache types were enabled: %s</info>';
+    const SUCCESS_MESSAGE = '<info>The following cache types were disabled: %s</info>';
 
-    const TARGET_IS_ENABLED = 1;
+    const TARGET_IS_ENABLED = 0;
 
     protected function configure()
     {
         $this
-            ->setName('cache:enable')
-            ->setDescription('Enables Magento caches')
+            ->setName('cache:disable')
+            ->setDescription('Disables Magento caches')
             ->addArgument(
                 'type',
                 InputArgument::IS_ARRAY,
-                'Type of cache to enable (separate multiple types with a space)'
+                'Type of cache to disable (separate multiple types with a space)'
             )
             ->addOption(
                 'format',
                 null,
                 InputOption::VALUE_OPTIONAL,
                 'Output Format. One of [' . implode(',', RendererFactory::getFormats()) . ']'
-            );
+            )
+        ;
     }
 }

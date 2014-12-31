@@ -4,12 +4,13 @@
  *          touching caches changes state and will result in different test result second time
  *          solutions: disabling/enabling, faking&mocking or having one defined test environment
  */
+
 namespace N98\Magento\Command\Cache;
 
 use Symfony\Component\Console\Tester\CommandTester;
 use N98\Magento\Command\PHPUnit\TestCase;
 
-class EnableCommandTest extends TestCase
+class DisableCommandTest extends TestCase
 {
     const NONEXISTENT_CACHE_TYPE = 'FAKE_CACHE_TYPE';
     /**
@@ -20,22 +21,22 @@ class EnableCommandTest extends TestCase
     public function setUp()
     {
         $application = $this->getApplication();
-        $application->add(new EnableCommand);
+        $application->add(new DisableCommand);
         $application->add(new ListCommand);
 
-        $this->command = $this->getApplication()->find('cache:enable');
+        $this->command = $this->getApplication()->find('cache:disable');
     }
 
-    public function testEnableNonexistentCache()
+    public function testDisableNonexistentCache()
     {
         $commandTester = new CommandTester($this->command);
         $commandTester->execute(array('command' => $this->command->getName(), 'type' => self::NONEXISTENT_CACHE_TYPE));
 
         // Strip tags because of console formatting (<info> etc)
         $expectedOutput = strip_tags(
-            sprintf(EnableCommand::INVALID_TYPES_MESSAGE, self::NONEXISTENT_CACHE_TYPE) .
+            sprintf(DisableCommand::INVALID_TYPES_MESSAGE, self::NONEXISTENT_CACHE_TYPE) .
             PHP_EOL .
-            EnableCommand::ABORT_MESSAGE .
+            DisableCommand::ABORT_MESSAGE .
             PHP_EOL
         );
 
