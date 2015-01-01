@@ -423,6 +423,18 @@ abstract class AbstractMagentoCommand extends Command
     ) {
         $configBag = new ConfigBag();
 
-        return new SubCommandFactory($this, $baseNamespace, $input, $output, $this->commandConfig, $configBag);
+        $commandConfig = $this->getCommandConfig();
+        if (empty($commandConfig)) {
+            $commandConfig = array();
+        }
+
+        return new SubCommandFactory(
+            $this,
+            $baseNamespace,
+            $input,
+            $output,
+            $commandConfig,
+            $configBag
+        );
     }
 }
