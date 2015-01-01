@@ -41,6 +41,11 @@ class MagentoHelper extends AbstractHelper
     protected $output;
 
     /**
+     * @var array
+     */
+    protected $baseConfig;
+
+    /**
      * Returns the canonical name of this helper.
      *
      * @return string The canonical name
@@ -284,5 +289,39 @@ class MagentoHelper extends AbstractHelper
         }
 
         return false;
+    }
+
+    /**
+     * @return array
+     * @throws \ErrorException
+     * @throws \Exception
+     */
+    public function getBaseConfig()
+    {
+        if (!$this->baseConfig) {
+            $command = $this->getHelperSet()->getCommand();
+            if ($command == null) {
+                $application = new Application();
+            } else {
+                $application = $command->getApplication(); /* @var $application Application */
+            }
+            $application->detectMagento();
+
+            $configFile = $application->getMagentoRootFolder() . '/app/etc/config.php';
+
+            if (!is_readable($configFile)) {
+                throw new \Exception('app/etc/config.php is not readable');
+            }
+
+            $config = @include $configFile;
+
+            if (!is_array($config)) {
+                throw new \ErrorException('app/etc/config.php is corrupted. Please check it.');
+            }
+
+            $this->baseConfig = $config;
+        }
+
+        return $this->baseConfig;
     }
 }

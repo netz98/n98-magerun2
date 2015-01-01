@@ -51,10 +51,12 @@ class TestCase extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @return \Varien_Db_Adapter_Pdo_Mysql
+     * @return \Magento\Framework\DB\Adapter\AdapterInterface
      */
     public function getDatabaseConnection()
     {
-        return \Mage::getSingleton('core/resource')->getConnection('write');
+        $resource = $this->getApplication()->getObjectManager()->get('\Magento\Framework\App\Resource');
+
+        return $resource->getConnection('write');
     }
 }

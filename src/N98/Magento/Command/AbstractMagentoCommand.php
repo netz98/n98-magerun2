@@ -412,13 +412,17 @@ abstract class AbstractMagentoCommand extends Command
     /**
      * @param InputInterface  $input
      * @param OutputInterface $output
+     * @param string $baseNamespace If this is set we can use relative class names.
      *
      * @return SubCommandFactory
      */
-    protected function createSubCommandFactory(InputInterface $input, OutputInterface $output)
-    {
+    protected function createSubCommandFactory(
+        InputInterface $input,
+        OutputInterface $output,
+        $baseNamespace = ''
+    ) {
         $configBag = new ConfigBag();
 
-        return new SubCommandFactory($this, $input, $output, $this->commandConfig, $configBag);
+        return new SubCommandFactory($this, $baseNamespace, $input, $output, $this->commandConfig, $configBag);
     }
 }

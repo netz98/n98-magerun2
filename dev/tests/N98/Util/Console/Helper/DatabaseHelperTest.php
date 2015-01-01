@@ -8,11 +8,6 @@ use N98\Magento\Command\PHPUnit\TestCase;
 
 class DatabaseHelperTest extends TestCase
 {
-    protected function setUp()
-    {
-        $this->markTestSkipped('Reactivate if db commands are available.');
-    }
-
     protected function getHelper()
     {
         $command = $this->getApplication()->find('db:info');
@@ -82,7 +77,6 @@ class DatabaseHelperTest extends TestCase
             $definitions
         );
         $this->assertContains('catalog_product_entity', $tables);
-        $this->assertContains('dataflow_batch_import', $tables);
         $this->assertNotContains('catalogrule', $tables);
     }
 }

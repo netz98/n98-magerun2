@@ -9,6 +9,19 @@ DEVELOPMENT IN GIT BRANCH **develop**.
 This software is only running with Magento 2.
 If you use Magento 1 please use another stable version (https://github.com/netz98/n98-magerun).
 
+Build Status
+------------
+
+**Development Branch**
+
+.. image:: https://travis-ci.org/netz98/n98-magerun2.png?branch=develop
+:target: https://travis-ci.org/netz98/n98-magerun2
+
+Compatibility
+-------------
+The tools will automatically be tested for multiple PHP versions (5.4, 5.5). It's currently running in various Linux distributions and Mac OS X.
+Microsoft Windows is not fully supported (some Commands like `db:dump` or `install` are excluded).
+
 Installation
 ------------
 
@@ -130,3 +143,212 @@ List Magento cache status
 .. code-block:: sh
 
    $ n98-magerun2.phar cache:list
+
+Set Config
+""""""""""
+
+.. code-block:: sh
+
+   $ n98-magerun2.phar config:set [--scope[="..."]] [--scope-id[="..."]] [--encrypt] path value
+
+Arguments:
+    path        The config path
+    value       The config value
+
+Options:
+    --scope     The config value's scope (default: "default" | Can be "default", "websites", "stores")
+    --scope-id  The config value's scope ID (default: "0")
+    --encrypt   Encrypt the config value using crypt key
+
+Get Config
+""""""""""
+
+.. code-block:: sh
+
+   $ n98-magerun2.phar config:get [--scope="..."] [--scope-id="..."] [--decrypt] [--format[="..."]] [path]
+
+Arguments:
+    path        The config path
+
+Options:
+    --scope             The config value's scope (default, websites, stores)
+    --scope-id          The config value's scope ID
+    --decrypt           Decrypt the config value using local.xml's crypt key
+    --update-script     Output as update script lines
+    --magerun-script    Output for usage with config:set
+    --format            Output as json, xml or csv
+
+Help:
+    If path is not set, all available config items will be listed. path may contain wildcards (*)
+
+Example:
+
+.. code-block:: sh
+
+   $ n98-magerun2.phar config:get web/* --magerun-script
+
+Delete Config
+"""""""""""""
+
+.. code-block:: sh
+
+   $ n98-magerun2.phar config:delete [--scope[="..."]] [--scope-id[="..."]] [--all] path
+
+Arguments:
+    path        The config path
+
+Options:
+    --scope     The config scope (default, websites, stores)
+    --scope-id  The config value's scope ID
+    --all       Deletes all entries of a path (ignores --scope and --scope-id)
+
+List Magento cache status
+"""""""""""""""""""""""""
+
+.. code-block:: sh
+
+   $ n98-magerun2.phar cache:list
+
+Clean Magento cache
+"""""""""""""""""""
+
+Cleans expired cache entries.
+
+If you would like to clean only one cache type:
+
+.. code-block:: sh
+
+   $ n98-magerun2.phar cache:clean [code]
+
+If you would like to clean multiple cache types at once:
+
+.. code-block:: sh
+
+   $ n98-magerun2.phar cache:clean [code] [code] ...
+
+If you would like to remove all cache entries use `cache:flush`
+
+Run `cache:list` command to see all codes.
+
+Remove all cache entries
+""""""""""""""""""""""""
+
+.. code-block:: sh
+
+   $ n98-magerun2.phar cache:flush
+
+List Magento caches
+"""""""""""""""""""
+
+.. code-block:: sh
+
+   $ n98-magerun2.phar cache:list [--format[="..."]]
+
+Disable Magento cache
+"""""""""""""""""""""
+
+.. code-block:: sh
+
+   $ n98-magerun2.phar cache:disable [code]
+
+If no code is specified, all cache types will be disabled.
+Run `cache:list` command to see all codes.
+
+Enable Magento cache
+""""""""""""""""""""
+
+.. code-block:: sh
+
+   $ n98-magerun2.phar cache:enable [code]
+
+If no code is specified, all cache types will be enabled.
+Run `cache:list` command to see all codes.
+
+n98-magerun Shell
+"""""""""""""""""
+
+If you need autocompletion for all n98-magerun commands you can start with "shell command".
+
+.. code-block:: sh
+
+   $ n98-magerun2.phar shell
+
+n98-magerun Script
+""""""""""""""""""
+
+Run multiple commands from a script file.
+
+.. code-block:: sh
+
+   $ n98-magerun2.phar [-d|--define[="..."]] [--stop-on-error] [filename]
+
+Example:
+
+.. code-block::
+
+   # Set multiple config
+   config:set "web/cookie/cookie_domain" example.com
+
+   # Set with multiline values with "\n"
+   config:set "general/store_information/address" "First line\nSecond line\nThird line"
+
+   # This is a comment
+   cache:flush
+
+
+Optionally you can work with unix pipes.
+
+.. code-block:: sh
+
+   $ echo "cache:flush" | n98-magerun2.phar script
+
+.. code-block:: sh
+
+   $ n98-magerun2.phar script < filename
+
+It is even possible to create executable scripts:
+
+Create file `test.magerun` and make it executable (`chmod +x test.magerun`):
+
+.. code-block:: sh
+
+   #!/usr/bin/env n98-magerun2.phar script
+
+   config:set "web/cookie/cookie_domain" example.com
+   cache:flush
+
+   # Run a shell script with "!" as first char
+   ! ls -l
+
+   # Register your own variable (only key = value currently supported)
+   ${my.var}=bar
+
+   # Let magerun ask for variable value - add a question mark
+   ${my.var}=?
+
+   ! echo ${my.var}
+
+   # Use resolved variables from n98-magerun in shell commands
+   ! ls -l ${magento.root}/code/local
+
+Pre-defined variables:
+
+* ${magento.root}    -> Magento Root-Folder
+* ${magento.version} -> Magento Version i.e. 2.0.0.0
+* ${magento.edition} -> Magento Edition -> Community or Enterprise
+* ${magerun.version} -> Magerun version i.e. 2.1.0
+* ${php.version}     -> PHP Version
+* ${script.file}     -> Current script file path
+* ${script.dir}      -> Current script file dir
+
+Variables can be passed to a script with "--define (-d)" option.
+
+Example:
+
+.. code-block:: sh
+
+   $ n98-magerun2.phar script -d foo=bar filename
+
+   # This will register the variable ${foo} with value bar.
+
+It's possible to define multiple values by passing more than one option.

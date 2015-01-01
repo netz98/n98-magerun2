@@ -36,5 +36,5 @@ before_script:
   - export N98_MAGERUN2_TEST_MAGENTO_ROOT="./${MAGENTO_VERSION}"
 
 script:
-  - vendor/bin/phpunit
+  - vendor/bin/phpunit --debug
   - php dev/tests/check-coverage.php clover.xml ${COVERAGE}
