@@ -41,6 +41,12 @@ event:
 
 commands:
   customCommands:
+    - N98\Magento\Command\Cache\DisableCommand
+    - N98\Magento\Command\Cache\EnableCommand
+    - N98\Magento\Command\Cache\ListCommand
+    - N98\Magento\Command\Config\DeleteCommand
+    - N98\Magento\Command\Config\GetCommand
+    - N98\Magento\Command\Config\SetCommand
     - N98\Magento\Command\Database\ConsoleCommand
     - N98\Magento\Command\Database\CreateCommand
     - N98\Magento\Command\Database\DropCommand
@@ -57,6 +63,8 @@ commands:
     - N98\Magento\Command\System\Website\ListCommand
     - N98\Magento\Command\Indexer\ListCommand
     - N98\Magento\Command\Installer\InstallCommand
+    - N98\Magento\Command\ScriptCommand
+    - N98\Magento\Command\ShellCommand
 
   disabled:
     - dummy
