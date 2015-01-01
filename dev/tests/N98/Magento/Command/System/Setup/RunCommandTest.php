@@ -10,7 +10,7 @@ class RunCommandTest extends TestCase
     public function testExecute()
     {
         $application = $this->getApplication();
-        $application->add(new CompareVersionsCommand());
+        $application->add(new RunCommand());
         $command = $this->getApplication()->find('sys:setup:run');
 
         $commandTester = new CommandTester($command);
