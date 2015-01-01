@@ -15,6 +15,11 @@ abstract class AbstractModifierCommand extends AbstractMagentoCommand
     const SUCCESS_MESSAGE = null;
     const TARGET_IS_ENABLED = null;
 
+    /**
+     * @param bool $isEnabled
+     *
+     * @return array
+     */
     protected function getCacheTypes($isEnabled)
     {
         /** @var $listCommand ListCommand */
@@ -23,6 +28,14 @@ abstract class AbstractModifierCommand extends AbstractMagentoCommand
         $listCommand->run(new ArrayInput(['command' => 'cache:list', '--enabled' => $isEnabled]), new NullOutput());
 
         return $listCommand->getTypes();
+    }
+
+    /**
+     * @return \Magento\Framework\App\Cache\Manager;
+     */
+    public function getCacheManager()
+    {
+        return $this->getObjectManager()->get('\Magento\Framework\App\Cache\Manager');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)

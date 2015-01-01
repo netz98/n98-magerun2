@@ -41,8 +41,10 @@ event:
 
 commands:
   customCommands:
+    - N98\Magento\Command\Cache\CleanCommand
     - N98\Magento\Command\Cache\DisableCommand
     - N98\Magento\Command\Cache\EnableCommand
+    - N98\Magento\Command\Cache\FlushCommand
     - N98\Magento\Command\Cache\ListCommand
     - N98\Magento\Command\Config\DeleteCommand
     - N98\Magento\Command\Config\GetCommand
