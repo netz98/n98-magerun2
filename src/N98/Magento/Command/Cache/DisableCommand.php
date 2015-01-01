@@ -13,7 +13,7 @@ class DisableCommand extends AbstractModifierCommand
 
     const EXCEPTION_MESSAGE = '<error>Something went wrong: %s</error>';
 
-    const SUCCESS_MESSAGE = '<info>The following cache types were disabled: %s</info>';
+    const SUCCESS_MESSAGE = '<info>The following cache types were disabled: <comment>%s</comment></info>';
 
     const TARGET_IS_ENABLED = 0;
 
