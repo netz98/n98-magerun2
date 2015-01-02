@@ -14,7 +14,7 @@ class EnableCommand extends AbstractModifierCommand
 
     const EXCEPTION_MESSAGE = '<error>Something went wrong: %s</error>';
 
-    const SUCCESS_MESSAGE = '<info>The following cache types were enabled: %s</info>';
+    const SUCCESS_MESSAGE = '<info>The following cache types were enabled: <comment>%s</comment></info>';
 
     const TARGET_IS_ENABLED = 1;
 
