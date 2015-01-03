@@ -62,6 +62,7 @@ class InfoCommand extends AbstractMagentoCommand
         $this->addVersionInfo();
         $this->addDeploymentInfo();
         $this->addCacheInfos();
+        $this->addVendors();
         $this->addAttributeCount();
         $this->addCustomerCount();
         $this->addCategoryCount();
@@ -148,5 +149,21 @@ class InfoCommand extends AbstractMagentoCommand
     {
         $this->infos['Version'] = \Magento\Framework\AppInterface::VERSION;
         $this->infos['Edition'] = 'Community'; // @TODO Where can i obtain this info?
+    }
+
+    protected function addVendors()
+    {
+        $vendors = [];
+
+        foreach ($this->getObjectManager()->get('\Magento\Framework\Module\ModuleListInterface')->getAll() as $moduleName => $info) {
+            // First index is (probably always) vendor
+            $moduleNameData = explode('_', $moduleName);
+
+            if (isset($moduleNameData[0])) {
+                $vendors[] = $moduleNameData[0];
+            }
+        }
+
+        $this->infos['Vendors'] = implode(', ', array_unique($vendors));
     }
 }
