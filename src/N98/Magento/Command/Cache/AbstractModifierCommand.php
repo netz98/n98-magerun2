@@ -43,10 +43,17 @@ abstract class AbstractModifierCommand extends AbstractMagentoCommand
         $this->detectMagento($output, true);
         $this->initMagento();
 
-        $types = (array) $input->getArgument('type');
+        $types = $input->getArgument('type');
+
+        if (empty($types)) {
+            // If no argument is supplied, we are modifying all targets
+            $types = array_keys($this->getCacheTypes(static::TARGET_IS_ENABLED));
+        } else {
+            $types = (array) $types;
+        }
 
         // Find out which types simply do not exist or are not affected by modifier
-        $invalidTypes = array_diff($types, array_keys($this->getCacheTypes(! static::TARGET_IS_ENABLED)));
+        $invalidTypes = array_diff($types, array_keys($this->getCacheTypes(!static::TARGET_IS_ENABLED)));
 
         if (! empty($invalidTypes)) {
             $output->writeln(sprintf(static::INVALID_TYPES_MESSAGE, implode(', ', $invalidTypes)));
@@ -66,6 +73,10 @@ abstract class AbstractModifierCommand extends AbstractMagentoCommand
 
         try {
             foreach ($types as $type) {
+                if ($cacheState->isEnabled($type) == static::TARGET_IS_ENABLED) {
+                    continue;
+                }
+
                 $cacheState->setEnabled($type, (bool) static::TARGET_IS_ENABLED);
                 $touchedTypes[] = $type;
             }
