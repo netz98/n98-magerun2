@@ -61,7 +61,6 @@ class InfoCommand extends AbstractMagentoCommand
 
         $this->addVersionInfo();
         $this->addDeploymentInfo();
-        $this->addDeploymentInfo();
         $this->addCacheInfos();
         $this->addAttributeCount();
         $this->addCustomerCount();
