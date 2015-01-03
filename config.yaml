@@ -61,6 +61,8 @@ commands:
     - N98\Magento\Command\Database\Maintain\CheckTablesCommand
     - N98\Magento\Command\Database\InfoCommand
     - N98\Magento\Command\System\InfoCommand
+    - N98\Magento\Command\System\MaintenanceCommand
+    - N98\Magento\Command\System\Setup\RunCommand
     - N98\Magento\Command\System\Store\ListCommand
     - N98\Magento\Command\System\Website\ListCommand
     - N98\Magento\Command\Indexer\ListCommand
