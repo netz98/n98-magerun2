@@ -39,4 +39,11 @@ class InfoCommandTest extends TestCase
     {
         $this->assertNotFalse(preg_match('/^[a-f0-9]{32}$/', $this->command->getInfo(self::CRYPT_KEY_INFO)));
     }
+
+    public function testCounts()
+    {
+        $counts = ['Attribute Count', 'Customer Count', 'Category Count', 'Product Count'];
+
+        $this->assertEmpty(array_diff($counts, array_keys($this->command->getInfo())));
+    }
 }
