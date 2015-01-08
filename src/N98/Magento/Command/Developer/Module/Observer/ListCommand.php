@@ -13,12 +13,28 @@ class ListCommand extends AbstractMagentoCommand
 {
     const SORT_WARNING_MESSAGE = '<warning>Sorting observers is a bad idea, call-order is important.</warning>';
 
+    protected $areas = [
+        'global',
+        'adminhtml',
+        'frontend',
+        'crontab'
+    ];
+
     protected function configure()
     {
         $this
             ->setName('dev:module:observer:list')
-            ->addArgument('area', InputArgument::REQUIRED, 'Observers in area (global, admin, frontend, crontab)')
             ->setDescription('Lists all registered observers')
+            ->addArgument(
+                'event',
+                InputArgument::OPTIONAL,
+                'Filter observers for specific event.'
+            )
+            ->addArgument(
+                'area',
+                InputArgument::OPTIONAL,
+                'Filter observers in specific area. One of [' . implode(',', $this->areas) . ']'
+            )
             ->addOption(
                 'format',
                 null,
@@ -44,31 +60,32 @@ class ListCommand extends AbstractMagentoCommand
         $this->initMagento();
 
         $area = $input->getArgument('area');
-        $areas = [
-            'global',
-            'adminhtml',
-            'frontend',
-            'crontab'
-        ];
+        $eventFilter = $input->getArgument('event');
 
-        if (is_null($area) || ! in_array($area, $areas)) {
-            foreach ($areas as $key => $area) {
+        if (is_null($area) || ! in_array($area, $this->areas)) {
+            foreach ($this->areas as $key => $area) {
                 $question[] = '<comment>[' . ($key + 1) . ']</comment> ' . $area . PHP_EOL;
             }
 
             $question[] = '<question>Please select an area:</question>';
 
-            $area = $this->getHelper('dialog')->askAndValidate($output, $question, function ($areaIndex) use ($areas) {
-                if (! in_array($areaIndex, range(1, count($areas)))) {
+            $area = $this->getHelper('dialog')->askAndValidate($output, $question, function ($areaIndex) {
+                if (! in_array($areaIndex, range(1, count($this->areas)))) {
                     throw new \InvalidArgumentException('Invalid selection.');
                 }
 
-                return $areas[$areaIndex - 1];
+                return $this->areas[$areaIndex - 1];
             });
         }
 
         if ($input->getOption('format') === null) {
-            $this->writeSection($output, 'Observers in [' . $area . '] area');
+            $sectionHeader = 'Observers in [' . $area . '] area';
+
+            if (! is_null($eventFilter)) {
+                $sectionHeader .= ' registered for [' . $eventFilter . '] event';
+            }
+
+            $this->writeSection($output, $sectionHeader);
         }
 
         $observerConfig = $this->getObjectManager()
@@ -91,6 +108,10 @@ class ListCommand extends AbstractMagentoCommand
 
         foreach ($observerConfig as $eventName => $observers) {
             $firstObserver = true;
+
+            if (! is_null($eventFilter) && $eventName != $eventFilter) {
+                continue;
+            }
 
             foreach ($observers as $observerName => $observerData) {
                 if ($firstObserver) {
