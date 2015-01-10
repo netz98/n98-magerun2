@@ -47,15 +47,23 @@ class ParameterHelper extends AbstractHelper
      */
     public function askStore(InputInterface $input, OutputInterface $output, $argumentName = 'store', $withDefaultStore = false)
     {
+        $storeManager = $this->getHelperSet()
+            ->getCommand()
+            ->getApplication()
+            ->getObjectManager()
+            ->get('Magento\Store\Model\StoreManagerInterface');
+        /* @var $storeManager \Magento\Store\Model\StoreManagerInterface */
+
         try {
             if ($input->getArgument($argumentName) === null) {
                 throw new \Exception('No store given');
             }
-            $store = \Mage::app()->getStore($input->getArgument($argumentName));
+            $store = $storeManager->getStore($input->getArgument($argumentName));
         } catch (\Exception $e) {
             $stores = array();
             $i = 0;
-            foreach (\Mage::app()->getStores($withDefaultStore) as $store) {
+
+            foreach ($storeManager->getStores($withDefaultStore) as $store) {
                 $stores[$i] = $store->getId();
                 $question[] = '<comment>[' . ($i + 1) . ']</comment> ' . $store->getCode() . ' - ' . $store->getName() . PHP_EOL;
                 $i++;
@@ -75,7 +83,7 @@ class ParameterHelper extends AbstractHelper
                 $storeId = $stores[0];
             }
 
-            $store = \Mage::app()->getStore($storeId);
+            $store = $storeManager->getStore($storeId);
         }
 
         return $store;
@@ -91,15 +99,20 @@ class ParameterHelper extends AbstractHelper
      */
     public function askWebsite(InputInterface $input, OutputInterface $output, $argumentName = 'website')
     {
+        $storeManager = $this->getHelperSet()
+            ->getCommand()
+            ->getApplication()
+            ->getObjectManager()
+            ->get('Magento\Store\Model\StoreManagerInterface');
         try {
             if ($input->getArgument($argumentName) === null) {
                 throw new \Exception('No website given');
             }
-            $website = \Mage::app()->getWebsite($input->getArgument($argumentName));
+            $website = $storeManager->getWebsite($input->getArgument($argumentName));
         } catch (\Exception $e) {
             $i = 0;
             $websites = array();
-            foreach (\Mage::app()->getWebsites() as $website) {
+            foreach ($storeManager->getWebsites() as $website) {
                 $websites[$i] = $website->getId();
                 $question[] = '<comment>[' . ($i + 1) . ']</comment> ' . $website->getCode() . ' - ' . $website->getName() . PHP_EOL;
                 $i++;
@@ -117,7 +130,7 @@ class ParameterHelper extends AbstractHelper
                 return $websites[$typeInput - 1];
             });
 
-            $website = \Mage::app()->getWebsite($websiteId);
+            $website = $storeManager->getWebsite($websiteId);
         }
 
         return $website;

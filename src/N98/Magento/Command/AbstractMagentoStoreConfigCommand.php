@@ -2,6 +2,7 @@
 
 namespace N98\Magento\Command;
 
+use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -105,15 +106,16 @@ abstract class AbstractMagentoStoreConfigCommand extends AbstractMagentoCommand
             $runOnStoreView = false;
             if ($this->scope == self::SCOPE_STORE_VIEW
                 || ($this->scope == self::SCOPE_STORE_VIEW_GLOBAL && !$input->getOption('global'))
-            )
-            {
+            ) {
                 $runOnStoreView = true;
             }
 
             if ($runOnStoreView) {
                 $store = $this->_initStore($input, $output);
             } else {
-                $store = \Mage::app()->getStore(\Mage_Core_Model_App::ADMIN_STORE_ID);
+                $storeManager = $this->getObjectManager()->get('Magento\Store\Model\StoreManagerInterface');
+                /* @var $storeManager \Magento\Store\Model\StoreManagerInterface */
+                $store = $storeManager->getStore(\Magento\Store\Model\Store::DEFAULT_STORE_ID);
             }
         }
 
@@ -122,17 +124,35 @@ abstract class AbstractMagentoStoreConfigCommand extends AbstractMagentoCommand
         } elseif ($input->getOption('off')) {
             $isFalse = false;
         } else {
-            $isFalse = !\Mage::getStoreConfigFlag($this->configPath, $store->getId());
+            $scopeConfig = $this->getObjectManager()->get('\Magento\Framework\App\Config\ScopeConfigInterface');
+            /* @var $scopeConfig \Magento\Framework\App\Config\ScopeConfigInterface */
+            $isFalse = !$scopeConfig->isSetFlag(
+                $this->configPath,
+                \Magento\Store\Model\ScopeInterface::SCOPE_STORE,
+                $store->getCode()
+            );
         }
 
         $this->_beforeSave($store, $isFalse);
 
-        \Mage::app()->getConfig()->saveConfig(
-            $this->configPath,
-            $isFalse ? 1 : 0,
-            $store->getId() == \Mage_Core_Model_App::ADMIN_STORE_ID ? 'default' : 'stores',
-            $store->getId()
-        );
+
+        if ($store->getId() == \Magento\Store\Model\Store::DEFAULT_STORE_ID) {
+            $scope = \Magento\Framework\App\ScopeInterface::SCOPE_DEFAULT;
+        } else {
+            $scope = \Magento\Store\Model\ScopeInterface::SCOPE_STORES;
+        }
+
+        $configSetCommands = [
+            'command'    => 'config:set',
+            'path'       => $this->configPath,
+            'value'      => $isFalse ? 1 : 0,
+            '--scope'    => $scope,
+            '--scope-id' => $store->getId(),
+        ];
+
+        $input = new ArrayInput($configSetCommands);
+        $this->getApplication()->setAutoExit(false);
+        $this->getApplication()->run($input, new NullOutput());
 
         $comment = '<comment>' . $this->toggleComment . '</comment> '
                  . '<info>' . (!$isFalse ? $this->falseName : $this->trueName) . '</info>'
@@ -157,19 +177,19 @@ abstract class AbstractMagentoStoreConfigCommand extends AbstractMagentoCommand
     }
 
     /**
-     * @param \Mage_Core_Model_Store $store
+     * @param \Magento\Store\Model\Store $store
      * @param bool $disabled
      */
-    protected function _beforeSave(\Mage_Core_Model_Store $store, $disabled)
+    protected function _beforeSave(\Magento\Store\Model\Store $store, $disabled)
     {
 
     }
 
     /**
-     * @param \Mage_Core_Model_Store $store
+     * @param \Magento\Store\Model\Store $store
      * @param bool $disabled
      */
-    protected function _afterSave(\Mage_Core_Model_Store $store, $disabled)
+    protected function _afterSave(\Magento\Store\Model\Store $store, $disabled)
     {
 
     }
