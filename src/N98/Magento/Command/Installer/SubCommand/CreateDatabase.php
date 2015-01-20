@@ -61,55 +61,65 @@ class CreateDatabase extends AbstractSubCommand
             do {
 
                 // Host
+                $dbHostDefault = $this->input->getOption('dbHost') ? $this->input->getOption('dbHost') : 'localhost';
                 $this->config->setString(
                     'db_host',
                     $dialog->askAndValidate(
                         $this->output,
-                        '<question>Please enter the database host:</question> <comment>[localhost]</comment>: ',
+                        '<question>Please enter the database host</question> <comment>[' . $dbHostDefault . ']</comment>: ',
                         $this->notEmptyCallback,
                         false,
-                        'localhost'
+                        $dbHostDefault
                     )
                 );
 
                 // Port
+                $dbPortDefault = $this->input->getOption('dbPort') ? $this->input->getOption('dbPort') : 3306;
                 $this->config->setInt(
                     'db_port',
                     intval($dialog->askAndValidate(
                         $this->output,
-                        '<question>Please enter the database port:</question> <comment>[3306]</comment>: ',
+                        '<question>Please enter the database port </question> <comment>[' . $dbPortDefault . ']</comment>: ',
                         $this->notEmptyCallback,
                         false,
-                        3306
+                        $dbPortDefault
                     ))
                 );
 
                 // User
+                $dbUserDefault = $this->input->getOption('dbUser') ? $this->input->getOption('dbUser') : 'root';
                 $this->config->setString(
                     'db_user',
                     $dialog->askAndValidate(
                         $this->output,
-                        '<question>Please enter the database username:</question> ',
-                        $this->notEmptyCallback
+                        '<question>Please enter the database username</question> <comment>[' . $dbUserDefault . ']</comment>: ',
+                        $this->notEmptyCallback,
+                        false,
+                        $dbUserDefault
                     )
                 );
 
                 // Password
+                $dbPassDefault = $this->input->getOption('dbPass') ? $this->input->getOption('dbPass') : '';
                 $this->config->setString(
                     'db_pass',
                     $dialog->ask(
                         $this->output,
-                        '<question>Please enter the database password:</question> '
+                        '<question>Please enter the database password</question> <comment>[' . $dbPassDefault . ']</comment>: ',
+                        $dbPassDefault
                     )
                 );
 
                 // DB-Name
+                $dbNameDefault = $this->input->getOption('dbName') ? $this->input->getOption('dbName') : 'magento';
                 $this->config->setString(
                     'db_name',
                     $dialog->askAndValidate(
                         $this->output,
-                        '<question>Please enter the database name:</question> ',
-                        $this->notEmptyCallback
+                        '<question>Please enter the database name</question> <comment>[' . $dbNameDefault . ']</comment>: ',
+                        $this->notEmptyCallback,
+                        false,
+                        $dbNameDefault
                     )
                 );
 

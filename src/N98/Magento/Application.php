@@ -29,10 +29,11 @@ class Application extends BaseApplication
      * @var string
      */
     const APP_NAME = 'n98-magerun2';
+
     /**
      * @var string
      */
-    const APP_VERSION = '0.1.0';
+    const APP_VERSION = '0.2.0';
 
     /**
      * @type int
