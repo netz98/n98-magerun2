@@ -70,10 +70,11 @@ commands:
     - N98\Magento\Command\System\Website\ListCommand
     - N98\Magento\Command\Indexer\ListCommand
     - N98\Magento\Command\Installer\InstallCommand
-    - N98\Magento\Command\ScriptCommand
-    - N98\Magento\Command\ShellCommand
     - N98\Magento\Command\Developer\Module\ListCommand
     - N98\Magento\Command\Developer\Module\Observer\ListCommand
+    - N98\Magento\Command\ScriptCommand
+    - N98\Magento\Command\ShellCommand
+    - N98\Magento\Command\SelfUpdateCommand
 
   disabled:
     - dummy

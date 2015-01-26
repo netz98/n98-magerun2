@@ -2,6 +2,7 @@
 
 namespace N98\Util\Console\Helper;
 
+use N98\Magento\Application;
 use N98\Util\String;
 use Symfony\Component\Console\Helper\Helper as AbstractHelper;
 use Symfony\Component\Console\Input\ArgvInput;
@@ -268,17 +269,19 @@ class MagentoHelper extends AbstractHelper
             $files = iterator_to_array($finder, false);
             /* @var $file \SplFileInfo */
 
-            if (count($files) == 2) {
-                // Magento 2 has bootstrap.php and autoload.php in app folder
-                $this->_magentoMajorVersion = \N98\Magento\Application::MAGENTO_MAJOR_VERSION_2;
+            $hasMageFile = false;
+            foreach ($files as $file) {
+                if ($file->getFilename() == 'Mage.php') {
+                    $hasMageFile = true;
+                }
             }
 
             $this->_magentoRootFolder = $searchFolder;
 
-            if (is_callable(array('\Mage', 'getEdition'))) {
-                $this->_magentoEnterprise = (\Mage::getEdition() == 'Enterprise');
+            if ($hasMageFile) {
+                $this->_magentoMajorVersion = Application::MAGENTO_MAJOR_VERSION_1;
             } else {
-                $this->_magentoEnterprise = is_dir($this->_magentoRootFolder . '/app/code/core/Enterprise');
+                $this->_magentoMajorVersion = Application::MAGENTO_MAJOR_VERSION_2;
             }
 
             if (OutputInterface::VERBOSITY_DEBUG <= $this->output->getVerbosity()) {

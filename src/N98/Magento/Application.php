@@ -87,6 +87,11 @@ class Application extends BaseApplication
     protected $_magentoEnterprise = false;
 
     /**
+     * @var int
+     */
+    protected $_magentoMajorVersion = self::MAGENTO_MAJOR_VERSION_2;
+
+    /**
      * @var EntryPoint
      */
     protected $_magento2EntryPoint = null;
@@ -392,7 +397,11 @@ class Application extends BaseApplication
     public function initMagento()
     {
         if ($this->getMagentoRootFolder() !== null) {
-            $this->_initMagento2();
+            if ($this->_magentoMajorVersion == self::MAGENTO_MAJOR_VERSION_2) {
+                $this->_initMagento2();
+            } else {
+                $this->_initMagento1();
+            }
 
             return true;
         }
@@ -663,6 +672,38 @@ class Application extends BaseApplication
                 return;
             }
         }
+    }
+
+    protected function _initMagento1()
+    {
+        $magento1Hint = <<<'MAGENTO1HINT'
+You are running a Magento 1.x instance. This version of n98-magerun is not compatible
+with Magento 1.x. Please use n98-magerun (version 1) for this shop.
+
+A current version of the software can be downloaded on github.
+
+<info>Download with curl
+------------------</info>
+
+    <comment>curl -o n98-magerun.phar https://raw.githubusercontent.com/netz98/n98-magerun/master/n98-magerun.phar</comment>
+
+<info>Download with wget
+------------------</info>
+
+    <comment>curl -o n98-magerun.phar https://raw.githubusercontent.com/netz98/n98-magerun/master/n98-magerun.phar</comment>
+
+MAGENTO1HINT;
+
+        $output = new ConsoleOutput();
+
+        $output->writeln(array(
+            '',
+            $this->getHelperSet()->get('formatter')->formatBlock('Compatibility Notice', 'bg=blue;fg=white', true),
+            ''
+        ));
+
+        $output->writeln($magento1Hint);
+        exit;
     }
 
     /**
