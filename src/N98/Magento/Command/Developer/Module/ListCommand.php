@@ -73,6 +73,8 @@ class ListCommand extends AbstractMagentoCommand
 
     protected function prepareModuleList($vendor)
     {
+        $this->moduleList = [];
+
         foreach ($this->moduleListObject->getAll() as $moduleName => $info) {
             // First index is (probably always) vendor
             $moduleNameData = explode('_', $moduleName);
