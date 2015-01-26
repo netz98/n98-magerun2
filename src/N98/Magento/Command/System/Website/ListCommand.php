@@ -16,7 +16,7 @@ class ListCommand extends AbstractMagentoCommand
     protected $infos;
 
     /**
-     * @var \Magento\Store\Model\StoreManager
+     * @var \Magento\Store\Model\StoreManagerInterface
      */
     protected $storeManager;
 
@@ -35,9 +35,9 @@ class ListCommand extends AbstractMagentoCommand
     }
 
     /**
-     * @param \Magento\Store\Model\StoreManager $storeManager
+     * @param \Magento\Store\Model\StoreManagerInterface $storeManager
      */
-    public function inject(\Magento\Store\Model\StoreManager $storeManager)
+    public function inject(\Magento\Store\Model\StoreManagerInterface $storeManager)
     {
         $this->storeManager = $storeManager;
     }
@@ -49,12 +49,9 @@ class ListCommand extends AbstractMagentoCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->detectMagento($output, true);
-
         if ($input->getOption('format') === null) {
             $this->writeSection($output, 'Magento Websites');
         }
-        $this->initMagento();
 
         foreach ($this->storeManager->getWebsites() as $website) {
             $table[$website->getId()] = array(

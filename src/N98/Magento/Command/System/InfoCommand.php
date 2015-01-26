@@ -114,13 +114,9 @@ class InfoCommand extends AbstractMagentoCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->detectMagento($output, true);
-
         if ($input->getOption('format') == null) {
             $this->writeSection($output, 'Magento System Information');
         }
-
-        $this->initMagento();
 
         $this->addVersionInfo();
         $this->addDeploymentInfo();

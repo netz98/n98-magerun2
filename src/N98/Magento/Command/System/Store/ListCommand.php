@@ -16,7 +16,7 @@ class ListCommand extends AbstractMagentoCommand
     protected $infos;
 
     /**
-     * @var \Magento\Store\Model\StoreManager
+     * @var \Magento\Store\Model\StoreManagerInterface
      */
     protected $storeManager;
 
@@ -37,7 +37,7 @@ class ListCommand extends AbstractMagentoCommand
     /**
      * @param \Magento\Store\Model\StoreManager $storeManager
      */
-    public function inject(\Magento\Store\Model\StoreManager $storeManager)
+    public function inject(\Magento\Store\Model\StoreManagerInterface $storeManager)
     {
         $this->storeManager = $storeManager;
     }
@@ -49,9 +49,6 @@ class ListCommand extends AbstractMagentoCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->detectMagento($output, true);
-        $this->initMagento();
-
         foreach ($this->storeManager->getStores() as $store) {
             $table[$store->getId()] = array(
                 $store->getId(),
