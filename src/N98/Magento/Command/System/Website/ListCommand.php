@@ -15,6 +15,11 @@ class ListCommand extends AbstractMagentoCommand
      */
     protected $infos;
 
+    /**
+     * @var \Magento\Store\Model\StoreManager
+     */
+    protected $storeManager;
+
     protected function configure()
     {
         $this
@@ -27,6 +32,14 @@ class ListCommand extends AbstractMagentoCommand
                 'Output Format. One of [' . implode(',', RendererFactory::getFormats()) . ']'
             )
         ;
+    }
+
+    /**
+     * @param \Magento\Store\Model\StoreManager $storeManager
+     */
+    public function inject(\Magento\Store\Model\StoreManager $storeManager)
+    {
+        $this->storeManager = $storeManager;
     }
 
     /**
@@ -43,10 +56,7 @@ class ListCommand extends AbstractMagentoCommand
         }
         $this->initMagento();
 
-        $storeManager = $this->getObjectManager()->get('Magento\Store\Model\StoreManager');
-        /* @var $storeManager \Magento\Store\Model\StoreManager */
-
-        foreach ($storeManager->getWebsites() as $website) {
+        foreach ($this->storeManager->getWebsites() as $website) {
             $table[$website->getId()] = array(
                 $website->getId(),
                 $website->getCode(),

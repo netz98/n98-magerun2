@@ -16,19 +16,40 @@ class InfoCommand extends AbstractMagentoCommand
      */
     protected $infos = [];
 
-    public function hasInfo()
-    {
-        return ! empty($this->infos);
-    }
+    /**
+     * @var \Magento\Customer\Model\CustomerFactory
+     */
+    protected $customerFactory;
 
-    public function getInfo($key = null)
-    {
-        if (is_null($key)) {
-            return $this->infos;
-        }
+    /**
+     * @var \Magento\Catalog\Model\ProductFactory
+     */
+    protected $productFactory;
 
-        return isset($this->infos[$key]) ? $this->infos[$key] : null;
-    }
+    /**
+     * @var \Magento\Catalog\Model\CategoryFactory
+     */
+    protected $categoryFactory;
+
+    /**
+     * @var \Magento\Eav\Model\Entity\AttributeFactory
+     */
+    protected $attributeFactory;
+
+    /**
+     * @var \Magento\Framework\App\Cache\Type\FrontendPool
+     */
+    protected $frontendPool;
+
+    /**
+     * @var \Magento\Framework\Module\ModuleListInterface
+     */
+    protected $moduleList;
+
+    /**
+     * @var \Magento\Framework\App\DeploymentConfig
+     */
+    protected $deploymentConfig;
 
     protected function configure()
     {
@@ -42,6 +63,48 @@ class InfoCommand extends AbstractMagentoCommand
                 'Output Format. One of [' . implode(',', RendererFactory::getFormats()) . ']'
             )
         ;
+    }
+
+    /**
+     * @param \Magento\Customer\Model\CustomerFactory $customerFactory
+     * @param \Magento\Catalog\Model\ProductFactory $productFactory
+     * @param \Magento\Catalog\Model\CategoryFactory $categoryFactory
+     * @param \Magento\Eav\Model\Entity\AttributeFactory $attributeFactory
+     * @param \Magento\Framework\App\Cache\Type\FrontendPool $frontendPool
+     * @param \Magento\Framework\App\DeploymentConfig $deploymentConfig
+     * @param \Magento\Framework\Module\ModuleListInterface $moduleList
+     */
+    public function inject(
+        \Magento\Customer\Model\CustomerFactory $customerFactory,
+        \Magento\Catalog\Model\ProductFactory $productFactory,
+        \Magento\Catalog\Model\CategoryFactory $categoryFactory,
+        \Magento\Eav\Model\Entity\AttributeFactory $attributeFactory,
+        \Magento\Framework\App\Cache\Type\FrontendPool $frontendPool,
+        \Magento\Framework\App\DeploymentConfig $deploymentConfig,
+        \Magento\Framework\Module\ModuleListInterface $moduleList
+
+    ) {
+        $this->customerFactory = $customerFactory;
+        $this->productFactory = $productFactory;
+        $this->categoryFactory = $categoryFactory;
+        $this->attributeFactory = $attributeFactory;
+        $this->frontendPool = $frontendPool;
+        $this->deploymentConfig = $deploymentConfig;
+        $this->moduleList = $moduleList;
+    }
+
+    public function hasInfo()
+    {
+        return ! empty($this->infos);
+    }
+
+    public function getInfo($key = null)
+    {
+        if (is_null($key)) {
+            return $this->infos;
+        }
+
+        return isset($this->infos[$key]) ? $this->infos[$key] : null;
     }
 
     /**
@@ -83,9 +146,7 @@ class InfoCommand extends AbstractMagentoCommand
      */
     protected function addProductCount()
     {
-        //$productRepository = $this->getObjectManager()->get('\Magento\Catalog\Api\ProductRepositoryInterface');
-        $this->infos['Product Count'] = $this->getObjectManager()
-                                             ->get('\Magento\Catalog\Model\ProductFactory')
+        $this->infos['Product Count'] = $this->productFactory
                                              ->create()
                                              ->getCollection()
                                              ->getSize();
@@ -93,17 +154,14 @@ class InfoCommand extends AbstractMagentoCommand
 
     protected function addCustomerCount()
     {
-        $this->infos['Customer Count'] = $this->getObjectManager()
-                                              ->get('\Magento\Customer\Model\CustomerFactory')
-                                              ->create()
+        $this->infos['Customer Count'] = $this->customerFactory->create()
                                               ->getCollection()
                                               ->getSize();
     }
 
     protected function addCategoryCount()
     {
-        $this->infos['Category Count'] = $this->getObjectmanager()
-                                              ->get('\Magento\Catalog\Model\CategoryFactory')
+        $this->infos['Category Count'] = $this->categoryFactory
                                               ->create()
                                               ->getCollection()
                                               ->getSize();
@@ -111,8 +169,7 @@ class InfoCommand extends AbstractMagentoCommand
 
     protected function addAttributeCount()
     {
-        $this->infos['Attribute Count'] = $this->getObjectmanager()
-                                               ->get('\Magento\Eav\Model\Entity\AttributeFactory')
+        $this->infos['Attribute Count'] = $this->attributeFactory
                                                ->create()
                                                ->getCollection()
                                                ->getSize();
@@ -120,7 +177,7 @@ class InfoCommand extends AbstractMagentoCommand
 
     protected function addCacheInfos()
     {
-        $cachePool = $this->getObjectManager()->get('Magento\Framework\App\Cache\Type\FrontendPool');
+        $cachePool = $this->frontendPool;
 
         $this->infos['Cache Backend'] = get_class($cachePool->get('config')->getBackend());
 
@@ -138,11 +195,9 @@ class InfoCommand extends AbstractMagentoCommand
 
     protected function addDeploymentInfo()
     {
-        $deploymentConfig = $this->getObjectManager()->get('\Magento\Framework\App\DeploymentConfig');
-
-        $this->infos['Session'] = $deploymentConfig->get('session/save');
-        $this->infos['Crypt Key'] = $deploymentConfig->get('crypt/key');
-        $this->infos['Install Date'] = $deploymentConfig->get('install/date');
+        $this->infos['Session'] = $this->deploymentConfig->get('session/save');
+        $this->infos['Crypt Key'] = $this->deploymentConfig->get('crypt/key');
+        $this->infos['Install Date'] = $this->deploymentConfig->get('install/date');
     }
 
     protected function addVersionInfo()
@@ -155,7 +210,9 @@ class InfoCommand extends AbstractMagentoCommand
     {
         $vendors = [];
 
-        foreach ($this->getObjectManager()->get('\Magento\Framework\Module\ModuleListInterface')->getAll() as $moduleName => $info) {
+        $moduleList = $this->moduleList->getAll();
+
+        foreach ($moduleList as $moduleName => $info) {
             // First index is (probably always) vendor
             $moduleNameData = explode('_', $moduleName);
 

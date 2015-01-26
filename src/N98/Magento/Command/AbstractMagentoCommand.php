@@ -406,7 +406,23 @@ abstract class AbstractMagentoCommand extends Command
     {
         $this->getHelperSet()->setCommand($this);
 
+        $this->injectObjects();
+
         return parent::run($input, $output);
+    }
+
+    public function injectObjects()
+    {
+        /* @var $injectionHelper InjectionHelper */
+        if (method_exists($this, 'inject')) {
+            $this->initMagento();
+            $injectionHelper = $this->getHelper('injection');
+            $injectionHelper->methodInjection(
+                $this,
+                'inject',
+                $this->getObjectManager()
+            );
+        }
     }
 
     /**

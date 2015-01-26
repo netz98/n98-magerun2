@@ -3,6 +3,7 @@
 namespace N98\Magento;
 
 use Magento\Framework\ObjectManager\ObjectManager;
+use N98\Magento\Application\Console\Events;
 use N98\Magento\Command\ConfigurationLoader;
 use N98\Magento\EntryPoint\Magerun as MagerunEntryPoint;
 use N98\Util\ArrayFunctions;
@@ -497,7 +498,7 @@ class Application extends BaseApplication
     public function doRun(InputInterface $input, OutputInterface $output)
     {
         $event = new Application\Console\Event($this, $input, $output);
-        $this->dispatcher->dispatch('n98-magerun.application.console.run.before', $event);
+        $this->dispatcher->dispatch(Events::RUN_BEFORE, $event);
 
         /**
          * only for compatibility to old versions.
