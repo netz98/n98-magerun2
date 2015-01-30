@@ -36,9 +36,9 @@ class ScriptLoader
     {
         $this->_magentoRootFolder = $magentoRootFolder;
         if (OperatingSystem::isWindows()) {
-            $this->_homeScriptFolder = OperatingSystem::getHomeDir() . '/n98-magerun/scripts';
+            $this->_homeScriptFolder = OperatingSystem::getHomeDir() . '/n98-magerun2/scripts';
         } else {
-            $this->_homeScriptFolder = OperatingSystem::getHomeDir() . '/.n98-magerun/scripts';
+            $this->_homeScriptFolder = OperatingSystem::getHomeDir() . '/.n98-magerun2/scripts';
         }
 
         $this->_scriptFolders = $scriptFolders;
