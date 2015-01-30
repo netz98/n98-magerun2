@@ -352,6 +352,15 @@ class ConfigurationLoader
             $path = $file->getPathname();
         } else {
             $path = $file->getRealPath();
+
+            if ($path === "") {
+                throw new \UnexpectedValueException(sprintf("Realpath for '%s' did return an empty string.", $file));
+            }
+
+            if ($path === false) {
+                $this->_output->writeln(sprintf("<error>Plugin config file broken link '%s'</error>", $file));
+                return;
+            }
         }
 
         if (OutputInterface::VERBOSITY_DEBUG <= $this->_output->getVerbosity()) {

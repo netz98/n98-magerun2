@@ -15,6 +15,11 @@ class ListCommand extends AbstractMagentoCommand
      */
     protected $infos;
 
+    /**
+     * @var \Magento\Store\Model\StoreManagerInterface
+     */
+    protected $storeManager;
+
     protected function configure()
     {
         $this
@@ -30,19 +35,21 @@ class ListCommand extends AbstractMagentoCommand
     }
 
     /**
+     * @param \Magento\Store\Model\StoreManager $storeManager
+     */
+    public function inject(\Magento\Store\Model\StoreManagerInterface $storeManager)
+    {
+        $this->storeManager = $storeManager;
+    }
+
+    /**
      * @param \Symfony\Component\Console\Input\InputInterface $input
      * @param \Symfony\Component\Console\Output\OutputInterface $output
      * @return int|void
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->detectMagento($output, true);
-        $this->initMagento();
-
-        $storeManager = $this->getObjectManager()->get('Magento\Store\Model\StoreManager');
-        /* @var $storeManager \Magento\Store\Model\StoreManager */
-
-        foreach ($storeManager->getStores() as $store) {
+        foreach ($this->storeManager->getStores() as $store) {
             $table[$store->getId()] = array(
                 $store->getId(),
                 $store->getCode(),

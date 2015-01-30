@@ -1,12 +1,15 @@
 <?php
 
-namespace N98\Magento;
+namespace N98\Magento\Application\Console\EventSubscriber;
 
 use N98\Magento\Application\Console\Event;
+use N98\Magento\Application\Console\Events;
 use N98\Util\OperatingSystem;
+use Symfony\Component\Console\ConsoleEvents;
+use Symfony\Component\Console\Event\ConsoleEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class EventSubscriber implements EventSubscriberInterface
+class CheckRootUser implements EventSubscriberInterface
 {
     const WARNING_ROOT_USER = '<error>It\'s not recommended to run n98-magerun as root user</error>';
 
@@ -19,15 +22,15 @@ class EventSubscriber implements EventSubscriberInterface
      */
     public static function getSubscribedEvents()
     {
-        return array(
-            'n98-magerun.application.console.run.before' => 'checkRunningAsRootUser'
-        );
+        return [
+            Events::RUN_BEFORE     => 'checkRunningAsRootUser'
+        ];
     }
 
     /**
      * Display a warning if a running n98-magerun as root user
      *
-     * @param ConsoleEvent $event
+     * @param Event $event
      * @return void
      */
     public function checkRunningAsRootUser(Event $event)
@@ -35,6 +38,7 @@ class EventSubscriber implements EventSubscriberInterface
         if ($this->_isSkipRootCheck()) {
             return;
         }
+
         $config = $event->getApplication()->getConfig();
         if (!$config['application']['check-root-user']) {
             return;

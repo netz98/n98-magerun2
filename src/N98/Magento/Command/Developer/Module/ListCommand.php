@@ -11,11 +11,27 @@ use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
 
 class ListCommand extends AbstractMagentoCommand
 {
-    protected $moduleList = [];
+    /**
+     * @var array
+     */
+    protected $moduleList;
+
+    /**
+     * @var \Magento\Framework\Module\ModuleListInterface
+     */
+    protected $moduleListObject;
 
     public function getModuleList()
     {
         return $this->moduleList;
+    }
+
+    /**
+     * @param \Magento\Framework\Module\ModuleListInterface $moduleList
+     */
+    public function inject(\Magento\Framework\Module\ModuleListInterface $moduleList)
+    {
+        $this->moduleListObject = $moduleList;
     }
 
     protected function configure()
@@ -57,7 +73,9 @@ class ListCommand extends AbstractMagentoCommand
 
     protected function prepareModuleList($vendor)
     {
-        foreach ($this->getObjectManager()->get('\Magento\Framework\Module\ModuleListInterface')->getAll() as $moduleName => $info) {
+        $this->moduleList = [];
+
+        foreach ($this->moduleListObject->getAll() as $moduleName => $info) {
             // First index is (probably always) vendor
             $moduleNameData = explode('_', $moduleName);
 

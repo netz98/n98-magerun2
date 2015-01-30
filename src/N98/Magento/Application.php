@@ -3,6 +3,7 @@
 namespace N98\Magento;
 
 use Magento\Framework\ObjectManager\ObjectManager;
+use N98\Magento\Application\Console\Events;
 use N98\Magento\Command\ConfigurationLoader;
 use N98\Magento\EntryPoint\Magerun as MagerunEntryPoint;
 use N98\Util\ArrayFunctions;
@@ -85,6 +86,11 @@ class Application extends BaseApplication
      * @var bool
      */
     protected $_magentoEnterprise = false;
+
+    /**
+     * @var int
+     */
+    protected $_magentoMajorVersion = self::MAGENTO_MAJOR_VERSION_2;
 
     /**
      * @var EntryPoint
@@ -246,6 +252,12 @@ class Application extends BaseApplication
                 $this->autoloader->add($prefix, $path);
             }
         }
+
+        if (isset($this->config['autoloaders_psr4']) && is_array($this->config['autoloaders_psr4'])) {
+            foreach ($this->config['autoloaders_psr4'] as $prefix => $path) {
+                $this->autoloader->addPsr4($prefix, $path);
+            }
+        }
     }
 
     /**
@@ -392,7 +404,11 @@ class Application extends BaseApplication
     public function initMagento()
     {
         if ($this->getMagentoRootFolder() !== null) {
-            $this->_initMagento2();
+            if ($this->_magentoMajorVersion == self::MAGENTO_MAJOR_VERSION_2) {
+                $this->_initMagento2();
+            } else {
+                $this->_initMagento1();
+            }
 
             return true;
         }
@@ -488,7 +504,7 @@ class Application extends BaseApplication
     public function doRun(InputInterface $input, OutputInterface $output)
     {
         $event = new Application\Console\Event($this, $input, $output);
-        $this->dispatcher->dispatch('n98-magerun.application.console.run.before', $event);
+        $this->dispatcher->dispatch(Events::RUN_BEFORE, $event);
 
         /**
          * only for compatibility to old versions.
@@ -663,6 +679,38 @@ class Application extends BaseApplication
                 return;
             }
         }
+    }
+
+    protected function _initMagento1()
+    {
+        $magento1Hint = <<<'MAGENTO1HINT'
+You are running a Magento 1.x instance. This version of n98-magerun is not compatible
+with Magento 1.x. Please use n98-magerun (version 1) for this shop.
+
+A current version of the software can be downloaded on github.
+
+<info>Download with curl
+------------------</info>
+
+    <comment>curl -o n98-magerun.phar https://raw.githubusercontent.com/netz98/n98-magerun/master/n98-magerun.phar</comment>
+
+<info>Download with wget
+------------------</info>
+
+    <comment>curl -o n98-magerun.phar https://raw.githubusercontent.com/netz98/n98-magerun/master/n98-magerun.phar</comment>
+
+MAGENTO1HINT;
+
+        $output = new ConsoleOutput();
+
+        $output->writeln(array(
+            '',
+            $this->getHelperSet()->get('formatter')->formatBlock('Compatibility Notice', 'bg=blue;fg=white', true),
+            ''
+        ));
+
+        $output->writeln($magento1Hint);
+        exit;
     }
 
     /**
