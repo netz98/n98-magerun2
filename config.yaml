@@ -64,6 +64,8 @@ commands:
     - N98\Magento\Command\Developer\SymlinksCommand
     - N98\Magento\Command\Developer\TemplateHintsBlocksCommand
     - N98\Magento\Command\Developer\TemplateHintsCommand
+    - N98\Magento\Command\Script\Repository\ListCommand
+    - N98\Magento\Command\Script\Repository\RunCommand
     - N98\Magento\Command\System\InfoCommand
     - N98\Magento\Command\System\MaintenanceCommand
     - N98\Magento\Command\System\Setup\CompareVersionsCommand
