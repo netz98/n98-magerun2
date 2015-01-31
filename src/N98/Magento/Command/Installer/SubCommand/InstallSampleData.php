@@ -37,6 +37,7 @@ class InstallSampleData extends AbstractSubCommand
 
         if ($installSampleData) {
             // Composer config
+            $this->changeComposerMiniumStability();
             $this->addComposerRepository();
 
             // Composer require
@@ -45,7 +46,6 @@ class InstallSampleData extends AbstractSubCommand
             }
 
             $this->updateComposer();
-
             $this->runSampleDataInstaller();
         }
     }
@@ -68,6 +68,22 @@ class InstallSampleData extends AbstractSubCommand
         $process = $processBuilder->getProcess();
         $process->setTimeout(86400);
         $process->run();
+    }
+
+    protected function changeComposerMiniumStability()
+    {
+        $composerJsonFile = $this->config->getString('installationFolder') . DIRECTORY_SEPARATOR . 'composer.json';
+        // @TODO Find a better solution instead of self-parsing composer.json file.
+        $jsonConfig = \json_decode(\file_get_contents($composerJsonFile));
+
+        if (isset($jsonConfig->{'minimum-stability'}) && $jsonConfig->{'minimum-stability'} == 'dev') {
+            return;
+        }
+
+        $jsonConfig->{'minimum-stability'} = 'dev';
+        \file_put_contents($composerJsonFile, \json_encode($jsonConfig, \JSON_PRETTY_PRINT));
+
+        $this->output->writeln('<info>Changed <comment>minimum-stability</comment> in composer.json to <comment>dev</comment></info>');
     }
 
     protected function updateComposer()
