@@ -22,10 +22,10 @@ class CheckTablesTest extends TestCase
                 'command'  => $command->getName(),
                 '--format' => 'csv',
                 '--type'   => 'quick',
-                '--table'  => 'catalogsearch_fulltext'
+                '--table'  => 'oauth_nonce'
             )
         );
-        $this->assertContains('catalogsearch_fulltext,check,quick,OK', $commandTester->getDisplay());
+        $this->assertContains('oauth_nonce,check,quick,OK', $commandTester->getDisplay());
 
     }
 
