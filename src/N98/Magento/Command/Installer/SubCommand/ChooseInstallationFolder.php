@@ -48,13 +48,13 @@ class ChooseInstallationFolder extends AbstractSubCommand
                     );
                 }
 
-                $localXml = $folderName . '/app/etc/local.xml';
-                if (file_exists($localXml)) {
+                $configPhp = $folderName . '/app/etc/config.php';
+                if (file_exists($configPhp)) {
                     throw new \InvalidArgumentException(
                         sprintf(
                             'Magento working copy in %s seems already installed. Please remove %s and retry.',
                             $folderName,
-                            $localXml
+                            $configPhp
                         )
                     );
                 }
