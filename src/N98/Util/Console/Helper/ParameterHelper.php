@@ -51,8 +51,8 @@ class ParameterHelper extends AbstractHelper
             ->getCommand()
             ->getApplication()
             ->getObjectManager()
-            ->get('Magento\Store\Model\StoreManagerInterface');
-        /* @var $storeManager \Magento\Store\Model\StoreManagerInterface */
+            ->get('Magento\Framework\Store\StoreManagerInterface');
+        /* @var $storeManager \Magento\Framework\Store\StoreManagerInterface */
 
         try {
             if ($input->getArgument($argumentName) === null) {
@@ -103,7 +103,7 @@ class ParameterHelper extends AbstractHelper
             ->getCommand()
             ->getApplication()
             ->getObjectManager()
-            ->get('Magento\Store\Model\StoreManagerInterface');
+            ->get('Magento\Framework\Store\StoreManagerInterface');
         try {
             if ($input->getArgument($argumentName) === null) {
                 throw new \Exception('No website given');

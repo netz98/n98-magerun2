@@ -16,7 +16,7 @@ class ListCommand extends AbstractMagentoCommand
     protected $infos;
 
     /**
-     * @var \Magento\Store\Model\StoreManagerInterface
+     * @var \Magento\Framework\Store\StoreManagerInterface
      */
     protected $storeManager;
 
@@ -37,7 +37,7 @@ class ListCommand extends AbstractMagentoCommand
     /**
      * @param \Magento\Store\Model\StoreManager $storeManager
      */
-    public function inject(\Magento\Store\Model\StoreManagerInterface $storeManager)
+    public function inject(\Magento\Framework\Store\StoreManagerInterface $storeManager)
     {
         $this->storeManager = $storeManager;
     }

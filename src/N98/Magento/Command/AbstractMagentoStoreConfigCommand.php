@@ -113,8 +113,8 @@ abstract class AbstractMagentoStoreConfigCommand extends AbstractMagentoCommand
             if ($runOnStoreView) {
                 $store = $this->_initStore($input, $output);
             } else {
-                $storeManager = $this->getObjectManager()->get('Magento\Store\Model\StoreManagerInterface');
-                /* @var $storeManager \Magento\Store\Model\StoreManagerInterface */
+                $storeManager = $this->getObjectManager()->get('Magento\Framework\Store\StoreManagerInterface');
+                /* @var $storeManager \Magento\Framework\Store\StoreManagerInterface */
                 $store = $storeManager->getStore(\Magento\Store\Model\Store::DEFAULT_STORE_ID);
             }
         }
