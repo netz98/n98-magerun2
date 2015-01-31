@@ -149,7 +149,7 @@ class InstallSampleData extends AbstractSubCommand
             if (Process::ERR === $type) {
                 $this->output->write('<error>sample-data > ' . $buffer . '</error>');
             } else {
-                $this->output->write('sample-data > ' . $buffer, false);
+                $this->output->write($buffer, false);
             }
         });
     }
