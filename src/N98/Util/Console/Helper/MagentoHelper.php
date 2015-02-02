@@ -32,6 +32,16 @@ class MagentoHelper extends AbstractHelper
     protected $_magentoEnterprise = false;
 
     /**
+     * @var bool
+     */
+    protected $_magerunStopFileFound = false;
+
+    /**
+     * @var string
+     */
+    protected $_magerunStopFileFolder = null;
+
+    /**
      * @var InputInterface
      */
     protected $input;
@@ -130,6 +140,22 @@ class MagentoHelper extends AbstractHelper
     }
 
     /**
+     * @return boolean
+     */
+    public function isMagerunStopFileFound()
+    {
+        return $this->_magerunStopFileFound;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMagerunStopFileFolder()
+    {
+        return $this->_magerunStopFileFolder;
+    }
+
+    /**
      * @param string $folder
      *
      * @return array
@@ -220,14 +246,16 @@ class MagentoHelper extends AbstractHelper
                 ->depth(0)
                 ->followLinks()
                 ->ignoreDotFiles(false)
-                ->name('.n98-magerun')
+                ->name('.n98-magerun2')
                 ->in($searchFolder);
 
             $count = $finder->count();
             if ($count > 0) {
-                $magerunFileContent = trim(file_get_contents($searchFolder . DIRECTORY_SEPARATOR . '.n98-magerun'));
+                $this->_magerunStopFileFound = true;
+                $this->_magerunStopFileFolder = $searchFolder;
+                $magerunFileContent = trim(file_get_contents($searchFolder . DIRECTORY_SEPARATOR . '.n98-magerun2'));
                 if (OutputInterface::VERBOSITY_DEBUG <= $this->output->getVerbosity()) {
-                    $this->output->writeln('<debug>Found .n98-magerun file with content <info>' . $magerunFileContent . '</info></debug>');
+                    $this->output->writeln('<debug>Found .n98-magerun2 file with content <info>' . $magerunFileContent . '</info></debug>');
                 }
 
                 $modmanBaseFolder = $searchFolder

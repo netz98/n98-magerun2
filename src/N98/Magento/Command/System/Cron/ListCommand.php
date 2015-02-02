@@ -1,30 +1,24 @@
 <?php
 
-namespace N98\Magento\Command\System\Website;
+namespace N98\Magento\Command\System\Cron;
 
-use N98\Magento\Command\AbstractMagentoCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
 
-class ListCommand extends AbstractMagentoCommand
+class ListCommand extends AbstractCronCommand
 {
     /**
      * @var array
      */
     protected $infos;
 
-    /**
-     * @var \Magento\Framework\Store\StoreManagerInterface
-     */
-    protected $storeManager;
-
     protected function configure()
     {
         $this
-            ->setName('sys:website:list')
-            ->setDescription('Lists all websites')
+            ->setName('sys:cron:list')
+            ->setDescription('Lists all cronjobs')
             ->addOption(
                 'format',
                 null,
@@ -35,34 +29,20 @@ class ListCommand extends AbstractMagentoCommand
     }
 
     /**
-     * @param \Magento\Framework\Store\StoreManagerInterface $storeManager
-     */
-    public function inject(\Magento\Framework\Store\StoreManagerInterface $storeManager)
-    {
-        $this->storeManager = $storeManager;
-    }
-
-    /**
      * @param \Symfony\Component\Console\Input\InputInterface $input
      * @param \Symfony\Component\Console\Output\OutputInterface $output
      * @return int|void
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+
         if ($input->getOption('format') === null) {
-            $this->writeSection($output, 'Magento Websites');
+            $this->writeSection($output, 'Cronjob List');
         }
 
-        foreach ($this->storeManager->getWebsites() as $website) {
-            $table[$website->getId()] = array(
-                $website->getId(),
-                $website->getCode(),
-            );
-        }
-
-        ksort($table);
+        $table = $this->getJobs();
         $this->getHelper('table')
-            ->setHeaders(array('id', 'code'))
+            ->setHeaders(array_keys(current($table)))
             ->renderByFormat($output, $table, $input->getOption('format'));
     }
 }

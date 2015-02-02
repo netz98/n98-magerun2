@@ -11,6 +11,11 @@ use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
 
 class GetCommand extends AbstractConfigCommand
 {
+    /**
+     * @var \Magento\Core\Model\Resource\Config\Data\Collection
+     */
+    protected $_collection;
+
     protected function configure()
     {
         $this
@@ -47,76 +52,78 @@ HELP;
     }
 
     /**
+     * @param \Magento\Core\Model\Resource\Config\Data\Collection $collection
+     */
+    public function inject(\Magento\Core\Model\Resource\Config\Data\Collection $collection)
+    {
+        $this->_collection = $collection;
+    }
+
+    /**
      * @param InputInterface $input
      * @param \Symfony\Component\Console\Output\OutputInterface $output
      * @return int|void
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->detectMagento($output, true);
-        if ($this->initMagento()) {
-            $collection = $this->getObjectManager()->get('\Magento\Core\Model\Resource\Config\Data\Collection');
-            /* @var $collection \Magento\Core\Model\Resource\Config\Data\Collection */
+        $searchPath = $input->getArgument('path');
 
-            $searchPath = $input->getArgument('path');
+        if (substr($input->getArgument('path'), -1, 1) === '/') {
+            $searchPath .= '*';
+        }
 
-            if (substr($input->getArgument('path'), -1, 1) === '/') {
-                $searchPath .= '*';
-            }
+        $this->_collection->addFieldToFilter('path', array(
+            'like' => str_replace('*', '%', $searchPath)
+        ));
 
-            $collection->addFieldToFilter('path', array(
-                'like' => str_replace('*', '%', $searchPath)
-            ));
+        if ($scopeId = $input->getOption('scope')) {
+            $this->_collection->addFieldToFilter(
+                'scope',
+                array(
+                     'eq' => $scopeId
+                )
+            );
+        }
 
-            if ($scopeId = $input->getOption('scope')) {
-                $collection->addFieldToFilter(
-                    'scope',
-                    array(
-                         'eq' => $scopeId
-                    )
-                );
-            }
+        if ($scopeId = $input->getOption('scope-id')) {
+            $this->_collection->addFieldToFilter(
+                'scope_id',
+                array(
+                    'eq' => $scopeId
+                )
+            );
+        }
 
-            if ($scopeId = $input->getOption('scope-id')) {
-                $collection->addFieldToFilter(
-                    'scope_id',
-                    array(
-                        'eq' => $scopeId
-                    )
-                );
-            }
+        $this->_collection->addOrder('path', 'ASC');
 
-            $collection->addOrder('path', 'ASC');
+        // sort according to the config overwrite order
+        // trick to force order default -> (f)website -> store , because f comes after d and before s
+        $this->_collection->addOrder('REPLACE(scope, "website", "fwebsite")', 'ASC');
 
-            // sort according to the config overwrite order
-            // trick to force order default -> (f)website -> store , because f comes after d and before s
-            $collection->addOrder('REPLACE(scope, "website", "fwebsite")', 'ASC');
+        $this->_collection->addOrder('scope_id', 'ASC');
 
-            $collection->addOrder('scope_id', 'ASC');
+        if ($this->_collection->count() == 0) {
+            $output->writeln(sprintf("Couldn't find a config value for \"%s\"", $input->getArgument('path')));
+            return;
+        }
 
-            if($collection->count() == 0) {
-                $output->writeln(sprintf("Couldn't find a config value for \"%s\"", $input->getArgument('path')));
-                return;
-            }
+        foreach ($this->_collection as $item) {
+            $table[] = array(
+                'path'     => $item->getPath(),
+                'scope'    => $item->getScope(),
+                'scope_id' => $item->getScopeId(),
+                'value'    => $this->_formatValue($item->getValue(), ($input->getOption('decrypt') ? 'decrypt' : false)),
+            );
+        }
 
-            foreach ($collection as $item) {
-                $table[] = array(
-                    'path'     => $item->getPath(),
-                    'scope'    => $item->getScope(),
-                    'scope_id' => $item->getScopeId(),
-                    'value'    => $this->_formatValue($item->getValue(), ($input->getOption('decrypt') ? 'decrypt' : false)),
-                );
-            }
+        ksort($table);
 
-            ksort($table);
-
-            if ($input->getOption('update-script')) {
-                $this->renderAsUpdateScript($output, $table);
-            } elseif ($input->getOption('magerun-script')) {
-                $this->renderAsMagerunScript($output, $table);
-            } else {
-                $this->renderAsTable($output, $table, $input->getOption('format'));
-            }
+        if ($input->getOption('update-script')) {
+            $this->renderAsUpdateScript($output, $table);
+        } elseif ($input->getOption('magerun-script')) {
+            $this->renderAsMagerunScript($output, $table);
+        } else {
+            $this->renderAsTable($output, $table, $input->getOption('format'));
         }
     }
 
