@@ -129,6 +129,11 @@ class Application extends BaseApplication
     protected $_directRootDir = false;
 
     /**
+     * @var bool
+     */
+    protected $_magentoDetected = false;
+
+    /**
      * @var ObjectManager
      */
     protected $_objectManager = null;
@@ -198,6 +203,11 @@ class Application extends BaseApplication
      */
     public function detectMagento(InputInterface $input = null, OutputInterface $output = null)
     {
+        // do not detect magento twice
+        if ($this->_magentoDetected) {
+            return;
+        }
+
         if ($this->getMagentoRootFolder() === null) {
             $this->_checkRootDirOption();
             if (function_exists('exec')) {
@@ -220,7 +230,8 @@ class Application extends BaseApplication
         } else {
             $subFolders = array();
         }
-        $magentoHelper->detect($folder, $subFolders);
+
+        $this->_magentoDetected = $magentoHelper->detect($folder, $subFolders);
         $this->_magentoRootFolder = $magentoHelper->getRootFolder();
         $this->_magentoEnterprise = $magentoHelper->isEnterpriseEdition();
         $this->_magentoMajorVersion = $magentoHelper->getMajorVersion();
