@@ -163,7 +163,7 @@ class Application extends BaseApplication
         $skipExternalConfig = new InputOption(
             '--skip-config',
             '',
-            InputOption::VALUE_OPTIONAL,
+            InputOption::VALUE_NONE,
             'Do not load any custom config.'
         );
         $inputDefinition->addOption($skipExternalConfig);
@@ -174,7 +174,7 @@ class Application extends BaseApplication
         $skipExternalConfig = new InputOption(
             '--skip-root-check',
             '',
-            InputOption::VALUE_OPTIONAL,
+            InputOption::VALUE_NONE,
             'Do not check if n98-magerun runs as root'
         );
         $inputDefinition->addOption($skipExternalConfig);
