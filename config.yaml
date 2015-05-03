@@ -42,6 +42,8 @@ event:
 
 commands:
   customCommands:
+    - N98\Magento\Command\Admin\User\ListCommand
+    - N98\Magento\Command\Admin\User\ChangePasswordCommand
     - N98\Magento\Command\Cache\CleanCommand
     - N98\Magento\Command\Cache\DisableCommand
     - N98\Magento\Command\Cache\EnableCommand
@@ -74,6 +76,8 @@ commands:
     - N98\Magento\Command\System\Setup\CompareVersionsCommand
     - N98\Magento\Command\System\Setup\RunCommand
     - N98\Magento\Command\System\Store\ListCommand
+    - N98\Magento\Command\System\Url\ListCommand
+    - N98\Magento\Command\System\Store\Config\BaseUrlListCommand
     - N98\Magento\Command\System\Website\ListCommand
     - N98\Magento\Command\Indexer\ListCommand
     - N98\Magento\Command\Installer\InstallCommand
