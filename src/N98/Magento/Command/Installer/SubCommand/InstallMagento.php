@@ -44,12 +44,12 @@ class InstallMagento extends AbstractSubCommand
             $defaults['session_save']
         );
 
-        $adminFrontname = $useDefaultConfigParams ? $defaults['admin_frontname'] : $dialog->askAndValidate(
+        $adminFrontname = $useDefaultConfigParams ? $defaults['backend_frontname'] : $dialog->askAndValidate(
             $this->output,
-            '<question>Please enter the admin frontname:</question> <comment>[' . $defaults['admin_frontname'] . ']</comment> ',
+            '<question>Please enter the admin/backend frontname:</question> <comment>[' . $defaults['backend_frontname'] . ']</comment> ',
             $this->notEmptyCallback,
             false,
-            $defaults['admin_frontname']
+            $defaults['backend_frontname']
         );
 
         $currency = $useDefaultConfigParams ? $defaults['currency'] : $dialog->askAndValidate(
@@ -76,12 +76,12 @@ class InstallMagento extends AbstractSubCommand
             $defaults['timezone']
         );
 
-        $adminUsername = $useDefaultConfigParams ? $defaults['admin_username'] : $dialog->askAndValidate(
+        $adminUsername = $useDefaultConfigParams ? $defaults['admin_user'] : $dialog->askAndValidate(
             $this->output,
-            '<question>Please enter the admin username:</question> <comment>[' . $defaults['admin_username'] . ']</comment>: ',
+            '<question>Please enter the admin username:</question> <comment>[' . $defaults['admin_user'] . ']</comment>: ',
             $this->notEmptyCallback,
             false,
-            $defaults['admin_username']
+            $defaults['admin_user']
         );
 
         $adminPassword = $useDefaultConfigParams ? $defaults['admin_password'] : $dialog->askAndValidate(
@@ -154,7 +154,7 @@ class InstallMagento extends AbstractSubCommand
             'use_secure'                 => false,
             'base_url_secure'            => '',
             'use_secure_admin'           => true,
-            'admin_username'             => $adminUsername,
+            'admin_user'                 => $adminUsername,
             'admin_lastname'             => $adminLastname,
             'admin_firstname'            => $adminFirstname,
             'admin_email'                => $adminEmail,
@@ -166,7 +166,7 @@ class InstallMagento extends AbstractSubCommand
 
         $dbPass = $this->config->getString('db_pass');
         if (!empty($dbPass)) {
-            $argv['db_pass'] = $dbPass;
+            $argv['db_password'] = $dbPass;
         }
 
         if ($useDefaultConfigParams) {
@@ -216,7 +216,7 @@ class InstallMagento extends AbstractSubCommand
      */
     protected function getInstallScriptPath()
     {
-        $installerScript  = $this->config->getString('installationFolder') . DIRECTORY_SEPARATOR . 'setup/index.php';
+        $installerScript  = $this->config->getString('installationFolder') . DIRECTORY_SEPARATOR . 'bin/magento';
         if (!file_exists($installerScript)) {
             throw new \RuntimeException('Installation script was not found.', 1);
         }
@@ -267,9 +267,9 @@ class InstallMagento extends AbstractSubCommand
         $returnStatus = null;
 
         if (OperatingSystem::isWindows()) {
-            $installCommand = 'php ' . $this->getInstallScriptPath() . ' install ' . $installArgs;
+            $installCommand = 'php ' . $this->getInstallScriptPath() . ' setup:install ' . $installArgs;
         } else {
-            $installCommand = '/usr/bin/env php ' . $this->getInstallScriptPath() . ' install ' . $installArgs;
+            $installCommand = '/usr/bin/env php ' . $this->getInstallScriptPath() . ' setup:install ' . $installArgs;
         }
 
         $this->output->writeln('<comment>' . $installCommand . '</comment>');

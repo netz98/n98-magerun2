@@ -132,15 +132,15 @@ commands:
 
   N98\Magento\Command\Installer\InstallCommand:
     magento-packages:
-      - name: magento-ce-2.0.0.0-dev-beta6
-        version: 0.1.0-beta6
+      - name: magento-ce-2.0.0.0-dev-beta7
+        version: 0.74.0-beta7
         source:
           url: https://github.com/magento/magento2.git
           type: git
           reference: master
         extra:
           sample-data:
-            magento/sample-data: "0.42.0-beta6"
+            magento/sample-data: "0.74.0-beta7"
 
     installation:
       pre-check:
@@ -164,10 +164,10 @@ commands:
         use_secure: no
         use_rewrites: yes
         session_save: files
-        admin_username: admin
+        admin_user: admin
         admin_firstname: John
         admin_lastname: Doe
         admin_password: password123
-        admin_frontname: admin
+        backend_frontname: admin
         admin_email: john.doe@example.com
         encryption_key:
