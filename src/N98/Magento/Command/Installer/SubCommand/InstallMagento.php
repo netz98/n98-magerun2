@@ -218,7 +218,7 @@ class InstallMagento extends AbstractSubCommand
     {
         $installerScript  = $this->config->getString('installationFolder') . DIRECTORY_SEPARATOR . 'setup/index.php';
         if (!file_exists($installerScript)) {
-            throw new \Exception('Installation script was not found.');
+            throw new \RuntimeException('Installation script was not found.', 1);
         }
 
         return $installerScript;
@@ -276,7 +276,7 @@ class InstallMagento extends AbstractSubCommand
         exec($installCommand, $installationOutput, $returnStatus);
         $installationOutput = implode(PHP_EOL, $installationOutput);
         if ($returnStatus !== self::EXEC_STATUS_OK) {
-            throw new \Exception('Installation failed.' . $installationOutput);
+            throw new \RuntimeException('Installation failed.' . $installationOutput, 1);
         } else {
             $this->output->writeln('<info>Successfully installed Magento</info>');
             $encryptionKey = trim(substr($installationOutput, strpos($installationOutput, ':') + 1));
