@@ -283,6 +283,24 @@ class Application extends BaseApplication
     }
 
     /**
+     * Try to bootstrap magento 2 and load cli application
+     */
+    protected function registerMagentoCoreCommands()
+    {
+        if ($this->getMagentoRootFolder()) {
+            // Magento was found -> register core cli commands
+            require_once $this->getMagentoRootFolder() . '/app/bootstrap.php';
+
+            $coreCliApplication = new \Magento\Framework\Console\Cli();
+            $coreCliApplicationCommands = $coreCliApplication->all();
+
+            foreach ($coreCliApplicationCommands as $coreCliApplicationCommand) {
+                $this->add($coreCliApplicationCommand);
+            }
+        }
+    }
+
+    /**
      * @return void
      */
     protected function registerCustomCommands()
@@ -646,6 +664,7 @@ class Application extends BaseApplication
             $this->dispatcher = new EventDispatcher();
             $this->setDispatcher($this->dispatcher);
             if ($this->autoloader) {
+                $this->registerMagentoCoreCommands();
                 $this->registerCustomAutoloaders();
                 $this->registerEventSubscribers();
                 $this->registerCustomCommands();
