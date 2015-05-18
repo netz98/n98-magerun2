@@ -58,6 +58,12 @@ class InstallCommand extends AbstractMagentoCommand
                 'If set skips download step. Used when installationFolder is already a Magento installation that has ' .
                 'to be installed on the given database.'
             )
+            ->addOption(
+                'only-download',
+                null,
+                InputOption::VALUE_NONE,
+                'Downloads (and extracts) source code'
+            )
             ->addOption('forceUseDb', null, InputOption::VALUE_OPTIONAL, 'If --noDownload passed, force to use given database if it already exists.')
             ->setDescription('Install magento')
         ;
@@ -111,7 +117,12 @@ HELP;
         $subCommandFactory->create('PreCheckPhp')->execute();
         $subCommandFactory->create('SelectMagentoVersion')->execute();
         $subCommandFactory->create('ChooseInstallationFolder')->execute();
+
         $subCommandFactory->create('DownloadMagento')->execute();
+        if ($input->getOption('only-download')) {
+            return 0;
+        }
+
         $subCommandFactory->create('InstallComposer')->execute();
         $subCommandFactory->create('InstallComposerPackages')->execute();
         $subCommandFactory->create('CreateDatabase')->execute();
