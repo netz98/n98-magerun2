@@ -67,7 +67,7 @@ HELP;
      * @param \Magento\Sitemap\Model\Resource\Cms\Page $sitemapPageCollection
      */
     public function inject(
-        \Magento\Framework\Store\StoreManagerInterface $storeManager,
+        \Magento\Store\Model\StoreManagerInterface $storeManager,
         \Magento\Sitemap\Model\Resource\Catalog\Category $sitemapCategoryCollection,
         \Magento\Sitemap\Model\Resource\Catalog\Product $sitemapProductCollection,
         \Magento\Sitemap\Model\Resource\Cms\Page $sitemapPageCollection

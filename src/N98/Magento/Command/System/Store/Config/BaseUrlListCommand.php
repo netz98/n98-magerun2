@@ -31,9 +31,9 @@ class BaseUrlListCommand extends AbstractMagentoCommand
     }
 
     /**
-     * @param \Magento\Store\Model\StoreManager $storeManager
+     * @param \Magento\Store\Model\StoreManagerInterface $storeManager
      */
-    public function inject(\Magento\Framework\Store\StoreManagerInterface $storeManager)
+    public function inject(\Magento\Store\Model\StoreManagerInterface $storeManager)
     {
         $this->storeManager = $storeManager;
     }

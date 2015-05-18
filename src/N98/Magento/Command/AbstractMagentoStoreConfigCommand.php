@@ -113,8 +113,8 @@ abstract class AbstractMagentoStoreConfigCommand extends AbstractMagentoCommand
             if ($runOnStoreView) {
                 $store = $this->_initStore($input, $output);
             } else {
-                $storeManager = $this->getObjectManager()->get('Magento\Framework\Store\StoreManagerInterface');
-                /* @var $storeManager \Magento\Framework\Store\StoreManagerInterface */
+                $storeManager = $this->getObjectManager()->get('Magento\Store\Model\StoreManagerInterface');
+                /* @var $storeManager \Magento\Store\Model\StoreManagerInterface */
                 $store = $storeManager->getStore(\Magento\Store\Model\Store::DEFAULT_STORE_ID);
             }
         }
@@ -137,7 +137,7 @@ abstract class AbstractMagentoStoreConfigCommand extends AbstractMagentoCommand
 
 
         if ($store->getId() == \Magento\Store\Model\Store::DEFAULT_STORE_ID) {
-            $scope = \Magento\Framework\App\ScopeInterface::SCOPE_DEFAULT;
+            $scope = 'default'; // @TODO Constant was removed in Magento2 ?
         } else {
             $scope = \Magento\Store\Model\ScopeInterface::SCOPE_STORES;
         }
