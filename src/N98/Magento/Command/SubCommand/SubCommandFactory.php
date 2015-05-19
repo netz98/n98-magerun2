@@ -24,7 +24,7 @@ class SubCommandFactory
     protected $output;
 
     /**
-     * @var array
+     * @var ConfigBag
      */
     protected $config;
 
@@ -86,5 +86,13 @@ class SubCommandFactory
         $subCommand->setCommandConfig($this->commandConfig);
 
         return $subCommand;
+    }
+
+    /**
+     * @return ConfigBag
+     */
+    public function getConfig()
+    {
+        return $this->config;
     }
 }
