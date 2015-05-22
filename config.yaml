@@ -138,14 +138,14 @@ commands:
   N98\Magento\Command\Installer\InstallCommand:
     magento-packages:
       - name: magento-ce-2.0.0.0-dev-beta7
-        version: 0.74.0-beta7
+        version: 0.74.0-beta10
         source:
           url: https://github.com/magento/magento2.git
           type: git
           reference: master
         extra:
           sample-data:
-            magento/sample-data: "0.74.0-beta7"
+            magento/sample-data: "0.74.0-beta9"
 
     installation:
       pre-check:
@@ -161,18 +161,19 @@ commands:
             - iconv
             - ctype
             - gd
+            - xsl
 
       defaults:
         currency: EUR
         locale: de_DE
         timezone: Europe/Berlin
-        use_secure: no
-        use_rewrites: yes
-        session_save: files
-        admin_user: admin
-        admin_firstname: John
-        admin_lastname: Doe
-        admin_password: password123
-        backend_frontname: admin
-        admin_email: john.doe@example.com
+        use-secure: no
+        use-rewrites: yes
+        session-save: files
+        admin-user: admin
+        admin-firstname: John
+        admin-lastname: Doe
+        admin-password: password123
+        backend-frontname: admin
+        admin-email: john.doe@example.com
         encryption_key:
