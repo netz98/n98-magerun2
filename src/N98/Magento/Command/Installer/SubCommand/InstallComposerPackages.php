@@ -29,11 +29,7 @@ class InstallComposerPackages extends AbstractSubCommand
 
         $process->start();
         $process->wait(function ($type, $buffer) {
-            if (Process::ERR === $type) {
-                $this->output->write('<error>composer-error > ' . $buffer . '</error>');
-            } else {
-                $this->output->write('composer > ' . $buffer, false);
-            }
+            $this->output->write('composer > ' . $buffer, false);
         });
 
         return true;

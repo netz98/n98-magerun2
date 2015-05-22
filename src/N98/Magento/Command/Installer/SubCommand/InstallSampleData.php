@@ -118,11 +118,7 @@ class InstallSampleData extends AbstractSubCommand
         $process->setTimeout(86400);
         $process->start();
         $process->wait(function ($type, $buffer) {
-            if (Process::ERR === $type) {
-                $this->output->write('<error>sample-data > ' . $buffer . '</error>');
-            } else {
-                $this->output->write('sample-data > ' . $buffer, false);
-            }
+            $this->output->write('sample-data > ' . $buffer, false);
         });
     }
 
@@ -134,7 +130,7 @@ class InstallSampleData extends AbstractSubCommand
             array(
                 'php',
                 'dev/tools/Magento/Tools/SampleData/install.php',
-                '--admin_username=' . $installationArgs['admin_username']
+                '--admin_user=' . $installationArgs['admin_user']
             )
         );
 
@@ -146,11 +142,7 @@ class InstallSampleData extends AbstractSubCommand
         $process->setTimeout(86400);
         $process->start();
         $process->wait(function ($type, $buffer) {
-            if (Process::ERR === $type) {
-                $this->output->write('<error>sample-data > ' . $buffer . '</error>');
-            } else {
-                $this->output->write($buffer, false);
-            }
+            $this->output->write($buffer, false);
         });
     }
 }

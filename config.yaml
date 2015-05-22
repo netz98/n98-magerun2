@@ -42,6 +42,8 @@ event:
 
 commands:
   customCommands:
+    - N98\Magento\Command\Admin\User\ListCommand
+    - N98\Magento\Command\Admin\User\ChangePasswordCommand
     - N98\Magento\Command\Cache\CleanCommand
     - N98\Magento\Command\Cache\DisableCommand
     - N98\Magento\Command\Cache\EnableCommand
@@ -61,6 +63,7 @@ commands:
     - N98\Magento\Command\Database\StatusCommand
     - N98\Magento\Command\Database\Maintain\CheckTablesCommand
     - N98\Magento\Command\Database\InfoCommand
+    - N98\Magento\Command\Developer\Module\CreateCommand
     - N98\Magento\Command\Developer\SymlinksCommand
     - N98\Magento\Command\Developer\TemplateHintsBlocksCommand
     - N98\Magento\Command\Developer\TemplateHintsCommand
@@ -74,6 +77,8 @@ commands:
     - N98\Magento\Command\System\Setup\CompareVersionsCommand
     - N98\Magento\Command\System\Setup\RunCommand
     - N98\Magento\Command\System\Store\ListCommand
+    - N98\Magento\Command\System\Url\ListCommand
+    - N98\Magento\Command\System\Store\Config\BaseUrlListCommand
     - N98\Magento\Command\System\Website\ListCommand
     - N98\Magento\Command\Indexer\ListCommand
     - N98\Magento\Command\Installer\InstallCommand
@@ -132,15 +137,15 @@ commands:
 
   N98\Magento\Command\Installer\InstallCommand:
     magento-packages:
-      - name: magento-ce-2.0.0.0-dev-beta6
-        version: 0.1.0-beta6
+      - name: magento-ce-2.0.0.0-dev-beta7
+        version: 0.74.0-beta10
         source:
           url: https://github.com/magento/magento2.git
           type: git
           reference: master
         extra:
           sample-data:
-            magento/sample-data: "0.42.0-beta6"
+            magento/sample-data: "0.74.0-beta9"
 
     installation:
       pre-check:
@@ -156,18 +161,19 @@ commands:
             - iconv
             - ctype
             - gd
+            - xsl
 
       defaults:
         currency: EUR
         locale: de_DE
         timezone: Europe/Berlin
-        use_secure: no
-        use_rewrites: yes
-        session_save: files
-        admin_username: admin
-        admin_firstname: John
-        admin_lastname: Doe
-        admin_password: password123
-        admin_frontname: admin
-        admin_email: john.doe@example.com
+        use-secure: no
+        use-rewrites: yes
+        session-save: files
+        admin-user: admin
+        admin-firstname: John
+        admin-lastname: Doe
+        admin-password: password123
+        backend-frontname: admin
+        admin-email: john.doe@example.com
         encryption_key:

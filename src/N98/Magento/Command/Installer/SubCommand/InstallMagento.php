@@ -38,18 +38,18 @@ class InstallMagento extends AbstractSubCommand
 
         $useDefaultConfigParams = $this->getCommand()->parseBoolOption($this->input->getOption('useDefaultConfigParams'));
 
-        $sessionSave = $useDefaultConfigParams ? $defaults['session_save'] : $dialog->ask(
+        $sessionSave = $useDefaultConfigParams ? $defaults['session-save'] : $dialog->ask(
             $this->output,
-            '<question>Please enter the session save:</question> <comment>[' . $defaults['session_save'] . ']</comment>: ',
-            $defaults['session_save']
+            '<question>Please enter the session save:</question> <comment>[' . $defaults['session-save'] . ']</comment>: ',
+            $defaults['session-save']
         );
 
-        $adminFrontname = $useDefaultConfigParams ? $defaults['admin_frontname'] : $dialog->askAndValidate(
+        $adminFrontname = $useDefaultConfigParams ? $defaults['backend-frontname'] : $dialog->askAndValidate(
             $this->output,
-            '<question>Please enter the admin frontname:</question> <comment>[' . $defaults['admin_frontname'] . ']</comment> ',
+            '<question>Please enter the admin/backend frontname:</question> <comment>[' . $defaults['backend-frontname'] . ']</comment> ',
             $this->notEmptyCallback,
             false,
-            $defaults['admin_frontname']
+            $defaults['backend-frontname']
         );
 
         $currency = $useDefaultConfigParams ? $defaults['currency'] : $dialog->askAndValidate(
@@ -76,44 +76,44 @@ class InstallMagento extends AbstractSubCommand
             $defaults['timezone']
         );
 
-        $adminUsername = $useDefaultConfigParams ? $defaults['admin_username'] : $dialog->askAndValidate(
+        $adminUsername = $useDefaultConfigParams ? $defaults['admin-user'] : $dialog->askAndValidate(
             $this->output,
-            '<question>Please enter the admin username:</question> <comment>[' . $defaults['admin_username'] . ']</comment>: ',
+            '<question>Please enter the admin username:</question> <comment>[' . $defaults['admin-user'] . ']</comment>: ',
             $this->notEmptyCallback,
             false,
-            $defaults['admin_username']
+            $defaults['admin-user']
         );
 
-        $adminPassword = $useDefaultConfigParams ? $defaults['admin_password'] : $dialog->askAndValidate(
+        $adminPassword = $useDefaultConfigParams ? $defaults['admin-password'] : $dialog->askAndValidate(
             $this->output,
-            '<question>Please enter the admin password:</question> <comment>[' . $defaults['admin_password'] . ']</comment>: ',
+            '<question>Please enter the admin password:</question> <comment>[' . $defaults['admin-password'] . ']</comment>: ',
             $this->notEmptyCallback,
             false,
-            $defaults['admin_password']
+            $defaults['admin-password']
         );
 
-        $adminFirstname = $useDefaultConfigParams ? $defaults['admin_firstname'] : $dialog->askAndValidate(
+        $adminFirstname = $useDefaultConfigParams ? $defaults['admin-firstname'] : $dialog->askAndValidate(
             $this->output,
-            '<question>Please enter the admin\'s firstname:</question> <comment>[' . $defaults['admin_firstname'] . ']</comment>: ',
+            '<question>Please enter the admin\'s firstname:</question> <comment>[' . $defaults['admin-firstname'] . ']</comment>: ',
             $this->notEmptyCallback,
             false,
-            $defaults['admin_firstname']
+            $defaults['admin-firstname']
         );
 
-        $adminLastname = $useDefaultConfigParams ? $defaults['admin_lastname'] : $dialog->askAndValidate(
+        $adminLastname = $useDefaultConfigParams ? $defaults['admin-lastname'] : $dialog->askAndValidate(
             $this->output,
-            '<question>Please enter the admin\'s lastname:</question> <comment>[' . $defaults['admin_lastname'] . ']</comment>: ',
+            '<question>Please enter the admin\'s lastname:</question> <comment>[' . $defaults['admin-lastname'] . ']</comment>: ',
             $this->notEmptyCallback,
             false,
-            $defaults['admin_lastname']
+            $defaults['admin-lastname']
         );
 
-        $adminEmail = $useDefaultConfigParams ? $defaults['admin_email'] : $dialog->askAndValidate(
+        $adminEmail = $useDefaultConfigParams ? $defaults['admin-email'] : $dialog->askAndValidate(
             $this->output,
-            '<question>Please enter the admin\'s email:</question> <comment>[' . $defaults['admin_email'] . ']</comment>: ',
+            '<question>Please enter the admin\'s email:</question> <comment>[' . $defaults['admin-email'] . ']</comment>: ',
             $this->notEmptyCallback,
             false,
-            $defaults['admin_email']
+            $defaults['admin-email']
         );
 
         $validateBaseUrl = function($url) {
@@ -146,44 +146,39 @@ class InstallMagento extends AbstractSubCommand
         $argv = array(
             'language'                   => $locale,
             'timezone'                   => $timezone,
-            'db_host'                    => $this->_prepareDbHost(),
-            'db_name'                    => $this->config->getString('db_name'),
-            'db_user'                    => $this->config->getString('db_user'),
-            'base_url'                   => $baseUrl,
-            'use_rewrites'               => true,
-            'use_secure'                 => false,
-            'base_url_secure'            => '',
-            'use_secure_admin'           => true,
-            'admin_username'             => $adminUsername,
-            'admin_lastname'             => $adminLastname,
-            'admin_firstname'            => $adminFirstname,
-            'admin_email'                => $adminEmail,
-            'admin_password'             => $adminPassword,
-            'session_save'               => $sessionSave,
-            'backend_frontname'          => $adminFrontname,
+            'db-host'                    => $this->_prepareDbHost(),
+            'db-name'                    => $this->config->getString('db_name'),
+            'db-user'                    => $this->config->getString('db_user'),
+            'base-url'                   => $baseUrl,
+            'use-rewrites'               => 1,
+            'use-secure'                 => 0,
+            'use-secure-admin'           => 1,
+            'admin-user'                 => $adminUsername,
+            'admin-lastname'             => $adminLastname,
+            'admin-firstname'            => $adminFirstname,
+            'admin-email'                => $adminEmail,
+            'admin-password'             => $adminPassword,
+            'session-save'               => $sessionSave,
+            'backend-frontname'          => $adminFrontname,
             'currency'                   => $currency,
         );
 
         $dbPass = $this->config->getString('db_pass');
         if (!empty($dbPass)) {
-            $argv['db_pass'] = $dbPass;
+            $argv['db-password'] = $dbPass;
         }
 
         if ($useDefaultConfigParams) {
-            if (strlen($defaults['encryption_key']) > 0) {
-                $argv['encryption_key'] = $defaults['encryption_key'];
+            if (strlen($defaults['encryption-key']) > 0) {
+                $argv['encryption-key'] = $defaults['encryption-key'];
             }
-            if (strlen($defaults['use_secure']) > 0) {
-                $argv['use_secure'] = $defaults['use_secure'];
-                $argv['base_url_secure'] = str_replace('http://', 'https://', $baseUrl);
+            if (strlen($defaults['use-secure']) > 0) {
+                $argv['use-secure'] = $defaults['use-secure'];
+                $argv['base-url-secure'] = str_replace('http://', 'https://', $baseUrl);
             }
-            if (strlen($defaults['use_rewrites']) > 0) {
-                $argv['use_rewrites'] = $defaults['use_rewrites'];
+            if (strlen($defaults['use-rewrites']) > 0) {
+                $argv['use-rewrites'] = $defaults['use-rewrites'];
             }
-        }
-
-        if (empty($argv['base_url_secure'])) {
-            $argv['base_url_secure'] = $argv['base_url'];
         }
 
         $this->config->setArray('installation_args', $argv);
@@ -194,9 +189,9 @@ class InstallMagento extends AbstractSubCommand
                 $installArgs .= '--' . $argName . ' ';
             } elseif (is_bool($argValue)) {
                 if ($argValue) {
-                    $argValue = 'true';
+                    $argValue = '1';
                 } else {
-                    $argValue = 'false';
+                    $argValue = '0';
                 }
                 $installArgs .= '--' . $argName . '=' . $argValue . ' ';
             } else {
@@ -216,9 +211,9 @@ class InstallMagento extends AbstractSubCommand
      */
     protected function getInstallScriptPath()
     {
-        $installerScript  = $this->config->getString('installationFolder') . DIRECTORY_SEPARATOR . 'setup/index.php';
+        $installerScript  = $this->config->getString('installationFolder') . DIRECTORY_SEPARATOR . 'bin/magento';
         if (!file_exists($installerScript)) {
-            throw new \Exception('Installation script was not found.');
+            throw new \RuntimeException('Installation script was not found.', 1);
         }
 
         return $installerScript;
@@ -267,16 +262,16 @@ class InstallMagento extends AbstractSubCommand
         $returnStatus = null;
 
         if (OperatingSystem::isWindows()) {
-            $installCommand = 'php ' . $this->getInstallScriptPath() . ' install ' . $installArgs;
+            $installCommand = 'php ' . $this->getInstallScriptPath() . ' setup:install ' . $installArgs;
         } else {
-            $installCommand = '/usr/bin/env php ' . $this->getInstallScriptPath() . ' install ' . $installArgs;
+            $installCommand = '/usr/bin/env php ' . $this->getInstallScriptPath() . ' setup:install ' . $installArgs;
         }
 
         $this->output->writeln('<comment>' . $installCommand . '</comment>');
         exec($installCommand, $installationOutput, $returnStatus);
         $installationOutput = implode(PHP_EOL, $installationOutput);
         if ($returnStatus !== self::EXEC_STATUS_OK) {
-            throw new \Exception('Installation failed.' . $installationOutput);
+            throw new \RuntimeException('Installation failed.' . $installationOutput, 1);
         } else {
             $this->output->writeln('<info>Successfully installed Magento</info>');
             $encryptionKey = trim(substr($installationOutput, strpos($installationOutput, ':') + 1));
