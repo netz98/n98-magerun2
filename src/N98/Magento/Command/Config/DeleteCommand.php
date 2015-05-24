@@ -53,8 +53,8 @@ HELP;
             $path = $input->getArgument('path');
             $pathArray = array();
             if (strstr($path, '*')) {
-                $collection = $this->getObjectManager()->get('\Magento\Core\Model\Resource\Config\Data\Collection');
-                /* @var $collection \Magento\Core\Model\Resource\Config\Data\Collection */
+                $collection = $this->getObjectManager()->get('\Magento\Config\Model\Resource\Config\Data\Collection');
+                /* @var $collection \Magento\Config\Model\Resource\Config\Data\Collection */
 
                 $searchPath = str_replace('*', '%', $path);
                 $collection->addFieldToFilter('path', array('like' => $searchPath));
