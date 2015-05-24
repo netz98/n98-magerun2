@@ -12,7 +12,7 @@ use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
 class GetCommand extends AbstractConfigCommand
 {
     /**
-     * @var \Magento\Core\Model\Resource\Config\Data\Collection
+     * @var \Magento\Config\Model\Resource\Config\Data\Collection
      */
     protected $_collection;
 
@@ -52,9 +52,9 @@ HELP;
     }
 
     /**
-     * @param \Magento\Core\Model\Resource\Config\Data\Collection $collection
+     * @param \Magento\Config\Model\Resource\Config\Data\Collection $collection
      */
-    public function inject(\Magento\Core\Model\Resource\Config\Data\Collection $collection)
+    public function inject(\Magento\Config\Model\Resource\Config\Data\Collection $collection)
     {
         $this->_collection = $collection;
     }
