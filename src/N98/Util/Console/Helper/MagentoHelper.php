@@ -54,7 +54,7 @@ class MagentoHelper extends AbstractHelper
     /**
      * @var array
      */
-    protected $baseConfig;
+    protected $baseConfig = array();
 
     /**
      * @var string
@@ -348,19 +348,24 @@ class MagentoHelper extends AbstractHelper
             }
             $application->detectMagento();
 
-            $configFile = $application->getMagentoRootFolder() . '/app/etc/config.php';
+            $configFiles = [
+                $application->getMagentoRootFolder() . '/app/etc/config.php',
+                $application->getMagentoRootFolder() . '/app/etc/env.php'
+            ];
 
-            if (!is_readable($configFile)) {
-                throw new \Exception('app/etc/config.php is not readable');
+            foreach ($configFiles as $configFile) {
+                if (!is_readable($configFile)) {
+                    throw new \Exception('app/etc/config.php is not readable');
+                }
+
+                $config = @include $configFile;
+
+                if (!is_array($config)) {
+                    throw new \ErrorException('app/etc/config.php is corrupted. Please check it.');
+                }
+
+                $this->baseConfig = array_merge($this->baseConfig, $config);
             }
-
-            $config = @include $configFile;
-
-            if (!is_array($config)) {
-                throw new \ErrorException('app/etc/config.php is corrupted. Please check it.');
-            }
-
-            $this->baseConfig = $config;
         }
 
         return $this->baseConfig;
