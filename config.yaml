@@ -137,7 +137,7 @@ commands:
 
   N98\Magento\Command\Installer\InstallCommand:
     magento-packages:
-      - name: magento-ce-2.0.0.0-dev-beta7
+      - name: magento-ce-2.0.0.0-dev-beta10
         version: 0.74.0-beta10
         source:
           url: https://github.com/magento/magento2.git
@@ -145,7 +145,7 @@ commands:
           reference: master
         extra:
           sample-data:
-            magento/sample-data: "0.74.0-beta9"
+            magento/sample-data: "0.74.0-beta10"
 
     installation:
       pre-check:
