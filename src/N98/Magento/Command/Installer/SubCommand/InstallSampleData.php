@@ -129,8 +129,9 @@ class InstallSampleData extends AbstractSubCommand
         $processBuilder = new ProcessBuilder(
             array(
                 'php',
-                'dev/tools/Magento/Tools/SampleData/install.php',
-                '--admin_user=' . $installationArgs['admin_user']
+                'bin/magento',
+                'sampledata:install',
+                $installationArgs['admin-user']
             )
         );
 
@@ -138,6 +139,26 @@ class InstallSampleData extends AbstractSubCommand
             $processBuilder->setPrefix('/usr/bin/env');
         }
 
+        $process = $processBuilder->getProcess();
+        $process->setTimeout(86400);
+        $process->start();
+        $process->wait(function ($type, $buffer) {
+            $this->output->write($buffer, false);
+        });
+
+
+        // @TODO Refactor code duplication
+        if (!OperatingSystem::isWindows()) {
+            $processBuilder->setPrefix('/usr/bin/env');
+        }
+
+        $processBuilder = new ProcessBuilder(
+            array(
+                'php',
+                'bin/magento',
+                'setup:upgrade'
+            )
+        );
         $process = $processBuilder->getProcess();
         $process->setTimeout(86400);
         $process->start();
