@@ -110,6 +110,10 @@ class CreateCommand extends AbstractMagentoCommand
             $subCommandFactory->create('CreateComposerFile')->execute();
         }
 
+        if ($input->getOption('add-setup')) {
+            $subCommandFactory->create('CreateSetupFiles')->execute();
+        }
+
         $subCommandFactory->create('CreateAdditionalFiles')->execute();
     }
 
