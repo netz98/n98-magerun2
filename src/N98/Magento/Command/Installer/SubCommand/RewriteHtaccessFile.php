@@ -33,7 +33,7 @@ class RewriteHtaccessFile extends AbstractSubCommand
             }
 
             if ($replaceHtaccessFile) {
-                $this->replaceHtaccessFile($args['base_url']);
+                $this->replaceHtaccessFile($args['base-url']);
             }
         }
     }
