@@ -79,7 +79,7 @@ HELP;
         $table = array();
         foreach ($this->moduleList->getAll() as $moduleName => $moduleInfo) {
             foreach ($this->resourceResolver->getResourceList($moduleName) as $resourceName) {
-                $moduleVersion  = $moduleInfo['schema_version'];
+                $moduleVersion  = $moduleInfo['setup_version'];
                 $dbVersion      = $this->moduleResource->getDbVersion($resourceName);
                 if (!$ignoreDataUpdate) {
                     $dataVersion = $this->moduleResource->getDataVersion($resourceName);
