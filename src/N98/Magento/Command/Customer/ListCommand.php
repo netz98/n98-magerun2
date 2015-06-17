@@ -22,7 +22,7 @@ class ListCommand extends AbstractCustomerCommand
             );
 
         $help = <<<HELP
-Lists all Magento indexers of current installation.
+Lists all Magento Customers of current installation.
 HELP;
         $this->setHelp($help);
     }
