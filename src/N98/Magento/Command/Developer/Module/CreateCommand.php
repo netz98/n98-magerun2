@@ -25,6 +25,7 @@ class CreateCommand extends AbstractMagentoCommand
             ->addOption('add-models', null, InputOption::VALUE_NONE, 'Adds models')
             ->addOption('add-setup', null, InputOption::VALUE_NONE, 'Adds SQL setup')
             ->addOption('add-all', null, InputOption::VALUE_NONE, 'Adds blocks, helpers and models')
+            ->addOption('enable', null, InputOption::VALUE_NONE, 'Enable module after creation')
             ->addOption('modman', null, InputOption::VALUE_NONE, 'Create all files in folder with a modman file.')
             ->addOption('add-readme', null, InputOption::VALUE_NONE, 'Adds a readme.md file to generated module')
             ->addOption('add-composer', null, InputOption::VALUE_NONE, 'Adds a composer.json file to generated module')
@@ -85,6 +86,10 @@ class CreateCommand extends AbstractMagentoCommand
             $configBag->setBool('shouldAddSetup', true);
         }
 
+        if ($input->getOption('enable')) {
+            $configBag->setBool('shouldEnableModule', true);
+        }
+
         $configBag->setString('baseFolder', __DIR__ . '/../../../../../../res/module/create');
         $configBag->setString('vendorNamespace', ucfirst($input->getArgument('vendorNamespace')));
         $configBag->setString('moduleName', ucfirst($input->getArgument('moduleName')));
@@ -97,6 +102,7 @@ class CreateCommand extends AbstractMagentoCommand
         $subCommandFactory->create('CreateModuleDiFile')->execute();
         $subCommandFactory->create('CreateModuleEventsFile')->execute();
         $subCommandFactory->create('CreateModuleCrontabFile')->execute();
+        $subCommandFactory->create('EnableModule')->execute();
 
         if ($input->getOption('add-readme')) {
             $subCommandFactory->create('CreateReadmeFile')->execute();
