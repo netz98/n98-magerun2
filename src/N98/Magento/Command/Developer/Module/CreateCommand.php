@@ -20,6 +20,7 @@ class CreateCommand extends AbstractMagentoCommand
             ->setName('dev:module:create')
             ->addArgument('vendorNamespace', InputArgument::REQUIRED, 'Namespace (your company prefix)')
             ->addArgument('moduleName', InputArgument::REQUIRED, 'Name of your module.')
+            ->addOption('minimal', null, InputOption::VALUE_NONE, 'Create only module file')
             ->addOption('add-blocks', null, InputOption::VALUE_NONE, 'Adds blocks')
             ->addOption('add-helpers', null, InputOption::VALUE_NONE, 'Adds helpers')
             ->addOption('add-models', null, InputOption::VALUE_NONE, 'Adds models')
@@ -98,10 +99,14 @@ class CreateCommand extends AbstractMagentoCommand
 
         $subCommandFactory->create('CreateModuleFolders')->execute();
         $subCommandFactory->create('CreateModuleRegistrationFile')->execute();
-        $subCommandFactory->create('CreateModuleConfigFile')->execute();
-        $subCommandFactory->create('CreateModuleDiFile')->execute();
-        $subCommandFactory->create('CreateModuleEventsFile')->execute();
-        $subCommandFactory->create('CreateModuleCrontabFile')->execute();
+
+        if (!$input->getOption('minimal')) {
+            $subCommandFactory->create('CreateModuleConfigFile')->execute();
+            $subCommandFactory->create('CreateModuleDiFile')->execute();
+            $subCommandFactory->create('CreateModuleEventsFile')->execute();
+            $subCommandFactory->create('CreateModuleCrontabFile')->execute();
+        }
+
         $subCommandFactory->create('EnableModule')->execute();
 
         if ($input->getOption('add-readme')) {
@@ -120,7 +125,9 @@ class CreateCommand extends AbstractMagentoCommand
             $subCommandFactory->create('CreateSetupFiles')->execute();
         }
 
-        $subCommandFactory->create('CreateAdditionalFiles')->execute();
+        if (!$input->getOption('minimal')) {
+            $subCommandFactory->create('CreateAdditionalFiles')->execute();
+        }
     }
 
     protected function initView(InputInterface $input, ConfigBag $configBag)
