@@ -12,19 +12,14 @@ use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
 class CompareVersionsCommand extends AbstractMagentoCommand
 {
     /**
-     * @var \Magento\Framework\Module\ResourceInterface
-     */
-    protected $moduleResource;
-
-    /**
      * @var \Magento\Framework\Module\ModuleListInterface
      */
-    protected $moduleList;
+    private $moduleList;
 
     /**
-     * @var \Magento\Framework\Module\ResourceResolverInterface
+     * @var \Magento\Framework\Module\ResourceInterface
      */
-    protected $resourceResolver;
+    private $resource;
 
     protected function configure()
     {
@@ -47,17 +42,13 @@ HELP;
 
     /**
      * @param \Magento\Framework\Module\ModuleListInterface $moduleList
-     * @param \Magento\Framework\Module\ResourceResolverInterface $resourceResolver
-     * @param \Magento\Framework\Module\ResourceInterface $moduleResource
      */
     public function inject(
         \Magento\Framework\Module\ModuleListInterface $moduleList,
-        \Magento\Framework\Module\ResourceResolverInterface $resourceResolver,
-        \Magento\Framework\Module\ResourceInterface $moduleResource
+        \Magento\Framework\Module\ResourceInterface $resource
     ) {
         $this->moduleList = $moduleList;
-        $this->resourceResolver = $resourceResolver;
-        $this->moduleResource = $moduleResource;
+        $this->resource = $resource;
     }
 
     /**
@@ -78,32 +69,32 @@ HELP;
         $errorCounter = 0;
         $table = array();
         foreach ($this->moduleList->getAll() as $moduleName => $moduleInfo) {
-            foreach ($this->resourceResolver->getResourceList($moduleName) as $resourceName) {
-                $moduleVersion  = $moduleInfo['setup_version'];
-                $dbVersion      = $this->moduleResource->getDbVersion($resourceName);
-                if (!$ignoreDataUpdate) {
-                    $dataVersion = $this->moduleResource->getDataVersion($resourceName);
-                }
-                $ok = $dbVersion == $moduleVersion;
-                if ($ok && !$ignoreDataUpdate) {
-                    $ok = $dataVersion == $moduleVersion;
-                }
-                if (!$ok) {
-                    $errorCounter++;
-                }
 
-                $row = array(
-                    'Setup'     => $resourceName,
-                    'Module'    => $moduleVersion,
-                    'DB'        => $dbVersion,
-                );
-
-                if (!$ignoreDataUpdate) {
-                    $row['Data-Version'] = $dataVersion;
-                }
-                $row['Status'] = $ok ? 'OK' : 'Error';
-                $table[] = $row;
+            $moduleVersion  = $moduleInfo['setup_version'];
+            $dbVersion      = $this->resource->getDbVersion($moduleName);
+            if (!$ignoreDataUpdate) {
+                $dataVersion = $this->resource->getDataVersion($moduleName);
             }
+
+            $ok = $dbVersion == $moduleVersion;
+            if ($ok && !$ignoreDataUpdate) {
+                $ok = $dataVersion == $moduleVersion;
+            }
+            if (!$ok) {
+                $errorCounter++;
+            }
+
+            $row = array(
+                'Module' => $moduleName,
+                'DB'     => $dbVersion,
+                'Data'   => $dataVersion,
+            );
+
+            if (!$ignoreDataUpdate) {
+                $row['Data-Version'] = $dataVersion;
+            }
+            $row['Status'] = $ok ? 'OK' : 'Error';
+            $table[] = $row;
         }
 
         //if there is no output format
