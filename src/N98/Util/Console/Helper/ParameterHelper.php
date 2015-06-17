@@ -99,6 +99,7 @@ class ParameterHelper extends AbstractHelper
      */
     public function askWebsite(InputInterface $input, OutputInterface $output, $argumentName = 'website')
     {
+        /** @var \Magento\Store\Model\StoreManagerInterface $storeManager */
         $storeManager = $this->getHelperSet()
             ->getCommand()
             ->getApplication()
@@ -118,7 +119,7 @@ class ParameterHelper extends AbstractHelper
                 $i++;
             }
             if (count($websites) == 1) {
-                return \Mage::app()->getWebsite($websites[0]);
+                return $storeManager->getWebsite($websites[0]);
             }
             $question[] = '<question>Please select a website: </question>';
 
