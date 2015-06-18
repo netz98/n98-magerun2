@@ -52,6 +52,7 @@ commands:
     - N98\Magento\Command\Config\DeleteCommand
     - N98\Magento\Command\Config\GetCommand
     - N98\Magento\Command\Config\SetCommand
+    - N98\Magento\Command\Customer\ListCommand
     - N98\Magento\Command\Database\ConsoleCommand
     - N98\Magento\Command\Database\CreateCommand
     - N98\Magento\Command\Database\DropCommand
