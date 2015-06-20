@@ -47,7 +47,15 @@ class AbstractCustomerCommand extends AbstractMagentoCommand
     }
 
     /**
-     * @return mixed
+     * @return Customer
+     */
+    protected function getCustomer()
+    {
+        return $this->getObjectManager()->get(Customer::class);
+    }
+
+    /**
+     * @return CustomerCollection
      */
     protected function getCustomerCollection()
     {
