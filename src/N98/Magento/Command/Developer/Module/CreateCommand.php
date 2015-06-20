@@ -20,13 +20,13 @@ class CreateCommand extends AbstractMagentoCommand
             ->setName('dev:module:create')
             ->addArgument('vendorNamespace', InputArgument::REQUIRED, 'Namespace (your company prefix)')
             ->addArgument('moduleName', InputArgument::REQUIRED, 'Name of your module.')
-            ->addOption('minimal', null, InputOption::VALUE_NONE, 'Create only module file')
+            ->addOption('minimal', 'm', InputOption::VALUE_NONE, 'Create only module file')
             ->addOption('add-blocks', null, InputOption::VALUE_NONE, 'Adds blocks')
             ->addOption('add-helpers', null, InputOption::VALUE_NONE, 'Adds helpers')
             ->addOption('add-models', null, InputOption::VALUE_NONE, 'Adds models')
             ->addOption('add-setup', null, InputOption::VALUE_NONE, 'Adds SQL setup')
             ->addOption('add-all', null, InputOption::VALUE_NONE, 'Adds blocks, helpers and models')
-            ->addOption('enable', null, InputOption::VALUE_NONE, 'Enable module after creation')
+            ->addOption('enable', 'e', InputOption::VALUE_NONE, 'Enable module after creation')
             ->addOption('modman', null, InputOption::VALUE_NONE, 'Create all files in folder with a modman file.')
             ->addOption('add-readme', null, InputOption::VALUE_NONE, 'Adds a readme.md file to generated module')
             ->addOption('add-composer', null, InputOption::VALUE_NONE, 'Adds a composer.json file to generated module')
@@ -59,10 +59,7 @@ class CreateCommand extends AbstractMagentoCommand
         $configBag->setBool('isModmanMode', $input->getOption('modman'));
         $configBag->setString('magentoRootFolder', $this->_magentoRootFolder);
 
-        $configBag->setBool('shouldAddBlocks', false);
-        $configBag->setBool('shouldAddHelpers', false);
-        $configBag->setBool('shouldAddModels', false);
-        $configBag->setBool('shouldAddSetup', false);
+        $this->initConfigBagDefaultValues($configBag);
 
         if ($input->getOption('add-all')) {
             $configBag->setBool('shouldAddBlocks', true);
@@ -130,7 +127,7 @@ class CreateCommand extends AbstractMagentoCommand
         }
     }
 
-    protected function initView(InputInterface $input, ConfigBag $configBag)
+    private function initView(InputInterface $input, ConfigBag $configBag)
     {
         $configBag->setArray('twigVars', array(
             'vendorNamespace' => $configBag->getString('vendorNamespace'),
@@ -143,5 +140,17 @@ class CreateCommand extends AbstractMagentoCommand
             'authorEmail'     => $input->getOption('author-email'),
             'description'     => $input->getOption('description'),
         ));
+    }
+
+    /**
+     * @param $configBag
+     */
+    private function initConfigBagDefaultValues($configBag)
+    {
+        $configBag->setBool('shouldAddBlocks', false);
+        $configBag->setBool('shouldAddHelpers', false);
+        $configBag->setBool('shouldAddModels', false);
+        $configBag->setBool('shouldAddSetup', false);
+        $configBag->setBool('shouldEnableModule', false);
     }
 }
