@@ -3,7 +3,7 @@
 namespace N98\Magento\Command\Installer\SubCommand;
 
 use N98\Magento\Command\SubCommand\AbstractSubCommand;
-use N98\Util\StringUtil;
+use N98\Util\String;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -35,7 +35,7 @@ class CreateDatabase extends AbstractSubCommand
         $dbOptionsFound = 0;
         foreach ($dbOptions as $dbOption) {
             foreach ($this->getCliArguments() as $definedCliOption) {
-                if (StringUtil::startsWith($definedCliOption, $dbOption)) {
+                if (String::startsWith($definedCliOption, $dbOption)) {
                     $dbOptionsFound++;
                 }
             }

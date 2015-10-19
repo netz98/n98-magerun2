@@ -3,7 +3,7 @@
 namespace N98\Magento\Command;
 
 use FSHL\Output;
-use N98\Util\StringUtil;
+use N98\Util\String;
 use N98\Util\OperatingSystem;
 use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -357,7 +357,7 @@ class ConfigurationLoader
      */
     protected function registerPluginConfigFile($magentoRootFolder, $file)
     {
-        if (StringUtil::startsWith($file->getPathname(), 'vfs://')) {
+        if (String::startsWith($file->getPathname(), 'vfs://')) {
             $path = $file->getPathname();
         } else {
             $path = $file->getRealPath();

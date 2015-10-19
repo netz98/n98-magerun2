@@ -3,7 +3,7 @@
 namespace N98\Magento\Command;
 
 use N98\Magento\Command\AbstractMagentoCommand;
-use N98\Util\StringUtil;
+use N98\Util\String;
 use Symfony\Component\Console\Helper\DialogHelper;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
@@ -165,7 +165,7 @@ HELP;
                 if (!strstr($define, '=')) {
                     throw new \InvalidArgumentException('Invalid define');
                 }
-                $parts = StringUtil::trimExplodeEmpty('=', $define);
+                $parts = String::trimExplodeEmpty('=', $define);
                 $variable = $parts[0];
                 $value = null;
                 if (isset($parts[1])) {
@@ -220,7 +220,7 @@ HELP;
                  */
                 if (isset($matches[2][1]) && $matches[2][1] == '[') {
                     if (preg_match('/\[(.+)\]/', $matches[2], $choiceMatches)) {
-                        $choices = StringUtil::trimExplodeEmpty(',', $choiceMatches[1]);
+                        $choices = String::trimExplodeEmpty(',', $choiceMatches[1]);
                         $selectedIndex = $dialog->select(
                             $output,
                             '<info>Please enter a value for <comment>' . $matches[1] . '</comment>:</info> ',
