@@ -2,7 +2,7 @@
 
 namespace N98\Util;
 
-class String
+class StringUtil
 {
     /**
      * @param $delimiter
