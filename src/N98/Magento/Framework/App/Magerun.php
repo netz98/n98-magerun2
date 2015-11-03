@@ -3,7 +3,7 @@
 namespace N98\Magento\Framework\App;
 
 use Magento\Framework\App\Bootstrap;
-use \Magento\Framework\ObjectManagerInterface;
+use Magento\Framework\ObjectManagerInterface;
 
 class Magerun implements \Magento\Framework\AppInterface
 {
