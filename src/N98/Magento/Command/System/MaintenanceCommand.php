@@ -42,6 +42,7 @@ class MaintenanceCommand extends AbstractMagentoCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->detectMagento($output);
+        $this->initMagento();
 
         /* @var $flagDir \Magento\Framework\Filesystem\Directory\Write */
         $flagDir = $this->getObjectManager()
