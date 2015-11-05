@@ -170,8 +170,8 @@ commands:
         currency: EUR
         locale: de_DE
         timezone: Europe/Berlin
-        use-secure: no
-        use-rewrites: yes
+        use-secure: 0
+        use-rewrites: 1
         session-save: files
         admin-user: admin
         admin-firstname: John
