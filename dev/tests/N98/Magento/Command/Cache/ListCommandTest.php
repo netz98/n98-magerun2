@@ -41,8 +41,8 @@ class ListCommandTest extends TestCase
         $cacheTypes = $this->command->getTypes();
         $disabledCacheTypes = 0;
 
-        foreach ($cacheTypes as $name => $isEnabled) {
-            if (! $isEnabled) {
+        foreach ($cacheTypes as $cacheType) {
+            if (! $cacheType->getStatus()) {
                 $disabledCacheTypes++;
             }
         }
