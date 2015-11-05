@@ -35,31 +35,6 @@ class ChooseInstallationFolder extends AbstractSubCommand
                 return $folderName;
             }
 
-            if ($input->hasOption('noDownload') && $input->getOption('noDownload')) {
-                /** @var MagentoHelper $magentoHelper */
-                $magentoHelper = new MagentoHelper();
-                $magentoHelper->detect($folderName);
-                if ($magentoHelper->getRootFolder() !== $folderName) {
-                    throw new \InvalidArgumentException(
-                        sprintf(
-                            'Folder %s is not a Magento working copy.',
-                            $folderName
-                        )
-                    );
-                }
-
-                $configPhp = $folderName . '/app/etc/config.php';
-                if (file_exists($configPhp)) {
-                    throw new \InvalidArgumentException(
-                        sprintf(
-                            'Magento working copy in %s seems already installed. Please remove %s and retry.',
-                            $folderName,
-                            $configPhp
-                        )
-                    );
-                }
-            }
-
             return $folderName;
         };
 

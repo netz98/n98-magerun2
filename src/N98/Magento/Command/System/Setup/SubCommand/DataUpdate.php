@@ -23,8 +23,8 @@ class DataUpdate extends AbstractSubCommand
         $resourceResolver = $this->getCommand()
             ->getApplication()
             ->getObjectManager()
-            ->get('Magento\Framework\Module\ResourceResolverInterface');
-        /* @var $resourceResolver \Magento\Framework\Module\ResourceResolverInterface */
+            ->get('Magento\Framework\Module\ResourceInterface');
+        /* @var $resourceResolver \Magento\Framework\Module\ResourceInterface */
 
         $dbVersionInfo = $this->getCommand()
             ->getApplication()

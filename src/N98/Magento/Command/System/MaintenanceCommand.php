@@ -8,20 +8,14 @@ use N98\Magento\Command\AbstractMagentoCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Finder\Finder;
 
 class MaintenanceCommand extends AbstractMagentoCommand
 {
     const ALREADY_DISABLED_MESSAGE = 'Nothing to disable, maintenance mode is not enabled!';
-
     const ALREADY_ENABLED_MESSAGE = 'Maintenance mode is already enabled.';
-
     const ENABLED_MESSAGE = 'Maintenance mode <info>on</info>';
-
     const DISABLED_MESSAGE = 'Maintenance mode <info>off</info>';
-
     const WROTE_IP_MESSAGE = 'Wrote IP exclusion file.';
-
     const DELETED_IP_MESSAGE = 'Deleted IP exclusion file.';
 
     protected function configure()

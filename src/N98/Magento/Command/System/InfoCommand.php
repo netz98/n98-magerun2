@@ -17,6 +17,11 @@ class InfoCommand extends AbstractMagentoCommand
     protected $infos = [];
 
     /**
+     * @var \Magento\Framework\App\ProductMetadataInterface
+     */
+    protected $productMetadata;
+
+    /**
      * @var \Magento\Customer\Model\CustomerFactory
      */
     protected $customerFactory;
@@ -66,6 +71,7 @@ class InfoCommand extends AbstractMagentoCommand
     }
 
     /**
+     * @param \Magento\Framework\App\ProductMetadataInterface $productMetadata
      * @param \Magento\Customer\Model\CustomerFactory $customerFactory
      * @param \Magento\Catalog\Model\ProductFactory $productFactory
      * @param \Magento\Catalog\Model\CategoryFactory $categoryFactory
@@ -75,6 +81,7 @@ class InfoCommand extends AbstractMagentoCommand
      * @param \Magento\Framework\Module\ModuleListInterface $moduleList
      */
     public function inject(
+        \Magento\Framework\App\ProductMetadataInterface $productMetadata,
         \Magento\Customer\Model\CustomerFactory $customerFactory,
         \Magento\Catalog\Model\ProductFactory $productFactory,
         \Magento\Catalog\Model\CategoryFactory $categoryFactory,
@@ -84,6 +91,7 @@ class InfoCommand extends AbstractMagentoCommand
         \Magento\Framework\Module\ModuleListInterface $moduleList
 
     ) {
+        $this->productMetadata = $productMetadata;
         $this->customerFactory = $customerFactory;
         $this->productFactory = $productFactory;
         $this->categoryFactory = $categoryFactory;
@@ -198,8 +206,9 @@ class InfoCommand extends AbstractMagentoCommand
 
     protected function addVersionInfo()
     {
-        $this->infos['Version'] = \Magento\Framework\AppInterface::VERSION;
-        $this->infos['Edition'] = 'Community'; // @TODO Where can i obtain this info?
+        $this->infos['Name'] = $this->productMetadata->getName();
+        $this->infos['Version'] = $this->productMetadata->getVersion();
+        $this->infos['Edition'] = $this->productMetadata->getEdition();
     }
 
     protected function addVendors()
