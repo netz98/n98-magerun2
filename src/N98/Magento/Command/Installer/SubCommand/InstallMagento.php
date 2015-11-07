@@ -169,7 +169,7 @@ class InstallMagento extends AbstractSubCommand
         }
 
         if ($useDefaultConfigParams) {
-            if (strlen($defaults['encryption-key']) > 0) {
+            if (isset($defaults['encryption-key']) && strlen($defaults['encryption-key']) > 0) {
                 $argv['encryption-key'] = $defaults['encryption-key'];
             }
             if (strlen($defaults['use-secure']) > 0) {

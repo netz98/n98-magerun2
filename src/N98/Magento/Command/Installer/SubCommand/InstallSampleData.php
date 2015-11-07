@@ -103,7 +103,7 @@ class InstallSampleData extends AbstractSubCommand
      * @param $extraPackageName
      * @param $extraPackageVersion
      */
-    protected function composerRequirePackage($extraPackageName, $extraPackageVersion)
+    protected function  composerRequirePackage($extraPackageName, $extraPackageVersion)
     {
         $processBuilder = new ProcessBuilder(
             array(

@@ -9,7 +9,7 @@ php:
   - 5.6
 
 env:
-  - MAGENTO_VERSION="magento-ce-2.0.0.0-dev-beta13" DB=mysql INSTALL_SAMPLE_DATA=no COVERAGE=10
+  - MAGENTO_VERSION="magento2-ce-1.0.0-beta4" DB=mysql INSTALL_SAMPLE_DATA=0 COVERAGE=10
 
 matrix:
   fast_finish: true
