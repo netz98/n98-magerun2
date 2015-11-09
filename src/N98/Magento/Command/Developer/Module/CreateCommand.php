@@ -95,7 +95,7 @@ class CreateCommand extends AbstractMagentoCommand
         $this->initView($input, $configBag);
 
         $subCommandFactory->create('CreateModuleFolders')->execute();
-        $subCommandFactory->create('CreateModuleRegistrationFile')->execute();
+        $subCommandFactory->create('CreateModuleRegistrationFiles')->execute();
 
         if (!$input->getOption('minimal')) {
             $subCommandFactory->create('CreateModuleConfigFile')->execute();
