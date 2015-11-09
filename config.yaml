@@ -140,15 +140,25 @@ commands:
 
   N98\Magento\Command\Installer\InstallCommand:
     magento-packages:
-      - name: magento2-ce-1.0.0-beta4
-        version: 1.0.0-beta4
+      - name: magento-ce-2.0.0-rc
+        version: 2.0.0-rc
         source:
           url: https://github.com/magento/magento2.git
           type: git
-          reference: 1.0.0-beta4
+          reference: 2.0.0-rc
         extra:
           sample-data:
             magento/sample-data: "1.0.0-beta"
+
+      - name: magento-ce-2.0.0-merchant-beta
+        version: merchant-beta
+        source:
+          url: https://github.com/magento/magento2.git
+          type: git
+          reference: merchant_beta
+        extra:
+          sample-data:
+            magento/sample-data: "merchant_beta"
 
     installation:
       pre-check:
