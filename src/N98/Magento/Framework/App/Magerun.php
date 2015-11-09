@@ -35,6 +35,10 @@ class Magerun implements \Magento\Framework\AppInterface
      */
     public function getObjectManager()
     {
+        if ($this->objectManager === null) {
+            throw new \RuntimeException('Please initialize Magento to use the object manager.');
+        }
+
         return $this->objectManager;
     }
 
