@@ -2,7 +2,7 @@
 
 namespace N98\Magento\Command\System\Setup;
 
-use Magento\Setup\Model\LoggerInterface;
+use Magento\Framework\Setup\LoggerInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class BridgetConsoleLogger implements LoggerInterface
