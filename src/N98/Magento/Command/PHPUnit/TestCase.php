@@ -2,6 +2,7 @@
 
 namespace N98\Magento\Command\PHPUnit;
 
+use Magento\Framework\App\ResourceConnection;
 use N98\Magento\Application;
 use PHPUnit_Framework_MockObject_MockObject;
 
@@ -55,7 +56,7 @@ class TestCase extends \PHPUnit_Framework_TestCase
      */
     public function getDatabaseConnection()
     {
-        $resource = $this->getApplication()->getObjectManager()->get('\Magento\Framework\App\Resource');
+        $resource = $this->getApplication()->getObjectManager()->get(ResourceConnection::class);
 
         return $resource->getConnection('write');
     }

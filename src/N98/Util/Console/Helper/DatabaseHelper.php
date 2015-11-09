@@ -41,7 +41,7 @@ class DatabaseHelper extends AbstractHelper
     {
         if ($this->dbSettings == null) {
             $magentoHelper = $this->getHelperSet()->getCommand()->getHelper('magento');
-            $config = $magentoHelper->getBaseConfig();
+            $config = $magentoHelper->getBaseConfig(); // @TODO Use \Magento\Framework\App\DeploymentConfig ?
 
             if (!isset($config['db'])) {
                 $output->writeln('<error>DB settings was not found in config.xml file</error>');
@@ -53,9 +53,13 @@ class DatabaseHelper extends AbstractHelper
             }
 
             $this->dbSettings = (array) $config['db']['connection']['default'];
-            $this->dbSettings['prefix'] = (string) $config['db']['table_prefix'];
 
-            if(strpos($this->dbSettings['host'], ':') !== false) {
+            $this->dbSettings['prefix'] = '';
+            if (isset($config['db']['table_prefix'])) {
+                $this->dbSettings['prefix'] = (string) $config['db']['table_prefix'];
+            }
+
+            if (strpos($this->dbSettings['host'], ':') !== false) {
                 list($this->dbSettings['host'], $this->dbSettings['port']) = explode(':', $this->dbSettings['host']);
             }
 
