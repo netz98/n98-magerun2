@@ -7,7 +7,7 @@ use N98\Magento\Command\PHPUnit\TestCase;
 class ListCommandTest extends TestCase
 {
     const NONEXISTENT_VENDOR = 'FAKE_VENDOR';
-    const MODULE_OCCURENCE_CHECK = 'Magento_Core';
+    const MODULE_OCCURENCE_CHECK = 'Magento_Catalog';
 
     /**
      * @var $command ListCommand
@@ -36,7 +36,7 @@ class ListCommandTest extends TestCase
     /**
      * Sanity test to check whether Magento_Core occurs in the output
      */
-    public function testMagentoCoreOccurs()
+    public function testMagentoCatalogOccurs()
     {
         $commandTester = new CommandTester($this->command);
         $commandTester->execute(array('command' => $this->command->getName()));
