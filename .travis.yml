@@ -42,4 +42,4 @@ before_script:
 
 script:
   - vendor/bin/phpunit --debug
-  - php dev/tests/check-coverage.php clover.xml ${COVERAGE}
+  - php tests/check-coverage.php clover.xml ${COVERAGE}

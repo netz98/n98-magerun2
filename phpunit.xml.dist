@@ -1,5 +1,5 @@
 <phpunit backupGlobals="true"
-         bootstrap="dev/tests/bootstrap.php"
+         bootstrap="tests/bootstrap.php"
          backupStaticAttributes="false"
          cacheTokens="false"
          colors="true"
@@ -12,11 +12,10 @@
          stopOnError="false"
          stopOnFailure="false"
          stopOnIncomplete="false"
-         stopOnSkipped="false"
-         strict="false">
+         stopOnSkipped="false">
     <testsuites>
-        <testsuite name="n98-magerun2 Tests">
-            <directory>./dev/tests</directory>
+        <testsuite name="n98-magerun2-tests">
+            <directory>./tests</directory>
         </testsuite>
     </testsuites>
     <filter>
@@ -27,7 +26,4 @@
             </exclude>
         </whitelist>
     </filter>
-    <logging>
-        <log type="coverage-clover" target="./clover.xml"/>
-    </logging>
 </phpunit>

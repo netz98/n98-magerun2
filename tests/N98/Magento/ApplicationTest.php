@@ -17,7 +17,7 @@ class ApplicationTest extends TestCase
         /**
          * Check autoloading
          */
-        $application = require __DIR__ . '/../../../../src/bootstrap.php';
+        $application = require __DIR__ . '/../../../src/bootstrap.php';
         $application->setMagentoRootFolder(getenv('N98_MAGERUN2_TEST_MAGENTO_ROOT'));
 
         /* @var $application Application */
@@ -28,13 +28,13 @@ class ApplicationTest extends TestCase
         /**
          * Check version
          */
-        $this->assertEquals(\N98\Magento\Application::APP_VERSION, trim(file_get_contents(__DIR__ . '/../../../../version.txt')));
+        $this->assertEquals(\N98\Magento\Application::APP_VERSION, trim(file_get_contents(__DIR__ . '/../../../version.txt')));
 
         /* @var $loader \Composer\Autoload\ClassLoader */
         $prefixes = $loader->getPrefixes();
         $this->assertArrayHasKey('N98', $prefixes);
 
-        $distConfigArray = Yaml::parse(file_get_contents(__DIR__ . '/../../../../config.yaml'));
+        $distConfigArray = Yaml::parse(file_get_contents(__DIR__ . '/../../../config.yaml'));
 
         $configArray = array(
             'autoloaders' => array(
@@ -86,7 +86,7 @@ class ApplicationTest extends TestCase
         /**
          * Check autoloading
          */
-        $application = require __DIR__ . '/../../../../src/bootstrap.php';
+        $application = require __DIR__ . '/../../../src/bootstrap.php';
         $application->setMagentoRootFolder(getenv('N98_MAGERUN2_TEST_MAGENTO_ROOT'));
 
         // Load plugin config
@@ -153,7 +153,7 @@ class ApplicationTest extends TestCase
             ->method('getConfigurationLoaderDir')
             ->will($this->returnValue(vfsStream::url('root/vendor/n98/magerun/src/N98/Magento/Command')));
 
-        $application = require __DIR__ . '/../../../../src/bootstrap.php';
+        $application = require __DIR__ . '/../../../src/bootstrap.php';
         /* @var $application Application */
         $application->setMagentoRootFolder(vfsStream::url('root/htdocs'));
         $application->setConfigurationLoader($configurationLoader);
