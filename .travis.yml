@@ -13,7 +13,11 @@ env:
 
 matrix:
   fast_finish: true
-
+  include:
+    # Lint PHP code with PHP 7.0
+    - php: 7.0
+      env: LINTSH=1
+      script: find {src,dev} -name "*.php" -print0 | xargs -0 -n1 -P8 php -l
 before_script:
   # Install MySQL 5.6
   - >
