@@ -11,7 +11,7 @@ php:
   - 5.6
 
 env:
-  - MAGENTO_VERSION="magento-ce-2.0.0-rc" DB=mysql INSTALL_SAMPLE_DATA=0 COVERAGE=10
+  - MAGENTO_VERSION="magento-ce-2.0.0-rc" DB=mysql INSTALL_SAMPLE_DATA=0
 
 matrix:
   fast_finish: true
@@ -42,4 +42,3 @@ before_script:
 
 script:
   - vendor/bin/phpunit --debug
-  - php tests/check-coverage.php clover.xml ${COVERAGE}
