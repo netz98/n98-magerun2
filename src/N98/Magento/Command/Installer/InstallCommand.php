@@ -117,14 +117,15 @@ HELP;
         $subCommandFactory->create('PreCheckPhp')->execute();
         $subCommandFactory->create('SelectMagentoVersion')->execute();
         $subCommandFactory->create('ChooseInstallationFolder')->execute();
+        $subCommandFactory->create('InstallComposer')->execute();
 
         $subCommandFactory->create('DownloadMagento')->execute();
         if ($input->getOption('only-download')) {
             return 0;
         }
 
-        $subCommandFactory->create('InstallComposer')->execute();
-        $subCommandFactory->create('InstallComposerPackages')->execute();
+
+        //$subCommandFactory->create('InstallComposerPackages')->execute();
         $subCommandFactory->create('CreateDatabase')->execute();
         $subCommandFactory->create('RemoveEmptyFolders')->execute();
         $subCommandFactory->create('SetDirectoryPermissions')->execute();
