@@ -3,7 +3,6 @@
 namespace N98\Magento\Command\Installer\SubCommand;
 
 use N98\Magento\Command\SubCommand\AbstractSubCommand;
-use N98\Util\Console\Helper\MagentoHelper;
 
 class ChooseInstallationFolder extends AbstractSubCommand
 {

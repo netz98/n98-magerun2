@@ -328,7 +328,9 @@ HELP;
             /** @var DialogHelper $dialog */
             $dialog      = $this->getHelperSet()->get('dialog');
             $defaultName = $namePrefix . $this->dbSettings['dbname'] . $nameSuffix . $nameExtension;
-            if (isset($isDir) && $isDir) $defaultName = rtrim($fileName, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $defaultName;
+            if (isset($isDir) && $isDir) {
+                $defaultName = rtrim($fileName, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $defaultName;
+            }
             if (!$input->getOption('force')) {
                 $fileName = $dialog->ask($output, '<question>Filename for SQL dump:</question> [<comment>'
                     . $defaultName . '</comment>]', $defaultName

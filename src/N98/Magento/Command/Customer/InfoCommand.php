@@ -6,7 +6,6 @@ use Magento\Customer\Model\Attribute as CustomerAttribute;
 use Magento\Customer\Model\Resource\Customer;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class InfoCommand extends AbstractCustomerCommand
