@@ -12,17 +12,17 @@ class ListCommand extends AbstractMagentoCommand
 {
 
     /**
-     * @var \Magento\Framework\Store\StoreManagerInterface
+     * @var \Magento\Store\Model\StoreManagerInterface
      */
     protected $storeManager;
 
     /**
-     * @var \Magento\Sitemap\Model\Resource\Catalog\Category
+     * @var \Magento\Sitemap\Model\ResourceModel\Catalog\Category
      */
     protected $sitemapCategoryCollection;
 
     /**
-     * @var \Magento\Sitemap\Model\Resource\Catalog\Product
+     * @var \Magento\Sitemap\Model\ResourceModel\Catalog\Product
      */
     protected $sitemapProductCollection;
 
@@ -62,15 +62,15 @@ HELP;
 
     /**
      * @param \Magento\Store\Model\StoreManager $storeManager
-     * @param \Magento\Sitemap\Model\Resource\Catalog\Category $sitemapCategoryCollection
-     * @param \Magento\Sitemap\Model\Resource\Catalog\Product $sitmapProductCollection
-     * @param \Magento\Sitemap\Model\Resource\Cms\Page $sitemapPageCollection
+     * @param \Magento\Sitemap\Model\ResourceModel\Catalog\Category $sitemapCategoryCollection
+     * @param \Magento\Sitemap\Model\ResourceModel\Catalog\Product $sitmapProductCollection
+     * @param \Magento\Sitemap\Model\ResourceModel\Cms\Page $sitemapPageCollection
      */
     public function inject(
         \Magento\Store\Model\StoreManagerInterface $storeManager,
-        \Magento\Sitemap\Model\Resource\Catalog\Category $sitemapCategoryCollection,
-        \Magento\Sitemap\Model\Resource\Catalog\Product $sitemapProductCollection,
-        \Magento\Sitemap\Model\Resource\Cms\Page $sitemapPageCollection
+        \Magento\Sitemap\Model\ResourceModel\Catalog\Category $sitemapCategoryCollection,
+        \Magento\Sitemap\Model\ResourceModel\Catalog\Product $sitemapProductCollection,
+        \Magento\Sitemap\Model\ResourceModel\Cms\Page $sitemapPageCollection
     )
     {
         $this->storeManager = $storeManager;

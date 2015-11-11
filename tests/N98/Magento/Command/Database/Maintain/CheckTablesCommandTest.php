@@ -14,6 +14,8 @@ class CheckTablesTest extends TestCase
 {
     public function testExecuteMyIsam()
     {
+        $this->markTestSkipped('Currently we have no myisam tables in a magento2 installation');
+
         $command = $this->getCommand();
 
         $commandTester = new CommandTester($command);

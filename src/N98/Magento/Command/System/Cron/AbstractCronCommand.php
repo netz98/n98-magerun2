@@ -27,7 +27,7 @@ abstract class AbstractCronCommand extends AbstractMagentoCommand
     protected $_scopeConfig;
 
     /**
-     * @var \Magento\Cron\Model\Resource\Schedule\Collection
+     * @var \Magento\Cron\Model\ResourceModel\Schedule\Collection
      */
     protected $_cronScheduleCollection;
 
@@ -36,14 +36,14 @@ abstract class AbstractCronCommand extends AbstractMagentoCommand
      * @param \Magento\Framework\Event\ManagerInterface $eventManager
      * @param \Magento\Cron\Model\ConfigInterface $cronConfig
      * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
-     * @param \Magento\Cron\Model\Resource\Schedule\Collection $cronScheduleCollection
+     * @param \Magento\Cron\Model\ResourceModel\Schedule\Collection $cronScheduleCollection
      */
     public function inject(
         \Magento\Framework\App\State $state,
         \Magento\Framework\Event\ManagerInterface $eventManager,
         \Magento\Cron\Model\ConfigInterface $cronConfig,
         \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
-        \Magento\Cron\Model\Resource\Schedule\Collection $cronScheduleCollection
+        \Magento\Cron\Model\ResourceModel\Schedule\Collection $cronScheduleCollection
     ) {
         $this->_state = $state;
         $this->_eventManager = $eventManager;
