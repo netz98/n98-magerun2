@@ -783,18 +783,6 @@ MAGENTO1HINT;
     }
 
     /**
-     * @return void
-     */
-    protected function _restoreAutoloaders($loaders) {
-        $current_loaders = spl_autoload_functions();
-        foreach ($loaders as $function) {
-            if (!in_array($function, $current_loaders)) {
-                spl_autoload_register($function);
-            }
-        }
-    }
-
-    /**
      * @return \Symfony\Component\EventDispatcher\EventDispatcher
      */
     public function getDispatcher()
