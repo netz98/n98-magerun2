@@ -1,14 +1,25 @@
 <?php
+/*
+ * this file is part of magerun
+ *
+ * @author Tom Klingenberg <https://github.com/ktomk>
+ */
 
 namespace N98\Util;
+
+use RuntimeException;
 
 /**
  * Class FilesystemTest
  * @package N98\Util
  * @author Aydin Hassan <aydin@hotmail.co.uk>
+ * @covers N98\Util\Filesystem
  */
 class FilesystemTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @var Filesystem
+     */
     protected $fileSystem;
 
     public function setUp()
@@ -16,6 +27,9 @@ class FilesystemTest extends \PHPUnit_Framework_TestCase
         $this->fileSystem = new Filesystem();
     }
 
+    /**
+     * @expectedException RuntimeException
+     */
     public function testRecursiveCopy()
     {
         $tmp        = sys_get_temp_dir();
@@ -47,6 +61,15 @@ class FilesystemTest extends \PHPUnit_Framework_TestCase
         rmdir($dest . "/folder1");
         rmdir($dest . "/folder2");
         rmdir($dest);
+
+        $this->assertFileNotExists($dest . "/folder1/file1.txt");
+        $this->assertFileNotExists($dest);
+
+        is_dir($tmp . '/a') || mkdir($tmp . '/a');
+        touch($tmp . '/file1.txt');
+        $this->fileSystem->recursiveCopy($tmp . '/a', $tmp . '/file1.txt');
+        unlink($tmp . '/file1.txt');
+        rmdir($tmp . '/a');
     }
 
     public function testRecursiveCopyWithBlacklist()
@@ -84,6 +107,9 @@ class FilesystemTest extends \PHPUnit_Framework_TestCase
         rmdir($dest);
     }
 
+    /**
+     * @requires function symlink
+     */
     public function testRecursiveDirectoryRemoveUnLinksSymLinks()
     {
         $tmp            = sys_get_temp_dir();
@@ -149,12 +175,9 @@ class FilesystemTest extends \PHPUnit_Framework_TestCase
     public function testFalseIsReturnedIfDirectoryNotReadable()
     {
         $tmp        = sys_get_temp_dir();
-        $basePath   = $tmp . "/n98_testdir";
-        @mkdir($basePath, 0000, true);
+        $basePath   = $tmp . "/n98_testdir-never-existed";
 
         $this->assertFalse($this->fileSystem->recursiveRemoveDirectory($basePath));
-        //cleanup
-        rmdir($basePath);
     }
 
     public function testParentIsNotRemovedIfEmptyIsTrue()
@@ -196,11 +219,11 @@ class FilesystemTest extends \PHPUnit_Framework_TestCase
     public static function convertedBytesProvider()
     {
         return array(
-            array(20000000,     2,  '19.07 MB'),
-            array(20000000,     3,  '19.073 MB'),
-            array(2000000000,   2,  '1.86 GB'),
-            array(2,            2,  '2.00 B'),
-            array(2048,         2,  '2.00 KB'),
+            array(20000000,     2,  '19.07M'),
+            array(20000000,     3,  '19.073M'),
+            array(2000000000,   2,  '1.86G'),
+            array(2,            2,  '2.00B'),
+            array(2048,         2,  '2.00K'),
         );
     }
 }

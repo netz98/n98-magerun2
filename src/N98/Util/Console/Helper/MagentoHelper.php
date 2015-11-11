@@ -6,14 +6,16 @@ use N98\Magento\Application;
 use N98\Util\BinaryString;
 use Symfony\Component\Console\Helper\Helper as AbstractHelper;
 use Symfony\Component\Console\Input\ArgvInput;
-use Symfony\Component\Console\Input\InputAwareInterface;
-use Symfony\Component\Console\Input\StringInput;
-use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputInterface;
 
+/**
+ * Class MagentoHelper
+ *
+ * @package N98\Util\Console\Helper
+ */
 class MagentoHelper extends AbstractHelper
 {
     /**
@@ -22,7 +24,7 @@ class MagentoHelper extends AbstractHelper
     protected $_magentoRootFolder = null;
 
     /**
-     * @var string
+     * @var int
      */
     protected $_magentoMajorVersion = \N98\Magento\Application::MAGENTO_MAJOR_VERSION_1;
 
@@ -95,10 +97,10 @@ class MagentoHelper extends AbstractHelper
      * Start Magento detection
      *
      * @param string $folder
-     * @param array $subFolders Sub-folders to check
+     * @param array $subFolders [optional] sub-folders to check
      * @return bool
      */
-    public function detect($folder, $subFolders = array())
+    public function detect($folder, array $subFolders = array())
     {
         $folders = $this->splitPathFolders($folder);
         $folders = $this->checkMagerunFile($folders);
@@ -142,7 +144,7 @@ class MagentoHelper extends AbstractHelper
     }
 
     /**
-     * @return mixed
+     * @return int
      */
     public function getMajorVersion()
     {
@@ -192,12 +194,14 @@ class MagentoHelper extends AbstractHelper
      *
      * @return array
      */
-    protected function checkModman($folders)
+    protected function checkModman(array $folders)
     {
         foreach (array_reverse($folders) as $searchFolder) {
             if (!is_readable($searchFolder)) {
                 if (OutputInterface::VERBOSITY_DEBUG <= $this->output->getVerbosity()) {
-                    $this->output->writeln('<debug>Folder <info>' . $searchFolder . '</info> is not readable. Skip.</debug>');
+                    $this->output->writeln(
+                        '<debug>Folder <info>' . $searchFolder . '</info> is not readable. Skip.</debug>'
+                    );
                 }
                 continue;
             }
@@ -216,16 +220,15 @@ class MagentoHelper extends AbstractHelper
             if ($count > 0) {
                 $baseFolderContent = trim(file_get_contents($searchFolder . DIRECTORY_SEPARATOR . '.basedir'));
                 if (OutputInterface::VERBOSITY_DEBUG <= $this->output->getVerbosity()) {
-                    $this->output->writeln('<debug>Found modman .basedir file with content <info>' . $baseFolderContent . '</info></debug>');
+                    $this->output->writeln(
+                        '<debug>Found modman .basedir file with content <info>' . $baseFolderContent . '</info></debug>'
+                    );
                 }
 
                 if (!empty($baseFolderContent)) {
-                    $modmanBaseFolder = $searchFolder
-                                      . DIRECTORY_SEPARATOR
-                                      . '..'
-                                      . DIRECTORY_SEPARATOR
-                                      . $baseFolderContent;
-                    array_push($folders, $modmanBaseFolder);
+                    array_push(
+                        $folders, $searchFolder . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . $baseFolderContent
+                    );
                 }
             }
         }
@@ -240,12 +243,14 @@ class MagentoHelper extends AbstractHelper
      *
      * @return array
      */
-    protected function checkMagerunFile($folders)
+    protected function checkMagerunFile(array $folders)
     {
         foreach (array_reverse($folders) as $searchFolder) {
             if (!is_readable($searchFolder)) {
                 if (OutputInterface::VERBOSITY_DEBUG <= $this->output->getVerbosity()) {
-                    $this->output->writeln('<debug>Folder <info>' . $searchFolder . '</info> is not readable. Skip.</debug>');
+                    $this->output->writeln(
+                        '<debug>Folder <info>' . $searchFolder . '</info> is not readable. Skip.</debug>'
+                    );
                 }
                 continue;
             }
@@ -265,13 +270,12 @@ class MagentoHelper extends AbstractHelper
                 $this->_magerunStopFileFolder = $searchFolder;
                 $magerunFileContent = trim(file_get_contents($searchFolder . DIRECTORY_SEPARATOR . '.n98-magerun2'));
                 if (OutputInterface::VERBOSITY_DEBUG <= $this->output->getVerbosity()) {
-                    $this->output->writeln('<debug>Found .n98-magerun2 file with content <info>' . $magerunFileContent . '</info></debug>');
+                    $this->output->writeln(
+                        '<debug>Found .n98-magerun2 file with content <info>' . $magerunFileContent . '</info></debug>'
+                    );
                 }
 
-                $modmanBaseFolder = $searchFolder
-                    . DIRECTORY_SEPARATOR
-                    . $magerunFileContent;
-                array_push($folders, $modmanBaseFolder);
+                array_push($folders, $searchFolder . DIRECTORY_SEPARATOR . $magerunFileContent);
             }
         }
 
@@ -316,14 +320,17 @@ class MagentoHelper extends AbstractHelper
 
             $this->_magentoRootFolder = $searchFolder;
 
-            if ($hasMageFile) {
-                $this->_magentoMajorVersion = Application::MAGENTO_MAJOR_VERSION_1;
-            } else {
+            // Magento 2 does not have a god class and thus if this file is not there it is version 2
+            if ($hasMageFile == false) {
                 $this->_magentoMajorVersion = Application::MAGENTO_MAJOR_VERSION_2;
+            } else {
+                $this->_magentoMajorVersion = Application::MAGENTO_MAJOR_VERSION_1;
             }
 
             if (OutputInterface::VERBOSITY_DEBUG <= $this->output->getVerbosity()) {
-                $this->output->writeln('<debug>Found Magento in folder <info>' . $this->_magentoRootFolder . '</info></debug>');
+                $this->output->writeln(
+                    '<debug>Found Magento in folder <info>' . $this->_magentoRootFolder . '</info></debug>'
+                );
             }
 
             return true;
@@ -334,8 +341,7 @@ class MagentoHelper extends AbstractHelper
 
     /**
      * @return array
-     * @throws \ErrorException
-     * @throws \Exception
+     * @throws RuntimeException
      */
     public function getBaseConfig()
     {
@@ -355,13 +361,13 @@ class MagentoHelper extends AbstractHelper
 
             foreach ($configFiles as $configFile) {
                 if (!is_readable($configFile)) {
-                    throw new \Exception('app/etc/config.php is not readable');
+                    throw new RuntimeException('app/etc/config.php is not readable');
                 }
 
                 $config = @include $configFile;
 
                 if (!is_array($config)) {
-                    throw new \ErrorException('app/etc/config.php is corrupted. Please check it.');
+                    throw new RuntimeException('app/etc/config.php is corrupted. Please check it.');
                 }
 
                 $this->baseConfig = array_merge($this->baseConfig, $config);

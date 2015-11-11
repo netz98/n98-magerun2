@@ -65,7 +65,7 @@ class VariablesCommandTest extends TestCase
             'search'     => '%size%',
         ));
 
-        $this->assertRegExp('~max_binlog_stmt_cache_size," [0-9\.]+\s[A-Z]{1,2}"~', $commandTester->getDisplay());
-        $this->assertRegExp('~myisam_max_sort_file_size,"  [0-9\.]+\s[A-Z]{1,2}"~', $commandTester->getDisplay());
+        $this->assertRegExp('~max_binlog_stmt_cache_size," [0-9\.]+[A-Z]"~', $commandTester->getDisplay());
+        $this->assertRegExp('~myisam_max_sort_file_size,"  [0-9\.]+[A-Z]"~', $commandTester->getDisplay());
     }
 }
