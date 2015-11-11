@@ -14,12 +14,11 @@ class RunCommandTest extends TestCase
         $command = $this->getApplication()->find('sys:cron:run');
 
         $commandTester = new CommandTester($command);
-        $commandTester->execute(
-            array(
-                'command' => $command->getName(),
-                'job'     => 'log_clean')
-        );
+        $commandTester->execute([
+            'command' => $command->getName(),
+            'job'     => 'backend_clean_cache'
+        ]);
     
-        $this->assertContains('Run Magento\Log\Model\Cron::logClean done', $commandTester->getDisplay());
+        $this->assertContains('Run Magento\Backend\Cron\CleanCache::execute done', $commandTester->getDisplay());
     }
 }
