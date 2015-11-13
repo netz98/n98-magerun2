@@ -12,7 +12,7 @@ php:
   - 7.0
 
 env:
-  - MAGENTO_VERSION="magento-ce-2.0.0-rc" DB=mysql INSTALL_SAMPLE_DATA=0
+  - MAGENTO_VERSION="magento-ce-2.0.0-rc2" DB=mysql INSTALL_SAMPLE_DATA=0
 
 matrix:
   fast_finish: true
