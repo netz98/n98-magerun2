@@ -17,10 +17,11 @@ class ApplicationTest extends TestCase
         /**
          * Check autoloading
          */
-        $application = require __DIR__ . '/../../../src/bootstrap.php';
-        $application->setMagentoRootFolder(getenv('N98_MAGERUN2_TEST_MAGENTO_ROOT'));
 
         /* @var $application Application */
+        $application = require __DIR__ . '/../../../src/bootstrap.php';
+        $application->setMagentoRootFolder($this->getTestMagentoRoot());
+
         $this->assertInstanceOf('\N98\Magento\Application', $application);
         $loader = $application->getAutoloader();
         $this->assertInstanceOf('\Composer\Autoload\ClassLoader', $loader);
@@ -28,7 +29,7 @@ class ApplicationTest extends TestCase
         /**
          * Check version
          */
-        $this->assertEquals(\N98\Magento\Application::APP_VERSION, trim(file_get_contents(__DIR__ . '/../../../version.txt')));
+        $this->assertEquals(Application::APP_VERSION, trim(file_get_contents(__DIR__ . '/../../../version.txt')));
 
         /* @var $loader \Composer\Autoload\ClassLoader */
         $prefixes = $loader->getPrefixes();
@@ -83,11 +84,13 @@ class ApplicationTest extends TestCase
 
     public function testPlugins()
     {
+        $this->getApplication(); // bootstrap implicit
+
         /**
          * Check autoloading
          */
         $application = require __DIR__ . '/../../../src/bootstrap.php';
-        $application->setMagentoRootFolder(getenv('N98_MAGERUN2_TEST_MAGENTO_ROOT'));
+        $application->setMagentoRootFolder($this->getTestMagentoRoot());
 
         // Load plugin config
         $injectConfig = array(
@@ -153,8 +156,8 @@ class ApplicationTest extends TestCase
             ->method('getConfigurationLoaderDir')
             ->will($this->returnValue(vfsStream::url('root/vendor/n98/magerun/src/N98/Magento/Command')));
 
-        $application = require __DIR__ . '/../../../src/bootstrap.php';
         /* @var $application Application */
+        $application = require __DIR__ . '/../../../src/bootstrap.php';
         $application->setMagentoRootFolder(vfsStream::url('root/htdocs'));
         $application->setConfigurationLoader($configurationLoader);
         $application->init();
