@@ -11,7 +11,7 @@ Build phar with:
 
 -->
 <project name="n98-magerun2" default="dist">
-    <taskdef name="patched-pharpackage" classname="build.tasks.PatchedPharPackageTask" />
+    <taskdef name="patched-pharpackage" classname="build.phar.tasks.PatchedPharPackageTask" />
     <property name="phar" value="${phing.project.name}.phar"/>
 
     <fileset dir="." id="root_folder">
@@ -71,7 +71,7 @@ Build phar with:
     </target>
 
     <target name="dist_unix">
-        <patched-pharpackage basedir="./" stub="build/_cli_stub.php" signature="sha512" compression="${compression}" destfile="./${phar}">
+        <patched-pharpackage basedir="./" stub="build/phar/_cli_stub.php" signature="sha512" compression="${compression}" destfile="./${phar}">
             <metadata>
                 <element name="version" value="1.0.0" />
                 <element name="authors">
@@ -88,10 +88,6 @@ Build phar with:
 
         <!-- make phar executable -->
         <chmod file="./${phar}" mode="775" />
-        <exec command="git update-index --chmod=+x ${phar}" />
-        <!-- the phar is not updated in the repository -->
-        <exec command="git reset HEAD ${phar}" />
-        <exec command="git update-index --assume-unchanged ${phar}" />
     </target>
 
     <target name="install">
