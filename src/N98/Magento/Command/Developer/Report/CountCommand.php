@@ -51,10 +51,10 @@ class CountCommand extends AbstractMagentoCommand
 
         $directoryRead = $this->filesystem->getDirectoryRead(DirectoryList::VAR_DIR);
         if (!$directoryRead->isDirectory('report')) {
-            return 0; // currently we have no error report
+            $count = 0; // currently we have no error report
+        } else {
+            $count = $this->getFileCount($directoryRead->getAbsolutePath('report'));
         }
-
-        $count = $this->getFileCount($directoryRead->getAbsolutePath('report'));
 
         $output->writeln($count);
     }
