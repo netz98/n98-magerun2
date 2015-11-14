@@ -76,6 +76,7 @@ commands:
     - N98\Magento\Command\Generation\FlushCommand
     - N98\Magento\Command\Script\Repository\ListCommand
     - N98\Magento\Command\Script\Repository\RunCommand
+    - N98\Magento\Command\System\CheckCommand
     - N98\Magento\Command\System\Cron\HistoryCommand
     - N98\Magento\Command\System\Cron\ListCommand
     - N98\Magento\Command\System\Cron\RunCommand
@@ -165,6 +166,8 @@ commands:
             - ctype
             - gd
             - xsl
+            - openssl
+            - intl
 
       defaults:
         currency: EUR
@@ -180,3 +183,52 @@ commands:
         backend-frontname: admin
         admin-email: john.doe@example.com
         encryption_key:
+
+  N98\Magento\Command\System\CheckCommand:
+    checks:
+      settings:
+        - N98\Magento\Command\System\Check\Settings\SecureBaseUrlCheck
+        - N98\Magento\Command\System\Check\Settings\UnsecureBaseUrlCheck
+        - N98\Magento\Command\System\Check\Settings\SecureCookieDomainCheck
+        - N98\Magento\Command\System\Check\Settings\UnsecureCookieDomainCheck
+      filesystem:
+        - N98\Magento\Command\System\Check\Filesystem\FoldersCheck
+        - N98\Magento\Command\System\Check\Filesystem\FilesCheck
+      php:
+        - N98\Magento\Command\System\Check\PHP\ExtensionsCheck
+        - N98\Magento\Command\System\Check\PHP\BytecodeCacheExtensionsCheck
+      mysql:
+        - N98\Magento\Command\System\Check\MySQL\VersionCheck
+        - N98\Magento\Command\System\Check\MySQL\EnginesCheck
+
+    filesystem:
+      folders:
+        pub/media: "Used for images and other media files."
+        var: "Used for caching, reports, etc."
+        var/cache: "Used for caching"
+        var/session: "Used as file based session save"
+
+      files:
+        app/etc/env.php: "Magento local configuration."
+
+    php:
+      required-extensions:
+        - simplexml
+        - mcrypt
+        - hash
+        - gd
+        - dom
+        - iconv
+        - curl
+        - soap
+        - pdo
+        - pdo_mysql
+        - intl
+        - openssl
+
+      bytecode-cache-extensions:
+        - apc
+        - eaccelerator
+        - xcache
+        - Zend Optimizer
+        - Zend OPcache
