@@ -74,6 +74,7 @@ commands:
     - N98\Magento\Command\Developer\TemplateHintsCommand
     - N98\Magento\Command\Developer\Theme\ListCommand
     - N98\Magento\Command\Generation\FlushCommand
+    - N98\Magento\Command\OpenBrowserCommand
     - N98\Magento\Command\Script\Repository\ListCommand
     - N98\Magento\Command\Script\Repository\RunCommand
     - N98\Magento\Command\System\CheckCommand
