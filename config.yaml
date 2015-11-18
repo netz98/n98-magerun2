@@ -145,9 +145,9 @@ commands:
 
   N98\Magento\Command\Installer\InstallCommand:
     magento-packages:
-      - name: magento-ce-2.0.0-rc2
+      - name: magento-ce-2.0.0
         package: magento/project-community-edition
-        version: 2.0.0-rc2
+        version: 2.0.0
         options:
           prefer-dist: true
           stability: beta
