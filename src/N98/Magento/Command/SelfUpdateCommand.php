@@ -96,13 +96,13 @@ EOT
                 if ($loadUnstable) {
                     $changeLogContent = $rfs->getContents(
                         'raw.github.com',
-                        'https://raw.github.com/netz98/n98-magerun2/develop/changes.txt',
+                        'https://raw.github.com/netz98/n98-magerun2/develop/CHANGELOG.md',
                         false
                     );
                 } else {
                     $changeLogContent = $rfs->getContents(
                         'raw.github.com',
-                        'https://raw.github.com/netz98/n98-magerun2/master/changes.txt',
+                        'https://raw.github.com/netz98/n98-magerun2/master/CHANGELOG.md',
                         false
                     );
                 }

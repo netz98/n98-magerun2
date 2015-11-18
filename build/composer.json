@@ -1,0 +1,15 @@
+{
+    "name": "n98/magerun2-build",
+    "description": "magerun2 build",
+    "require-dev": {
+        "phing/phing": "~2.10.0"
+    },
+    "authors": [
+        {
+            "name": "Tom Klingenberg",
+            "email": "tklingenberg@lastflood.net"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {}
+}

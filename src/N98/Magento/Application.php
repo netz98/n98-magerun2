@@ -9,7 +9,7 @@ use N98\Util\ArrayFunctions;
 use N98\Util\Console\Helper\TwigHelper;
 use N98\Util\Console\Helper\MagentoHelper;
 use N98\Util\OperatingSystem;
-use N98\Util\String;
+use N98\Util\BinaryString;
 use Symfony\Component\Console\Application as BaseApplication;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Event\ConsoleEvent;
@@ -20,7 +20,6 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class Application extends BaseApplication
@@ -33,7 +32,7 @@ class Application extends BaseApplication
     /**
      * @var string
      */
-    const APP_VERSION = '0.5.0';
+    const APP_VERSION = '1.0.0';
 
     /**
      * @type int
@@ -50,10 +49,10 @@ class Application extends BaseApplication
      */
     private static $logo = "
           ____  ____                                                   ___ 
-   ____  / __ \( __ )      ____ ___  ____ _____ ____  _______  ______ |__ \
-  / __ \/ /_/ / __  |_____/ __ `__ \/ __ `/ __ `/ _ \/ ___/ / / / __ \__/ /
- / / / /\__, / /_/ /_____/ / / / / / /_/ / /_/ /  __/ /  / /_/ / / / / __/ 
-/_/ /_//____/\____/     /_/ /_/ /_/\__,_/\__, /\___/_/   \__,_/_/ /_/____/ 
+   ____  / __ \\( __ )      ____ ___  ____ _____ ____  _______  ______ |__ \\
+  / __ \\/ /_/ / __  |_____/ __ `__ \\/ __ `/ __ `/ _ \\/ ___/ / / / __ \\__/ /
+ / / / /\\__, / /_/ /_____/ / / / / / /_/ / /_/ /  __/ /  / /_/ / / / / __/
+/_/ /_//____/\\____/     /_/ /_/ /_/\\__,_/\\__, /\\___/_/   \\__,_/_/ /_/____/
                                         /____/                             
 ";
     /**
@@ -583,7 +582,7 @@ class Application extends BaseApplication
                 if (is_array($alias)) {
                     $aliasCommandName = key($alias);
                     if ($input->getFirstArgument() == $aliasCommandName) {
-                        $aliasCommandParams = array_slice(String::trimExplodeEmpty(' ', $alias[$aliasCommandName]), 1);
+                        $aliasCommandParams = array_slice(BinaryString::trimExplodeEmpty(' ', $alias[$aliasCommandName]), 1);
                         if (count($aliasCommandParams) > 0) {
                             // replace with aliased data
                             $mergedParams = array_merge(
@@ -781,18 +780,6 @@ MAGENTO1HINT;
         $app->launch();
 
         $this->_objectManager = $app->getObjectManager();
-    }
-
-    /**
-     * @return void
-     */
-    protected function _restoreAutoloaders($loaders) {
-        $current_loaders = spl_autoload_functions();
-        foreach ($loaders as $function) {
-            if (!in_array($function, $current_loaders)) {
-                spl_autoload_register($function);
-            }
-        }
     }
 
     /**

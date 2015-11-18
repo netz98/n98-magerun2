@@ -1,6 +1,0 @@
-autoloaders:
-  TestModule: %module%/src
-
-commands:
-  customCommands:
-    - TestModule\FooCommand

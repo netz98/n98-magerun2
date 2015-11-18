@@ -75,9 +75,9 @@ class InstallCommand extends AbstractMagentoCommand
 * Starts Magento installer
 * Sets rewrite base in .htaccess file
 
-Example of an unattended Magento CE 1.7.0.2 installation:
+Example of an unattended Magento CE 2.0.0 installation:
 
-   $ n98-magerun.phar install --dbHost="localhost" --dbUser="mydbuser" --dbPass="mysecret" --dbName="magentodb" --installSampleData=yes --useDefaultConfigParams=yes --magentoVersionByName="magento-ce-1.7.0.2" --installationFolder="magento" --baseUrl="http://magento.localdomain/"
+   $ n98-magerun.phar install --dbHost="localhost" --dbUser="mydbuser" --dbPass="mysecret" --dbName="magentodb" --installSampleData=yes --useDefaultConfigParams=yes --magentoVersionByName="magento-ce-2.0.0" --installationFolder="magento" --baseUrl="http://magento.localdomain/"
 
 Additionally, with --noDownload option you can install Magento working copy already stored in --installationFolder on
 the given database.
@@ -117,14 +117,15 @@ HELP;
         $subCommandFactory->create('PreCheckPhp')->execute();
         $subCommandFactory->create('SelectMagentoVersion')->execute();
         $subCommandFactory->create('ChooseInstallationFolder')->execute();
+        $subCommandFactory->create('InstallComposer')->execute();
 
         $subCommandFactory->create('DownloadMagento')->execute();
         if ($input->getOption('only-download')) {
             return 0;
         }
 
-        $subCommandFactory->create('InstallComposer')->execute();
-        $subCommandFactory->create('InstallComposerPackages')->execute();
+
+        //$subCommandFactory->create('InstallComposerPackages')->execute();
         $subCommandFactory->create('CreateDatabase')->execute();
         $subCommandFactory->create('RemoveEmptyFolders')->execute();
         $subCommandFactory->create('SetDirectoryPermissions')->execute();

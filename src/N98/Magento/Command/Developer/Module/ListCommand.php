@@ -83,7 +83,7 @@ class ListCommand extends AbstractMagentoCommand
                 continue;
             }
 
-            $this->moduleList[] = [$info['name'], $info['schema_version']];
+            $this->moduleList[] = [$info['name'], $info['setup_version']];
         }
     }
 }

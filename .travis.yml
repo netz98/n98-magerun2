@@ -2,39 +2,50 @@ language: php
 
 branches:
   only:
+    - master
     - develop
+    - /^(bugfix|feature)\/.*$/
 
 php:
   - 5.5
   - 5.6
+  - 7.0
 
 env:
-  - MAGENTO_VERSION="magento-ce-2.0.0.0-dev-beta7" DB=mysql INSTALL_SAMPLE_DATA=no COVERAGE=10
+  matrix:
+    - MAGENTO_VERSION="magento-ce-2.0.0" DB=mysql INSTALL_SAMPLE_DATA=0
+  global:
+    secure: "CJnQ2lmhXcHSuKor8RtjjeUEyUyFRCiezwdn6loy+IWQF3q+o6Tt36MOV+2V3/yG6p+EcUQXnphtdq11m86GSUVDqbOsa8aJLtdv+v+UuPG+0wBd0/akvTcZqeXb52dT2F1g6RwgZIh3fxHsQkXavrirILA39GZZdAaX7Ct49sQ="
 
 matrix:
   fast_finish: true
+  include:
+    - php: 5.5
+      env: BUILDSH=1
+      script: ./build.sh
+    - php: 5.6
+      env: BUILDSH=1
+      script: ./build.sh
+    - php: 7.0
+      env: BUILDSH=1
+      script: ./build.sh
+    - php: 7.0
+      env: LINTSH=1
+      script: find {src,tests} -name "*.php" ! -path '*/String.php' -print0 | xargs
+        -0 -n1 -P8 php -l | grep -v '^No syntax errors detected'; test $? -eq 1
+
+  allow_failures:
+    - php: 7.0
+      env: MAGENTO_VERSION="magento-ce-2.0.0-rc" DB=mysql INSTALL_SAMPLE_DATA=0
+
+before_install:
+  - travis_retry composer self-update
+
+install:
+  - travis_retry composer install --prefer-source --no-interaction --ignore-platform-reqs
 
 before_script:
-  # Install MySQL 5.6
-  - >
-      sudo apt-get remove --purge mysql-common mysql-server-5.5 mysql-server-core-5.5 mysql-client-5.5 mysql-client-core-5.5;
-      sudo apt-get autoremove;
-      sudo apt-get autoclean;
-      sudo apt-add-repository ppa:ondrej/mysql-5.6 -y;
-      sudo apt-get update;
-      sudo apt-get install mysql-server-5.6 mysql-client-5.6;
-      mysql -uroot -e 'SET @@global.sql_mode = NO_ENGINE_SUBSTITUTION; CREATE DATABASE magento_travis;';
-
-  # Install n98-magerun from source
-  - curl -s http://getcomposer.org/installer | php
-  - php composer.phar install --dev --prefer-source
-
-  # Install Magento with install command
-  - bin/n98-magerun2 install --magentoVersionByName="${MAGENTO_VERSION}" --installationFolder="./${MAGENTO_VERSION}" --dbHost=localhost --dbUser=root --dbPass='' --dbName="magento_travis" --installSampleData=${INSTALL_SAMPLE_DATA} --useDefaultConfigParams=yes --baseUrl="http://travis.magento.local/"
-
-  # Prepare test framework
-  - export N98_MAGERUN2_TEST_MAGENTO_ROOT="./${MAGENTO_VERSION}"
+  - source ./build/travis/before_script.sh
 
 script:
   - vendor/bin/phpunit --debug
-  - php dev/tests/check-coverage.php clover.xml ${COVERAGE}

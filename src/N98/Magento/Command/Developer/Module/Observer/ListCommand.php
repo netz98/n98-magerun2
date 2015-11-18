@@ -116,9 +116,9 @@ class ListCommand extends AbstractMagentoCommand
             foreach ($observers as $observerName => $observerData) {
                 if ($firstObserver) {
                     $firstObserver = ! $firstObserver;
-                    $table[] = [$eventName, $observerName, $observerData['instance'] . '::' . $observerData['method']];
+                    $table[] = [$eventName, $observerName, $observerData['instance'] . '::' . $observerData['name']];
                 } else {
-                    $table[] = ['', $observerName, $observerData['instance'] . '::' . $observerData['method']];
+                    $table[] = ['', $observerName, $observerData['instance'] . '::' . $observerData['name']];
                 }
             }
         }

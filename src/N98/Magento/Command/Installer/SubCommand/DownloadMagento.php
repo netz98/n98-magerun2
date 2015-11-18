@@ -3,6 +3,8 @@
 namespace N98\Magento\Command\Installer\SubCommand;
 
 use N98\Magento\Command\SubCommand\AbstractSubCommand;
+use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Process\ProcessBuilder;
 
 class DownloadMagento extends AbstractSubCommand
 {
@@ -16,36 +18,45 @@ class DownloadMagento extends AbstractSubCommand
         }
 
         try {
-            $package = $this->getCommand()->createComposerPackageByConfig($this->config['magentoVersionData']);
-            $this->config->setObject('magentoPackage', $package);
+            $package = $this->config['magentoVersionData'];
+            $this->config->setArray('magentoPackage', $package);
 
-            if (file_exists($this->config->getString('installationFolder') . DIRECTORY_SEPARATOR . 'app' . DIRECTORY_SEPARATOR . 'Mage.php')) {
+            if (file_exists($this->config->getString('installationFolder') . DIRECTORY_SEPARATOR . 'app/etc/env.php')) {
                 $this->output->writeln('<error>A magento installation already exists in this folder </error>');
                 return false;
             }
 
-            $composer = $this->getCommand()->getComposer($this->input, $this->output);
-            $targetFolder = $this->getTargetFolderByType($composer, $package, $this->config->getString('installationFolder'));
-            $this->config->setObject(
-                'magentoPackage',
-                $this->getCommand()->downloadByComposerConfig(
-                    $this->input,
-                    $this->output,
-                    $package,
-                    $targetFolder,
-                    true
-                )
-            );
+            $args = [
+                $this->config['composer_bin'],
+                'create-project',
+            ];
 
-            if ($this->getCommand()->isSourceTypeRepository($package->getSourceType())) {
-                $filesystem = new \N98\Util\Filesystem;
-                $filesystem->recursiveCopy($targetFolder, $this->config['installationFolder'], array('.git', '.hg'));
-            } else {
-                $filesystem = new \Composer\Util\Filesystem();
-                $filesystem->copyThenRemove(
-                    $this->config['installationFolder'] . '/_n98_magerun_download', $this->config['installationFolder']
-                );
+            // Add composer options
+            foreach ($package['options'] as $optionName => $optionValue) {
+                $args[] = '--' . $optionName . ($optionValue === true ? '' : '=' . $optionValue);
             }
+
+            // Add arguments
+            $args[] = $package['package'];
+            $args[] = $this->config->getString('installationFolder');
+            $args[] = $package['version'];
+
+            if (OutputInterface::VERBOSITY_VERBOSE <= $this->output->getVerbosity()) {
+                $args[] = '-vvv';
+            }
+
+            $processBuilder = new ProcessBuilder($args);
+
+            $process = $processBuilder->getProcess();
+            if (OutputInterface::VERBOSITY_VERBOSE <= $this->output->getVerbosity()) {
+                $this->output->writeln($process->getCommandLine());
+            }
+
+            $process->setTimeout(86400);
+            $process->start();
+            $process->wait(function ($type, $buffer) {
+                $this->output->write($buffer, false, OutputInterface::OUTPUT_RAW);
+            });
 
         } catch (\Exception $e) {
             $this->output->writeln('<error>' . $e->getMessage() . '</error>');
