@@ -12,30 +12,27 @@ php:
   - 7.0
 
 env:
-  - MAGENTO_VERSION="magento-ce-2.0.0" DB=mysql INSTALL_SAMPLE_DATA=0
+  matrix:
+    - MAGENTO_VERSION="magento-ce-2.0.0" DB=mysql INSTALL_SAMPLE_DATA=0
+  global:
+    secure: "CJnQ2lmhXcHSuKor8RtjjeUEyUyFRCiezwdn6loy+IWQF3q+o6Tt36MOV+2V3/yG6p+EcUQXnphtdq11m86GSUVDqbOsa8aJLtdv+v+UuPG+0wBd0/akvTcZqeXb52dT2F1g6RwgZIh3fxHsQkXavrirILA39GZZdAaX7Ct49sQ="
 
 matrix:
   fast_finish: true
   include:
-    # Run the build script with an older PHP version
     - php: 5.5
       env: BUILDSH=1
       script: ./build.sh
-
-    # Run the build script with a recent PHP version
     - php: 5.6
       env: BUILDSH=1
       script: ./build.sh
-
-    # Run the build script with the next PHP version
     - php: 7.0
       env: BUILDSH=1
       script: ./build.sh
-
-    # Lint PHP code with PHP 7.0
     - php: 7.0
       env: LINTSH=1
-      script: find {src,tests} -name "*.php" ! -path '*/String.php' -print0 | xargs -0 -n1 -P8 php -l | grep -v '^No syntax errors detected'; test $? -eq 1
+      script: find {src,tests} -name "*.php" ! -path '*/String.php' -print0 | xargs
+        -0 -n1 -P8 php -l | grep -v '^No syntax errors detected'; test $? -eq 1
 
   allow_failures:
     - php: 7.0

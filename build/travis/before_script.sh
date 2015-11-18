@@ -1,7 +1,11 @@
 #!/usr/bin/env bash
 
-# only install magento if MAGENTO_VERSION has been set
+# Prepare magento connect download
+(
+    composer global config http-basic.repo.magento.com "${MAGENTO_CONNECT_USERNAME}" "${MAGENTO_CONNECT_PASSWORD}"
+)
 
+# only install magento if MAGENTO_VERSION has been set
 if [ ! -z ${MAGENTO_VERSION+x} ]; then
 
     # Install MySQL 5.6

@@ -151,6 +151,7 @@ commands:
         options:
           prefer-dist: true
           stability: beta
+          repository-url: https://repo.magento.com
 
     installation:
       pre-check:
