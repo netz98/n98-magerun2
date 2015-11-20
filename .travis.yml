@@ -15,7 +15,7 @@ env:
   matrix:
     - MAGENTO_VERSION="magento-ce-2.0.0" DB=mysql INSTALL_SAMPLE_DATA=0
   global:
-    secure: "CJnQ2lmhXcHSuKor8RtjjeUEyUyFRCiezwdn6loy+IWQF3q+o6Tt36MOV+2V3/yG6p+EcUQXnphtdq11m86GSUVDqbOsa8aJLtdv+v+UuPG+0wBd0/akvTcZqeXb52dT2F1g6RwgZIh3fxHsQkXavrirILA39GZZdAaX7Ct49sQ="
+    secure: "IEmCQNLHz63zsgcaVVbbeJDZ/Ayx58iJebr5zKDUN/Cbb5MZyW8WgQ5VIn3hlnJsPZrYLx0h3PPSqOB2qLKa02VQaljC50edjSVqT3UsIyC7S+xFA0Vnz492Lf6QFjO6ZiCOqtDiY4fPjOF16nyQO46V2tx4+2W7qVuGy6QHGZw="
 
 matrix:
   fast_finish: true

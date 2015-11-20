@@ -128,18 +128,18 @@ class DownloadMagento extends AbstractSubCommand
                 '',
             ));
 
-            $this->output->writeln('You need to authenticate with your magento.com credentials.');
-            $this->output->writeln('Registration page: <info>https://www.magentocommerce.com/products/customer/account/create/</info>');
+            $this->output->writeln('You need to create a secury key. Login at magentocommerce.com.');
+            $this->output->writeln('Developers -> Secure Keys. <info>Use public key as username and private key as password</info>');
             $this->output->writeln('');
 
             $dialog = $this->getCommand()->getHelper('dialog');
 
             $username = $dialog->askAndValidate(
                 $output,
-                '<comment>Please enter your username: </comment>',
+                '<comment>Please enter your public key: </comment>',
                 function ($value) {
                     if ('' === trim($value)) {
-                        throw new \Exception('The username can not be empty');
+                        throw new \Exception('The private key (auth token) can not be empty');
                     }
 
                     return $value;
@@ -151,10 +151,10 @@ class DownloadMagento extends AbstractSubCommand
 
             $password = $dialog->askHiddenResponseAndValidate(
                 $output,
-                '<comment>Please enter your password: </comment>',
+                '<comment>Please enter your private key: </comment>',
                 function ($value) {
                     if ('' === trim($value)) {
-                        throw new \Exception('The password can not be empty');
+                        throw new \Exception('The private key (auth token) can not be empty');
                     }
 
                     return $value;
