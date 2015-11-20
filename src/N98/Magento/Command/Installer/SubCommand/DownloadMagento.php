@@ -2,7 +2,9 @@
 
 namespace N98\Magento\Command\Installer\SubCommand;
 
+use Magento\Catalog\Helper\Output;
 use N98\Magento\Command\SubCommand\AbstractSubCommand;
+use N98\Util\Console\Helper\ComposerHelper;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Process\ProcessBuilder;
 
@@ -18,6 +20,8 @@ class DownloadMagento extends AbstractSubCommand
         }
 
         try {
+            $this->checkMagentoConnectCredentials($this->output);
+
             $package = $this->config['magentoVersionData'];
             $this->config->setArray('magentoPackage', $package);
 
@@ -45,9 +49,13 @@ class DownloadMagento extends AbstractSubCommand
                 $args[] = '-vvv';
             }
 
+            /**
+             * @TODO use composer helper
+             */
             $processBuilder = new ProcessBuilder($args);
 
             $process = $processBuilder->getProcess();
+            $process->setInput($this->input);
             if (OutputInterface::VERBOSITY_VERBOSE <= $this->output->getVerbosity()) {
                 $this->output->writeln($process->getCommandLine());
             }
@@ -96,5 +104,66 @@ class DownloadMagento extends AbstractSubCommand
         }
 
         return $targetPath;
+    }
+
+    /**
+     * @param OutputInterface $output
+     */
+    protected function checkMagentoConnectCredentials(OutputInterface $output)
+    {
+        $configKey = 'http-basic.repo.magento.com';
+
+        $composerHelper = $this->getCommand()->getHelper('composer'); /** @var $composerHelper ComposerHelper */
+        $authConfig = $composerHelper->getConfigValue($configKey);
+
+        if (!isset($authConfig->username)
+            || !isset($authConfig->password)
+        ) {
+            $this->output->writeln(array(
+                '',
+                $this->getCommand()
+                    ->getHelperSet()
+                    ->get('formatter')
+                    ->formatBlock('Authentication',  'bg=blue;fg=white', true),
+                '',
+            ));
+
+            $this->output->writeln('You need to authenticate with your magento.com credentials.');
+            $this->output->writeln('Registration page: <info>https://www.magentocommerce.com/products/customer/account/create/</info>');
+            $this->output->writeln('');
+
+            $dialog = $this->getCommand()->getHelper('dialog');
+
+            $username = $dialog->askAndValidate(
+                $output,
+                '<comment>Please enter your username: </comment>',
+                function ($value) {
+                    if ('' === trim($value)) {
+                        throw new \Exception('The username can not be empty');
+                    }
+
+                    return $value;
+                },
+                20,
+                false
+            );
+
+
+            $password = $dialog->askHiddenResponseAndValidate(
+                $output,
+                '<comment>Please enter your password: </comment>',
+                function ($value) {
+                    if ('' === trim($value)) {
+                        throw new \Exception('The password can not be empty');
+                    }
+
+                    return $value;
+                },
+                20,
+                false
+            );
+
+            $composerHelper->setConfigValue($configKey, [$username, $password]);
+        }
     }
 }
