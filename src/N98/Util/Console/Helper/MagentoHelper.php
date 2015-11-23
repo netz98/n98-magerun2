@@ -4,6 +4,7 @@ namespace N98\Util\Console\Helper;
 
 use N98\Magento\Application;
 use N98\Util\BinaryString;
+use RuntimeException;
 use Symfony\Component\Console\Helper\Helper as AbstractHelper;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Output\ConsoleOutput;
