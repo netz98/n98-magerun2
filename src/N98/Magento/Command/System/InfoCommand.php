@@ -3,11 +3,12 @@
 namespace N98\Magento\Command\System;
 
 use N98\Magento\Command\AbstractMagentoCommand;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Finder\Finder;
 use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
+use Magento\Framework\App\State as AppState;
 
 class InfoCommand extends AbstractMagentoCommand
 {
@@ -61,6 +62,7 @@ class InfoCommand extends AbstractMagentoCommand
         $this
             ->setName('sys:info')
             ->setDescription('Prints infos about the current magento system.')
+            ->addArgument('key', InputArgument::OPTIONAL, 'Only output value of named param like "version". Key is case insensitive.')
             ->addOption(
                 'format',
                 null,
@@ -122,7 +124,7 @@ class InfoCommand extends AbstractMagentoCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        if ($input->getOption('format') == null) {
+        if ($input->getOption('format') == null && $input->getArgument('key') == null) {
             $this->writeSection($output, 'Magento System Information');
         }
 
@@ -140,9 +142,18 @@ class InfoCommand extends AbstractMagentoCommand
             $table[] = array($key, $value);
         }
 
-        $this->getHelper('table')
-            ->setHeaders(array('name', 'value'))
-            ->renderByFormat($output, $table, $input->getOption('format'));
+        if (($settingArgument = $input->getArgument('key')) !== null) {
+            $settingArgument = strtolower($settingArgument);
+            $this->infos = array_change_key_case($this->infos, CASE_LOWER);
+            if (!isset($this->infos[$settingArgument])) {
+                throw new InvalidArgumentException('Unknown key: ' . $settingArgument);
+            }
+            $output->writeln((string) $this->infos[$settingArgument]);
+        } else {
+            $this->getHelper('table')
+                ->setHeaders(array('name', 'value'))
+                ->renderByFormat($output, $table, $input->getOption('format'));
+        }
     }
 
     /**
@@ -199,6 +210,7 @@ class InfoCommand extends AbstractMagentoCommand
 
     protected function addDeploymentInfo()
     {
+        $this->infos['Application Mode'] = $this->deploymentConfig->get(AppState::PARAM_MODE);
         $this->infos['Session'] = $this->deploymentConfig->get('session/save');
         $this->infos['Crypt Key'] = $this->deploymentConfig->get('crypt/key');
         $this->infos['Install Date'] = $this->deploymentConfig->get('install/date');
