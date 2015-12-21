@@ -1,6 +1,12 @@
 RECENT CHANGES
 ==============
 
+1.0.1
+-----
+
+* Fix: #160 Stopfile broken (by Tom Klingenberg)
+
+
 1.0.0
 -----
 
