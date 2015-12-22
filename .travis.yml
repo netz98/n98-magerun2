@@ -39,6 +39,7 @@ matrix:
       env: MAGENTO_VERSION="magento-ce-2.0.0-rc" DB=mysql INSTALL_SAMPLE_DATA=0
 
 before_install:
+  - phpenv config-rm xdebug.ini
   - travis_retry composer self-update
 
 install:
