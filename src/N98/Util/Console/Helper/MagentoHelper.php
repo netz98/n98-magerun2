@@ -347,34 +347,59 @@ class MagentoHelper extends AbstractHelper
     public function getBaseConfig()
     {
         if (!$this->baseConfig) {
-            $command = $this->getHelperSet()->getCommand();
-            if ($command == null) {
-                $application = new Application();
-            } else {
-                $application = $command->getApplication(); /* @var $application Application */
-            }
-            $application->detectMagento();
-
-            $configFiles = [
-                $application->getMagentoRootFolder() . '/app/etc/config.php',
-                $application->getMagentoRootFolder() . '/app/etc/env.php'
-            ];
-
-            foreach ($configFiles as $configFile) {
-                if (!is_readable($configFile)) {
-                    throw new RuntimeException('app/etc/config.php is not readable');
-                }
-
-                $config = @include $configFile;
-
-                if (!is_array($config)) {
-                    throw new RuntimeException('app/etc/config.php is corrupted. Please check it.');
-                }
-
-                $this->baseConfig = array_merge($this->baseConfig, $config);
-            }
+            $this->initBaseConfig();
         }
 
         return $this->baseConfig;
+    }
+
+    private function initBaseConfig()
+    {
+        $this->baseConfig = [];
+
+        $application = $this->getApplication();
+
+        $configFiles = [
+            'app/etc/config.php',
+            'app/etc/env.php'
+        ];
+
+        foreach ($configFiles as $configFileName) {
+            $this->addBaseConfig($application->getMagentoRootFolder(), $configFileName);
+        }
+    }
+
+    /**
+     * private getter for application that has magento detected
+     *
+     * @return Application|\Symfony\Component\Console\Application
+     */
+    private function getApplication()
+    {
+        $command = $this->getHelperSet()->getCommand();
+        if ($command == null) {
+            $application = new Application();
+        } else {
+            $application = $command->getApplication(); /* @var $application Application */
+        }
+        $application->detectMagento();
+
+        return $application;
+    }
+
+    private function addBaseConfig($root, $configFileName)
+    {
+        $configFile = $root . '/' . $configFileName;
+        if (!(is_file($configFile) && is_readable($configFile))) {
+            throw new RuntimeException(sprintf('%s is not readable', $configFileName));
+        }
+
+        $config = @include $configFile;
+
+        if (!is_array($config)) {
+            throw new RuntimeException(sprintf('%s is corrupted. Please check it.', $configFileName));
+        }
+
+        $this->baseConfig = array_merge($this->baseConfig, $config);
     }
 }
