@@ -5,6 +5,7 @@ RECENT CHANGES
 -----
 
 * Fix: #160 Stopfile broken (by Tom Klingenberg)
+* Fix: #157 Undefined index moduleFolder (by Robbie Averill)
 
 
 1.0.0
