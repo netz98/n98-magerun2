@@ -4,18 +4,33 @@ netz98 magerun CLI tools for Magento 2
 
 The n98 magerun cli tools provides some handy tools to work with Magento from command line.
 
+Build Status
+------------
+
++------------------------+------------------------------------------------------------------------------------------------+
+| **Latest Release**     | .. image:: https://travis-ci.org/netz98/n98-magerun2.png?branch=master                         |
+|                        |    :target: https://travis-ci.org/netz98/n98-magerun2                                          |
+|                        | .. image:: https://www.versioneye.com/user/projects/51236c8b294edc00020064c5/badge.png         |
+|                        |    :target: https://www.versioneye.com/user/projects/51236c8b294edc00020064c5                  |
+|                        | .. image:: https://scrutinizer-ci.com/g/netz98/n98-magerun2/badges/quality-score.png?b=master  |
+|                        |    :target: https://scrutinizer-ci.com/g/netz98/n98-magerun2/                                  |
+|                        | .. image:: https://poser.pugx.org/n98/magerun2/v/stable.png                                    |
+|                        |    :target: https://packagist.org/packages/n98/magerun2                                        |
++------------------------+------------------------------------------------------------------------------------------------+
+| **Development Branch** | .. image:: https://travis-ci.org/netz98/n98-magerun2.png?branch=develop                        |
+|                        |    :target: https://travis-ci.org/netz98/n98-magerun2                                          |
+|                        | .. image:: https://circleci.com/gh/netz98/n98-magerun2/tree/develop.svg?style=shield           |
+|                        |    :target: https://circleci.com/gh/netz98/n98-magerun2/tree/develop                           |
+|                        | .. image:: https://scrutinizer-ci.com/g/netz98/n98-magerun2/badges/quality-score.png?b=develop |
+|                        |    :target: https://scrutinizer-ci.com/g/netz98/n98-magerun2/?branch=develop                   |
+|                        | .. image:: https://codecov.io/github/netz98/n98-magerun2/coverage.svg?branch=develop           |
+|                        |    :target: https://codecov.io/github/netz98/n98-magerun2?branch=develop                       |
++------------------------+------------------------------------------------------------------------------------------------+
+
 DEVELOPMENT IN GIT BRANCH **develop**.
 
 This software is only running with Magento 2.
 If you use Magento 1 please use another stable version (https://github.com/netz98/n98-magerun).
-
-Build Status
-------------
-
-**Development Branch**
-
-.. image:: https://travis-ci.org/netz98/n98-magerun2.png?branch=develop
-:target: https://travis-ci.org/netz98/n98-magerun2
 
 Compatibility
 -------------
