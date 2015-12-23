@@ -32,7 +32,7 @@ sed -i 's/^;//' ~/.phpenv/versions/$(phpenv global)/etc/conf.d/xdebug.ini
 # php.ini (memory limit)
 cp build/circleci/php.ini ~/.phpenv/versions/$(phpenv global)/etc/conf.d/
 
-# warumup composer dist packages
+# warmup composer dist packages
 composer install --prefer-dist --no-interaction --quiet
 
 # on circleci, the magento installation itself counts as a dependency as assets and it can be cached
