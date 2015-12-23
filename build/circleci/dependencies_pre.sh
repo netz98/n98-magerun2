@@ -35,6 +35,11 @@ cp build/circleci/php.ini ~/.phpenv/versions/$(phpenv global)/etc/conf.d/
 # warmup composer dist packages
 composer install --prefer-dist --no-interaction --quiet
 
+# Prepare magento connect download
+(
+    composer global config http-basic.repo.magento.com "${MAGENTO_CONNECT_USERNAME}" "${MAGENTO_CONNECT_PASSWORD}"
+)
+
 # on circleci, the magento installation itself counts as a dependency as assets and it can be cached
 buildecho "install magento incl. sampledata with the installer:"
 magerun_install "${MAGENTO_VERSION}" "${INSTALL_SAMPLE_DATA}"
