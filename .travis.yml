@@ -1,6 +1,5 @@
-dist: trusty
-
 language: php
+dist: trusty
 
 branches:
   only:
@@ -14,10 +13,11 @@ php:
   - 7.0
 
 env:
-  matrix:
-    - MAGENTO_VERSION="magento-ce-2.0.0" DB=mysql INSTALL_SAMPLE_DATA=0
   global:
-    secure: "IEmCQNLHz63zsgcaVVbbeJDZ/Ayx58iJebr5zKDUN/Cbb5MZyW8WgQ5VIn3hlnJsPZrYLx0h3PPSqOB2qLKa02VQaljC50edjSVqT3UsIyC7S+xFA0Vnz492Lf6QFjO6ZiCOqtDiY4fPjOF16nyQO46V2tx4+2W7qVuGy6QHGZw="
+    - secure: "IEmCQNLHz63zsgcaVVbbeJDZ/Ayx58iJebr5zKDUN/Cbb5MZyW8WgQ5VIn3hlnJsPZrYLx0h3PPSqOB2qLKa02VQaljC50edjSVqT3UsIyC7S+xFA0Vnz492Lf6QFjO6ZiCOqtDiY4fPjOF16nyQO46V2tx4+2W7qVuGy6QHGZw="
+    - DB=mysql
+  matrix:
+    - MAGENTO_VERSION="magento-ce-2.0.0" INSTALL_SAMPLE_DATA=0
 
 matrix:
   fast_finish: true
@@ -48,7 +48,7 @@ install:
   - travis_retry composer install --prefer-source --no-interaction --ignore-platform-reqs
 
 before_script:
-  - source ./build/travis/before_script.sh
+  - source build/travis/before_script.sh
 
 script:
   - vendor/bin/phpunit --debug
