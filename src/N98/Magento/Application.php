@@ -176,6 +176,14 @@ class Application extends BaseApplication
         );
         $inputDefinition->addOption($skipExternalConfig);
 
+        $skipMagento2CoreCommands = new InputOption(
+            '--skip-core-commands',
+            '',
+            InputOption::VALUE_OPTIONAL,
+            'Do not include Magento 2 core commands'
+        );
+        $inputDefinition->addOption($skipMagento2CoreCommands);
+
         return $inputDefinition;
     }
 
@@ -265,26 +273,44 @@ class Application extends BaseApplication
 
     /**
      * Adds autoloader prefixes from user's config
+     *
+     * @param OutputInterface $output
      */
-    protected function registerCustomAutoloaders()
+    protected function registerCustomAutoloaders(OutputInterface $output)
     {
         if (isset($this->config['autoloaders']) && is_array($this->config['autoloaders'])) {
             foreach ($this->config['autoloaders'] as $prefix => $path) {
                 $this->autoloader->add($prefix, $path);
+
+                if (OutputInterface::VERBOSITY_DEBUG <= $output->getVerbosity()) {
+                    $output->writeln(
+                        '<debug>Registrered PSR-2 autoloader </debug> <info>'
+                        . $prefix . '</info> -> <comment>' . $path . '</comment>'
+                    );
+                }
             }
         }
 
         if (isset($this->config['autoloaders_psr4']) && is_array($this->config['autoloaders_psr4'])) {
             foreach ($this->config['autoloaders_psr4'] as $prefix => $path) {
                 $this->autoloader->addPsr4($prefix, $path);
+
+                if (OutputInterface::VERBOSITY_DEBUG <= $output->getVerbosity()) {
+                    $output->writeln(
+                        '<debug>Registrered PSR-4 autoloader </debug> <info>'
+                        . $prefix . ' </info> -> <comment>' . $path . '</comment>'
+                    );
+                }
             }
         }
     }
 
     /**
      * Try to bootstrap magento 2 and load cli application
+     *
+     * @param OutputInterface $output
      */
-    protected function registerMagentoCoreCommands()
+    protected function registerMagentoCoreCommands(OutputInterface $output)
     {
         if ($this->getMagentoRootFolder()) {
             // Magento was found -> register core cli commands
@@ -295,14 +321,21 @@ class Application extends BaseApplication
 
             foreach ($coreCliApplicationCommands as $coreCliApplicationCommand) {
                 $this->add($coreCliApplicationCommand);
+
+                if (OutputInterface::VERBOSITY_DEBUG <= $output->getVerbosity()) {
+                    $output->writeln(
+                        '<debug>Added core command </debug><comment>'
+                        . get_class($coreCliApplicationCommand) . '</comment>'
+                    );
+                }
             }
         }
     }
 
     /**
-     * @return void
+     * @param OutputInterface $output
      */
-    protected function registerCustomCommands()
+    protected function registerCustomCommands(OutputInterface $output)
     {
         if (isset($this->config['commands']['customCommands'])
             && is_array($this->config['commands']['customCommands'])
@@ -316,6 +349,12 @@ class Application extends BaseApplication
                     $command = new $commandClass();
                 }
                 $this->add($command);
+
+                if (OutputInterface::VERBOSITY_DEBUG <= $output->getVerbosity()) {
+                    $output->writeln(
+                        '<debug>Added command </debug><comment>' . get_class($command) . '</comment>'
+                    );
+                }
             }
         }
     }
@@ -652,9 +691,11 @@ class Application extends BaseApplication
             date_default_timezone_set(@date_default_timezone_get());
 
             $loadExternalConfig = !$this->_checkSkipConfigOption();
+
             if ($output === null) {
                 $output = new NullOutput();
             }
+
             $configLoader = $this->getConfigurationLoader($initConfig, $output);
             $this->partialConfig = $configLoader->getPartialConfig($loadExternalConfig);
             $this->detectMagento($input, $output);
@@ -662,12 +703,21 @@ class Application extends BaseApplication
             $this->config = $configLoader->toArray();;
             $this->dispatcher = new EventDispatcher();
             $this->setDispatcher($this->dispatcher);
+
             if ($this->autoloader) {
-                $this->registerMagentoCoreCommands();
-                $this->registerCustomAutoloaders();
+
+                /**
+                 * Include commands shipped by Magento 2 core
+                 */
+                if (!$this->_checkSkipMagento2CoreCommandsOption()) {
+                    $this->registerMagentoCoreCommands($output);
+                }
+
+                $this->registerCustomAutoloaders($output);
                 $this->registerEventSubscribers();
-                $this->registerCustomCommands();
+                $this->registerCustomCommands($output);
             }
+
             $this->registerHelpers();
 
             $this->_isInitialized = true;
@@ -702,6 +752,16 @@ class Application extends BaseApplication
     protected function _checkSkipConfigOption()
     {
         $skipConfigOption = getopt('', array('skip-config'));
+
+        return count($skipConfigOption) > 0;
+    }
+
+    /**
+     * @return bool
+     */
+    protected function _checkSkipMagento2CoreCommandsOption()
+    {
+        $skipConfigOption = getopt('', array('skip-core-commands'));
 
         return count($skipConfigOption) > 0;
     }
