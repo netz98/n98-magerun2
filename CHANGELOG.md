@@ -7,6 +7,7 @@ RECENT CHANGES
 * Feature: #132 Porting command: giftcard:create (by Robbie Averill)
 * Feature: #133 Porting command: giftcard:info (by Robbie Averill)
 * Feature: #134 Porting command: giftcard:remove (by Robbie Averill)
+* Feature: Added composer auth to download magento. (by Christian Münch)
 * Fix: #160 Stopfile broken (by Tom Klingenberg)
 * Fix: #157 Undefined index moduleFolder (by Robbie Averill)
 
