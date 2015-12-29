@@ -313,6 +313,27 @@ Remove a Gift Card
    $ n98-magerun2.phar giftcard:remove [code]
 
 
+Compare Setup Versions
+""""""""""""""""""""""
+
+Compares module version with saved setup version in `setup_module` table and displays version mismatchs if found.
+
+.. code-block:: sh
+
+   $ n98-magerun2.phar sys:setup:compare-versions [--ignore-data] [--log-junit="..."] [--format[="..."]]
+
+* If a filename with `--log-junit` option is set the tool generates an XML file and no output to *stdout*.
+
+Change Setup Version
+""""""""""""""""""""
+
+Changes the version of a module. This command is useful if you want to re-run an upgrade script again possibly for 
+debugging. Alternatively you would have to alter the row in the database manually.
+
+.. code-block:: sh
+
+   $ n98-magerun2.phar sys:setup:change-version module version
+
 n98-magerun Shell
 """""""""""""""""
 

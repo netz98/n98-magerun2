@@ -2,25 +2,14 @@
 
 namespace N98\Magento\Command\System\Setup;
 
-use N98\Magento\Command\AbstractMagentoCommand;
 use N98\JUnitXml\Document as JUnitXmlDocument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
 
-class CompareVersionsCommand extends AbstractMagentoCommand
+class CompareVersionsCommand extends AbstractSetupCommand
 {
-    /**
-     * @var \Magento\Framework\Module\ModuleListInterface
-     */
-    private $moduleList;
-
-    /**
-     * @var \Magento\Framework\Module\ResourceInterface
-     */
-    private $resource;
-
     protected function configure()
     {
         $this
@@ -41,25 +30,20 @@ HELP;
     }
 
     /**
-     * @param \Magento\Framework\Module\ModuleListInterface $moduleList
-     */
-    public function inject(
-        \Magento\Framework\Module\ModuleListInterface $moduleList,
-        \Magento\Framework\Module\ResourceInterface $resource
-    ) {
-        $this->moduleList = $moduleList;
-        $this->resource = $resource;
-    }
-
-    /**
      * @param \Symfony\Component\Console\Input\InputInterface $input
      * @param \Symfony\Component\Console\Output\OutputInterface $output
      * @return int|null|void
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $this->detectMagento($output, true);
+
+        if (!$this->initMagento()) {
+            return;
+        }
+
         $time = microtime(true);
-        $ignoreDataUpdate   = $input->getOption('ignore-data');
+        $ignoreDataUpdate = $input->getOption('ignore-data');
 
         $headers = array('Setup', 'Module', 'DB', 'Data', 'Status');
         if ($ignoreDataUpdate) {
@@ -68,12 +52,12 @@ HELP;
 
         $errorCounter = 0;
         $table = array();
-        foreach ($this->moduleList->getAll() as $moduleName => $moduleInfo) {
+        foreach ($this->getMagentoModuleList() as $moduleName => $moduleInfo) {
 
-            $moduleVersion  = $moduleInfo['setup_version'];
-            $dbVersion      = $this->resource->getDbVersion($moduleName);
+            $moduleVersion = $moduleInfo['setup_version'];
+            $dbVersion     = $this->getMagentoModuleResource()->getDbVersion($moduleName);
             if (!$ignoreDataUpdate) {
-                $dataVersion = $this->resource->getDataVersion($moduleName);
+                $dataVersion = $this->getMagentoModuleResource()->getDataVersion($moduleName);
             }
 
             $ok = $dbVersion == $moduleVersion;
@@ -97,9 +81,7 @@ HELP;
             $table[] = $row;
         }
 
-        //if there is no output format
-        //highlight the status
-        //and show error'd rows at bottom
+        // If there is no output format highlight the status and show error'd rows at bottom
         if (!$input->getOption('format')) {
 
             usort($table, function($a, $b) {
@@ -166,10 +148,7 @@ HELP;
             foreach ($data as $moduleSetup) {
                 if (stristr($moduleSetup['Status'], 'error')) {
                     $testCase->addFailure(
-                        sprintf(
-                            'Setup Script Error: [Setup %s]',
-                            $moduleSetup['Setup']
-                        ),
+                        'Setup Script Error',
                         'MagentoSetupScriptVersionException'
                     );
                 }

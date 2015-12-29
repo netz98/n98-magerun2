@@ -20,12 +20,14 @@ class CompareVersionsCommandTest extends TestCase
                 'command' => $command->getName()
             )
         );
-    
-        $this->assertRegExp('/Setup/', $commandTester->getDisplay());
-        $this->assertRegExp('/Module/', $commandTester->getDisplay());
-        $this->assertRegExp('/DB/', $commandTester->getDisplay());
-        $this->assertRegExp('/Data/', $commandTester->getDisplay());
-        $this->assertRegExp('/Status/', $commandTester->getDisplay());
+
+        $result = $commandTester->getDisplay();
+
+        $this->assertRegExp('/Setup/', $result);
+        $this->assertRegExp('/Module/', $result);
+        $this->assertRegExp('/DB/', $result);
+        $this->assertRegExp('/Data/', $result);
+        $this->assertRegExp('/Status/', $result);
     }
 
     public function testJunit()
