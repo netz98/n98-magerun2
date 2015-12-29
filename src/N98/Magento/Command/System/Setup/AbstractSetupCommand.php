@@ -3,54 +3,63 @@
 namespace N98\Magento\Command\System\Setup;
 
 use N98\Magento\Command\AbstractMagentoCommand;
-use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Output\OutputInterface;
-use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
+use Magento\Framework\Module\ModuleListInterface;
+use Magento\Framework\Module\ResourceInterface;
 
 /**
  * Class AbstractSetupCommand
  * @package N98\Magento\Command\System\Setup
  */
-class AbstractSetupCommand extends AbstractMagentoCommand
+abstract class AbstractSetupCommand extends AbstractMagentoCommand
 {
-
     /**
-     * @param string $moduleName
-     * @return array
+     * @var ModuleListInterface
      */
-    public function getModuleSetupResources($moduleName)
-    {
-        $moduleSetups   = array();
-        $resources      = \Mage::getConfig()->getNode('global/resources')->children();
-
-        foreach ($resources as $resName => $resource) {
-            $modName = (string) $resource->setup->module;
-
-            if ($modName == $moduleName) {
-                $moduleSetups[$resName] = $resource;
-            }
-        }
-
-        return $moduleSetups;
-    }
+    protected $moduleList;
 
     /**
-     * @param InputInterface $input
+     * @var ResourceInterface
+     */
+    protected $resource;
+
+    /**
+     * Determine if a module exists. If it does, return the actual module name (not lowercased).
+     * @param  string $requestedModuleName
      * @return string
-     * @throws \InvalidArgumentException
+     * @throws \InvalidArgumentException When the module doesn't exist
      */
-    public function getModule(InputInterface $input)
+    public function getModuleName($requestedModuleName)
     {
-        $modules = \Mage::app()->getConfig()->getNode('modules')->asArray();
-
-        foreach ($modules as $moduleName => $data) {
-            if (strtolower($moduleName) === strtolower($input->getArgument('module'))) {
+        $lowercaseModuleName = strtolower($requestedModuleName);
+        
+        foreach ($this->getModuleList()->getAll() as $moduleName => $moduleInfo) {
+            if ($lowercaseModuleName === strtolower($moduleName)) {
                 return $moduleName;
             }
         }
+        
+        throw new \InvalidArgumentException(sprintf('Module does not exist: "%s"', $requestedModuleName));
+    }
 
-        throw new \InvalidArgumentException(sprintf('No module found with name: "%s"', $input->getArgument('module')));
+    /**
+     * @return ModuleListInterface
+     */
+    public function getModuleList()
+    {
+        if (is_null($this->moduleList)) {
+            $this->moduleList = $this->getObjectManager()->get('Magento\Framework\Module\ModuleListInterface');
+        }
+        return $this->moduleList;
+    }
+
+    /**
+     * @return ResourceInterface
+     */
+    public function getResource()
+    {
+        if (is_null($this->resource)) {
+            $this->resource = $this->getObjectManager()->get('Magento\Framework\Module\ResourceInterface');
+        }
+        return $this->resource;
     }
 }
