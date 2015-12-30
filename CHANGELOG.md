@@ -1,6 +1,10 @@
 RECENT CHANGES
 ==============
 
+1.1.3
+-----
+* Fix: #168 Version mismatch (by Tom Klingenberg)
+
 1.1.2
 -----
 * Fix: #168 Version mismatch (by Tom Klingenberg)
