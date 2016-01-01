@@ -1,6 +1,10 @@
 RECENT CHANGES
 ==============
 
+1.1.4
+-----
+* Feature: #120 Porting command: sys:setup:change-version ((by Robbie Averill)
+
 1.1.3
 -----
 * Fix: #168 Version mismatch (by Tom Klingenberg)

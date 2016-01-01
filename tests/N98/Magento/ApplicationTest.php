@@ -12,6 +12,26 @@ use org\bovigo\vfs\vfsStream;
 
 class ApplicationTest extends TestCase
 {
+
+    /**
+     * @test
+     */
+    public function versionAligned()
+    {
+        // constant must be same as version.txt and latest in CHANGELOG.md
+
+        $projectDir = __DIR__ . '/../../..';
+
+        $versionFromVersionTxt = trim(file_get_contents($projectDir . '/version.txt'));
+
+        $buffer = file_get_contents($projectDir . '/CHANGELOG.md');
+
+        $versionFromChangelog = preg_match('~^\d+\.\d+\.\d+$~m', $buffer, $matches) ? $matches[0] : null;
+
+        $this->assertEquals(Application::APP_VERSION, $versionFromVersionTxt, 'changes.txt same as APP_VERSION');
+        $this->assertEquals(Application::APP_VERSION, $versionFromChangelog, 'CHANGELOG.md same as APP_VERSION');
+    }
+
     public function testExecute()
     {
         /**
@@ -25,11 +45,6 @@ class ApplicationTest extends TestCase
         $this->assertInstanceOf('\N98\Magento\Application', $application);
         $loader = $application->getAutoloader();
         $this->assertInstanceOf('\Composer\Autoload\ClassLoader', $loader);
-
-        /**
-         * Check version
-         */
-        $this->assertEquals(Application::APP_VERSION, trim(file_get_contents(__DIR__ . '/../../../version.txt')));
 
         /* @var $loader \Composer\Autoload\ClassLoader */
         $prefixes = $loader->getPrefixes();
