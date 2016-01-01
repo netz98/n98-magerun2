@@ -10,6 +10,9 @@ use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
 
 class CompareVersionsCommand extends AbstractSetupCommand
 {
+    /**
+     * Setup
+     */
     protected function configure()
     {
         $this
@@ -30,9 +33,9 @@ HELP;
     }
 
     /**
-     * @param \Symfony\Component\Console\Input\InputInterface $input
-     * @param \Symfony\Component\Console\Output\OutputInterface $output
-     * @return int|null|void
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     * @return int|null
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -55,9 +58,10 @@ HELP;
         foreach ($this->getMagentoModuleList() as $moduleName => $moduleInfo) {
 
             $moduleVersion = $moduleInfo['setup_version'];
-            $dbVersion     = $this->getMagentoModuleResource()->getDbVersion($moduleName);
+            $resource      = $this->getMagentoModuleResource();
+            $dbVersion     = $resource->getDbVersion($moduleName);
             if (!$ignoreDataUpdate) {
-                $dataVersion = $this->getMagentoModuleResource()->getDataVersion($moduleName);
+                $dataVersion = $resource->getDataVersion($moduleName);
             }
 
             $ok = $dbVersion == $moduleVersion;
@@ -88,7 +92,7 @@ HELP;
                 return $a['Status'] !== 'OK';
             });
 
-            array_walk($table, function (&$row) {
+            array_walk($table, function(&$row) {
                 $status             = $row['Status'];
                 $availableStatus    = array('OK' => 'info', 'Error' => 'error');
                 $statusString       = sprintf(
