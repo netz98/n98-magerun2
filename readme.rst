@@ -279,6 +279,15 @@ Enable Magento cache
 If no code is specified, all cache types will be enabled.
 Run `cache:list` command to see all codes.
 
+EAV Attributes
+"""""""""""""""""
+
+View the data for a particular attribute:
+
+.. code-block:: sh
+
+   $ n98-magerun2.phar eav:attribute:view [--format[="..."]] entityType attributeCode
+
 Generate Gift Card Pool
 """""""""""""""""
 
