@@ -6,7 +6,7 @@ use Composer\Autoload\ClassLoader;
 use Magento\Framework\ObjectManager\ObjectManager;
 use Magento\Mtf\EntryPoint\EntryPoint;
 use N98\Magento\Application\Console\Events;
-use N98\Magento\Command\ConfigurationLoader;
+use N98\Magento\Application\ConfigurationLoader;
 use N98\Util\ArrayFunctions;
 use N98\Util\Console\Helper\TwigHelper;
 use N98\Util\Console\Helper\MagentoHelper;
@@ -871,7 +871,7 @@ MAGENTO1HINT;
     }
 
     /**
-     * @param \N98\Magento\Command\ConfigurationLoader $configurationLoader
+     * @param \N98\Magento\Application\ConfigurationLoader $configurationLoader
      *
      * @return $this
      */

@@ -1,6 +1,6 @@
 <?php
 
-namespace N98\Magento\Command;
+namespace N98\Magento\Application;
 
 use N98\Util\BinaryString;
 use N98\Util\OperatingSystem;
