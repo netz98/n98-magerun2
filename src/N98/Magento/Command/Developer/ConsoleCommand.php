@@ -5,6 +5,7 @@ namespace N98\Magento\Command\Developer;
 use Exception;
 use Magento\Framework\App\ProductMetadataInterface;
 use N98\Magento\Command\AbstractMagentoCommand;
+use N98\Magento\Command\Developer\Console\Shell;
 use N98\Util\Unicode\Charset;
 use PhpParser\Lexer;
 use PhpParser\Parser;
@@ -12,10 +13,8 @@ use Psy\CodeCleaner;
 use Psy\Command\ListCommand;
 use Psy\Configuration;
 use Psy\Output\ShellOutput;
-use Psy\Shell;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Psy\ParserFactory;
 
 class ConsoleCommand extends AbstractMagentoCommand
 {
@@ -68,6 +67,11 @@ class ConsoleCommand extends AbstractMagentoCommand
             'di' => $this->getObjectManager(),
         ]);
 
+        $commandConfig = $this->getCommandConfig();
+        foreach ($commandConfig['commands'] as $command) {
+            $shell->add(new $command());
+        }
+
         if ($initialized) {
             $ok = Charset::convertInteger(Charset::UNICODE_CHECKMARK_CHAR);
 
@@ -75,8 +79,12 @@ class ConsoleCommand extends AbstractMagentoCommand
             $magentoVersion = $this->productMeta->getVersion();
 
             $consoleOutput->writeln(
-                '<fg=black;bg=green>Magento ' . $magentoVersion . ' ' . $edition .
-                ' initialized.</fg=black;bg=green> ' . $ok
+                '<fg=black;bg=green>Magento '
+                . $magentoVersion
+                . ' '
+                . $edition
+                . ' initialized.</fg=black;bg=green> '
+                . $ok
             );
         } else {
             $consoleOutput->writeln('<fg=black;bg=yellow>Magento is not initialized.</fg=black;bg=yellow>');

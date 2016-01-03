@@ -245,6 +245,13 @@ commands:
         admin-email: john.doe@example.com
         encryption_key:
 
+  N98\Magento\Command\Developer\ConsoleCommand:
+    commands:
+      - N98\Magento\Command\Developer\Console\ModuleCommand
+      - N98\Magento\Command\Developer\Console\ModulesCommand
+      - N98\Magento\Command\Developer\Console\MakeControllerCommand
+      - N98\Magento\Command\Developer\Console\MakeModelCommand
+
   N98\Magento\Command\System\CheckCommand:
     checks:
       settings:
