@@ -2,7 +2,9 @@
 
 namespace N98\Magento;
 
+use Composer\Autoload\ClassLoader;
 use Magento\Framework\ObjectManager\ObjectManager;
+use Magento\Mtf\EntryPoint\EntryPoint;
 use N98\Magento\Application\Console\Events;
 use N98\Magento\Command\ConfigurationLoader;
 use N98\Util\ArrayFunctions;
@@ -56,7 +58,7 @@ class Application extends BaseApplication
                                         /____/                             
 ";
     /**
-     * @var \Composer\Autoload\ClassLoader
+     * @var ClassLoader
      */
     protected $autoloader;
 
@@ -138,7 +140,7 @@ class Application extends BaseApplication
     protected $_objectManager = null;
 
     /**
-     * @param \Composer\Autoload\ClassLoader $autoloader
+     * @param ClassLoader $autoloader
      */
     public function __construct($autoloader = null)
     {
@@ -540,7 +542,7 @@ class Application extends BaseApplication
     }
 
     /**
-     * @return \Composer\Autoload\ClassLoader
+     * @return ClassLoader
      */
     public function getAutoloader()
     {
@@ -548,9 +550,9 @@ class Application extends BaseApplication
     }
 
     /**
-     * @param \Composer\Autoload\ClassLoader $autoloader
+     * @param ClassLoader $autoloader
      */
-    public function setAutoloader($autoloader)
+    public function setAutoloader(ClassLoader $autoloader)
     {
         $this->autoloader = $autoloader;
     }
@@ -611,8 +613,8 @@ class Application extends BaseApplication
     }
 
     /**
-     * @param \Symfony\Component\Console\Input\InputInterface $input
-     * @return \Symfony\Component\Console\Input\ArgvInput|\Symfony\Component\Console\Input\InputInterface
+     * @param InputInterface $input
+     * @return ArgvInput|InputInterface
      */
     protected function checkConfigCommandAlias(InputInterface $input)
     {

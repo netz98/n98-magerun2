@@ -3,6 +3,7 @@
 namespace N98\Magento\Command\PHPUnit;
 
 use Magento\Framework\App\ResourceConnection;
+use Magento\Framework\DB\Adapter\AdapterInterface;
 use N98\Magento\Application;
 use PHPUnit_Framework_MockObject_MockObject;
 
@@ -50,32 +51,29 @@ class TestCase extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @return PHPUnit_Framework_MockObject_MockObject|Application
+     * @return Application|PHPUnit_Framework_MockObject_MockObject
      */
     public function getApplication()
     {
         if ($this->application === null) {
             $root = $this->getTestMagentoRoot();
 
-            $this->application = $this->getMock(
-                'N98\Magento\Application',
-                array('getMagentoRootFolder')
-            );
-            $loader = require __DIR__ . '/../../../../../vendor/autoload.php';
-            $this->application->setAutoloader($loader);
-            $this->application->expects($this->any())->method('getMagentoRootFolder')->will($this->returnValue($root));
-            $this->application->init();
-            $this->application->initMagento();
-            if ($this->application->getMagentoMajorVersion() == Application::MAGENTO_MAJOR_VERSION_1) {
-                spl_autoload_unregister(array(\Varien_Autoload::instance(), 'autoload'));
-            }
+            /** @var Application|PHPUnit_Framework_MockObject_MockObject $application */
+            $application = $this->getMock('N98\Magento\Application', array('getMagentoRootFolder'));
+            $loader      = require __DIR__ . '/../../../../../vendor/autoload.php';
+            $application->setAutoloader($loader);
+            $application->expects($this->any())->method('getMagentoRootFolder')->will($this->returnValue($root));
+            $application->init();
+            $application->initMagento();
+
+            $this->application = $application;
         }
 
         return $this->application;
     }
 
     /**
-     * @return \Magento\Framework\DB\Adapter\AdapterInterface
+     * @return AdapterInterface
      */
     public function getDatabaseConnection()
     {
