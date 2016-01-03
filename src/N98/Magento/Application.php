@@ -35,12 +35,12 @@ class Application extends BaseApplication
     const APP_VERSION = '1.1.4';
 
     /**
-     * @type int
+     * @var int
      */
     const MAGENTO_MAJOR_VERSION_1 = 1;
 
     /**
-     * @type int
+     * @var int
      */
     const MAGENTO_MAJOR_VERSION_2 = 2;
 

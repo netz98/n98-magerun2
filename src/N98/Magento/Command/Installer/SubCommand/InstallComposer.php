@@ -10,7 +10,7 @@ use N98\Magento\Command\SubCommand\AbstractSubCommand;
 class InstallComposer extends AbstractSubCommand
 {
     /**
-     * @type int
+     * @var int
      */
     const EXEC_STATUS_OK = 0;
 
