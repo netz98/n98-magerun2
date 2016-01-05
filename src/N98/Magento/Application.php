@@ -802,12 +802,12 @@ A current version of the software can be downloaded on github.
 <info>Download with curl
 ------------------</info>
 
-    <comment>curl -o n98-magerun.phar https://raw.githubusercontent.com/netz98/n98-magerun/master/n98-magerun.phar</comment>
+    <comment>curl -o n98-magerun.phar https://files.magerun.net/n98-magerun-latest.phar</comment>
 
 <info>Download with wget
 ------------------</info>
 
-    <comment>curl -o n98-magerun.phar https://raw.githubusercontent.com/netz98/n98-magerun/master/n98-magerun.phar</comment>
+    <comment>wget -O n98-magerun.phar https://files.magerun.net/n98-magerun-latest.phar</comment>
 
 MAGENTO1HINT;
 
