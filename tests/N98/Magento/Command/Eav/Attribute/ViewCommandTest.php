@@ -2,6 +2,7 @@
 
 namespace N98\Magento\Command\Eav\Attribute;
 
+use N98\Magento\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 use N98\Magento\Command\PHPUnit\TestCase;
 
@@ -23,9 +24,10 @@ class ViewCommandTest extends TestCase
      */
     public function setUp()
     {
-        $this->getApplication()->add(new ViewCommand());
-        $this->command = $this->getApplication()->find('eav:attribute:view');
-
+        /** @var Application $application */
+        $application = $this->getApplication();
+        $application->add(new ViewCommand());
+        $this->command = $application->find('eav:attribute:view');
         $this->commandTester = new CommandTester($this->command);
     }
 
