@@ -5,13 +5,12 @@ namespace N98\Magento;
 use Composer\Autoload\ClassLoader;
 use Magento\Framework\ObjectManager\ObjectManager;
 use Magento\Mtf\EntryPoint\EntryPoint;
+use N98\Magento\Application\Config;
 use N98\Magento\Application\Console\Events;
 use N98\Magento\Application\ConfigurationLoader;
-use N98\Util\ArrayFunctions;
 use N98\Util\Console\Helper\TwigHelper;
 use N98\Util\Console\Helper\MagentoHelper;
 use N98\Util\OperatingSystem;
-use N98\Util\BinaryString;
 use Symfony\Component\Console\Application as BaseApplication;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Event\ConsoleEvent;
@@ -23,6 +22,7 @@ use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
+use UnexpectedValueException;
 
 class Application extends BaseApplication
 {
@@ -63,19 +63,9 @@ class Application extends BaseApplication
     protected $autoloader;
 
     /**
-     * @var array
+     * @var Config
      */
-    protected $config = array();
-
-    /**
-     * @var ConfigurationLoader
-     */
-    protected $configurationLoader = null;
-
-    /**
-     * @var array
-     */
-    protected $partialConfig = array();
+    protected $config;
 
     /**
      * @var string
@@ -118,7 +108,7 @@ class Application extends BaseApplication
     protected $_isInitialized = false;
 
     /**
-     * @var \Symfony\Component\EventDispatcher\EventDispatcher
+     * @var EventDispatcher
      */
     protected $dispatcher;
 
@@ -154,7 +144,7 @@ class Application extends BaseApplication
     protected function getDefaultInputDefinition()
     {
         $inputDefinition = parent::getDefaultInputDefinition();
-        $rootDirOption = new InputOption(
+        $rootDirOption   = new InputOption(
             '--root-dir',
             '',
             InputOption::VALUE_OPTIONAL,
@@ -190,25 +180,10 @@ class Application extends BaseApplication
     }
 
     /**
-     * Get names of sub-folders to be scanned during Magento detection
-     * @return array
-     */
-    public function getDetectSubFolders()
-    {
-        if (isset($this->partialConfig['detect'])) {
-            if (isset($this->partialConfig['detect']['subFolders'])) {
-                return $this->partialConfig['detect']['subFolders'];
-            }
-        }
-        return array();
-    }
-
-    /**
      * Search for magento root folder
      *
-     * @param InputInterface $input
-     * @param OutputInterface $output
-     * @return void
+     * @param InputInterface  $input  [optional]
+     * @param OutputInterface $output [optional]
      */
     public function detectMagento(InputInterface $input = null, OutputInterface $output = null)
     {
@@ -233,9 +208,10 @@ class Application extends BaseApplication
         }
 
         $this->getHelperSet()->set(new MagentoHelper($input, $output), 'magento');
-        $magentoHelper = $this->getHelperSet()->get('magento'); /* @var $magentoHelper MagentoHelper */
+        $magentoHelper = $this->getHelperSet()->get('magento');
+        /* @var $magentoHelper MagentoHelper */
         if (!$this->_directRootDir) {
-            $subFolders = $this->getDetectSubFolders();
+            $subFolders = $this->config->getDetectSubFolders();
         } else {
             $subFolders = array();
         }
@@ -256,53 +232,20 @@ class Application extends BaseApplication
     protected function registerHelpers()
     {
         $helperSet = $this->getHelperSet();
+        $config = $this->config->getConfig();
 
         // Twig
         $twigBaseDirs = array(
             __DIR__ . '/../../../res/twig'
         );
-        if (isset($this->config['twig']['baseDirs']) && is_array($this->config['twig']['baseDirs'])) {
-            $twigBaseDirs = array_merge(array_reverse($this->config['twig']['baseDirs']), $twigBaseDirs);
+        if (isset($config['twig']['baseDirs']) && is_array($config['twig']['baseDirs'])) {
+            $twigBaseDirs = array_merge(array_reverse($config['twig']['baseDirs']), $twigBaseDirs);
         }
         $helperSet->set(new TwigHelper($twigBaseDirs), 'twig');
 
-        foreach ($this->config['helpers'] as $helperName => $helperClass) {
+        foreach ($config['helpers'] as $helperName => $helperClass) {
             if (class_exists($helperClass)) {
                 $helperSet->set(new $helperClass(), $helperName);
-            }
-        }
-    }
-
-    /**
-     * Adds autoloader prefixes from user's config
-     *
-     * @param OutputInterface $output
-     */
-    protected function registerCustomAutoloaders(OutputInterface $output)
-    {
-        if (isset($this->config['autoloaders']) && is_array($this->config['autoloaders'])) {
-            foreach ($this->config['autoloaders'] as $prefix => $path) {
-                $this->autoloader->add($prefix, $path);
-
-                if (OutputInterface::VERBOSITY_DEBUG <= $output->getVerbosity()) {
-                    $output->writeln(
-                        '<debug>Registrered PSR-2 autoloader </debug> <info>'
-                        . $prefix . '</info> -> <comment>' . $path . '</comment>'
-                    );
-                }
-            }
-        }
-
-        if (isset($this->config['autoloaders_psr4']) && is_array($this->config['autoloaders_psr4'])) {
-            foreach ($this->config['autoloaders_psr4'] as $prefix => $path) {
-                $this->autoloader->addPsr4($prefix, $path);
-
-                if (OutputInterface::VERBOSITY_DEBUG <= $output->getVerbosity()) {
-                    $output->writeln(
-                        '<debug>Registrered PSR-4 autoloader </debug> <info>'
-                        . $prefix . ' </info> -> <comment>' . $path . '</comment>'
-                    );
-                }
             }
         }
     }
@@ -335,35 +278,6 @@ class Application extends BaseApplication
     }
 
     /**
-     * @param OutputInterface $output
-     */
-    protected function registerCustomCommands(OutputInterface $output)
-    {
-        if (isset($this->config['commands']['customCommands'])
-            && is_array($this->config['commands']['customCommands'])
-        ) {
-            foreach ($this->config['commands']['customCommands'] as $commandClass) {
-                if (is_array($commandClass)) { // Support for key => value (name -> class)
-                    $resolvedCommandClass = current($commandClass);
-                    $command = new $resolvedCommandClass();
-                    $command->setName(key($commandClass));
-                } else {
-                    $command = new $commandClass();
-                }
-                $this->add($command);
-
-                if (OutputInterface::VERBOSITY_DEBUG <= $output->getVerbosity()) {
-                    $output->writeln(
-                        '<debug>Added command </debug><comment>' . get_class($command) . '</comment>'
-                    );
-                }
-            }
-        }
-    }
-
-
-
-    /**
      * Override standard command registration. We want alias support.
      *
      * @param \Symfony\Component\Console\Command\Command $command
@@ -371,41 +285,11 @@ class Application extends BaseApplication
      */
     public function add(Command $command)
     {
-        $this->registerConfigCommandAlias($command);
+        if ($this->config) {
+            $this->config->registerConfigCommandAlias($command);
+        }
 
         return parent::add($command);
-    }
-
-    /**
-     * @param \Symfony\Component\Console\Command\Command $command
-     */
-    protected function registerConfigCommandAlias(Command $command)
-    {
-        if ($this->hasConfigCommandAliases()) {
-            foreach ($this->config['commands']['aliases'] as $alias) {
-                if (!is_array($alias)) {
-                    continue;
-                }
-
-                $aliasCommandName = key($alias);
-                $commandString = $alias[$aliasCommandName];
-
-                list($originalCommand) = explode(' ', $commandString);
-                if ($command->getName() == $originalCommand) {
-                    $currentCommandAliases = $command->getAliases();
-                    $currentCommandAliases[] = $aliasCommandName;
-                    $command->setAliases($currentCommandAliases);
-                }
-            }
-        }
-    }
-
-    /**
-     * @return bool
-     */
-    private function hasConfigCommandAliases()
-    {
-        return isset($this->config['commands']['aliases']) && is_array($this->config['commands']['aliases']);
     }
 
     /**
@@ -433,7 +317,7 @@ class Application extends BaseApplication
     public function checkVarDir(OutputInterface $output)
     {
         if (OutputInterface::VERBOSITY_NORMAL <= $output->getVerbosity()) {
-            $tempVarDir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'magento' . DIRECTORY_SEPARATOR .  'var';
+            $tempVarDir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'magento' . DIRECTORY_SEPARATOR . 'var';
 
             if (is_dir($tempVarDir)) {
                 $this->detectMagento(null, $output);
@@ -448,7 +332,7 @@ class Application extends BaseApplication
                     $this->initMagento();
                 } catch (\Exception $e) {
                     $message = 'Cannot initialize Magento. Please check your configuration. '
-                             . 'Some n98-magerun command will not work. Got message: ';
+                        . 'Some n98-magerun command will not work. Got message: ';
                     if (OutputInterface::VERBOSITY_VERY_VERBOSE <= $output->getVerbosity()) {
                         $message .= $e->getTraceAsString();
                     } else {
@@ -463,16 +347,32 @@ class Application extends BaseApplication
                 $currentVarDir = $configOptions->getVarDir();
 
                 if ($currentVarDir == $tempVarDir) {
-                    $output->writeln(sprintf('<warning>Fallback folder %s is used in n98-magerun</warning>', $tempVarDir));
+                    $output->writeln(sprintf('<warning>Fallback folder %s is used in n98-magerun</warning>',
+                        $tempVarDir));
                     $output->writeln('');
-                    $output->writeln('n98-magerun is using the fallback folder. If there is another folder configured for Magento, this can cause serious problems.');
-                    $output->writeln('Please refer to https://github.com/netz98/n98-magerun/wiki/File-system-permissions for more information.');
+                    $output->writeln(
+                        'n98-magerun is using the fallback folder. If there is another folder configured for Magento, '
+                        . 'this can cause serious problems.'
+                    );
+                    $output->writeln(
+                        'Please refer to https://github.com/netz98/n98-magerun/wiki/File-system-permissions '
+                        . 'for more information.'
+                    );
                     $output->writeln('');
                 } else {
-                    $output->writeln(sprintf('<warning>Folder %s found, but not used in n98-magerun</warning>', $tempVarDir));
+                    $output->writeln(sprintf('<warning>Folder %s found, but not used in n98-magerun</warning>',
+                        $tempVarDir));
                     $output->writeln('');
-                    $output->writeln(sprintf('This might cause serious problems. n98-magerun is using the configured var-folder <comment>%s</comment>', $currentVarDir));
-                    $output->writeln('Please refer to https://github.com/netz98/n98-magerun/wiki/File-system-permissions for more information.');
+                    $output->writeln(
+                        sprintf(
+                            'This might cause serious problems. n98-magerun is using the configured var-folder '
+                            . '<comment>%s</comment>', $currentVarDir
+                        )
+                    );
+                    $output->writeln(
+                        'Please refer to https://github.com/netz98/n98-magerun/wiki/File-system-permissions '
+                        . 'for more information.'
+                    );
                     $output->writeln('');
 
                     return false;
@@ -562,7 +462,7 @@ class Application extends BaseApplication
      */
     public function getConfig()
     {
-        return $this->config;
+        return $this->config->getConfig();
     }
 
     /**
@@ -570,7 +470,7 @@ class Application extends BaseApplication
      */
     public function setConfig($config)
     {
-        $this->config = $config;
+        $this->config->setConfig($config);
     }
 
     /**
@@ -584,7 +484,7 @@ class Application extends BaseApplication
     /**
      * Runs the current application with possible command aliases
      *
-     * @param InputInterface $input  An Input instance
+     * @param InputInterface  $input  An Input instance
      * @param OutputInterface $output An Output instance
      *
      * @return integer 0 if everything went fine, or an error code
@@ -600,7 +500,7 @@ class Application extends BaseApplication
         $event = new ConsoleEvent(new Command('dummy'), $input, $output);
         $this->dispatcher->dispatch('console.run.before', $event);
 
-        $input = $this->checkConfigCommandAlias($input);
+        $input = $this->config->checkConfigCommandAlias($input);
         if ($output instanceof ConsoleOutput) {
             $this->checkVarDir($output->getErrorOutput());
         }
@@ -613,37 +513,9 @@ class Application extends BaseApplication
     }
 
     /**
-     * @param InputInterface $input
-     * @return ArgvInput|InputInterface
-     */
-    protected function checkConfigCommandAlias(InputInterface $input)
-    {
-        if ($this->hasConfigCommandAliases()) {
-            foreach ($this->config['commands']['aliases'] as $alias) {
-                if (is_array($alias)) {
-                    $aliasCommandName = key($alias);
-                    if ($input->getFirstArgument() == $aliasCommandName) {
-                        $aliasCommandParams = array_slice(BinaryString::trimExplodeEmpty(' ', $alias[$aliasCommandName]), 1);
-                        if (count($aliasCommandParams) > 0) {
-                            // replace with aliased data
-                            $mergedParams = array_merge(
-                                array_slice($_SERVER['argv'], 0, 2),
-                                $aliasCommandParams,
-                                array_slice($_SERVER['argv'], 2)
-                            );
-                            $input = new ArgvInput($mergedParams);
-                        }
-                    }
-                }
-            }
-            return $input;
-        }
-        return $input;
-    }
-
-    /**
-     * @param InputInterface $input
-     * @param OutputInterface $output
+     * @param InputInterface  $input  [optional]
+     * @param OutputInterface $output [optional]
+     *
      * @return int
      */
     public function run(InputInterface $input = null, OutputInterface $output = null)
@@ -680,8 +552,8 @@ class Application extends BaseApplication
     }
 
     /**
-     * @param array $initConfig
-     * @param InputInterface $input
+     * @param array           $initConfig
+     * @param InputInterface  $input
      * @param OutputInterface $output
      *
      * @return void
@@ -698,15 +570,21 @@ class Application extends BaseApplication
                 $output = new NullOutput();
             }
 
-            $configLoader = $this->getConfigurationLoader($initConfig, $output);
-            $this->partialConfig = $configLoader->getPartialConfig($loadExternalConfig);
+            if (null !== $this->config) {
+                throw new UnexpectedValueException(sprintf('Config already initialized'));
+            }
+
+            $this->config = $config = new Config($initConfig, $this->isPharMode(), $output);
+            $configLoader = $config->getLoader();
+            $config->loadPartialConfig($loadExternalConfig);
             $this->detectMagento($input, $output);
             $configLoader->loadStageTwo($this->_magentoRootFolder, $loadExternalConfig, $this->_magerunStopFileFolder);
-            $this->config = $configLoader->toArray();;
+            $config->load();
+
             $this->dispatcher = new EventDispatcher();
             $this->setDispatcher($this->dispatcher);
 
-            if ($this->autoloader) {
+            if ($autoloader = $this->autoloader) {
 
                 /**
                  * Include commands shipped by Magento 2 core
@@ -715,21 +593,21 @@ class Application extends BaseApplication
                     $this->registerMagentoCoreCommands($output);
                 }
 
-                $this->registerCustomAutoloaders($output);
+                $this->config->registerCustomAutoloaders($autoloader);
                 $this->registerEventSubscribers();
-                $this->registerCustomCommands($output);
+                $config->registerCustomCommands($this);
             }
-
             $this->registerHelpers();
+
 
             $this->_isInitialized = true;
         }
     }
 
     /**
-     * @param array $initConfig
-     * @param InputInterface $input
-     * @param OutputInterface $output
+     * @param array           $initConfig [optional]
+     * @param InputInterface  $input      [optional]
+     * @param OutputInterface $output     [optional]
      */
     public function reinit($initConfig = array(), InputInterface $input = null, OutputInterface $output = null)
     {
@@ -742,7 +620,7 @@ class Application extends BaseApplication
      */
     protected function registerEventSubscribers()
     {
-        foreach ($this->config['event']['subscriber'] as $subscriberClass) {
+        foreach ($this->config->getConfig()['event']['subscriber'] as $subscriberClass) {
             $subscriber = new $subscriberClass();
             $this->dispatcher->addSubscriber($subscriber);
         }
@@ -765,6 +643,8 @@ class Application extends BaseApplication
     {
         $skipConfigOption = getopt('', array('skip-core-commands'));
 
+        getenv('MAGERUN_SKIP_CORE_COMMANDS') && $skipConfigOption[] = 1;
+
         return count($skipConfigOption) > 0;
     }
 
@@ -779,12 +659,13 @@ class Application extends BaseApplication
             if (isset($specialGlobalOptions['root-dir'][0])
                 && $specialGlobalOptions['root-dir'][0] == '~'
             ) {
-                $specialGlobalOptions['root-dir'] = OperatingSystem::getHomeDir() . substr($specialGlobalOptions['root-dir'], 1);
+                $specialGlobalOptions['root-dir'] = OperatingSystem::getHomeDir() . substr($specialGlobalOptions['root-dir'],
+                        1);
             }
             $folder = realpath($specialGlobalOptions['root-dir']);
             $this->_directRootDir = true;
             if (is_dir($folder)) {
-                \chdir($folder);
+                chdir($folder);
 
                 return;
             }
@@ -845,7 +726,7 @@ MAGENTO1HINT;
     }
 
     /**
-     * @return \Symfony\Component\EventDispatcher\EventDispatcher
+     * @return EventDispatcher
      */
     public function getDispatcher()
     {
@@ -853,33 +734,11 @@ MAGENTO1HINT;
     }
 
     /**
-     * @param array $initConfig
-     * @param OutputInterface $output
-     * @return ConfigurationLoader
+     * @param ConfigurationLoader $configurationLoader
      */
-    public function getConfigurationLoader($initConfig = array(), OutputInterface $output)
+    public function setConfigurationLoader(ConfigurationLoader $configurationLoader)
     {
-        if ($this->configurationLoader === null) {
-            $this->configurationLoader = new ConfigurationLoader(
-                ArrayFunctions::mergeArrays($this->config, $initConfig),
-                $this->isPharMode(),
-                $output
-            );
-        }
-
-        return $this->configurationLoader;
-    }
-
-    /**
-     * @param \N98\Magento\Application\ConfigurationLoader $configurationLoader
-     *
-     * @return $this
-     */
-    public function setConfigurationLoader($configurationLoader)
-    {
-        $this->configurationLoader = $configurationLoader;
-
-        return $this;
+        $this->config->setConfigurationLoader($configurationLoader);
     }
 
     /**
