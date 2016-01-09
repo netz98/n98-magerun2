@@ -63,10 +63,10 @@ EOT
         $loadUnstable = $input->getOption('unstable');
         if ($loadUnstable) {
             $versionTxtUrl = 'https://raw.githubusercontent.com/netz98/n98-magerun2/develop/version.txt';
-            $remoteFilename = 'http://files.magerun.net/n98-magerun2-dev.phar';
+            $remoteFilename = 'https://files.magerun.net/n98-magerun2-dev.phar';
         } else {
             $versionTxtUrl = 'https://raw.githubusercontent.com/netz98/n98-magerun2/master/version.txt';
-            $remoteFilename = 'http://files.magerun.net/n98-magerun2-latest.phar';
+            $remoteFilename = 'https://files.magerun.net/n98-magerun2.phar';
         }
 
         $latest = trim($rfs->getContents('raw.githubusercontent.com', $versionTxtUrl, false));
