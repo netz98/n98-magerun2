@@ -249,6 +249,7 @@ commands:
     commands:
       - N98\Magento\Command\Developer\Console\ModuleCommand
       - N98\Magento\Command\Developer\Console\ModulesCommand
+      - N98\Magento\Command\Developer\Console\MakeCommandCommand
       - N98\Magento\Command\Developer\Console\MakeControllerCommand
       - N98\Magento\Command\Developer\Console\MakeModelCommand
 

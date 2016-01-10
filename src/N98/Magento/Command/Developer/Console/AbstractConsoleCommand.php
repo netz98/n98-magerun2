@@ -13,7 +13,7 @@ abstract class AbstractConsoleCommand extends ReflectingCommand
      *
      * @return void
      */
-    protected function setScopeVariable($variable, $value)
+    public function setScopeVariable($variable, $value)
     {
         $variables = $this->context->getAll();
         $variables[$variable] = $value;
@@ -25,7 +25,7 @@ abstract class AbstractConsoleCommand extends ReflectingCommand
      * @param string $type
      * @return mixed
      */
-    protected function get($type)
+    public function get($type)
     {
         $di = $this->getScopeVariable('di');
 
@@ -38,7 +38,7 @@ abstract class AbstractConsoleCommand extends ReflectingCommand
      * @param array $arguments
      * @return mixed
      */
-    protected function create($type, $arguments = [])
+    public function create($type, $arguments = [])
     {
         $di = $this->getScopeVariable('di');
 

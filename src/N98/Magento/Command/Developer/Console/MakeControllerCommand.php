@@ -9,7 +9,6 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Magento\Framework\Code\Generator\ClassGenerator;
-use Zend\Code\Generator\FileGenerator;
 
 class MakeControllerCommand extends AbstractGeneratorCommand
 {
@@ -17,7 +16,7 @@ class MakeControllerCommand extends AbstractGeneratorCommand
     {
         $this
             ->setName('make:controller')
-            ->addArgument('action', InputArgument::REQUIRED)
+            ->addArgument('classpath', InputArgument::REQUIRED)
             ->addOption('result', 'r', InputOption::VALUE_OPTIONAL, 'Result type', 'json')
             ->setDescription('Creates a controller')
         ;
@@ -32,10 +31,10 @@ class MakeControllerCommand extends AbstractGeneratorCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         try {
-            $actionFileName = $this->getNormalizedPathByArgument($input->getArgument('action'));
+            $actionFileName = $this->getNormalizedPathByArgument($input->getArgument('classpath'));
             $classNameToGenerate = $this->getCurrentModuleNamespace()
                 . '\\Controller\\'
-                . $this->getNormalizedClassnameByArgument($input->getArgument('action'));
+                . $this->getNormalizedClassnameByArgument($input->getArgument('classpath'));
             $filePathToGenerate = 'Controller/' . $actionFileName . '.php';
 
             $classGenerator = $this->create(ClassGenerator::class);
@@ -50,16 +49,8 @@ class MakeControllerCommand extends AbstractGeneratorCommand
             $classGenerator->setName($classNameToGenerate);
             $classGenerator->addUse('Magento\Framework\Controller\ResultFactory');
 
-            $controllerFileGenerator = FileGenerator::fromArray(
-                [
-                    'classes' => [$classGenerator]
-                ]
-            );
+            $this->writeClassToFile($output, $classGenerator, $filePathToGenerate);
 
-            $directoryWriter = $this->getCurrentModuleDirectoryWriter();
-            $directoryWriter->writeFile($filePathToGenerate, $controllerFileGenerator->generate());
-
-            $output->writeln('<info>generated </info><comment>' . $filePathToGenerate . '</comment>');
         } catch (Exception $e) {
             $output->writeln('<error>' . $e->getMessage() . '</error>');
         }
@@ -117,6 +108,7 @@ class MakeControllerCommand extends AbstractGeneratorCommand
                 ],
             ],
         ];
+
         return $executeMethodDefinition;
     }
 
