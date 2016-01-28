@@ -63,7 +63,6 @@ class MakeCommandCommand extends AbstractGeneratorCommand
 
         // Write class
         $this->writeClassToFile($output, $classGenerator, $filePathToGenerate);
-        $output->writeln($classGenerator->generate());
 
         // new class to di config
         $this->writeNewCommandToDiConfig($input, $classNameToGenerate);

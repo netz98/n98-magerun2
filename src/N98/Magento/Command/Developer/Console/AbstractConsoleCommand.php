@@ -4,6 +4,8 @@ namespace N98\Magento\Command\Developer\Console;
 
 use Magento\Framework\App\ObjectManager;
 use Psy\Command\ReflectingCommand;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
 
 abstract class AbstractConsoleCommand extends ReflectingCommand
 {
@@ -44,5 +46,18 @@ abstract class AbstractConsoleCommand extends ReflectingCommand
 
         /** @var $di ObjectManager */
         return $di->create($type, $arguments);
+    }
+
+    /**
+     * @param string $commandName
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     * @return int
+     */
+    public function callMagerunCommand($commandName, InputInterface $input, OutputInterface $output)
+    {
+        $command = $this->getScopeVariable('magerun')->find($commandName);
+
+        return $command->run($input, $output);
     }
 }

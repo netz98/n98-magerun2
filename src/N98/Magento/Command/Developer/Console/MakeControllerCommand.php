@@ -40,13 +40,14 @@ class MakeControllerCommand extends AbstractGeneratorCommand
             $classGenerator = $this->create(ClassGenerator::class);
 
             /** @var $classGenerator ClassGenerator */
-            $classGenerator->setExtendedClass('\Magento\Framework\App\Action\Action');
+            $classGenerator->setExtendedClass('Action');
 
             $body = $this->createClassBody($input);
             $executeMethodDefinition = $this->createClassMethodDefinitions($body);
 
             $classGenerator->addMethods([$executeMethodDefinition]);
             $classGenerator->setName($classNameToGenerate);
+            $classGenerator->addUse('Magento\Framework\App\Action\Action');
             $classGenerator->addUse('Magento\Framework\Controller\ResultFactory');
 
             $this->writeClassToFile($output, $classGenerator, $filePathToGenerate);
@@ -62,26 +63,27 @@ class MakeControllerCommand extends AbstractGeneratorCommand
      */
     private function createClassBody(InputInterface $input)
     {
+        $body = '';
+
         if ($input->getOption('result') == ResultFactory::TYPE_PAGE) {
-            $body = 'return $this->resultFactory->create(ResultFactory::TYPE_PAGE);';
-            return $body;
+            $body .= 'return $this->resultFactory->create(ResultFactory::TYPE_PAGE);';
         } elseif ($input->getOption('result') == ResultFactory::TYPE_RAW) {
-            $body = '$result = $this->resultFactory->create(ResultFactory::TYPE_RAW);';
+            $body .= '$result = $this->resultFactory->create(ResultFactory::TYPE_RAW);';
             $body .= PHP_EOL;
-            $body .= '$result->setContents(\'ok\')';
+            $body .= '$result->setContents(\'ok\');';
             $body .= PHP_EOL;
             $body .= PHP_EOL;
             $body .= 'return $result';
-            return $body;
         } else {
-            $body = '$result = $this->resultFactory->create(ResultFactory::TYPE_JSON);';
+            $body .= '$result = $this->resultFactory->create(ResultFactory::TYPE_JSON);';
             $body .= PHP_EOL;
-            $body .= '$result->setData(\'ok\')';
+            $body .= '$result->setData(\'ok\');';
             $body .= PHP_EOL;
             $body .= PHP_EOL;
-            $body .= 'return $result';
-            return $body;
+            $body .= 'return $result;';
         }
+
+        return $body;
     }
 
     /**

@@ -5,14 +5,14 @@ namespace N98\Magento\Command\Developer\Console;
 
 use Magento\Framework\Filesystem\Directory\WriteInterface;
 
-class MakeControllerCommandTest extends TestCase
+class MakeModelCommandTest extends TestCase
 {
     /**
      * @test
      */
     public function testOutput()
     {
-        $command = new MakeControllerCommand();
+        $command = new MakeModelCommand();
 
         $commandTester = $this->createCommandTester($command);
         $command->setCurrentModuleName('N98_Dummy');
@@ -23,13 +23,10 @@ class MakeControllerCommandTest extends TestCase
             ->method('writeFile')
             ->with(
                 $this->anything(), // param1
-                $this->equalTo(file_get_contents(__DIR__ . '/_files/reference_controller.php'))
+                $this->equalTo(file_get_contents(__DIR__ . '/_files/reference_model.php'))
             );
 
         $command->setCurrentModuleDirectoryWriter($writerMock);
-
-        $commandTester->execute([
-            'classpath' => 'foo.bar.baz',
-        ]);
+        $commandTester->execute(['classpath' => 'foo.bar.baz']);
     }
 }

@@ -34,20 +34,10 @@ class MakeCommandCommandTest extends TestCase
             ->method('writeFile')
             ->with(
                 $this->anything(), // param 1
-                $this->logicalAnd( // param 2
-                    $this->stringContains('namespace N98\Dummy\Console\Command\Foo\Bar'),
-                    $this->stringContains('class BazCommand'),
-                    $this->stringContains('public function configure'),
-                    $this->stringContains('public function execute')
-                )
+                $this->equalTo(file_get_contents(__DIR__ . '/_files/reference_command.php'))
             );
 
         $command->setCurrentModuleDirectoryWriter($writerMock);
-
-        $commandTester->execute(
-            array(
-                'classpath' => 'foo.bar.baz',
-            )
-        );
+        $commandTester->execute(['classpath' => 'foo.bar.baz']);
     }
 }

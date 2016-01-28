@@ -2,6 +2,7 @@
 
 namespace N98\Magento\Command\Developer\Console;
 
+use N98\Util\BinaryString;
 use Psy\VarDumper\Presenter;
 use Psy\VarDumper\PresenterAware;
 use Symfony\Component\Console\Input\InputArgument;
@@ -21,6 +22,7 @@ class ModuleCommand extends AbstractGeneratorCommand implements PresenterAware
         $this
             ->setName('module')
             ->addArgument('module', InputArgument::OPTIONAL)
+            ->setAliases(['mod'])
             ->setDescription('Set current module context')
         ;
     }
@@ -63,17 +65,30 @@ class ModuleCommand extends AbstractGeneratorCommand implements PresenterAware
      */
     protected function setCurrentModuleContext(OutputInterface $output, $module)
     {
-        $moduleList = $this->get(ModuleListInterface::class);
+        $moduleList = $this->create(ModuleListInterface::class);
         /** @var $moduleList ModuleListInterface */
 
         $detectedModule = $moduleList->getOne($module);
+        if (is_array($detectedModule)) {
+            $detectedModule = $detectedModule['name'];
+        }
+
+        if (!$detectedModule) {
+            // Try to load first matching module
+            foreach ($moduleList->getAll() as $moduleListItem) {
+                if (BinaryString::startsWith($moduleListItem['name'], $module)) {
+                    $detectedModule = $moduleListItem['name'];
+                    break;
+                }
+            }
+        }
 
         if ($detectedModule) {
-            $this->setCurrentModuleName($module);
+            $this->setCurrentModuleName($detectedModule);
 
-            $output->page($this->presenter->present($module, 1, 0));
-            $output->writeln('<info>Use module </info><comment>' . $module . '</comment>');
-            $this->getApplication()->setPrompt('Module: ' . $module . ' >>> ');
+            $output->page($this->presenter->present($detectedModule, 1, 0));
+            $output->writeln('<info>Use module </info><comment>' . $detectedModule . '</comment>');
+            $this->getApplication()->setPrompt('Module: ' . $detectedModule . ' >>> ');
         } else {
             $output->writeln('<error>Invalid module</error>');
         }

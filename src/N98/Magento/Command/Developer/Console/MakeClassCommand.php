@@ -2,7 +2,6 @@
 
 namespace N98\Magento\Command\Developer\Console;
 
-use Magento\Framework\Controller\ResultFactory;
 use Magento\Framework\Module\Dir;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -11,14 +10,16 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Magento\Framework\Code\Generator\ClassGenerator;
 use Zend\Code\Generator\FileGenerator;
 
-class MakeModelCommand extends AbstractGeneratorCommand
+class MakeClassCommand extends AbstractGeneratorCommand
 {
+    const CLASSPATH = 'classpath';
+
     protected function configure()
     {
         $this
-            ->setName('make:model')
-            ->addArgument('classpath', InputArgument::REQUIRED)
-            ->setDescription('Creates a model')
+            ->setName('make:class')
+            ->addArgument(self::CLASSPATH, InputArgument::REQUIRED)
+            ->setDescription('Creates a generic class')
         ;
     }
 
@@ -31,24 +32,21 @@ class MakeModelCommand extends AbstractGeneratorCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         try {
-            $modelFileName = $this->getNormalizedPathByArgument($input->getArgument('classpath'));
-            $classNameToGenerate = $this->getCurrentModuleNamespace()
-                . '\\Model\\'
-                . $this->getNormalizedClassnameByArgument($input->getArgument('classpath'));
-            $filePathToGenerate = 'Model/' . $modelFileName . '.php';
+            $modelFileName = $this->getNormalizedPathByArgument($input->getArgument(self::CLASSPATH));
 
-            $classGenerator = $this->create(ClassGenerator::class);
+            $classNameToGenerate = $this->getCurrentModuleNamespace()
+                . '\\'
+                . $this->getNormalizedClassnameByArgument($input->getArgument(self::CLASSPATH));
+
+            $filePathToGenerate = $modelFileName . '.php';
 
             /** @var $classGenerator ClassGenerator */
-            $classGenerator->setExtendedClass('\Magento\Catalog\Model\AbstractModel');
-
+            $classGenerator = $this->create(ClassGenerator::class);
             $classGenerator->setName($classNameToGenerate);
 
-            $modelFileGenerator = FileGenerator::fromArray(
-                [
-                    'classes' => [$classGenerator]
-                ]
-            );
+            $modelFileGenerator = FileGenerator::fromArray([
+                'classes' => [$classGenerator]
+            ]);
 
             $directoryWriter = $this->getCurrentModuleDirectoryWriter();
             $directoryWriter->writeFile($filePathToGenerate, $modelFileGenerator->generate());
