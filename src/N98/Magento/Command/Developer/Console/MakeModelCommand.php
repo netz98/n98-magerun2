@@ -2,7 +2,6 @@
 
 namespace N98\Magento\Command\Developer\Console;
 
-use Magento\Framework\Controller\ResultFactory;
 use Magento\Framework\Module\Dir;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -54,6 +53,7 @@ class MakeModelCommand extends AbstractGeneratorCommand
             $directoryWriter->writeFile($filePathToGenerate, $modelFileGenerator->generate());
 
             $output->writeln('<info>generated </info><comment>' . $filePathToGenerate . '</comment>');
+
         } catch (Exception $e) {
             $output->writeln('<error>' . $e->getMessage() . '</error>');
         }
