@@ -57,14 +57,14 @@ class MakeBlockCommand extends AbstractGeneratorCommand
 
         $classGenerator->setName($classNameToGenerate);
 
-        $modelFileGenerator = FileGenerator::fromArray(
+        $fileGenerator = FileGenerator::fromArray(
             [
                 'classes' => [$classGenerator]
             ]
         );
 
         $directoryWriter = $this->getCurrentModuleDirectoryWriter();
-        $directoryWriter->writeFile($filePathToGenerate, $modelFileGenerator->generate());
+        $directoryWriter->writeFile($filePathToGenerate, $fileGenerator->generate());
 
         $output->writeln('<info>generated </info><comment>' . $filePathToGenerate . '</comment>');
     }
