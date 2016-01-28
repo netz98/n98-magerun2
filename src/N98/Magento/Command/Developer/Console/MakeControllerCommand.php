@@ -18,7 +18,7 @@ class MakeControllerCommand extends AbstractGeneratorCommand
             ->setName('make:controller')
             ->addArgument('classpath', InputArgument::REQUIRED)
             ->addOption('result', 'r', InputOption::VALUE_OPTIONAL, 'Result type', 'json')
-            ->setDescription('Creates a controller')
+            ->setDescription('Creates a controller action class')
         ;
     }
 

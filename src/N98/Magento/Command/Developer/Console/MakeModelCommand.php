@@ -17,7 +17,7 @@ class MakeModelCommand extends AbstractGeneratorCommand
         $this
             ->setName('make:model')
             ->addArgument('classpath', InputArgument::REQUIRED)
-            ->setDescription('Creates a model')
+            ->setDescription('Creates a model class')
         ;
     }
 
