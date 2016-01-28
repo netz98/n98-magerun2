@@ -2,7 +2,9 @@
 
 namespace N98\Dummy\Model\Foo\Bar;
 
-class Baz extends \Magento\Catalog\Model\AbstractModel
+use Magento\Framework\Model\AbstractModel;
+
+class Baz extends AbstractModel
 {
 
 

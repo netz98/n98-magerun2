@@ -10,14 +10,14 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Magento\Framework\Code\Generator\ClassGenerator;
 use Zend\Code\Generator\FileGenerator;
 
-class MakeModelCommand extends AbstractGeneratorCommand
+class MakeHelperCommand extends AbstractGeneratorCommand
 {
     protected function configure()
     {
         $this
-            ->setName('make:model')
+            ->setName('make:helper')
             ->addArgument('classpath', InputArgument::REQUIRED)
-            ->setDescription('Creates a model')
+            ->setDescription('Creates a helper class')
         ;
     }
 
@@ -30,28 +30,28 @@ class MakeModelCommand extends AbstractGeneratorCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         try {
-            $modelFileName = $this->getNormalizedPathByArgument($input->getArgument('classpath'));
+            $classFileName = $this->getNormalizedPathByArgument($input->getArgument('classpath'));
             $classNameToGenerate = $this->getCurrentModuleNamespace()
-                . '\\Model\\'
+                . '\\Helper\\'
                 . $this->getNormalizedClassnameByArgument($input->getArgument('classpath'));
-            $filePathToGenerate = 'Model/' . $modelFileName . '.php';
+            $filePathToGenerate = 'Helper/' . $classFileName . '.php';
 
             $classGenerator = $this->create(ClassGenerator::class);
 
             /** @var $classGenerator ClassGenerator */
-            $classGenerator->setExtendedClass('AbstractModel');
-            $classGenerator->addUse('Magento\Framework\Model\AbstractModel');
+            $classGenerator->setExtendedClass('AbstractHelper');
+            $classGenerator->addUse('Magento\Framework\App\Helper\AbstractHelper');
 
             $classGenerator->setName($classNameToGenerate);
 
-            $modelFileGenerator = FileGenerator::fromArray(
+            $fileGenerator = FileGenerator::fromArray(
                 [
                     'classes' => [$classGenerator]
                 ]
             );
 
             $directoryWriter = $this->getCurrentModuleDirectoryWriter();
-            $directoryWriter->writeFile($filePathToGenerate, $modelFileGenerator->generate());
+            $directoryWriter->writeFile($filePathToGenerate, $fileGenerator->generate());
 
             $output->writeln('<info>generated </info><comment>' . $filePathToGenerate . '</comment>');
 

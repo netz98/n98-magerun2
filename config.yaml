@@ -250,6 +250,7 @@ commands:
       - N98\Magento\Command\Developer\Console\CallCommand
       - N98\Magento\Command\Developer\Console\ModuleCommand
       - N98\Magento\Command\Developer\Console\MakeBlockCommand
+      - N98\Magento\Command\Developer\Console\MakeHelperCommand
       - N98\Magento\Command\Developer\Console\MakeModuleCommand
       - N98\Magento\Command\Developer\Console\ModulesCommand
       - N98\Magento\Command\Developer\Console\MakeClassCommand
