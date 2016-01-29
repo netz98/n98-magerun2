@@ -20,16 +20,16 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class MakeConfigRoutesCommand extends AbstractSimpleConfigFileGeneratorCommand
+class MakeConfigWebapiCommand extends AbstractSimpleConfigFileGeneratorCommand
 {
-    const CONFIG_FILENAME = 'routes.xml';
+    const CONFIG_FILENAME = 'webapi.xml';
 
     protected function configure()
     {
         $this
-            ->setName('make:config:routes')
-            ->addArgument('area', InputArgument::OPTIONAL, 'Area of routes.xml file', 'frontend')
-            ->setDescription('Creates a new routes.xml file')
+            ->setName('make:config:webapi')
+            ->addArgument('area', InputArgument::OPTIONAL, 'Area of webapi.xml file', 'global')
+            ->setDescription('Creates a new webapi.xml file')
         ;
     }
 
@@ -50,7 +50,7 @@ class MakeConfigRoutesCommand extends AbstractSimpleConfigFileGeneratorCommand
             return;
         }
 
-        $referenceConfigFileContent = file_get_contents(__DIR__ . '/_files/reference_routes.xml');
+        $referenceConfigFileContent = file_get_contents(__DIR__ . '/_files/reference_webapi.xml');
         $this->getCurrentModuleDirectoryWriter()->writeFile($relativeConfigFilePath, $referenceConfigFileContent);
 
         $output->writeln('<info>generated </info><comment>' . $relativeConfigFilePath . '</comment>');
