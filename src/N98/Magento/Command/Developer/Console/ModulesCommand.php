@@ -5,6 +5,7 @@ namespace N98\Magento\Command\Developer\Console;
 use N98\Util\BinaryString;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\StringInput;
 use Symfony\Component\Console\Output\OutputInterface;
 use Magento\Framework\Module\ModuleListInterface;
 

@@ -258,6 +258,13 @@ commands:
       - N98\Magento\Command\Developer\Console\MakeControllerCommand
       - N98\Magento\Command\Developer\Console\MakeModelCommand
       - N98\Magento\Command\Developer\Console\MakeInterfaceCommand
+      - N98\Magento\Command\Developer\Console\MakeConfigDiCommand
+      - N98\Magento\Command\Developer\Console\MakeConfigEventsCommand
+      - N98\Magento\Command\Developer\Console\MakeConfigFieldsetCommand
+      - N98\Magento\Command\Developer\Console\MakeConfigMenuCommand
+      - N98\Magento\Command\Developer\Console\MakeConfigRoutesCommand
+      - N98\Magento\Command\Developer\Console\MakeConfigSystemCommand
+      - N98\Magento\Command\Developer\Console\MakeConfigWidgetCommand
 
   N98\Magento\Command\System\CheckCommand:
     checks:
