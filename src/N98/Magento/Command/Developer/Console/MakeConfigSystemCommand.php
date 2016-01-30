@@ -27,7 +27,7 @@ class MakeConfigSystemCommand extends AbstractSimpleConfigFileGeneratorCommand
     protected function configure()
     {
         $this
-            ->setName('make:config:routes')
+            ->setName('make:config:system')
             ->addArgument('area', InputArgument::OPTIONAL, 'Area of system.xml file', 'adminhtml')
             ->setDescription('Creates a new system.xml file')
         ;
