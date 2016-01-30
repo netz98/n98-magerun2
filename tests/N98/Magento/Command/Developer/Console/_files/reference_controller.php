@@ -16,10 +16,7 @@ class Baz extends Action
      */
     public function execute()
     {
-        $result = $this->resultFactory->create(ResultFactory::TYPE_JSON);
-        $result->setData('ok');
-
-        return $result;
+        return $this->resultFactory->create(ResultFactory::TYPE_PAGE);
     }
 
 

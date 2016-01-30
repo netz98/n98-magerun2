@@ -68,7 +68,11 @@ abstract class AbstractGeneratorCommand extends AbstractConsoleCommand
      */
     public function setCurrentModuleName($name)
     {
-        $magerunInternal = $this->getScopeVariable('magerunInternal');
+        try {
+            $magerunInternal = $this->getScopeVariable('magerunInternal');
+        } catch (\InvalidArgumentException $e) {
+            $magerunInternal = new \stdClass();
+        }
         $magerunInternal->currentModule = $name;
         $this->setScopeVariable('magerunInternal', $magerunInternal);
 
