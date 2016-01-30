@@ -16,7 +16,7 @@ abstract class AbstractGeneratorCommand extends AbstractConsoleCommand
     /**
      * @var WriteInterface
      */
-    protected $currentModuleDirWriter;
+    protected static $currentModuleDirWriter = null;
 
     /**
      * @param string $type
@@ -53,7 +53,9 @@ abstract class AbstractGeneratorCommand extends AbstractConsoleCommand
     public function getCurrentModuleName()
     {
         try {
-            $currentModuleName = $this->getScopeVariable('_current_module');
+            $magerunInternal = $this->getScopeVariable('magerunInternal');
+
+            $currentModuleName = $magerunInternal->currentModule;
         } catch (\InvalidArgumentException $e) {
             throw new \InvalidArgumentException('Module not defined. Please use "module <name>" command');
         }
@@ -66,7 +68,11 @@ abstract class AbstractGeneratorCommand extends AbstractConsoleCommand
      */
     public function setCurrentModuleName($name)
     {
-        $this->setScopeVariable('_current_module', $name);
+        $magerunInternal = $this->getScopeVariable('magerunInternal');
+        $magerunInternal->currentModule = $name;
+        $this->setScopeVariable('magerunInternal', $magerunInternal);
+
+        $this->reset();
     }
 
     /**
@@ -74,7 +80,7 @@ abstract class AbstractGeneratorCommand extends AbstractConsoleCommand
      */
     public function setCurrentModuleDirectoryWriter(WriteInterface $currentModuleDirWriter)
     {
-        $this->currentModuleDirWriter = $currentModuleDirWriter;
+        self::$currentModuleDirWriter = $currentModuleDirWriter;
     }
 
     /**
@@ -82,14 +88,14 @@ abstract class AbstractGeneratorCommand extends AbstractConsoleCommand
      */
     public function getCurrentModuleDirectoryWriter()
     {
-        if (!$this->currentModuleDirWriter) {
-            $directoryWrite = $this->get(DirectoryWriteFactory::class);
+        if (self::$currentModuleDirWriter === null) {
+            $directoryWrite = $this->create(DirectoryWriteFactory::class);
             /** @var $directoryWrite DirectoryWriteFactory */
 
-            $this->currentModuleDirWriter = $directoryWrite->create($this->getCurrentModulePath());
+            self::$currentModuleDirWriter = $directoryWrite->create($this->getCurrentModulePath());
         }
 
-        return $this->currentModuleDirWriter;
+        return self::$currentModuleDirWriter;
     }
 
     /**
@@ -168,6 +174,14 @@ abstract class AbstractGeneratorCommand extends AbstractConsoleCommand
 
         $output->writeln('<info>generated </info><comment>' . $filePathToGenerate . '</comment>');
 
+    }
+
+    /**
+     * Reset internal caches etc.
+     */
+    protected function reset()
+    {
+        self::$currentModuleDirWriter = null;
     }
 
 }
