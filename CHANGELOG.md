@@ -3,6 +3,7 @@ RECENT CHANGES
 
 1.1.4
 -----
+* Feature: Install command: magento-ce-2.0.1 and magento-ce-2.0.2 versions (TK)
 * Feature: #101 Porting command: eav:attribute:view (by Robbie Averill)
 * Feature: #120 Porting command: sys:setup:change-version (by Robbie Averill)
 
