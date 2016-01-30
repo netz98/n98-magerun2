@@ -17,7 +17,7 @@ class MakeControllerCommand extends AbstractGeneratorCommand
         $this
             ->setName('make:controller')
             ->addArgument('classpath', InputArgument::REQUIRED)
-            ->addOption('result', 'r', InputOption::VALUE_OPTIONAL, 'Result type', 'json')
+            ->addOption('result', 'r', InputOption::VALUE_OPTIONAL, 'Result type', 'page')
             ->setDescription('Creates a controller action class')
         ;
     }
@@ -73,7 +73,7 @@ class MakeControllerCommand extends AbstractGeneratorCommand
             $body .= '$result->setContents(\'ok\');';
             $body .= PHP_EOL;
             $body .= PHP_EOL;
-            $body .= 'return $result';
+            $body .= 'return $result;';
         } else {
             $body .= '$result = $this->resultFactory->create(ResultFactory::TYPE_JSON);';
             $body .= PHP_EOL;
