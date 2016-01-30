@@ -28,7 +28,7 @@ class ApplicationTest extends TestCase
 
         $versionFromChangelog = preg_match('~^\d+\.\d+\.\d+$~m', $buffer, $matches) ? $matches[0] : null;
 
-        $this->assertEquals(Application::APP_VERSION, $versionFromVersionTxt, 'changes.txt same as APP_VERSION');
+        $this->assertEquals(Application::APP_VERSION, $versionFromVersionTxt, 'version.txt same as APP_VERSION');
         $this->assertEquals(Application::APP_VERSION, $versionFromChangelog, 'CHANGELOG.md same as APP_VERSION');
     }
 

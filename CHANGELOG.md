@@ -1,6 +1,9 @@
 RECENT CHANGES
 ==============
 
+1.1.5
+-----
+
 1.1.4
 -----
 * Feature: Install command: magento-ce-2.0.1 and magento-ce-2.0.2 versions (TK)
