@@ -123,7 +123,7 @@ class ViewCommand extends AbstractAttributeCommand
 
             // Optional formatting callback
             $value = is_callable($callback) ? $callback($value) : $value;
-            
+
             if ($value === array()) {
                 $value = '';
             }

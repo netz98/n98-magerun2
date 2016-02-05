@@ -3,6 +3,7 @@ RECENT CHANGES
 
 1.1.5
 -----
+* Fix: Whitespace
 
 1.1.4
 -----
