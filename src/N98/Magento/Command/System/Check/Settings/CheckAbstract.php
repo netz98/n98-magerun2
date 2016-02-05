@@ -103,7 +103,7 @@ abstract class CheckAbstract implements StoreCheck
         $paramValues = $this->storeConfigPaths;
 
         foreach ($paramValues as $name => $path) {
-            $value = $this->scopeConfig->getValue(ScopeInterface::SCOPE_STORE, $store->getCode());
+            $value = $this->scopeConfig->getValue($path, ScopeInterface::SCOPE_STORE, $store->getCode());
             $paramValues[$name] = $value;
         }
 
