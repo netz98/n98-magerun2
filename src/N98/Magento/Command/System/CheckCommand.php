@@ -207,10 +207,10 @@ HELP;
 
     /**
      * @param ResultCollection $results
-     * @param $checkGroupClass
-     * @param $check
+     * @param string $checkGroupClass name
+     * @param Check\StoreCheck $check
      */
-    private function checkStores(ResultCollection $results, $checkGroupClass, $check)
+    private function checkStores(ResultCollection $results, $checkGroupClass, Check\StoreCheck $check)
     {
         if (!$stores = $this->storeManager->getStores()) {
             $this->_markCheckWarning($results, 'stores', $checkGroupClass);
@@ -222,10 +222,10 @@ HELP;
 
     /**
      * @param ResultCollection $results
-     * @param $checkGroupClass
-     * @param $check
+     * @param string $checkGroupClass name
+     * @param Check\WebsiteCheck $check
      */
-    private function checkWebsites(ResultCollection $results, $checkGroupClass, $check)
+    private function checkWebsites(ResultCollection $results, $checkGroupClass, Check\WebsiteCheck $check)
     {
         if (!$websites = $this->storeManager->getWebsites()) {
             $this->_markCheckWarning($results, 'websites', $checkGroupClass);
