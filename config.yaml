@@ -267,6 +267,7 @@ commands:
       - N98\Magento\Command\Developer\Console\MakeConfigSystemCommand
       - N98\Magento\Command\Developer\Console\MakeConfigWidgetCommand
       - N98\Magento\Command\Developer\Console\MakeConfigWebapiCommand
+      - N98\Magento\Command\Developer\Console\MakeThemeCommand
 
   N98\Magento\Command\System\CheckCommand:
     checks:

@@ -52,6 +52,10 @@ class MakeControllerCommand extends AbstractGeneratorCommand
 
             $this->writeClassToFile($output, $classGenerator, $filePathToGenerate);
 
+            if ($input->getOption('result') == ResultFactory::TYPE_PAGE) {
+                $this->createLayoutFile();
+            }
+
         } catch (Exception $e) {
             $output->writeln('<error>' . $e->getMessage() . '</error>');
         }
@@ -114,5 +118,9 @@ class MakeControllerCommand extends AbstractGeneratorCommand
         return $executeMethodDefinition;
     }
 
+    protected function createLayoutFile()
+    {
+
+    }
 
 }
