@@ -85,8 +85,6 @@ class ModuleCommand extends AbstractGeneratorCommand implements PresenterAware
 
         if ($detectedModule) {
             $this->setCurrentModuleName($detectedModule);
-
-            $output->page($this->presenter->present($detectedModule, 1, 0));
             $output->writeln('<info>Use module </info><comment>' . $detectedModule . '</comment>');
             $this->getApplication()->setPrompt('Module: ' . $detectedModule . ' >>> ');
         } else {

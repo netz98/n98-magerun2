@@ -2,6 +2,8 @@
 
 namespace N98\Magento\Command\Developer\Console\Util\Config;
 
+use N98\Magento\Command\Developer\Console\Util\Xml;
+
 class DiFileWriter extends FileWriter
 {
     /**
@@ -61,4 +63,17 @@ XML;
 
         return $this;
     }
+
+    public function save($filename, $options = null)
+    {
+        if (parent::save($filename, $options)) {
+            // Reformat
+            $xml = file_get_contents($filename);
+            $xml = Xml::formatString($xml);
+
+            \file_put_contents($filename, $xml);
+        }
+    }
+
+
 }
