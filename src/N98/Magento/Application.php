@@ -612,6 +612,7 @@ class Application extends BaseApplication
     public function reinit($initConfig = array(), InputInterface $input = null, OutputInterface $output = null)
     {
         $this->_isInitialized = false;
+        $this->config = null;
         $this->init($initConfig, $input, $output);
     }
 
