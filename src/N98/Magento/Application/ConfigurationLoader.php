@@ -293,22 +293,22 @@ class ConfigurationLoader
      *
      * @return array
      */
-    public function loadUserConfig($config, $magentoRootFolder = null)
+    public function loadUserConfig(array $config, $magentoRootFolder = null)
     {
-        if ($this->_userConfig == null) {
+        if (null === $this->_userConfig) {
             $this->_userConfig = array();
             $homeDirectory =  OperatingSystem::getHomeDir();
-            if (OperatingSystem::isWindows()) {
-                $personalConfigFile = $homeDirectory . DIRECTORY_SEPARATOR . $this->_customConfigFilename;
-            } else {
-                $personalConfigFile = $homeDirectory . DIRECTORY_SEPARATOR . '.' . $this->_customConfigFilename;
-            }
+            if ($homeDirectory) {
 
-            if ($homeDirectory && file_exists($personalConfigFile)) {
-                $userConfig = $this->applyVariables(\file_get_contents($personalConfigFile), $magentoRootFolder, null);
-                $this->_userConfig = Yaml::parse($userConfig);
-
-                return $config;
+                if (OperatingSystem::isWindows()) {
+                    $personalConfigFile = $homeDirectory . DIRECTORY_SEPARATOR . $this->_customConfigFilename;
+                } else {
+                    $personalConfigFile = $homeDirectory . DIRECTORY_SEPARATOR . '.' . $this->_customConfigFilename;
+                }
+                if (file_exists($personalConfigFile)) {
+                    $userConfig = $this->applyVariables(\file_get_contents($personalConfigFile), $magentoRootFolder);
+                    $this->_userConfig = Yaml::parse($userConfig);
+                }
             }
         }
 
