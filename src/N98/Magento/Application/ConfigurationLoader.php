@@ -94,7 +94,7 @@ class ConfigurationLoader
      * @param bool $isPharMode
      * @param OutputInterface $output
      */
-    public function __construct($config, $isPharMode, OutputInterface $output)
+    public function __construct(array $config, $isPharMode, OutputInterface $output)
     {
         $this->_initialConfig = $config;
         $this->_isPharMode = $isPharMode;
@@ -154,7 +154,7 @@ class ConfigurationLoader
      *
      * @return array
      */
-    protected function loadDistConfig($initConfig)
+    protected function loadDistConfig(array $initConfig)
     {
         if ($this->_distConfig == null) {
             $this->_distConfig = Yaml::parse(__DIR__ . '/../../../../config.yaml');
@@ -174,7 +174,7 @@ class ConfigurationLoader
      *
      * @return array
      */
-    public function loadSystemConfig($config)
+    public function loadSystemConfig(array $config)
     {
         if ($this->_systemConfig == null) {
             if (OperatingSystem::isWindows()) {
@@ -326,7 +326,7 @@ class ConfigurationLoader
      *
      * @return array
      */
-    public function loadProjectConfig($magentoRootFolder, $magerunStopFileFolder, $config)
+    public function loadProjectConfig($magentoRootFolder, $magerunStopFileFolder, array $config)
     {
         if ($this->_projectConfig == null) {
             $this->_projectConfig = array();
