@@ -560,6 +560,9 @@ class Application extends BaseApplication
             // Suppress DateTime warnings
             date_default_timezone_set(@date_default_timezone_get());
 
+            $this->dispatcher = new EventDispatcher();
+            $this->setDispatcher($this->dispatcher);
+
             $loadExternalConfig = !$this->_checkSkipConfigOption();
 
             if ($output === null) {
@@ -576,9 +579,6 @@ class Application extends BaseApplication
             $this->detectMagento($input, $output);
             $configLoader->loadStageTwo($this->_magentoRootFolder, $loadExternalConfig, $this->_magerunStopFileFolder);
             $config->load();
-
-            $this->dispatcher = new EventDispatcher();
-            $this->setDispatcher($this->dispatcher);
 
             if ($autoloader = $this->autoloader) {
 
