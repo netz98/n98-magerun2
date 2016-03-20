@@ -119,7 +119,7 @@ class ConfigurationLoader
 
     /**
      * @param string $magentoRootFolder
-     * @param bool   $loadExternalConfig
+     * @param bool $loadExternalConfig
      * @param string $magerunStopFileFolder
      */
     public function loadStageTwo($magentoRootFolder, $loadExternalConfig = true, $magerunStopFileFolder = '')
@@ -202,7 +202,7 @@ class ConfigurationLoader
     /**
      * Load config from all installed bundles
      *
-     * @param array  $config
+     * @param array $config
      * @param string $magentoRootFolder
      *
      * @return array
@@ -239,7 +239,8 @@ class ConfigurationLoader
                         ->name($this->_customConfigFilename)
                         ->in($this->getVendorDir());
 
-                    foreach ($finder as $file) { /* @var $file SplFileInfo */
+                    foreach ($finder as $file) {
+                        /* @var $file SplFileInfo */
                         $this->registerPluginConfigFile($magentoRootFolder, $file);
                     }
                 }
@@ -256,7 +257,8 @@ class ConfigurationLoader
                     ->name($this->_customConfigFilename)
                     ->in($moduleBaseFolders);
 
-                foreach ($finder as $file) { /* @var $file SplFileInfo */
+                foreach ($finder as $file) {
+                    /* @var $file SplFileInfo */
                     $this->registerPluginConfigFile($magentoRootFolder, $file);
                 }
             }
@@ -268,8 +270,8 @@ class ConfigurationLoader
     }
 
     /**
-     * @param string      $rawConfig
-     * @param string      $magentoRootFolder
+     * @param string $rawConfig
+     * @param string $magentoRootFolder
      * @param SplFileInfo $file [optional]
      *
      * @return string
@@ -278,7 +280,7 @@ class ConfigurationLoader
     {
         $replace = array(
             '%module%' => $file ? $file->getPath() : '',
-            '%root%'   => $magentoRootFolder,
+            '%root%' => $magentoRootFolder,
         );
 
         return str_replace(array_keys($replace), $replace, $rawConfig);
@@ -288,7 +290,7 @@ class ConfigurationLoader
     /**
      * Check if there is a user config file. ~/.n98-magerun.yaml
      *
-     * @param array  $config
+     * @param array $config
      * @param string $magentoRootFolder [optional]
      *
      * @return array
@@ -297,7 +299,7 @@ class ConfigurationLoader
     {
         if (null === $this->_userConfig) {
             $this->_userConfig = array();
-            $homeDirectory =  OperatingSystem::getHomeDir();
+            $homeDirectory = OperatingSystem::getHomeDir();
             if ($homeDirectory) {
 
                 if (OperatingSystem::isWindows()) {
@@ -356,7 +358,7 @@ class ConfigurationLoader
     /**
      * Loads a plugin config file and merges it to plugin config
      *
-     * @param string       $magentoRootFolder
+     * @param string $magentoRootFolder
      * @param SplFileInfo $file
      */
     protected function registerPluginConfigFile($magentoRootFolder, $file)
