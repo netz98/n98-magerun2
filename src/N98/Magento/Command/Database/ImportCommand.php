@@ -28,7 +28,6 @@ Imports an SQL file with mysql cli client into current configured database.
 You need to have MySQL client tools installed on your system.
 HELP;
         $this->setHelp($help);
-
     }
 
     /**
@@ -46,7 +45,7 @@ HELP;
      */
     protected function optimize($fileName)
     {
-        $in = fopen($fileName,'r');
+        $in = fopen($fileName, 'r');
         $result = tempnam(sys_get_temp_dir(), 'dump') . '.sql';
         $out = fopen($result, 'w');
 
@@ -88,13 +87,11 @@ HELP;
                 }
                 fwrite($out, $line);
             }
-
         }
         fclose($in);
         fclose($out);
 
         return $result;
-
     }
     /**
      * @param \Symfony\Component\Console\Input\InputInterface $input
@@ -138,25 +135,26 @@ HELP;
             $fileName = $this->optimize($fileName);
         }
 
-        if( $input->getOption('drop') ) {
+        if ($input->getOption('drop')) {
             $dbHelper->dropDatabase($output);
             $dbHelper->createDatabase($output);
         }
-        if( $input->getOption('drop-tables') ) {
+        if ($input->getOption('drop-tables')) {
             $dbHelper->dropTables($output);
         }
 
 
 
 
-            $this->doImport($output, $fileName, $exec);
+        $this->doImport($output, $fileName, $exec);
 
         if ($input->getOption('optimize')) {
             unlink($fileName);
         }
     }
 
-    public function asText() {
+    public function asText()
+    {
         return parent::asText() . "\n" .
             $this->getCompressionHelp();
     }

@@ -10,7 +10,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class ListCommand extends AbstractMagentoCommand
 {
-
     /**
      * @var \Magento\Store\Model\StoreManagerInterface
      */
@@ -71,8 +70,7 @@ HELP;
         \Magento\Sitemap\Model\ResourceModel\Catalog\Category $sitemapCategoryCollection,
         \Magento\Sitemap\Model\ResourceModel\Catalog\Product $sitemapProductCollection,
         \Magento\Sitemap\Model\ResourceModel\Cms\Page $sitemapPageCollection
-    )
-    {
+    ) {
         $this->storeManager = $storeManager;
         $this->sitemapCategoryCollection = $sitemapCategoryCollection;
         $this->sitemapProductCollection= $sitemapProductCollection;
@@ -81,7 +79,6 @@ HELP;
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-
         if ($input->getOption('add-all')) {
             $input->setOption('add-categories', true);
             $input->setOption('add-products', true);
@@ -90,16 +87,14 @@ HELP;
 
         $this->detectMagento($output, true);
         if ($this->initMagento()) {
-
             $stores = explode(',', $input->getArgument('stores'));
 
             $urls = array();
 
             foreach ($stores as $storeId) {
-
                 try {
                     $currentStore = $this->storeManager->getStore($storeId);
-                } catch(\Exception $e) {
+                } catch (\Exception $e) {
                     throw new \RuntimeException("Store with id {$storeId} doesn´t exist");
                 }
 
@@ -137,7 +132,6 @@ HELP;
                         unset($collection);
                     }
                 }
-
             } // foreach ($stores as $storeId)
 
             if (count($urls) > 0) {

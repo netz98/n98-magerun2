@@ -55,7 +55,7 @@ abstract class AbstractCronCommand extends AbstractMagentoCommand
     /**
      * @return array
      */
-    protected  function getJobs()
+    protected function getJobs()
     {
         $table = array();
 
@@ -74,7 +74,7 @@ abstract class AbstractCronCommand extends AbstractMagentoCommand
             }
         }
 
-        usort($table, function($a, $b) {
+        usort($table, function ($a, $b) {
             return strcmp($a['Job'], $b['Job']);
         });
 
@@ -90,7 +90,6 @@ abstract class AbstractCronCommand extends AbstractMagentoCommand
         foreach ($this->_cronConfig->getJobs() as $jobGroup) {
             foreach ($jobGroup as $job) {
                 if ($job['name'] == $jobCode) {
-
                     return $job;
                 }
             }

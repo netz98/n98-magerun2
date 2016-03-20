@@ -65,7 +65,6 @@ class DownloadMagento extends AbstractSubCommand
             $process->wait(function ($type, $buffer) {
                 $this->output->write($buffer, false, OutputInterface::OUTPUT_RAW);
             });
-
         } catch (\Exception $e) {
             $this->output->writeln('<error>' . $e->getMessage() . '</error>');
             return false;

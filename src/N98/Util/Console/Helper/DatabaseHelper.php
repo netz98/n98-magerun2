@@ -40,7 +40,6 @@ class DatabaseHelper extends AbstractHelper
      */
     public function detectDbSettings(OutputInterface $output)
     {
-
         if ($this->dbSettings !== null) {
             return;
         }
@@ -104,7 +103,7 @@ class DatabaseHelper extends AbstractHelper
         if (strpos($this->dbSettings['host'], '/') !== false) {
             $this->dbSettings['unix_socket'] = $this->dbSettings['host'];
             unset($this->dbSettings['host']);
-        } else if (strpos($this->dbSettings['host'], ':') !== false) {
+        } elseif (strpos($this->dbSettings['host'], ':') !== false) {
             list($this->dbSettings['host'], $this->dbSettings['port']) = explode(':', $this->dbSettings['host']);
         }
 
@@ -348,7 +347,7 @@ class DatabaseHelper extends AbstractHelper
                 return $result;
             }
 
-            return array_map(function($tableName) use ($prefix) {
+            return array_map(function ($tableName) use ($prefix) {
                 return str_replace($prefix, '', $tableName);
             }, $result);
         }

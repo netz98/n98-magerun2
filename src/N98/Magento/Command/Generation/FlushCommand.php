@@ -13,7 +13,7 @@ class FlushCommand extends AbstractMagentoCommand
 {
     protected function configure()
     {
-      $this
+        $this
           ->setName('generation:flush')
           ->setDescription('Flushs generated code like factories and proxies')
           ->addArgument('vendorName', InputArgument::OPTIONAL, 'Vendor to remove like "Magento"')
@@ -40,7 +40,6 @@ class FlushCommand extends AbstractMagentoCommand
         $filesystem = new Filesystem();
 
         foreach ($finder as $directory) {
-
             if (!empty($vendorNameToFilter) && $directory->getBasename() != $vendorNameToFilter) {
                 continue;
             }

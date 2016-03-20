@@ -92,5 +92,4 @@ class OpenBrowserCommand extends AbstractMagentoCommand
     {
         return $store->getBaseUrl(FrontendUrlInterface::URL_TYPE_LINK) . '?___store=' . $store->getCode();
     }
-
 }

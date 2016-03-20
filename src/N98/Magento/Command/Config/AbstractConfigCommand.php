@@ -65,7 +65,7 @@ abstract class AbstractConfigCommand extends AbstractMagentoCommand
     {
         if ($encryptionType == 'encrypt') {
             $value = $this->getEncryptionModel()->encrypt($value);
-        } else if ($encryptionType == 'decrypt') {
+        } elseif ($encryptionType == 'decrypt') {
             $value = $this->getEncryptionModel()->decrypt($value);
         }
 

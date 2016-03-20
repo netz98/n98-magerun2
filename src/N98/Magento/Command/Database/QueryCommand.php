@@ -69,7 +69,7 @@ HELP;
             $query = $dialog->ask($output, '<question>SQL Query:</question>');
         }
         
-        $query = $this->getEscapedSql($query);        
+        $query = $this->getEscapedSql($query);
         
         $exec = 'mysql ' . $this->getMysqlClientToolConnectionString() . " -e '" . $query . "'";
 
@@ -81,6 +81,6 @@ HELP;
             if ($returnValue > 0) {
                 $output->writeln('<error>' . implode(PHP_EOL, $commandOutput) . '</error>');
             }
-        }        
+        }
     }
 }

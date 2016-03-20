@@ -36,7 +36,7 @@ abstract class AbstractDatabaseCommand extends AbstractMagentoCommand
      *
      * @return mixed
      */
-    function __get($name)
+    public function __get($name)
     {
         if ($name == '_connection') {
             return $this->getHelper('database')->getConnection();

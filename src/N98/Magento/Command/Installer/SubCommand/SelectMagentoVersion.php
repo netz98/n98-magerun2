@@ -27,7 +27,7 @@ class SelectMagentoVersion extends AbstractSubCommand
             $commandConfig = $this->commandConfig;
 
 
-            $type = $this->getCommand()->getHelper('dialog')->askAndValidate($this->output, $question, function($typeInput) use ($commandConfig) {
+            $type = $this->getCommand()->getHelper('dialog')->askAndValidate($this->output, $question, function ($typeInput) use ($commandConfig) {
                 if (!in_array($typeInput, range(1, count($this->commandConfig['magento-packages'])))) {
                     throw new \InvalidArgumentException('Invalid type');
                 }

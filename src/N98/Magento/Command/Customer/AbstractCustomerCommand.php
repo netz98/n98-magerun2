@@ -61,5 +61,4 @@ class AbstractCustomerCommand extends AbstractMagentoCommand
     {
         return $this->getObjectManager()->get(CustomerCollection::class);
     }
-
 }

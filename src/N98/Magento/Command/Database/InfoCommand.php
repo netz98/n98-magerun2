@@ -30,7 +30,6 @@ This command is useful to print all informations about the current configured da
 It can print connection string for JDBC, PDO connections.
 HELP;
         $this->setHelp($help);
-
     }
 
     /**
@@ -83,5 +82,4 @@ HELP;
                 ->renderByFormat($output, $rows, $input->getOption('format'));
         }
     }
-
 }

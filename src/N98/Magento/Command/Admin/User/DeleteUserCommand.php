@@ -35,7 +35,6 @@ class DeleteUserCommand extends AbstractAdminUserCommand
     {
         $this->detectMagento($output);
         if ($this->initMagento()) {
-
             $dialog = $this->getHelperSet()->get('dialog');
             // Username
             if (($id = $input->getArgument('id')) == null) {

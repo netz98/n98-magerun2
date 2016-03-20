@@ -23,7 +23,7 @@ class InstallMagento extends AbstractSubCommand
      */
     public function execute()
     {
-        $this->notEmptyCallback = function($input) {
+        $this->notEmptyCallback = function ($input) {
             if (empty($input)) {
                 throw new \InvalidArgumentException('Please enter a value');
             }
@@ -116,7 +116,7 @@ class InstallMagento extends AbstractSubCommand
             $defaults['admin-email']
         );
 
-        $validateBaseUrl = function($url) {
+        $validateBaseUrl = function ($url) {
             if (!preg_match('|^http(s)?://[a-z0-9-]+(.[a-z0-9-]+)*(:[0-9]+)?(/.*)?$|i', $url)) {
                 throw new \InvalidArgumentException('Please enter a valid URL');
             }

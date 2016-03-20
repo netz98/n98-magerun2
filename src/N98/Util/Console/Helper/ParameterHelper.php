@@ -74,7 +74,7 @@ class ParameterHelper extends AbstractHelper
 
             if (count($stores) > 1) {
                 $question[] = '<question>Please select a store: </question>';
-                $storeId = $this->getHelperSet()->get('dialog')->askAndValidate($output, $question, function($typeInput) use ($stores) {
+                $storeId = $this->getHelperSet()->get('dialog')->askAndValidate($output, $question, function ($typeInput) use ($stores) {
                     if (!isset($stores[$typeInput - 1])) {
                         throw new InvalidArgumentException('Invalid store');
                     }
@@ -128,7 +128,7 @@ class ParameterHelper extends AbstractHelper
             }
             $question[] = '<question>Please select a website: </question>';
 
-            $websiteId = $this->getHelperSet()->get('dialog')->askAndValidate($output, $question, function($typeInput) use ($websites) {
+            $websiteId = $this->getHelperSet()->get('dialog')->askAndValidate($output, $question, function ($typeInput) use ($websites) {
                 if (!isset($websites[$typeInput - 1])) {
                     throw new InvalidArgumentException('Invalid store');
                 }
@@ -175,8 +175,7 @@ class ParameterHelper extends AbstractHelper
         OutputInterface $output,
         $argumentName = 'password',
         $needDigits = true
-    )
-    {
+    ) {
         $validators = array();
 
         if ($needDigits) {
@@ -223,7 +222,7 @@ class ParameterHelper extends AbstractHelper
             $value = $this->getHelperSet()->get('dialog')->askAndValidate(
                 $output,
                 $question,
-                function($typeInput) use ($validator, $constraints, $name) {
+                function ($typeInput) use ($validator, $constraints, $name) {
                     $errors = $validator->validateValue(array($name => $typeInput), $constraints);
                     if (count($errors) > 0) {
                         throw new InvalidArgumentException($errors[0]->getMessage());

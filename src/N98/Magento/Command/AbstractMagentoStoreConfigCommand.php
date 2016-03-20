@@ -90,7 +90,6 @@ abstract class AbstractMagentoStoreConfigCommand extends AbstractMagentoCommand
         if ($this->scope == self::SCOPE_STORE_VIEW || $this->scope == self::SCOPE_STORE_VIEW_GLOBAL) {
             $this->addArgument('store', InputArgument::OPTIONAL, 'Store code or ID');
         }
-
     }
 
     /**
@@ -102,7 +101,6 @@ abstract class AbstractMagentoStoreConfigCommand extends AbstractMagentoCommand
     {
         $this->detectMagento($output);
         if ($this->initMagento()) {
-
             $runOnStoreView = false;
             if ($this->scope == self::SCOPE_STORE_VIEW
                 || ($this->scope == self::SCOPE_STORE_VIEW_GLOBAL && !$input->getOption('global'))
@@ -182,7 +180,6 @@ abstract class AbstractMagentoStoreConfigCommand extends AbstractMagentoCommand
      */
     protected function _beforeSave(\Magento\Store\Model\Store $store, $disabled)
     {
-
     }
 
     /**
@@ -191,6 +188,5 @@ abstract class AbstractMagentoStoreConfigCommand extends AbstractMagentoCommand
      */
     protected function _afterSave(\Magento\Store\Model\Store $store, $disabled)
     {
-
     }
 }

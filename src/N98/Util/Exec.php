@@ -8,8 +8,8 @@ use RuntimeException;
  * Class Exec
  * @package N98\Util
  */
-class Exec {
-
+class Exec
+{
     /**
      * @var string
      */
@@ -25,8 +25,8 @@ class Exec {
      * @param string $commandOutput
      * @param int $returnCode
      */
-    public static function run($command, &$commandOutput = null, &$returnCode = null) {
-
+    public static function run($command, &$commandOutput = null, &$returnCode = null)
+    {
         $command = $command . self::REDIRECT_STDERR_TO_STDOUT;
 
         exec($command, $commandOutput, $returnCode);
@@ -42,8 +42,8 @@ class Exec {
      *
      * @return bool
      */
-    public static function allowed() {
-
+    public static function allowed()
+    {
         return function_exists('exec');
     }
 
@@ -51,8 +51,8 @@ class Exec {
      * @param $commandOutput
      * @return string
      */
-    private static function parseCommandOutput($commandOutput) {
-
+    private static function parseCommandOutput($commandOutput)
+    {
         return implode(PHP_EOL, $commandOutput);
     }
 }

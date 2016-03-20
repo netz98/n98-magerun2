@@ -86,7 +86,8 @@ HELP;
                 InputOption::VALUE_OPTIONAL,
                 'Output Format. One of [' . implode(',', RendererFactory::getFormats()) . ']'
             )
-            ->setHelp($help);;
+            ->setHelp($help);
+        ;
     }
 
     /**
@@ -157,7 +158,6 @@ HELP;
         );
 
         foreach ($tables as $tableName) {
-
             if (isset($allTableStatus[$tableName]) && isset($methods[$allTableStatus[$tableName]['Engine']])) {
                 $m           = '_check' . $allTableStatus[$tableName]['Engine'];
                 $tableOutput = array_merge($tableOutput, $this->$m($tableName));

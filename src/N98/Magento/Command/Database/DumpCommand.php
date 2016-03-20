@@ -80,7 +80,6 @@ See it in action: http://youtu.be/ttjZHY6vThs
 
 HELP;
         $this->setHelp($help);
-
     }
 
     /**
@@ -342,7 +341,7 @@ HELP;
         } else {
             if ($input->getOption('add-time')) {
                 $pathParts = pathinfo($fileName);
-                $fileName = ($pathParts['dirname'] == '.' ? '' : $pathParts['dirname'] . DIRECTORY_SEPARATOR ) .
+                $fileName = ($pathParts['dirname'] == '.' ? '' : $pathParts['dirname'] . DIRECTORY_SEPARATOR) .
                     $namePrefix . $pathParts['filename'] . $nameSuffix . '.' . $pathParts['extension'];
             }
         }

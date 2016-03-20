@@ -68,7 +68,6 @@ class ListCommand extends AbstractMagentoCommand
         $this->getHelper('table')
             ->setHeaders(array('Name', '(Schema) Version'))
             ->renderByFormat($output, $this->moduleList, $input->getOption('format'));
-
     }
 
     protected function prepareModuleList($vendor)

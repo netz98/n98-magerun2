@@ -18,7 +18,7 @@ class ListCommand extends AbstractMagentoCommand
 
     protected function configure()
     {
-      $this
+        $this
           ->setName('dev:theme:list')
           ->setDescription('Lists all available themes')
           ->addOption(

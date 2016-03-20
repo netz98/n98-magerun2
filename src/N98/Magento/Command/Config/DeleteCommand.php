@@ -44,7 +44,6 @@ HELP;
     {
         $this->detectMagento($output, true);
         if ($this->initMagento()) {
-
             $this->_validateScopeParam($input->getOption('scope'));
             $scopeId = $this->_convertScopeIdParam($input->getOption('scope'), $input->getOption('scope-id'));
 
@@ -106,7 +105,6 @@ HELP;
     {
         $deleted = array();
         if ($input->getOption('all')) {
-
             $storeManager = $this->getObjectManager()->get('Magento\Store\Model\StoreManager');
 
             // Default
@@ -148,7 +146,6 @@ HELP;
                     'scopeId' => $store->getId(),
                 );
             }
-
         } else {
             $configWriter->delete(
                 $path,
@@ -161,7 +158,6 @@ HELP;
                 'scope'   => $input->getOption('scope'),
                 'scopeId' => $scopeId,
             );
-
         }
 
         return $deleted;
