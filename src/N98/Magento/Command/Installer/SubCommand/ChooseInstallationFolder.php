@@ -15,7 +15,7 @@ class ChooseInstallationFolder extends AbstractSubCommand
         $validateInstallationFolder = function ($folderName) use ($input) {
             $folderName = rtrim(trim($folderName, ' '), '/');
             if (substr($folderName, 0, 1) == '.') {
-                $cwd = \getcwd() ;
+                $cwd = \getcwd();
                 if (empty($cwd) && isset($_SERVER['PWD'])) {
                     $cwd = $_SERVER['PWD'];
                 }
@@ -41,7 +41,13 @@ class ChooseInstallationFolder extends AbstractSubCommand
             $defaultFolder = './magento';
             $question[] = "<question>Enter installation folder:</question> [<comment>" . $defaultFolder . "</comment>]";
 
-            $installationFolder = $this->getCommand()->getHelper('dialog')->askAndValidate($this->output, $question, $validateInstallationFolder, false, $defaultFolder);
+            $installationFolder = $this->getCommand()->getHelper('dialog')->askAndValidate(
+                $this->output,
+                $question,
+                $validateInstallationFolder,
+                false,
+                $defaultFolder
+            );
         } else {
             // @Todo improve validation and bring it to 1 single function
             $installationFolder = $validateInstallationFolder($installationFolder);

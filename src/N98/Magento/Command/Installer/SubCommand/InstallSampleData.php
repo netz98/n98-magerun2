@@ -25,7 +25,10 @@ class InstallSampleData extends AbstractSubCommand
         if ($this->input->getOption('installSampleData') !== null) {
             $installSampleData = $this->getCommand()->parseBoolOption($this->input->getOption('installSampleData'));
         } else {
-            $installSampleData = $dialog->askConfirmation($this->output, '<question>Install sample data?</question> <comment>[y]</comment>: ');
+            $installSampleData = $dialog->askConfirmation(
+                $this->output,
+                '<question>Install sample data?</question> <comment>[y]</comment>: '
+            );
         }
 
         if ($installSampleData) {

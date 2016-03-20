@@ -24,7 +24,8 @@ class SelfUpdateCommand extends AbstractMagentoCommand
             ->setAliases(array('selfupdate'))
             ->addOption('unstable', null, InputOption::VALUE_NONE, 'Load unstable version from develop branch')
             ->setDescription('Updates n98-magerun.phar to the latest version.')
-            ->setHelp(<<<EOT
+            ->setHelp(
+<<<EOT
 The <info>self-update</info> command checks github for newer
 versions of n98-magerun and if found, installs the latest.
 
@@ -50,11 +51,16 @@ EOT
 
         // check for permissions in local filesystem before start connection process
         if (!is_writable($tempDirectory = dirname($tempFilename))) {
-            throw new FilesystemException('n98-magerun2 update failed: the "' . $tempDirectory . '" directory used to download the temp file could not be written');
+            throw new FilesystemException(
+                'n98-magerun2 update failed: the "' . $tempDirectory .
+                '" directory used to download the temp file could not be written'
+            );
         }
 
         if (!is_writable($localFilename)) {
-            throw new FilesystemException('n98-magerun2 update failed: the "' . $localFilename . '" file could not be written');
+            throw new FilesystemException(
+                'n98-magerun2 update failed: the "' . $localFilename . '" file could not be written'
+            );
         }
 
         $io = new ConsoleIO($input, $output, $this->getHelperSet());

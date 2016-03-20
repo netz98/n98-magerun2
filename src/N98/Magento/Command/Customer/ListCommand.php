@@ -17,7 +17,9 @@ class ListCommand extends AbstractCustomerCommand
             ->setDescription('Lists all magento customers')
             ->addArgument('search', InputArgument::OPTIONAL, 'Search query')
             ->addOption(
-                'format', null, InputOption::VALUE_OPTIONAL,
+                'format',
+                null,
+                InputOption::VALUE_OPTIONAL,
                 'Output Format. One of [' . implode(',', RendererFactory::getFormats()) . ']'
             );
 

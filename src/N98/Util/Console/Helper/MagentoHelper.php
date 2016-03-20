@@ -227,9 +227,7 @@ class MagentoHelper extends AbstractHelper
                 }
 
                 if (!empty($baseFolderContent)) {
-                    array_push(
-                        $folders, $searchFolder . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . $baseFolderContent
-                    );
+                    array_push($folders, $searchFolder . '/../' . $baseFolderContent);
                 }
             }
         }
@@ -274,7 +272,8 @@ class MagentoHelper extends AbstractHelper
                 $magerunFileContent           = trim(file_get_contents($magerunFilePath));
                 if (OutputInterface::VERBOSITY_DEBUG <= $this->output->getVerbosity()) {
                     $message = sprintf(
-                        '<debug>Found stopfile \'%s\' file with content <info>%s</info></debug>', $stopFile,
+                        '<debug>Found stopfile \'%s\' file with content <info>%s</info></debug>',
+                        $stopFile,
                         $magerunFileContent
                     );
                     $this->output->writeln($message);

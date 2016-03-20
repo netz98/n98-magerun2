@@ -122,7 +122,8 @@ class DatabaseHelper extends AbstractHelper
             if (OutputInterface::VERBOSITY_VERY_VERBOSE <= $output->getVerbosity()) {
                 $output->writeln(sprintf(
                     '<error>Failed to use database <comment>%s</comment>: %s</error>',
-                    var_export($this->dbSettings['dbname'], true), $e->getMessage()
+                    var_export($this->dbSettings['dbname'], true),
+                    $e->getMessage()
                 ));
             }
         }
@@ -208,8 +209,10 @@ class DatabaseHelper extends AbstractHelper
         $string .= ' '
             . '-u' . escapeshellarg($this->dbSettings['username'])
             . ' '
-            . (isset($this->dbSettings['port']) ? '-P' . escapeshellarg($this->dbSettings['port']) . ' ' : '')
-            . (strlen($this->dbSettings['password']) ? '--pass=' . escapeshellarg($this->dbSettings['password']) . ' ' : '')
+            . (isset($this->dbSettings['port'])
+                ? '-P' . escapeshellarg($this->dbSettings['port']) . ' ' : '')
+            . (strlen($this->dbSettings['password'])
+                ? '--pass=' . escapeshellarg($this->dbSettings['password']) . ' ' : '')
             . escapeshellarg($this->dbSettings['dbname']);
 
         return $string;
@@ -252,8 +255,8 @@ class DatabaseHelper extends AbstractHelper
                     throw new RuntimeException('Invalid definition of table-groups (id missing) Index: ' . $index);
                 }
                 if (!isset($definition['tables'])) {
-                    throw new RuntimeException('Invalid definition of table-groups (tables missing) Id: '
-                        . $definition['id']
+                    throw new RuntimeException(
+                        'Invalid definition of table-groups (tables missing) Id: ' . $definition['id']
                     );
                 }
 
@@ -290,7 +293,11 @@ class DatabaseHelper extends AbstractHelper
                 }
                 if (!isset($resolved[$code])) {
                     $resolved[$code] = true;
-                    $tables          = $this->resolveTables(explode(' ', $definitions[$code]['tables']), $definitions, $resolved);
+                    $tables          = $this->resolveTables(
+                        explode(' ', $definitions[$code]['tables']),
+                        $definitions,
+                        $resolved
+                    );
                     $resolvedList    = array_merge($resolvedList, $tables);
                 }
                 continue;
@@ -299,7 +306,10 @@ class DatabaseHelper extends AbstractHelper
             // resolve wildcards
             if (strpos($entry, '*') !== false) {
                 $connection = $this->getConnection();
-                $sth        = $connection->prepare('SHOW TABLES LIKE :like', array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
+                $sth        = $connection->prepare(
+                    'SHOW TABLES LIKE :like',
+                    array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY)
+                );
                 $sth->execute(
                     array(':like' => str_replace('*', '%', $this->dbSettings['prefix'] . $entry))
                 );

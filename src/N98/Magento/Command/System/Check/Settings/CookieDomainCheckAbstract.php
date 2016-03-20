@@ -39,12 +39,21 @@ abstract class CookieDomainCheckAbstract extends CheckAbstract
             $result->setStatus($isValid);
 
             if ($isValid) {
-                $result->setMessage('<info>Cookie Domain (' . $this->class . '): <comment>' . $cookieDomain . '</comment> of Store: <comment>' . $store->getCode() . '</comment> - OK</info>');
+                $result->setMessage(
+                    '<info>Cookie Domain (' . $this->class . '): <comment>' . $cookieDomain . '</comment>' .
+                    ' of Store: <comment>' . $store->getCode() . '</comment> - OK</info>'
+                );
             } else {
-                $result->setMessage('<error>Cookie Domain (' . $this->class . '): <comment>' . $cookieDomain . '</comment> of Store: <comment>' . $store->getCode() . '</comment> - ERROR: ' . $errorMessage . '</error>');
+                $result->setMessage(
+                    '<error>Cookie Domain (' . $this->class . '): <comment>' . $cookieDomain . '</comment>' .
+                    ' of Store: <comment>' . $store->getCode() . '</comment> - ERROR: ' . $errorMessage . '</error>'
+                );
             }
         } else {
-            $result->setMessage('<info>Empty cookie Domain (' . $this->class . ') of Store: <comment>' . $store->getCode() . '</comment> - OK</info>');
+            $result->setMessage(
+                '<info>Empty cookie Domain (' . $this->class . ') of Store: <comment>' . $store->getCode() .
+                '</comment> - OK</info>'
+            );
         }
     }
 
@@ -70,14 +79,14 @@ abstract class CookieDomainCheckAbstract extends CheckAbstract
     public function validateCookieDomainAgainstUrl($cookieDomain, $siteUrl)
     {
         $siteDomain = strtolower(parse_url($siteUrl, PHP_URL_HOST));
-        $siteLen    = strlen($siteDomain);
+        $siteLen = strlen($siteDomain);
 
         if (0 === $siteLen) {
             return false;
         }
 
         $cookieDomain = strtolower($cookieDomain);
-        $cookieLen    = strlen($cookieDomain);
+        $cookieLen = strlen($cookieDomain);
 
         if (3 > $cookieLen) {
             return false;
@@ -86,7 +95,7 @@ abstract class CookieDomainCheckAbstract extends CheckAbstract
         $hasLeadingDot = $cookieDomain[0] === '.';
         if ($hasLeadingDot) {
             $cookieDomain = substr($cookieDomain, 1);
-            $cookieLen    = strlen($cookieDomain);
+            $cookieLen = strlen($cookieDomain);
         } elseif ($siteDomain === $cookieDomain) {
             return true;
         }

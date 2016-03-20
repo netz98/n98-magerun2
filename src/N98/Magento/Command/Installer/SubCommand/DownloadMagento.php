@@ -2,7 +2,6 @@
 
 namespace N98\Magento\Command\Installer\SubCommand;
 
-use Magento\Catalog\Helper\Output;
 use N98\Magento\Command\SubCommand\AbstractSubCommand;
 use N98\Util\Console\Helper\ComposerHelper;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -112,7 +111,8 @@ class DownloadMagento extends AbstractSubCommand
     {
         $configKey = 'http-basic.repo.magento.com';
 
-        $composerHelper = $this->getCommand()->getHelper('composer'); /** @var $composerHelper ComposerHelper */
+        $composerHelper = $this->getCommand()->getHelper('composer');
+        /** @var $composerHelper ComposerHelper */
         $authConfig = $composerHelper->getConfigValue($configKey);
 
         if (!isset($authConfig->username)
@@ -123,14 +123,15 @@ class DownloadMagento extends AbstractSubCommand
                 $this->getCommand()
                     ->getHelperSet()
                     ->get('formatter')
-                    ->formatBlock('Authentication',  'bg=blue;fg=white', true),
+                    ->formatBlock('Authentication', 'bg=blue;fg=white', true),
                 '',
             ));
 
-            $this->output->writeln('You need to create a secury key. Login at magentocommerce.com.');
-            $this->output->writeln('Developers -> Secure Keys. <info>Use public key as username and private key as password</info>');
-            $this->output->writeln('');
-
+            $this->output->writeln(array(
+                'You need to create a secury key. Login at magentocommerce.com.',
+                'Developers -> Secure Keys. <info>Use public key as username and private key as password</info>',
+                ''
+            ));
             $dialog = $this->getCommand()->getHelper('dialog');
 
             $username = $dialog->askAndValidate(

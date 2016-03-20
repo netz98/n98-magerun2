@@ -22,8 +22,19 @@ class MaintenanceCommand extends AbstractMagentoCommand
     {
         $this
             ->setName('sys:maintenance')
-            ->addOption('on', null, InputOption::VALUE_OPTIONAL, 'Set to [1] to enable maintenance mode. Optionally supply a comma separated list of IP addresses to exclude from being affected')
-            ->addOption('off', null, InputOption::VALUE_OPTIONAL, 'Set to [1] to disable maintenance mode. Set to [d] to also delete the list with excluded IP addresses.')
+            ->addOption(
+                'on',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'Set to [1] to enable maintenance mode. Optionally supply a comma separated list of IP addresses ' .
+                'to exclude from being affected'
+            )
+            ->addOption(
+                'off',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'Set to [1] to disable maintenance mode. Set to [d] to also delete the list with excluded IP addresses.'
+            )
             ->setDescription('Toggles maintenance mode if --on or --off preferences are not set')
         ;
     }
@@ -75,7 +86,7 @@ class MaintenanceCommand extends AbstractMagentoCommand
     protected function handleDisable(
         \Magento\Framework\Filesystem\Directory\Write $flagDir,
         OutputInterface $output,
-        $offOption= null
+        $offOption = null
     ) {
         $flagDir->delete(MaintenanceMode::FLAG_FILENAME);
         $output->writeln(self::DISABLED_MESSAGE);

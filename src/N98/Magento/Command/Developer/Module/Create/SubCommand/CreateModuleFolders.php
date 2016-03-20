@@ -11,25 +11,27 @@ class CreateModuleFolders extends AbstractSubCommand
      */
     public function execute()
     {
-        if ($this->config->getBool('isModmanMode')) {
-            $modManDir = $this->config->getString('vendorNamespace') . '_' . $this->config->getString('moduleName'). '/src';
+        $config = $this->config;
+
+        if ($config->getBool('isModmanMode')) {
+            $modManDir = sprintf('%s_%s/src', $config->getString('vendorNamespace'), $config->getString('moduleName'));
             if (file_exists($modManDir)) {
                 throw new \RuntimeException('Module already exists. Stop.');
             }
             mkdir($modManDir, 0777, true);
-            $this->config->setString('magentoRootFolder', './' . $modManDir);
-            $this->config->setString('modmanRootFolder', './' . substr($modManDir, 0, -4));
+            $config->setString('magentoRootFolder', './' . $modManDir);
+            $config->setString('modmanRootFolder', './' . substr($modManDir, 0, -4));
         }
 
-        $moduleDir = $this->config->getString('magentoRootFolder')
+        $moduleDir = $config->getString('magentoRootFolder')
             . '/app/code'
-            . '/' . $this->config->getString('vendorNamespace')
-            . '/' . $this->config->getString('moduleName');
+            . '/' . $config->getString('vendorNamespace')
+            . '/' . $config->getString('moduleName');
         if (file_exists($moduleDir)) {
             throw new \RuntimeException('Module already exists. Stop.');
         }
 
-        $this->config->setString('moduleDirectory', $moduleDir);
+        $config->setString('moduleDirectory', $moduleDir);
 
         mkdir($moduleDir, 0777, true);
         $this->output->writeln('<info>Created directory: <comment>' .  $moduleDir .'<comment></info>');
@@ -39,25 +41,25 @@ class CreateModuleFolders extends AbstractSubCommand
         $this->output->writeln('<info>Created directory: <comment>' .  $moduleDir .'/etc<comment></info>');
 
         // Add blocks folder
-        if ($this->config->getBool('shouldAddBlocks')) {
+        if ($config->getBool('shouldAddBlocks')) {
             mkdir($moduleDir . '/Block');
             $this->output->writeln('<info>Created directory: <comment>' .  $moduleDir . '/Block' .'<comment></info>');
         }
 
         // Add helpers folder
-        if ($this->config->getBool('shouldAddHelpers')) {
+        if ($config->getBool('shouldAddHelpers')) {
             mkdir($moduleDir . '/Helper');
             $this->output->writeln('<info>Created directory: <comment>' .  $moduleDir . '/Helper' .'<comment></info>');
         }
 
         // Add models folder
-        if ($this->config->getBool('shouldAddModels')) {
+        if ($config->getBool('shouldAddModels')) {
             mkdir($moduleDir . '/Model');
             $this->output->writeln('<info>Created directory: <comment>' .  $moduleDir . '/Model' .'<comment></info>');
         }
 
         // Create SQL and Data folder
-        if ($this->config->getBool('shouldAddSetup')) {
+        if ($config->getBool('shouldAddSetup')) {
             $setupFolder = $moduleDir . '/Setup/';
             mkdir($setupFolder, 0777, true);
             $this->output->writeln('<info>Created directory: <comment>' . $setupFolder . '<comment></info>');

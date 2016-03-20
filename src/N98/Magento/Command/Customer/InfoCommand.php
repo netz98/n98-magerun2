@@ -70,7 +70,8 @@ class InfoCommand extends AbstractCustomerCommand
                 $tableLabel = $attributeFrontend->getLabel();
                 $tableValue = $value;
 
-                // @todo mwr temporary work around due to getValue throwing notice within getOptionText (array keys !== store_ids)
+                // @todo mwr temporary work around due to getValue throwing notice within getOptionText
+                // (array keys !== store_ids)
                 if ($key != 'store_id') {
                     $tableValue = $attributeFrontend->getValue($customer);
                     if ($tableValue != $value) {

@@ -6,10 +6,10 @@ use Composer\Autoload\ClassLoader;
 use Magento\Framework\ObjectManager\ObjectManager;
 use Magento\Mtf\EntryPoint\EntryPoint;
 use N98\Magento\Application\Config;
-use N98\Magento\Application\Console\Events;
 use N98\Magento\Application\ConfigurationLoader;
-use N98\Util\Console\Helper\TwigHelper;
+use N98\Magento\Application\Console\Events;
 use N98\Util\Console\Helper\MagentoHelper;
+use N98\Util\Console\Helper\TwigHelper;
 use N98\Util\OperatingSystem;
 use Symfony\Component\Console\Application as BaseApplication;
 use Symfony\Component\Console\Command\Command;
@@ -355,8 +355,9 @@ class Application extends BaseApplication
         $currentVarDir = $configOptions->getVarDir();
 
         if ($currentVarDir == $tempVarDir) {
-            $output->writeln(sprintf('<warning>Fallback folder %s is used in n98-magerun</warning>',
-                $tempVarDir));
+            $output->writeln(
+                sprintf('<warning>Fallback folder %s is used in n98-magerun</warning>', $tempVarDir)
+            );
             $output->writeln('');
             $output->writeln(
                 'n98-magerun is using the fallback folder. If there is another folder configured for Magento, '
@@ -368,13 +369,16 @@ class Application extends BaseApplication
             );
             $output->writeln('');
         } else {
-            $output->writeln(sprintf('<warning>Folder %s found, but not used in n98-magerun</warning>',
-                $tempVarDir));
+            $output->writeln(sprintf(
+                '<warning>Folder %s found, but not used in n98-magerun</warning>',
+                $tempVarDir
+            ));
             $output->writeln('');
             $output->writeln(
                 sprintf(
                     'This might cause serious problems. n98-magerun is using the configured var-folder '
-                    . '<comment>%s</comment>', $currentVarDir
+                    . '<comment>%s</comment>',
+                    $currentVarDir
                 )
             );
             $output->writeln(
@@ -495,7 +499,7 @@ class Application extends BaseApplication
     /**
      * Runs the current application with possible command aliases
      *
-     * @param InputInterface $input  An Input instance
+     * @param InputInterface $input An Input instance
      * @param OutputInterface $output An Output instance
      *
      * @return integer 0 if everything went fine, or an error code
@@ -520,7 +524,7 @@ class Application extends BaseApplication
     }
 
     /**
-     * @param InputInterface  $input [optional]
+     * @param InputInterface $input [optional]
      * @param OutputInterface $output [optional]
      *
      * @return int
@@ -559,8 +563,8 @@ class Application extends BaseApplication
     }
 
     /**
-     * @param array           $initConfig
-     * @param InputInterface  $input
+     * @param array $initConfig
+     * @param InputInterface $input
      * @param OutputInterface $output
      *
      * @return void
@@ -617,10 +621,11 @@ class Application extends BaseApplication
 
         $this->_isInitialized = true;
     }
+
     /**
-     * @param array           $initConfig [optional]
-     * @param InputInterface  $input      [optional]
-     * @param OutputInterface $output     [optional]
+     * @param array $initConfig [optional]
+     * @param InputInterface $input [optional]
+     * @param OutputInterface $output [optional]
      */
     public function reinit($initConfig = array(), InputInterface $input = null, OutputInterface $output = null)
     {
@@ -673,8 +678,8 @@ class Application extends BaseApplication
             if (isset($specialGlobalOptions['root-dir'][0])
                 && $specialGlobalOptions['root-dir'][0] == '~'
             ) {
-                $specialGlobalOptions['root-dir'] = OperatingSystem::getHomeDir() . substr($specialGlobalOptions['root-dir'],
-                        1);
+                $specialGlobalOptions['root-dir'] = OperatingSystem::getHomeDir() .
+                    substr($specialGlobalOptions['root-dir'], 1);
             }
             $folder = realpath($specialGlobalOptions['root-dir']);
             $this->_directRootDir = true;

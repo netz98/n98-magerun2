@@ -2,13 +2,13 @@
 
 namespace N98\Magento\Application;
 
+use N98\Util\ArrayFunctions;
 use N98\Util\BinaryString;
 use N98\Util\OperatingSystem;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\Yaml\Yaml;
-use N98\Util\ArrayFunctions;
 
 /**
  * Config consists of several parts which are merged.
@@ -335,7 +335,9 @@ class ConfigurationLoader
             $projectConfigFile = $magentoRootFolder . DIRECTORY_SEPARATOR . 'app/etc/' . $this->_customConfigFilename;
             if ($projectConfigFile && file_exists($projectConfigFile)) {
                 $projectConfig = $this->applyVariables(
-                    \file_get_contents($projectConfigFile), $magentoRootFolder, null
+                    \file_get_contents($projectConfigFile),
+                    $magentoRootFolder,
+                    null
                 );
                 $this->_projectConfig = Yaml::parse($projectConfig);
             }
@@ -343,7 +345,9 @@ class ConfigurationLoader
             $stopFileConfigFile = $magerunStopFileFolder . DIRECTORY_SEPARATOR . '.' . $this->_customConfigFilename;
             if (!empty($magerunStopFileFolder) && file_exists($stopFileConfigFile)) {
                 $projectConfig = $this->applyVariables(
-                    \file_get_contents($stopFileConfigFile), $magentoRootFolder, null
+                    \file_get_contents($stopFileConfigFile),
+                    $magentoRootFolder,
+                    null
                 );
                 $this->_projectConfig = ArrayFunctions::mergeArrays($this->_projectConfig, Yaml::parse($projectConfig));
             }

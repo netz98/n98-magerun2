@@ -20,7 +20,9 @@ class CreateSetupFiles extends AbstractSubCommand
                 $this->config->getArray('twigVars')
             )
         );
-        $this->output->writeln('<info>Created file: <comment>' .  $setupFolder . '/InstallSchema.php' .'<comment></info>');
+        $this->output->writeln(
+            '<info>Created file: <comment>' .  $setupFolder . '/InstallSchema.php' .'<comment></info>'
+        );
 
         \file_put_contents(
             $setupFolder . '/InstallData.php',
@@ -29,7 +31,9 @@ class CreateSetupFiles extends AbstractSubCommand
                 $this->config->getArray('twigVars')
             )
         );
-        $this->output->writeln('<info>Created file: <comment>' .  $setupFolder . '/InstallData.php' .'<comment></info>');
+        $this->output->writeln(
+            '<info>Created file: <comment>' .  $setupFolder . '/InstallData.php' .'<comment></info>'
+        );
 
         \file_put_contents(
             $setupFolder . '/UpgradeSchema.php',
@@ -38,7 +42,9 @@ class CreateSetupFiles extends AbstractSubCommand
                 $this->config->getArray('twigVars')
             )
         );
-        $this->output->writeln('<info>Created file: <comment>' .  $setupFolder . '/UpgradeSchema.php' .'<comment></info>');
+        $this->output->writeln(
+            '<info>Created file: <comment>' .  $setupFolder . '/UpgradeSchema.php' .'<comment></info>'
+        );
 
         \file_put_contents(
             $setupFolder . '/UpgradeData.php',
@@ -47,6 +53,8 @@ class CreateSetupFiles extends AbstractSubCommand
                 $this->config->getArray('twigVars')
             )
         );
-        $this->output->writeln('<info>Created file: <comment>' .  $setupFolder . '/UpgradeData.php' .'<comment></info>');
+        $this->output->writeln(
+            '<info>Created file: <comment>' .  $setupFolder . '/UpgradeData.php' .'<comment></info>'
+        );
     }
 }
