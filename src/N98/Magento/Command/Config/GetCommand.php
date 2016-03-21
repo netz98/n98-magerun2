@@ -2,6 +2,7 @@
 
 namespace N98\Magento\Command\Config;
 
+use Magento\Config\Model\ResourceModel\Config\Data\Collection;
 use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -12,9 +13,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 class GetCommand extends AbstractConfigCommand
 {
     /**
-     * @var \Magento\Config\Model\ResourceModel\Config\Data\Collection
+     * @var Collection
      */
-    protected $_collection;
+    private $collection;
 
     protected function configure()
     {
@@ -22,12 +23,12 @@ class GetCommand extends AbstractConfigCommand
             ->setName('config:get')
             ->setDescription('Get a core config item')
             ->setHelp(
-<<<EOT
-If <info>path</info> is not set, all available config items will be listed.
+                <<<EOT
+                If <info>path</info> is not set, all available config items will be listed.
 The <info>path</info> may contain wildcards (*).
 If <info>path</info> ends with a trailing slash, all child items will be listed. E.g.
 
-    config:get web/ 
+    config:get web/
 is the same as
     config:get web/*
 EOT
@@ -57,69 +58,66 @@ HELP;
     }
 
     /**
-     * @param \Magento\Config\Model\ResourceModel\Config\Data\Collection $collection
+     * @param Collection $collection
      */
-    public function inject(\Magento\Config\Model\ResourceModel\Config\Data\Collection $collection)
+    public function inject(Collection $collection)
     {
-        $this->_collection = $collection;
+        $this->collection = $collection;
     }
 
     /**
      * @param InputInterface $input
-     * @param \Symfony\Component\Console\Output\OutputInterface $output
+     * @param OutputInterface $output
+     *
      * @return int|void
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $collection = $this->collection;
+
         $searchPath = $input->getArgument('path');
 
         if (substr($input->getArgument('path'), -1, 1) === '/') {
             $searchPath .= '*';
         }
 
-        $this->_collection->addFieldToFilter('path', array(
+        $collection->addFieldToFilter('path', array(
             'like' => str_replace('*', '%', $searchPath)
         ));
 
         if ($scopeId = $input->getOption('scope')) {
-            $this->_collection->addFieldToFilter(
-                'scope',
-                array(
-                    'eq' => $scopeId
-                )
-            );
+            $collection->addFieldToFilter('scope', array('eq' => $scopeId));
         }
 
         if ($scopeId = $input->getOption('scope-id')) {
-            $this->_collection->addFieldToFilter(
+            $collection->addFieldToFilter(
                 'scope_id',
-                array(
-                    'eq' => $scopeId
-                )
+                array('eq' => $scopeId)
             );
         }
 
-        $this->_collection->addOrder('path', 'ASC');
+        $collection->addOrder('path', 'ASC');
 
         // sort according to the config overwrite order
         // trick to force order default -> (f)website -> store , because f comes after d and before s
-        $this->_collection->addOrder('REPLACE(scope, "website", "fwebsite")', 'ASC');
+        $collection->addOrder('REPLACE(scope, "website", "fwebsite")', 'ASC');
 
-        $this->_collection->addOrder('scope_id', 'ASC');
+        $collection->addOrder('scope_id', 'ASC');
 
-        if ($this->_collection->count() == 0) {
+        if ($collection->count() == 0) {
             $output->writeln(sprintf("Couldn't find a config value for \"%s\"", $input->getArgument('path')));
+
             return;
         }
 
-        foreach ($this->_collection as $item) {
+        foreach ($collection as $item) {
             $table[] = array(
-                'path' => $item->getPath(),
-                'scope' => $item->getScope(),
+                'path'     => $item->getPath(),
+                'scope'    => $item->getScope(),
                 'scope_id' => $item->getScopeId(),
-                'value' => $this->_formatValue(
+                'value'    => $this->_formatValue(
                     $item->getValue(),
-                    ($input->getOption('decrypt') ? 'decrypt' : false)
+                    $input->getOption('decrypt') ? 'decrypt' : false
                 ),
             );
         }
@@ -198,10 +196,13 @@ HELP;
     {
         foreach ($table as $row) {
             $value = str_replace(array("\n", "\r"), array('\n', '\r'), $row['value']);
-            $line = 'config:set ' . $row['path']
-                . ' --scope-id=' . $row['scope_id']
-                . ' --scope=' . $row['scope']
-                . ' ' . escapeshellarg($value);
+            $line = sprintf(
+                'config:set --scope-id=%s --scope=%s -- %s %s',
+                $row['scope_id'],
+                $row['scope'],
+                escapeshellarg($row['path']),
+                escapeshellarg($value)
+            );
             $output->writeln($line);
         }
     }
