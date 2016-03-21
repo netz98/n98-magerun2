@@ -82,7 +82,7 @@ abstract class AbstractModifierCommand extends AbstractMagentoCommand
             }
 
             $cacheState->persist();
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             $output->writeln(sprintf(static::EXCEPTION_MESSAGE, $e->getMessage()));
         }
 

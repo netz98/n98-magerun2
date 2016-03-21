@@ -62,7 +62,11 @@ class InfoCommand extends AbstractMagentoCommand
         $this
             ->setName('sys:info')
             ->setDescription('Prints infos about the current magento system.')
-            ->addArgument('key', InputArgument::OPTIONAL, 'Only output value of named param like "version". Key is case insensitive.')
+            ->addArgument(
+                'key',
+                InputArgument::OPTIONAL,
+                'Only output value of named param like "version". Key is case insensitive.'
+            )
             ->addOption(
                 'format',
                 null,

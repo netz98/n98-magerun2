@@ -66,7 +66,9 @@ HELP;
 
         $callback = array($model, $jobConfig['method']);
 
-        $output->write('<info>Run </info><comment>' . $jobConfig['instance'] . '::' . $jobConfig['method'] . '</comment> ');
+        $output->write(
+            '<info>Run </info><comment>' . $jobConfig['instance'] . '::' . $jobConfig['method'] . '</comment> '
+        );
 
         try {
             $schedule = $this->_cronScheduleCollection->getNewEmptyItem();

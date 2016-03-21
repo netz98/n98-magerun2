@@ -28,7 +28,9 @@ class ConsoleCommand extends AbstractMagentoCommand
     {
         $this
             ->setName('dev:console')
-            ->setDescription('Opens PHP interactive shell with initialized Mage::app() <comment>(Experimental)</comment>')
+            ->setDescription(
+                'Opens PHP interactive shell with initialized Mage::app() <comment>(Experimental)</comment>'
+            )
         ;
     }
 
@@ -72,7 +74,10 @@ class ConsoleCommand extends AbstractMagentoCommand
             $edition = $this->productMeta->getEdition();
             $magentoVersion = $this->productMeta->getVersion();
 
-            $consoleOutput->writeln('<fg=black;bg=green>Magento ' . $magentoVersion . ' ' . $edition . ' initialized.</fg=black;bg=green> ' . $ok);
+            $consoleOutput->writeln(
+                '<fg=black;bg=green>Magento ' . $magentoVersion . ' ' . $edition .
+                ' initialized.</fg=black;bg=green> ' . $ok
+            );
         } else {
             $consoleOutput->writeln('<fg=black;bg=yellow>Magento is not initialized.</fg=black;bg=yellow>');
         }

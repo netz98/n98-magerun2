@@ -27,15 +27,57 @@ class DumpCommand extends AbstractDatabaseCommand
         $this
             ->setName('db:dump')
             ->addArgument('filename', InputArgument::OPTIONAL, 'Dump filename')
-            ->addOption('add-time', 't', InputOption::VALUE_OPTIONAL, 'Adds time to filename (only if filename was not provided)')
-            ->addOption('compression', 'c', InputOption::VALUE_REQUIRED, 'Compress the dump file using one of the supported algorithms')
-            ->addOption('only-command', null, InputOption::VALUE_NONE, 'Print only mysqldump command. Do not execute')
-            ->addOption('print-only-filename', null, InputOption::VALUE_NONE, 'Execute and prints no output except the dump filename')
-            ->addOption('no-single-transaction', null, InputOption::VALUE_NONE, 'Do not use single-transaction (not recommended, this is blocking)')
-            ->addOption('human-readable', null, InputOption::VALUE_NONE, 'Use a single insert with column names per row. Useful to track database differences. Use db:import --optimize for speeding up the import.')
-            ->addOption('add-routines', null, InputOption::VALUE_NONE, 'Include stored routines in dump (procedures & functions)')
+            ->addOption(
+                'add-time',
+                't',
+                InputOption::VALUE_OPTIONAL,
+                'Adds time to filename (only if filename was not provided)'
+            )
+            ->addOption(
+                'compression',
+                'c',
+                InputOption::VALUE_REQUIRED,
+                'Compress the dump file using one of the supported algorithms'
+            )
+            ->addOption(
+                'only-command',
+                null,
+                InputOption::VALUE_NONE,
+                'Print only mysqldump command. 
+                Do not execute'
+            )
+            ->addOption(
+                'print-only-filename',
+                null,
+                InputOption::VALUE_NONE,
+                'Execute and prints no output except the dump filename'
+            )
+            ->addOption(
+                'no-single-transaction',
+                null,
+                InputOption::VALUE_NONE,
+                'Do not use single-transaction (not recommended, this is blocking)'
+            )
+            ->addOption(
+                'human-readable',
+                null,
+                InputOption::VALUE_NONE,
+                'Use a single insert with column names per row. Useful to track database differences. Use ' .
+                'db:import --optimize for speeding up the import.'
+            )
+            ->addOption(
+                'add-routines',
+                null,
+                InputOption::VALUE_NONE,
+                'Include stored routines in dump (procedures & functions)'
+            )
             ->addOption('stdout', null, InputOption::VALUE_NONE, 'Dump to stdout')
-            ->addOption('strip', 's', InputOption::VALUE_OPTIONAL, 'Tables to strip (dump only structure of those tables)')
+            ->addOption(
+                'strip',
+                's',
+                InputOption::VALUE_OPTIONAL,
+                'Tables to strip (dump only structure of those tables)'
+            )
             ->addOption('force', 'f', InputOption::VALUE_NONE, 'Do not prompt if all options are defined')
             ->setDescription('Dumps database with mysqldump cli client according to informations from local.xml');
 
@@ -80,7 +122,6 @@ See it in action: http://youtu.be/ttjZHY6vThs
 
 HELP;
         $this->setHelp($help);
-
     }
 
     /**
@@ -105,19 +146,19 @@ HELP;
             $this->tableDefinitions = array();
             if (isset($this->commandConfig['table-groups'])) {
                 $tableGroups = $this->commandConfig['table-groups'];
-                foreach ($tableGroups as $index=>$definition) {
+                foreach ($tableGroups as $index => $definition) {
                     $description = isset($definition['description']) ? $definition['description'] : '';
                     if (!isset($definition['id'])) {
                         throw new RuntimeException('Invalid definition of table-groups (id missing) Index: ' . $index);
                     }
                     if (!isset($definition['id'])) {
-                        throw new RuntimeException('Invalid definition of table-groups (tables missing) Id: '
-                            . $definition['id']
+                        throw new RuntimeException(
+                            'Invalid definition of table-groups (tables missing) Id: ' . $definition['id']
                         );
                     }
 
                     $this->tableDefinitions[$definition['id']] = array(
-                        'tables'      => $definition['tables'],
+                        'tables' => $definition['tables'],
                         'description' => $description,
                     );
                 }
@@ -161,8 +202,8 @@ HELP;
     public function getHelp()
     {
         return parent::getHelp() . PHP_EOL
-            . $this->getCompressionHelp() . PHP_EOL
-            . $this->getTableDefinitionHelp();
+        . $this->getCompressionHelp() . PHP_EOL
+        . $this->getTableDefinitionHelp();
     }
 
     /**
@@ -181,15 +222,19 @@ HELP;
         }
 
         $compressor = $this->getCompressor($input->getOption('compression'));
-        $fileName   = $this->getFileName($input, $output, $compressor);
+        $fileName = $this->getFileName($input, $output, $compressor);
 
         $stripTables = false;
         if ($input->getOption('strip')) {
-            $stripTables = $this->getHelper('database')->resolveTables(explode(' ', $input->getOption('strip')), $this->getTableDefinitions());
+            $stripTables = $this->getHelper('database')->resolveTables(
+                explode(' ', $input->getOption('strip')),
+                $this->getTableDefinitions()
+            );
             if (!$input->getOption('stdout') && !$input->getOption('only-command')
                 && !$input->getOption('print-only-filename')
             ) {
-                $output->writeln('<comment>No-data export for: <info>' . implode(' ', $stripTables)
+                $output->writeln(
+                    '<comment>No-data export for: <info>' . implode(' ', $stripTables)
                     . '</info></comment>'
                 );
             }
@@ -219,7 +264,8 @@ HELP;
             $execs[] = $exec;
         } else {
             // dump structure for strip-tables
-            $exec = 'mysqldump ' . $dumpOptions . '--no-data ' . $this->getHelper('database')->getMysqlClientToolConnectionString();
+            $exec = 'mysqldump ' . $dumpOptions . '--no-data ' .
+                $this->getHelper('database')->getMysqlClientToolConnectionString();
             $exec .= ' ' . implode(' ', $stripTables);
             $exec .= $this->postDumpPipeCommands();
             $exec = $compressor->getCompressingCommand($exec);
@@ -234,7 +280,8 @@ HELP;
             }
 
             // dump data for all other tables
-            $exec = 'mysqldump ' . $dumpOptions . $ignore . $this->getHelper('database')->getMysqlClientToolConnectionString();
+            $exec = 'mysqldump ' . $dumpOptions . $ignore .
+                $this->getHelper('database')->getMysqlClientToolConnectionString();
             $exec .= $this->postDumpPipeCommands();
             $exec = $compressor->getCompressingCommand($exec);
             if (!$input->getOption('stdout')) {
@@ -262,8 +309,9 @@ HELP;
             if (!$input->getOption('stdout') && !$input->getOption('only-command')
                 && !$input->getOption('print-only-filename')
             ) {
-                $output->writeln('<comment>Start dumping database <info>' . $this->dbSettings['dbname']
-                    . '</info> to file <info>' . $fileName . '</info>'
+                $output->writeln(
+                    '<comment>Start dumping database <info>' . $this->dbSettings['dbname'] .
+                    '</info> to file <info>' . $fileName . '</info>'
                 );
             }
 
@@ -308,11 +356,13 @@ HELP;
      * @param \N98\Magento\Command\Database\Compressor\AbstractCompressor $compressor
      * @return string
      */
-    protected function getFileName(InputInterface $input, OutputInterface $output,
+    protected function getFileName(
+        InputInterface $input,
+        OutputInterface $output,
         Compressor\AbstractCompressor $compressor
     ) {
-        $namePrefix    = '';
-        $nameSuffix    = '';
+        $namePrefix = '';
+        $nameSuffix = '';
         $nameExtension = '.sql';
 
         if ($input->getOption('add-time') !== false) {
@@ -325,16 +375,24 @@ HELP;
             }
         }
 
-        if ((($fileName = $input->getArgument('filename')) === null || ($isDir = is_dir($fileName))) && !$input->getOption('stdout')) {
+        if (
+            (
+                ($fileName = $input->getArgument('filename')) === null
+                || ($isDir = is_dir($fileName))
+            )
+            && !$input->getOption('stdout')
+        ) {
             /** @var DialogHelper $dialog */
-            $dialog      = $this->getHelperSet()->get('dialog');
+            $dialog = $this->getHelperSet()->get('dialog');
             $defaultName = $namePrefix . $this->dbSettings['dbname'] . $nameSuffix . $nameExtension;
             if (isset($isDir) && $isDir) {
                 $defaultName = rtrim($fileName, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $defaultName;
             }
             if (!$input->getOption('force')) {
-                $fileName = $dialog->ask($output, '<question>Filename for SQL dump:</question> [<comment>'
-                    . $defaultName . '</comment>]', $defaultName
+                $fileName = $dialog->ask(
+                    $output,
+                    '<question>Filename for SQL dump:</question> [<comment>' . $defaultName . '</comment>]',
+                    $defaultName
                 );
             } else {
                 $fileName = $defaultName;
@@ -342,7 +400,7 @@ HELP;
         } else {
             if ($input->getOption('add-time')) {
                 $pathParts = pathinfo($fileName);
-                $fileName = ($pathParts['dirname'] == '.' ? '' : $pathParts['dirname'] . DIRECTORY_SEPARATOR ) .
+                $fileName = ($pathParts['dirname'] == '.' ? '' : $pathParts['dirname'] . DIRECTORY_SEPARATOR) .
                     $namePrefix . $pathParts['filename'] . $nameSuffix . '.' . $pathParts['extension'];
             }
         }

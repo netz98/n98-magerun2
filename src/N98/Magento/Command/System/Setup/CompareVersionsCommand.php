@@ -56,7 +56,6 @@ HELP;
         $errorCounter = 0;
         $table = array();
         foreach ($this->getMagentoModuleList() as $moduleName => $moduleInfo) {
-
             $moduleVersion = $moduleInfo['setup_version'];
             $resource      = $this->getMagentoModuleResource();
             $dbVersion     = $resource->getDbVersion($moduleName);
@@ -87,12 +86,11 @@ HELP;
 
         // If there is no output format highlight the status and show error'd rows at bottom
         if (!$input->getOption('format')) {
-
-            usort($table, function($a, $b) {
+            usort($table, function ($a, $b) {
                 return $a['Status'] !== 'OK';
             });
 
-            array_walk($table, function(&$row) {
+            array_walk($table, function (&$row) {
                 $status             = $row['Status'];
                 $availableStatus    = array('OK' => 'info', 'Error' => 'error');
                 $statusString       = sprintf(

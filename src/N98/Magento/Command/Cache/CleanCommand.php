@@ -43,7 +43,6 @@ HELP;
     {
         $this->detectMagento($output, true);
         if ($this->initMagento()) {
-
             $cacheManager = $this->getCacheManager();
             $eventManager = $this->getObjectManager()->get('\Magento\Framework\Event\ManagerInterface');
             $availableTypes = $cacheManager->getAvailableTypes();

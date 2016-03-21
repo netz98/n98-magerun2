@@ -17,23 +17,31 @@ class SelectMagentoVersion extends AbstractSubCommand
             return false;
         }
 
-        if ($this->input->getOption('magentoVersion') == null && $this->input->getOption('magentoVersionByName') == null) {
+        if (
+            $this->input->getOption('magentoVersion') == null
+            && $this->input->getOption('magentoVersionByName') == null
+        ) {
             $question = array();
             foreach ($this->commandConfig['magento-packages'] as $key => $package) {
-                $question[] = '<comment>' . str_pad('[' . ($key + 1) . ']', 4, ' ') . '</comment> ' . $package['name'] . "\n";
+                $question[] = '<comment>' . str_pad('[' . ($key + 1) . ']', 4, ' ') . '</comment> ' .
+                    $package['name'] . "\n";
             }
             $question[] = "<question>Choose a magento version:</question> ";
 
             $commandConfig = $this->commandConfig;
 
 
-            $type = $this->getCommand()->getHelper('dialog')->askAndValidate($this->output, $question, function($typeInput) use ($commandConfig) {
-                if (!in_array($typeInput, range(1, count($this->commandConfig['magento-packages'])))) {
-                    throw new \InvalidArgumentException('Invalid type');
-                }
+            $type = $this->getCommand()->getHelper('dialog')->askAndValidate(
+                $this->output,
+                $question,
+                function ($typeInput) use ($commandConfig) {
+                    if (!in_array($typeInput, range(1, count($this->commandConfig['magento-packages'])))) {
+                        throw new \InvalidArgumentException('Invalid type');
+                    }
 
-                return $typeInput;
-            });
+                    return $typeInput;
+                }
+            );
         } else {
             $type = null;
 

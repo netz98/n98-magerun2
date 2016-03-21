@@ -7,7 +7,6 @@ namespace N98\Magento\Application;
 
 use Composer\Autoload\ClassLoader;
 use N98\Magento\Application;
-use N98\Magento\Application\ConfigurationLoader;
 use N98\Util\ArrayFunctions;
 use N98\Util\BinaryString;
 use Symfony\Component\Console\Command\Command;
@@ -66,7 +65,7 @@ class Config
     public function __construct(array $initConfig = array(), $isPharMode = false, OutputInterface $output = null)
     {
         $this->initConfig = $initConfig;
-        $this->isPharMode = (bool) $isPharMode;
+        $this->isPharMode = (bool)$isPharMode;
         $this->output = $output ?: new NullOutput();
     }
 
@@ -83,8 +82,10 @@ class Config
                 if (is_array($alias)) {
                     $aliasCommandName = key($alias);
                     if ($input->getFirstArgument() == $aliasCommandName) {
-                        $aliasCommandParams = array_slice(BinaryString::trimExplodeEmpty(' ',
-                            $alias[$aliasCommandName]), 1);
+                        $aliasCommandParams = array_slice(
+                            BinaryString::trimExplodeEmpty(' ', $alias[$aliasCommandName]),
+                            1
+                        );
                         if (count($aliasCommandParams) > 0) {
                             // replace with aliased data
                             $mergedParams = array_merge(
@@ -116,11 +117,11 @@ class Config
                 }
 
                 $aliasCommandName = key($alias);
-                $commandString    = $alias[$aliasCommandName];
+                $commandString = $alias[$aliasCommandName];
 
                 list($originalCommand) = explode(' ', $commandString);
                 if ($command->getName() == $originalCommand) {
-                    $currentCommandAliases   = $command->getAliases();
+                    $currentCommandAliases = $command->getAliases();
                     $currentCommandAliases[] = $aliasCommandName;
                     $command->setAliases($currentCommandAliases);
                 }
@@ -249,7 +250,7 @@ class Config
      */
     public function loadPartialConfig($loadExternalConfig)
     {
-        $loader              = $this->getLoader();
+        $loader = $this->getLoader();
         $this->partialConfig = $loader->getPartialConfig($loadExternalConfig);
     }
 

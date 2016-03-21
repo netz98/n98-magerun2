@@ -202,7 +202,9 @@ abstract class AbstractMagentoCommand extends Command
 
         if (!$silent) {
             $editionString = ($this->_magentoEnterprise ? ' (Enterprise Edition) ' : '');
-            $output->writeln('<info>Found Magento '. $editionString . 'in folder "' . $this->_magentoRootFolder . '"</info>');
+            $output->writeln(
+                '<info>Found Magento '. $editionString . 'in folder "' . $this->_magentoRootFolder . '"</info>'
+            );
         }
 
         if (!empty($this->_magentoRootFolder)) {
@@ -262,7 +264,11 @@ abstract class AbstractMagentoCommand extends Command
      * @param bool $preferSource
      * @return \Composer\Package\CompletePackage
      */
-    public function downloadByComposerConfig(InputInterface $input, OutputInterface $output, $config, $targetFolder,
+    public function downloadByComposerConfig(
+        InputInterface $input,
+        OutputInterface $output,
+        $config,
+        $targetFolder,
         $preferSource = true
     ) {
         $dm = $this->getComposerDownloadManager($input, $output);
@@ -361,7 +367,10 @@ abstract class AbstractMagentoCommand extends Command
     protected function checkDeprecatedAliases(InputInterface $input, OutputInterface $output)
     {
         if (isset($this->_deprecatedAlias[$input->getArgument('command')])) {
-            $output->writeln('<error>Deprecated:</error> <comment>' . $this->_deprecatedAlias[$input->getArgument('command')] . '</comment>');
+            $output->writeln(
+                '<error>Deprecated:</error> <comment>' . $this->_deprecatedAlias[$input->getArgument('command')] .
+                '</comment>'
+            );
         }
     }
 

@@ -13,18 +13,17 @@ class FlushCommand extends AbstractMagentoCommand
 {
     protected function configure()
     {
-      $this
-          ->setName('generation:flush')
-          ->setDescription('Flushs generated code like factories and proxies')
-          ->addArgument('vendorName', InputArgument::OPTIONAL, 'Vendor to remove like "Magento"')
-      ;
+        $this
+            ->setName('generation:flush')
+            ->setDescription('Flushs generated code like factories and proxies')
+            ->addArgument('vendorName', InputArgument::OPTIONAL, 'Vendor to remove like "Magento"');
     }
 
-   /**
-    * @param \Symfony\Component\Console\Input\InputInterface $input
-    * @param \Symfony\Component\Console\Output\OutputInterface $output
-    * @return int|void
-    */
+    /**
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     * @return int|void
+     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->detectMagento($output);
@@ -32,15 +31,13 @@ class FlushCommand extends AbstractMagentoCommand
         $finder = Finder::create()
             ->directories()
             ->depth(0)
-            ->in($this->getApplication()->getMagentoRootFolder() . '/var/generation')
-        ;
+            ->in($this->getApplication()->getMagentoRootFolder() . '/var/generation');
 
         $vendorNameToFilter = $input->getArgument('vendorName');
 
         $filesystem = new Filesystem();
 
         foreach ($finder as $directory) {
-
             if (!empty($vendorNameToFilter) && $directory->getBasename() != $vendorNameToFilter) {
                 continue;
             }

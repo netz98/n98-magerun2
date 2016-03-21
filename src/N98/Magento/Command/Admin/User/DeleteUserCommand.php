@@ -35,7 +35,6 @@ class DeleteUserCommand extends AbstractAdminUserCommand
     {
         $this->detectMagento($output);
         if ($this->initMagento()) {
-
             $dialog = $this->getHelperSet()->get('dialog');
             // Username
             if (($id = $input->getArgument('id')) == null) {
@@ -54,7 +53,11 @@ class DeleteUserCommand extends AbstractAdminUserCommand
 
             $shouldRemove = $input->getOption('force');
             if (!$shouldRemove) {
-                $shouldRemove = $dialog->askConfirmation($output, '<question>Are you sure?</question> <comment>[n]</comment>: ', false);
+                $shouldRemove = $dialog->askConfirmation(
+                    $output,
+                    '<question>Are you sure?</question> <comment>[n]</comment>: ',
+                    false
+                );
             }
 
             if ($shouldRemove) {

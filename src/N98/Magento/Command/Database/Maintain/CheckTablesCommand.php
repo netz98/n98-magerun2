@@ -77,16 +77,28 @@ HELP;
         $this
             ->setName('db:maintain:check-tables')
             ->setDescription('Check database tables')
-            ->addOption('type', null, InputOption::VALUE_OPTIONAL, 'Check type (one of QUICK, FAST, MEDIUM, EXTENDED, CHANGED)', 'MEDIUM')
+            ->addOption(
+                'type',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'Check type (one of QUICK, FAST, MEDIUM, EXTENDED, CHANGED)',
+                'MEDIUM'
+            )
             ->addOption('repair', null, InputOption::VALUE_NONE, 'Repair tables (only MyISAM)')
-            ->addOption('table', null, InputOption::VALUE_OPTIONAL, 'Process only given table (wildcards are supported)')
+            ->addOption(
+                'table',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'Process only given table (wildcards are supported)'
+            )
             ->addOption(
                 'format',
                 null,
                 InputOption::VALUE_OPTIONAL,
                 'Output Format. One of [' . implode(',', RendererFactory::getFormats()) . ']'
             )
-            ->setHelp($help);;
+            ->setHelp($help);
+        ;
     }
 
     /**
@@ -157,7 +169,6 @@ HELP;
         );
 
         foreach ($tables as $tableName) {
-
             if (isset($allTableStatus[$tableName]) && isset($methods[$allTableStatus[$tableName]['Engine']])) {
                 $m           = '_check' . $allTableStatus[$tableName]['Engine'];
                 $tableOutput = array_merge($tableOutput, $this->$m($tableName));

@@ -17,7 +17,12 @@ class ImportCommand extends AbstractDatabaseCommand
             ->addOption('compression', 'c', InputOption::VALUE_REQUIRED, 'The compression of the specified file')
             ->addOption('only-command', null, InputOption::VALUE_NONE, 'Print only mysql command. Do not execute')
             ->addOption('only-if-empty', null, InputOption::VALUE_NONE, 'Imports only if database is empty')
-            ->addOption('optimize', null, InputOption::VALUE_NONE, 'Convert verbose INSERTs to short ones before import (not working with compression)')
+            ->addOption(
+                'optimize',
+                null,
+                InputOption::VALUE_NONE,
+                'Convert verbose INSERTs to short ones before import (not working with compression)'
+            )
             ->addOption('drop', null, InputOption::VALUE_NONE, 'Drop and recreate database before import')
             ->addOption('drop-tables', null, InputOption::VALUE_NONE, 'Drop tables before import')
             ->setDescription('Imports database with mysql cli client according to database defined in local.xml');
@@ -28,7 +33,6 @@ Imports an SQL file with mysql cli client into current configured database.
 You need to have MySQL client tools installed on your system.
 HELP;
         $this->setHelp($help);
-
     }
 
     /**
@@ -46,7 +50,7 @@ HELP;
      */
     protected function optimize($fileName)
     {
-        $in = fopen($fileName,'r');
+        $in = fopen($fileName, 'r');
         $result = tempnam(sys_get_temp_dir(), 'dump') . '.sql';
         $out = fopen($result, 'w');
 
@@ -88,13 +92,11 @@ HELP;
                 }
                 fwrite($out, $line);
             }
-
         }
         fclose($in);
         fclose($out);
 
         return $result;
-
     }
     /**
      * @param \Symfony\Component\Console\Input\InputInterface $input
@@ -138,25 +140,26 @@ HELP;
             $fileName = $this->optimize($fileName);
         }
 
-        if( $input->getOption('drop') ) {
+        if ($input->getOption('drop')) {
             $dbHelper->dropDatabase($output);
             $dbHelper->createDatabase($output);
         }
-        if( $input->getOption('drop-tables') ) {
+        if ($input->getOption('drop-tables')) {
             $dbHelper->dropTables($output);
         }
 
 
 
 
-            $this->doImport($output, $fileName, $exec);
+        $this->doImport($output, $fileName, $exec);
 
         if ($input->getOption('optimize')) {
             unlink($fileName);
         }
     }
 
-    public function asText() {
+    public function asText()
+    {
         return parent::asText() . "\n" .
             $this->getCompressionHelp();
     }

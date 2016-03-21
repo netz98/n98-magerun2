@@ -6,7 +6,6 @@ use N98\Magento\Command\AbstractMagentoCommand;
 
 abstract class AbstractAdminUserCommand extends AbstractMagentoCommand
 {
-
     /**
      * @var \Magento\User\Model\User
      */
@@ -17,9 +16,7 @@ abstract class AbstractAdminUserCommand extends AbstractMagentoCommand
      */
     public function inject(
         \Magento\User\Model\User $userModel
-    )
-    {
+    ) {
         $this->userModel = $userModel;
     }
-
 }

@@ -24,7 +24,7 @@ class CreateDatabase extends AbstractSubCommand
      */
     public function execute()
     {
-        $this->notEmptyCallback = function($input) {
+        $this->notEmptyCallback = function ($input) {
             if (empty($input)) {
                 throw new \InvalidArgumentException('Please enter a value');
             }
@@ -55,7 +55,6 @@ class CreateDatabase extends AbstractSubCommand
             if ($db === false) {
                 throw new \InvalidArgumentException("Database configuration is invalid", null);
             }
-
         } else {
             $dialog = $this->getCommand()->getHelperSet()->get('dialog');
             do {
@@ -66,7 +65,8 @@ class CreateDatabase extends AbstractSubCommand
                     'db_host',
                     $dialog->askAndValidate(
                         $this->output,
-                        '<question>Please enter the database host</question> <comment>[' . $dbHostDefault . ']</comment>: ',
+                        '<question>Please enter the database host</question> <comment>[' .
+                        $dbHostDefault . ']</comment>: ',
                         $this->notEmptyCallback,
                         false,
                         $dbHostDefault
@@ -79,7 +79,8 @@ class CreateDatabase extends AbstractSubCommand
                     'db_port',
                     intval($dialog->askAndValidate(
                         $this->output,
-                        '<question>Please enter the database port </question> <comment>[' . $dbPortDefault . ']</comment>: ',
+                        '<question>Please enter the database port </question> <comment>[' .
+                        $dbPortDefault . ']</comment>: ',
                         $this->notEmptyCallback,
                         false,
                         $dbPortDefault
@@ -92,7 +93,8 @@ class CreateDatabase extends AbstractSubCommand
                     'db_user',
                     $dialog->askAndValidate(
                         $this->output,
-                        '<question>Please enter the database username</question> <comment>[' . $dbUserDefault . ']</comment>: ',
+                        '<question>Please enter the database username</question> <comment>[' .
+                        $dbUserDefault . ']</comment>: ',
                         $this->notEmptyCallback,
                         false,
                         $dbUserDefault
@@ -105,7 +107,8 @@ class CreateDatabase extends AbstractSubCommand
                     'db_pass',
                     $dialog->ask(
                         $this->output,
-                        '<question>Please enter the database password</question> <comment>[' . $dbPassDefault . ']</comment>: ',
+                        '<question>Please enter the database password</question> <comment>[' .
+                        $dbPassDefault . ']</comment>: ',
                         $dbPassDefault
                     )
                 );
@@ -116,7 +119,8 @@ class CreateDatabase extends AbstractSubCommand
                     'db_name',
                     $dialog->askAndValidate(
                         $this->output,
-                        '<question>Please enter the database name</question> <comment>[' . $dbNameDefault . ']</comment>: ',
+                        '<question>Please enter the database name</question> <comment>[' .
+                        $dbNameDefault . ']</comment>: ',
                         $this->notEmptyCallback,
                         false,
                         $dbNameDefault
@@ -124,7 +128,6 @@ class CreateDatabase extends AbstractSubCommand
                 );
 
                 $db = $this->validateDatabaseSettings($this->input, $this->output);
-
             } while ($db === false);
         }
 
@@ -170,7 +173,6 @@ class CreateDatabase extends AbstractSubCommand
             }
 
             return $db;
-
         } catch (\Exception $e) {
             $output->writeln('<error>' . $e->getMessage() . '</error>');
         } catch (\PDOException $e) {

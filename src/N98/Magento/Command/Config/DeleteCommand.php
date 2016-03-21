@@ -24,7 +24,13 @@ class DeleteCommand extends AbstractConfigCommand
             ->setName('config:delete')
             ->setDescription('Deletes a store config item')
             ->addArgument('path', InputArgument::REQUIRED, 'The config path')
-            ->addOption('scope', null, InputOption::VALUE_OPTIONAL, 'The config value\'s scope (default, websites, stores)', 'default')
+            ->addOption(
+                'scope',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'The config value\'s scope (default, websites, stores)',
+                'default'
+            )
             ->addOption('scope-id', null, InputOption::VALUE_OPTIONAL, 'The config value\'s scope ID', '0')
             ->addOption('all', null, InputOption::VALUE_NONE, 'Delete all entries by path')
         ;
@@ -44,7 +50,6 @@ HELP;
     {
         $this->detectMagento($output, true);
         if ($this->initMagento()) {
-
             $this->_validateScopeParam($input->getOption('scope'));
             $scopeId = $this->_convertScopeIdParam($input->getOption('scope'), $input->getOption('scope-id'));
 
@@ -106,7 +111,6 @@ HELP;
     {
         $deleted = array();
         if ($input->getOption('all')) {
-
             $storeManager = $this->getObjectManager()->get('Magento\Store\Model\StoreManager');
 
             // Default
@@ -148,7 +152,6 @@ HELP;
                     'scopeId' => $store->getId(),
                 );
             }
-
         } else {
             $configWriter->delete(
                 $path,
@@ -161,7 +164,6 @@ HELP;
                 'scope'   => $input->getOption('scope'),
                 'scopeId' => $scopeId,
             );
-
         }
 
         return $deleted;

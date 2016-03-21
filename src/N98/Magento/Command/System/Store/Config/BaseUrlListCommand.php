@@ -10,7 +10,6 @@ use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
 
 class BaseUrlListCommand extends AbstractMagentoCommand
 {
-
     /**
      * @var \Magento\Framework\Store\StoreManagerInterface
      */

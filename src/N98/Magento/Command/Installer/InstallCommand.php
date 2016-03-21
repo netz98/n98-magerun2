@@ -4,7 +4,6 @@ namespace N98\Magento\Command\Installer;
 
 use N98\Magento\Command\AbstractMagentoCommand;
 use N98\Magento\Command\Installer\SubCommand\SubCommandFactory;
-use N98\Util\OperatingSystem;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\StringInput;
@@ -40,7 +39,12 @@ class InstallCommand extends AbstractMagentoCommand
         $this
             ->setName('install')
             ->addOption('magentoVersion', null, InputOption::VALUE_OPTIONAL, 'Magento version')
-            ->addOption('magentoVersionByName', null, InputOption::VALUE_OPTIONAL, 'Magento version name instead of order number')
+            ->addOption(
+                'magentoVersionByName',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'Magento version name instead of order number'
+            )
             ->addOption('installationFolder', null, InputOption::VALUE_OPTIONAL, 'Installation folder')
             ->addOption('dbHost', null, InputOption::VALUE_OPTIONAL, 'Database host')
             ->addOption('dbUser', null, InputOption::VALUE_OPTIONAL, 'Database user')
@@ -48,9 +52,19 @@ class InstallCommand extends AbstractMagentoCommand
             ->addOption('dbName', null, InputOption::VALUE_OPTIONAL, 'Database name')
             ->addOption('dbPort', null, InputOption::VALUE_OPTIONAL, 'Database port', 3306)
             ->addOption('installSampleData', null, InputOption::VALUE_OPTIONAL, 'Install sample data')
-            ->addOption('useDefaultConfigParams', null, InputOption::VALUE_OPTIONAL, 'Use default installation parameters defined in the yaml file')
+            ->addOption(
+                'useDefaultConfigParams',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'Use default installation parameters defined in the yaml file'
+            )
             ->addOption('baseUrl', null, InputOption::VALUE_OPTIONAL, 'Installation base url')
-            ->addOption('replaceHtaccessFile', null, InputOption::VALUE_OPTIONAL, 'Generate htaccess file (for non vhost environment)')
+            ->addOption(
+                'replaceHtaccessFile',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'Generate htaccess file (for non vhost environment)'
+            )
             ->addOption(
                 'noDownload',
                 null,
@@ -64,12 +78,17 @@ class InstallCommand extends AbstractMagentoCommand
                 InputOption::VALUE_NONE,
                 'Downloads (and extracts) source code'
             )
-            ->addOption('forceUseDb', null, InputOption::VALUE_OPTIONAL, 'If --noDownload passed, force to use given database if it already exists.')
-            ->setDescription('Install magento')
-        ;
+            ->addOption(
+                'forceUseDb',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'If --noDownload passed, force to use given database if it already exists.'
+            )
+            ->setDescription('Install magento');
 
         $help = <<<HELP
-* Download Magento by a list of git repos and zip files (mageplus, magelte, official community packages).
+* Download Magento by a list of git repos and zip files (mageplus, 
+  magelte, official community packages).
 * Try to create database if it does not exist.
 * Installs Magento sample data if available (since version 1.2.0).
 * Starts Magento installer
@@ -77,10 +96,14 @@ class InstallCommand extends AbstractMagentoCommand
 
 Example of an unattended Magento CE 2.0.0 installation:
 
-   $ n98-magerun.phar install --dbHost="localhost" --dbUser="mydbuser" --dbPass="mysecret" --dbName="magentodb" --installSampleData=yes --useDefaultConfigParams=yes --magentoVersionByName="magento-ce-2.0.0" --installationFolder="magento" --baseUrl="http://magento.localdomain/"
+   $ n98-magerun.phar install --dbHost="localhost" --dbUser="mydbuser" \
+     --dbPass="mysecret" --dbName="magentodb" --installSampleData=yes \
+     --useDefaultConfigParams=yes \
+     --magentoVersionByName="magento-ce-2.0.0" \
+     --installationFolder="magento" --baseUrl="http://magento.localdomain/"
 
-Additionally, with --noDownload option you can install Magento working copy already stored in --installationFolder on
-the given database.
+Additionally, with --noDownload option you can install Magento working 
+copy already stored in --installationFolder on the given database.
 
 See it in action: http://youtu.be/WU-CbJ86eQc
 

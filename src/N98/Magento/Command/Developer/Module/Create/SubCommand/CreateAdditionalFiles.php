@@ -33,7 +33,6 @@ class CreateAdditionalFiles extends AbstractSubCommand implements CommandConfigA
 
                 $this->output->writeln('<info>Created file: <comment>' .  $outFile .'<comment></info>');
             }
-
         }
     }
 

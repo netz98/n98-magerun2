@@ -2,8 +2,8 @@
 
 namespace N98\Magento\Command\Installer\SubCommand;
 
-use N98\Util\OperatingSystem;
 use N98\Magento\Command\SubCommand\AbstractSubCommand;
+use N98\Util\OperatingSystem;
 
 class InstallMagento extends AbstractSubCommand
 {
@@ -23,7 +23,7 @@ class InstallMagento extends AbstractSubCommand
      */
     public function execute()
     {
-        $this->notEmptyCallback = function($input) {
+        $this->notEmptyCallback = function ($input) {
             if (empty($input)) {
                 throw new \InvalidArgumentException('Please enter a value');
             }
@@ -36,17 +36,21 @@ class InstallMagento extends AbstractSubCommand
 
         $defaults = $this->commandConfig['installation']['defaults'];
 
-        $useDefaultConfigParams = $this->getCommand()->parseBoolOption($this->input->getOption('useDefaultConfigParams'));
+        $useDefaultConfigParams = $this->getCommand()->parseBoolOption(
+            $this->input->getOption('useDefaultConfigParams')
+        );
 
         $sessionSave = $useDefaultConfigParams ? $defaults['session-save'] : $dialog->ask(
             $this->output,
-            '<question>Please enter the session save:</question> <comment>[' . $defaults['session-save'] . ']</comment>: ',
+            '<question>Please enter the session save:</question> <comment>[' .
+            $defaults['session-save'] . ']</comment>: ',
             $defaults['session-save']
         );
 
         $adminFrontname = $useDefaultConfigParams ? $defaults['backend-frontname'] : $dialog->askAndValidate(
             $this->output,
-            '<question>Please enter the admin/backend frontname:</question> <comment>[' . $defaults['backend-frontname'] . ']</comment> ',
+            '<question>Please enter the admin/backend frontname:</question> <comment>[' .
+            $defaults['backend-frontname'] . ']</comment> ',
             $this->notEmptyCallback,
             false,
             $defaults['backend-frontname']
@@ -54,7 +58,8 @@ class InstallMagento extends AbstractSubCommand
 
         $currency = $useDefaultConfigParams ? $defaults['currency'] : $dialog->askAndValidate(
             $this->output,
-            '<question>Please enter the default currency code:</question> <comment>[' . $defaults['currency'] . ']</comment>: ',
+            '<question>Please enter the default currency code:</question> <comment>[' .
+            $defaults['currency'] . ']</comment>: ',
             $this->notEmptyCallback,
             false,
             $defaults['currency']
@@ -78,7 +83,8 @@ class InstallMagento extends AbstractSubCommand
 
         $adminUsername = $useDefaultConfigParams ? $defaults['admin-user'] : $dialog->askAndValidate(
             $this->output,
-            '<question>Please enter the admin username:</question> <comment>[' . $defaults['admin-user'] . ']</comment>: ',
+            '<question>Please enter the admin username:</question> <comment>[' .
+            $defaults['admin-user'] . ']</comment>: ',
             $this->notEmptyCallback,
             false,
             $defaults['admin-user']
@@ -86,7 +92,8 @@ class InstallMagento extends AbstractSubCommand
 
         $adminPassword = $useDefaultConfigParams ? $defaults['admin-password'] : $dialog->askAndValidate(
             $this->output,
-            '<question>Please enter the admin password:</question> <comment>[' . $defaults['admin-password'] . ']</comment>: ',
+            '<question>Please enter the admin password:</question> <comment>[' .
+            $defaults['admin-password'] . ']</comment>: ',
             $this->notEmptyCallback,
             false,
             $defaults['admin-password']
@@ -94,7 +101,8 @@ class InstallMagento extends AbstractSubCommand
 
         $adminFirstname = $useDefaultConfigParams ? $defaults['admin-firstname'] : $dialog->askAndValidate(
             $this->output,
-            '<question>Please enter the admin\'s firstname:</question> <comment>[' . $defaults['admin-firstname'] . ']</comment>: ',
+            '<question>Please enter the admin\'s firstname:</question> <comment>[' .
+            $defaults['admin-firstname'] . ']</comment>: ',
             $this->notEmptyCallback,
             false,
             $defaults['admin-firstname']
@@ -102,7 +110,8 @@ class InstallMagento extends AbstractSubCommand
 
         $adminLastname = $useDefaultConfigParams ? $defaults['admin-lastname'] : $dialog->askAndValidate(
             $this->output,
-            '<question>Please enter the admin\'s lastname:</question> <comment>[' . $defaults['admin-lastname'] . ']</comment>: ',
+            '<question>Please enter the admin\'s lastname:</question> <comment>[' .
+            $defaults['admin-lastname'] . ']</comment>: ',
             $this->notEmptyCallback,
             false,
             $defaults['admin-lastname']
@@ -110,29 +119,34 @@ class InstallMagento extends AbstractSubCommand
 
         $adminEmail = $useDefaultConfigParams ? $defaults['admin-email'] : $dialog->askAndValidate(
             $this->output,
-            '<question>Please enter the admin\'s email:</question> <comment>[' . $defaults['admin-email'] . ']</comment>: ',
+            '<question>Please enter the admin\'s email:</question> <comment>[' .
+            $defaults['admin-email'] . ']</comment>: ',
             $this->notEmptyCallback,
             false,
             $defaults['admin-email']
         );
 
-        $validateBaseUrl = function($url) {
+        $validateBaseUrl = function ($url) {
             if (!preg_match('|^http(s)?://[a-z0-9-]+(.[a-z0-9-]+)*(:[0-9]+)?(/.*)?$|i', $url)) {
                 throw new \InvalidArgumentException('Please enter a valid URL');
             }
-            if (parse_url($url, \PHP_URL_HOST) ==  'localhost') {
-                throw new \InvalidArgumentException('localhost cause problems! Please use 127.0.0.1 or another hostname');
+            if (parse_url($url, \PHP_URL_HOST) == 'localhost') {
+                throw new \InvalidArgumentException(
+                    'localhost cause problems! Please use 127.0.0.1 or another hostname'
+                );
             }
 
             return $url;
         };
 
-        $baseUrl = ($this->input->getOption('baseUrl') !== null) ? $this->input->getOption('baseUrl') : $dialog->askAndValidate(
-            $this->output,
-            '<question>Please enter the base url:</question> ',
-            $validateBaseUrl,
-            false
-        );
+        $baseUrl = ($this->input->getOption('baseUrl') !== null)
+            ? $this->input->getOption('baseUrl')
+            : $dialog->askAndValidate(
+                $this->output,
+                '<question>Please enter the base url:</question> ',
+                $validateBaseUrl,
+                false
+            );
         $baseUrl = rtrim($baseUrl, '/') . '/'; // normalize baseUrl
 
         /**
@@ -144,23 +158,23 @@ class InstallMagento extends AbstractSubCommand
         $this->_getDefaultSessionFolder($sessionSave);
 
         $argv = array(
-            'language'                   => $locale,
-            'timezone'                   => $timezone,
-            'db-host'                    => $this->_prepareDbHost(),
-            'db-name'                    => $this->config->getString('db_name'),
-            'db-user'                    => $this->config->getString('db_user'),
-            'base-url'                   => $baseUrl,
-            'use-rewrites'               => 1,
-            'use-secure'                 => 0,
-            'use-secure-admin'           => 1,
-            'admin-user'                 => $adminUsername,
-            'admin-lastname'             => $adminLastname,
-            'admin-firstname'            => $adminFirstname,
-            'admin-email'                => $adminEmail,
-            'admin-password'             => $adminPassword,
-            'session-save'               => $sessionSave,
-            'backend-frontname'          => $adminFrontname,
-            'currency'                   => $currency,
+            'language' => $locale,
+            'timezone' => $timezone,
+            'db-host' => $this->_prepareDbHost(),
+            'db-name' => $this->config->getString('db_name'),
+            'db-user' => $this->config->getString('db_user'),
+            'base-url' => $baseUrl,
+            'use-rewrites' => 1,
+            'use-secure' => 0,
+            'use-secure-admin' => 1,
+            'admin-user' => $adminUsername,
+            'admin-lastname' => $adminLastname,
+            'admin-firstname' => $adminFirstname,
+            'admin-email' => $adminEmail,
+            'admin-password' => $adminPassword,
+            'session-save' => $sessionSave,
+            'backend-frontname' => $adminFrontname,
+            'currency' => $currency,
         );
 
         $dbPass = $this->config->getString('db_pass');
@@ -211,7 +225,7 @@ class InstallMagento extends AbstractSubCommand
      */
     protected function getInstallScriptPath()
     {
-        $installerScript  = $this->config->getString('installationFolder') . DIRECTORY_SEPARATOR . 'bin/magento';
+        $installerScript = $this->config->getString('installationFolder') . DIRECTORY_SEPARATOR . 'bin/magento';
         if (!file_exists($installerScript)) {
             throw new \RuntimeException('Installation script was not found.', 1);
         }
