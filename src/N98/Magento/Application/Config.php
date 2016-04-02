@@ -77,29 +77,27 @@ class Config
      */
     public function checkConfigCommandAlias(InputInterface $input)
     {
-        if ($this->hasConfigCommandAliases()) {
-            foreach ($this->config['commands']['aliases'] as $alias) {
-                if (is_array($alias)) {
-                    $aliasCommandName = key($alias);
-                    if ($input->getFirstArgument() == $aliasCommandName) {
-                        $aliasCommandParams = array_slice(
-                            BinaryString::trimExplodeEmpty(' ', $alias[$aliasCommandName]),
-                            1
-                        );
-                        if (count($aliasCommandParams) > 0) {
-                            // replace with aliased data
-                            $mergedParams = array_merge(
-                                array_slice($_SERVER['argv'], 0, 2),
-                                $aliasCommandParams,
-                                array_slice($_SERVER['argv'], 2)
-                            );
-                            $input = new ArgvInput($mergedParams);
-                        }
-                    }
-                }
+        foreach ($this->getArray(array('commands', 'aliases')) as $alias) {
+            if (!is_array($alias)) {
+                continue;
             }
-
-            return $input;
+            $aliasCommandName = key($alias);
+            if ($input->getFirstArgument() !== $aliasCommandName) {
+                continue;
+            }
+            $aliasCommandParams = array_slice(
+                BinaryString::trimExplodeEmpty(' ', $alias[$aliasCommandName]),
+                1
+            );
+            if (count($aliasCommandParams) > 0) {
+                // replace with aliased data
+                $mergedParams = array_merge(
+                    array_slice($_SERVER['argv'], 0, 2),
+                    $aliasCommandParams,
+                    array_slice($_SERVER['argv'], 2)
+                );
+                $input = new ArgvInput($mergedParams);
+            }
         }
 
         return $input;
@@ -110,31 +108,20 @@ class Config
      */
     public function registerConfigCommandAlias(Command $command)
     {
-        if ($this->hasConfigCommandAliases()) {
-            foreach ($this->config['commands']['aliases'] as $alias) {
-                if (!is_array($alias)) {
-                    continue;
-                }
-
-                $aliasCommandName = key($alias);
-                $commandString = $alias[$aliasCommandName];
-
-                list($originalCommand) = explode(' ', $commandString);
-                if ($command->getName() == $originalCommand) {
-                    $currentCommandAliases = $command->getAliases();
-                    $currentCommandAliases[] = $aliasCommandName;
-                    $command->setAliases($currentCommandAliases);
-                }
+        foreach ($this->getArray(array('commands', 'aliases')) as $alias) {
+            if (!is_array($alias)) {
+                continue;
             }
-        }
-    }
 
-    /**
-     * @return bool
-     */
-    private function hasConfigCommandAliases()
-    {
-        return isset($this->config['commands']['aliases']) && is_array($this->config['commands']['aliases']);
+            $aliasCommandName = key($alias);
+            $commandString = $alias[$aliasCommandName];
+            list($originalCommand) = explode(' ', $commandString, 2);
+            if ($command->getName() !== $originalCommand) {
+                continue;
+            }
+
+            $command->setAliases(array_merge($command->getAliases(), array($aliasCommandName)));
+        }
     }
 
     /**
@@ -142,28 +129,18 @@ class Config
      */
     public function registerCustomCommands(Application $application)
     {
-        if (isset($this->config['commands']['customCommands'])
-            && is_array($this->config['commands']['customCommands'])
-        ) {
-            foreach ($this->config['commands']['customCommands'] as $commandClass) {
-                if (is_array($commandClass)) { // Support for key => value (name -> class)
-                    $resolvedCommandClass = current($commandClass);
-                    /** @var Command $command */
-                    $command = new $resolvedCommandClass();
-                    $command->setName(key($commandClass));
-                } else {
-                    /** @var Command $command */
-                    $command = new $commandClass();
-                }
-                $application->add($command);
-
-                $output = $this->output;
-                if (OutputInterface::VERBOSITY_DEBUG <= $output->getVerbosity()) {
-                    $output->writeln(
-                        '<debug>Added command </debug><comment>' . get_class($command) . '</comment>'
-                    );
-                }
+        foreach ($this->getArray(array('commands', 'customCommands')) as $commandClass) {
+            if (is_array($commandClass)) { // Support for key => value (name -> class)
+                $resolvedCommandClass = current($commandClass);
+                /** @var Command $command */
+                $command = new $resolvedCommandClass();
+                $command->setName(key($commandClass));
+            } else {
+                /** @var Command $command */
+                $command = new $commandClass();
             }
+            $this->debugWriteln(sprintf('<debug>Add command </debug><comment>%s</comment>', get_class($command)));
+            $application->add($command);
         }
     }
 
@@ -174,32 +151,16 @@ class Config
      */
     public function registerCustomAutoloaders(ClassLoader $autoloader)
     {
-        $output = $this->output;
+        $mask = '<debug>Registered %s autoloader </debug> <info>%s</info> -> <comment>%s</comment>';
 
-        if (isset($this->config['autoloaders']) && is_array($this->config['autoloaders'])) {
-            foreach ($this->config['autoloaders'] as $prefix => $path) {
-                $autoloader->add($prefix, $path);
-
-                if (OutputInterface::VERBOSITY_DEBUG <= $output->getVerbosity()) {
-                    $output->writeln(
-                        '<debug>Registrered PSR-2 autoloader </debug> <info>'
-                        . $prefix . '</info> -> <comment>' . $path . '</comment>'
-                    );
-                }
-            }
+        foreach ($this->getArray('autoloaders') as $prefix => $path) {
+            $autoloader->add($prefix, $path);
+            $this->debugWriteln(sprintf($mask, 'PSR-2', $prefix, $path));
         }
 
-        if (isset($this->config['autoloaders_psr4']) && is_array($this->config['autoloaders_psr4'])) {
-            foreach ($this->config['autoloaders_psr4'] as $prefix => $path) {
-                $autoloader->addPsr4($prefix, $path);
-
-                if (OutputInterface::VERBOSITY_DEBUG <= $output->getVerbosity()) {
-                    $output->writeln(
-                        '<debug>Registrered PSR-4 autoloader </debug> <info>'
-                        . $prefix . ' </info> -> <comment>' . $path . '</comment>'
-                    );
-                }
-            }
+        foreach ($this->getArray('autoloaders_psr4') as $prefix => $path) {
+            $autoloader->addPsr4($prefix, $path);
+            $this->debugWriteln(sprintf($mask, 'PSR-4', $prefix, $path));
         }
     }
 
@@ -281,5 +242,47 @@ class Config
         $loader = new ConfigurationLoader($config, $isPharMode, $output);
 
         return $loader;
+    }
+
+    /**
+     * @param string $message
+     */
+    private function debugWriteln($message)
+    {
+        $output = $this->output;
+        if (OutputInterface::VERBOSITY_DEBUG <= $output->getVerbosity()) {
+            $output->writeln($message);
+        }
+    }
+
+    /**
+     * Get array from config, default to an empty array if not set
+     *
+     * @param string|array $key
+     * @param array $default [optional]
+     * @return array
+     */
+    private function getArray($key, $default = array())
+    {
+        $result = $this->traverse((array)$key);
+        if (null === $result) {
+            return $default;
+        }
+        return $result;
+    }
+
+    private function traverse(array $keys)
+    {
+        $anchor = &$this->config;
+        foreach ($keys as $key) {
+            if (!isset($anchor[$key])) {
+                return null;
+            }
+            $anchor = &$anchor[$key];
+            if (!is_array($anchor)) {
+                return null;
+            }
+        }
+        return $anchor;
     }
 }

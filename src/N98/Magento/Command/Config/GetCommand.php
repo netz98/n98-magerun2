@@ -23,8 +23,8 @@ class GetCommand extends AbstractConfigCommand
             ->setName('config:get')
             ->setDescription('Get a core config item')
             ->setHelp(
-                <<<EOT
-                If <info>path</info> is not set, all available config items will be listed.
+<<<EOT
+If <info>path</info> is not set, all available config items will be listed.
 The <info>path</info> may contain wildcards (*).
 If <info>path</info> ends with a trailing slash, all child items will be listed. E.g.
 
@@ -68,7 +68,6 @@ HELP;
     /**
      * @param InputInterface $input
      * @param OutputInterface $output
-     *
      * @return int|void
      */
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -112,10 +111,10 @@ HELP;
 
         foreach ($collection as $item) {
             $table[] = array(
-                'path'     => $item->getPath(),
-                'scope'    => $item->getScope(),
+                'path' => $item->getPath(),
+                'scope' => $item->getScope(),
                 'scope_id' => $item->getScopeId(),
-                'value'    => $this->_formatValue(
+                'value' => $this->_formatValue(
                     $item->getValue(),
                     $input->getOption('decrypt') ? 'decrypt' : false
                 ),
