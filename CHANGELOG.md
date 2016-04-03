@@ -6,6 +6,7 @@ RECENT CHANGES
 * Fix: #172 Base-URL check on IP addresses (TK)
 * Fix: Whitespace and code-style (TK)
 * Feature: Install command: magento-ce-2.0.4 version (TK)
+* Feature: Extract config-loader (TK)
 
 1.1.4
 -----
