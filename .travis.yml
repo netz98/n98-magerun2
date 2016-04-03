@@ -56,7 +56,7 @@ before_install:
   - travis_retry composer self-update
 
 install:
-  - travis_retry composer install --prefer-source --no-interaction --ignore-platform-reqs
+  - travis_retry composer install --prefer-dist --no-interaction --ignore-platform-reqs
 
 before_script:
   - source build/travis/before_script.sh
