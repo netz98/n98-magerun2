@@ -4,7 +4,8 @@ RECENT CHANGES
 1.1.5
 -----
 * Fix: #172 Base-URL check on IP addresses (TK)
-* Fix: Whitespace
+* Fix: Whitespace and code-style (TK)
+* Feature: Install command: magento-ce-2.0.4 version (TK)
 
 1.1.4
 -----
