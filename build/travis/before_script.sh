@@ -8,15 +8,6 @@
 # only install magento if MAGENTO_VERSION has been set
 if [ ! -z ${MAGENTO_VERSION+x} ]; then
 
-    # Install MySQL 5.6
-    build/travis/mysql-5.6-install.sh
-    BUILD_LAST_EXIT=$?
-    if [ "${BUILD_LAST_EXIT}" -ne 0 ]; then
-        echo "build/travis/mysql-5.6-install.sh returned with exit status ${BUILD_LAST_EXIT}"
-        echo 'Failed to install mysql 5.6, aborting'
-        exit 1
-    fi
-
     echo "installing magento ${MAGENTO_VERSION}"
 
     export N98_MAGERUN2_TEST_MAGENTO_ROOT="./${MAGENTO_VERSION}"
