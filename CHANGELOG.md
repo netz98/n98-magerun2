@@ -7,6 +7,7 @@ RECENT CHANGES
 * Fix: Whitespace and code-style (TK)
 * Feature: Install command: magento-ce-2.0.4 version (TK)
 * Feature: Extract config-loader (TK)
+* Feature: Add dry-run mode for db:dump (TK)
 
 1.1.4
 -----
