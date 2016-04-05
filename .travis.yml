@@ -1,6 +1,13 @@
 language: php
-sudo: required
+
 dist: trusty
+sudo: required
+addons:
+  apt:
+    packages:
+    - mysql-server-5.6
+    - mysql-client-core-5.6
+    - mysql-client-5.6
 
 branches:
   only:
@@ -21,6 +28,7 @@ env:
     - MAGENTO_VERSION="magento-ce-2.0.0" INSTALL_SAMPLE_DATA=0
     - MAGENTO_VERSION="magento-ce-2.0.1" INSTALL_SAMPLE_DATA=0
     - MAGENTO_VERSION="magento-ce-2.0.2" INSTALL_SAMPLE_DATA=0
+    - MAGENTO_VERSION="magento-ce-2.0.4" INSTALL_SAMPLE_DATA=0
 
 matrix:
   fast_finish: true
@@ -48,7 +56,7 @@ before_install:
   - travis_retry composer self-update
 
 install:
-  - travis_retry composer install --prefer-source --no-interaction --ignore-platform-reqs
+  - travis_retry composer install --prefer-dist --no-interaction --ignore-platform-reqs
 
 before_script:
   - source build/travis/before_script.sh
