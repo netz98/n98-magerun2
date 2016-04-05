@@ -1,6 +1,9 @@
 RECENT CHANGES
 ==============
 
+1.1.6
+-----
+
 1.1.5
 -----
 * Fix: #172 Base-URL check on IP addresses (TK)
