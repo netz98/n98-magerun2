@@ -248,6 +248,15 @@ commands:
   N98\Magento\Command\Developer\ConsoleCommand:
     commands:
       - N98\Magento\Command\Developer\Console\CallCommand
+      - N98\Magento\Command\Developer\Console\Config\MakeConfigDiCommand
+      - N98\Magento\Command\Developer\Console\Config\MakeConfigCrontabCommand
+      - N98\Magento\Command\Developer\Console\Config\MakeConfigEventsCommand
+      - N98\Magento\Command\Developer\Console\Config\MakeConfigFieldsetCommand
+      - N98\Magento\Command\Developer\Console\Config\MakeConfigMenuCommand
+      - N98\Magento\Command\Developer\Console\Config\MakeConfigRoutesCommand
+      - N98\Magento\Command\Developer\Console\Config\MakeConfigSystemCommand
+      - N98\Magento\Command\Developer\Console\Config\MakeConfigWidgetCommand
+      - N98\Magento\Command\Developer\Console\Config\MakeConfigWebapiCommand
       - N98\Magento\Command\Developer\Console\ModuleCommand
       - N98\Magento\Command\Developer\Console\MakeBlockCommand
       - N98\Magento\Command\Developer\Console\MakeHelperCommand
@@ -258,16 +267,8 @@ commands:
       - N98\Magento\Command\Developer\Console\MakeControllerCommand
       - N98\Magento\Command\Developer\Console\MakeModelCommand
       - N98\Magento\Command\Developer\Console\MakeInterfaceCommand
-      - N98\Magento\Command\Developer\Console\MakeConfigDiCommand
-      - N98\Magento\Command\Developer\Console\MakeConfigCrontabCommand
-      - N98\Magento\Command\Developer\Console\MakeConfigEventsCommand
-      - N98\Magento\Command\Developer\Console\MakeConfigFieldsetCommand
-      - N98\Magento\Command\Developer\Console\MakeConfigMenuCommand
-      - N98\Magento\Command\Developer\Console\MakeConfigRoutesCommand
-      - N98\Magento\Command\Developer\Console\MakeConfigSystemCommand
-      - N98\Magento\Command\Developer\Console\MakeConfigWidgetCommand
-      - N98\Magento\Command\Developer\Console\MakeConfigWebapiCommand
       - N98\Magento\Command\Developer\Console\MakeThemeCommand
+      - N98\Magento\Command\Developer\Console\TreeCommand
 
   N98\Magento\Command\System\CheckCommand:
     checks:
