@@ -343,6 +343,17 @@ debugging. Alternatively you would have to alter the row in the database manuall
 
    $ n98-magerun2.phar sys:setup:change-version module version
 
+Interactive Development Console
+"""""""""""""""""""""""""""""""
+
+Opens PHP interactive shell with initialized Magento Admin-Store.
+
+.. code-block:: sh
+
+   $ n98-magerun2.phar dev:console
+
+Variable ``$di`` is made available with a ``Magento\Framework\ObjectManagerInterface`` instance to allow creation of object instances.
+
 n98-magerun Shell
 """""""""""""""""
 
