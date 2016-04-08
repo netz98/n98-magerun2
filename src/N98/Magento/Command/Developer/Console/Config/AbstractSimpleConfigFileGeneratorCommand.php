@@ -14,9 +14,10 @@
  * @package N98\Magento\Command\Developer\Console
  */
 
-namespace N98\Magento\Command\Developer\Console;
+namespace N98\Magento\Command\Developer\Console\Config;
 
 use Magento\Framework\App\AreaList;
+use N98\Magento\Command\Developer\Console\AbstractGeneratorCommand;
 
 abstract class AbstractSimpleConfigFileGeneratorCommand extends AbstractGeneratorCommand
 {

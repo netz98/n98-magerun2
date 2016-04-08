@@ -7,6 +7,7 @@ use Magento\Framework\Filesystem\Directory\WriteInterface;
 use Magento\Framework\Module\Dir as ModuleDir;
 use Magento\Framework\Filesystem\Directory\WriteFactory as DirectoryWriteFactory;
 use Magento\Framework\Filesystem\Directory\ReadFactory as DirectoryReadFactory;
+use N98\Magento\Command\Developer\Console\Structure\ModuleNameStructure;
 use Symfony\Component\Console\Output\OutputInterface;
 use Zend\Code\Generator\FileGenerator;
 use Zend\Filter\Word\SeparatorToSeparator;
@@ -24,7 +25,7 @@ abstract class AbstractGeneratorCommand extends AbstractConsoleCommand
      */
     public function getCurrentModulePath($type = '')
     {
-        return $this->get(ModuleDir::class)->getDir($this->getCurrentModuleName(), $type);
+        return $this->get(ModuleDir::class)->getDir($this->getCurrentModuleName()->getFullModuleName(), $type);
     }
 
     /**
@@ -41,14 +42,14 @@ abstract class AbstractGeneratorCommand extends AbstractConsoleCommand
      */
     public function getCurrentModuleNamespace()
     {
-        $moduleName = $this->getCurrentModuleName();
+        $moduleName = $this->getCurrentModuleName()->getFullModuleName();
         list($vendorPrefix, $moduleNamespace) = explode('_', $moduleName);
 
         return $vendorPrefix . '\\' . $moduleNamespace;
     }
 
     /**
-     * @return string
+     * @return ModuleNameStructure
      */
     public function getCurrentModuleName()
     {
@@ -56,11 +57,16 @@ abstract class AbstractGeneratorCommand extends AbstractConsoleCommand
             $magerunInternal = $this->getScopeVariable('magerunInternal');
 
             $currentModuleName = $magerunInternal->currentModule;
+
+            if (empty($currentModuleName)) {
+                throw new \InvalidArgumentException('No module defined');
+            }
+
         } catch (\InvalidArgumentException $e) {
             throw new \InvalidArgumentException('Module not defined. Please use "module <name>" command');
         }
 
-        return $currentModuleName;
+        return new ModuleNameStructure($currentModuleName);
     }
 
     /**

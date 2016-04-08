@@ -8,6 +8,7 @@ namespace N98\Magento\Command\Developer\Console;
 
 use Magento\Framework\Filesystem;
 use Magento\Framework\App\Filesystem\DirectoryList;
+use N98\Magento\Command\Developer\Console\Structure\ThemeNameStructure;
 use N98\Magento\Command\Developer\Console\Util\Xml;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -39,11 +40,11 @@ class MakeThemeCommand extends AbstractGeneratorCommand
         $appDirReader = $filesystem->getDirectoryRead(DirectoryList::APP);
         $appDirWriter = $filesystem->getDirectoryWrite(DirectoryList::APP);
 
-        $themeName = $input->getArgument('area')
-            . '/'
-            . ucfirst($input->getArgument('package'))
-            . '/'
-            . strtolower($input->getArgument('name'));
+        $themeName = new ThemeNameStructure(
+            $input->getArgument('area'),
+            $input->getArgument('package'),
+            $input->getArgument('name')
+        );
 
         $relativePath = 'design' . '/' . $themeName;
 

@@ -6,11 +6,13 @@ use Magento\Framework\App\Cache;
 use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Framework\App\State\CleanupFiles;
 use Magento\Framework\Filesystem;
+use Magento\Framework\Filesystem\Directory\ReadInterface;
+use Magento\Framework\Filesystem\Directory\WriteInterface;
 use Magento\Framework\Module\Status;
+use N98\Magento\Command\Developer\Console\Structure\ModuleNameStructure;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class MakeModuleCommand extends AbstractGeneratorCommand
@@ -31,37 +33,74 @@ class MakeModuleCommand extends AbstractGeneratorCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        list($vendorName, $moduleName) = explode('_', $input->getArgument('modulename'));
-
-        if (empty($vendorName) || empty($moduleName)) {
-            throw new \InvalidArgumentException('Invalid module name. (Format Acme_Foo)');
-        }
-
-        $vendorName = ucfirst($vendorName);
-        $moduleName = ucfirst($moduleName);
-
-        $newModuleName = $vendorName . '_' . $moduleName;
-
+        $moduleName = new ModuleNameStructure($input->getArgument('modulename'));
+        
         $filesystem = $this->get(Filesystem::class);
         /** @var $filesystem Filesystem */
         $appDirectoryWriter = $filesystem->getDirectoryWrite(DirectoryList::APP);
+        $appDirectoryReader = $filesystem->getDirectoryRead(DirectoryList::APP);
 
+        $this->createRegistrationFile($moduleName, $appDirectoryWriter);
+        $this->createEtcModuleFile($moduleName, $appDirectoryWriter);
+        $this->createTestDirectories($moduleName, $appDirectoryWriter);
+        $this->includeRegistrationFile($moduleName, $appDirectoryReader);
+
+        $output->writeln('<info>created new module </info><comment>' . $moduleName->getFullModuleName() . '</comment>');
+
+        $this->activateNewModuleInSystem($output, $moduleName);
+        $this->cleanClassCache();
+
+        $this->changeToNewModule($output, $moduleName);
+    }
+
+    /**
+     * @param OutputInterface $output
+     * @param ModuleNameStructure $moduleName
+     * @return int
+     */
+    private function changeToNewModule(OutputInterface $output, ModuleNameStructure $moduleName)
+    {
+        $command = $this->getApplication()->find('module');
+        $arguments = [
+            'module' => $moduleName->getFullModuleName(),
+        ];
+        $input = new ArrayInput($arguments);
+
+        return $command->run($input, $output);
+    }
+
+    /**
+     * @param ModuleNameStructure $moduleName
+     * @param WriteInterface $appDirectoryWriter
+     */
+    private function createRegistrationFile(ModuleNameStructure $moduleName, WriteInterface $appDirectoryWriter)
+    {
         $registrationFileBody = <<<FILE_BODY
 <?php
 
 \Magento\Framework\Component\ComponentRegistrar::register(
     \Magento\Framework\Component\ComponentRegistrar::MODULE,
-    '${newModuleName}',
+    '{$moduleName->getFullModuleName()}',
     __DIR__
 );
 
 FILE_BODY;
-        $appDirectoryWriter->writeFile('code/' . $vendorName . '/' . $moduleName . '/registration.php', $registrationFileBody);
+        $appDirectoryWriter->writeFile(
+            'code/' . $moduleName->getVendorName() . '/' . $moduleName->getShortModuleName() . '/registration.php',
+            $registrationFileBody
+        );
+    }
 
+    /**
+     * @param ModuleNameStructure $moduleName
+     * @param WriteInterface $appDirectoryWriter
+     */
+    private function createEtcModuleFile(ModuleNameStructure $moduleName, WriteInterface $appDirectoryWriter)
+    {
         $moduleFileBody = <<<FILE_BODY
 <?xml version="1.0"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Module/etc/module.xsd">
-    <module name="$newModuleName" setup_version="1.0.0">
+    <module name="{$moduleName->getFullModuleName()}" setup_version="1.0.0">
         <sequence>
         </sequence>
     </module>
@@ -69,44 +108,55 @@ FILE_BODY;
 
 FILE_BODY;
 
-        $appDirectoryWriter->writeFile('code/' . $vendorName . '/' . $moduleName . '/etc/module.xml', $moduleFileBody);
+        $appDirectoryWriter->writeFile('code/' . $moduleName->getVendorName() . '/' . $moduleName->getShortModuleName() . '/etc/module.xml', $moduleFileBody);
+    }
 
-        $output->writeln('<info>create new module </info><comment>' . $newModuleName . '</comment>');
-
-
-        $appDirectoryReader = $filesystem->getDirectoryRead(DirectoryList::APP);
-        $moduleRegistrationFile = $appDirectoryReader->getAbsolutePath(
-            'code/' . $vendorName . '/' . $moduleName . '/registration.php'
+    /**
+     * @param ModuleNameStructure $moduleName
+     * @param WriteInterface $appDirectoryWriter
+     */
+    private function createTestDirectories(ModuleNameStructure $moduleName, WriteInterface $appDirectoryWriter)
+    {
+        $appDirectoryWriter->create(
+            'code/' . $moduleName->getVendorName() . '/' . $moduleName->getShortModuleName() . '/Test/Unit'
         );
-        include($moduleRegistrationFile);
+    }
 
+    /**
+     * @param ModuleNameStructure $moduleName
+     * @param ReadInterface $appDirectoryReader
+     */
+    private function includeRegistrationFile(ModuleNameStructure $moduleName, ReadInterface $appDirectoryReader)
+    {
+        $moduleRegistrationFile = $appDirectoryReader->getAbsolutePath(
+            'code/' . $moduleName->getVendorName() . '/' . $moduleName->getShortModuleName() . '/registration.php'
+        );
+
+        include($moduleRegistrationFile);
+    }
+
+    /**
+     * @return voic
+     */
+    private function cleanClassCache()
+    {
         $applicationCache = $this->get(Cache::class);
         $applicationCache->clean();
 
         $cleanupFiles = $this->get(CleanupFiles::class);
         $cleanupFiles->clearCodeGeneratedClasses();
-
-        $moduleStatus = $this->get(Status::class);
-        /** @var $moduleStatus Status */
-        $moduleStatus->setIsEnabled(true, [$newModuleName]);
-
-        $this->changeToNewModule($output, $newModuleName);
     }
 
     /**
      * @param OutputInterface $output
-     * @param string $newModuleName
-     * @return int
+     * @param ModuleNameStructure $moduleName
      */
-    protected function changeToNewModule(OutputInterface $output, $newModuleName)
+    private function activateNewModuleInSystem(OutputInterface $output, ModuleNameStructure $moduleName)
     {
-        $command = $this->getApplication()->find('module');
-        $arguments = [
-            'module' => $newModuleName
-        ];
-        $input = new ArrayInput($arguments);
+        $moduleStatus = $this->get(Status::class);
+        /** @var $moduleStatus Status */
+        $moduleStatus->setIsEnabled(true, [$moduleName->getFullModuleName()]);
 
-        return $command->run($input, $output);
+        $output->writeln('<info>activated new module </info><comment>' . $moduleName->getFullModuleName() . '</comment>');
     }
-
 }

@@ -2,6 +2,7 @@
 
 namespace N98\Magento\Command\Developer\Console;
 
+use N98\Magento\Command\Developer\Console\Structure\ModuleNameStructure;
 use N98\Util\BinaryString;
 use Psy\VarDumper\Presenter;
 use Psy\VarDumper\PresenterAware;
@@ -48,7 +49,8 @@ class ModuleCommand extends AbstractGeneratorCommand implements PresenterAware
         $module = $input->getArgument('module');
 
         if (!empty($module)) {
-            $this->setCurrentModuleContext($output, $module);
+            $moduleName = new ModuleNameStructure($module);
+            $this->setCurrentModuleContext($output, $moduleName);
         } else {
             try {
                 $module = $this->getCurrentModuleName();
@@ -61,14 +63,15 @@ class ModuleCommand extends AbstractGeneratorCommand implements PresenterAware
 
     /**
      * @param OutputInterface $output
-     * @param $module
+     * @param ModuleNameStructure $moduleName
      */
-    protected function setCurrentModuleContext(OutputInterface $output, $module)
+    protected function setCurrentModuleContext(OutputInterface $output, ModuleNameStructure $moduleName)
     {
         $moduleList = $this->create(ModuleListInterface::class);
         /** @var $moduleList ModuleListInterface */
 
-        $detectedModule = $moduleList->getOne($module);
+        $detectedModule = $moduleList->getOne($moduleName->getFullModuleName());
+
         if (is_array($detectedModule)) {
             $detectedModule = $detectedModule['name'];
         }
@@ -76,7 +79,7 @@ class ModuleCommand extends AbstractGeneratorCommand implements PresenterAware
         if (!$detectedModule) {
             // Try to load first matching module
             foreach ($moduleList->getAll() as $moduleListItem) {
-                if (BinaryString::startsWith($moduleListItem['name'], $module)) {
+                if (BinaryString::startsWith($moduleListItem['name'], $moduleName->getFullModuleName())) {
                     $detectedModule = $moduleListItem['name'];
                     break;
                 }

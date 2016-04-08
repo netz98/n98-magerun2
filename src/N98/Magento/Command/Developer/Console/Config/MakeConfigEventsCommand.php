@@ -14,7 +14,7 @@
  * @package N98\Magento\Command\Developer\Console
  */
 
-namespace N98\Magento\Command\Developer\Console;
+namespace N98\Magento\Command\Developer\Console\Config;
 
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;

@@ -6,7 +6,7 @@
 
 namespace N98\Magento\Command\Developer\Console\Structure;
 
-class ModuleStructure
+class ModuleNameStructure
 {
     /**
      * @var string
@@ -57,5 +57,13 @@ class ModuleStructure
     public function getVendorName()
     {
         return $this->vendorName;
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->getFullModuleName();
     }
 }
