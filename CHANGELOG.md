@@ -4,6 +4,8 @@ RECENT CHANGES
 1.1.6
 -----
 
+* Fix: Fix module loader (reported by Matthias Walter, fixed by TK)
+
 1.1.5
 -----
 * Fix: #172 Base-URL check on IP addresses (TK)

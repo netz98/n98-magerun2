@@ -209,13 +209,14 @@ class ConfigurationLoader
             $this->_pluginConfig = array();
             $moduleBaseFolders = array();
             $customFilename = $this->_customConfigFilename;
+            $customName = pathinfo($customFilename, PATHINFO_FILENAME);
             if (OperatingSystem::isWindows()) {
-                $config['plugin']['folders'][] = getenv('WINDIR') . '/' . $customFilename . '/modules';
-                $config['plugin']['folders'][] = OperatingSystem::getHomeDir() . '/' . $customFilename . '/modules';
+                $config['plugin']['folders'][] = getenv('WINDIR') . '/' . $customName . '/modules';
+                $config['plugin']['folders'][] = OperatingSystem::getHomeDir() . '/' . $customName . '/modules';
             } else {
-                $config['plugin']['folders'][] = OperatingSystem::getHomeDir() . '/.' . $customFilename . '/modules';
+                $config['plugin']['folders'][] = OperatingSystem::getHomeDir() . '/.' . $customName . '/modules';
             }
-            $config['plugin']['folders'][] = $magentoRootFolder . '/lib/' . $customFilename . '/modules';
+            $config['plugin']['folders'][] = $magentoRootFolder . '/lib/' . $customName . '/modules';
             foreach ($config['plugin']['folders'] as $folder) {
                 if (is_dir($folder)) {
                     $moduleBaseFolders[] = $folder;
@@ -360,7 +361,6 @@ class ConfigurationLoader
         }
 
         $this->logDebug('Load plugin config <comment>' . $path . '</comment>');
-
         $localPluginConfigFile = ConfigFile::createFromFile($path);
         $localPluginConfigFile->applyVariables($magentoRootFolder, $file);
         $this->_pluginConfig = $localPluginConfigFile->mergeArray($this->_pluginConfig);
