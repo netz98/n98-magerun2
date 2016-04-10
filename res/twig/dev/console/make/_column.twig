@@ -1,0 +1,11 @@
+{% if not value is null %}
+
+{% if value == true %}
+    '{{ key }}' => true,
+{% elseif value == false %}
+    '{{ key }}' => false,
+{% else %}
+    '{{ key }}' => '{{ value }}',
+{% endif %}
+
+{% endif %}

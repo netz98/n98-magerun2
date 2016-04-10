@@ -1,12 +1,17 @@
 $table = $installer->getConnection()->newTable(
-    $installer->getTable('{{ tableName }}')
+    $installer->getTable('{{ table.name }}')
 )
 {% for column in columns %}
-)->addColumn(
+->addColumn(
     '{{ column.name }}',
     \Magento\Framework\DB\Ddl\Table::TYPE_INTEGER,
     null,
-    ['identity' => true, 'unsigned' => true, 'nullable' => false, 'primary' => true],
+    [
+    {% for key, value in column %}
+        {% include 'dev/console/make/_column.twig' %}
+    {% endfor %}
+    ],
     '{{ column.comment }}'
 )
 {% endfor %}
+->setComment('{{ table.comment }}');

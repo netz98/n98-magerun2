@@ -7,6 +7,9 @@
 namespace N98\Magento\Command\Developer\Console;
 
 use Magento\Framework\DB\Ddl\Table;
+use N98\Magento\Command\Developer\Console\Renderer\PHPCode\TableRenderer;
+use N98\Magento\Command\Developer\Console\Structure\DDLTable;
+use N98\Magento\Command\Developer\Console\Structure\DDLTableColumn;
 use N98\Util\Console\Helper\TwigHelper;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputInterface;
@@ -37,22 +40,6 @@ class MakeTableCommand extends AbstractGeneratorCommand
     ];
 
     /**
-     * @var array
-     */
-    private $columnTypesWithSize = [
-        Table::TYPE_TEXT,
-    ];
-
-    /**
-     * @var array
-     */
-    private $intTypes = [
-        Table::TYPE_BIGINT,
-        Table::TYPE_INTEGER,
-        Table::TYPE_SMALLINT,
-    ];
-
-    /**
      * @var string
      */
     private $identityColumn = null;
@@ -76,21 +63,25 @@ class MakeTableCommand extends AbstractGeneratorCommand
         /** @var QuestionHelper $questionHelper */
         $questionHelper = $this->getHelper('question');
 
-        $tableName = $this->askForTableName($input, $output, $questionHelper);
-        $columns = $this->processColumns($input, $output, $questionHelper);
-        $comment = $this->askForTableComment($input, $output, $questionHelper);
+        $table = new DDLTable();
+        
+        $this->askForTableName($input, $output, $questionHelper, $table);
+        $this->processColumns($input, $output, $questionHelper, $table);
+        $this->askForTableComment($input, $output, $questionHelper, $table);
 
-        $this->generateCode($input, $output, $tableName, $columns, $comment);
+        $this->generateCode($input, $output, $table);
     }
 
     /**
      * @param InputInterface $input
      * @param OutputInterface $output
      * @param QuestionHelper $questionHelper
-     * @return array
+     * @param DDLTable $table
+     * @return void
      */
-    private function processColumns(InputInterface $input, OutputInterface $output, QuestionHelper $questionHelper)
-    {
+    private function processColumns(
+        InputInterface $input, OutputInterface $output, QuestionHelper $questionHelper, DDLTable $table
+    ) {
         $columns = [];
 
         do {
@@ -99,29 +90,36 @@ class MakeTableCommand extends AbstractGeneratorCommand
             $question = new ConfirmationQuestion('<question>Add a new column? [y/n]</question>:');
         } while ($questionHelper->ask($input, $output, $question));
 
-        return $columns;
+        $table->setColumnDefinitions($columns);
     }
 
     /**
      * @param InputInterface $input
      * @param OutputInterface $output
      * @param QuestionHelper $questionHelper
-     * @return array
+     * @return DDLTableColumn
      */
-    private function processColumn(InputInterface $input, OutputInterface $output, QuestionHelper $questionHelper)
-    {
-        $data = [];
+    private function processColumn(
+        InputInterface $input, OutputInterface $output, QuestionHelper $questionHelper
+    ) {
+        $column = new DDLTableColumn();
+        
+        $this->askForColumnName($input, $output, $questionHelper, $column);
+        $this->askForColumnType($input, $output, $questionHelper, $column);
 
-        $data['name'] = $this->askForColumnName($input, $output, $questionHelper);
-        $data['type'] = $this->askForColumnType($input, $output, $questionHelper);
-        $data['size'] = $this->askForColumnSize($input, $output, $questionHelper, $data);
-        $data['nullable'] = $this->askForColumnIsNullable($input, $output, $questionHelper, $data);
-        $data['unsigned'] = $this->askForColumnIsUnsigned($input, $output, $questionHelper, $data);
-        $data['default'] = $this->askForColumnDefault($input, $output, $questionHelper, $data);
-        $data['comment'] = $this->askForColumnComment($input, $output, $questionHelper);
+        if (empty($this->identityColumn)) {
+            $this->askForIdentityColumn($input, $output, $questionHelper, $column);
+        }
+
+        $this->askForColumnSize($input, $output, $questionHelper, $column);
+        $this->askForColumnIsNullable($input, $output, $questionHelper, $column);
+        $this->askForColumnIsUnsigned($input, $output, $questionHelper, $column);
+        $this->askForColumnDefault($input, $output, $questionHelper, $column);
+        $this->askForColumnComment($input, $output, $questionHelper, $column);
+
         $output->writeln('');
 
-        return $data;
+        return $column;
     }
 
     /**
@@ -146,55 +144,82 @@ class MakeTableCommand extends AbstractGeneratorCommand
     /**
      * @param InputInterface $input
      * @param OutputInterface $output
+     * @param QuestionHelper $questionHelper
+     * @param DDLTableColumn $data
+     * @TODO refactor
      * @return string
      */
-    private function askForColumnType(InputInterface $input, OutputInterface $output, QuestionHelper $questionHelper)
-    {
-        $columnTypeQuestion = new ChoiceQuestion('<question>Column type:</question>', $this->columnTypes);
-        $columnTypeQuestion->setErrorMessage('Type %s is invalid.');
+    private function askForIdentityColumn(
+        InputInterface $input, OutputInterface $output, QuestionHelper $questionHelper, DDLTableColumn $data
+    ) {
+        $columnNameQuestion = new ConfirmationQuestion('<question>Is this your identity column? (y/n)</question>');
 
-        return $questionHelper->ask($input, $output, $columnTypeQuestion);
+        if ($questionHelper->ask($input, $output, $columnNameQuestion)) {
+            $this->identityColumn = $data['name'];
+            $data['type'] = Table::TYPE_INTEGER;
+            $data['unsigned'] = true;
+            $data['default'] = null;
+            $data['primary'] = true;
+        }
     }
 
     /**
      * @param InputInterface $input
      * @param OutputInterface $output
-     * @param array $data
-     * @return string
+     * @param QuestionHelper $questionHelper
+     * @param DDLTableColumn $data
+     * @return void
+     */
+    private function askForColumnType(
+        InputInterface $input, OutputInterface $output, QuestionHelper $questionHelper, DDLTableColumn $data
+    ) {
+        $columnTypeQuestion = new ChoiceQuestion('<question>Column type:</question>', $this->columnTypes);
+        $columnTypeQuestion->setErrorMessage('Type %s is invalid.');
+
+        $data->setType($questionHelper->ask($input, $output, $columnTypeQuestion));
+    }
+
+    /**
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     * @param QuestionHelper $questionHelper
+     * @param DDLTableColumn $column
+     * @return void
      */
     private function askForColumnIsUnsigned(
-        InputInterface $input, OutputInterface $output, QuestionHelper $questionHelper, array $data
+        InputInterface $input, OutputInterface $output, QuestionHelper $questionHelper, DDLTableColumn $column
     ) {
-        if (!in_array($data['type'], $this->intTypes)) {
-            return null;
+        if (!$column->isIntType()) {
+            return;
         }
 
         $columnTypeQuestion = new ConfirmationQuestion(
             '<question>Is column unsigned?</question><info>(default yes)</info>'
         );
 
-        return $questionHelper->ask($input, $output, $columnTypeQuestion);
+        $column->setUnsigned($questionHelper->ask($input, $output, $columnTypeQuestion));
     }
 
     /**
      * @param InputInterface $input
      * @param OutputInterface $output
-     * @param array $data
-     * @return int
+     * @param QuestionHelper $questionHelper
+     * @param DDLTableColumn $column
+     * @return void
      */
     private function askForColumnSize(
         InputInterface $input,
         OutputInterface $output,
         QuestionHelper $questionHelper,
-        array $data
+        DDLTableColumn $column
     ) {
-        if (!in_array($data['type'], $this->columnTypesWithSize)) {
-            return null;
+        if (!$column->isTypeWithSize()) {
+            return;
         }
 
         $default = null;
 
-        if ($data['type'] == Table::TYPE_TEXT) {
+        if ($column->getType() == Table::TYPE_TEXT) {
             $default = 255;
         }
 
@@ -214,53 +239,59 @@ class MakeTableCommand extends AbstractGeneratorCommand
             return (int) $answer;
         });
 
-        return $questionHelper->ask($input, $output, $columnNameQuestion);
-    }
-
-    /**
-     * @param InputInterface $input
-     * @param OutputInterface $output
-     * @return string
-     */
-    private function askForColumnIsNullable(InputInterface $input, OutputInterface $output, QuestionHelper $questionHelper)
-    {
-        $columnTypeQuestion = new ConfirmationQuestion(
-            '<question>Is column nullable:</question><info>(default yes)</info>'
-        );
-
-        return $questionHelper->ask($input, $output, $columnTypeQuestion);
+        $column->setSize($questionHelper->ask($input, $output, $columnNameQuestion));
     }
 
     /**
      * @param InputInterface $input
      * @param OutputInterface $output
      * @param QuestionHelper $questionHelper
-     * @param array $data
-     * @return string
+     * @param DDLTableColumn $column
+     * @return void
+     */
+    private function askForColumnIsNullable(
+        InputInterface $input, OutputInterface $output, QuestionHelper $questionHelper, DDLTableColumn $column
+    ) {
+        $columnTypeQuestion = new ConfirmationQuestion(
+            '<question>Is column nullable:</question><info>(default yes)</info>'
+        );
+
+        $column->setNullable($questionHelper->ask($input, $output, $columnTypeQuestion));
+    }
+
+    /**
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     * @param QuestionHelper $questionHelper
+     * @param DDLTableColumn $column
+     * @return void
      */
     private function askForColumnDefault(
-        InputInterface $input, OutputInterface $output, QuestionHelper $questionHelper, array $data
+        InputInterface $input, OutputInterface $output, QuestionHelper $questionHelper, DDLTableColumn $column
     ) {
         $question = new Question('<question>Column default value:</question>');
-        $question->setValidator(function ($answer) use ($data) {
+        $question->setValidator(function ($answer) use ($column) {
 
-            if (in_array($data['type'], $this->intTypes) && !is_numeric($answer)) {
+            if ($column->isIntType() && !is_numeric($answer) && !empty($answer)) {
                 throw new \InvalidArgumentException('Invalid default value');
             }
 
             return $answer;
         });
 
-        return $questionHelper->ask($input, $output, $question);
+        $column->setDefault($questionHelper->ask($input, $output, $question));
     }
 
     /**
      * @param InputInterface $input
      * @param OutputInterface $output
-     * @return string
+     * @param QuestionHelper $questionHelper
+     * @param DDLTableColumn $column
+     * @return void
      */
-    private function askForColumnComment(InputInterface $input, OutputInterface $output, QuestionHelper $questionHelper)
-    {
+    private function askForColumnComment(
+        InputInterface $input, OutputInterface $output, QuestionHelper $questionHelper, DDLTableColumn $column
+    ) {
         $columnNameQuestion = new Question('<question>Column comment:</question>');
         $columnNameQuestion->setValidator(function ($answer) {
             if (empty($answer)) {
@@ -270,16 +301,18 @@ class MakeTableCommand extends AbstractGeneratorCommand
             return $answer;
         });
 
-        return $questionHelper->ask($input, $output, $columnNameQuestion);
+        
+        $column->setComment($questionHelper->ask($input, $output, $columnNameQuestion));
     }
 
     /**
      * @param InputInterface $input
      * @param OutputInterface $output
      * @param $questionHelper
-     * @return string
+     * @param DDLTable $table
+     * @return void
      */
-    private function askForTableName(InputInterface $input, OutputInterface $output, $questionHelper)
+    private function askForTableName(InputInterface $input, OutputInterface $output, $questionHelper, DDLTable $table)
     {
         $question = new Question('<question>Table name:</question>');
         $question->setValidator(function ($answer) {
@@ -291,17 +324,19 @@ class MakeTableCommand extends AbstractGeneratorCommand
             return $answer;
         });
 
-        return $questionHelper->ask($input, $output, $question);
+        $table->setName($questionHelper->ask($input, $output, $question));
     }
 
     /**
      * @param InputInterface $input
      * @param OutputInterface $output
      * @param $questionHelper
-     * @return string
+     * @param DDLTable $column
+     * @return void
      */
-    private function askForTableComment(InputInterface $input, OutputInterface $output, $questionHelper)
-    {
+    private function askForTableComment(
+        InputInterface $input, OutputInterface $output, $questionHelper, DDLTable $column
+    ) {
         $question = new Question('<question>Table comment:</question>');
         $question->setValidator(function ($answer) {
 
@@ -312,24 +347,20 @@ class MakeTableCommand extends AbstractGeneratorCommand
             return $answer;
         });
 
-        return $questionHelper->ask($input, $output, $question);
+        $column->setComment($questionHelper->ask($input, $output, $question));
     }
 
     /**
      * @param InputInterface $input
      * @param OutputInterface $output
-     * @param array $columns
-     * @param string $tableComment
-     * @return string
+     * @param DDLTable $table
+     * @return void
      */
     private function generateCode(
-        InputInterface $input, OutputInterface $output, $tableName, array $columns, $tableComment
+        InputInterface $input, OutputInterface $output, DDLTable $table
     ) {
-        /** @var TwigHelper $twigHelper */
-        $twigHelper = $this->getHelper('twig');
-        echo $twigHelper->render(
-            'dev/console/make/table.twig',
-            ['tableName' => $tableName, 'columns' => $columns, 'tableComment' => $tableComment]
-        );
+        $renderer = new TableRenderer($table, $this->getHelper('twig'));
+
+        echo $renderer->render();
     }
 }
