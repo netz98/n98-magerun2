@@ -10,7 +10,6 @@ use Magento\Framework\DB\Ddl\Table;
 use N98\Magento\Command\Developer\Console\Renderer\PHPCode\TableRenderer;
 use N98\Magento\Command\Developer\Console\Structure\DDLTable;
 use N98\Magento\Command\Developer\Console\Structure\DDLTableColumn;
-use N98\Util\Console\Helper\TwigHelper;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -90,7 +89,7 @@ class MakeTableCommand extends AbstractGeneratorCommand
             $question = new ConfirmationQuestion('<question>Add a new column? [y/n]</question>:');
         } while ($questionHelper->ask($input, $output, $question));
 
-        $table->setColumnDefinitions($columns);
+        $table->setColumns($columns);
     }
 
     /**
@@ -106,11 +105,7 @@ class MakeTableCommand extends AbstractGeneratorCommand
         
         $this->askForColumnName($input, $output, $questionHelper, $column);
         $this->askForColumnType($input, $output, $questionHelper, $column);
-
-        if (empty($this->identityColumn)) {
-            $this->askForIdentityColumn($input, $output, $questionHelper, $column);
-        }
-
+        $this->askForIdentityColumn($input, $output, $questionHelper, $column);
         $this->askForColumnSize($input, $output, $questionHelper, $column);
         $this->askForColumnIsNullable($input, $output, $questionHelper, $column);
         $this->askForColumnIsUnsigned($input, $output, $questionHelper, $column);
@@ -125,10 +120,13 @@ class MakeTableCommand extends AbstractGeneratorCommand
     /**
      * @param InputInterface $input
      * @param OutputInterface $output
-     * @return string
+     * @param QuestionHelper $questionHelper
+     * @param DDLTableColumn $column
+     * @return void
      */
-    private function askForColumnName(InputInterface $input, OutputInterface $output, QuestionHelper $questionHelper)
-    {
+    private function askForColumnName(
+        InputInterface $input, OutputInterface $output, QuestionHelper $questionHelper, DDLTableColumn $column
+    ) {
         $columnNameQuestion = new Question('<question>Column name:</question>');
         $columnNameQuestion->setValidator(function ($answer) {
             if (empty($answer)) {
@@ -138,28 +136,31 @@ class MakeTableCommand extends AbstractGeneratorCommand
             return $answer;
         });
 
-        return $questionHelper->ask($input, $output, $columnNameQuestion);
+        $column->setName($questionHelper->ask($input, $output, $columnNameQuestion));
     }
 
     /**
      * @param InputInterface $input
      * @param OutputInterface $output
      * @param QuestionHelper $questionHelper
-     * @param DDLTableColumn $data
-     * @TODO refactor
-     * @return string
+     * @param DDLTableColumn $column
+     * @return void
      */
     private function askForIdentityColumn(
-        InputInterface $input, OutputInterface $output, QuestionHelper $questionHelper, DDLTableColumn $data
+        InputInterface $input, OutputInterface $output, QuestionHelper $questionHelper, DDLTableColumn $column
     ) {
+        if (!empty($this->identityColumn) || !$column->isIntType()) { // there can only be one identity column
+            return;
+        }
+
         $columnNameQuestion = new ConfirmationQuestion('<question>Is this your identity column? (y/n)</question>');
 
         if ($questionHelper->ask($input, $output, $columnNameQuestion)) {
-            $this->identityColumn = $data['name'];
-            $data['type'] = Table::TYPE_INTEGER;
-            $data['unsigned'] = true;
-            $data['default'] = null;
-            $data['primary'] = true;
+            $this->identityColumn = $column->getName();
+            $column->setUnsigned(true);
+            $column->setPrimary(true);
+            $column->setNullable(false);
+            $column->setIdentity(true);
         }
     }
 
@@ -190,6 +191,10 @@ class MakeTableCommand extends AbstractGeneratorCommand
         InputInterface $input, OutputInterface $output, QuestionHelper $questionHelper, DDLTableColumn $column
     ) {
         if (!$column->isIntType()) {
+            return;
+        }
+
+        if ($column->getUnsigned() !== null) {
             return;
         }
 
@@ -252,6 +257,10 @@ class MakeTableCommand extends AbstractGeneratorCommand
     private function askForColumnIsNullable(
         InputInterface $input, OutputInterface $output, QuestionHelper $questionHelper, DDLTableColumn $column
     ) {
+        if ($column->isNullable() !== null) {
+            return;
+        }
+
         $columnTypeQuestion = new ConfirmationQuestion(
             '<question>Is column nullable:</question><info>(default yes)</info>'
         );
@@ -269,6 +278,10 @@ class MakeTableCommand extends AbstractGeneratorCommand
     private function askForColumnDefault(
         InputInterface $input, OutputInterface $output, QuestionHelper $questionHelper, DDLTableColumn $column
     ) {
+        if ($column->getIdentity()) {
+            return;
+        }
+
         $question = new Question('<question>Column default value:</question>');
         $question->setValidator(function ($answer) use ($column) {
 

@@ -71,7 +71,7 @@ class DDLTable
     /**
      * @return array|DDLTableColumn[]
      */
-    public function getColumnDefinitions()
+    public function getColumns()
     {
         return $this->columnDefinitions;
     }
@@ -79,7 +79,7 @@ class DDLTable
     /**
      * @param array|DDLTableColumn[] $columnDefinitions
      */
-    public function setColumnDefinitions($columnDefinitions)
+    public function setColumns($columnDefinitions)
     {
         $this->columnDefinitions = $columnDefinitions;
     }

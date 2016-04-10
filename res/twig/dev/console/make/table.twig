@@ -1,17 +1,8 @@
+{% import "dev/console/make/_table_macros.twig" as table_macros %}
 $table = $installer->getConnection()->newTable(
     $installer->getTable('{{ table.name }}')
 )
-{% for column in columns %}
-->addColumn(
-    '{{ column.name }}',
-    \Magento\Framework\DB\Ddl\Table::TYPE_INTEGER,
-    null,
-    [
-    {% for key, value in column %}
-        {% include 'dev/console/make/_column.twig' %}
-    {% endfor %}
-    ],
-    '{{ column.comment }}'
-)
-{% endfor %}
+{% for column in table.columns %}
+    {{- table_macros.render_column(column) }}
+{%- endfor -%}
 ->setComment('{{ table.comment }}');
