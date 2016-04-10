@@ -4,6 +4,8 @@ RECENT CHANGES
 1.1.7
 -----
 
+* Upd: Stabilize composer ^1.0.0 (by TK)
+
 1.1.6
 -----
 
