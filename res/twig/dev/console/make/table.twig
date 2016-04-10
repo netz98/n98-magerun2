@@ -1,0 +1,12 @@
+$table = $installer->getConnection()->newTable(
+    $installer->getTable('{{ tableName }}')
+)
+{% for column in columns %}
+)->addColumn(
+    '{{ column.name }}',
+    \Magento\Framework\DB\Ddl\Table::TYPE_INTEGER,
+    null,
+    ['identity' => true, 'unsigned' => true, 'nullable' => false, 'primary' => true],
+    '{{ column.comment }}'
+)
+{% endfor %}
