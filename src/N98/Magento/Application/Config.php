@@ -6,6 +6,7 @@
 namespace N98\Magento\Application;
 
 use Composer\Autoload\ClassLoader;
+use InvalidArgumentException;
 use N98\Magento\Application;
 use N98\Util\ArrayFunctions;
 use N98\Util\BinaryString;
@@ -58,6 +59,7 @@ class Config
 
     /**
      * Config constructor.
+     *
      * @param array $initConfig
      * @param bool $isPharMode
      * @param OutputInterface $output [optional]
@@ -130,18 +132,39 @@ class Config
     public function registerCustomCommands(Application $application)
     {
         foreach ($this->getArray(array('commands', 'customCommands')) as $commandClass) {
-            if (is_array($commandClass)) { // Support for key => value (name -> class)
-                $resolvedCommandClass = current($commandClass);
-                /** @var Command $command */
-                $command = new $resolvedCommandClass();
-                $command->setName(key($commandClass));
-            } else {
-                /** @var Command $command */
-                $command = new $commandClass();
+            $commandName = null;
+            if (is_array($commandClass)) {
+                // Support for key => value (name -> class)
+                $commandName = key($commandClass);
+                $commandClass = current($commandClass);
             }
+            $command = $this->newCommand($commandClass, $commandName);
             $this->debugWriteln(sprintf('<debug>Add command </debug><comment>%s</comment>', get_class($command)));
             $application->add($command);
         }
+    }
+
+    /**
+     * @param string $className
+     * @param string|null $commandName
+     * @return Command
+     * @throws InvalidArgumentException
+     */
+    private function newCommand($className, $commandName)
+    {
+        /** @var Command $command */
+        if (!(is_string($className) || is_object($className))) {
+            throw new InvalidArgumentException(
+                sprintf('Command classname must be string, %s given', gettype($className))
+            );
+        }
+
+        $command = new $className();
+        if (null !== $commandName) {
+            $command->setName($commandName);
+        }
+
+        return $command;
     }
 
     /**
@@ -217,6 +240,7 @@ class Config
 
     /**
      * Get names of sub-folders to be scanned during Magento detection
+     *
      * @return array
      */
     public function getDetectSubFolders()
@@ -268,6 +292,7 @@ class Config
         if (null === $result) {
             return $default;
         }
+
         return $result;
     }
 
@@ -283,6 +308,7 @@ class Config
                 return null;
             }
         }
+
         return $anchor;
     }
 }
