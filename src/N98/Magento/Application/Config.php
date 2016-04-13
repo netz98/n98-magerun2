@@ -11,6 +11,7 @@ use N98\Magento\Application;
 use N98\Util\ArrayFunctions;
 use N98\Util\BinaryString;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Formatter\OutputFormatter;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\NullOutput;
@@ -180,7 +181,7 @@ class Config
      */
     public function registerCustomAutoloaders(ClassLoader $autoloader)
     {
-        $mask = '<debug>Registered %s autoloader </debug> <info>%s </info>-> <comment>%s</comment>';
+        $mask = '<debug>Registered %s autoloader </debug> <info>%s</info> -> <comment>%s</comment>';
 
         foreach ($this->getArray('autoloaders') as $prefix => $path) {
             $autoloader->add($prefix, $path);
@@ -189,7 +190,7 @@ class Config
 
         foreach ($this->getArray('autoloaders_psr4') as $prefix => $path) {
             $autoloader->addPsr4($prefix, $path);
-            $this->debugWriteln(sprintf($mask, 'PSR-4', $prefix, $path));
+            $this->debugWriteln(sprintf($mask, 'PSR-4', OutputFormatter::escape($prefix), $path));
         }
     }
 
