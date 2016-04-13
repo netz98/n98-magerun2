@@ -174,7 +174,7 @@ class Config
      */
     public function registerCustomAutoloaders(ClassLoader $autoloader)
     {
-        $mask = '<debug>Registered %s autoloader </debug> <info>%s</info> -> <comment>%s</comment>';
+        $mask = '<debug>Registered %s autoloader </debug> <info>%s </info>-> <comment>%s</comment>';
 
         foreach ($this->getArray('autoloaders') as $prefix => $path) {
             $autoloader->add($prefix, $path);
