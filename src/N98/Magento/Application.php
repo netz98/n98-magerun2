@@ -272,14 +272,16 @@ class Application extends BaseApplication
             $coreCliApplicationCommands = $coreCliApplication->all();
 
             foreach ($coreCliApplicationCommands as $coreCliApplicationCommand) {
-                $this->add($coreCliApplicationCommand);
-
                 if (OutputInterface::VERBOSITY_DEBUG <= $output->getVerbosity()) {
                     $output->writeln(
-                        '<debug>Added core command </debug><comment>'
-                        . get_class($coreCliApplicationCommand) . '</comment>'
+                        sprintf(
+                            '<debug>Add core command </debug> <info>%s</info> -> <comment>%s</comment>',
+                            $coreCliApplicationCommand->getName(),
+                            get_class($coreCliApplicationCommand)
+                        )
                     );
                 }
+                $this->add($coreCliApplicationCommand);
             }
         }
     }

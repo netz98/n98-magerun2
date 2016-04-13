@@ -139,7 +139,13 @@ class Config
                 $commandClass = current($commandClass);
             }
             $command = $this->newCommand($commandClass, $commandName);
-            $this->debugWriteln(sprintf('<debug>Add command </debug><comment>%s</comment>', get_class($command)));
+            $this->debugWriteln(
+                sprintf(
+                    '<debug>Add command </debug> <info>%s</info> -> <comment>%s</comment>',
+                    $command->getName(),
+                    get_class($command)
+                )
+            );
             $application->add($command);
         }
     }
