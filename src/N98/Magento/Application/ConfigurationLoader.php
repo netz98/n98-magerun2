@@ -20,6 +20,7 @@ use Symfony\Component\Yaml\Yaml;
  * The toArray method only works if the Magento folder specific configuration is already loaded.
  *
  * Class ConfigurationLoader
+ *
  * @package N98\Magento\Command
  */
 class ConfigurationLoader
@@ -192,6 +193,7 @@ class ConfigurationLoader
         }
 
         $config = ArrayFunctions::mergeArrays($config, $this->_systemConfig);
+
         return $config;
     }
 
@@ -356,6 +358,7 @@ class ConfigurationLoader
 
             if ($path === false) {
                 $this->log(sprintf("<error>Plugin config file broken link '%s'</error>", $file));
+
                 return;
             }
         }
