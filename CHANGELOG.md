@@ -4,6 +4,7 @@ RECENT CHANGES
 1.1.7
 -----
 
+* Add zsh auto-completion (by Sam Tay)
 * Upd: Stabilize composer ^1.0.0 (by TK)
 
 1.1.6
