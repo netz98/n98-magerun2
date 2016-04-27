@@ -54,7 +54,7 @@ HELP;
 
         $model = $this->getObjectManager()->get($jobConfig['instance']);
 
-        if (!$model || !method_exists($model, $jobConfig['method'])) {
+        if (!$model || !is_callable(array($model, $jobConfig['method']))) {
             throw new \RuntimeException(
                 sprintf(
                     'Invalid callback: %s::%s does not exist',
