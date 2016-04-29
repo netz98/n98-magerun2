@@ -11,31 +11,34 @@ class RewriteHtaccessFile extends AbstractSubCommand
      */
     public function execute()
     {
-        if ($this->input->getOption('useDefaultConfigParams') == null
-            || $this->input->getOption('replaceHtaccessFile') != null
+        if ($this->input->getOption('useDefaultConfigParams') !== null
+            || $this->input->getOption('replaceHtaccessFile') === null
         ) {
-            $this->getCommand()->getApplication()->setAutoExit(false);
-            $dialog = $this->getCommand()->getHelper('dialog');
-
-            $args = $this->config->getArray('installation_args');
-
-            $replaceHtaccessFile = false;
-
-            if ($this->getCommand()->parseBoolOption($this->input->getOption('replaceHtaccessFile'))) {
-                $replaceHtaccessFile = true;
-            } elseif ($dialog->askConfirmation(
-                $this->output,
-                '<question>Write BaseURL to .htaccess file?</question> <comment>[n]</comment>: ',
-                false
-            )
-            ) {
-                $replaceHtaccessFile = true;
-            }
-
-            if ($replaceHtaccessFile) {
-                $this->replaceHtaccessFile($args['base-url']);
-            }
+            return;
         }
+
+        $this->getCommand()->getApplication()->setAutoExit(false);
+        $dialog = $this->getCommand()->getHelper('dialog');
+
+        $replaceHtaccessFile = false;
+
+        if ($this->getCommand()->parseBoolOption($this->input->getOption('replaceHtaccessFile'))) {
+            $replaceHtaccessFile = true;
+        } elseif ($dialog->askConfirmation(
+            $this->output,
+            '<question>Write BaseURL to .htaccess file?</question> <comment>[n]</comment>: ',
+            false
+        )
+        ) {
+            $replaceHtaccessFile = true;
+        }
+
+        if (!$replaceHtaccessFile) {
+            return;
+        }
+
+        $args = $this->config->getArray('installation_args');
+        $this->replaceHtaccessFile($args['base-url']);
     }
 
     /**
