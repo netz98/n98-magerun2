@@ -18,7 +18,7 @@ class InstallMagento extends AbstractSubCommand
     protected $notEmptyCallback;
 
     /**
-     * @return bool
+     * @return void
      * @throws \Exception
      */
     public function execute()
@@ -215,8 +215,6 @@ class InstallMagento extends AbstractSubCommand
 
         $this->output->writeln('<info>Start installation process.</info>');
         $this->_runInstaller($installArgs);
-
-        return true;
     }
 
     /**

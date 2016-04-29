@@ -82,7 +82,7 @@ abstract class AbstractSubCommand implements SubCommandInterface
     }
 
     /**
-     * @return bool
+     * @return void
      */
     abstract public function execute();
 }

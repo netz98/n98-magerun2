@@ -9,7 +9,7 @@ class PreCheckPhp extends AbstractSubCommand
     /**
      * Check PHP environment against minimal required settings modules
      *
-     * @return bool
+     * @return void
      */
     public function execute()
     {

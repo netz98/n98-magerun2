@@ -39,7 +39,7 @@ interface SubCommandInterface
     public function setCommand(AbstractMagentoCommand $command);
 
     /**
-     * @return bool
+     * @return void
      */
     public function execute();
 }

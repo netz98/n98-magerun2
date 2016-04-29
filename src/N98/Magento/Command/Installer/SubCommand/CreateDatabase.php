@@ -20,7 +20,7 @@ class CreateDatabase extends AbstractSubCommand
     protected $notEmptyCallback;
 
     /**
-     * @return bool
+     * @return void
      */
     public function execute()
     {

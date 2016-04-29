@@ -8,7 +8,7 @@ use Symfony\Component\Finder\Finder;
 class SetDirectoryPermissions extends AbstractSubCommand
 {
     /**
-     * @return bool
+     * @return void
      */
     public function execute()
     {

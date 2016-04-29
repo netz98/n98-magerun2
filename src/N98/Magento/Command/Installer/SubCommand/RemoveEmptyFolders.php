@@ -9,7 +9,7 @@ use Symfony\Component\Finder\Finder;
 class RemoveEmptyFolders extends AbstractSubCommand
 {
     /**
-     * @return bool
+     * @return void
      */
     public function execute()
     {

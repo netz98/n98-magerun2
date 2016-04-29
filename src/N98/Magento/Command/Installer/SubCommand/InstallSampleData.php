@@ -9,12 +9,12 @@ use Symfony\Component\Process\ProcessBuilder;
 class InstallSampleData extends AbstractSubCommand
 {
     /**
-     * @return bool
+     * @return void
      */
     public function execute()
     {
         if ($this->input->getOption('noDownload')) {
-            return false;
+            return;
         }
 
         $installationFolder = $this->config->getString('installationFolder');

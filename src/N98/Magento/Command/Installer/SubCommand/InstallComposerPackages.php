@@ -11,7 +11,7 @@ class InstallComposerPackages extends AbstractSubCommand
     /**
      * Check PHP environment agains minimal required settings modules
      *
-     * @return bool
+     * @return void
      *
      * @throws \Exception
      */
@@ -31,7 +31,5 @@ class InstallComposerPackages extends AbstractSubCommand
         $process->wait(function ($type, $buffer) {
             $this->output->write('composer > ' . $buffer, false);
         });
-
-        return true;
     }
 }

@@ -8,7 +8,7 @@ use Symfony\Component\Console\Input\ArrayInput;
 class PostInstallation extends AbstractSubCommand
 {
     /**
-     * @return bool
+     * @return void
      */
     public function execute()
     {

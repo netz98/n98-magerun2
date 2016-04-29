@@ -9,12 +9,12 @@ class SelectMagentoVersion extends AbstractSubCommand
     /**
      * Check PHP environment against minimal required settings modules
      *
-     * @return bool
+     * @return void
      */
     public function execute()
     {
         if ($this->input->getOption('noDownload')) {
-            return false;
+            return;
         }
 
         if (
@@ -62,7 +62,5 @@ class SelectMagentoVersion extends AbstractSubCommand
         }
 
         $this->config['magentoVersionData'] = $this->commandConfig['magento-packages'][$type - 1];
-
-        return true;
     }
 }

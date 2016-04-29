@@ -10,12 +10,12 @@ use Symfony\Component\Process\ProcessBuilder;
 class DownloadMagento extends AbstractSubCommand
 {
     /**
-     * @return bool
+     * @return void
      */
     public function execute()
     {
         if ($this->input->getOption('noDownload')) {
-            return false;
+            return;
         }
 
         try {
@@ -26,7 +26,7 @@ class DownloadMagento extends AbstractSubCommand
 
             if (file_exists($this->config->getString('installationFolder') . DIRECTORY_SEPARATOR . 'app/etc/env.php')) {
                 $this->output->writeln('<error>A magento installation already exists in this folder </error>');
-                return false;
+                return;
             }
 
             $args = [
@@ -66,10 +66,7 @@ class DownloadMagento extends AbstractSubCommand
             });
         } catch (\Exception $e) {
             $this->output->writeln('<error>' . $e->getMessage() . '</error>');
-            return false;
         }
-
-        return true;
     }
 
     /**
