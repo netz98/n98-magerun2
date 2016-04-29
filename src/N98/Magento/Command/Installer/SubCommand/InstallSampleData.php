@@ -20,18 +20,9 @@ class InstallSampleData extends AbstractSubCommand
         $installationFolder = $this->config->getString('installationFolder');
         chdir($installationFolder);
 
-        $dialog = $this->getCommand()->getHelper('dialog');
+        $flag = $this->getOptionalBooleanOption('installSampleData', 'Install sample data?');
 
-        if ($this->input->getOption('installSampleData') !== null) {
-            $installSampleData = $this->getCommand()->parseBoolOption($this->input->getOption('installSampleData'));
-        } else {
-            $installSampleData = $dialog->askConfirmation(
-                $this->output,
-                '<question>Install sample data?</question> <comment>[y]</comment>: '
-            );
-        }
-
-        if ($installSampleData) {
+        if ($flag) {
             $this->runSampleDataInstaller();
         }
     }
