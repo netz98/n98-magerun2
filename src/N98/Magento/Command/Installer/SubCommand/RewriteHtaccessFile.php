@@ -11,46 +11,37 @@ class RewriteHtaccessFile extends AbstractSubCommand
      */
     public function execute()
     {
-        if ($this->input->getOption('useDefaultConfigParams') !== null
+        if (
+            $this->input->getOption('useDefaultConfigParams') !== null
             || $this->input->getOption('replaceHtaccessFile') === null
         ) {
             return;
         }
 
         $this->getCommand()->getApplication()->setAutoExit(false);
+
         $dialog = $this->getCommand()->getHelper('dialog');
 
-        $replaceHtaccessFile = false;
-
-        if ($this->input->hasOption('replaceHtaccessFile')) {
+        if ($this->input->getOption('replaceHtaccessFile') !== null) {
             $replaceHtaccessFile = $this->getCommand()->parseBoolOption($this->input->getOption('replaceHtaccessFile'));
-        } elseif ($dialog->askConfirmation(
-            $this->output,
-            '<question>Write BaseURL to .htaccess file?</question> <comment>[n]</comment>: ',
-            false
-        )
-        ) {
-            $replaceHtaccessFile = true;
+        } else {
+            $replaceHtaccessFile = $dialog->askConfirmation(
+                $this->output,
+                '<question>Write BaseURL to .htaccess file?</question> <comment>[n]</comment>: ',
+                false
+            );
         }
 
-        if (!$replaceHtaccessFile) {
-            return;
+        if ($replaceHtaccessFile) {
+            $this->replaceHtaccessFile();
         }
-
-        $args = $this->config->getArray('installation_args');
-        $this->replaceHtaccessFile($args['base-url']);
     }
 
-    /**
-     * @param string $baseUrl
-     */
-    protected function replaceHtaccessFile($baseUrl)
+    protected function replaceHtaccessFile()
     {
-        $htaccessFile = $this->config->getString('installationFolder')
-                      . DIRECTORY_SEPARATOR
-                      . 'pub'
-                      . DIRECTORY_SEPARATOR
-                      . '.htaccess';
+        $installationArgs = $this->config->getArray('installation_args');
+        $baseUrl = $installationArgs['base-url'];
+        $htaccessFile = $this->config->getString('installationFolder') . '/pub/.htaccess';
 
         $this->_backupOriginalFile($htaccessFile);
         $this->_replaceContent($htaccessFile, $baseUrl);
