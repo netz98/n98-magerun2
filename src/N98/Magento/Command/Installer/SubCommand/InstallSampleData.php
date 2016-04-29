@@ -38,12 +38,19 @@ class InstallSampleData extends AbstractSubCommand
 
     protected function runSampleDataInstaller()
     {
-        $installationArgs = $this->config->getArray('installation_args');
+        $this->runMagentoCommand('sampledata:deploy');
+        $this->runMagentoCommand('setup:upgrade');
+    }
 
+    /**
+     * @return void
+     */
+    private function runMagentoCommand($command)
+    {
         $processBuilder = new ProcessBuilder([
             'php',
             'bin/magento',
-            'sampledata:deploy',
+            $command,
         ]);
 
         if (!OperatingSystem::isWindows()) {
@@ -54,27 +61,7 @@ class InstallSampleData extends AbstractSubCommand
         $process->setTimeout(86400);
         $process->start();
         $process->wait(function ($type, $buffer) {
-            $this->output->write($buffer, false);
-        });
-
-
-        // @TODO Refactor code duplication
-        if (!OperatingSystem::isWindows()) {
-            $processBuilder->setPrefix('/usr/bin/env');
-        }
-
-        $processBuilder = new ProcessBuilder(
-            array(
-                'php',
-                'bin/magento',
-                'setup:upgrade'
-            )
-        );
-        $process = $processBuilder->getProcess();
-        $process->setTimeout(86400);
-        $process->start();
-        $process->wait(function ($type, $buffer) {
-            $this->output->write($buffer, false);
+            $this->output->write('bin/magento > ' . $buffer, false);
         });
     }
 }
