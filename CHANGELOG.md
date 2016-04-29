@@ -4,6 +4,7 @@ RECENT CHANGES
 1.1.7
 -----
 
+* Check for optional replaceHtaccessFile parameter (reported by Matthias Zeis; by TK)
 * Add zsh auto-completion (by Sam Tay)
 * Upd: Stabilize composer ^1.0.0 (by TK)
 

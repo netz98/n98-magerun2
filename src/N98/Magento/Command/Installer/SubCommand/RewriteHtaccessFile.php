@@ -22,8 +22,8 @@ class RewriteHtaccessFile extends AbstractSubCommand
 
         $replaceHtaccessFile = false;
 
-        if ($this->getCommand()->parseBoolOption($this->input->getOption('replaceHtaccessFile'))) {
-            $replaceHtaccessFile = true;
+        if ($this->input->hasOption('replaceHtaccessFile')) {
+            $replaceHtaccessFile = $this->getCommand()->parseBoolOption($this->input->getOption('replaceHtaccessFile'));
         } elseif ($dialog->askConfirmation(
             $this->output,
             '<question>Write BaseURL to .htaccess file?</question> <comment>[n]</comment>: ',
