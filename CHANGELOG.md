@@ -4,10 +4,11 @@ RECENT CHANGES
 1.1.7
 -----
 
-* Check for optional replaceHtaccessFile parameter (reported by Matthias Zeis; by TK)
-* Add zsh auto-completion (by Sam Tay)
-* Feature: Install command: magento-ce-2.0.5 version (by Raul E Watson)
-* Upd: Stabilize composer ^1.0.0 (by TK)
+* Fix: Check for optional replace-htaccess-file parameter (reported by Matthias Zeis, by TK, #191)
+* Fix: Add trailing namespace prefix slash (by Phillip Jackson, #190)
+* Update: Stabilize composer ^1.0.0 (by TK)
+* Feature: Add zsh auto-completion (by Sam Tay, #189)
+* Feature: Install command: magento-ce-2.0.5 version (by Raul E Watson, #193)
 
 1.1.6
 -----
