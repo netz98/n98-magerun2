@@ -6,6 +6,7 @@ RECENT CHANGES
 
 * Check for optional replaceHtaccessFile parameter (reported by Matthias Zeis; by TK)
 * Add zsh auto-completion (by Sam Tay)
+* Feature: Install command: magento-ce-2.0.5 version (by Raul E Watson)
 * Upd: Stabilize composer ^1.0.0 (by TK)
 
 1.1.6
