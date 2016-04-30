@@ -131,6 +131,6 @@ class ConfigLocator
             $basename = ".$basename";
         }
 
-        return $homeDirectory . DIRECTORY_SEPARATOR . $basename;
+        return $homeDirectory . '/' . $basename;
     }
 }

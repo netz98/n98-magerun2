@@ -223,7 +223,7 @@ class InstallMagento extends AbstractSubCommand
      */
     protected function getInstallScriptPath()
     {
-        $installerScript = $this->config->getString('installationFolder') . DIRECTORY_SEPARATOR . 'bin/magento';
+        $installerScript = $this->config->getString('installationFolder') . '/bin/magento';
         if (!file_exists($installerScript)) {
             throw new \RuntimeException('Installation script was not found.', 1);
         }
@@ -239,9 +239,7 @@ class InstallMagento extends AbstractSubCommand
         /**
          * Try to create session folder
          */
-        $defaultSessionFolder = $this->config->getString('installationFolder')
-            . DIRECTORY_SEPARATOR
-            . 'var/session';
+        $defaultSessionFolder = $this->config->getString('installationFolder') . '/var/session';
         if ($sessionSave == 'files' && !is_dir($defaultSessionFolder)) {
             @mkdir($defaultSessionFolder);
         }

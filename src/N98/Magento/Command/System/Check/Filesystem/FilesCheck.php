@@ -33,7 +33,7 @@ class FilesCheck implements SimpleCheck, CommandAware, CommandConfigAware
         foreach ($files as $file => $comment) {
             $result = $results->createResult();
 
-            if (file_exists($magentoRoot . DIRECTORY_SEPARATOR . $file)) {
+            if (file_exists($magentoRoot . '/' . $file)) {
                 $result->setStatus(Result::STATUS_OK);
                 $result->setMessage("<info>File <comment>" . $file . "</comment> found.</info>");
             } else {

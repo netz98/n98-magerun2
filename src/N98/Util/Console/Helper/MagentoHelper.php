@@ -177,9 +177,9 @@ class MagentoHelper extends AbstractHelper
     {
         $folders = array();
 
-        $folderParts = explode(DIRECTORY_SEPARATOR, $folder);
+        $folderParts = explode('/', $folder);
         foreach ($folderParts as $key => $part) {
-            $explodedFolder = implode(DIRECTORY_SEPARATOR, array_slice($folderParts, 0, $key + 1));
+            $explodedFolder = implode('/', array_slice($folderParts, 0, $key + 1));
             if ($explodedFolder !== '') {
                 $folders[] = $explodedFolder;
             }
@@ -219,7 +219,7 @@ class MagentoHelper extends AbstractHelper
 
             $count = $finder->count();
             if ($count > 0) {
-                $baseFolderContent = trim(file_get_contents($searchFolder . DIRECTORY_SEPARATOR . '.basedir'));
+                $baseFolderContent = trim(file_get_contents($searchFolder . '/.basedir'));
                 if (OutputInterface::VERBOSITY_DEBUG <= $this->output->getVerbosity()) {
                     $this->output->writeln(
                         '<debug>Found modman .basedir file with content <info>' . $baseFolderContent . '</info></debug>'
@@ -268,7 +268,7 @@ class MagentoHelper extends AbstractHelper
             if ($count > 0) {
                 $this->_magerunStopFileFound  = true;
                 $this->_magerunStopFileFolder = $searchFolder;
-                $magerunFilePath              = $searchFolder . DIRECTORY_SEPARATOR . $stopFile;
+                $magerunFilePath              = $searchFolder . '/' . $stopFile;
                 $magerunFileContent           = trim(file_get_contents($magerunFilePath));
                 if (OutputInterface::VERBOSITY_DEBUG <= $this->output->getVerbosity()) {
                     $message = sprintf(
@@ -279,7 +279,7 @@ class MagentoHelper extends AbstractHelper
                     $this->output->writeln($message);
                 }
 
-                array_push($folders, $searchFolder . DIRECTORY_SEPARATOR . $magerunFileContent);
+                array_push($folders, $searchFolder . '/' . $magerunFileContent);
             }
         }
 

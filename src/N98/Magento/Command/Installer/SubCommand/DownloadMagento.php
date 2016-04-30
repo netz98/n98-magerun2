@@ -24,7 +24,7 @@ class DownloadMagento extends AbstractSubCommand
             $package = $this->config['magentoVersionData'];
             $this->config->setArray('magentoPackage', $package);
 
-            if (file_exists($this->config->getString('installationFolder') . DIRECTORY_SEPARATOR . 'app/etc/env.php')) {
+            if (file_exists($this->config->getString('installationFolder') . '/app/etc/env.php')) {
                 $this->output->writeln('<error>A magento installation already exists in this folder </error>');
                 return;
             }
