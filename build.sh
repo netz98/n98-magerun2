@@ -15,11 +15,11 @@ if [ ! -e "composer.phar" ]; then
 fi
 
 if [ ! -d "vendor" ]; then
-    ./composer.phar install
+    ./composer.phar install --no-interaction
 fi
 
 if [ ! -d "build/vendor" ]; then
-    ./composer.phar -d=build install
+    ./composer.phar -d=build install --no-interaction
 fi
 
 ulimit -Sn $(ulimit -Hn)

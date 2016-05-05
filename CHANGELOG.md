@@ -1,6 +1,12 @@
 RECENT CHANGES
 ==============
 
+1.1.9
+-----
+
+* Fix: Build script not stop asking (by Christian Muench)
+* Fix: Bump version to build again (by Tom Klingenberg)
+
 1.1.8
 -----
 
