@@ -1,6 +1,11 @@
 RECENT CHANGES
 ==============
 
+1.1.8
+-----
+
+* Update: Composer to 1.0.3
+
 1.1.7
 -----
 
