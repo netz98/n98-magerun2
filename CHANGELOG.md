@@ -1,6 +1,11 @@
 RECENT CHANGES
 ==============
 
+1.1.10
+------
+
+* Fix: db:console password parameter name (by Federico Rivollier)
+
 1.1.9
 -----
 
