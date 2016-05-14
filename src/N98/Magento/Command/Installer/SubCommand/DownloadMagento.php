@@ -4,6 +4,7 @@ namespace N98\Magento\Command\Installer\SubCommand;
 
 use N98\Magento\Command\SubCommand\AbstractSubCommand;
 use N98\Util\Console\Helper\ComposerHelper;
+use RuntimeException;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Process\ProcessBuilder;
 
@@ -61,11 +62,18 @@ class DownloadMagento extends AbstractSubCommand
 
             $process->setTimeout(86400);
             $process->start();
+            $code =
             $process->wait(function ($type, $buffer) {
                 $this->output->write($buffer, false, OutputInterface::OUTPUT_RAW);
             });
         } catch (\Exception $e) {
             $this->output->writeln('<error>' . $e->getMessage() . '</error>');
+        }
+
+        if (isset($code) && 0 !== $code) {
+            throw new RuntimeException(
+                'Non-zero exit code for composer create-project command: ' . $process->getCommandLine()
+            );
         }
     }
 
