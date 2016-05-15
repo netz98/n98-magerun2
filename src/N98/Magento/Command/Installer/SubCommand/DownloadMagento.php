@@ -6,9 +6,9 @@ use Exception;
 use N98\Magento\Command\SubCommand\AbstractSubCommand;
 use N98\Util\Console\Helper\ComposerHelper;
 use N98\Util\Exec;
+use N98\Util\ProcessArguments;
 use RuntimeException;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Process\ProcessBuilder;
 
 class DownloadMagento extends AbstractSubCommand
 {
@@ -39,31 +39,24 @@ class DownloadMagento extends AbstractSubCommand
             throw new RuntimeException('A magento installation already exists in this folder');
         }
 
-        $args = [
-            $this->config['composer_bin'],
-            'create-project',
-        ];
-
-        // Add composer options
-        foreach ($package['options'] as $optionName => $optionValue) {
-            $args[] = '--' . $optionName . ($optionValue === true ? '' : '=' . $optionValue);
-        }
-
-        // Add arguments
-        $args[] = $package['package'];
-        $args[] = $this->config->getString('installationFolder');
-        $args[] = $package['version'];
+        $args = new ProcessArguments(array($this->config['composer_bin'], 'create-project',));
+        $args
+            // Add composer options
+            ->addArgs($package['options'])
+            // Add arguments
+            ->addArg($package['package'])
+            ->addArg($this->config->getString('installationFolder'))
+            ->addArg($package['version'])
+        ;
 
         if (OutputInterface::VERBOSITY_VERBOSE <= $this->output->getVerbosity()) {
-            $args[] = '-vvv';
+            $args->addArg('-vvv');
         }
 
         /**
          * @TODO use composer helper
          */
-        $processBuilder = new ProcessBuilder($args);
-
-        $process = $processBuilder->getProcess();
+        $process = $args->createBuilder()->getProcess();
         $process->setInput($this->input);
         if (OutputInterface::VERBOSITY_VERBOSE <= $this->output->getVerbosity()) {
             $this->output->writeln($process->getCommandLine());
