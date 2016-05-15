@@ -2,8 +2,10 @@
 
 namespace N98\Magento\Command\Installer\SubCommand;
 
+use Exception;
 use N98\Magento\Command\SubCommand\AbstractSubCommand;
 use N98\Util\Console\Helper\ComposerHelper;
+use N98\Util\Exec;
 use RuntimeException;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Process\ProcessBuilder;
@@ -20,57 +22,60 @@ class DownloadMagento extends AbstractSubCommand
         }
 
         try {
-            $this->checkMagentoConnectCredentials($this->output);
-
-            $package = $this->config['magentoVersionData'];
-            $this->config->setArray('magentoPackage', $package);
-
-            if (file_exists($this->config->getString('installationFolder') . '/app/etc/env.php')) {
-                $this->output->writeln('<error>A magento installation already exists in this folder </error>');
-                return;
-            }
-
-            $args = [
-                $this->config['composer_bin'],
-                'create-project',
-            ];
-
-            // Add composer options
-            foreach ($package['options'] as $optionName => $optionValue) {
-                $args[] = '--' . $optionName . ($optionValue === true ? '' : '=' . $optionValue);
-            }
-
-            // Add arguments
-            $args[] = $package['package'];
-            $args[] = $this->config->getString('installationFolder');
-            $args[] = $package['version'];
-
-            if (OutputInterface::VERBOSITY_VERBOSE <= $this->output->getVerbosity()) {
-                $args[] = '-vvv';
-            }
-
-            /**
-             * @TODO use composer helper
-             */
-            $processBuilder = new ProcessBuilder($args);
-
-            $process = $processBuilder->getProcess();
-            $process->setInput($this->input);
-            if (OutputInterface::VERBOSITY_VERBOSE <= $this->output->getVerbosity()) {
-                $this->output->writeln($process->getCommandLine());
-            }
-
-            $process->setTimeout(86400);
-            $process->start();
-            $code =
-            $process->wait(function ($type, $buffer) {
-                $this->output->write($buffer, false, OutputInterface::OUTPUT_RAW);
-            });
-        } catch (\Exception $e) {
+            $this->implementation();
+        } catch (Exception $e) {
             $this->output->writeln('<error>' . $e->getMessage() . '</error>');
         }
+    }
 
-        if (isset($code) && 0 !== $code) {
+    private function implementation()
+    {
+        $this->checkMagentoConnectCredentials($this->output);
+
+        $package = $this->config['magentoVersionData'];
+        $this->config->setArray('magentoPackage', $package);
+
+        if (file_exists($this->config->getString('installationFolder') . '/app/etc/env.php')) {
+            throw new RuntimeException('A magento installation already exists in this folder');
+        }
+
+        $args = [
+            $this->config['composer_bin'],
+            'create-project',
+        ];
+
+        // Add composer options
+        foreach ($package['options'] as $optionName => $optionValue) {
+            $args[] = '--' . $optionName . ($optionValue === true ? '' : '=' . $optionValue);
+        }
+
+        // Add arguments
+        $args[] = $package['package'];
+        $args[] = $this->config->getString('installationFolder');
+        $args[] = $package['version'];
+
+        if (OutputInterface::VERBOSITY_VERBOSE <= $this->output->getVerbosity()) {
+            $args[] = '-vvv';
+        }
+
+        /**
+         * @TODO use composer helper
+         */
+        $processBuilder = new ProcessBuilder($args);
+
+        $process = $processBuilder->getProcess();
+        $process->setInput($this->input);
+        if (OutputInterface::VERBOSITY_VERBOSE <= $this->output->getVerbosity()) {
+            $this->output->writeln($process->getCommandLine());
+        }
+
+        $process->setTimeout(86400);
+        $process->start();
+        $code = $process->wait(function ($type, $buffer) {
+            $this->output->write($buffer, false, OutputInterface::OUTPUT_RAW);
+        });
+
+        if (Exec::CODE_CLEAN_EXIT !== $code) {
             throw new RuntimeException(
                 'Non-zero exit code for composer create-project command: ' . $process->getCommandLine()
             );
@@ -144,7 +149,7 @@ class DownloadMagento extends AbstractSubCommand
                 '<comment>Please enter your public key: </comment>',
                 function ($value) {
                     if ('' === trim($value)) {
-                        throw new \Exception('The private key (auth token) can not be empty');
+                        throw new Exception('The private key (auth token) can not be empty');
                     }
 
                     return $value;
@@ -159,7 +164,7 @@ class DownloadMagento extends AbstractSubCommand
                 '<comment>Please enter your private key: </comment>',
                 function ($value) {
                     if ('' === trim($value)) {
-                        throw new \Exception('The private key (auth token) can not be empty');
+                        throw new Exception('The private key (auth token) can not be empty');
                     }
 
                     return $value;
