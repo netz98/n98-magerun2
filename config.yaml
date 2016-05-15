@@ -205,6 +205,8 @@ commands:
             - xsl
             - openssl
             - intl
+            - mbstring
+            - zip
 
       defaults:
         currency: EUR

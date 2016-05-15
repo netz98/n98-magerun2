@@ -4,6 +4,8 @@ RECENT CHANGES
 1.1.11
 ------
 
+* Fix: Install command missing PHP extension checks of mbstring and zip (by Tom KLingenberg)
+
 1.1.10
 ------
 
