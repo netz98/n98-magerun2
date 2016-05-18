@@ -4,6 +4,7 @@ namespace N98\Magento\Command\Database;
 
 use N98\Magento\Command\AbstractMagentoCommand;
 use N98\Magento\Command\Database\Compressor;
+use N98\Magento\Command\Database\Compressor\AbstractCompressor;
 use N98\Util\Console\Helper\DatabaseHelper;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -25,7 +26,7 @@ abstract class AbstractDatabaseCommand extends AbstractMagentoCommand
      */
     protected function detectDbSettings(OutputInterface $output)
     {
-        $database = $this->getHelper('database'); /* @var $database DatabaseHelper */
+        $database = $this->getDatabaseHelper();
         $database->detectDbSettings($output);
         $this->isSocketConnect = $database->getIsSocketConnect();
         $this->dbSettings = $database->getDbSettings();
@@ -39,10 +40,9 @@ abstract class AbstractDatabaseCommand extends AbstractMagentoCommand
     public function __get($name)
     {
         if ($name == '_connection') {
-            return $this->getHelper('database')->getConnection();
+            return $this->getDatabaseHelper()->getConnection();
         }
     }
-
 
     /**
      * Generate help for compression
@@ -63,22 +63,12 @@ abstract class AbstractDatabaseCommand extends AbstractMagentoCommand
 
     /**
      * @param string $type
-     * @return Compressor\AbstractCompressor
-     * @throws \InvalidArgumentException
+     * @return AbstractCompressor
+     * @deprecated Since 1.1.12; use AbstractCompressor::create() instead
      */
     protected function getCompressor($type)
     {
-        switch ($type) {
-            case null:
-                return new Compressor\Uncompressed;
-
-            case 'gz':
-            case 'gzip':
-                return new Compressor\Gzip;
-
-            default:
-                throw new \InvalidArgumentException("Compression type '{$type}' is not supported.");
-        }
+        return AbstractCompressor::create($type);
     }
 
     /**
@@ -88,7 +78,7 @@ abstract class AbstractDatabaseCommand extends AbstractMagentoCommand
      */
     protected function getMysqlClientToolConnectionString()
     {
-        return $this->getHelper('database')->getMysqlClientToolConnectionString();
+        return $this->getDatabaseHelper()->getMysqlClientToolConnectionString();
     }
 
     /**
@@ -101,7 +91,7 @@ abstract class AbstractDatabaseCommand extends AbstractMagentoCommand
      */
     protected function _dsn()
     {
-        return $this->getHelper('database')->dsn();
+        return $this->getDatabaseHelper()->dsn();
     }
 
     /**
@@ -117,6 +107,14 @@ abstract class AbstractDatabaseCommand extends AbstractMagentoCommand
      */
     protected function resolveTables(array $excludes, array $definitions, array $resolved = array())
     {
-        return $this->getHelper('database')->resolveTables($excludes, $definitions, $resolved);
+        return $this->getDatabaseHelper()->resolveTables($excludes, $definitions, $resolved);
+    }
+
+    /**
+     * @return DatabaseHelper
+     */
+    protected function getDatabaseHelper()
+    {
+        return $this->getHelper('database');
     }
 }
