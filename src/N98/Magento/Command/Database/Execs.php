@@ -36,10 +36,12 @@ class Execs
 
     /**
      * Execs constructor.
+     *
+     * @param string $command [optional]
      */
     public function __construct($command = null)
     {
-        $this->options = (array)$command;
+        $this->options = (array) $command;
     }
 
     /**
@@ -116,7 +118,7 @@ class Execs
      */
     public function getCommands()
     {
-        if (!$this->execs) {
+        if (empty($this->execs)) {
             return [$this->getBaseCommand()];
         }
 

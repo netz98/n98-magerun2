@@ -2,6 +2,7 @@
 
 namespace N98\Magento\Command\Installer\SubCommand;
 
+use Exception;
 use N98\Magento\Command\SubCommand\AbstractSubCommand;
 use N98\Util\OperatingSystem;
 
@@ -19,7 +20,7 @@ class InstallMagento extends AbstractSubCommand
 
     /**
      * @return void
-     * @throws \Exception
+     * @throws Exception
      */
     public function execute()
     {
@@ -219,7 +220,7 @@ class InstallMagento extends AbstractSubCommand
 
     /**
      * @return string
-     * @throws \Exception
+     * @throws Exception
      */
     protected function getInstallScriptPath()
     {
@@ -262,9 +263,9 @@ class InstallMagento extends AbstractSubCommand
     }
 
     /**
-     * @param array $installArgs
+     * @param string $installArgs
      *
-     * @throws \Exception
+     * @throws Exception
      */
     protected function _runInstaller($installArgs)
     {

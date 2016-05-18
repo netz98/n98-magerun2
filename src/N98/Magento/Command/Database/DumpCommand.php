@@ -278,7 +278,7 @@ HELP;
     }
 
     /**
-     * @param array|Execs $execs
+     * @param Execs $execs
      * @param InputInterface $input
      * @param OutputInterface $output
      */

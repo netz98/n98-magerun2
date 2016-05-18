@@ -2,13 +2,13 @@
 
 namespace N98\Magento\Command;
 
-use N98\Magento\Command\AbstractMagentoCommand;
 use N98\Util\BinaryString;
+use RuntimeException;
 use Symfony\Component\Console\Helper\DialogHelper;
 use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\StringInput;
-use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class ScriptCommand extends AbstractMagentoCommand
@@ -35,8 +35,7 @@ class ScriptCommand extends AbstractMagentoCommand
             ->addArgument('filename', InputArgument::OPTIONAL, 'Script file')
             ->addOption('define', 'd', InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY, 'Defines a variable')
             ->addOption('stop-on-error', null, InputOption::VALUE_NONE, 'Stops execution of script on error')
-            ->setDescription('Runs multiple n98-magerun commands')
-        ;
+            ->setDescription('Runs multiple n98-magerun commands');
 
         $help = <<<HELP
 Example:
@@ -156,42 +155,33 @@ HELP;
      */
     protected function _initDefines(InputInterface $input)
     {
-        $defines = $input->getOption('define');
-        if (is_string($defines)) {
-            $defines = array($defines);
-        }
-        if (count($defines) > 0) {
-            foreach ($defines as $define) {
-                if (!strstr($define, '=')) {
-                    throw new \InvalidArgumentException('Invalid define');
-                }
-                $parts = BinaryString::trimExplodeEmpty('=', $define);
-                $variable = $parts[0];
-                $value = null;
-                if (isset($parts[1])) {
-                    $value = $parts[1];
-                }
-                $this->scriptVars['${' . $variable. '}'] = $value;
+        $defines = (array) $input->getOption('define');
+
+        foreach ($defines as $define) {
+            if (!strstr($define, '=')) {
+                throw new \InvalidArgumentException('Invalid define');
             }
+            $parts = BinaryString::trimExplodeEmpty('=', $define);
+            list($variable, $value) = $parts + [1 => null];
+            $this->scriptVars['${' . $variable . '}'] = $value;
         }
     }
 
     /**
      * @param string $filename
-     * @throws \RuntimeException
+     * @throws RuntimeException
      * @internal param string $input
      * @return string
      */
     protected function _getContent($filename)
     {
-        if ($filename == '-' || empty($filename)) {
-            $script = @\file_get_contents('php://stdin', 'r');
-        } else {
-            $script = @\file_get_contents($filename);
+        if ($filename === '-' || empty($filename)) {
+            $filename = 'php://stdin';
         }
+        $script = @\file_get_contents($filename);
 
         if (!$script) {
-            throw new \RuntimeException('Script file was not found');
+            throw new RuntimeException('Script file was not found');
         }
 
         return $script;
@@ -200,7 +190,7 @@ HELP;
     /**
      * @param OutputInterface $output
      * @param string $commandString
-     * @throws \RuntimeException
+     * @throws RuntimeException
      * @return void
      */
     protected function registerVariable(OutputInterface $output, $commandString)
@@ -213,7 +203,8 @@ HELP;
                     return $this->scriptVars[$matches[1]];
                 }
 
-                $dialog = $this->getHelperSet()->get('dialog'); /* @var $dialog DialogHelper */
+                $dialog = $this->getHelperSet()->get('dialog');
+                /* @var $dialog DialogHelper */
 
                 /**
                  * Check for select "?["
@@ -228,7 +219,7 @@ HELP;
                         );
                         $this->scriptVars[$matches[1]] = $choices[$selectedIndex];
                     } else {
-                        throw new \RuntimeException('Invalid choices');
+                        throw new RuntimeException('Invalid choices');
                     }
                 } else {
                     // normal input
@@ -253,8 +244,8 @@ HELP;
     /**
      * @param InputInterface $input
      * @param OutputInterface $output
-     * @param $commandString
-     * @throws \RuntimeException
+     * @param string $commandString
+     * @throws RuntimeException
      */
     protected function runMagerunCommand(InputInterface $input, OutputInterface $output, $commandString)
     {
@@ -263,13 +254,13 @@ HELP;
         $input = new StringInput($commandString);
         $exitCode = $this->getApplication()->run($input, $output);
         if ($exitCode !== 0 && $this->_stopOnError) {
-            throw new \RuntimeException('Script stopped with errors');
+            throw new RuntimeException('Script stopped with errors');
         }
     }
 
     /**
      * @param string $commandString
-     * @return mixed|string
+     * @return string
      */
     protected function _prepareShellCommand($commandString)
     {
@@ -297,7 +288,7 @@ HELP;
             $this->scriptVars['${magento.edition}'] = 'Community'; // @TODO replace this if EE is available
         }
 
-        $this->scriptVars['${php.version}']     = substr(phpversion(), 0, strpos(phpversion(), '-'));
+        $this->scriptVars['${php.version}'] = substr(phpversion(), 0, strpos(phpversion(), '-'));
         $this->scriptVars['${magerun.version}'] = $this->getApplication()->getVersion();
         $this->scriptVars['${script.file}'] = $this->_scriptFilename;
         $this->scriptVars['${script.dir}'] = dirname($this->_scriptFilename);
@@ -305,7 +296,7 @@ HELP;
 
     /**
      * @param OutputInterface $output
-     * @param string          $commandString
+     * @param string $commandString
      * @internal param $returnValue
      */
     protected function runShellCommand(OutputInterface $output, $commandString)
@@ -318,8 +309,8 @@ HELP;
     }
 
     /**
-     * @param $commandString
-     * @return mixed
+     * @param string $commandString
+     * @return string
      */
     protected function _replaceScriptVars($commandString)
     {

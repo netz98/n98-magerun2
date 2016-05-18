@@ -2,17 +2,17 @@
 
 namespace N98\Magento\Command;
 
+use Composer\Factory as ComposerFactory;
+use Composer\IO\ConsoleIO;
+use Composer\Package\Loader\ArrayLoader as PackageLoader;
 use Composer\Package\PackageInterface;
+use Mage;
 use Magento\Framework\ObjectManager\ObjectManager;
 use N98\Magento\Command\SubCommand\ConfigBag;
 use N98\Magento\Command\SubCommand\SubCommandFactory;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Composer\Package\Loader\ArrayLoader as PackageLoader;
-use Composer\Factory as ComposerFactory;
-use Composer\IO\ConsoleIO;
-use N98\Util\Console\Helper\MagentoHelper;
 
 /**
  * Class AbstractMagentoCommand
@@ -64,7 +64,7 @@ abstract class AbstractMagentoCommand extends Command
      * This is mainly useful when a lot of commands extends one main command
      * where some things need to be initialized based on the input arguments and options.
      *
-     * @param InputInterface  $input  An InputInterface instance
+     * @param InputInterface $input An InputInterface instance
      * @param OutputInterface $output An OutputInterface instance
      */
     protected function initialize(InputInterface $input, OutputInterface $output)
@@ -82,27 +82,27 @@ abstract class AbstractMagentoCommand extends Command
 
     /**
      * @param array $codeArgument
-     * @param bool  $status
-     * @return bool
+     * @param bool $status
+     * @return void
      */
     protected function saveCacheStatus($codeArgument, $status)
     {
         $cacheTypes = $this->_getCacheModel()->getTypes();
-        $enable = \Mage::app()->useCache();
+        $enable = Mage::app()->useCache();
         foreach ($cacheTypes as $cacheCode => $cacheModel) {
             if (empty($codeArgument) || in_array($cacheCode, $codeArgument)) {
                 $enable[$cacheCode] = $status ? 1 : 0;
             }
         }
 
-        \Mage::app()->saveUseCache($enable);
+        Mage::app()->saveUseCache($enable);
     }
 
     private function _initWebsites()
     {
         $this->_websiteCodeMap = array();
         /** @var \Mage_Core_Model_Website[] $websites */
-        $websites = \Mage::app()->getWebsites(false);
+        $websites = Mage::app()->getWebsites(false);
         foreach ($websites as $website) {
             $this->_websiteCodeMap[$website->getId()] = $website->getCode();
         }
@@ -203,7 +203,7 @@ abstract class AbstractMagentoCommand extends Command
         if (!$silent) {
             $editionString = ($this->_magentoEnterprise ? ' (Enterprise Edition) ' : '');
             $output->writeln(
-                '<info>Found Magento '. $editionString . 'in folder "' . $this->_magentoRootFolder . '"</info>'
+                '<info>Found Magento ' . $editionString . 'in folder "' . $this->_magentoRootFolder . '"</info>'
             );
         }
 
@@ -231,9 +231,10 @@ abstract class AbstractMagentoCommand extends Command
     protected function getCoreHelper()
     {
         if ($this->_magentoMajorVersion == self::MAGENTO_MAJOR_VERSION_2) {
-            return \Mage::helper('Mage_Core_Helper_Data');
+            return Mage::helper('Mage_Core_Helper_Data');
         }
-        return \Mage::helper('core');
+
+        return Mage::helper('core');
     }
 
     /**
@@ -253,6 +254,7 @@ abstract class AbstractMagentoCommand extends Command
     public function createComposerPackageByConfig($config)
     {
         $packageLoader = new PackageLoader();
+
         return $packageLoader->load($config);
     }
 
@@ -272,7 +274,7 @@ abstract class AbstractMagentoCommand extends Command
         $preferSource = true
     ) {
         $dm = $this->getComposerDownloadManager($input, $output);
-        if (! $config instanceof PackageInterface) {
+        if (!$config instanceof PackageInterface) {
             $package = $this->createComposerPackageByConfig($config);
         } else {
             $package = $config;
@@ -294,10 +296,10 @@ abstract class AbstractMagentoCommand extends Command
     /**
      * brings locally cached repository up to date if it is missing the requested tag
      *
-     * @param $package
-     * @param $targetFolder
+     * @param PackageInterface $package
+     * @param string $targetFolder
      */
-    protected function checkRepository($package, $targetFolder)
+    protected function checkRepository(PackageInterface $package, $targetFolder)
     {
         if ($package->getSourceType() == 'git') {
             $command = sprintf(
@@ -316,7 +318,7 @@ abstract class AbstractMagentoCommand extends Command
                 escapeshellarg($targetFolder),
                 escapeshellarg($package->getSourceReference())
             );
-            $existingTag =  shell_exec($command);
+            $existingTag = shell_exec($command);
             if ($existingTag === $package->getSourceReference()) {
                 $command = sprintf('cd %s && hg pull', escapeshellarg($targetFolder));
                 shell_exec($command);
@@ -337,7 +339,7 @@ abstract class AbstractMagentoCommand extends Command
     /**
      * obtain composer
      *
-     * @param InputInterface  $input
+     * @param InputInterface $input
      * @param OutputInterface $output
      *
      * @return \Composer\Composer
@@ -412,7 +414,7 @@ abstract class AbstractMagentoCommand extends Command
     }
 
     /**
-     * @param InputInterface  $input
+     * @param InputInterface $input
      * @param OutputInterface $output
      *
      * @return int
@@ -445,7 +447,7 @@ abstract class AbstractMagentoCommand extends Command
     }
 
     /**
-     * @param InputInterface  $input
+     * @param InputInterface $input
      * @param OutputInterface $output
      * @param string $baseNamespace If this is set we can use relative class names.
      *
