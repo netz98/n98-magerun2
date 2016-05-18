@@ -4,7 +4,9 @@ RECENT CHANGES
 1.1.11
 ------
 
+* Fix: Cron app state emulation (by Sam Tay, #196)
 * Fix: Install command missing PHP extension checks of mbstring and zip (by Tom KLingenberg)
+* Feature: Install command: magento-ce-2.0.6 version (by Raul E Watson, #197)
 
 1.1.10
 ------
