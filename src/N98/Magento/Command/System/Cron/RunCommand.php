@@ -44,8 +44,6 @@ HELP;
             $jobCode = $this->askJobCode($input, $output, $jobs);
         }
 
-        $this->_state->setAreaCode('crontab');
-
         $jobConfig = $this->getJobConfig($jobCode);
 
         if (empty($jobCode)|| !isset($jobConfig['instance'])) {
@@ -78,7 +76,7 @@ HELP;
                 ->setExecutedAt(strftime('%Y-%m-%d %H:%M:%S', time()))
                 ->save();
 
-            call_user_func_array($callback, array($schedule));
+            $this->_state->emulateAreaCode('crontab', $callback, array($schedule));
 
             $schedule
                 ->setStatus(Schedule::STATUS_SUCCESS)
