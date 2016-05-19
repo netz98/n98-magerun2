@@ -6,7 +6,6 @@ use PDO;
 use PDOException;
 use RuntimeException;
 use Symfony\Component\Console\Helper\Helper as AbstractHelper;
-use N98\Magento\Application;
 use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -298,7 +297,7 @@ class DatabaseHelper extends AbstractHelper
                         $definitions,
                         $resolved
                     );
-                    $resolvedList    = array_merge($resolvedList, $tables);
+                    $resolvedList = array_merge($resolvedList, $tables);
                 }
                 continue;
             }

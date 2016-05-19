@@ -2,8 +2,6 @@
 
 namespace N98\Magento\Command\Database\Maintain;
 
-use Symfony\Component\Console\Output\NullOutput;
-use Symfony\Component\Console\Tester\ApplicationTester;
 use Symfony\Component\Console\Tester\CommandTester;
 use N98\Magento\Command\PHPUnit\TestCase;
 

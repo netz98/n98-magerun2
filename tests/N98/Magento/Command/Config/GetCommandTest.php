@@ -20,26 +20,26 @@ class GetCommandTest extends TestCase
         $commandTester = new CommandTester($setCommand);
         $commandTester->execute(
             array(
-                 'command' => $setCommand->getName(),
-                 'path'    => 'n98_magerun/foo/bar',
-                 'value'   => '1234',
+                    'command' => $setCommand->getName(),
+                    'path'    => 'n98_magerun/foo/bar',
+                    'value'   => '1234',
             )
         );
 
         $commandTester = new CommandTester($getCommand);
         $commandTester->execute(
             array(
-                 'command' => $getCommand->getName(),
-                 'path'    => 'n98_magerun/foo/bar',
+                    'command' => $getCommand->getName(),
+                    'path'    => 'n98_magerun/foo/bar',
             )
         );
         $this->assertContains('| n98_magerun/foo/bar | default | 0        | 1234  |', $commandTester->getDisplay());
 
         $commandTester->execute(
             array(
-                 'command'         => $getCommand->getName(),
-                 'path'            => 'n98_magerun/foo/bar',
-                 '--update-script' => true
+                    'command'         => $getCommand->getName(),
+                    'path'            => 'n98_magerun/foo/bar',
+                    '--update-script' => true
             )
         );
         $this->assertContains(
@@ -49,9 +49,9 @@ class GetCommandTest extends TestCase
 
         $commandTester->execute(
             array(
-                 'command'          => $getCommand->getName(),
-                 'path'             => 'n98_magerun/foo/bar',
-                 '--magerun-script' => true
+                    'command'          => $getCommand->getName(),
+                    'path'             => 'n98_magerun/foo/bar',
+                    '--magerun-script' => true
             )
         );
         $this->assertContains(

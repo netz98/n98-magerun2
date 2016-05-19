@@ -3,7 +3,6 @@
 namespace N98\Util\Console\Helper;
 
 use N98\Magento\Application;
-use N98\Util\BinaryString;
 use RuntimeException;
 use Symfony\Component\Console\Helper\Helper as AbstractHelper;
 use Symfony\Component\Console\Input\ArgvInput;
@@ -390,6 +389,9 @@ class MagentoHelper extends AbstractHelper
         return $application;
     }
 
+    /**
+     * @param string $configFileName
+     */
     private function addBaseConfig($root, $configFileName)
     {
         $configFile = $root . '/' . $configFileName;

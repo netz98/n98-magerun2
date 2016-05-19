@@ -42,7 +42,7 @@ class ListCommandTest extends TestCase
         $disabledCacheTypes = 0;
 
         foreach ($cacheTypes as $cacheType) {
-            if (! $cacheType->getStatus()) {
+            if (!$cacheType->getStatus()) {
                 $disabledCacheTypes++;
             }
         }

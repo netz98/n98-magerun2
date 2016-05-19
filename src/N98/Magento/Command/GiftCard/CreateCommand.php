@@ -49,7 +49,7 @@ HELP;
                 'status'        => 1,
                 'is_redeemable' => 1,
                 'website_id'    => $input->getOption('website')
-                    ? : $this->getObjectManager()->get('Magento\Store\Model\StoreManager')->getWebsite(true)->getId(),
+                    ?: $this->getObjectManager()->get('Magento\Store\Model\StoreManager')->getWebsite(true)->getId(),
                 'balance'       => $input->getArgument('amount'),
                 'date_expires'  => $input->getOption('expires')
             )

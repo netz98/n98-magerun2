@@ -68,7 +68,7 @@ HELP;
                     $collection->addFieldToFilter(
                         'scope',
                         array(
-                             'eq' => $scopeId
+                                'eq' => $scopeId
                         )
                     );
                 }

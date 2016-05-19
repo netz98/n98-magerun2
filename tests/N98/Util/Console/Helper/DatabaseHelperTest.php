@@ -2,7 +2,6 @@
 
 namespace N98\Util\Console\Helper;
 
-use Symfony\Component\Console\Tester\CommandTester;
 use N98\Magento\Command\PHPUnit\TestCase;
 
 

@@ -2,8 +2,8 @@
 
 namespace N98\Magento\Command\Config;
 
-use Symfony\Component\Console\Tester\CommandTester;
 use N98\Magento\Command\PHPUnit\TestCase;
+use Symfony\Component\Console\Tester\CommandTester;
 
 class DeleteCommandTest extends TestCase
 {
@@ -36,8 +36,8 @@ class DeleteCommandTest extends TestCase
         );
         $this->assertContains('| n98_magerun/foo/bar | default | 0  |', $commandTester->getDisplay());
 
-        $storeManager = $application->getObjectManager()->get('Magento\Store\Model\StoreManager');
         /* @var $storeManager \Magento\Store\Model\StoreManager */
+        $storeManager = $application->getObjectManager()->get('Magento\Store\Model\StoreManager');
 
         /**
          * Delete all
@@ -47,11 +47,11 @@ class DeleteCommandTest extends TestCase
             $commandTester = new CommandTester($setCommand);
             $commandTester->execute(
                 array(
-                     'command'    => $setCommand->getName(),
-                     'path'       => 'n98_magerun/foo/bar',
-                     '--scope'    => 'stores',
-                     '--scope-id'  => $store->getId(),
-                     'value'      => 'store-' . $store->getId(),
+                    'command'    => $setCommand->getName(),
+                    'path'       => 'n98_magerun/foo/bar',
+                    '--scope'    => 'stores',
+                    '--scope-id' => $store->getId(),
+                    'value'      => 'store-' . $store->getId(),
                 )
             );
         }
@@ -59,14 +59,17 @@ class DeleteCommandTest extends TestCase
         $commandTester = new CommandTester($deleteCommand);
         $commandTester->execute(
             array(
-                 'command' => $deleteCommand->getName(),
-                 'path'    => 'n98_magerun/foo/bar',
-                 '--all'   => true,
+                'command' => $deleteCommand->getName(),
+                'path'    => 'n98_magerun/foo/bar',
+                '--all'   => true,
             )
         );
 
         foreach ($storeManager->getStores() as $store) {
-            $this->assertContains('| n98_magerun/foo/bar | stores   | ' . $store->getId() . '  |', $commandTester->getDisplay());
+            $this->assertContains(
+                '| n98_magerun/foo/bar | stores   | ' . $store->getId() . '  |',
+                $commandTester->getDisplay()
+            );
         }
 
     }

@@ -79,22 +79,22 @@ class ViewCommand extends AbstractAttributeCommand
             'BackendType' => array('Backend-Type'),
             'SourceModel' => array('Source-Model'),
             'CacheIdTags' => array('Cache-ID-Tags', function ($values) {
-                return implode(',', (array)$values);
+                return implode(',', (array) $values);
             }),
             'CacheTags' => array('Cache-Tags', function ($values) {
-                return implode(',', (array)$values);
+                return implode(',', (array) $values);
             }),
             'DefaultValue' => array('Default-Value'),
             'FlatColumns' => array(
                 'Flat-Columns',
                 function ($values) {
-                    return implode(',', array_keys((array)$values));
+                    return implode(',', array_keys((array) $values));
                 }
             ),
             'FlatIndexes' => array(
                 'Flat-Indexes',
                 function ($values) {
-                    return implode(',', array_keys((array)$values));
+                    return implode(',', array_keys((array) $values));
                 }
             )
         );

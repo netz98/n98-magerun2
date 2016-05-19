@@ -47,8 +47,7 @@ class HistoryCommand extends AbstractCronCommand
         }
 
         $timezone = $input->getOption('timezone')
-            ? $input->getOption('timezone') :
-            $this->_scopeConfig->getValue('general/locale/timezone');
+            ? $input->getOption('timezone') : $this->_scopeConfig->getValue('general/locale/timezone');
 
         if (!$input->getOption('format')) {
             $output->writeln('<info>Times shown in <comment>' . $timezone . '</comment></info>');

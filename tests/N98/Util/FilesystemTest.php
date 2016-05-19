@@ -219,11 +219,11 @@ class FilesystemTest extends \PHPUnit_Framework_TestCase
     public static function convertedBytesProvider()
     {
         return array(
-            array(20000000,     2,  '19.07M'),
-            array(20000000,     3,  '19.073M'),
-            array(2000000000,   2,  '1.86G'),
-            array(2,            2,  '2.00B'),
-            array(2048,         2,  '2.00K'),
+            array(20000000, 2, '19.07M'),
+            array(20000000, 3, '19.073M'),
+            array(2000000000, 2, '1.86G'),
+            array(2, 2, '2.00B'),
+            array(2048, 2, '2.00K'),
         );
     }
 }

@@ -34,28 +34,28 @@ class CreateModuleFolders extends AbstractSubCommand
         $config->setString('moduleDirectory', $moduleDir);
 
         mkdir($moduleDir, 0777, true);
-        $this->output->writeln('<info>Created directory: <comment>' .  $moduleDir .'<comment></info>');
+        $this->output->writeln('<info>Created directory: <comment>' . $moduleDir . '<comment></info>');
 
         // Add etc folder
         mkdir($moduleDir . '/etc');
-        $this->output->writeln('<info>Created directory: <comment>' .  $moduleDir .'/etc<comment></info>');
+        $this->output->writeln('<info>Created directory: <comment>' . $moduleDir . '/etc<comment></info>');
 
         // Add blocks folder
         if ($config->getBool('shouldAddBlocks')) {
             mkdir($moduleDir . '/Block');
-            $this->output->writeln('<info>Created directory: <comment>' .  $moduleDir . '/Block' .'<comment></info>');
+            $this->output->writeln('<info>Created directory: <comment>' . $moduleDir . '/Block' . '<comment></info>');
         }
 
         // Add helpers folder
         if ($config->getBool('shouldAddHelpers')) {
             mkdir($moduleDir . '/Helper');
-            $this->output->writeln('<info>Created directory: <comment>' .  $moduleDir . '/Helper' .'<comment></info>');
+            $this->output->writeln('<info>Created directory: <comment>' . $moduleDir . '/Helper' . '<comment></info>');
         }
 
         // Add models folder
         if ($config->getBool('shouldAddModels')) {
             mkdir($moduleDir . '/Model');
-            $this->output->writeln('<info>Created directory: <comment>' .  $moduleDir . '/Model' .'<comment></info>');
+            $this->output->writeln('<info>Created directory: <comment>' . $moduleDir . '/Model' . '<comment></info>');
         }
 
         // Create SQL and Data folder

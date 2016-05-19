@@ -74,7 +74,7 @@ class SubCommandFactory
         }
 
         $subCommand = new $className();
-        if (! $subCommand instanceof SubCommandInterface) {
+        if (!$subCommand instanceof SubCommandInterface) {
             throw new \InvalidArgumentException('Subcommand must implement SubCommandInterface.');
         }
 

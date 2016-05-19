@@ -46,7 +46,7 @@ HELP;
 
         $jobConfig = $this->getJobConfig($jobCode);
 
-        if (empty($jobCode)|| !isset($jobConfig['instance'])) {
+        if (empty($jobCode) || !isset($jobConfig['instance'])) {
             throw new \InvalidArgumentException('No job config found!');
         }
 
@@ -97,14 +97,14 @@ HELP;
      * @param InputInterface $input
      * @param OutputInterface $output
      * @param array $jobs
-     * @return mixed
+     * @return string
      * @throws \InvalidArgumentException
      * @throws \Exception
      */
     protected function askJobCode(InputInterface $input, OutputInterface $output, $jobs)
     {
         foreach ($jobs as $key => $job) {
-            $question[] = '<comment>[' . ($key+1) . ']</comment> ' . $job['Job'] . PHP_EOL;
+            $question[] = '<comment>[' . ($key + 1) . ']</comment> ' . $job['Job'] . PHP_EOL;
         }
         $question[] = '<question>Please select job: </question>' . PHP_EOL;
 

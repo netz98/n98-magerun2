@@ -321,7 +321,7 @@ class Application extends BaseApplication
      * @TODO Move logic into "EventSubscriber"
      *
      * @param OutputInterface $output
-     * @return bool
+     * @return null|false
      */
     public function checkVarDir(OutputInterface $output)
     {

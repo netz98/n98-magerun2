@@ -70,7 +70,7 @@ HELP;
      *
      * @param StoreManager $storeManager
      * @param Category $sitemapCategoryCollection
-     * @param Product $sitmapProductCollection
+     * @param Product $sitemapProductCollection
      * @param Page $sitemapPageCollection
      */
     public function inject(
@@ -146,7 +146,6 @@ HELP;
     }
 
     /**
-     * @param string $resourceModel
      * @param string $linkBaseUrl
      * @param string $storeId
      * @param array  $urls

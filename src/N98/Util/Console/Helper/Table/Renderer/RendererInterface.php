@@ -9,6 +9,7 @@ interface RendererInterface
     /**
      * @param OutputInterface $output
      * @param array $rows
+     * @return void
      */
     public function render(OutputInterface $output, array $rows);
 }
