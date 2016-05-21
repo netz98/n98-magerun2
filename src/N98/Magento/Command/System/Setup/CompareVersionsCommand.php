@@ -1,12 +1,19 @@
 <?php
+/*
+ * this file is part of magerun
+ *
+ * @author Tom Klingenberg <https://github.com/ktomk>
+ */
 
 namespace N98\Magento\Command\System\Setup;
 
-use N98\JUnitXml\Document as JUnitXmlDocument;
+use N98\Util\ArrayFunctions;
+use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
+use N98\Util\Console\Helper\TableHelper;
+use N98\Util\JUnitSession;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
 
 class CompareVersionsCommand extends AbstractSetupCommand
 {
@@ -45,103 +52,30 @@ HELP;
             return;
         }
 
-        $time = microtime(true);
+        $junit = $input->getOption('log-junit') ? new JUnitSession($input->getOption('log-junit')) : null;
+
         $ignoreDataUpdate = $input->getOption('ignore-data');
-
-        $headers = array('Setup', 'Module', 'DB', 'Data', 'Status');
         if ($ignoreDataUpdate) {
-            unset($headers[array_search('Data', $headers)]);
-        }
-
-        $errorCounter = 0;
-        $table = array();
-        foreach ($this->getMagentoModuleList() as $moduleName => $moduleInfo) {
-            $moduleVersion = $moduleInfo['setup_version'];
-            $resource      = $this->getMagentoModuleResource();
-            $dbVersion     = $resource->getDbVersion($moduleName);
-            if (!$ignoreDataUpdate) {
-                $dataVersion = $resource->getDataVersion($moduleName);
-            }
-
-            $ok = $dbVersion == $moduleVersion;
-            if ($ok && !$ignoreDataUpdate) {
-                $ok = $dataVersion == $moduleVersion;
-            }
-            if (!$ok) {
-                $errorCounter++;
-            }
-
-            $row = array(
-                'Module' => $moduleName,
-                'DB'     => $dbVersion,
-                'Data'   => $dataVersion,
-            );
-
-            if (!$ignoreDataUpdate) {
-                $row['Data-Version'] = $dataVersion;
-            }
-            $row['Status'] = $ok ? 'OK' : 'Error';
-            $table[] = $row;
-        }
-
-        // If there is no output format highlight the status and show error'd rows at bottom
-        if (!$input->getOption('format')) {
-            usort($table, function ($a, $b) {
-                return $a['Status'] !== 'OK';
-            });
-
-            array_walk($table, function (&$row) {
-                $status             = $row['Status'];
-                $availableStatus    = array('OK' => 'info', 'Error' => 'error');
-                $statusString       = sprintf(
-                    '<%s>%s</%s>',
-                    $availableStatus[$status],
-                    $status,
-                    $availableStatus[$status]
-                );
-                $row['Status'] = $statusString;
-            });
-        }
-
-        if ($input->getOption('log-junit')) {
-            $this->logJUnit($table, $input->getOption('log-junit'), microtime($time) - $time);
+            $headers = array('Setup', 'Module', 'DB', 'Status');
         } else {
-            $this->getHelper('table')
-                ->setHeaders($headers)
-                ->renderByFormat($output, $table, $input->getOption('format'));
-
-            //if no output format specified - output summary line
-            if (!$input->getOption('format')) {
-                if ($errorCounter > 0) {
-                    $this->writeSection(
-                        $output,
-                        sprintf(
-                            '%s error%s %s found!',
-                            $errorCounter,
-                            $errorCounter === 1 ? '' : 's',
-                            $errorCounter === 1 ? 'was' : 'were'
-                        ),
-                        'error'
-                    );
-                } else {
-                    $this->writeSection($output, 'No setup problems were found.', 'info');
-                }
-            }
+            $headers = array('Setup', 'Module', 'DB', 'Data', 'Status');
         }
+
+        $table = $this->getModuleTable($ignoreDataUpdate, $headers, $errors);
+
+        $this->output($input, $output, $headers, $table, $junit, $errors);
     }
 
     /**
      * @param array $data
-     * @param string $filename
-     * @param float $duration
+     * @param JUnitSession $session
      */
-    protected function logJUnit(array $data, $filename, $duration)
+    protected function logJUnit(array $data, JUnitSession $session)
     {
-        $document = new JUnitXmlDocument();
-        $suite = $document->addTestSuite();
+        $suite = $session->addTestSuite();
         $suite->setName('n98-magerun2: ' . $this->getName());
         $suite->setTimestamp(new \DateTime());
-        $suite->setTime($duration);
+        $suite->setTime($session->getDuration());
 
         $testCase = $suite->addTestCase();
         $testCase->setName('Magento Setup Version Test');
@@ -157,6 +91,150 @@ HELP;
             }
         }
 
-        $document->save($filename);
+        $session->save($session->getName());
+    }
+
+    /**
+     * @param bool $ignoreDataUpdate
+     * @param array $headers
+     * @param int $errorCount
+     * @return array
+     */
+    private function getModuleTable($ignoreDataUpdate, array $headers, &$errorCount)
+    {
+        $errorCount = 0;
+        $table = array();
+        foreach ($this->getMagentoModuleList() as $name => $module) {
+            $row = $this->mapModuleToRow($name, $module, $ignoreDataUpdate, $errorCount);
+            if ($ignoreDataUpdate) {
+                unset($row['Data']);
+            }
+
+            $table[] = ArrayFunctions::columnOrder($headers, $row);
+        }
+
+        return $table;
+    }
+
+    private function testVersionProblem(array $row, $ignoreDataUpdate)
+    {
+        $moduleVersion = $row['Module'];
+        $dbVersion = $row['DB'];
+        $dataVersion = $row['Data'];
+
+        $result = $dbVersion === $moduleVersion;
+        if (!$ignoreDataUpdate && $result && $dataVersion !== $moduleVersion) {
+            $result = false;
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param int $errorCount
+     * @return string
+     */
+    private function buildSetupResultMessage($errorCount)
+    {
+        if (0 === $errorCount) {
+            return 'No setup errors were found.';
+        }
+
+        $message = sprintf(
+            '%s setup error%s %s found!',
+            $errorCount,
+            $errorCount === 1 ? '' : 's',
+            $errorCount === 1 ? 'was' : 'were'
+        );
+
+        return $message;
+    }
+
+    /**
+     * format highlight the status (green/red) and show error'd rows at bottom
+     *
+     * @param $table
+     */
+    private function sortAndDecorate(&$table)
+    {
+        usort($table, function ($a, $b) {
+            if ($a['Status'] === $b['Status']) {
+                return strcmp($a['Setup'], $b['Setup']);
+            }
+
+            return $a['Status'] !== 'OK';
+        });
+
+        array_walk($table, function (&$row) {
+            $status = $row['Status'];
+            $availableStatus = array('OK' => 'info', 'Error' => 'error');
+            $statusString = sprintf(
+                '<%s>%s</%s>',
+                $availableStatus[$status],
+                $status,
+                $availableStatus[$status]
+            );
+            $row['Status'] = $statusString;
+        });
+    }
+
+    /**
+     * @param $ignoreDataUpdate
+     * @param $errorCount
+     * @param $name
+     * @param $module
+     * @return array
+     */
+    private function mapModuleToRow($name, $module, $ignoreDataUpdate, &$errorCount)
+    {
+        $resource = $this->getMagentoModuleResource();
+
+        $row = array(
+            'Setup'  => $name,
+            'Module' => $module['setup_version'],
+            'DB'     => $resource->getDbVersion($name),
+            'Data'   => $resource->getDataVersion($name),
+        );
+
+        $test = $this->testVersionProblem($row, $ignoreDataUpdate);
+
+        if (!$test) {
+            $errorCount++;
+        }
+
+        $row['Status'] = $test ? 'OK' : 'Error';
+
+        return $row;
+    }
+
+    /**
+     * @param InputInterface $inputa
+     * @param OutputInterface $output
+     * @param $headers
+     * @param $table
+     * @param $junit
+     * @param $errors
+     */
+    private function output(InputInterface $inputa, OutputInterface $output, $headers, $table, $junit, $errors)
+    {
+        if ($junit) {
+            $this->logJUnit($table, $junit);
+        } else {
+            // sort errors to bottom and decorate status with colors if no output format is specified
+            if (!$inputa->getOption('format')) {
+                $this->sortAndDecorate($table);
+            }
+
+            /** @var $table TableHelper */
+            $tableHelper = $this->getHelper('table');
+            $tableHelper
+                ->setHeaders($headers)
+                ->renderByFormat($output, $table, $inputa->getOption('format'));
+
+            // output summary line if no output format is specified
+            if (!$inputa->getOption('format')) {
+                $this->writeSection($output, $this->buildSetupResultMessage($errors), $errors ? 'error' : 'info');
+            }
+        }
     }
 }
