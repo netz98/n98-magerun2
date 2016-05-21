@@ -12,11 +12,15 @@ if [ ! -z ${MAGENTO_VERSION+x} ]; then
 
     export N98_MAGERUN2_TEST_MAGENTO_ROOT="./${MAGENTO_VERSION}"
 
-    bin/n98-magerun2 install \
+    bin/n98-magerun2 -vvv install \
         --magentoVersionByName="${MAGENTO_VERSION}" --installationFolder="./${MAGENTO_VERSION}" \
         --dbHost=localhost --dbUser=root --dbPass='' --dbName="magento_travis" \
         --installSampleData=${INSTALL_SAMPLE_DATA} --useDefaultConfigParams=yes \
         --baseUrl="http://travis.magento.local/"
+
+    N98_MAGERUN2_INSTALL_STATUS=$?
+    echo "magerun magento install exit code: ${N98_MAGERUN2_INSTALL_STATUS}"
+    exit ${N98_MAGERUN2_INSTALL_STATUS}
 
 else
 

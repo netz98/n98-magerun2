@@ -3,6 +3,7 @@ RECENT CHANGES
 
 1.1.12
 ------
+* Fix: Install command regression handling download errors in 1.1.11 (by Tom Klingenberg)
 * Fix: Align Symfony Console version requirements with Magento 2 (by Tom Klingenberg, #198)
 
 1.1.11

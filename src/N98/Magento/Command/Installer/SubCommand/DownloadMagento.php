@@ -13,6 +13,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 class DownloadMagento extends AbstractSubCommand
 {
     /**
+     * @throws Exception
      * @return void
      */
     public function execute()
@@ -24,7 +25,7 @@ class DownloadMagento extends AbstractSubCommand
         try {
             $this->implementation();
         } catch (Exception $e) {
-            $this->output->writeln('<error>' . $e->getMessage() . '</error>');
+            throw new RuntimeException('Error while downloading magento, aborting install', 0, $e);
         }
     }
 
@@ -46,8 +47,7 @@ class DownloadMagento extends AbstractSubCommand
             // Add arguments
             ->addArg($package['package'])
             ->addArg($this->config->getString('installationFolder'))
-            ->addArg($package['version'])
-        ;
+            ->addArg($package['version']);
 
         if (OutputInterface::VERBOSITY_VERBOSE <= $this->output->getVerbosity()) {
             $args->addArg('-vvv');
