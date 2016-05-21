@@ -12,6 +12,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Finder\Finder;
+use UnexpectedValueException;
 
 /**
  * Class MagentoHelper
@@ -373,23 +374,28 @@ class MagentoHelper extends AbstractHelper
     /**
      * private getter for application that has magento detected
      *
-     * @return Application|\Symfony\Component\Console\Application
+     * @return Application
      */
     private function getApplication()
     {
         $command = $this->getHelperSet()->getCommand();
-        if ($command == null) {
-            $application = new Application();
-        } else {
-            /* @var $application Application */
-            $application = $command->getApplication();
+
+        $application = $command ? $command->getApplication() : new Application();
+
+        // verify type because of detectMagento() call below
+        if (!$application instanceof Application) {
+            throw new UnexpectedValueException(
+                sprintf('Expected magerun application got %s', get_class($application))
+            );
         }
+
         $application->detectMagento();
 
         return $application;
     }
 
     /**
+     * @param string $root
      * @param string $configFileName
      */
     private function addBaseConfig($root, $configFileName)
