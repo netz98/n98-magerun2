@@ -2,14 +2,16 @@
 
 namespace N98\Util\Console\Helper;
 
+use ArrayIterator;
+use CallbackFilterIterator;
 use N98\Magento\Application;
 use RuntimeException;
 use Symfony\Component\Console\Helper\Helper as AbstractHelper;
 use Symfony\Component\Console\Input\ArgvInput;
-use Symfony\Component\Console\Output\ConsoleOutput;
-use Symfony\Component\Finder\Finder;
-use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\ConsoleOutput;
+use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Finder\Finder;
 
 /**
  * Class MagentoHelper
@@ -196,16 +198,7 @@ class MagentoHelper extends AbstractHelper
      */
     protected function checkModman(array $folders)
     {
-        foreach (array_reverse($folders) as $searchFolder) {
-            if (!is_readable($searchFolder)) {
-                if (OutputInterface::VERBOSITY_DEBUG <= $this->output->getVerbosity()) {
-                    $this->output->writeln(
-                        '<debug>Folder <info>' . $searchFolder . '</info> is not readable. Skip.</debug>'
-                    );
-                }
-                continue;
-            }
-
+        foreach ($this->searchFolders($folders) as $searchFolder) {
             $finder = Finder::create();
             $finder
                 ->files()
@@ -219,11 +212,7 @@ class MagentoHelper extends AbstractHelper
             $count = $finder->count();
             if ($count > 0) {
                 $baseFolderContent = trim(file_get_contents($searchFolder . '/.basedir'));
-                if (OutputInterface::VERBOSITY_DEBUG <= $this->output->getVerbosity()) {
-                    $this->output->writeln(
-                        '<debug>Found modman .basedir file with content <info>' . $baseFolderContent . '</info></debug>'
-                    );
-                }
+                $this->writeDebug('Found modman .basedir file with content <info>' . $baseFolderContent . '</info>');
 
                 if (!empty($baseFolderContent)) {
                     array_push($folders, $searchFolder . '/../' . $baseFolderContent);
@@ -243,15 +232,7 @@ class MagentoHelper extends AbstractHelper
      */
     protected function checkMagerunFile(array $folders)
     {
-        foreach (array_reverse($folders) as $searchFolder) {
-            if (!is_readable($searchFolder)) {
-                if (OutputInterface::VERBOSITY_DEBUG <= $this->output->getVerbosity()) {
-                    $this->output->writeln(
-                        sprintf('<debug>Folder <info>%s</info> is not readable. Skip.</debug>', $searchFolder)
-                    );
-                }
-                continue;
-            }
+        foreach ($this->searchFolders($folders) as $searchFolder) {
             $stopFile = '.' . pathinfo($this->_customConfigFilename, PATHINFO_FILENAME);
             $finder = Finder::create();
             $finder
@@ -265,18 +246,16 @@ class MagentoHelper extends AbstractHelper
 
             $count = $finder->count();
             if ($count > 0) {
-                $this->_magerunStopFileFound  = true;
+                $this->_magerunStopFileFound = true;
                 $this->_magerunStopFileFolder = $searchFolder;
-                $magerunFilePath              = $searchFolder . '/' . $stopFile;
-                $magerunFileContent           = trim(file_get_contents($magerunFilePath));
-                if (OutputInterface::VERBOSITY_DEBUG <= $this->output->getVerbosity()) {
-                    $message = sprintf(
-                        '<debug>Found stopfile \'%s\' file with content <info>%s</info></debug>',
-                        $stopFile,
-                        $magerunFileContent
-                    );
-                    $this->output->writeln($message);
-                }
+                $magerunFilePath = $searchFolder . '/' . $stopFile;
+                $magerunFileContent = trim(file_get_contents($magerunFilePath));
+                $message = sprintf(
+                    'Found stopfile \'%s\' file with content <info>%s</info>',
+                    $stopFile,
+                    $magerunFileContent
+                );
+                $this->writeDebug($message);
 
                 array_push($folders, $searchFolder . '/' . $magerunFileContent);
             }
@@ -286,15 +265,39 @@ class MagentoHelper extends AbstractHelper
     }
 
     /**
+     * Turn an array of folders into a Traversable of readable paths.
+     *
+     * @param array $folders
+     * @return CallbackFilterIterator Traversable of strings that are readable paths
+     */
+    private function searchFolders(array $folders)
+    {
+        $that = $this;
+
+        $callback = function ($searchFolder) use ($that) {
+            if (!is_readable($searchFolder)) {
+                $that->writeDebug('Folder <info>' . $searchFolder . '</info> is not readable. Skip.');
+
+                return false;
+            }
+
+            return true;
+        };
+
+        return new CallbackFilterIterator(
+            new ArrayIterator(array_reverse($folders)),
+            $callback
+        );
+    }
+
+    /**
      * @param string $searchFolder
      *
      * @return bool
      */
     protected function _search($searchFolder)
     {
-        if (OutputInterface::VERBOSITY_DEBUG <= $this->output->getVerbosity()) {
-            $this->output->writeln('<debug>Search for Magento in folder <info>' . $searchFolder . '</info></debug>');
-        }
+        $this->writeDebug('Search for Magento in folder <info>' . $searchFolder . '</info>');
 
         if (!is_dir($searchFolder . '/app')) {
             return false;
@@ -330,11 +333,7 @@ class MagentoHelper extends AbstractHelper
                 $this->_magentoMajorVersion = Application::MAGENTO_MAJOR_VERSION_1;
             }
 
-            if (OutputInterface::VERBOSITY_DEBUG <= $this->output->getVerbosity()) {
-                $this->output->writeln(
-                    '<debug>Found Magento in folder <info>' . $this->_magentoRootFolder . '</info></debug>'
-                );
-            }
+            $this->writeDebug('Found Magento in folder <info>' . $this->_magentoRootFolder . '</info>');
 
             return true;
         }
@@ -382,7 +381,8 @@ class MagentoHelper extends AbstractHelper
         if ($command == null) {
             $application = new Application();
         } else {
-            $application = $command->getApplication(); /* @var $application Application */
+            /* @var $application Application */
+            $application = $command->getApplication();
         }
         $application->detectMagento();
 
@@ -406,5 +406,18 @@ class MagentoHelper extends AbstractHelper
         }
 
         $this->baseConfig = array_merge($this->baseConfig, $config);
+    }
+
+    /**
+     * @param string $message
+     * @return void
+     */
+    private function writeDebug($message)
+    {
+        if (OutputInterface::VERBOSITY_DEBUG <= $this->output->getVerbosity()) {
+            $this->output->writeln(
+                '<debug>' . $message . '</debug>'
+            );
+        }
     }
 }
