@@ -21,6 +21,6 @@ class CreateModuleDiFile extends AbstractSubCommand
             )
         );
 
-        $this->output->writeln('<info>Created file: <comment>' .  $outFile .'<comment></info>');
+        $this->output->writeln('<info>Created file: <comment>' . $outFile . '<comment></info>');
     }
 }

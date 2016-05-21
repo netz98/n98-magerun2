@@ -3,8 +3,7 @@
 namespace N98\Magento\Command\Database;
 
 use N98\Magento\Command\PHPUnit\TestCase;
-use Symfony\Component\Console\Output\NullOutput;
-use Symfony\Component\Console\Tester\ApplicationTester;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Tester\CommandTester;
 
 /**
@@ -13,7 +12,7 @@ use Symfony\Component\Console\Tester\CommandTester;
 class DumpCommandTest extends TestCase
 {
     /**
-     * @return \Symfony\Component\Console\Command\Command
+     * @return Command
      */
     protected function getCommand()
     {
@@ -38,7 +37,7 @@ class DumpCommandTest extends TestCase
                 '--compression'  => 'gz'
             )
         );
-    
+
         $this->assertRegExp('/mysqldump/', $commandTester->getDisplay());
         $this->assertRegExp('/\.sql/', $commandTester->getDisplay());
         $this->assertContains(".sql.gz", $commandTester->getDisplay());
