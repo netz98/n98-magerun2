@@ -6,12 +6,13 @@ use Magento\Backend\Model\UrlInterface as BackendUrlInterface;
 use Magento\Framework\UrlInterface as FrontendUrlInterface;
 use Magento\Store\Api\Data\StoreInterface;
 use Magento\Store\Model\Store;
-use RuntimeException;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Output\OutputInterface;
-use N98\Util\OperatingSystem;
+use N98\Util\Console\Helper\ParameterHelper;
 use N98\Util\Exec;
+use N98\Util\OperatingSystem;
+use RuntimeException;
+use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
 
 class OpenBrowserCommand extends AbstractMagentoCommand
 {
@@ -54,7 +55,9 @@ class OpenBrowserCommand extends AbstractMagentoCommand
 
         $this->detectMagento($output);
         if ($this->initMagento($output)) {
-            $store = $this->getHelperSet()->get('parameter')->askStore($input, $output, 'store', true);
+            /** @var $parameter ParameterHelper */
+            $parameter = $this->getHelper('parameter');
+            $store = $parameter->askStore($input, $output, 'store', true);
 
             if ($store->getId() == Store::DEFAULT_STORE_ID) {
                 $url = $this->getBackendStoreUrl($store);

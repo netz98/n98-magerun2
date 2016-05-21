@@ -11,6 +11,7 @@ use Magento\Framework\ObjectManager\ObjectManager;
 use N98\Magento\Command\SubCommand\ConfigBag;
 use N98\Magento\Command\SubCommand\SubCommandFactory;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Helper\FormatterHelper;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -157,15 +158,18 @@ abstract class AbstractMagentoCommand extends Command
     }
 
     /**
-     * @param \Symfony\Component\Console\Output\OutputInterface $output
+     * @param OutputInterface $output
      * @param string $text
      * @param string $style
      */
     protected function writeSection(OutputInterface $output, $text, $style = 'bg=blue;fg=white')
     {
+        /** @var $formatter FormatterHelper */
+        $formatter = $this->getHelper('formatter');
+
         $output->writeln(array(
             '',
-            $this->getHelperSet()->get('formatter')->formatBlock($text, $style, true),
+            $formatter->formatBlock($text, $style, true),
             '',
         ));
     }

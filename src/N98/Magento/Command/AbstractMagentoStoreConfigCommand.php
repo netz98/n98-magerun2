@@ -2,6 +2,8 @@
 
 namespace N98\Magento\Command;
 
+use Exception;
+use N98\Util\Console\Helper\ParameterHelper;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -93,8 +95,8 @@ abstract class AbstractMagentoStoreConfigCommand extends AbstractMagentoCommand
     }
 
     /**
-     * @param \Symfony\Component\Console\Input\InputInterface $input
-     * @param \Symfony\Component\Console\Output\OutputInterface $output
+     * @param InputInterface $input
+     * @param OutputInterface $output
      * @return int|void
      */
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -164,14 +166,17 @@ abstract class AbstractMagentoStoreConfigCommand extends AbstractMagentoCommand
     }
 
     /**
-     * @param \Symfony\Component\Console\Input\InputInterface $input
-     * @param \Symfony\Component\Console\Output\OutputInterface $output
+     * @param InputInterface $input
+     * @param OutputInterface $output
      * @return mixed
-     * @throws \Exception
+     * @throws Exception
      */
-    protected function _initStore($input, $output)
+    protected function _initStore(InputInterface $input, OutputInterface $output)
     {
-        return $this->getHelperSet()->get('parameter')->askStore($input, $output, 'store', $this->withAdminStore);
+        /** @var $parameter ParameterHelper */
+        $parameter = $this->getHelper('parameter');
+
+        return $parameter->askStore($input, $output, 'store', $this->withAdminStore);
     }
 
     /**

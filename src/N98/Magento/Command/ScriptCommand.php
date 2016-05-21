@@ -203,8 +203,8 @@ HELP;
                     return $this->scriptVars[$matches[1]];
                 }
 
-                $dialog = $this->getHelperSet()->get('dialog');
                 /* @var $dialog DialogHelper */
+                $dialog = $this->getHelper('dialog');
 
                 /**
                  * Check for select "?["

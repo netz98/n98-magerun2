@@ -411,7 +411,7 @@ HELP;
             }
             if (!$input->getOption('force')) {
                 /** @var DialogHelper $dialog */
-                $dialog = $this->getHelperSet()->get('dialog');
+                $dialog = $this->getHelper('dialog');
                 $fileName = $dialog->ask(
                     $output,
                     '<question>Filename for SQL dump:</question> [<comment>' . $defaultName . '</comment>]',

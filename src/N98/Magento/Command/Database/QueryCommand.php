@@ -2,6 +2,7 @@
 
 namespace N98\Magento\Command\Database;
 
+use Symfony\Component\Console\Helper\DialogHelper;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -65,7 +66,8 @@ HELP;
         $this->detectDbSettings($output);
         
         if (($query = $input->getArgument('query')) === null) {
-            $dialog = $this->getHelperSet()->get('dialog');
+            /** @var $dialog DialogHelper */
+            $dialog = $this->getHelper('dialog');
             $query = $dialog->ask($output, '<question>SQL Query:</question>');
         }
         

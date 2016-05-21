@@ -6,6 +6,7 @@ use Exception;
 use InvalidArgumentException;
 use N98\Util\Validator\FakeMetadataFactory;
 use RuntimeException;
+use Symfony\Component\Console\Helper\DialogHelper;
 use Symfony\Component\Console\Helper\Helper as AbstractHelper;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputInterface;
@@ -79,7 +80,10 @@ class ParameterHelper extends AbstractHelper
 
             if (count($stores) > 1) {
                 $question[] = '<question>Please select a store: </question>';
-                $storeId = $this->getHelperSet()->get('dialog')->askAndValidate(
+
+                /** @var $dialog DialogHelper */
+                $dialog = $this->getHelperSet()->get('dialog');
+                $storeId = $dialog->askAndValidate(
                     $output,
                     $question,
                     function ($typeInput) use ($stores) {
@@ -139,7 +143,9 @@ class ParameterHelper extends AbstractHelper
             }
             $question[] = '<question>Please select a website: </question>';
 
-            $websiteId = $this->getHelperSet()->get('dialog')->askAndValidate(
+            /** @var $dialog DialogHelper */
+            $dialog = $this->getHelperSet()->get('dialog');
+            $websiteId = $dialog->askAndValidate(
                 $output,
                 $question,
                 function ($typeInput) use ($websites) {
@@ -234,7 +240,10 @@ class ParameterHelper extends AbstractHelper
 
         if (count($errors) > 0 || empty($value)) {
             $question = '<question>' . ucfirst($name) . ': </question>';
-            $value = $this->getHelperSet()->get('dialog')->askAndValidate(
+
+            /** @var $dialog DialogHelper */
+            $dialog = $this->getHelperSet()->get('dialog');
+            $value = $dialog->askAndValidate(
                 $output,
                 $question,
                 function ($typeInput) use ($validator, $constraints, $name) {

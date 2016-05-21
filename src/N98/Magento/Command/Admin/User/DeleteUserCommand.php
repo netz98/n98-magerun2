@@ -2,10 +2,11 @@
 
 namespace N98\Magento\Command\Admin\User;
 
+use Symfony\Component\Console\Helper\DialogHelper;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Class DeleteUserCommand
@@ -35,7 +36,9 @@ class DeleteUserCommand extends AbstractAdminUserCommand
     {
         $this->detectMagento($output);
         if ($this->initMagento()) {
-            $dialog = $this->getHelperSet()->get('dialog');
+            /** @var $dialog DialogHelper */
+            $dialog = $this->getHelper('dialog');
+
             // Username
             if (($id = $input->getArgument('id')) == null) {
                 $id = $dialog->ask($output, '<question>Username or Email:</question>');
