@@ -4,6 +4,7 @@ RECENT CHANGES
 1.1.13
 ------
 * Fix: Fix db:dump regression in 1.1.12 (report by Pieter Hoste, fix by Tom Klingenberg, #199)
+* Imp: Check repository connectivity in Travis build (by Tom Klingenberg)
 
 1.1.12
 ------
