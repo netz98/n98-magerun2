@@ -33,26 +33,6 @@ class OpenBrowserCommand extends AbstractMagentoCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $opener = '';
-        if (OperatingSystem::isMacOs()) {
-            $opener = 'open';
-        } elseif (OperatingSystem::isWindows()) {
-            $opener = 'start';
-        } else {
-            // Linux
-            if (exec('which xde-open')) {
-                $opener = 'xdg-open';
-            } elseif (exec('which gnome-open')) {
-                $opener = 'gnome-open';
-            } elseif (exec('which kde-open')) {
-                $opener = 'kde-open';
-            }
-        }
-
-        if (empty($opener)) {
-            throw new RuntimeException('No opener command like xde-open, gnome-open, kde-open was found.');
-        }
-
         $this->detectMagento($output);
         if ($this->initMagento($output)) {
             /** @var $parameter ParameterHelper */
@@ -67,6 +47,7 @@ class OpenBrowserCommand extends AbstractMagentoCommand
 
             $output->writeln('Opening URL <comment>' . $url . '</comment> in browser');
 
+            $opener = $this->resolveOpenerCommand();
             Exec::run(escapeshellcmd($opener . ' ' . $url));
         }
     }
@@ -94,5 +75,33 @@ class OpenBrowserCommand extends AbstractMagentoCommand
     private function getFrontendStoreUrl(StoreInterface $store)
     {
         return $store->getBaseUrl(FrontendUrlInterface::URL_TYPE_LINK) . '?___store=' . $store->getCode();
+    }
+
+    /**
+     * @return string
+     */
+    private function resolveOpenerCommand()
+    {
+        $opener = '';
+        if (OperatingSystem::isMacOs()) {
+            $opener = 'open';
+        } elseif (OperatingSystem::isWindows()) {
+            $opener = 'start';
+        } else {
+            // Linux
+            if (exec('which xde-open')) {
+                $opener = 'xdg-open';
+            } elseif (exec('which gnome-open')) {
+                $opener = 'gnome-open';
+            } elseif (exec('which kde-open')) {
+                $opener = 'kde-open';
+            }
+        }
+
+        if (empty($opener)) {
+            throw new RuntimeException('No opener command like xde-open, gnome-open, kde-open was found.');
+        }
+
+        return $opener;
     }
 }

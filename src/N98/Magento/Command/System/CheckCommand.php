@@ -69,10 +69,10 @@ HELP;
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->config = $this->getCommandConfig();
-
         $this->detectMagento($output);
         if ($this->initMagento()) {
+            $this->config = $this->getCommandConfig();
+
             $results = new ResultCollection();
 
             foreach ($this->config['checks'] as $checkGroup => $checkGroupClasses) {

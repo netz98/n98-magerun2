@@ -87,14 +87,14 @@ HELP;
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        if ($input->getOption('add-all')) {
-            $input->setOption('add-categories', true);
-            $input->setOption('add-products', true);
-            $input->setOption('add-cmspages', true);
-        }
-
         $this->detectMagento($output, true);
         if ($this->initMagento()) {
+            if ($input->getOption('add-all')) {
+                $input->setOption('add-categories', true);
+                $input->setOption('add-products', true);
+                $input->setOption('add-cmspages', true);
+            }
+
             $stores = explode(',', $input->getArgument('stores'));
 
             $urls = array();
