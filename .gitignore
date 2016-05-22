@@ -1,6 +1,9 @@
 # Composer
 vendor/
 
+# Magerun Stopfile
+.n98-magerun2
+
 # Phpunit
 phpunit.xml
 

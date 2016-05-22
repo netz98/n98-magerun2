@@ -15,6 +15,7 @@ use Symfony\Component\Console\Application as BaseApplication;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Event\ConsoleEvent;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
+use Symfony\Component\Console\Helper\FormatterHelper;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputInterface;
@@ -34,7 +35,7 @@ class Application extends BaseApplication
     /**
      * @var string
      */
-    const APP_VERSION = '1.1.12';
+    const APP_VERSION = '1.1.13';
 
     /**
      * @var int
@@ -692,6 +693,9 @@ class Application extends BaseApplication
         }
     }
 
+    /**
+     * Show a hint that this is Magento 1 and how to obtain magerun for it
+     */
     protected function _initMagento1()
     {
         $magento1Hint = <<<'MAGENTO1HINT'
@@ -714,14 +718,17 @@ MAGENTO1HINT;
 
         $output = new ConsoleOutput();
 
+        /** @var $formatter FormatterHelper */
+        $formatter = $this->getHelperSet()->get('formatter');
+
         $output->writeln(array(
             '',
-            $this->getHelperSet()->get('formatter')->formatBlock('Compatibility Notice', 'bg=blue;fg=white', true),
-            ''
+            $formatter->formatBlock('Compatibility Notice', 'bg=blue;fg=white', true),
+            '',
+            $magento1Hint,
         ));
 
-        $output->writeln($magento1Hint);
-        exit;
+        throw new \RuntimeException('Incompatible Magento version');
     }
 
     /**

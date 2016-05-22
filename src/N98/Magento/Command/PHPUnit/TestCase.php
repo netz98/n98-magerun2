@@ -40,7 +40,8 @@ class TestCase extends \PHPUnit_Framework_TestCase
 
         $root = getenv('N98_MAGERUN2_TEST_MAGENTO_ROOT');
         if (empty($root)) {
-            if ($buffer = rtrim(file_get_contents(getcwd() . '/.n98-magerun2'))) {
+            $stopfile = getcwd() . '/.n98-magerun2';
+            if (is_readable($stopfile) && $buffer = rtrim(file_get_contents($stopfile))) {
                 $root = $buffer;
             }
         }

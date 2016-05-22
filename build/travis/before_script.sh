@@ -12,7 +12,7 @@ if [ ! -z ${MAGENTO_VERSION+x} ]; then
 
     export N98_MAGERUN2_TEST_MAGENTO_ROOT="./${MAGENTO_VERSION}"
 
-    bin/n98-magerun2 -vvv install \
+    bin/n98-magerun2 install \
         --magentoVersionByName="${MAGENTO_VERSION}" --installationFolder="./${MAGENTO_VERSION}" \
         --dbHost=localhost --dbUser=root --dbPass='' --dbName="magento_travis" \
         --installSampleData=${INSTALL_SAMPLE_DATA} --useDefaultConfigParams=yes \
@@ -20,7 +20,19 @@ if [ ! -z ${MAGENTO_VERSION+x} ]; then
 
     N98_MAGERUN2_INSTALL_STATUS=$?
     echo "magerun magento install exit code: ${N98_MAGERUN2_INSTALL_STATUS}"
-    exit ${N98_MAGERUN2_INSTALL_STATUS}
+
+    # verify magento connect credentials
+    (
+        build/sh/magento_verify_repo_credentials.sh
+    )
+    if [ $? -ne 0 ]; then
+        echo "problems to connect to repository, allow setup to fail with ${MAGENTO_VERSION}"
+        # remove test environment so that test-suite does not think it's installed
+        rm -rf "./${MAGENTO_VERSION}"
+        unset N98_MAGERUN2_TEST_MAGENTO_ROOT
+    else
+        exit ${N98_MAGERUN2_INSTALL_STATUS}
+    fi
 
 else
 
