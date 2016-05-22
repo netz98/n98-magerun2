@@ -85,13 +85,13 @@ HELP;
             foreach ($pathArray as $pathToDelete) {
                 $deleted = array_merge($deleted, $this->_deletePath($input, $configWriter, $pathToDelete, $scopeId));
             }
-        }
 
-        if (count($deleted) > 0) {
-            $this->getHelper('table')
-                ->setHeaders(array('deleted path', 'scope', 'id'))
-                ->setRows($deleted)
-                ->render($output);
+            if (count($deleted) > 0) {
+                $this->getHelper('table')
+                    ->setHeaders(array('deleted path', 'scope', 'id'))
+                    ->setRows($deleted)
+                    ->render($output);
+            }
         }
     }
 
