@@ -40,6 +40,11 @@ class TestCase extends \PHPUnit_Framework_TestCase
 
         $root = getenv('N98_MAGERUN2_TEST_MAGENTO_ROOT');
         if (empty($root)) {
+            if ($buffer = rtrim(file_get_contents(getcwd() . '/.n98-magerun2'))) {
+                $root = $buffer;
+            }
+        }
+        if (empty($root)) {
             $this->markTestSkipped(
                 'Please specify environment variable N98_MAGERUN2_TEST_MAGENTO_ROOT with path to your test ' .
                 'magento installation!'
