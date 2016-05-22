@@ -2,6 +2,7 @@
 
 namespace N98\Magento\Command\System\Cron;
 
+use Symfony\Component\Console\Helper\DialogHelper;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -46,7 +47,7 @@ HELP;
 
         $jobConfig = $this->getJobConfig($jobCode);
 
-        if (empty($jobCode)|| !isset($jobConfig['instance'])) {
+        if (empty($jobCode) || !isset($jobConfig['instance'])) {
             throw new \InvalidArgumentException('No job config found!');
         }
 
@@ -97,18 +98,20 @@ HELP;
      * @param InputInterface $input
      * @param OutputInterface $output
      * @param array $jobs
-     * @return mixed
+     * @return string
      * @throws \InvalidArgumentException
      * @throws \Exception
      */
     protected function askJobCode(InputInterface $input, OutputInterface $output, $jobs)
     {
         foreach ($jobs as $key => $job) {
-            $question[] = '<comment>[' . ($key+1) . ']</comment> ' . $job['Job'] . PHP_EOL;
+            $question[] = '<comment>[' . ($key + 1) . ']</comment> ' . $job['Job'] . PHP_EOL;
         }
         $question[] = '<question>Please select job: </question>' . PHP_EOL;
 
-        $jobCode = $this->getHelperSet()->get('dialog')->askAndValidate(
+        /** @var $dialog DialogHelper */
+        $dialog = $this->getHelper('dialog');
+        $jobCode = $dialog->askAndValidate(
             $output,
             $question,
             function ($typeInput) use ($jobs) {

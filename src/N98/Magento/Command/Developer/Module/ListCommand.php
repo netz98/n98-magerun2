@@ -83,7 +83,7 @@ class ListCommand extends AbstractMagentoCommand
             // First index is (probably always) vendor
             $moduleNameData = explode('_', $moduleName);
 
-            if (! is_null($vendor) && strtolower($moduleNameData[0]) !== strtolower($vendor)) {
+            if (!is_null($vendor) && strtolower($moduleNameData[0]) !== strtolower($vendor)) {
                 continue;
             }
 

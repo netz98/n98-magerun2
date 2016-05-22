@@ -70,10 +70,10 @@ class ConfigFile
     }
 
     /**
-     * @param string      $magentoRootFolder
-     * @param SplFileInfo $file [optional]
+     * @param string $magentoRootFolder
+     * @param SplFileInfo|null $file [optional]
      *
-     * @return string
+     * @return void
      */
     public function applyVariables($magentoRootFolder, SplFileInfo $file = null)
     {

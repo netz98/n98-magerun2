@@ -21,7 +21,7 @@ class CreateSetupFiles extends AbstractSubCommand
             )
         );
         $this->output->writeln(
-            '<info>Created file: <comment>' .  $setupFolder . '/InstallSchema.php' .'<comment></info>'
+            '<info>Created file: <comment>' . $setupFolder . '/InstallSchema.php' . '<comment></info>'
         );
 
         \file_put_contents(
@@ -32,7 +32,7 @@ class CreateSetupFiles extends AbstractSubCommand
             )
         );
         $this->output->writeln(
-            '<info>Created file: <comment>' .  $setupFolder . '/InstallData.php' .'<comment></info>'
+            '<info>Created file: <comment>' . $setupFolder . '/InstallData.php' . '<comment></info>'
         );
 
         \file_put_contents(
@@ -43,7 +43,7 @@ class CreateSetupFiles extends AbstractSubCommand
             )
         );
         $this->output->writeln(
-            '<info>Created file: <comment>' .  $setupFolder . '/UpgradeSchema.php' .'<comment></info>'
+            '<info>Created file: <comment>' . $setupFolder . '/UpgradeSchema.php' . '<comment></info>'
         );
 
         \file_put_contents(
@@ -54,7 +54,7 @@ class CreateSetupFiles extends AbstractSubCommand
             )
         );
         $this->output->writeln(
-            '<info>Created file: <comment>' .  $setupFolder . '/UpgradeData.php' .'<comment></info>'
+            '<info>Created file: <comment>' . $setupFolder . '/UpgradeData.php' . '<comment></info>'
         );
     }
 }

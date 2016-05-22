@@ -20,7 +20,6 @@ use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\ConsoleOutput;
-use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use UnexpectedValueException;
@@ -35,7 +34,7 @@ class Application extends BaseApplication
     /**
      * @var string
      */
-    const APP_VERSION = '1.1.11';
+    const APP_VERSION = '1.1.12';
 
     /**
      * @var int
@@ -321,7 +320,7 @@ class Application extends BaseApplication
      * @TODO Move logic into "EventSubscriber"
      *
      * @param OutputInterface $output
-     * @return bool
+     * @return null|false
      */
     public function checkVarDir(OutputInterface $output)
     {

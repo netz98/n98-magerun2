@@ -2,6 +2,7 @@
 
 namespace N98\Magento\Command\Database;
 
+use N98\Magento\Command\Database\Compressor\AbstractCompressor;
 use N98\Util\OperatingSystem;
 use RuntimeException;
 use Symfony\Component\Console\Helper\DialogHelper;
@@ -159,7 +160,7 @@ HELP;
                     }
 
                     $this->tableDefinitions[$definition['id']] = array(
-                        'tables' => $definition['tables'],
+                        'tables'      => $definition['tables'],
                         'description' => $description,
                     );
                 }
@@ -208,129 +209,97 @@ HELP;
     }
 
     /**
-     * @param \Symfony\Component\Console\Input\InputInterface $input
-     * @param \Symfony\Component\Console\Output\OutputInterface $output
+     * @param InputInterface $input
+     * @param OutputInterface $output
      * @return int|void
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->detectDbSettings($output);
 
-        if (!$input->getOption('stdout') && !$input->getOption('only-command')
-            && !$input->getOption('print-only-filename')
-        ) {
+        if ($this->nonCommandOutput($input)) {
             $this->writeSection($output, 'Dump MySQL Database');
         }
 
-        $compressor = $this->getCompressor($input->getOption('compression'));
-        $fileName = $this->getFileName($input, $output, $compressor);
+        $execs = $this->createExecs($input, $output);
 
-        $stripTables = false;
-        if ($input->getOption('strip')) {
-            $stripTables = $this->getHelper('database')->resolveTables(
-                explode(' ', $input->getOption('strip')),
-                $this->getTableDefinitions()
-            );
-            if (!$input->getOption('stdout') && !$input->getOption('only-command')
-                && !$input->getOption('print-only-filename')
-            ) {
-                $output->writeln(
-                    '<comment>No-data export for: <info>' . implode(' ', $stripTables)
-                    . '</info></comment>'
-                );
-            }
-        }
+        $this->runExecs($execs, $input, $output);
+    }
 
-        $dumpOptions = '';
+    /**
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     * @return Execs
+     */
+    private function createExecs(InputInterface $input, OutputInterface $output)
+    {
+        $execs = new Execs('mysqldump');
+        $execs->setCompression($input->getOption('compression'));
+        $execs->setFileName($this->getFileName($input, $output, $execs->getCompressor()));
+
         if (!$input->getOption('no-single-transaction')) {
-            $dumpOptions = '--single-transaction --quick ';
+            $execs->addOptions('--single-transaction --quick');
         }
 
         if ($input->getOption('human-readable')) {
-            $dumpOptions .= '--complete-insert --skip-extended-insert ';
+            $execs->addOptions('--complete-insert --skip-extended-insert ');
         }
 
         if ($input->getOption('add-routines')) {
-            $dumpOptions .= '--routines ';
+            $execs->addOptions('--routines ');
         }
-        $execs = array();
 
-        if (!$stripTables) {
-            $exec = 'mysqldump ' . $dumpOptions . $this->getHelper('database')->getMysqlClientToolConnectionString();
-            $exec .= $this->postDumpPipeCommands();
-            $exec = $compressor->getCompressingCommand($exec);
-            if (!$input->getOption('stdout')) {
-                $exec .= ' > ' . escapeshellarg($fileName);
-            }
-            $execs[] = $exec;
-        } else {
+        $database = $this->getDatabaseHelper();
+        $stripTables = $this->stripTables($input, $output);
+        if ($stripTables) {
             // dump structure for strip-tables
-            $exec = 'mysqldump ' . $dumpOptions . '--no-data ' .
-                $this->getHelper('database')->getMysqlClientToolConnectionString();
-            $exec .= ' ' . implode(' ', $stripTables);
-            $exec .= $this->postDumpPipeCommands();
-            $exec = $compressor->getCompressingCommand($exec);
-            if (!$input->getOption('stdout')) {
-                $exec .= ' > ' . escapeshellarg($fileName);
-            }
-            $execs[] = $exec;
+            $execs->add(
+                '--no-data ' . $database->getMysqlClientToolConnectionString() .
+                ' ' . implode(' ', $stripTables) . $this->postDumpPipeCommands()
+            );
 
+            // dump data for all other tables
             $ignore = '';
             foreach ($stripTables as $stripTable) {
                 $ignore .= '--ignore-table=' . $this->dbSettings['dbname'] . '.' . $stripTable . ' ';
             }
+            $execs->add(
+                $ignore . $database->getMysqlClientToolConnectionString() . $this->postDumpPipeCommands()
+            );
 
-            // dump data for all other tables
-            $exec = 'mysqldump ' . $dumpOptions . $ignore .
-                $this->getHelper('database')->getMysqlClientToolConnectionString();
-            $exec .= $this->postDumpPipeCommands();
-            $exec = $compressor->getCompressingCommand($exec);
-            if (!$input->getOption('stdout')) {
-                $exec .= ' >> ' . escapeshellarg($fileName);
-            }
-            $execs[] = $exec;
+            return $execs;
+        } else {
+            $execs->add(
+                $database->getMysqlClientToolConnectionString() . $this->postDumpPipeCommands()
+            );
+
+            return $execs;
         }
-
-        $this->runExecs($execs, $fileName, $input, $output);
     }
 
     /**
-     * @param array $execs
-     * @param string $fileName
+     * @param Execs $execs
      * @param InputInterface $input
      * @param OutputInterface $output
      */
-    private function runExecs(array $execs, $fileName, InputInterface $input, OutputInterface $output)
+    private function runExecs(Execs $execs, InputInterface $input, OutputInterface $output)
     {
         if ($input->getOption('only-command') && !$input->getOption('print-only-filename')) {
-            foreach ($execs as $exec) {
-                $output->writeln($exec);
+            foreach ($execs->getCommands() as $command) {
+                $output->writeln($command);
             }
         } else {
-            if (!$input->getOption('stdout') && !$input->getOption('only-command')
-                && !$input->getOption('print-only-filename')
-            ) {
+            if ($this->nonCommandOutput($input)) {
                 $output->writeln(
                     '<comment>Start dumping database <info>' . $this->dbSettings['dbname'] .
-                    '</info> to file <info>' . $fileName . '</info>'
+                    '</info> to file <info>' . $execs->getFileName() . '</info>'
                 );
             }
 
-            if ($input->getOption('dry-run')) {
-                $execs = array();
-            }
+            $commands = $input->getOption('dry-run') ? array() : $execs->getCommands();
 
-            foreach ($execs as $exec) {
-                $commandOutput = '';
-                if ($input->getOption('stdout')) {
-                    passthru($exec, $returnValue);
-                } else {
-                    exec($exec, $commandOutput, $returnValue);
-                }
-                if ($returnValue > 0) {
-                    $output->writeln('<error>' . implode(PHP_EOL, $commandOutput) . '</error>');
-                    $output->writeln('<error>Return Code: ' . $returnValue . '. ABORTED.</error>');
-
+            foreach ($commands as $command) {
+                if (!$this->runExec($command, $input, $output)) {
                     return;
                 }
             }
@@ -341,8 +310,57 @@ HELP;
         }
 
         if ($input->getOption('print-only-filename')) {
-            $output->writeln($fileName);
+            $output->writeln($execs->getFileName());
         }
+    }
+
+    /**
+     * @param string $command
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     */
+    private function runExec($command, InputInterface $input, OutputInterface $output)
+    {
+        $commandOutput = '';
+
+        if ($input->getOption('stdout')) {
+            passthru($command, $returnValue);
+        } else {
+            exec($command, $commandOutput, $returnValue);
+        }
+
+        if ($returnValue > 0) {
+            $output->writeln([
+                '<error>' . implode(PHP_EOL, $commandOutput) . '</error>',
+                '<error>Return Code: ' . $returnValue . '. ABORTED.</error>',
+            ]);
+            return;
+        }
+    }
+
+    /**
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     * @return false|array
+     */
+    private function stripTables(InputInterface $input, OutputInterface $output)
+    {
+        if (!$input->getOption('strip')) {
+            return false;
+        }
+
+        $stripTables = $this->getDatabaseHelper()->resolveTables(
+            explode(' ', $input->getOption('strip')),
+            $this->getTableDefinitions()
+        );
+
+        if ($this->nonCommandOutput($input)) {
+            $output->writeln(
+                '<comment>No-data export for: <info>' . implode(' ', $stripTables) . '</info></comment>'
+            );
+        }
+
+        return $stripTables;
     }
 
     /**
@@ -356,15 +374,15 @@ HELP;
     }
 
     /**
-     * @param \Symfony\Component\Console\Input\InputInterface $input
-     * @param \Symfony\Component\Console\Output\OutputInterface $output
-     * @param \N98\Magento\Command\Database\Compressor\AbstractCompressor $compressor
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     * @param AbstractCompressor $compressor
      * @return string
      */
     protected function getFileName(
         InputInterface $input,
         OutputInterface $output,
-        Compressor\AbstractCompressor $compressor
+        AbstractCompressor $compressor
     ) {
         $namePrefix = '';
         $nameSuffix = '';
@@ -387,13 +405,13 @@ HELP;
             )
             && !$input->getOption('stdout')
         ) {
-            /** @var DialogHelper $dialog */
-            $dialog = $this->getHelperSet()->get('dialog');
             $defaultName = $namePrefix . $this->dbSettings['dbname'] . $nameSuffix . $nameExtension;
             if (isset($isDir) && $isDir) {
                 $defaultName = rtrim($fileName, '/') . '/' . $defaultName;
             }
             if (!$input->getOption('force')) {
+                /** @var DialogHelper $dialog */
+                $dialog = $this->getHelper('dialog');
                 $fileName = $dialog->ask(
                     $output,
                     '<question>Filename for SQL dump:</question> [<comment>' . $defaultName . '</comment>]',
@@ -413,5 +431,17 @@ HELP;
         $fileName = $compressor->getFileName($fileName);
 
         return $fileName;
+    }
+
+    /**
+     * @param InputInterface $input
+     * @return bool
+     */
+    private function nonCommandOutput(InputInterface $input)
+    {
+        return
+            !$input->getOption('stdout')
+            && !$input->getOption('only-command')
+            && !$input->getOption('print-only-filename');
     }
 }

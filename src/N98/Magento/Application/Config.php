@@ -68,7 +68,7 @@ class Config
     public function __construct(array $initConfig = array(), $isPharMode = false, OutputInterface $output = null)
     {
         $this->initConfig = $initConfig;
-        $this->isPharMode = (bool)$isPharMode;
+        $this->isPharMode = (bool) $isPharMode;
         $this->output = $output ?: new NullOutput();
     }
 
@@ -295,7 +295,7 @@ class Config
      */
     private function getArray($key, $default = array())
     {
-        $result = $this->traverse((array)$key);
+        $result = $this->traverse((array) $key);
         if (null === $result) {
             return $default;
         }

@@ -2,6 +2,8 @@
 
 namespace N98\Magento\Command\Database;
 
+use Exception;
+use N98\Magento\Command\Database\Compressor\AbstractCompressor;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -45,6 +47,7 @@ HELP;
 
     /**
      * Optimize a dump by converting single INSERTs per line to INSERTs with multiple lines
+     *
      * @param $fileName
      * @return string temporary filename
      */
@@ -98,10 +101,12 @@ HELP;
 
         return $result;
     }
+
     /**
-     * @param \Symfony\Component\Console\Input\InputInterface $input
-     * @param \Symfony\Component\Console\Output\OutputInterface $output
-     * @return int|void
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     * @return int|null|void
+     * @throws Exception
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -111,7 +116,7 @@ HELP;
 
         $fileName = $this->checkFilename($input);
 
-        $compressor = $this->getCompressor($input->getOption('compression'));
+        $compressor = AbstractCompressor::create($input->getOption('compression'));
 
         // create import command
         $exec = $compressor->getDecompressingCommand(
@@ -134,7 +139,7 @@ HELP;
 
         if ($input->getOption('optimize')) {
             if ($input->getOption('compression')) {
-                throw new \Exception('Options --compression and --optimize are not compatible');
+                throw new Exception('Options --compression and --optimize are not compatible');
             }
             $output->writeln('<comment>Optimizing <info>' . $fileName . '</info> to temporary file');
             $fileName = $this->optimize($fileName);
@@ -148,9 +153,6 @@ HELP;
             $dbHelper->dropTables($output);
         }
 
-
-
-
         $this->doImport($output, $fileName, $exec);
 
         if ($input->getOption('optimize')) {
@@ -161,7 +163,7 @@ HELP;
     public function asText()
     {
         return parent::asText() . "\n" .
-            $this->getCompressionHelp();
+        $this->getCompressionHelp();
     }
 
     /**
@@ -176,13 +178,14 @@ HELP;
         if (!file_exists($fileName)) {
             throw new \InvalidArgumentException('File does not exist');
         }
+
         return $fileName;
     }
 
     /**
      * @param OutputInterface $output
-     * @param string          $fileName
-     * @param string          $exec
+     * @param string $fileName
+     * @param string $exec
      *
      * @return void
      */

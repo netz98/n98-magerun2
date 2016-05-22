@@ -7,7 +7,7 @@ use N98\Magento\Command\SubCommand\AbstractSubCommand;
 class CreateModuleRegistrationFiles extends AbstractSubCommand
 {
     /**
-     * @return bool
+     * @return boolean|null
      */
     public function execute()
     {

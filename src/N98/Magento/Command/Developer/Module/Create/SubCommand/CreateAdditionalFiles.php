@@ -13,7 +13,7 @@ class CreateAdditionalFiles extends AbstractSubCommand implements CommandConfigA
     protected $commandConfig;
 
     /**
-     * @return bool
+     * @return boolean|null
      */
     public function execute()
     {
@@ -31,7 +31,7 @@ class CreateAdditionalFiles extends AbstractSubCommand implements CommandConfigA
                     $this->getCommand()->getHelper('twig')->render($template, $this->config->getArray('twigVars'))
                 );
 
-                $this->output->writeln('<info>Created file: <comment>' .  $outFile .'<comment></info>');
+                $this->output->writeln('<info>Created file: <comment>' . $outFile . '<comment></info>');
             }
         }
     }

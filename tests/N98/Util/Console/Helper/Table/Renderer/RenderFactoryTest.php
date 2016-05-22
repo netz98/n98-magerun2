@@ -22,7 +22,7 @@ class RenderFactoryTest extends \PHPUnit_Framework_TestCase
 
         $invalidFormat = $renderFactory->create('invalid_format');
         $this->assertFalse($invalidFormat);
-   }
+    }
 
 }
 

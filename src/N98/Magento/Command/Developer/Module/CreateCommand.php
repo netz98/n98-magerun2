@@ -143,7 +143,7 @@ class CreateCommand extends AbstractMagentoCommand
     }
 
     /**
-     * @param $configBag
+     * @param ConfigBag $configBag
      */
     private function initConfigBagDefaultValues($configBag)
     {

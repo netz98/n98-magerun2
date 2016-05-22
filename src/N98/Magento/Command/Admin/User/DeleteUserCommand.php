@@ -2,10 +2,11 @@
 
 namespace N98\Magento\Command\Admin\User;
 
+use Symfony\Component\Console\Helper\DialogHelper;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Class DeleteUserCommand
@@ -34,42 +35,46 @@ class DeleteUserCommand extends AbstractAdminUserCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->detectMagento($output);
-        if ($this->initMagento()) {
-            $dialog = $this->getHelperSet()->get('dialog');
-            // Username
-            if (($id = $input->getArgument('id')) == null) {
-                $id = $dialog->ask($output, '<question>Username or Email:</question>');
-            }
+        if (!$this->initMagento()) {
+            return;
+        }
 
-            $user = $this->userModel->loadByUsername($id);
-            if (!$user->getId()) {
-                $user = $this->userModel->load($id, 'email');
-            }
+        /** @var $dialog DialogHelper */
+        $dialog = $this->getHelper('dialog');
 
-            if (!$user->getId()) {
-                $output->writeln('<error>User was not found</error>');
-                return;
-            }
+        // Username
+        if (($id = $input->getArgument('id')) == null) {
+            $id = $dialog->ask($output, '<question>Username or Email:</question>');
+        }
 
-            $shouldRemove = $input->getOption('force');
-            if (!$shouldRemove) {
-                $shouldRemove = $dialog->askConfirmation(
-                    $output,
-                    '<question>Are you sure?</question> <comment>[n]</comment>: ',
-                    false
-                );
-            }
+        $user = $this->userModel->loadByUsername($id);
+        if (!$user->getId()) {
+            $user = $this->userModel->load($id, 'email');
+        }
 
-            if ($shouldRemove) {
-                try {
-                    $user->delete();
-                    $output->writeln('<info>User was successfully deleted</info>');
-                } catch (\Exception $e) {
-                    $output->writeln('<error>' . $e->getMessage() . '</error>');
-                }
-            } else {
-                $output->writeln('<error>Aborting delete</error>');
+        if (!$user->getId()) {
+            $output->writeln('<error>User was not found</error>');
+            return;
+        }
+
+        $shouldRemove = $input->getOption('force');
+        if (!$shouldRemove) {
+            $shouldRemove = $dialog->askConfirmation(
+                $output,
+                '<question>Are you sure?</question> <comment>[n]</comment>: ',
+                false
+            );
+        }
+
+        if ($shouldRemove) {
+            try {
+                $user->delete();
+                $output->writeln('<info>User was successfully deleted</info>');
+            } catch (\Exception $e) {
+                $output->writeln('<error>' . $e->getMessage() . '</error>');
             }
+        } else {
+            $output->writeln('<error>Aborting delete</error>');
         }
     }
 }

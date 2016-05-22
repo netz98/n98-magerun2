@@ -50,7 +50,7 @@ class SelectMagentoVersion extends AbstractSubCommand
             } elseif ($this->input->getOption('magentoVersionByName')) {
                 foreach ($this->commandConfig['magento-packages'] as $key => $package) {
                     if ($package['name'] == $this->input->getOption('magentoVersionByName')) {
-                        $type = $key+1;
+                        $type = $key + 1;
                         break;
                     }
                 }

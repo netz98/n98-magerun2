@@ -7,7 +7,7 @@ use N98\Magento\Command\SubCommand\AbstractSubCommand;
 class CreateModuleCrontabFile extends AbstractSubCommand
 {
     /**
-     * @return bool
+     * @return boolean|null
      */
     public function execute()
     {
@@ -21,6 +21,6 @@ class CreateModuleCrontabFile extends AbstractSubCommand
             )
         );
 
-        $this->output->writeln('<info>Created file: <comment>' .  $outFile .'<comment></info>');
+        $this->output->writeln('<info>Created file: <comment>' . $outFile . '<comment></info>');
     }
 }

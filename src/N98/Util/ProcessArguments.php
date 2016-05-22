@@ -64,7 +64,7 @@ class ProcessArguments
      */
     private function conditional($key, $value, $separator = '=', $prefix = '--')
     {
-        $buffer = (string)$value;
+        $buffer = (string) $value;
 
         if (is_string($key) && strlen($key)) {
             $buffer = $this->conditionalPrefix($key, $prefix) . $this->conditionalValue($value, $separator);

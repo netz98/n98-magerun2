@@ -70,7 +70,7 @@ HELP;
      *
      * @param StoreManager $storeManager
      * @param Category $sitemapCategoryCollection
-     * @param Product $sitmapProductCollection
+     * @param Product $sitemapProductCollection
      * @param Page $sitemapPageCollection
      */
     public function inject(
@@ -87,66 +87,67 @@ HELP;
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $this->detectMagento($output, true);
+        if (!$this->initMagento()) {
+            return;
+        }
+
         if ($input->getOption('add-all')) {
             $input->setOption('add-categories', true);
             $input->setOption('add-products', true);
             $input->setOption('add-cmspages', true);
         }
 
-        $this->detectMagento($output, true);
-        if ($this->initMagento()) {
-            $stores = explode(',', $input->getArgument('stores'));
+        $stores = explode(',', $input->getArgument('stores'));
 
-            $urls = array();
+        $urls = array();
 
-            foreach ($stores as $storeId) {
-                try {
-                    $currentStore = $this->storeManager->getStore($storeId);
-                } catch (\Exception $e) {
-                    throw new \RuntimeException("Store with id {$storeId} doesn´t exist");
-                }
-
-                // base url
-                $urls[] = $currentStore->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_WEB);
-
-                $linkBaseUrl = $currentStore->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_LINK);
-
-                if ($input->getOption('add-categories')) {
-                    $urls = $this->getUrls($this->sitemapCategoryCollection, $linkBaseUrl, $storeId, $urls);
-                }
-
-                if ($input->getOption('add-products')) {
-                    $urls = $this->getUrls($this->sitemapProductCollection, $linkBaseUrl, $storeId, $urls);
-                }
-
-                if ($input->getOption('add-cmspages')) {
-                    $urls = $this->getUrls($this->sitemapPageCollection, $linkBaseUrl, $storeId, $urls);
-                }
-            } // foreach ($stores as $storeId)
-
-            if (count($urls) === 0) {
-                return;
+        foreach ($stores as $storeId) {
+            try {
+                $currentStore = $this->storeManager->getStore($storeId);
+            } catch (\Exception $e) {
+                throw new \RuntimeException("Store with id {$storeId} doesn´t exist");
             }
 
-            foreach ($urls as $url) {
+            // base url
+            $urls[] = $currentStore->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_WEB);
 
-                // pre-process
-                $line = $input->getArgument('linetemplate');
-                $line = str_replace('{url}', $url, $line);
+            $linkBaseUrl = $currentStore->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_LINK);
 
-                $parts = parse_url($url);
-                foreach ($parts as $key => $value) {
-                    $line = str_replace('{' . $key . '}', $value, $line);
-                }
-
-                // ... and output
-                $output->writeln($line);
+            if ($input->getOption('add-categories')) {
+                $urls = $this->getUrls($this->sitemapCategoryCollection, $linkBaseUrl, $storeId, $urls);
             }
+
+            if ($input->getOption('add-products')) {
+                $urls = $this->getUrls($this->sitemapProductCollection, $linkBaseUrl, $storeId, $urls);
+            }
+
+            if ($input->getOption('add-cmspages')) {
+                $urls = $this->getUrls($this->sitemapPageCollection, $linkBaseUrl, $storeId, $urls);
+            }
+        } // foreach ($stores as $storeId)
+
+        if (count($urls) === 0) {
+            return;
+        }
+
+        foreach ($urls as $url) {
+
+            // pre-process
+            $line = $input->getArgument('linetemplate');
+            $line = str_replace('{url}', $url, $line);
+
+            $parts = parse_url($url);
+            foreach ($parts as $key => $value) {
+                $line = str_replace('{' . $key . '}', $value, $line);
+            }
+
+            // ... and output
+            $output->writeln($line);
         }
     }
 
     /**
-     * @param string $resourceModel
      * @param string $linkBaseUrl
      * @param string $storeId
      * @param array  $urls

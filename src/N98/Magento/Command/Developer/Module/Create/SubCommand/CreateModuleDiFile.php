@@ -7,7 +7,7 @@ use N98\Magento\Command\SubCommand\AbstractSubCommand;
 class CreateModuleDiFile extends AbstractSubCommand
 {
     /**
-     * @return bool
+     * @return boolean|null
      */
     public function execute()
     {
@@ -21,6 +21,6 @@ class CreateModuleDiFile extends AbstractSubCommand
             )
         );
 
-        $this->output->writeln('<info>Created file: <comment>' .  $outFile .'<comment></info>');
+        $this->output->writeln('<info>Created file: <comment>' . $outFile . '<comment></info>');
     }
 }

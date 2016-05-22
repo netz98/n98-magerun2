@@ -109,7 +109,7 @@ class InfoCommand extends AbstractMagentoCommand
 
     public function hasInfo()
     {
-        return ! empty($this->infos);
+        return !empty($this->infos);
     }
 
     public function getInfo($key = null)
@@ -166,32 +166,32 @@ class InfoCommand extends AbstractMagentoCommand
     protected function addProductCount()
     {
         $this->infos['Product Count'] = $this->productFactory
-                                             ->create()
-                                             ->getCollection()
-                                             ->getSize();
+                                                ->create()
+                                                ->getCollection()
+                                                ->getSize();
     }
 
     protected function addCustomerCount()
     {
         $this->infos['Customer Count'] = $this->customerFactory->create()
-                                              ->getCollection()
-                                              ->getSize();
+                                                ->getCollection()
+                                                ->getSize();
     }
 
     protected function addCategoryCount()
     {
         $this->infos['Category Count'] = $this->categoryFactory
-                                              ->create()
-                                              ->getCollection()
-                                              ->getSize();
+                                                ->create()
+                                                ->getCollection()
+                                                ->getSize();
     }
 
     protected function addAttributeCount()
     {
         $this->infos['Attribute Count'] = $this->attributeFactory
-                                               ->create()
-                                               ->getCollection()
-                                               ->getSize();
+                                                ->create()
+                                                ->getCollection()
+                                                ->getSize();
     }
 
     protected function addCacheInfos()

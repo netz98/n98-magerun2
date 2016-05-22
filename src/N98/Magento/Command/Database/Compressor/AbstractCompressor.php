@@ -2,10 +2,32 @@
 
 namespace N98\Magento\Command\Database\Compressor;
 
+use InvalidArgumentException;
 use N98\Util\OperatingSystem;
 
 abstract class AbstractCompressor
 {
+    /**
+     * @param string $type
+     * @return AbstractCompressor
+     * @throws InvalidArgumentException
+     */
+    public static function create($type)
+    {
+        switch ($type) {
+            case null:
+            case 'none':
+                return new Uncompressed;
+
+            case 'gz':
+            case 'gzip':
+                return new Gzip;
+
+            default:
+                throw new InvalidArgumentException("Compression type '{$type}' is not supported.");
+        }
+    }
+
     /**
      * Returns the command line for compressing the dump file.
      *

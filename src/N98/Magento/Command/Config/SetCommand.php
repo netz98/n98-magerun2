@@ -56,25 +56,27 @@ HELP;
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->detectMagento($output, true);
-        if ($this->initMagento()) {
-            $this->_validateScopeParam($input->getOption('scope'));
-            $scopeId = $this->_convertScopeIdParam($input->getOption('scope'), $input->getOption('scope-id'));
-
-            $value = str_replace(array('\n', '\r'), array("\n", "\r"), $input->getArgument('value'));
-            $value = $this->_formatValue($value, ($input->getOption('encrypt') ? 'encrypt' : false));
-
-
-            $this->getConfigWriter()->save(
-                $input->getArgument('path'),
-                $value,
-                $input->getOption('scope'),
-                $scopeId
-            );
-
-            $output->writeln(
-                '<comment>' . $input->getArgument('path') . "</comment> => <comment>" . $input->getArgument('value') .
-                '</comment>'
-            );
+        if (!$this->initMagento()) {
+            return;
         }
+
+        $this->_validateScopeParam($input->getOption('scope'));
+        $scopeId = $this->_convertScopeIdParam($input->getOption('scope'), $input->getOption('scope-id'));
+
+        $value = str_replace(array('\n', '\r'), array("\n", "\r"), $input->getArgument('value'));
+        $value = $this->_formatValue($value, ($input->getOption('encrypt') ? 'encrypt' : false));
+
+
+        $this->getConfigWriter()->save(
+            $input->getArgument('path'),
+            $value,
+            $input->getOption('scope'),
+            $scopeId
+        );
+
+        $output->writeln(
+            '<comment>' . $input->getArgument('path') . "</comment> => <comment>" . $input->getArgument('value') .
+            '</comment>'
+        );
     }
 }

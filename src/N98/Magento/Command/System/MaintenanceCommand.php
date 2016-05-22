@@ -54,15 +54,15 @@ class MaintenanceCommand extends AbstractMagentoCommand
                         ->get('\Magento\Framework\Filesystem')
                         ->getDirectoryWrite(MaintenanceMode::FLAG_DIR);
 
-        if (! is_null($input->getOption('off'))) {
-            if (! $flagDir->isExist(MaintenanceMode::FLAG_FILENAME)) {
+        if (!is_null($input->getOption('off'))) {
+            if (!$flagDir->isExist(MaintenanceMode::FLAG_FILENAME)) {
                 return $output->writeln(self::ALREADY_DISABLED_MESSAGE);
             }
 
             return $this->handleDisable($flagDir, $output, $input->getOption('off'));
         }
 
-        if (! is_null($input->getOption('on'))) {
+        if (!is_null($input->getOption('on'))) {
             if ($flagDir->isExist(MaintenanceMode::FLAG_FILENAME)) {
                 return $output->writeln(self::ALREADY_ENABLED_MESSAGE);
             }
@@ -111,7 +111,7 @@ class MaintenanceCommand extends AbstractMagentoCommand
         $flagDir->touch(MaintenanceMode::FLAG_FILENAME);
         $output->writeln(self::ENABLED_MESSAGE);
 
-        if (! is_null($onOption)) {
+        if (!is_null($onOption)) {
             // Write IPs to exclusion file
             $flagDir->writeFile(MaintenanceMode::IP_FILENAME, $onOption);
             $output->writeln(self::WROTE_IP_MESSAGE);

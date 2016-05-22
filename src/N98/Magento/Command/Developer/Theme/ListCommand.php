@@ -45,22 +45,24 @@ class ListCommand extends AbstractMagentoCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->detectMagento($output);
-        if ($this->initMagento()) {
-            $rows = [];
-
-            foreach ($this->themeCollection as $theme) {
-                $rows[] = [
-                    $theme->getId(),
-                    $theme->getThemePath(),
-                    $theme->getThemeTitle(),
-                    $theme->getArea(),
-                    $theme->getCode(),
-                ];
-            }
-
-            $this->getHelper('table')
-                ->setHeaders(array('id', 'path', 'title', 'area', 'code'))
-                ->renderByFormat($output, $rows, $input->getOption('format'));
+        if (!$this->initMagento()) {
+            return;
         }
+
+        $rows = [];
+
+        foreach ($this->themeCollection as $theme) {
+            $rows[] = [
+                $theme->getId(),
+                $theme->getThemePath(),
+                $theme->getThemeTitle(),
+                $theme->getArea(),
+                $theme->getCode(),
+            ];
+        }
+
+        $this->getHelper('table')
+            ->setHeaders(array('id', 'path', 'title', 'area', 'code'))
+            ->renderByFormat($output, $rows, $input->getOption('format'));
     }
 }
