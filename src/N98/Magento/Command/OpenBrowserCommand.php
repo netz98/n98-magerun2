@@ -34,22 +34,24 @@ class OpenBrowserCommand extends AbstractMagentoCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->detectMagento($output);
-        if ($this->initMagento($output)) {
-            /** @var $parameter ParameterHelper */
-            $parameter = $this->getHelper('parameter');
-            $store = $parameter->askStore($input, $output, 'store', true);
-
-            if ($store->getId() == Store::DEFAULT_STORE_ID) {
-                $url = $this->getBackendStoreUrl($store);
-            } else {
-                $url = $this->getFrontendStoreUrl($store);
-            }
-
-            $output->writeln('Opening URL <comment>' . $url . '</comment> in browser');
-
-            $opener = $this->resolveOpenerCommand();
-            Exec::run(escapeshellcmd($opener . ' ' . $url));
+        if (!$this->initMagento()) {
+            return;
         }
+
+        /** @var $parameter ParameterHelper */
+        $parameter = $this->getHelper('parameter');
+        $store = $parameter->askStore($input, $output, 'store', true);
+
+        if ($store->getId() == Store::DEFAULT_STORE_ID) {
+            $url = $this->getBackendStoreUrl($store);
+        } else {
+            $url = $this->getFrontendStoreUrl($store);
+        }
+
+        $output->writeln('Opening URL <comment>' . $url . '</comment> in browser');
+
+        $opener = $this->resolveOpenerCommand();
+        Exec::run(escapeshellcmd($opener . ' ' . $url));
     }
 
     /**

@@ -49,49 +49,51 @@ HELP;
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->detectMagento($output, true);
-        if ($this->initMagento()) {
-            $this->_validateScopeParam($input->getOption('scope'));
-            $scopeId = $this->_convertScopeIdParam($input->getOption('scope'), $input->getOption('scope-id'));
+        if (!$this->initMagento()) {
+            return;
+        }
 
-            $deleted = array();
+        $this->_validateScopeParam($input->getOption('scope'));
+        $scopeId = $this->_convertScopeIdParam($input->getOption('scope'), $input->getOption('scope-id'));
 
-            $path = $input->getArgument('path');
-            $pathArray = array();
-            if (strstr($path, '*')) {
-                $collection = $this->getObjectManager()->get('\Magento\Config\Model\Resource\Config\Data\Collection');
-                /* @var $collection \Magento\Config\Model\Resource\Config\Data\Collection */
+        $deleted = array();
 
-                $searchPath = str_replace('*', '%', $path);
-                $collection->addFieldToFilter('path', array('like' => $searchPath));
+        $path = $input->getArgument('path');
+        $pathArray = array();
+        if (strstr($path, '*')) {
+            $collection = $this->getObjectManager()->get('\Magento\Config\Model\Resource\Config\Data\Collection');
+            /* @var $collection \Magento\Config\Model\Resource\Config\Data\Collection */
 
-                if ($scopeId = $input->getOption('scope')) {
-                    $collection->addFieldToFilter(
-                        'scope',
-                        array(
-                                'eq' => $scopeId
-                        )
-                    );
-                }
-                $collection->addOrder('path', 'ASC');
+            $searchPath = str_replace('*', '%', $path);
+            $collection->addFieldToFilter('path', array('like' => $searchPath));
 
-                foreach ($collection as $item) {
-                    $pathArray[] = $item->getPath();
-                }
-            } else {
-                $pathArray[] = $path;
+            if ($scopeId = $input->getOption('scope')) {
+                $collection->addFieldToFilter(
+                    'scope',
+                    array(
+                            'eq' => $scopeId
+                    )
+                );
             }
+            $collection->addOrder('path', 'ASC');
 
-            $configWriter = $this->getConfigWriter();
-            foreach ($pathArray as $pathToDelete) {
-                $deleted = array_merge($deleted, $this->_deletePath($input, $configWriter, $pathToDelete, $scopeId));
+            foreach ($collection as $item) {
+                $pathArray[] = $item->getPath();
             }
+        } else {
+            $pathArray[] = $path;
+        }
 
-            if (count($deleted) > 0) {
-                $this->getHelper('table')
-                    ->setHeaders(array('deleted path', 'scope', 'id'))
-                    ->setRows($deleted)
-                    ->render($output);
-            }
+        $configWriter = $this->getConfigWriter();
+        foreach ($pathArray as $pathToDelete) {
+            $deleted = array_merge($deleted, $this->_deletePath($input, $configWriter, $pathToDelete, $scopeId));
+        }
+
+        if (count($deleted) > 0) {
+            $this->getHelper('table')
+                ->setHeaders(array('deleted path', 'scope', 'id'))
+                ->setRows($deleted)
+                ->render($output);
         }
     }
 

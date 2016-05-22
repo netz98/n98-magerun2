@@ -70,23 +70,25 @@ HELP;
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->detectMagento($output);
-        if ($this->initMagento()) {
-            $this->config = $this->getCommandConfig();
+        if (!$this->initMagento()) {
+            return;
+        }
 
-            $results = new ResultCollection();
+        $this->config = $this->getCommandConfig();
 
-            foreach ($this->config['checks'] as $checkGroup => $checkGroupClasses) {
-                $results->setResultGroup($checkGroup);
-                foreach ($checkGroupClasses as $checkGroupClass) {
-                    $this->_invokeCheckClass($results, $checkGroupClass);
-                }
+        $results = new ResultCollection();
+
+        foreach ($this->config['checks'] as $checkGroup => $checkGroupClasses) {
+            $results->setResultGroup($checkGroup);
+            foreach ($checkGroupClasses as $checkGroupClass) {
+                $this->_invokeCheckClass($results, $checkGroupClass);
             }
+        }
 
-            if ($input->getOption('format')) {
-                $this->_printTable($input, $output, $results);
-            } else {
-                $this->_printResults($output, $results);
-            }
+        if ($input->getOption('format')) {
+            $this->_printTable($input, $output, $results);
+        } else {
+            $this->_printResults($output, $results);
         }
     }
 

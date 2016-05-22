@@ -88,60 +88,62 @@ HELP;
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->detectMagento($output, true);
-        if ($this->initMagento()) {
-            if ($input->getOption('add-all')) {
-                $input->setOption('add-categories', true);
-                $input->setOption('add-products', true);
-                $input->setOption('add-cmspages', true);
+        if (!$this->initMagento()) {
+            return;
+        }
+
+        if ($input->getOption('add-all')) {
+            $input->setOption('add-categories', true);
+            $input->setOption('add-products', true);
+            $input->setOption('add-cmspages', true);
+        }
+
+        $stores = explode(',', $input->getArgument('stores'));
+
+        $urls = array();
+
+        foreach ($stores as $storeId) {
+            try {
+                $currentStore = $this->storeManager->getStore($storeId);
+            } catch (\Exception $e) {
+                throw new \RuntimeException("Store with id {$storeId} doesn´t exist");
             }
 
-            $stores = explode(',', $input->getArgument('stores'));
+            // base url
+            $urls[] = $currentStore->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_WEB);
 
-            $urls = array();
+            $linkBaseUrl = $currentStore->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_LINK);
 
-            foreach ($stores as $storeId) {
-                try {
-                    $currentStore = $this->storeManager->getStore($storeId);
-                } catch (\Exception $e) {
-                    throw new \RuntimeException("Store with id {$storeId} doesn´t exist");
-                }
-
-                // base url
-                $urls[] = $currentStore->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_WEB);
-
-                $linkBaseUrl = $currentStore->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_LINK);
-
-                if ($input->getOption('add-categories')) {
-                    $urls = $this->getUrls($this->sitemapCategoryCollection, $linkBaseUrl, $storeId, $urls);
-                }
-
-                if ($input->getOption('add-products')) {
-                    $urls = $this->getUrls($this->sitemapProductCollection, $linkBaseUrl, $storeId, $urls);
-                }
-
-                if ($input->getOption('add-cmspages')) {
-                    $urls = $this->getUrls($this->sitemapPageCollection, $linkBaseUrl, $storeId, $urls);
-                }
-            } // foreach ($stores as $storeId)
-
-            if (count($urls) === 0) {
-                return;
+            if ($input->getOption('add-categories')) {
+                $urls = $this->getUrls($this->sitemapCategoryCollection, $linkBaseUrl, $storeId, $urls);
             }
 
-            foreach ($urls as $url) {
-
-                // pre-process
-                $line = $input->getArgument('linetemplate');
-                $line = str_replace('{url}', $url, $line);
-
-                $parts = parse_url($url);
-                foreach ($parts as $key => $value) {
-                    $line = str_replace('{' . $key . '}', $value, $line);
-                }
-
-                // ... and output
-                $output->writeln($line);
+            if ($input->getOption('add-products')) {
+                $urls = $this->getUrls($this->sitemapProductCollection, $linkBaseUrl, $storeId, $urls);
             }
+
+            if ($input->getOption('add-cmspages')) {
+                $urls = $this->getUrls($this->sitemapPageCollection, $linkBaseUrl, $storeId, $urls);
+            }
+        } // foreach ($stores as $storeId)
+
+        if (count($urls) === 0) {
+            return;
+        }
+
+        foreach ($urls as $url) {
+
+            // pre-process
+            $line = $input->getArgument('linetemplate');
+            $line = str_replace('{url}', $url, $line);
+
+            $parts = parse_url($url);
+            foreach ($parts as $key => $value) {
+                $line = str_replace('{' . $key . '}', $value, $line);
+            }
+
+            // ... and output
+            $output->writeln($line);
         }
     }
 

@@ -42,19 +42,21 @@ HELP;
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->detectMagento($output, true);
-        if ($this->initMagento()) {
-            $cacheManager = $this->getCacheManager();
-            $eventManager = $this->getObjectManager()->get('\Magento\Framework\Event\ManagerInterface');
-            $availableTypes = $cacheManager->getAvailableTypes();
+        if (!$this->initMagento()) {
+            return;
+        }
 
-            $typesToClean = $input->getArgument('type');
+        $cacheManager = $this->getCacheManager();
+        $eventManager = $this->getObjectManager()->get('\Magento\Framework\Event\ManagerInterface');
+        $availableTypes = $cacheManager->getAvailableTypes();
 
-            foreach ($availableTypes as $type) {
-                if (count($typesToClean) == 0 || in_array($type, $typesToClean)) {
-                    $cacheManager->clean(array($type));
-                    $eventManager->dispatch('adminhtml_cache_refresh_type', ['type' => $type]);
-                    $output->writeln('<info><comment>' . $type . '</comment> cache cleaned</info>');
-                }
+        $typesToClean = $input->getArgument('type');
+
+        foreach ($availableTypes as $type) {
+            if (count($typesToClean) == 0 || in_array($type, $typesToClean)) {
+                $cacheManager->clean(array($type));
+                $eventManager->dispatch('adminhtml_cache_refresh_type', ['type' => $type]);
+                $output->writeln('<info><comment>' . $type . '</comment> cache cleaned</info>');
             }
         }
     }
