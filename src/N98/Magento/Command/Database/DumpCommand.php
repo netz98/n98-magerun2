@@ -318,6 +318,7 @@ HELP;
      * @param string $command
      * @param InputInterface $input
      * @param OutputInterface $output
+     * @return bool
      */
     private function runExec($command, InputInterface $input, OutputInterface $output)
     {
@@ -334,8 +335,9 @@ HELP;
                 '<error>' . implode(PHP_EOL, $commandOutput) . '</error>',
                 '<error>Return Code: ' . $returnValue . '. ABORTED.</error>',
             ]);
-            return;
+            return false;
         }
+        return true;
     }
 
     /**
