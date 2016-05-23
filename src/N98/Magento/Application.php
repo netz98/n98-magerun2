@@ -196,8 +196,8 @@ class Application extends BaseApplication
     /**
      * Search for magento root folder
      *
-     * @param InputInterface $input [optional]
-     * @param OutputInterface $output [optional]
+     * @param InputInterface|null $input [optional]
+     * @param OutputInterface|null $output [optional]
      * @return void
      */
     public function detectMagento(InputInterface $input = null, OutputInterface $output = null)

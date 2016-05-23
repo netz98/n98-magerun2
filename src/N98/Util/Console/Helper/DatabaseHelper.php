@@ -501,7 +501,7 @@ class DatabaseHelper extends AbstractHelper
     }
 
     /**
-     * @param string $variable [optional]
+     * @param string|null $variable [optional]
      *
      * @return array
      */
