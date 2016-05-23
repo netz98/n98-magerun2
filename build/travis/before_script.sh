@@ -21,21 +21,23 @@ if [ ! -z ${MAGENTO_VERSION+x} ]; then
     N98_MAGERUN2_INSTALL_STATUS=$?
     echo "magerun magento install exit code: ${N98_MAGERUN2_INSTALL_STATUS}"
 
-    # verify magento connect credentials
-    (
-        build/sh/magento_verify_repo_credentials.sh
-    )
-    if [ $? -ne 0 ]; then
-        echo "problems to connect to repository, allow setup to fail with ${MAGENTO_VERSION}"
-        # remove test environment so that test-suite does not think it's installed
-        rm -rf "./${MAGENTO_VERSION}"
-        unset N98_MAGERUN2_TEST_MAGENTO_ROOT
-    else
-        exit ${N98_MAGERUN2_INSTALL_STATUS}
+    if [ ${N98_MAGERUN2_INSTALL_STATUS} -ne 0 ]; then
+
+        # verify magento connect credentials
+        (
+            build/sh/magento_verify_repo_credentials.sh
+        )
+        if [ $? -ne 0 ]; then
+            echo "problems to connect to repository, allow setup to fail with ${MAGENTO_VERSION}"
+            # remove test environment so that test-suite does not think it's installed
+            rm -rf "./${MAGENTO_VERSION}"
+            unset N98_MAGERUN2_TEST_MAGENTO_ROOT
+        else
+            exit ${N98_MAGERUN2_INSTALL_STATUS}
+        fi
+
     fi
 
 else
-
     echo "no magento version to install"
-
 fi
