@@ -17,8 +17,13 @@ class DumpCommandTest extends TestCase
      */
     protected function getCommand()
     {
+        $dumpCommand = new DumpCommand();
+        if (!$dumpCommand->isEnabled()) {
+            $this->markTestSkipped('DumpCommand is not enabled.');
+        }
+
         $application = $this->getApplication();
-        $application->add(new DumpCommand());
+        $application->add($dumpCommand);
         $command = $this->getApplication()->find('db:dump');
 
         return $command;
@@ -148,7 +153,7 @@ class DumpCommandTest extends TestCase
      */
     public function realDump()
     {
-        $dumpFile = new SplFileInfo($this->getTestMagentoRoot(). '/test-dump.sql');
+        $dumpFile = new SplFileInfo($this->getTestMagentoRoot() . '/test-dump.sql');
         if ($dumpFile->isReadable()) {
             $this->assertTrue(unlink($dumpFile), 'Precondition to unlink that the file does not exists');
         }
