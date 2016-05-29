@@ -43,6 +43,8 @@ if [ ${BUILD_STATUS} -ne 0 ]; then
     exit ${BUILD_STATUS}
 fi
 
+php -f build/phar/phar-timestamp.php
+
 php -f "${phar}" -- --version
 
 ls -l "${phar}"
