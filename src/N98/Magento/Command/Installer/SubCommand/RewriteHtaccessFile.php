@@ -52,23 +52,4 @@ class RewriteHtaccessFile extends AbstractSubCommand
         $content = str_replace('#RewriteBase /magento/', 'RewriteBase ' . parse_url($baseUrl, PHP_URL_PATH), $content);
         file_put_contents($htaccessFile, $content);
     }
-
-    /**
-     * @param string $name of flag/option
-     * @param bool $default value for flag/option if set but with no value
-     * @return bool
-     */
-    private function hasFlagOrOptionalBoolOption($name, $default = true)
-    {
-        if (!$this->input->hasOption($name)) {
-            return false;
-        }
-
-        $value = $this->input->getOption($name);
-        if (null === $value) {
-            return (bool) $default;
-        }
-
-        return (bool) $this->getCommand()->parseBoolOption($value);
-    }
 }
