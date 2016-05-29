@@ -3,6 +3,7 @@ RECENT CHANGES
 
 1.1.15
 ------
+* Fix: Fix undefined index access in cron:list (report by redboxmarcins, fix by Tom Klingenberg, #201)
 
 1.1.14
 ------
