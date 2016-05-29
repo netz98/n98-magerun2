@@ -11,17 +11,13 @@ class RewriteHtaccessFile extends AbstractSubCommand
      */
     public function execute()
     {
-        $optionName = 'replaceHtaccessFile';
-        if (
-            $this->input->getOption('useDefaultConfigParams') !== null
-            || $this->input->getOption($optionName) === null
-        ) {
+        if ($this->hasFlagOrOptionalBoolOption('useDefaultConfigParams')) {
             return;
         }
 
         $this->getCommand()->getApplication()->setAutoExit(false);
 
-        $flag = $this->getOptionalBooleanOption($optionName, 'Write BaseURL to .htaccess file?', false);
+        $flag = $this->getOptionalBooleanOption('replaceHtaccessFile', 'Write BaseURL to .htaccess file?', false);
 
         if ($flag) {
             $this->replaceHtaccessFile();
@@ -55,5 +51,24 @@ class RewriteHtaccessFile extends AbstractSubCommand
         $content = file_get_contents($htaccessFile);
         $content = str_replace('#RewriteBase /magento/', 'RewriteBase ' . parse_url($baseUrl, PHP_URL_PATH), $content);
         file_put_contents($htaccessFile, $content);
+    }
+
+    /**
+     * @param string $name of flag/option
+     * @param bool $default value for flag/option if set but with no value
+     * @return bool
+     */
+    private function hasFlagOrOptionalBoolOption($name, $default = true)
+    {
+        if (!$this->input->hasOption($name)) {
+            return false;
+        }
+
+        $value = $this->input->getOption($name);
+        if (null === $value) {
+            return (bool) $default;
+        }
+
+        return (bool) $this->getCommand()->parseBoolOption($value);
     }
 }
