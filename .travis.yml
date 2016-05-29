@@ -31,6 +31,7 @@ env:
     - MAGENTO_VERSION="magento-ce-2.0.4" INSTALL_SAMPLE_DATA=0
     - MAGENTO_VERSION="magento-ce-2.0.5" INSTALL_SAMPLE_DATA=0
     - MAGENTO_VERSION="magento-ce-2.0.6" INSTALL_SAMPLE_DATA=0
+    - MAGENTO_VERSION="magento-ce-2.0.7" INSTALL_SAMPLE_DATA=0
 
 matrix:
   fast_finish: true
