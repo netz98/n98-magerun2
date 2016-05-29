@@ -5,6 +5,7 @@ namespace N98\Magento\Command\Database;
 use N98\Magento\Command\PHPUnit\TestCase;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Tester\CommandTester;
+use SplFileInfo;
 
 /**
  * @see \N98\Magento\Command\Database\DumpCommand
@@ -16,8 +17,13 @@ class DumpCommandTest extends TestCase
      */
     protected function getCommand()
     {
+        $dumpCommand = new DumpCommand();
+        if (!$dumpCommand->isEnabled()) {
+            $this->markTestSkipped('DumpCommand is not enabled.');
+        }
+
         $application = $this->getApplication();
-        $application->add(new DumpCommand());
+        $application->add($dumpCommand);
         $command = $this->getApplication()->find('db:dump');
 
         return $command;
@@ -139,5 +145,32 @@ class DumpCommandTest extends TestCase
         );
         $this->assertNotContains(".sql.gz", $commandTester->getDisplay());
 
+    }
+
+    /**
+     * @test
+     * @link https://github.com/netz98/n98-magerun2/issues/200
+     */
+    public function realDump()
+    {
+        $dumpFile = new SplFileInfo($this->getTestMagentoRoot() . '/test-dump.sql');
+        if ($dumpFile->isReadable()) {
+            $this->assertTrue(unlink($dumpFile), 'Precondition to unlink that the file does not exists');
+        }
+        $this->assertFalse(is_readable($dumpFile), 'Precondition that the file does not exists');
+
+        $command = $this->getCommand();
+        $commandTester = new CommandTester($command);
+        $commandTester->execute(
+            array(
+                'command' => $command->getName(),
+                '--strip' => '@stripped',
+                'filename' => $dumpFile,
+            )
+        );
+
+        $this->assertTrue($dumpFile->isReadable(), 'File was created');
+        // dump should be larger than quarter a megabyte
+        $this->assertGreaterThan(250000, $dumpFile->getSize());
     }
 }

@@ -1,6 +1,12 @@
 RECENT CHANGES
 ==============
 
+1.1.14
+------
+* Fix: Regression test for #199 (report by Pieter Hoste, fix by Tom Klingenberg, #200)
+* Fix: Travis build exited too early (by Tom Klingenberg)
+* Feature: Install command: magento-ce-2.0.7 version (by Raul E Watson, #202)
+
 1.1.13
 ------
 * Fix: Fix db:dump regression in 1.1.12 (report by Pieter Hoste, fix by Tom Klingenberg, #199)

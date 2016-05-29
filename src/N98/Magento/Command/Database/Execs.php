@@ -37,7 +37,7 @@ class Execs
     /**
      * Execs constructor.
      *
-     * @param string $command [optional]
+     * @param string|null $command [optional]
      */
     public function __construct($command = null)
     {

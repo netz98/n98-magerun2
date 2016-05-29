@@ -35,7 +35,7 @@ class Application extends BaseApplication
     /**
      * @var string
      */
-    const APP_VERSION = '1.1.13';
+    const APP_VERSION = '1.1.14';
 
     /**
      * @var int
@@ -196,8 +196,8 @@ class Application extends BaseApplication
     /**
      * Search for magento root folder
      *
-     * @param InputInterface $input [optional]
-     * @param OutputInterface $output [optional]
+     * @param InputInterface|null $input [optional]
+     * @param OutputInterface|null $output [optional]
      * @return void
      */
     public function detectMagento(InputInterface $input = null, OutputInterface $output = null)
