@@ -40,7 +40,7 @@ Microsoft Windows is not fully supported (some Commands like `db:dump` or `insta
 Installation
 ------------
 
-There are two ways to install the tools:
+There are three ways to install the tools:
 
 Download phar file
 """"""""""""""""""
@@ -67,6 +67,24 @@ If you want to use the command system wide you can copy it to `/usr/local/bin`.
 
     sudo cp ./n98-magerun2.phar /usr/local/bin/
 
+Install with Homebrew
+"""""""""""""""""""""
+
+First you need to have homebrew installed: http://brew.sh/
+
+Install homebrew-php tap: https://github.com/Homebrew/homebrew-php#installation
+
+Once homebrew and the tap are installed, you can install the tools with it:
+
+.. code-block:: sh
+
+    brew install n98-magerun2
+
+You can now use the tools:
+
+.. code-block:: sh
+
+    $ n98-magerun2 {command}
 
 Usage / Commands
 ----------------
