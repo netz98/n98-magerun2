@@ -28,17 +28,28 @@ fi
 
 git clone -l -- . "${build_dir}"
 
-if [ ! -e "composer.phar" ]; then
-    echo "Downloading composer.phar..."
-    wget http://getcomposer.org/composer.phar
-    chmod +x composer.phar
+composer="${build_dir}/composer-build.phar"
+
+if [ -a "${composer}" ]; then
+    rm "${composer}"
 fi
 
-./composer.phar --version
+if [ ! -e "${composer}" ]; then
+    echo "Downloading composer.phar..."
+    wget -O "${composer}" https://getcomposer.org/download/1.1.1/composer.phar
+    chmod +x "${composer}"
+fi
 
-./composer.phar -d="${build_dir}" -q --profile install --no-dev --no-interaction
+"${composer}" --version
+php --version
 
-./composer.phar -d="${build_dir}"/build -q --profile install --no-interaction
+if ! "${composer}" -d="${build_dir}" --profile -q install --no-dev --no-interaction; then
+    echo "failed to install from composer.lock, installing without lockfile now"
+    rm "${build_dir}"/composer.lock
+    "${composer}" -d="${build_dir}" --profile -q install --no-dev --no-interaction
+fi
+
+"${composer}" -d="${build_dir}"/build --profile -q install --no-interaction
 
 if [ -e "${phar}" ]; then
     echo "Remove earlier created ${phar} file"
@@ -48,6 +59,7 @@ fi
 cd "${build_dir}"
 
 echo "building in $(pwd -P)"
+git log --oneline -1
 
 ulimit -Sn $(ulimit -Hn)
 
