@@ -7,6 +7,7 @@ RECENT CHANGES
 * Fix: Install command replace-htaccess-file option (report by Matthias Zeis, fix by Tom Klingenberg, #191)
 * Fix: Fix undefined index access in cron:list (report by redboxmarcins, fix by Tom Klingenberg, #201)
 * Imp: Build with timestamp alignment and in clean directory (by Tom Klingenberg)
+* New: Add Homebrew installation (by Matthéo Geoffray, #203)
 
 1.1.14
 ------
