@@ -34,7 +34,7 @@ If you use Magento 1 please use another stable version (https://github.com/netz9
 
 Compatibility
 -------------
-The tools will automatically be tested for multiple PHP versions (5.4, 5.5). It's currently running in various Linux distributions and Mac OS X.
+The tools will automatically be tested for multiple PHP versions ( 5.5). It's currently running in various Linux distributions and Mac OS X.
 Microsoft Windows is not fully supported (some Commands like `db:dump` or `install` are excluded).
 
 Installation
