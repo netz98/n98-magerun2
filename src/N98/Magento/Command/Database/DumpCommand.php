@@ -81,7 +81,7 @@ class DumpCommand extends AbstractDatabaseCommand
                 'Tables to strip (dump only structure of those tables)'
             )
             ->addOption('force', 'f', InputOption::VALUE_NONE, 'Do not prompt if all options are defined')
-            ->setDescription('Dumps database with mysqldump cli client according to informations from local.xml');
+            ->setDescription('Dumps database with mysqldump cli client according to informations from env.php');
 
         $help = <<<HELP
 Dumps configured magento database with `mysqldump`.
@@ -89,7 +89,7 @@ You must have installed the MySQL client tools.
 
 On debian systems run `apt-get install mysql-client` to do that.
 
-The command reads app/etc/local.xml to find the correct settings.
+The command reads app/etc/env.php to find the correct settings.
 If you like to skip data of some tables you can use the --strip option.
 The strip option creates only the structure of the defined tables and
 forces `mysqldump` to skip the data.

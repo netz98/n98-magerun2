@@ -333,7 +333,7 @@ class Application extends BaseApplication
         $this->detectMagento(null, $output);
         /* If magento is not installed yet, don't check */
         if ($this->_magentoRootFolder === null
-            || !file_exists($this->_magentoRootFolder . '/app/etc/local.xml')
+            || !file_exists($this->_magentoRootFolder . '/app/etc/env.php')
         ) {
             return;
         }

@@ -206,7 +206,7 @@ Arguments:
 Options:
     --scope             The config value's scope (default, websites, stores)
     --scope-id          The config value's scope ID
-    --decrypt           Decrypt the config value using local.xml's crypt key
+    --decrypt           Decrypt the config value using crypt key defined in env.php
     --update-script     Output as update script lines
     --magerun-script    Output for usage with config:set
     --format            Output as json, xml or csv
