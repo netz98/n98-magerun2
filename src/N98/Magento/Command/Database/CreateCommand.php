@@ -16,7 +16,7 @@ class CreateCommand extends AbstractDatabaseCommand
 
         $help = <<<HELP
 The command tries to create the configured database according to your
-settings in app/etc/local.xml.
+settings in app/etc/env.php.
 The configured user must have "CREATE DATABASE" privileges on MySQL Server.
 HELP;
         $this->setHelp($help);

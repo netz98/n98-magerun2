@@ -37,7 +37,7 @@ class SetCommand extends AbstractConfigCommand
                 'encrypt',
                 null,
                 InputOption::VALUE_NONE,
-                'The config value should be encrypted using local.xml\'s crypt key'
+                'The config value should be encrypted using env.php\'s crypt key'
             );
 
         $help = <<<HELP

@@ -10,6 +10,7 @@ phpunit.xml
 # Build files
 composer.phar
 n98-magerun2.phar
+build/out/
 
 # Miscellaneous (Kraut und Rueben)
 .DS_Store

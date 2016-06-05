@@ -34,13 +34,13 @@ If you use Magento 1 please use another stable version (https://github.com/netz9
 
 Compatibility
 -------------
-The tools will automatically be tested for multiple PHP versions (5.4, 5.5). It's currently running in various Linux distributions and Mac OS X.
+The tools will automatically be tested for multiple PHP versions (5.5, 5.6, 7.0). It's currently running in various Linux distributions and Mac OS X.
 Microsoft Windows is not fully supported (some Commands like `db:dump` or `install` are excluded).
 
 Installation
 ------------
 
-There are two ways to install the tools:
+There are three ways to install the tools:
 
 Download phar file
 """"""""""""""""""
@@ -67,6 +67,24 @@ If you want to use the command system wide you can copy it to `/usr/local/bin`.
 
     sudo cp ./n98-magerun2.phar /usr/local/bin/
 
+Install with Homebrew
+"""""""""""""""""""""
+
+First you need to have homebrew installed: http://brew.sh/
+
+Install homebrew-php tap: https://github.com/Homebrew/homebrew-php#installation
+
+Once homebrew and the tap are installed, you can install the tools with it:
+
+.. code-block:: sh
+
+    brew install n98-magerun2
+
+You can now use the tools:
+
+.. code-block:: sh
+
+    $ n98-magerun2 {command}
 
 Usage / Commands
 ----------------
@@ -188,7 +206,7 @@ Arguments:
 Options:
     --scope             The config value's scope (default, websites, stores)
     --scope-id          The config value's scope ID
-    --decrypt           Decrypt the config value using local.xml's crypt key
+    --decrypt           Decrypt the config value using crypt key defined in env.php
     --update-script     Output as update script lines
     --magerun-script    Output for usage with config:set
     --format            Output as json, xml or csv

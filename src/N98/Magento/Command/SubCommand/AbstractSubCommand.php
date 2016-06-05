@@ -112,4 +112,23 @@ abstract class AbstractSubCommand implements SubCommandInterface
             return $flag;
         }
     }
+
+    /**
+     * @param string $name of flag/option
+     * @param bool $default value for flag/option if set but with no value
+     * @return bool
+     */
+    final protected function hasFlagOrOptionalBoolOption($name, $default = true)
+    {
+        if (!$this->input->hasOption($name)) {
+            return false;
+        }
+
+        $value = $this->input->getOption($name);
+        if (null === $value) {
+            return (bool) $default;
+        }
+
+        return (bool) $this->getCommand()->parseBoolOption($value);
+    }
 }
