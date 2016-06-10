@@ -38,9 +38,9 @@ class CompareVersionsCommand extends AbstractMagentoCommand
                 InputOption::VALUE_OPTIONAL,
                 'Output Format. One of [' . implode(',', RendererFactory::getFormats()) . ']'
             )
-            ->setDescription('Compare module version with core_resource table.');
+            ->setDescription('Compare module version with setup_module table.');
         $help = <<<HELP
-Compares module version with saved setup version in `core_resource` table and displays version mismatch.
+Compares module version with saved setup version in `setup_module` table and displays version mismatch.
 HELP;
         $this->setHelp($help);
     }
