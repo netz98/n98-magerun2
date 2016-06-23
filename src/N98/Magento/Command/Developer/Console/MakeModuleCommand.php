@@ -41,6 +41,7 @@ class MakeModuleCommand extends AbstractGeneratorCommand
         $appDirectoryReader = $filesystem->getDirectoryRead(DirectoryList::APP);
 
         $this->createRegistrationFile($moduleName, $appDirectoryWriter);
+        $this->createComposerFile($moduleName, $appDirectoryWriter);
         $this->createEtcModuleFile($moduleName, $appDirectoryWriter);
         $this->createTestDirectories($moduleName, $appDirectoryWriter);
         $this->includeRegistrationFile($moduleName, $appDirectoryReader);
@@ -95,6 +96,28 @@ FILE_BODY;
      * @param ModuleNameStructure $moduleName
      * @param WriteInterface $appDirectoryWriter
      */
+    private function createComposerFile(ModuleNameStructure $moduleName, WriteInterface $appDirectoryWriter)
+    {
+        $composerFileBody = $this->getHelper('twig')->render(
+            'dev/console/make/module/composer.json.twig',
+            [
+                'vendor' => $moduleName->getVendorName(),
+                'module' => $moduleName->getShortModuleName(),
+                'namespace' => str_replace('\\', '\\\\', $this->getModuleNamespace($moduleName->getFullModuleName())),
+            ]
+        );
+        var_dump($composerFileBody);
+
+        $appDirectoryWriter->writeFile(
+            'code/' . $moduleName->getVendorName() . '/' . $moduleName->getShortModuleName() . '/composer.json',
+            $composerFileBody
+        );
+    }
+
+    /**
+     * @param ModuleNameStructure $moduleName
+     * @param WriteInterface $appDirectoryWriter
+     */
     private function createEtcModuleFile(ModuleNameStructure $moduleName, WriteInterface $appDirectoryWriter)
     {
         $moduleFileBody = <<<FILE_BODY
@@ -108,7 +131,9 @@ FILE_BODY;
 
 FILE_BODY;
 
-        $appDirectoryWriter->writeFile('code/' . $moduleName->getVendorName() . '/' . $moduleName->getShortModuleName() . '/etc/module.xml', $moduleFileBody);
+        $appDirectoryWriter->writeFile(
+            'code/' . $moduleName->getVendorName() . '/' . $moduleName->getShortModuleName() . '/etc/module.xml', $moduleFileBody
+        );
     }
 
     /**

@@ -43,6 +43,17 @@ abstract class AbstractGeneratorCommand extends AbstractConsoleCommand
     public function getCurrentModuleNamespace()
     {
         $moduleName = $this->getCurrentModuleName()->getFullModuleName();
+
+        return $this->getModuleNamespace($moduleName);
+    }
+
+    /**
+     * @param string $moduleName
+     * 
+     * @return string
+     */
+    public function getModuleNamespace($moduleName)
+    {
         list($vendorPrefix, $moduleNamespace) = explode('_', $moduleName);
 
         return $vendorPrefix . '\\' . $moduleNamespace;
