@@ -27,6 +27,6 @@ class MakeEntityCommand extends AbstractGeneratorCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        
+        $output->writeln('currently not implemented');
     }
 }

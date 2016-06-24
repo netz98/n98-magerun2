@@ -13,6 +13,8 @@ use Psy\CodeCleaner;
 use Psy\Command\ListCommand;
 use Psy\Configuration;
 use Psy\Output\ShellOutput;
+use Psy\TabCompletion\AutoCompleter;
+use Psy\TabCompletion\Matcher\CommandsMatcher;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -57,22 +59,28 @@ class ConsoleCommand extends AbstractMagentoCommand
             // do nothing
         }
 
+        $config = new Configuration();
+
         $parser = new Parser(new Lexer());
         $cleaner = new CodeCleaner($parser);
-        $consoleOutput = new ShellOutput();
-        $config = new Configuration();
         $config->setCodeCleaner($cleaner);
+
+        $consoleOutput = new ShellOutput();
+
+        $commandConfig = $this->getCommandConfig();
+        $commandsToAdd = [];
+        foreach ($commandConfig['commands'] as $command) {
+            $commandsToAdd[]= new $command();
+        }
+
+        $config->addCommands($commandsToAdd);
+
         $shell = new Shell($config);
         $shell->setScopeVariables([
             'di' => $this->getObjectManager(),
             'magerun' => $this->getApplication(),
             'magerunInternal' => (object)['currentModule' => ''],
         ]);
-
-        $commandConfig = $this->getCommandConfig();
-        foreach ($commandConfig['commands'] as $command) {
-            $shell->add(new $command());
-        }
 
         if ($initialized) {
             $ok = Charset::convertInteger(Charset::UNICODE_CHECKMARK_CHAR);
