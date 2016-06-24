@@ -106,7 +106,6 @@ FILE_BODY;
                 'namespace' => str_replace('\\', '\\\\', $this->getModuleNamespace($moduleName->getFullModuleName())),
             ]
         );
-        var_dump($composerFileBody);
 
         $appDirectoryWriter->writeFile(
             'code/' . $moduleName->getVendorName() . '/' . $moduleName->getShortModuleName() . '/composer.json',
