@@ -50,7 +50,7 @@ XML;
 
             $argumentElement = $this->createElement('argument');
             $argumentElement->setAttribute('name', 'commands');
-            $argumentElement->setAttributeNS('http://www.w3.org/2001/XMLSchema-instance', 'xsi:type', 'array');
+            $argumentElement->setAttribute('xsi:type', 'array');
             $argumentsElement->appendChild($argumentElement);
 
             $this->documentElement->appendChild($typeElement);
@@ -58,7 +58,7 @@ XML;
 
         $itemElement = $this->createElement('item', $commandClass);
         $itemElement->setAttribute('name', $commandName);
-        $itemElement->setAttributeNS('http://www.w3.org/2001/XMLSchema-instance', 'xsi:type', 'object');
+        $itemElement->setAttribute('xsi:type', 'object');
         $argumentElement->appendChild($itemElement);
 
         return $this;
