@@ -8,6 +8,7 @@ namespace N98\Magento\Command\Developer\Console;
 
 use Magento\Framework\Filesystem;
 use Magento\Framework\App\Filesystem\DirectoryList;
+use Magento\Framework\Filesystem\Directory\WriteInterface;
 use N98\Magento\Command\Developer\Console\Structure\ThemeNameStructure;
 use N98\Magento\Command\Developer\Console\Util\Xml;
 use Symfony\Component\Console\Input\InputArgument;
@@ -54,7 +55,11 @@ class MakeThemeCommand extends AbstractGeneratorCommand
         }
 
         if (!$appDirReader->isFile($relativePath . '/registration.php')) {
-            $this->createRegistrationFile($output, $themeName, $appDirWriter, $relativePath);
+            $this->createRegistrationFile($themeName, $appDirWriter, $relativePath);
+        }
+
+        if (!$appDirReader->isFile($relativePath . '/composer.json')) {
+            $this->createComposerFile($themeName, $appDirWriter, $relativePath);
         }
 
         if (!$appDirReader->isFile($relativePath . '/theme.xml')) {
@@ -76,25 +81,43 @@ class MakeThemeCommand extends AbstractGeneratorCommand
     }
 
     /**
-     * @param OutputInterface $output
-     * @param string $themeName
+     * @param ThemeNameStructure $themeName
      * @param \Magento\Framework\Filesystem\Directory\WriteInterface $appDirWriter
      * @param string $relativePath
      */
-    private function createRegistrationFile(OutputInterface $output, $themeName, $appDirWriter, $relativePath)
+    private function createRegistrationFile(ThemeNameStructure $themeName, $appDirWriter, $relativePath)
     {
         $registrationFileBody = <<<FILE_BODY
 <?php
 
 \Magento\Framework\Component\ComponentRegistrar::register(
     \Magento\Framework\Component\ComponentRegistrar::THEME,
-    '$themeName',
+    '{$themeName->__toString()}',
     __DIR__
 );
 
 FILE_BODY;
         $appDirWriter->writeFile($relativePath . '/registration.php', $registrationFileBody);
-        $output->writeln('<info>generated </info><comment>' . $relativePath . '/registration.php</comment>');
+    }
+
+    /**
+     * @param ThemeNameStructure $themeName
+     * @param WriteInterface $appDirectoryWriter
+     * @param string $relativePath
+     */
+    private function createComposerFile(ThemeNameStructure $themeName, WriteInterface $appDirectoryWriter, $relativePath)
+    {
+        $composerFileBody = $this->getHelper('twig')->render(
+            'dev/console/make/theme/composer.json.twig',
+            [
+                'theme' => $themeName,
+            ]
+        );
+
+        $appDirectoryWriter->writeFile(
+            $relativePath . '/composer.json',
+            $composerFileBody
+        );
     }
 
     /**
