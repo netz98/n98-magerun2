@@ -4,8 +4,8 @@ namespace N98\Magento\Command\Script\Repository;
 
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class RunCommand extends AbstractRepositoryCommand
@@ -42,8 +42,7 @@ HELP;
             ->addOption('define', 'd', InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY, 'Defines a variable')
             ->addOption('stop-on-error', null, InputOption::VALUE_NONE, 'Stops execution of script on error')
             ->setDescription('Run script from repository')
-            ->setHelp($help)
-        ;
+            ->setHelp($help);
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -58,13 +57,17 @@ HELP;
                 $i++;
             }
             $question[] = '<question>Please select a script file: </question>';
-            $selectedFile = $this->getHelper('dialog')->askAndValidate($output, $question, function($typeInput) use ($files) {
-                if (!isset($files[$typeInput - 1])) {
-                    throw new \InvalidArgumentException('Invalid file');
-                }
+            $selectedFile = $this->getHelper('dialog')->askAndValidate(
+                $output,
+                $question,
+                function ($typeInput) use ($files) {
+                    if (!isset($files[$typeInput - 1])) {
+                        throw new \InvalidArgumentException('Invalid file');
+                    }
 
-                return $files[$typeInput - 1]['fileinfo']->getPathname();
-            });
+                    return $files[$typeInput - 1]['fileinfo']->getPathname();
+                }
+            );
         } else {
             $script = $input->getArgument('script');
             if (substr($script, -strlen(self::MAGERUN_EXTENSION)) !== self::MAGERUN_EXTENSION) {
@@ -79,7 +82,7 @@ HELP;
 
 
         $scriptArray = array(
-            'command'  => 'script',
+            'command' => 'script',
             'filename' => $selectedFile,
         );
         foreach ($input->getOption('define') as $define) {

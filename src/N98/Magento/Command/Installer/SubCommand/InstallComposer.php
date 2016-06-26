@@ -10,12 +10,12 @@ use N98\Magento\Command\SubCommand\AbstractSubCommand;
 class InstallComposer extends AbstractSubCommand
 {
     /**
-     * @type int
+     * @var int
      */
     const EXEC_STATUS_OK = 0;
 
     /**
-     * @return bool
+     * @return void
      *
      * @throws \Exception
      */
@@ -39,8 +39,6 @@ class InstallComposer extends AbstractSubCommand
 
         $this->output->writeln('<info>Found executable <comment>' . $composerBin . '</comment></info>');
         $this->config['composer_bin'] = $composerBin;
-
-        return true;
     }
 
     /**

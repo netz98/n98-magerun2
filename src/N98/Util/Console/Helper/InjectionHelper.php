@@ -32,7 +32,7 @@ class InjectionHelper extends AbstractHelper
             $argumentsToInject[] = $objectManager->get($parameter[1]);
         }
 
-        call_user_func_array([ $object, $methodName ], $argumentsToInject);
+        call_user_func_array([$object, $methodName], $argumentsToInject);
     }
 
     /**

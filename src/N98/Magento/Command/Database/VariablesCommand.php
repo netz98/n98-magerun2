@@ -11,7 +11,6 @@ use N98\Util\Filesystem;
 
 class VariablesCommand extends AbstractShowCommand
 {
-
     /**
      * variable name => recommended size (but this value must be calculated depending on the server size
      * @see https://launchpadlibrarian.net/78745738/tuning-primer.sh convert that to PHP ... ?
@@ -72,7 +71,7 @@ HELP;
             'max_write_lock_count'     => 1,
             'slave_max_allowed_packet' => 1,
         );
-        $isSize  = false !== strpos($name, '_size');
+        $isSize = false !== strpos($name, '_size');
 
         return $isSize || isset($toHuman[$name]);
     }

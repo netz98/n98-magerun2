@@ -24,7 +24,7 @@ class SubCommandFactory
     protected $output;
 
     /**
-     * @var array
+     * @var ConfigBag
      */
     protected $config;
 
@@ -74,7 +74,7 @@ class SubCommandFactory
         }
 
         $subCommand = new $className();
-        if (! $subCommand instanceof SubCommandInterface) {
+        if (!$subCommand instanceof SubCommandInterface) {
             throw new \InvalidArgumentException('Subcommand must implement SubCommandInterface.');
         }
 
@@ -86,5 +86,13 @@ class SubCommandFactory
         $subCommand->setCommandConfig($this->commandConfig);
 
         return $subCommand;
+    }
+
+    /**
+     * @return ConfigBag
+     */
+    public function getConfig()
+    {
+        return $this->config;
     }
 }

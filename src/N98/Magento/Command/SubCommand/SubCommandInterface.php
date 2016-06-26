@@ -10,21 +10,25 @@ interface SubCommandInterface
 {
     /**
      * @param ConfigBag $config
+     * @return void
      */
     public function setConfig(ConfigBag $config);
 
     /**
      * @param array $commandConfig
+     * @return void
      */
     public function setCommandConfig(array $commandConfig);
 
     /**
      * @param InputInterface $input
+     * @return void
      */
     public function setInput(InputInterface $input);
 
     /**
      * @param OutputInterface $output
+     * @return void
      */
     public function setOutput(OutputInterface $output);
 
@@ -35,11 +39,12 @@ interface SubCommandInterface
 
     /**
      * @param AbstractMagentoCommand $command
+     * @return void
      */
     public function setCommand(AbstractMagentoCommand $command);
 
     /**
-     * @return bool
+     * @return void
      */
     public function execute();
 }

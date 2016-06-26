@@ -4,41 +4,56 @@ netz98 magerun CLI tools for Magento 2
 
 The n98 magerun cli tools provides some handy tools to work with Magento from command line.
 
+Build Status
+------------
+
++------------------------+------------------------------------------------------------------------------------------------+
+| **Latest Release**     | .. image:: https://travis-ci.org/netz98/n98-magerun2.png?branch=master                         |
+|                        |    :target: https://travis-ci.org/netz98/n98-magerun2                                          |
+|                        | .. image:: https://www.versioneye.com/user/projects/51236c8b294edc00020064c5/badge.png         |
+|                        |    :target: https://www.versioneye.com/user/projects/51236c8b294edc00020064c5                  |
+|                        | .. image:: https://scrutinizer-ci.com/g/netz98/n98-magerun2/badges/quality-score.png?b=master  |
+|                        |    :target: https://scrutinizer-ci.com/g/netz98/n98-magerun2/                                  |
+|                        | .. image:: https://poser.pugx.org/n98/magerun2/v/stable.png                                    |
+|                        |    :target: https://packagist.org/packages/n98/magerun2                                        |
++------------------------+------------------------------------------------------------------------------------------------+
+| **Development Branch** | .. image:: https://travis-ci.org/netz98/n98-magerun2.png?branch=develop                        |
+|                        |    :target: https://travis-ci.org/netz98/n98-magerun2                                          |
+|                        | .. image:: https://circleci.com/gh/netz98/n98-magerun2/tree/develop.svg?style=shield           |
+|                        |    :target: https://circleci.com/gh/netz98/n98-magerun2/tree/develop                           |
+|                        | .. image:: https://scrutinizer-ci.com/g/netz98/n98-magerun2/badges/quality-score.png?b=develop |
+|                        |    :target: https://scrutinizer-ci.com/g/netz98/n98-magerun2/?branch=develop                   |
+|                        | .. image:: https://codecov.io/github/netz98/n98-magerun2/coverage.svg?branch=develop           |
+|                        |    :target: https://codecov.io/github/netz98/n98-magerun2?branch=develop                       |
++------------------------+------------------------------------------------------------------------------------------------+
+
 DEVELOPMENT IN GIT BRANCH **develop**.
 
 This software is only running with Magento 2.
 If you use Magento 1 please use another stable version (https://github.com/netz98/n98-magerun).
 
-Build Status
-------------
-
-**Development Branch**
-
-.. image:: https://travis-ci.org/netz98/n98-magerun2.png?branch=develop
-:target: https://travis-ci.org/netz98/n98-magerun2
-
 Compatibility
 -------------
-The tools will automatically be tested for multiple PHP versions (5.4, 5.5). It's currently running in various Linux distributions and Mac OS X.
+The tools will automatically be tested for multiple PHP versions (5.5, 5.6, 7.0). It's currently running in various Linux distributions and Mac OS X.
 Microsoft Windows is not fully supported (some Commands like `db:dump` or `install` are excluded).
 
 Installation
 ------------
 
-There are two ways to install the tools:
+There are three ways to install the tools:
 
 Download phar file
 """"""""""""""""""
 
 .. code-block:: sh
 
-    wget https://raw.githubusercontent.com/netz98/n98-magerun2/master/n98-magerun2.phar
+    wget https://files.magerun.net/n98-magerun2.phar
 
 or if you have problems with SSL certificate:
 
 .. code-block:: sh
 
-   curl -o n98-magerun2.phar https://raw.githubusercontent.com/netz98/n98-magerun2/master/n98-magerun2.phar
+   curl -O https://files.magerun.net/n98-magerun2.phar
 
 You can make the .phar file executable.
 
@@ -52,6 +67,24 @@ If you want to use the command system wide you can copy it to `/usr/local/bin`.
 
     sudo cp ./n98-magerun2.phar /usr/local/bin/
 
+Install with Homebrew
+"""""""""""""""""""""
+
+First you need to have homebrew installed: http://brew.sh/
+
+Install homebrew-php tap: https://github.com/Homebrew/homebrew-php#installation
+
+Once homebrew and the tap are installed, you can install the tools with it:
+
+.. code-block:: sh
+
+    brew install n98-magerun2
+
+You can now use the tools:
+
+.. code-block:: sh
+
+    $ n98-magerun2 {command}
 
 Usage / Commands
 ----------------
@@ -263,6 +296,81 @@ Enable Magento cache
 
 If no code is specified, all cache types will be enabled.
 Run `cache:list` command to see all codes.
+
+EAV Attributes
+"""""""""""""""""
+
+View the data for a particular attribute:
+
+.. code-block:: sh
+
+   $ n98-magerun2.phar eav:attribute:view [--format[="..."]] entityType attributeCode
+
+Generate Gift Card Pool
+"""""""""""""""""
+
+Generates a new gift card pool.
+
+.. code-block:: sh
+
+   $ n98-magerun2.phar giftcard:pool:generate
+
+Create a Gift Card
+"""""""""""""""""
+
+.. code-block:: sh
+
+   $ n98-magerun2.phar giftcard:create [--website[="..."]] [--expires[="..."]] [amount]
+
+You may specify a website ID or use the default. You may also optionally add an expiration date to the gift card
+using the `--expires` option. Dates should be in `YYYY-MM-DD` format.
+
+View Gift Card Information
+"""""""""""""""""
+
+.. code-block:: sh
+
+   $ n98-magerun2.phar giftcard:info [--format[="..."]] [code]
+
+Remove a Gift Card
+"""""""""""""""""
+
+.. code-block:: sh
+
+   $ n98-magerun2.phar giftcard:remove [code]
+
+
+Compare Setup Versions
+""""""""""""""""""""""
+
+Compares module version with saved setup version in `setup_module` table and displays version mismatchs if found.
+
+.. code-block:: sh
+
+   $ n98-magerun2.phar sys:setup:compare-versions [--ignore-data] [--log-junit="..."] [--format[="..."]]
+
+* If a filename with `--log-junit` option is set the tool generates an XML file and no output to *stdout*.
+
+Change Setup Version
+""""""""""""""""""""
+
+Changes the version of a module. This command is useful if you want to re-run an upgrade script again possibly for 
+debugging. Alternatively you would have to alter the row in the database manually.
+
+.. code-block:: sh
+
+   $ n98-magerun2.phar sys:setup:change-version module version
+
+Interactive Development Console
+"""""""""""""""""""""""""""""""
+
+Opens PHP interactive shell with initialized Magento Admin-Store.
+
+.. code-block:: sh
+
+   $ n98-magerun2.phar dev:console
+
+Variable ``$di`` is made available with a ``Magento\Framework\ObjectManagerInterface`` instance to allow creation of object instances.
 
 n98-magerun Shell
 """""""""""""""""

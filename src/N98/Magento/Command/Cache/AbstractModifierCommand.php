@@ -55,7 +55,7 @@ abstract class AbstractModifierCommand extends AbstractMagentoCommand
         // Find out which types simply do not exist or are not affected by modifier
         $invalidTypes = array_diff($types, array_keys($this->getCacheTypes(!static::TARGET_IS_ENABLED)));
 
-        if (! empty($invalidTypes)) {
+        if (!empty($invalidTypes)) {
             $output->writeln(sprintf(static::INVALID_TYPES_MESSAGE, implode(', ', $invalidTypes)));
         }
 
@@ -68,7 +68,7 @@ abstract class AbstractModifierCommand extends AbstractMagentoCommand
         }
 
         /** @var $cacheState \Magento\Framework\App\Cache\StateInterface */
-        $cacheState =  $this->getObjectManager()->get('\Magento\Framework\App\Cache\StateInterface');
+        $cacheState = $this->getObjectManager()->get('\Magento\Framework\App\Cache\StateInterface');
         $touchedTypes = [];
 
         try {
@@ -82,7 +82,7 @@ abstract class AbstractModifierCommand extends AbstractMagentoCommand
             }
 
             $cacheState->persist();
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             $output->writeln(sprintf(static::EXCEPTION_MESSAGE, $e->getMessage()));
         }
 

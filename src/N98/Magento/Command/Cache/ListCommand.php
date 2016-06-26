@@ -1,7 +1,8 @@
 <?php
 namespace N98\Magento\Command\Cache;
 
-use Magento\Framework\App\Cache\Type\ConfigSegment;
+use Magento\Framework\App\Cache\TypeList as CacheTypeList;
+use Magento\Framework\App\DeploymentConfig;
 use N98\Magento\Command\AbstractMagentoCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -10,11 +11,17 @@ use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
 
 class ListCommand extends AbstractMagentoCommand
 {
-    protected $cacheTypes = [];
+    /**
+     * @var CacheTypeList
+     */
+    private $cacheTypeList;
 
+    /**
+     * @return array
+     */
     public function getTypes()
     {
-        return $this->cacheTypes;
+        return $this->cacheTypeList->getTypes();
     }
 
     protected function configure()
@@ -37,6 +44,13 @@ class ListCommand extends AbstractMagentoCommand
         ;
     }
 
+    public function inject(
+        CacheTypeList $cacheTypeList
+    ) {
+        $this->cacheTypeList = $cacheTypeList;
+    }
+
+
     /**
      * @param \Symfony\Component\Console\Input\InputInterface $input
      * @param \Symfony\Component\Console\Output\OutputInterface $output
@@ -52,24 +66,23 @@ class ListCommand extends AbstractMagentoCommand
 
         $this->initMagento();
 
-        $this->cacheTypes = $this->getObjectManager()
-                                 ->get('\Magento\Framework\App\DeploymentConfig')
-                                 ->getSegment(ConfigSegment::SEGMENT_KEY);
+        $cacheTypes = $this->getTypes();
 
         $tableData = [];
 
-        foreach ($this->cacheTypes as $name => $isEnabled) {
+        foreach ($cacheTypes as $cacheType) {
+
             // If 'enabled' option is set, filter those who match
-            if (! is_null($input->getOption('enabled')) && $input->getOption('enabled') != $isEnabled) {
-                unset($this->cacheTypes[$name]);
+            if (!is_null($input->getOption('enabled')) && $input->getOption('enabled') != $cacheType->getStatus()) {
+                unset($cacheTypes[$cacheType->getId()]);
                 continue;
             }
 
-            $tableData[] = [$name, $isEnabled];
+            $tableData[] = [$cacheType->getId(), $cacheType->getCacheType(), $cacheType->getStatus()];
         }
 
         $this->getHelper('table')
-             ->setHeaders(array('Name', 'Enabled'))
-             ->renderByFormat($output, $tableData, $input->getOption('format'));
+                ->setHeaders(array('Name', 'Type', 'Enabled'))
+                ->renderByFormat($output, $tableData, $input->getOption('format'));
     }
 }

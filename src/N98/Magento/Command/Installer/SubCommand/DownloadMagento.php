@@ -2,57 +2,77 @@
 
 namespace N98\Magento\Command\Installer\SubCommand;
 
+use Exception;
 use N98\Magento\Command\SubCommand\AbstractSubCommand;
+use N98\Util\Console\Helper\ComposerHelper;
+use N98\Util\Exec;
+use N98\Util\ProcessArguments;
+use RuntimeException;
+use Symfony\Component\Console\Output\OutputInterface;
 
 class DownloadMagento extends AbstractSubCommand
 {
     /**
-     * @return bool
+     * @throws Exception
+     * @return void
      */
     public function execute()
     {
         if ($this->input->getOption('noDownload')) {
-            return false;
+            return;
         }
 
         try {
-            $package = $this->getCommand()->createComposerPackageByConfig($this->config['magentoVersionData']);
-            $this->config->setObject('magentoPackage', $package);
+            $this->implementation();
+        } catch (Exception $e) {
+            throw new RuntimeException('Error while downloading magento, aborting install', 0, $e);
+        }
+    }
 
-            if (file_exists($this->config->getString('installationFolder') . DIRECTORY_SEPARATOR . 'app' . DIRECTORY_SEPARATOR . 'Mage.php')) {
-                $this->output->writeln('<error>A magento installation already exists in this folder </error>');
-                return false;
-            }
+    private function implementation()
+    {
+        $this->checkMagentoConnectCredentials($this->output);
 
-            $composer = $this->getCommand()->getComposer($this->input, $this->output);
-            $targetFolder = $this->getTargetFolderByType($composer, $package, $this->config->getString('installationFolder'));
-            $this->config->setObject(
-                'magentoPackage',
-                $this->getCommand()->downloadByComposerConfig(
-                    $this->input,
-                    $this->output,
-                    $package,
-                    $targetFolder,
-                    true
-                )
-            );
+        $package = $this->config['magentoVersionData'];
+        $this->config->setArray('magentoPackage', $package);
 
-            if ($this->getCommand()->isSourceTypeRepository($package->getSourceType())) {
-                $filesystem = new \N98\Util\Filesystem;
-                $filesystem->recursiveCopy($targetFolder, $this->config['installationFolder'], array('.git', '.hg'));
-            } else {
-                $filesystem = new \Composer\Util\Filesystem();
-                $filesystem->copyThenRemove(
-                    $this->config['installationFolder'] . '/_n98_magerun_download', $this->config['installationFolder']
-                );
-            }
-
-        } catch (\Exception $e) {
-            $this->output->writeln('<error>' . $e->getMessage() . '</error>');
-            return false;
+        if (file_exists($this->config->getString('installationFolder') . '/app/etc/env.php')) {
+            throw new RuntimeException('A magento installation already exists in this folder');
         }
 
-        return true;
+        $args = new ProcessArguments(array($this->config['composer_bin'], 'create-project',));
+        $args
+            // Add composer options
+            ->addArgs($package['options'])
+            // Add arguments
+            ->addArg($package['package'])
+            ->addArg($this->config->getString('installationFolder'))
+            ->addArg($package['version']);
+
+        if (OutputInterface::VERBOSITY_VERBOSE <= $this->output->getVerbosity()) {
+            $args->addArg('-vvv');
+        }
+
+        /**
+         * @TODO use composer helper
+         */
+        $process = $args->createBuilder()->getProcess();
+        $process->setInput($this->input);
+        if (OutputInterface::VERBOSITY_VERBOSE <= $this->output->getVerbosity()) {
+            $this->output->writeln($process->getCommandLine());
+        }
+
+        $process->setTimeout(86400);
+        $process->start();
+        $code = $process->wait(function ($type, $buffer) {
+            $this->output->write($buffer, false, OutputInterface::OUTPUT_RAW);
+        });
+
+        if (Exec::CODE_CLEAN_EXIT !== $code) {
+            throw new RuntimeException(
+                'Non-zero exit code for composer create-project command: ' . $process->getCommandLine()
+            );
+        }
     }
 
     /**
@@ -85,5 +105,68 @@ class DownloadMagento extends AbstractSubCommand
         }
 
         return $targetPath;
+    }
+
+    /**
+     * @param OutputInterface $output
+     */
+    protected function checkMagentoConnectCredentials(OutputInterface $output)
+    {
+        $configKey = 'http-basic.repo.magento.com';
+
+        $composerHelper = $this->getCommand()->getHelper('composer');
+        /** @var $composerHelper ComposerHelper */
+        $authConfig = $composerHelper->getConfigValue($configKey);
+
+        if (!isset($authConfig->username)
+            || !isset($authConfig->password)
+        ) {
+            $this->output->writeln(array(
+                '',
+                $this->getCommand()
+                    ->getHelperSet()
+                    ->get('formatter')
+                    ->formatBlock('Authentication', 'bg=blue;fg=white', true),
+                '',
+            ));
+
+            $this->output->writeln(array(
+                'You need to create a secury key. Login at magentocommerce.com.',
+                'Developers -> Secure Keys. <info>Use public key as username and private key as password</info>',
+                ''
+            ));
+            $dialog = $this->getCommand()->getHelper('dialog');
+
+            $username = $dialog->askAndValidate(
+                $output,
+                '<comment>Please enter your public key: </comment>',
+                function ($value) {
+                    if ('' === trim($value)) {
+                        throw new Exception('The private key (auth token) can not be empty');
+                    }
+
+                    return $value;
+                },
+                20,
+                false
+            );
+
+
+            $password = $dialog->askHiddenResponseAndValidate(
+                $output,
+                '<comment>Please enter your private key: </comment>',
+                function ($value) {
+                    if ('' === trim($value)) {
+                        throw new Exception('The private key (auth token) can not be empty');
+                    }
+
+                    return $value;
+                },
+                20,
+                false
+            );
+
+            $composerHelper->setConfigValue($configKey, [$username, $password]);
+        }
     }
 }

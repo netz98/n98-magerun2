@@ -8,30 +8,26 @@ use Symfony\Component\Finder\Finder;
 class SetDirectoryPermissions extends AbstractSubCommand
 {
     /**
-     * @return bool
+     * @return void
      */
     public function execute()
     {
         try {
             $installationFolder = $this->config->getString('installationFolder');
             
-            $varFolder = $installationFolder . DIRECTORY_SEPARATOR . 'var';
+            $varFolder = $installationFolder . '/var';
             if (!is_dir($varFolder)) {
                 @mkdir($varFolder);
             }
             @chmod($varFolder, 0777);
 
-            $varCacheFolder = $installationFolder . DIRECTORY_SEPARATOR . 'var/cache';
+            $varCacheFolder = $installationFolder . '/var/cache';
             if (!is_dir($varCacheFolder)) {
                 @mkdir($varCacheFolder);
             }
             @chmod($varCacheFolder, 0777);
 
-            $mediaFolder = $installationFolder
-                         . DIRECTORY_SEPARATOR
-                         . 'pub'
-                         . DIRECTORY_SEPARATOR
-                         . 'media';
+            $mediaFolder = $installationFolder . '/pub/media';
             if (!is_dir($mediaFolder)) {
                 @mkdir($mediaFolder);
             }

@@ -3,11 +3,12 @@
 namespace N98\Magento\Command\System;
 
 use N98\Magento\Command\AbstractMagentoCommand;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Finder\Finder;
 use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
+use Magento\Framework\App\State as AppState;
 
 class InfoCommand extends AbstractMagentoCommand
 {
@@ -15,6 +16,11 @@ class InfoCommand extends AbstractMagentoCommand
      * @var array
      */
     protected $infos = [];
+
+    /**
+     * @var \Magento\Framework\App\ProductMetadataInterface
+     */
+    protected $productMetadata;
 
     /**
      * @var \Magento\Customer\Model\CustomerFactory
@@ -56,6 +62,11 @@ class InfoCommand extends AbstractMagentoCommand
         $this
             ->setName('sys:info')
             ->setDescription('Prints infos about the current magento system.')
+            ->addArgument(
+                'key',
+                InputArgument::OPTIONAL,
+                'Only output value of named param like "version". Key is case insensitive.'
+            )
             ->addOption(
                 'format',
                 null,
@@ -66,6 +77,7 @@ class InfoCommand extends AbstractMagentoCommand
     }
 
     /**
+     * @param \Magento\Framework\App\ProductMetadataInterface $productMetadata
      * @param \Magento\Customer\Model\CustomerFactory $customerFactory
      * @param \Magento\Catalog\Model\ProductFactory $productFactory
      * @param \Magento\Catalog\Model\CategoryFactory $categoryFactory
@@ -75,6 +87,7 @@ class InfoCommand extends AbstractMagentoCommand
      * @param \Magento\Framework\Module\ModuleListInterface $moduleList
      */
     public function inject(
+        \Magento\Framework\App\ProductMetadataInterface $productMetadata,
         \Magento\Customer\Model\CustomerFactory $customerFactory,
         \Magento\Catalog\Model\ProductFactory $productFactory,
         \Magento\Catalog\Model\CategoryFactory $categoryFactory,
@@ -84,6 +97,7 @@ class InfoCommand extends AbstractMagentoCommand
         \Magento\Framework\Module\ModuleListInterface $moduleList
 
     ) {
+        $this->productMetadata = $productMetadata;
         $this->customerFactory = $customerFactory;
         $this->productFactory = $productFactory;
         $this->categoryFactory = $categoryFactory;
@@ -95,7 +109,7 @@ class InfoCommand extends AbstractMagentoCommand
 
     public function hasInfo()
     {
-        return ! empty($this->infos);
+        return !empty($this->infos);
     }
 
     public function getInfo($key = null)
@@ -114,7 +128,7 @@ class InfoCommand extends AbstractMagentoCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        if ($input->getOption('format') == null) {
+        if ($input->getOption('format') == null && $input->getArgument('key') == null) {
             $this->writeSection($output, 'Magento System Information');
         }
 
@@ -132,9 +146,18 @@ class InfoCommand extends AbstractMagentoCommand
             $table[] = array($key, $value);
         }
 
-        $this->getHelper('table')
-            ->setHeaders(array('name', 'value'))
-            ->renderByFormat($output, $table, $input->getOption('format'));
+        if (($settingArgument = $input->getArgument('key')) !== null) {
+            $settingArgument = strtolower($settingArgument);
+            $this->infos = array_change_key_case($this->infos, CASE_LOWER);
+            if (!isset($this->infos[$settingArgument])) {
+                throw new InvalidArgumentException('Unknown key: ' . $settingArgument);
+            }
+            $output->writeln((string) $this->infos[$settingArgument]);
+        } else {
+            $this->getHelper('table')
+                ->setHeaders(array('name', 'value'))
+                ->renderByFormat($output, $table, $input->getOption('format'));
+        }
     }
 
     /**
@@ -143,32 +166,32 @@ class InfoCommand extends AbstractMagentoCommand
     protected function addProductCount()
     {
         $this->infos['Product Count'] = $this->productFactory
-                                             ->create()
-                                             ->getCollection()
-                                             ->getSize();
+                                                ->create()
+                                                ->getCollection()
+                                                ->getSize();
     }
 
     protected function addCustomerCount()
     {
         $this->infos['Customer Count'] = $this->customerFactory->create()
-                                              ->getCollection()
-                                              ->getSize();
+                                                ->getCollection()
+                                                ->getSize();
     }
 
     protected function addCategoryCount()
     {
         $this->infos['Category Count'] = $this->categoryFactory
-                                              ->create()
-                                              ->getCollection()
-                                              ->getSize();
+                                                ->create()
+                                                ->getCollection()
+                                                ->getSize();
     }
 
     protected function addAttributeCount()
     {
         $this->infos['Attribute Count'] = $this->attributeFactory
-                                               ->create()
-                                               ->getCollection()
-                                               ->getSize();
+                                                ->create()
+                                                ->getCollection()
+                                                ->getSize();
     }
 
     protected function addCacheInfos()
@@ -191,6 +214,7 @@ class InfoCommand extends AbstractMagentoCommand
 
     protected function addDeploymentInfo()
     {
+        $this->infos['Application Mode'] = $this->deploymentConfig->get(AppState::PARAM_MODE);
         $this->infos['Session'] = $this->deploymentConfig->get('session/save');
         $this->infos['Crypt Key'] = $this->deploymentConfig->get('crypt/key');
         $this->infos['Install Date'] = $this->deploymentConfig->get('install/date');
@@ -198,8 +222,9 @@ class InfoCommand extends AbstractMagentoCommand
 
     protected function addVersionInfo()
     {
-        $this->infos['Version'] = \Magento\Framework\AppInterface::VERSION;
-        $this->infos['Edition'] = 'Community'; // @TODO Where can i obtain this info?
+        $this->infos['Name'] = $this->productMetadata->getName();
+        $this->infos['Version'] = $this->productMetadata->getVersion();
+        $this->infos['Edition'] = $this->productMetadata->getEdition();
     }
 
     protected function addVendors()

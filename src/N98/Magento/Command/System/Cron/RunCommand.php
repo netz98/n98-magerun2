@@ -2,6 +2,7 @@
 
 namespace N98\Magento\Command\System\Cron;
 
+use Symfony\Component\Console\Helper\DialogHelper;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -44,17 +45,15 @@ HELP;
             $jobCode = $this->askJobCode($input, $output, $jobs);
         }
 
-        $this->_state->setAreaCode('crontab');
-
         $jobConfig = $this->getJobConfig($jobCode);
 
-        if (empty($jobCode)|| !isset($jobConfig['instance'])) {
+        if (empty($jobCode) || !isset($jobConfig['instance'])) {
             throw new \InvalidArgumentException('No job config found!');
         }
 
         $model = $this->getObjectManager()->get($jobConfig['instance']);
 
-        if (!$model || !method_exists($model, $jobConfig['method'])) {
+        if (!$model || !is_callable(array($model, $jobConfig['method']))) {
             throw new \RuntimeException(
                 sprintf(
                     'Invalid callback: %s::%s does not exist',
@@ -66,7 +65,9 @@ HELP;
 
         $callback = array($model, $jobConfig['method']);
 
-        $output->write('<info>Run </info><comment>' . $jobConfig['instance'] . '::' . $jobConfig['method'] . '</comment> ');
+        $output->write(
+            '<info>Run </info><comment>' . $jobConfig['instance'] . '::' . $jobConfig['method'] . '</comment> '
+        );
 
         try {
             $schedule = $this->_cronScheduleCollection->getNewEmptyItem();
@@ -76,7 +77,7 @@ HELP;
                 ->setExecutedAt(strftime('%Y-%m-%d %H:%M:%S', time()))
                 ->save();
 
-            call_user_func_array($callback, array($schedule));
+            $this->_state->emulateAreaCode('crontab', $callback, array($schedule));
 
             $schedule
                 ->setStatus(Schedule::STATUS_SUCCESS)
@@ -97,18 +98,20 @@ HELP;
      * @param InputInterface $input
      * @param OutputInterface $output
      * @param array $jobs
-     * @return mixed
+     * @return string
      * @throws \InvalidArgumentException
      * @throws \Exception
      */
     protected function askJobCode(InputInterface $input, OutputInterface $output, $jobs)
     {
         foreach ($jobs as $key => $job) {
-            $question[] = '<comment>[' . ($key+1) . ']</comment> ' . $job['Job'] . PHP_EOL;
+            $question[] = '<comment>[' . ($key + 1) . ']</comment> ' . $job['Job'] . PHP_EOL;
         }
         $question[] = '<question>Please select job: </question>' . PHP_EOL;
 
-        $jobCode = $this->getHelperSet()->get('dialog')->askAndValidate(
+        /** @var $dialog DialogHelper */
+        $dialog = $this->getHelper('dialog');
+        $jobCode = $dialog->askAndValidate(
             $output,
             $question,
             function ($typeInput) use ($jobs) {

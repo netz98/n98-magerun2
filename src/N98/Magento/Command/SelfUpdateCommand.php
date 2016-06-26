@@ -24,7 +24,8 @@ class SelfUpdateCommand extends AbstractMagentoCommand
             ->setAliases(array('selfupdate'))
             ->addOption('unstable', null, InputOption::VALUE_NONE, 'Load unstable version from develop branch')
             ->setDescription('Updates n98-magerun.phar to the latest version.')
-            ->setHelp(<<<EOT
+            ->setHelp(
+<<<EOT
 The <info>self-update</info> command checks github for newer
 versions of n98-magerun and if found, installs the latest.
 
@@ -46,15 +47,20 @@ EOT
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $localFilename = realpath($_SERVER['argv'][0]) ?: $_SERVER['argv'][0];
-        $tempFilename = dirname($localFilename) . '/' . basename($localFilename, '.phar').'-temp.phar';
+        $tempFilename = dirname($localFilename) . '/' . basename($localFilename, '.phar') . '-temp.phar';
 
         // check for permissions in local filesystem before start connection process
         if (!is_writable($tempDirectory = dirname($tempFilename))) {
-            throw new FilesystemException('n98-magerun2 update failed: the "' . $tempDirectory . '" directory used to download the temp file could not be written');
+            throw new FilesystemException(
+                'n98-magerun2 update failed: the "' . $tempDirectory .
+                '" directory used to download the temp file could not be written'
+            );
         }
 
         if (!is_writable($localFilename)) {
-            throw new FilesystemException('n98-magerun2 update failed: the "' . $localFilename . '" file could not be written');
+            throw new FilesystemException(
+                'n98-magerun2 update failed: the "' . $localFilename . '" file could not be written'
+            );
         }
 
         $io = new ConsoleIO($input, $output, $this->getHelperSet());
@@ -63,10 +69,10 @@ EOT
         $loadUnstable = $input->getOption('unstable');
         if ($loadUnstable) {
             $versionTxtUrl = 'https://raw.githubusercontent.com/netz98/n98-magerun2/develop/version.txt';
-            $remoteFilename = 'https://raw.githubusercontent.com/netz98/n98-magerun2/develop/n98-magerun.phar';
+            $remoteFilename = 'https://files.magerun.net/n98-magerun2-dev.phar';
         } else {
             $versionTxtUrl = 'https://raw.githubusercontent.com/netz98/n98-magerun2/master/version.txt';
-            $remoteFilename = 'https://raw.githubusercontent.com/netz98/n98-magerun2/master/n98-magerun.phar';
+            $remoteFilename = 'https://files.magerun.net/n98-magerun2.phar';
         }
 
         $latest = trim($rfs->getContents('raw.githubusercontent.com', $versionTxtUrl, false));
@@ -96,13 +102,13 @@ EOT
                 if ($loadUnstable) {
                     $changeLogContent = $rfs->getContents(
                         'raw.github.com',
-                        'https://raw.github.com/netz98/n98-magerun2/develop/changes.txt',
+                        'https://raw.github.com/netz98/n98-magerun2/develop/CHANGELOG.md',
                         false
                     );
                 } else {
                     $changeLogContent = $rfs->getContents(
                         'raw.github.com',
-                        'https://raw.github.com/netz98/n98-magerun2/master/changes.txt',
+                        'https://raw.github.com/netz98/n98-magerun2/master/CHANGELOG.md',
                         false
                     );
                 }
@@ -128,7 +134,7 @@ UNSTABLE_FOOTER;
                 if (!$e instanceof \UnexpectedValueException && !$e instanceof \PharException) {
                     throw $e;
                 }
-                $output->writeln('<error>The download is corrupted ('.$e->getMessage().').</error>');
+                $output->writeln('<error>The download is corrupted (' . $e->getMessage() . ').</error>');
                 $output->writeln('<error>Please re-run the self-update command to try again.</error>');
             }
         } else {

@@ -24,14 +24,16 @@ class FlushCommand extends AbstractModifierCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->detectMagento($output, true);
-        if ($this->initMagento()) {
-            $cacheManager = $this->getCacheManager();
+        if (!$this->initMagento()) {
+            return;
+        }
 
-            $availableTypes = $cacheManager->getAvailableTypes();
-            foreach ($availableTypes as $cacheType) {
-                $cacheManager->flush(array($cacheType));
-                $output->writeln('<info><comment>' . $cacheType . '</comment> cache flushed</info>');
-            }
+        $cacheManager = $this->getCacheManager();
+
+        $availableTypes = $cacheManager->getAvailableTypes();
+        foreach ($availableTypes as $cacheType) {
+            $cacheManager->flush(array($cacheType));
+            $output->writeln('<info><comment>' . $cacheType . '</comment> cache flushed</info>');
         }
     }
 }

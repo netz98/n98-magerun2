@@ -35,7 +35,6 @@ class ListCommand extends AbstractCronCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-
         if ($input->getOption('format') === null) {
             $this->writeSection($output, 'Cronjob List');
         }

@@ -2,6 +2,8 @@
 
 namespace N98\Magento\Command\Database;
 
+use N98\Util\Console\Helper\DatabaseHelper;
+use Symfony\Component\Console\Helper\DialogHelper;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -14,8 +16,7 @@ class DropCommand extends AbstractDatabaseCommand
             ->setName('db:drop')
             ->addOption('tables', 't', InputOption::VALUE_NONE, 'Drop all tables instead of dropping the database')
             ->addOption('force', 'f', InputOption::VALUE_NONE, 'Force')
-            ->setDescription('Drop current database')
-        ;
+            ->setDescription('Drop current database');
 
         $help = <<<HELP
 The command prompts before dropping the database. If --force option is specified it
@@ -33,13 +34,20 @@ HELP;
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->detectDbSettings($output);
-        $dialog = $this->getHelperSet()->get('dialog');
+        /** @var $dialog DialogHelper */
+        $dialog = $this->getHelper('dialog');
+        /** @var $dbHelper DatabaseHelper */
         $dbHelper = $this->getHelper('database');
 
         if ($input->getOption('force')) {
             $shouldDrop = true;
         } else {
-            $shouldDrop = $dialog->askConfirmation($output, '<question>Really drop database ' . $this->dbSettings['dbname'] . ' ?</question> <comment>[n]</comment>: ', false);
+            $shouldDrop = $dialog->askConfirmation(
+                $output,
+                '<question>Really drop database ' .
+                $this->dbSettings['dbname'] . ' ?</question> <comment>[n]</comment>: ',
+                false
+            );
         }
 
         if ($shouldDrop) {

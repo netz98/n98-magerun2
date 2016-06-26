@@ -2,39 +2,46 @@
 
 namespace N98\Magento\Command\Config;
 
+use Magento\Config\Model\ResourceModel\Config\Data\Collection;
+use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\Output;
 use Symfony\Component\Console\Output\OutputInterface;
-use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
 
 class GetCommand extends AbstractConfigCommand
 {
     /**
-     * @var \Magento\Core\Model\Resource\Config\Data\Collection
+     * @var Collection
      */
-    protected $_collection;
+    private $collection;
 
     protected function configure()
     {
         $this
             ->setName('config:get')
             ->setDescription('Get a core config item')
-            ->setHelp(<<<EOT
+            ->setHelp(
+<<<EOT
 If <info>path</info> is not set, all available config items will be listed.
 The <info>path</info> may contain wildcards (*).
 If <info>path</info> ends with a trailing slash, all child items will be listed. E.g.
 
-    config:get web/ 
+    config:get web/
 is the same as
     config:get web/*
 EOT
-                )
+            )
             ->addArgument('path', InputArgument::OPTIONAL, 'The config path')
             ->addOption('scope', null, InputOption::VALUE_REQUIRED, 'The config value\'s scope')
             ->addOption('scope-id', null, InputOption::VALUE_REQUIRED, 'The config value\'s scope ID')
-            ->addOption('decrypt', null, InputOption::VALUE_NONE, 'Decrypt the config value using local.xml\'s crypt key')
+            ->addOption(
+                'decrypt',
+                null,
+                InputOption::VALUE_NONE,
+                'Decrypt the config value using local.xml\'s crypt key'
+            )
             ->addOption('update-script', null, InputOption::VALUE_NONE, 'Output as update script lines')
             ->addOption('magerun-script', null, InputOption::VALUE_NONE, 'Output for usage with config:set')
             ->addOption(
@@ -42,8 +49,7 @@ EOT
                 null,
                 InputOption::VALUE_OPTIONAL,
                 'Output Format. One of [' . implode(',', RendererFactory::getFormats()) . ']'
-            )
-        ;
+            );
 
         $help = <<<HELP
 If path is not set, all available config items will be listed. path may contain wildcards (*)
@@ -52,67 +58,66 @@ HELP;
     }
 
     /**
-     * @param \Magento\Core\Model\Resource\Config\Data\Collection $collection
+     * @param Collection $collection
      */
-    public function inject(\Magento\Core\Model\Resource\Config\Data\Collection $collection)
+    public function inject(Collection $collection)
     {
-        $this->_collection = $collection;
+        $this->collection = $collection;
     }
 
     /**
      * @param InputInterface $input
-     * @param \Symfony\Component\Console\Output\OutputInterface $output
+     * @param OutputInterface $output
      * @return int|void
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $collection = $this->collection;
+
         $searchPath = $input->getArgument('path');
 
         if (substr($input->getArgument('path'), -1, 1) === '/') {
             $searchPath .= '*';
         }
 
-        $this->_collection->addFieldToFilter('path', array(
+        $collection->addFieldToFilter('path', array(
             'like' => str_replace('*', '%', $searchPath)
         ));
 
         if ($scopeId = $input->getOption('scope')) {
-            $this->_collection->addFieldToFilter(
-                'scope',
-                array(
-                     'eq' => $scopeId
-                )
-            );
+            $collection->addFieldToFilter('scope', array('eq' => $scopeId));
         }
 
         if ($scopeId = $input->getOption('scope-id')) {
-            $this->_collection->addFieldToFilter(
+            $collection->addFieldToFilter(
                 'scope_id',
-                array(
-                    'eq' => $scopeId
-                )
+                array('eq' => $scopeId)
             );
         }
 
-        $this->_collection->addOrder('path', 'ASC');
+        $collection->addOrder('path', 'ASC');
 
         // sort according to the config overwrite order
         // trick to force order default -> (f)website -> store , because f comes after d and before s
-        $this->_collection->addOrder('REPLACE(scope, "website", "fwebsite")', 'ASC');
+        $collection->addOrder('REPLACE(scope, "website", "fwebsite")', 'ASC');
 
-        $this->_collection->addOrder('scope_id', 'ASC');
+        $collection->addOrder('scope_id', 'ASC');
 
-        if ($this->_collection->count() == 0) {
+        if ($collection->count() == 0) {
             $output->writeln(sprintf("Couldn't find a config value for \"%s\"", $input->getArgument('path')));
+
             return;
         }
 
-        foreach ($this->_collection as $item) {
+        foreach ($collection as $item) {
             $table[] = array(
-                'path'     => $item->getPath(),
-                'scope'    => $item->getScope(),
+                'path' => $item->getPath(),
+                'scope' => $item->getScope(),
                 'scope_id' => $item->getScopeId(),
-                'value'    => $this->_formatValue($item->getValue(), ($input->getOption('decrypt') ? 'decrypt' : false)),
+                'value' => $this->_formatValue(
+                    $item->getValue(),
+                    $input->getOption('decrypt') ? 'decrypt' : false
+                ),
             );
         }
 
@@ -151,7 +156,7 @@ HELP;
 
     /**
      * @param OutputInterface $output
-     * @param array           $table
+     * @param array $table
      */
     protected function renderAsUpdateScript(OutputInterface $output, $table)
     {
@@ -163,7 +168,8 @@ HELP;
             if ($row['scope'] == 'default') {
                 $output->writeln(
                     sprintf(
-                        '$installer->setConfigData(%s, %s);', var_export($row['path'], true),
+                        '$installer->setConfigData(%s, %s);',
+                        var_export($row['path'], true),
                         var_export($row['value'], true)
                     )
                 );
@@ -183,16 +189,19 @@ HELP;
 
     /**
      * @param OutputInterface $output
-     * @param array           $table
+     * @param array $table
      */
     protected function renderAsMagerunScript(OutputInterface $output, $table)
     {
         foreach ($table as $row) {
             $value = str_replace(array("\n", "\r"), array('\n', '\r'), $row['value']);
-            $line = 'config:set ' . $row['path']
-                  . ' --scope-id=' . $row['scope_id']
-                  . ' --scope=' . $row['scope']
-                  . ' ' . escapeshellarg($value);
+            $line = sprintf(
+                'config:set --scope-id=%s --scope=%s -- %s %s',
+                $row['scope_id'],
+                $row['scope'],
+                escapeshellarg($row['path']),
+                escapeshellarg($value)
+            );
             $output->writeln($line);
         }
     }

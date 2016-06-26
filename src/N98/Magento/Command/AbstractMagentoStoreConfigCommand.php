@@ -2,6 +2,8 @@
 
 namespace N98\Magento\Command;
 
+use Exception;
+use N98\Util\Console\Helper\ParameterHelper;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -90,19 +92,17 @@ abstract class AbstractMagentoStoreConfigCommand extends AbstractMagentoCommand
         if ($this->scope == self::SCOPE_STORE_VIEW || $this->scope == self::SCOPE_STORE_VIEW_GLOBAL) {
             $this->addArgument('store', InputArgument::OPTIONAL, 'Store code or ID');
         }
-
     }
 
     /**
-     * @param \Symfony\Component\Console\Input\InputInterface $input
-     * @param \Symfony\Component\Console\Output\OutputInterface $output
+     * @param InputInterface $input
+     * @param OutputInterface $output
      * @return int|void
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->detectMagento($output);
         if ($this->initMagento()) {
-
             $runOnStoreView = false;
             if ($this->scope == self::SCOPE_STORE_VIEW
                 || ($this->scope == self::SCOPE_STORE_VIEW_GLOBAL && !$input->getOption('global'))
@@ -113,8 +113,8 @@ abstract class AbstractMagentoStoreConfigCommand extends AbstractMagentoCommand
             if ($runOnStoreView) {
                 $store = $this->_initStore($input, $output);
             } else {
-                $storeManager = $this->getObjectManager()->get('Magento\Framework\Store\StoreManagerInterface');
-                /* @var $storeManager \Magento\Framework\Store\StoreManagerInterface */
+                $storeManager = $this->getObjectManager()->get('Magento\Store\Model\StoreManagerInterface');
+                /* @var $storeManager \Magento\Store\Model\StoreManagerInterface */
                 $store = $storeManager->getStore(\Magento\Store\Model\Store::DEFAULT_STORE_ID);
             }
         }
@@ -137,7 +137,7 @@ abstract class AbstractMagentoStoreConfigCommand extends AbstractMagentoCommand
 
 
         if ($store->getId() == \Magento\Store\Model\Store::DEFAULT_STORE_ID) {
-            $scope = \Magento\Framework\App\ScopeInterface::SCOPE_DEFAULT;
+            $scope = 'default'; // @TODO Constant was removed in Magento2 ?
         } else {
             $scope = \Magento\Store\Model\ScopeInterface::SCOPE_STORES;
         }
@@ -155,8 +155,8 @@ abstract class AbstractMagentoStoreConfigCommand extends AbstractMagentoCommand
         $this->getApplication()->run($input, new NullOutput());
 
         $comment = '<comment>' . $this->toggleComment . '</comment> '
-                 . '<info>' . (!$isFalse ? $this->falseName : $this->trueName) . '</info>'
-                 . ($runOnStoreView ? ' <comment>for store</comment> <info>' . $store->getCode() . '</info>' : '');
+                    . '<info>' . (!$isFalse ? $this->falseName : $this->trueName) . '</info>'
+                    . ($runOnStoreView ? ' <comment>for store</comment> <info>' . $store->getCode() . '</info>' : '');
         $output->writeln($comment);
 
         $this->_afterSave($store, $isFalse);
@@ -166,14 +166,17 @@ abstract class AbstractMagentoStoreConfigCommand extends AbstractMagentoCommand
     }
 
     /**
-     * @param \Symfony\Component\Console\Input\InputInterface $input
-     * @param \Symfony\Component\Console\Output\OutputInterface $output
+     * @param InputInterface $input
+     * @param OutputInterface $output
      * @return mixed
-     * @throws \Exception
+     * @throws Exception
      */
-    protected function _initStore($input, $output)
+    protected function _initStore(InputInterface $input, OutputInterface $output)
     {
-        return $this->getHelperSet()->get('parameter')->askStore($input, $output, 'store', $this->withAdminStore);
+        /** @var $parameter ParameterHelper */
+        $parameter = $this->getHelper('parameter');
+
+        return $parameter->askStore($input, $output, 'store', $this->withAdminStore);
     }
 
     /**
@@ -182,7 +185,6 @@ abstract class AbstractMagentoStoreConfigCommand extends AbstractMagentoCommand
      */
     protected function _beforeSave(\Magento\Store\Model\Store $store, $disabled)
     {
-
     }
 
     /**
@@ -191,6 +193,5 @@ abstract class AbstractMagentoStoreConfigCommand extends AbstractMagentoCommand
      */
     protected function _afterSave(\Magento\Store\Model\Store $store, $disabled)
     {
-
     }
 }

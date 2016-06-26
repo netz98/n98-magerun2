@@ -7,47 +7,28 @@ use N98\Magento\Command\SubCommand\AbstractSubCommand;
 class RewriteHtaccessFile extends AbstractSubCommand
 {
     /**
-     * @return bool
+     * @return void
      */
     public function execute()
     {
-        if ($this->input->getOption('useDefaultConfigParams') == null
-            || $this->input->getOption('replaceHtaccessFile') != null
-        ) {
-            $this->getCommand()->getApplication()->setAutoExit(false);
-            $dialog = $this->getCommand()->getHelper('dialog');
+        if ($this->hasFlagOrOptionalBoolOption('useDefaultConfigParams')) {
+            return;
+        }
 
-            $args = $this->config->getArray('installation_args');
+        $this->getCommand()->getApplication()->setAutoExit(false);
 
-            $replaceHtaccessFile = false;
+        $flag = $this->getOptionalBooleanOption('replaceHtaccessFile', 'Write BaseURL to .htaccess file?', false);
 
-            if ($this->getCommand()->parseBoolOption($this->input->getOption('replaceHtaccessFile'))) {
-                $replaceHtaccessFile = true;
-            } elseif ($dialog->askConfirmation(
-                $this->output,
-                '<question>Write BaseURL to .htaccess file?</question> <comment>[n]</comment>: ',
-                false
-            )
-            ) {
-                $replaceHtaccessFile = true;
-            }
-
-            if ($replaceHtaccessFile) {
-                $this->replaceHtaccessFile($args['base_url']);
-            }
+        if ($flag) {
+            $this->replaceHtaccessFile();
         }
     }
 
-    /**
-     * @param string $baseUrl
-     */
-    protected function replaceHtaccessFile($baseUrl)
+    protected function replaceHtaccessFile()
     {
-        $htaccessFile = $this->config->getString('installationFolder')
-                      . DIRECTORY_SEPARATOR
-                      . 'pub'
-                      . DIRECTORY_SEPARATOR
-                      . '.htaccess';
+        $installationArgs = $this->config->getArray('installation_args');
+        $baseUrl = $installationArgs['base-url'];
+        $htaccessFile = $this->config->getString('installationFolder') . '/pub/.htaccess';
 
         $this->_backupOriginalFile($htaccessFile);
         $this->_replaceContent($htaccessFile, $baseUrl);

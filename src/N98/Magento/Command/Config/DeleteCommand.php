@@ -24,7 +24,13 @@ class DeleteCommand extends AbstractConfigCommand
             ->setName('config:delete')
             ->setDescription('Deletes a store config item')
             ->addArgument('path', InputArgument::REQUIRED, 'The config path')
-            ->addOption('scope', null, InputOption::VALUE_OPTIONAL, 'The config value\'s scope (default, websites, stores)', 'default')
+            ->addOption(
+                'scope',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'The config value\'s scope (default, websites, stores)',
+                'default'
+            )
             ->addOption('scope-id', null, InputOption::VALUE_OPTIONAL, 'The config value\'s scope ID', '0')
             ->addOption('all', null, InputOption::VALUE_NONE, 'Delete all entries by path')
         ;
@@ -43,43 +49,44 @@ HELP;
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->detectMagento($output, true);
-        if ($this->initMagento()) {
+        if (!$this->initMagento()) {
+            return;
+        }
 
-            $this->_validateScopeParam($input->getOption('scope'));
-            $scopeId = $this->_convertScopeIdParam($input->getOption('scope'), $input->getOption('scope-id'));
+        $this->_validateScopeParam($input->getOption('scope'));
+        $scopeId = $this->_convertScopeIdParam($input->getOption('scope'), $input->getOption('scope-id'));
 
-            $deleted = array();
+        $deleted = array();
 
-            $path = $input->getArgument('path');
-            $pathArray = array();
-            if (strstr($path, '*')) {
-                $collection = $this->getObjectManager()->get('\Magento\Core\Model\Resource\Config\Data\Collection');
-                /* @var $collection \Magento\Core\Model\Resource\Config\Data\Collection */
+        $path = $input->getArgument('path');
+        $pathArray = array();
+        if (strstr($path, '*')) {
+            $collection = $this->getObjectManager()->get('\Magento\Config\Model\Resource\Config\Data\Collection');
+            /* @var $collection \Magento\Config\Model\Resource\Config\Data\Collection */
 
-                $searchPath = str_replace('*', '%', $path);
-                $collection->addFieldToFilter('path', array('like' => $searchPath));
+            $searchPath = str_replace('*', '%', $path);
+            $collection->addFieldToFilter('path', array('like' => $searchPath));
 
-                if ($scopeId = $input->getOption('scope')) {
-                    $collection->addFieldToFilter(
-                        'scope',
-                        array(
-                             'eq' => $scopeId
-                        )
-                    );
-                }
-                $collection->addOrder('path', 'ASC');
-
-                foreach ($collection as $item) {
-                    $pathArray[] = $item->getPath();
-                }
-            } else {
-                $pathArray[] = $path;
+            if ($scopeId = $input->getOption('scope')) {
+                $collection->addFieldToFilter(
+                    'scope',
+                    array(
+                            'eq' => $scopeId
+                    )
+                );
             }
+            $collection->addOrder('path', 'ASC');
 
-            $configWriter = $this->getConfigWriter();
-            foreach ($pathArray as $pathToDelete) {
-                $deleted = array_merge($deleted, $this->_deletePath($input, $configWriter, $pathToDelete, $scopeId));
+            foreach ($collection as $item) {
+                $pathArray[] = $item->getPath();
             }
+        } else {
+            $pathArray[] = $path;
+        }
+
+        $configWriter = $this->getConfigWriter();
+        foreach ($pathArray as $pathToDelete) {
+            $deleted = array_merge($deleted, $this->_deletePath($input, $configWriter, $pathToDelete, $scopeId));
         }
 
         if (count($deleted) > 0) {
@@ -106,7 +113,6 @@ HELP;
     {
         $deleted = array();
         if ($input->getOption('all')) {
-
             $storeManager = $this->getObjectManager()->get('Magento\Store\Model\StoreManager');
 
             // Default
@@ -148,7 +154,6 @@ HELP;
                     'scopeId' => $store->getId(),
                 );
             }
-
         } else {
             $configWriter->delete(
                 $path,
@@ -161,7 +166,6 @@ HELP;
                 'scope'   => $input->getOption('scope'),
                 'scopeId' => $scopeId,
             );
-
         }
 
         return $deleted;

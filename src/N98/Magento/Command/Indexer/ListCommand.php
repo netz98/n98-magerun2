@@ -36,20 +36,22 @@ HELP;
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->detectMagento($output, true);
-        if ($this->initMagento()) {
-            $table = array();
-            foreach ($this->getIndexerList() as $index) {
-                $table[] = array(
-                    $index['code'],
-                    $index['title'],
-                    $index['status'],
-                    $index['last_runtime'],
-                );
-            }
-
-            $this->getHelper('table')
-                ->setHeaders(array('code', 'title', 'status', 'time'))
-                ->renderByFormat($output, $table, $input->getOption('format'));
+        if (!$this->initMagento()) {
+            return;
         }
+
+        $table = array();
+        foreach ($this->getIndexerList() as $index) {
+            $table[] = array(
+                $index['code'],
+                $index['title'],
+                $index['status'],
+                $index['last_runtime'],
+            );
+        }
+
+        $this->getHelper('table')
+            ->setHeaders(array('code', 'title', 'status', 'time'))
+            ->renderByFormat($output, $table, $input->getOption('format'));
     }
 }

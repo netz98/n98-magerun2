@@ -1,5 +1,20 @@
+# Composer
+vendor/
+
+# Magerun Stopfile
+.n98-magerun2
+
+# Phpunit
+phpunit.xml
+
+# Build files
+composer.phar
+n98-magerun2.phar
+build/out/
+
+# Miscellaneous (Kraut und Rueben)
+.DS_Store
 .idea
-vendor
 example-magento
 clover.xml
 clover

@@ -13,7 +13,7 @@ class InitZendApp extends AbstractSubCommand
     public function execute()
     {
         $zendApplication = \Zend\Mvc\Application::init(
-            require $this->getCommand()->getApplication()->getMagentoRootFolder() . '/setup/config/application.config.php'
+            require $this->getMagentoRootFolder() . '/setup/config/application.config.php'
         );
 
         $serviceManager = $zendApplication->getServiceManager();
@@ -35,5 +35,13 @@ class InitZendApp extends AbstractSubCommand
         $this->config->setObject('logger', $logger);
 
         return true;
+    }
+
+    /**
+     * @return string
+     */
+    private function getMagentoRootFolder()
+    {
+        return $this->getCommand()->getApplication()->getMagentoRootFolder();
     }
 }

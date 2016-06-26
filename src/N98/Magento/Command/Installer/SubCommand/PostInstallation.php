@@ -3,12 +3,12 @@
 namespace N98\Magento\Command\Installer\SubCommand;
 
 use N98\Magento\Command\SubCommand\AbstractSubCommand;
-use Symfony\Component\Console\Input\StringInput;
+use Symfony\Component\Console\Input\ArrayInput;
 
 class PostInstallation extends AbstractSubCommand
 {
     /**
-     * @return bool
+     * @return void
      */
     public function execute()
     {
@@ -17,11 +17,11 @@ class PostInstallation extends AbstractSubCommand
         \chdir($this->config->getString('installationFolder'));
         $this->getCommand()->getApplication()->reinit();
 
-        /**
-         * @TODO enable this after implementation of sys:check command
-         */
-        //$this->output->writeln('<info>Reindex all after installation</info>');
-        //$this->getCommand()->getApplication()->run(new StringInput('index:reindex:all'), $this->output);
+        $this->output->writeln('<info>Reindex all after installation</info>');
+        $this->getCommand()->getApplication()->run(
+            new ArrayInput(['command' => 'index:reindex']),
+            $this->output
+        );
 
         /**
          * @TODO enable this after implementation of sys:check command

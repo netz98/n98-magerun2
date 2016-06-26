@@ -2,6 +2,8 @@
 
 namespace N98\Magento\Command\Admin\User;
 
+use Exception;
+use Symfony\Component\Console\Helper\DialogHelper;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -21,43 +23,45 @@ class ChangePasswordCommand extends AbstractAdminUserCommand
     /**
      * @param InputInterface $input
      * @param OutputInterface $output
-     * @throws \Exception
+     * @throws Exception
      * @return int|void
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->detectMagento($output);
-        if ($this->initMagento()) {
-            
-            $dialog = $this->getHelperSet()->get('dialog');
-            
-            // Username
-            if (($username = $input->getArgument('username')) == null) {
-                $username = $dialog->ask($output, '<question>Username:</question>');
-            }
+        if (!$this->initMagento()) {
+            return;
+        }
 
-            $user = $this->userModel->loadByUsername($username);
-            if ($user->getId() <= 0) {
-                $output->writeln('<error>User was not found</error>');
-                return;
-            }
+        /** @var $dialog DialogHelper */
+        $dialog = $this->getHelper('dialog');
 
-            // Password
-            if (($password = $input->getArgument('password')) == null) {
-                $password = $dialog->ask($output, '<question>Password:</question>');
-            }
+        // Username
+        if (($username = $input->getArgument('username')) == null) {
+            $username = $dialog->ask($output, '<question>Username:</question>');
+        }
 
-            try {
-                $result = $user->validate();
-                if (is_array($result)) {
-                    throw new \Exception(implode(PHP_EOL, $result));
-                }
-                $user->setPassword($password);
-                $user->save();
-                $output->writeln('<info>Password successfully changed</info>');
-            } catch (\Exception $e) {
-                $output->writeln('<error>' . $e->getMessage() . '</error>');
+        $user = $this->userModel->loadByUsername($username);
+        if ($user->getId() <= 0) {
+            $output->writeln('<error>User was not found</error>');
+            return;
+        }
+
+        // Password
+        if (($password = $input->getArgument('password')) == null) {
+            $password = $dialog->ask($output, '<question>Password:</question>');
+        }
+
+        try {
+            $result = $user->validate();
+            if (is_array($result)) {
+                throw new Exception(implode(PHP_EOL, $result));
             }
+            $user->setPassword($password);
+            $user->save();
+            $output->writeln('<info>Password successfully changed</info>');
+        } catch (Exception $e) {
+            $output->writeln('<error>' . $e->getMessage() . '</error>');
         }
     }
 }

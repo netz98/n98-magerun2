@@ -38,7 +38,12 @@ class ListCommand extends AbstractMagentoCommand
     {
         $this
             ->setName('dev:module:list')
-            ->addOption('vendor', null, InputOption::VALUE_OPTIONAL, 'Show modules of a specific vendor (case insensitive)')
+            ->addOption(
+                'vendor',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'Show modules of a specific vendor (case insensitive)'
+            )
             ->setDescription('List all installed modules')
             ->addOption(
                 'format',
@@ -68,7 +73,6 @@ class ListCommand extends AbstractMagentoCommand
         $this->getHelper('table')
             ->setHeaders(array('Name', '(Schema) Version'))
             ->renderByFormat($output, $this->moduleList, $input->getOption('format'));
-
     }
 
     protected function prepareModuleList($vendor)
@@ -79,11 +83,11 @@ class ListCommand extends AbstractMagentoCommand
             // First index is (probably always) vendor
             $moduleNameData = explode('_', $moduleName);
 
-            if (! is_null($vendor) && strtolower($moduleNameData[0]) !== strtolower($vendor)) {
+            if (!is_null($vendor) && strtolower($moduleNameData[0]) !== strtolower($vendor)) {
                 continue;
             }
 
-            $this->moduleList[] = [$info['name'], $info['schema_version']];
+            $this->moduleList[] = [$info['name'], $info['setup_version']];
         }
     }
 }

@@ -2,7 +2,9 @@
 
 namespace N98\Magento\Command\Database;
 
+use N98\Magento\Command\Database\Compressor\AbstractCompressor;
 use N98\Util\OperatingSystem;
+use RuntimeException;
 use Symfony\Component\Console\Helper\DialogHelper;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -26,15 +28,58 @@ class DumpCommand extends AbstractDatabaseCommand
         $this
             ->setName('db:dump')
             ->addArgument('filename', InputArgument::OPTIONAL, 'Dump filename')
-            ->addOption('add-time', 't', InputOption::VALUE_OPTIONAL, 'Adds time to filename (only if filename was not provided)')
-            ->addOption('compression', 'c', InputOption::VALUE_REQUIRED, 'Compress the dump file using one of the supported algorithms')
-            ->addOption('only-command', null, InputOption::VALUE_NONE, 'Print only mysqldump command. Do not execute')
-            ->addOption('print-only-filename', null, InputOption::VALUE_NONE, 'Execute and prints no output except the dump filename')
-            ->addOption('no-single-transaction', null, InputOption::VALUE_NONE, 'Do not use single-transaction (not recommended, this is blocking)')
-            ->addOption('human-readable', null, InputOption::VALUE_NONE, 'Use a single insert with column names per row. Useful to track database differences. Use db:import --optimize for speeding up the import.')
-            ->addOption('add-routines', null, InputOption::VALUE_NONE, 'Include stored routines in dump (procedures & functions)')
+            ->addOption(
+                'add-time',
+                't',
+                InputOption::VALUE_OPTIONAL,
+                'Adds time to filename (only if filename was not provided)'
+            )
+            ->addOption(
+                'compression',
+                'c',
+                InputOption::VALUE_REQUIRED,
+                'Compress the dump file using one of the supported algorithms'
+            )
+            ->addOption(
+                'only-command',
+                null,
+                InputOption::VALUE_NONE,
+                'Print only mysqldump command. 
+                Do not execute'
+            )
+            ->addOption(
+                'print-only-filename',
+                null,
+                InputOption::VALUE_NONE,
+                'Execute and prints no output except the dump filename'
+            )
+            ->addOption('dry-run', null, InputOption::VALUE_NONE, 'do everything but the dump')
+            ->addOption(
+                'no-single-transaction',
+                null,
+                InputOption::VALUE_NONE,
+                'Do not use single-transaction (not recommended, this is blocking)'
+            )
+            ->addOption(
+                'human-readable',
+                null,
+                InputOption::VALUE_NONE,
+                'Use a single insert with column names per row. Useful to track database differences. Use ' .
+                'db:import --optimize for speeding up the import.'
+            )
+            ->addOption(
+                'add-routines',
+                null,
+                InputOption::VALUE_NONE,
+                'Include stored routines in dump (procedures & functions)'
+            )
             ->addOption('stdout', null, InputOption::VALUE_NONE, 'Dump to stdout')
-            ->addOption('strip', 's', InputOption::VALUE_OPTIONAL, 'Tables to strip (dump only structure of those tables)')
+            ->addOption(
+                'strip',
+                's',
+                InputOption::VALUE_OPTIONAL,
+                'Tables to strip (dump only structure of those tables)'
+            )
             ->addOption('force', 'f', InputOption::VALUE_NONE, 'Do not prompt if all options are defined')
             ->setDescription('Dumps database with mysqldump cli client according to informations from local.xml');
 
@@ -79,7 +124,6 @@ See it in action: http://youtu.be/ttjZHY6vThs
 
 HELP;
         $this->setHelp($help);
-
     }
 
     /**
@@ -92,8 +136,9 @@ HELP;
 
     /**
      * @return array
+     *
      * @deprecated Use database helper
-     * @throws \Exception
+     * @throws RuntimeException
      */
     public function getTableDefinitions()
     {
@@ -103,14 +148,14 @@ HELP;
             $this->tableDefinitions = array();
             if (isset($this->commandConfig['table-groups'])) {
                 $tableGroups = $this->commandConfig['table-groups'];
-                foreach ($tableGroups as $index=>$definition) {
+                foreach ($tableGroups as $index => $definition) {
                     $description = isset($definition['description']) ? $definition['description'] : '';
                     if (!isset($definition['id'])) {
-                        throw new \Exception('Invalid definition of table-groups (id missing) Index: ' . $index);
+                        throw new RuntimeException('Invalid definition of table-groups (id missing) Index: ' . $index);
                     }
                     if (!isset($definition['id'])) {
-                        throw new \Exception('Invalid definition of table-groups (tables missing) Id: '
-                            . $definition['id']
+                        throw new RuntimeException(
+                            'Invalid definition of table-groups (tables missing) Id: ' . $definition['id']
                         );
                     }
 
@@ -129,7 +174,6 @@ HELP;
      * Generate help for table definitions
      *
      * @return string
-     * @throws \Exception
      */
     public function getTableDefinitionHelp()
     {
@@ -160,123 +204,102 @@ HELP;
     public function getHelp()
     {
         return parent::getHelp() . PHP_EOL
-            . $this->getCompressionHelp() . PHP_EOL
-            . $this->getTableDefinitionHelp();
+        . $this->getCompressionHelp() . PHP_EOL
+        . $this->getTableDefinitionHelp();
     }
 
     /**
-     * @param \Symfony\Component\Console\Input\InputInterface $input
-     * @param \Symfony\Component\Console\Output\OutputInterface $output
+     * @param InputInterface $input
+     * @param OutputInterface $output
      * @return int|void
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->detectDbSettings($output);
 
-        if (!$input->getOption('stdout') && !$input->getOption('only-command')
-            && !$input->getOption('print-only-filename')
-        ) {
+        if ($this->nonCommandOutput($input)) {
             $this->writeSection($output, 'Dump MySQL Database');
         }
 
-        $compressor = $this->getCompressor($input->getOption('compression'));
-        $fileName   = $this->getFileName($input, $output, $compressor);
+        $execs = $this->createExecs($input, $output);
 
-        $stripTables = false;
-        if ($input->getOption('strip')) {
-            $stripTables = $this->getHelper('database')->resolveTables(explode(' ', $input->getOption('strip')), $this->getTableDefinitions());
-            if (!$input->getOption('stdout') && !$input->getOption('only-command')
-                && !$input->getOption('print-only-filename')
-            ) {
-                $output->writeln('<comment>No-data export for: <info>' . implode(' ', $stripTables)
-                    . '</info></comment>'
-                );
-            }
-        }
+        $this->runExecs($execs, $input, $output);
+    }
 
-        $dumpOptions = '';
+    /**
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     * @return Execs
+     */
+    private function createExecs(InputInterface $input, OutputInterface $output)
+    {
+        $execs = new Execs('mysqldump');
+        $execs->setCompression($input->getOption('compression'));
+        $execs->setFileName($this->getFileName($input, $output, $execs->getCompressor()));
+
         if (!$input->getOption('no-single-transaction')) {
-            $dumpOptions = '--single-transaction --quick ';
+            $execs->addOptions('--single-transaction --quick');
         }
 
         if ($input->getOption('human-readable')) {
-            $dumpOptions .= '--complete-insert --skip-extended-insert ';
+            $execs->addOptions('--complete-insert --skip-extended-insert ');
         }
 
         if ($input->getOption('add-routines')) {
-            $dumpOptions .= '--routines ';
+            $execs->addOptions('--routines ');
         }
-        $execs = array();
 
-        if (!$stripTables) {
-            $exec = 'mysqldump ' . $dumpOptions . $this->getHelper('database')->getMysqlClientToolConnectionString();
-            $exec .= $this->postDumpPipeCommands();
-            $exec = $compressor->getCompressingCommand($exec);
-            if (!$input->getOption('stdout')) {
-                $exec .= ' > ' . escapeshellarg($fileName);
-            }
-            $execs[] = $exec;
-        } else {
+        $database = $this->getDatabaseHelper();
+        $stripTables = $this->stripTables($input, $output);
+        if ($stripTables) {
             // dump structure for strip-tables
-            $exec = 'mysqldump ' . $dumpOptions . '--no-data ' . $this->getHelper('database')->getMysqlClientToolConnectionString();
-            $exec .= ' ' . implode(' ', $stripTables);
-            $exec .= $this->postDumpPipeCommands();
-            $exec = $compressor->getCompressingCommand($exec);
-            if (!$input->getOption('stdout')) {
-                $exec .= ' > ' . escapeshellarg($fileName);
-            }
-            $execs[] = $exec;
+            $execs->add(
+                '--no-data ' . $database->getMysqlClientToolConnectionString() .
+                ' ' . implode(' ', $stripTables) . $this->postDumpPipeCommands()
+            );
 
+            // dump data for all other tables
             $ignore = '';
             foreach ($stripTables as $stripTable) {
                 $ignore .= '--ignore-table=' . $this->dbSettings['dbname'] . '.' . $stripTable . ' ';
             }
+            $execs->add(
+                $ignore . $database->getMysqlClientToolConnectionString() . $this->postDumpPipeCommands()
+            );
 
-            // dump data for all other tables
-            $exec = 'mysqldump ' . $dumpOptions . $ignore . $this->getHelper('database')->getMysqlClientToolConnectionString();
-            $exec .= $this->postDumpPipeCommands();
-            $exec = $compressor->getCompressingCommand($exec);
-            if (!$input->getOption('stdout')) {
-                $exec .= ' >> ' . escapeshellarg($fileName);
-            }
-            $execs[] = $exec;
+            return $execs;
+        } else {
+            $execs->add(
+                $database->getMysqlClientToolConnectionString() . $this->postDumpPipeCommands()
+            );
+
+            return $execs;
         }
-
-        $this->runExecs($execs, $fileName, $input, $output);
     }
 
     /**
-     * @param array $execs
-     * @param string $fileName
+     * @param Execs $execs
      * @param InputInterface $input
      * @param OutputInterface $output
      */
-    private function runExecs(array $execs, $fileName, InputInterface $input, OutputInterface $output)
+    private function runExecs(Execs $execs, InputInterface $input, OutputInterface $output)
     {
         if ($input->getOption('only-command') && !$input->getOption('print-only-filename')) {
-            foreach ($execs as $exec) {
-                $output->writeln($exec);
+            foreach ($execs->getCommands() as $command) {
+                $output->writeln($command);
             }
         } else {
-            if (!$input->getOption('stdout') && !$input->getOption('only-command')
-                && !$input->getOption('print-only-filename')
-            ) {
-                $output->writeln('<comment>Start dumping database <info>' . $this->dbSettings['dbname']
-                    . '</info> to file <info>' . $fileName . '</info>'
+            if ($this->nonCommandOutput($input)) {
+                $output->writeln(
+                    '<comment>Start dumping database <info>' . $this->dbSettings['dbname'] .
+                    '</info> to file <info>' . $execs->getFileName() . '</info>'
                 );
             }
 
-            foreach ($execs as $exec) {
-                $commandOutput = '';
-                if ($input->getOption('stdout')) {
-                    passthru($exec, $returnValue);
-                } else {
-                    exec($exec, $commandOutput, $returnValue);
-                }
-                if ($returnValue > 0) {
-                    $output->writeln('<error>' . implode(PHP_EOL, $commandOutput) . '</error>');
-                    $output->writeln('<error>Return Code: ' . $returnValue . '. ABORTED.</error>');
+            $commands = $input->getOption('dry-run') ? array() : $execs->getCommands();
 
+            foreach ($commands as $command) {
+                if (!$this->runExec($command, $input, $output)) {
                     return;
                 }
             }
@@ -287,8 +310,59 @@ HELP;
         }
 
         if ($input->getOption('print-only-filename')) {
-            $output->writeln($fileName);
+            $output->writeln($execs->getFileName());
         }
+    }
+
+    /**
+     * @param string $command
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     * @return bool
+     */
+    private function runExec($command, InputInterface $input, OutputInterface $output)
+    {
+        $commandOutput = '';
+
+        if ($input->getOption('stdout')) {
+            passthru($command, $returnValue);
+        } else {
+            exec($command, $commandOutput, $returnValue);
+        }
+
+        if ($returnValue > 0) {
+            $output->writeln([
+                '<error>' . implode(PHP_EOL, $commandOutput) . '</error>',
+                '<error>Return Code: ' . $returnValue . '. ABORTED.</error>',
+            ]);
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     * @return false|array
+     */
+    private function stripTables(InputInterface $input, OutputInterface $output)
+    {
+        if (!$input->getOption('strip')) {
+            return false;
+        }
+
+        $stripTables = $this->getDatabaseHelper()->resolveTables(
+            explode(' ', $input->getOption('strip')),
+            $this->getTableDefinitions()
+        );
+
+        if ($this->nonCommandOutput($input)) {
+            $output->writeln(
+                '<comment>No-data export for: <info>' . implode(' ', $stripTables) . '</info></comment>'
+            );
+        }
+
+        return $stripTables;
     }
 
     /**
@@ -302,16 +376,18 @@ HELP;
     }
 
     /**
-     * @param \Symfony\Component\Console\Input\InputInterface $input
-     * @param \Symfony\Component\Console\Output\OutputInterface $output
-     * @param \N98\Magento\Command\Database\Compressor\AbstractCompressor $compressor
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     * @param AbstractCompressor $compressor
      * @return string
      */
-    protected function getFileName(InputInterface $input, OutputInterface $output,
-        Compressor\AbstractCompressor $compressor
+    protected function getFileName(
+        InputInterface $input,
+        OutputInterface $output,
+        AbstractCompressor $compressor
     ) {
-        $namePrefix    = '';
-        $nameSuffix    = '';
+        $namePrefix = '';
+        $nameSuffix = '';
         $nameExtension = '.sql';
 
         if ($input->getOption('add-time') !== false) {
@@ -324,14 +400,24 @@ HELP;
             }
         }
 
-        if ((($fileName = $input->getArgument('filename')) === null || ($isDir = is_dir($fileName))) && !$input->getOption('stdout')) {
-            /** @var DialogHelper $dialog */
-            $dialog      = $this->getHelperSet()->get('dialog');
+        if (
+            (
+                ($fileName = $input->getArgument('filename')) === null
+                || ($isDir = is_dir($fileName))
+            )
+            && !$input->getOption('stdout')
+        ) {
             $defaultName = $namePrefix . $this->dbSettings['dbname'] . $nameSuffix . $nameExtension;
-            if (isset($isDir) && $isDir) $defaultName = rtrim($fileName, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $defaultName;
+            if (isset($isDir) && $isDir) {
+                $defaultName = rtrim($fileName, '/') . '/' . $defaultName;
+            }
             if (!$input->getOption('force')) {
-                $fileName = $dialog->ask($output, '<question>Filename for SQL dump:</question> [<comment>'
-                    . $defaultName . '</comment>]', $defaultName
+                /** @var DialogHelper $dialog */
+                $dialog = $this->getHelper('dialog');
+                $fileName = $dialog->ask(
+                    $output,
+                    '<question>Filename for SQL dump:</question> [<comment>' . $defaultName . '</comment>]',
+                    $defaultName
                 );
             } else {
                 $fileName = $defaultName;
@@ -339,7 +425,7 @@ HELP;
         } else {
             if ($input->getOption('add-time')) {
                 $pathParts = pathinfo($fileName);
-                $fileName = ($pathParts['dirname'] == '.' ? '' : $pathParts['dirname'] . DIRECTORY_SEPARATOR ) .
+                $fileName = ($pathParts['dirname'] == '.' ? '' : $pathParts['dirname'] . '/') .
                     $namePrefix . $pathParts['filename'] . $nameSuffix . '.' . $pathParts['extension'];
             }
         }
@@ -347,5 +433,17 @@ HELP;
         $fileName = $compressor->getFileName($fileName);
 
         return $fileName;
+    }
+
+    /**
+     * @param InputInterface $input
+     * @return bool
+     */
+    private function nonCommandOutput(InputInterface $input)
+    {
+        return
+            !$input->getOption('stdout')
+            && !$input->getOption('only-command')
+            && !$input->getOption('print-only-filename');
     }
 }
