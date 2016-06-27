@@ -1,6 +1,9 @@
 RECENT CHANGES
 ==============
 
+1.1.16
+------
+
 1.1.15
 ------
 * Fix: Magento 2.1 version compatibility (by p-makowski, #214)
