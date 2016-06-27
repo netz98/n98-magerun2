@@ -24,19 +24,21 @@ fi
 mkdir "${build_dir}"
 if [ ! -d "${build_dir}" ]; then
     echo "Can not create build-dir '${build_dir}'"
+    echo "aborting."
+    exit 1
 fi
 
 git clone -l -- . "${build_dir}"
 
-composer="${build_dir}/composer-build.phar"
+composer="${build_dir}/composer.phar"
 
-if [ -a "${composer}" ]; then
+if [ -e "${composer}" ]; then
     rm "${composer}"
 fi
 
 if [ ! -e "${composer}" ]; then
     echo "Downloading composer.phar..."
-    wget -O "${composer}" https://getcomposer.org/download/1.1.1/composer.phar
+    wget -O "${composer}" https://getcomposer.org/download/1.1.3/composer.phar
     chmod +x "${composer}"
 fi
 
