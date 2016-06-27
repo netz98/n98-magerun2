@@ -11,17 +11,13 @@ class RewriteHtaccessFile extends AbstractSubCommand
      */
     public function execute()
     {
-        $optionName = 'replaceHtaccessFile';
-        if (
-            $this->input->getOption('useDefaultConfigParams') !== null
-            || $this->input->getOption($optionName) === null
-        ) {
+        if ($this->hasFlagOrOptionalBoolOption('useDefaultConfigParams')) {
             return;
         }
 
         $this->getCommand()->getApplication()->setAutoExit(false);
 
-        $flag = $this->getOptionalBooleanOption($optionName, 'Write BaseURL to .htaccess file?', false);
+        $flag = $this->getOptionalBooleanOption('replaceHtaccessFile', 'Write BaseURL to .htaccess file?', false);
 
         if ($flag) {
             $this->replaceHtaccessFile();

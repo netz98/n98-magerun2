@@ -1,6 +1,17 @@
 RECENT CHANGES
 ==============
 
+1.1.15
+------
+* Fix: Magento 2.1 version compatibility (by p-makowski, #214)
+* Fix: help description of system:setup:compare-versions (by p-makowski, #214)
+* Fix: PHP version requirements in documentation (report by Carsten Bohuslav, #204)
+* Fix: Install command use-default-config-params option (fix by Tom Klingenberg)
+* Fix: Install command replace-htaccess-file option (report by Matthias Zeis, fix by Tom Klingenberg, #191)
+* Fix: Fix undefined index access in cron:list (report by redboxmarcins, fix by Tom Klingenberg, #201)
+* Imp: Build with timestamp alignment and in clean directory (by Tom Klingenberg)
+* New: Add Homebrew installation (by Matthéo Geoffray, #203)
+
 1.1.14
 ------
 * Fix: Regression test for #199 (report by Pieter Hoste, fix by Tom Klingenberg, #200)

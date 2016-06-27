@@ -21,13 +21,26 @@ class ScriptCommandTest extends TestCase
                 'filename'  => __DIR__ . '/_files/test.mr',
             )
         );
+        
+        if (defined('\Magento\Framework\AppInterface::VERSION')) {
+            // Magento 2.0 compatibility
+            $magentoVersion = \Magento\Framework\AppInterface::VERSION;
+            $magentoEdition = 'Community'; // @TODO Replace this if EE is available
+        }
+        else {
+            // Magento 2.1+ compatibility
+            /** @var \Magento\Framework\App\ProductMetadata $productMetadata */
+            $productMetadata = $this->getApplication()->getObjectManager()->get('\Magento\Framework\App\ProductMetadata');
+            
+            $magentoVersion = $productMetadata->getVersion();
+            $magentoEdition = $productMetadata->getEdition();           
+        }        
 
         // Check pre defined vars
-        $edition = 'Community'; // @TODO Replace this if EE is available
-        $this->assertContains('magento.edition: ' . $edition, $commandTester->getDisplay());
-
         $this->assertContains('magento.root: ' . $this->getApplication()->getMagentoRootFolder(), $commandTester->getDisplay());
-        $this->assertContains('magento.version: ' . \Magento\Framework\AppInterface::VERSION, $commandTester->getDisplay());
+        $this->assertContains('magento.version: ' . $magentoVersion, $commandTester->getDisplay());
+        $this->assertContains('magento.edition: ' . $magentoEdition, $commandTester->getDisplay());
+        
         $this->assertContains('magerun.version: ' . $this->getApplication()->getVersion(), $commandTester->getDisplay());
 
         $this->assertContains('code', $commandTester->getDisplay());

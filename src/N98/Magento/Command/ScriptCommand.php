@@ -283,9 +283,23 @@ HELP;
     {
         $rootFolder = $this->getApplication()->getMagentoRootFolder();
         if (!empty($rootFolder)) {
-            $this->scriptVars['${magento.root}'] = $rootFolder;
-            $this->scriptVars['${magento.version}'] = \Magento\Framework\AppInterface::VERSION;
-            $this->scriptVars['${magento.edition}'] = 'Community'; // @TODO replace this if EE is available
+            if (defined('\Magento\Framework\AppInterface::VERSION')) {
+                // Magento 2.0 compatibility
+                $magentoVersion = \Magento\Framework\AppInterface::VERSION;
+                $magentoEdition = 'Community'; // @TODO Replace this if EE is available
+            }
+            else {
+                // Magento 2.1+ compatibility
+                /** @var \Magento\Framework\App\ProductMetadata $productMetadata */
+                $productMetadata = $this->getApplication()->getObjectManager()->get('\Magento\Framework\App\ProductMetadata');
+
+                $magentoVersion = $productMetadata->getVersion();
+                $magentoEdition = $productMetadata->getEdition();
+            }
+
+            $this->scriptVars['${magento.root}']    = $rootFolder;
+            $this->scriptVars['${magento.version}'] = $magentoVersion;
+            $this->scriptVars['${magento.edition}'] = $magentoEdition;
         }
 
         $this->scriptVars['${php.version}'] = substr(phpversion(), 0, strpos(phpversion(), '-'));

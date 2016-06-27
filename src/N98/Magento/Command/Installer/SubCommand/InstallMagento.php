@@ -37,9 +37,7 @@ class InstallMagento extends AbstractSubCommand
 
         $defaults = $this->commandConfig['installation']['defaults'];
 
-        $useDefaultConfigParams = $this->getCommand()->parseBoolOption(
-            $this->input->getOption('useDefaultConfigParams')
-        );
+        $useDefaultConfigParams = $this->hasFlagOrOptionalBoolOption('useDefaultConfigParams');
 
         $sessionSave = $useDefaultConfigParams ? $defaults['session-save'] : $dialog->ask(
             $this->output,
