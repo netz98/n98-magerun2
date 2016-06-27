@@ -28,6 +28,17 @@ class ScriptCommand extends AbstractMagentoCommand
      */
     protected $_stopOnError = false;
 
+    /**
+     * @var null|bool
+     */
+    protected $legacy = null;
+
+    /**
+     * @var null|\Magento\Framework\App\ProductMetadata
+     */
+    protected $productMetadata = null;
+    
+
     protected function configure()
     {
         $this
@@ -283,23 +294,9 @@ HELP;
     {
         $rootFolder = $this->getApplication()->getMagentoRootFolder();
         if (!empty($rootFolder)) {
-            if (defined('\Magento\Framework\AppInterface::VERSION')) {
-                // Magento 2.0 compatibility
-                $magentoVersion = \Magento\Framework\AppInterface::VERSION;
-                $magentoEdition = 'Community'; // @TODO Replace this if EE is available
-            }
-            else {
-                // Magento 2.1+ compatibility
-                /** @var \Magento\Framework\App\ProductMetadata $productMetadata */
-                $productMetadata = $this->getApplication()->getObjectManager()->get('\Magento\Framework\App\ProductMetadata');
-
-                $magentoVersion = $productMetadata->getVersion();
-                $magentoEdition = $productMetadata->getEdition();
-            }
-
             $this->scriptVars['${magento.root}']    = $rootFolder;
-            $this->scriptVars['${magento.version}'] = $magentoVersion;
-            $this->scriptVars['${magento.edition}'] = $magentoEdition;
+            $this->scriptVars['${magento.version}'] = $this->getMagentoVersion();
+            $this->scriptVars['${magento.edition}'] = $this->getMagentoEdition();
         }
 
         $this->scriptVars['${php.version}'] = substr(phpversion(), 0, strpos(phpversion(), '-'));
@@ -331,5 +328,57 @@ HELP;
         $commandString = str_replace(array_keys($this->scriptVars), $this->scriptVars, $commandString);
 
         return $commandString;
+    }
+
+    /**
+     * Checks if legacy code prior Magento 2.1 should be used
+     *
+     * @return mixed Returns `true` for Magento 2.0, return `false` for Magento 2.1+
+     */
+    protected function useLegacy()
+    {
+        if (is_null($this->legacy)) {
+            $this->legacy = defined('\Magento\Framework\AppInterface::VERSION');
+        }
+
+        return $this->legacy;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getMagentoVersion()
+    {
+        if ($this->useLegacy()) {
+            return \Magento\Framework\AppInterface::VERSION;
+        }
+
+        return $this->getProductMetadata()->getVersion();
+    }
+
+    /**
+     *
+     * @return mixed
+     */
+    protected function getMagentoEdition()
+    {
+        if ($this->useLegacy()) {
+            return 'Community'; // @TODO Replace this if EE is available
+        }
+
+        return $this->getProductMetadata()->getEdition();
+    }
+
+    /**
+     * @return \Magento\Framework\App\ProductMetadata
+     */
+    protected function getProductMetadata()
+    {
+        if(is_null($this->productMetadata)) {
+            $objectManager         = $this->getApplication()->getObjectManager();
+            $this->productMetadata = $objectManager->get('\Magento\Framework\App\ProductMetadata');
+        }
+
+        return $this->productMetadata;
     }
 }
