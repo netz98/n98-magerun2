@@ -29,11 +29,6 @@ class ScriptCommand extends AbstractMagentoCommand
     protected $_stopOnError = false;
 
     /**
-     * @var null|bool
-     */
-    protected $legacy = null;
-
-    /**
      * @var null|\Magento\Framework\App\ProductMetadata
      */
     protected $productMetadata = null;
