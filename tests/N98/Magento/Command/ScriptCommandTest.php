@@ -6,10 +6,7 @@ use Symfony\Component\Console\Tester\CommandTester;
 use N98\Magento\Command\PHPUnit\TestCase;
 
 class ScriptCommandTest extends TestCase
-{
-    /** @var null|bool  */
-    protected $legacy = null;
-    
+{    
     /** @var null|\Magento\Framework\App\ProductMetadata  */
     protected $productMetadata = null;
     
@@ -44,28 +41,10 @@ class ScriptCommandTest extends TestCase
     }
 
     /**
-     * Checks if legacy code prior Magento 2.1 should be used
-     * 
-     * @return mixed Returns `true` for Magento 2.0, return `false` for Magento 2.1+
-     */
-    protected function useLegacy()
-    {
-        if (is_null($this->legacy)) {
-            $this->legacy = defined('\Magento\Framework\AppInterface::VERSION');
-        }
-        
-        return $this->legacy;
-    }
-
-    /**
      * @return string
      */
     protected function getMagentoVersion()
     {
-        if ($this->useLegacy()) {
-            return \Magento\Framework\AppInterface::VERSION;
-        }
-
         return $this->getProductMetadata()->getVersion();
     }
 
@@ -75,10 +54,6 @@ class ScriptCommandTest extends TestCase
      */
     protected function getMagentoEdition()
     {
-        if ($this->useLegacy()) {
-            return 'Community'; // @TODO Replace this if EE is available
-        }
-
         return $this->getProductMetadata()->getEdition();
     }
 
