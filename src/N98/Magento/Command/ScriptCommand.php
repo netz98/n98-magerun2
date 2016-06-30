@@ -287,6 +287,8 @@ HELP;
 
     protected function initScriptVars()
     {
+        $this->initMagento();
+        
         $rootFolder = $this->getApplication()->getMagentoRootFolder();
         if (!empty($rootFolder)) {
             $this->scriptVars['${magento.root}']    = $rootFolder;
@@ -348,8 +350,7 @@ HELP;
     protected function getProductMetadata()
     {
         if(is_null($this->productMetadata)) {
-            $objectManager         = $this->getApplication()->getObjectManager();
-            $this->productMetadata = $objectManager->get('\Magento\Framework\App\ProductMetadata');
+            $this->productMetadata = $this->getObjectManager()->get('\Magento\Framework\App\ProductMetadata');
         }
 
         return $this->productMetadata;
