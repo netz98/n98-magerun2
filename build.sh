@@ -2,7 +2,7 @@
 #
 # build from clean checkout
 #
-set -euo pipefail
+set -xeuo pipefail
 IFS=$'\n\t'
 
 name="$(awk '/<project name="([^"]*)"/ && !done {print gensub(/<project name="([^"]*)".*/, "\\1", "g"); done=1}' build.xml
