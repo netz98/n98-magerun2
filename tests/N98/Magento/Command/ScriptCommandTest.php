@@ -6,7 +6,10 @@ use Symfony\Component\Console\Tester\CommandTester;
 use N98\Magento\Command\PHPUnit\TestCase;
 
 class ScriptCommandTest extends TestCase
-{
+{    
+    /** @var null|\Magento\Framework\App\ProductMetadata  */
+    protected $productMetadata = null;
+    
     public function testExecute()
     {
         $application = $this->getApplication();
@@ -22,24 +25,10 @@ class ScriptCommandTest extends TestCase
             )
         );
         
-        if (defined('\Magento\Framework\AppInterface::VERSION')) {
-            // Magento 2.0 compatibility
-            $magentoVersion = \Magento\Framework\AppInterface::VERSION;
-            $magentoEdition = 'Community'; // @TODO Replace this if EE is available
-        }
-        else {
-            // Magento 2.1+ compatibility
-            /** @var \Magento\Framework\App\ProductMetadata $productMetadata */
-            $productMetadata = $this->getApplication()->getObjectManager()->get('\Magento\Framework\App\ProductMetadata');
-            
-            $magentoVersion = $productMetadata->getVersion();
-            $magentoEdition = $productMetadata->getEdition();           
-        }        
-
         // Check pre defined vars
         $this->assertContains('magento.root: ' . $this->getApplication()->getMagentoRootFolder(), $commandTester->getDisplay());
-        $this->assertContains('magento.version: ' . $magentoVersion, $commandTester->getDisplay());
-        $this->assertContains('magento.edition: ' . $magentoEdition, $commandTester->getDisplay());
+        $this->assertContains('magento.version: ' . $this->getMagentoVersion(), $commandTester->getDisplay());
+        $this->assertContains('magento.edition: ' . $this->getMagentoEdition(), $commandTester->getDisplay());
         
         $this->assertContains('magerun.version: ' . $this->getApplication()->getVersion(), $commandTester->getDisplay());
 
@@ -49,5 +38,35 @@ class ScriptCommandTest extends TestCase
         $this->assertContains('Magento Websites', $commandTester->getDisplay());
         $this->assertContains('web/secure/base_url', $commandTester->getDisplay());
         $this->assertContains('web/seo/use_rewrites => 1', $commandTester->getDisplay());
+    }
+
+    /**
+     * @return string
+     */
+    protected function getMagentoVersion()
+    {
+        return $this->getProductMetadata()->getVersion();
+    }
+
+    /**
+     *
+     * @return mixed
+     */
+    protected function getMagentoEdition()
+    {
+        return $this->getProductMetadata()->getEdition();
+    }
+
+    /**
+     * @return \Magento\Framework\App\ProductMetadata
+     */
+    protected function getProductMetadata()
+    {
+        if(is_null($this->productMetadata)) {
+            $objectManager         = $this->getApplication()->getObjectManager();
+            $this->productMetadata = $objectManager->get('\Magento\Framework\App\ProductMetadata');
+        }
+        
+        return $this->productMetadata;
     }
 }

@@ -28,6 +28,12 @@ class ScriptCommand extends AbstractMagentoCommand
      */
     protected $_stopOnError = false;
 
+    /**
+     * @var null|\Magento\Framework\App\ProductMetadata
+     */
+    protected $productMetadata = null;
+    
+
     protected function configure()
     {
         $this
@@ -283,23 +289,9 @@ HELP;
     {
         $rootFolder = $this->getApplication()->getMagentoRootFolder();
         if (!empty($rootFolder)) {
-            if (defined('\Magento\Framework\AppInterface::VERSION')) {
-                // Magento 2.0 compatibility
-                $magentoVersion = \Magento\Framework\AppInterface::VERSION;
-                $magentoEdition = 'Community'; // @TODO Replace this if EE is available
-            }
-            else {
-                // Magento 2.1+ compatibility
-                /** @var \Magento\Framework\App\ProductMetadata $productMetadata */
-                $productMetadata = $this->getApplication()->getObjectManager()->get('\Magento\Framework\App\ProductMetadata');
-
-                $magentoVersion = $productMetadata->getVersion();
-                $magentoEdition = $productMetadata->getEdition();
-            }
-
             $this->scriptVars['${magento.root}']    = $rootFolder;
-            $this->scriptVars['${magento.version}'] = $magentoVersion;
-            $this->scriptVars['${magento.edition}'] = $magentoEdition;
+            $this->scriptVars['${magento.version}'] = $this->getMagentoVersion();
+            $this->scriptVars['${magento.edition}'] = $this->getMagentoEdition();
         }
 
         $this->scriptVars['${php.version}'] = substr(phpversion(), 0, strpos(phpversion(), '-'));
@@ -331,5 +323,35 @@ HELP;
         $commandString = str_replace(array_keys($this->scriptVars), $this->scriptVars, $commandString);
 
         return $commandString;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getMagentoVersion()
+    {
+        return $this->getProductMetadata()->getVersion();
+    }
+
+    /**
+     *
+     * @return mixed
+     */
+    protected function getMagentoEdition()
+    {
+        return $this->getProductMetadata()->getEdition();
+    }
+
+    /**
+     * @return \Magento\Framework\App\ProductMetadata
+     */
+    protected function getProductMetadata()
+    {
+        if(is_null($this->productMetadata)) {
+            $objectManager         = $this->getApplication()->getObjectManager();
+            $this->productMetadata = $objectManager->get('\Magento\Framework\App\ProductMetadata');
+        }
+
+        return $this->productMetadata;
     }
 }
