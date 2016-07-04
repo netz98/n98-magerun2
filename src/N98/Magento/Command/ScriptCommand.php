@@ -289,8 +289,10 @@ HELP;
                 $magentoEdition = 'Community'; // @TODO Replace this if EE is available
             } else {
                 // Magento 2.1+ compatibility
+                $this->initMagento(); // obtaining the object-manager requires init Magento
+                $objectManager = $this->getApplication()->getObjectManager();
                 /** @var \Magento\Framework\App\ProductMetadata $productMetadata */
-                $productMetadata = $this->getApplication()->getObjectManager()->get('\Magento\Framework\App\ProductMetadata');
+                $productMetadata = $objectManager->get('\Magento\Framework\App\ProductMetadata');
 
                 $magentoVersion = $productMetadata->getVersion();
                 $magentoEdition = $productMetadata->getEdition();
