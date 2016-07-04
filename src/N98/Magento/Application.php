@@ -401,7 +401,7 @@ class Application extends BaseApplication
     public function initMagento()
     {
         if ($this->getMagentoRootFolder() !== null) {
-            if ($this->_magentoMajorVersion == self::MAGENTO_MAJOR_VERSION_2) {
+            if (self::MAGENTO_MAJOR_VERSION_2 === $this->_magentoMajorVersion) {
                 $this->_initMagento2();
             } else {
                 $this->_initMagento1();
