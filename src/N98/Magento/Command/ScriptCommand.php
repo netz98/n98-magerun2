@@ -287,8 +287,7 @@ HELP;
                 // Magento 2.0 compatibility
                 $magentoVersion = \Magento\Framework\AppInterface::VERSION;
                 $magentoEdition = 'Community'; // @TODO Replace this if EE is available
-            }
-            else {
+            } else {
                 // Magento 2.1+ compatibility
                 /** @var \Magento\Framework\App\ProductMetadata $productMetadata */
                 $productMetadata = $this->getApplication()->getObjectManager()->get('\Magento\Framework\App\ProductMetadata');
