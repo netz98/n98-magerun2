@@ -3,6 +3,7 @@ RECENT CHANGES
 
 1.1.17
 ------
+* Fix: Replace remaining instances of Magento 1 local.xml with Magento 2 env.php (by Matthew O'Loughlin, #207)
 
 1.1.16
 ------
