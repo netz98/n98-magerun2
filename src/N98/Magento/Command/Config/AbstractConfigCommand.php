@@ -30,7 +30,7 @@ abstract class AbstractConfigCommand extends AbstractMagentoCommand
      */
     protected function _getConfigModel()
     {
-        return $this->getObjectManager('\Magento\Framework\App\Config');
+        return $this->getObjectManager()->get('\Magento\Framework\App\Config');
     }
 
     /**
