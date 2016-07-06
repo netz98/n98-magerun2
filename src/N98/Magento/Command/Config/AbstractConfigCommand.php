@@ -104,6 +104,10 @@ abstract class AbstractConfigCommand extends AbstractMagentoCommand
      */
     protected function _convertScopeIdParam($scope, $scopeId)
     {
+        if (null === $scopeId && in_array($scope, array('websites', 'stores'), true)) {
+            return $scopeId;
+        }
+
         if ($scope == 'websites' && !is_numeric($scopeId)) {
             $website = \Mage::app()->getWebsite($scopeId);
             if (!$website) {

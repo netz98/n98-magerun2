@@ -2,6 +2,8 @@
 
 namespace N98\Magento\Command\Config;
 
+use Magento\Config\Model\ResourceModel\Config\Data\Collection;
+use Magento\Framework\App\Config\Storage\WriterInterface;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -9,6 +11,11 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class DeleteCommand extends AbstractConfigCommand
 {
+    /**
+     * @var Collection
+     */
+    private $collection;
+
     /**
      * @var array
      */
@@ -31,7 +38,7 @@ class DeleteCommand extends AbstractConfigCommand
                 'The config value\'s scope (default, websites, stores)',
                 'default'
             )
-            ->addOption('scope-id', null, InputOption::VALUE_OPTIONAL, 'The config value\'s scope ID', '0')
+            ->addOption('scope-id', null, InputOption::VALUE_OPTIONAL, 'The config value\'s scope ID')
             ->addOption('all', null, InputOption::VALUE_NONE, 'Delete all entries by path')
         ;
 
@@ -39,6 +46,14 @@ class DeleteCommand extends AbstractConfigCommand
 To delete all entries if a path you can set the option --all.
 HELP;
         $this->setHelp($help);
+    }
+
+    /**
+     * @param Collection $collection
+     */
+    public function inject(Collection $collection)
+    {
+        $this->collection = $collection;
     }
 
     /**
@@ -58,35 +73,11 @@ HELP;
 
         $deleted = array();
 
-        $path = $input->getArgument('path');
-        $pathArray = array();
-        if (strstr($path, '*')) {
-            $collection = $this->getObjectManager()->get('\Magento\Config\Model\Resource\Config\Data\Collection');
-            /* @var $collection \Magento\Config\Model\Resource\Config\Data\Collection */
-
-            $searchPath = str_replace('*', '%', $path);
-            $collection->addFieldToFilter('path', array('like' => $searchPath));
-
-            if ($scopeId = $input->getOption('scope')) {
-                $collection->addFieldToFilter(
-                    'scope',
-                    array(
-                            'eq' => $scopeId
-                    )
-                );
-            }
-            $collection->addOrder('path', 'ASC');
-
-            foreach ($collection as $item) {
-                $pathArray[] = $item->getPath();
-            }
-        } else {
-            $pathArray[] = $path;
-        }
+        $paths = $this->resolvePaths($input->getArgument('path'), $scopeId);
 
         $configWriter = $this->getConfigWriter();
-        foreach ($pathArray as $pathToDelete) {
-            $deleted = array_merge($deleted, $this->_deletePath($input, $configWriter, $pathToDelete, $scopeId));
+        foreach ($paths as $path) {
+            $deleted = array_merge($deleted, $this->_deletePath($input, $configWriter, $path, $scopeId));
         }
 
         if (count($deleted) > 0) {
@@ -98,8 +89,39 @@ HELP;
     }
 
     /**
+     *
+     */
+    private function resolvePaths($path, $scopeId)
+    {
+        if (false === strstr($path, '*')) {
+            return (array)$path;
+        }
+
+        $paths = array();
+
+        $collection = clone $this->collection;
+
+        $searchPath = str_replace('*', '%', $path);
+        $collection->addFieldToFilter('path', array('like' => $searchPath));
+
+        if ($scopeId) {
+            $collection->addFieldToFilter('scope_id', $scopeId);
+        }
+
+        $collection->addOrder('path', 'ASC');
+
+        foreach ($collection as $item) {
+            $paths[] = $item->getPath();
+        }
+
+        $paths = array_unique($paths);
+
+        return $paths;
+    }
+
+    /**
      * @param InputInterface $input
-     * @param \Magento\Framework\App\Config\Storage\WriterInterface $configWriter
+     * @param WriterInterface $configWriter
      * @param                $path
      * @param                $scopeId
      *
@@ -107,7 +129,7 @@ HELP;
      */
     protected function _deletePath(
         InputInterface $input,
-        \Magento\Framework\App\Config\Storage\WriterInterface $configWriter,
+        WriterInterface $configWriter,
         $path,
         $scopeId)
     {
@@ -115,12 +137,8 @@ HELP;
         if ($input->getOption('all')) {
             $storeManager = $this->getObjectManager()->get('Magento\Store\Model\StoreManager');
 
-            // Default
-            $configWriter->delete(
-                $path,
-                'default',
-                0
-            );
+            // Delete default
+            $this->delete($configWriter, $deleted, $path, 'default', 0);
 
             $deleted[] = array(
                 'path'    => $path,
@@ -128,46 +146,63 @@ HELP;
                 'scopeId' => 0,
             );
 
+            // Delete websites
             foreach ($storeManager->getWebsites() as $website) {
-                $configWriter->delete(
-                    $path,
-                    'websites',
-                    $website->getId()
-                );
-                $deleted[] = array(
-                    'path'    => $path,
-                    'scope'   => 'websites',
-                    'scopeId' => $website->getId(),
-                );
+                $this->delete($configWriter, $deleted, $path, 'websites', $website->getId());
             }
 
             // Delete stores
             foreach ($storeManager->getStores() as $store) {
-                $configWriter->delete(
-                    $path,
-                    'stores',
-                    $store->getId()
-                );
-                $deleted[] = array(
-                    'path'    => $path,
-                    'scope'   => 'stores',
-                    'scopeId' => $store->getId(),
-                );
+                $this->delete($configWriter, $deleted, $path, 'stores', $store->getId());
             }
         } else {
-            $configWriter->delete(
-                $path,
-                $input->getOption('scope'),
-                $scopeId
-            );
-
-            $deleted[] = array(
-                'path'    => $path,
-                'scope'   => $input->getOption('scope'),
-                'scopeId' => $scopeId,
-            );
+            foreach ($this->resolveScopeIds($path, $input->getOption('scope'), $scopeId) as $item) {
+                $this->delete($configWriter, $deleted, $path, $item[1], $item[2]);
+            }
         }
 
         return $deleted;
+    }
+
+    private function delete(WriterInterface $configWriter, &$deleted, $path, $scope, $scopeId)
+    {
+        $configWriter->delete($path, $scope, $scopeId);
+
+        $deleted[] = array(
+            'path'    => $path,
+            'scope'   => $scope,
+            'scopeId' => $scopeId,
+        );
+    }
+
+    /**
+     * @param string $path
+     * @param string $scope
+     * @param int|null $scopeId
+     *
+     * @return array
+     */
+    private function resolveScopeIds($path, $scope, $scopeId)
+    {
+        $result = array();
+
+        if ($scopeId !== null) {
+            $result[] = array($path, $scope, $scopeId);
+            return $result;
+        }
+
+        $collection = clone $this->collection;
+
+        $collection->addFieldToFilter('path', array('eq' => $path));
+        $collection->addFieldToFilter('scope', array('eq' => $scope));
+        $collection->addOrder('scope_id', 'ASC');
+
+        $collection->clear();
+
+        foreach ($collection as $item) {
+            $result[] = array($item->getPath(), $item->getScope(), $item->getScopeId());
+        }
+
+        return $result;
     }
 }
