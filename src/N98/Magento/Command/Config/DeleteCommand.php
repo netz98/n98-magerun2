@@ -94,7 +94,7 @@ HELP;
     private function resolvePaths($path, $scopeId)
     {
         if (false === strstr($path, '*')) {
-            return (array)$path;
+            return (array) $path;
         }
 
         $paths = array();
@@ -131,8 +131,8 @@ HELP;
         InputInterface $input,
         WriterInterface $configWriter,
         $path,
-        $scopeId)
-    {
+        $scopeId
+    ) {
         $deleted = array();
         if ($input->getOption('all')) {
             $storeManager = $this->getObjectManager()->get('Magento\Store\Model\StoreManager');
@@ -188,6 +188,7 @@ HELP;
 
         if ($scopeId !== null) {
             $result[] = array($path, $scope, $scopeId);
+
             return $result;
         }
 
