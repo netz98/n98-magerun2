@@ -45,4 +45,13 @@ else
     ensure_magento2_auth
 fi
 
+# create stopfile if it does not yet exists
+test_stopfile=".${test_setup_basename}"
+if [ ! -f "${test_stopfile}" ]; then
+    echo "${test_setup_directory}" > "${test_stopfile}"
+    buildecho "stopfile ${test_stopfile} created: $(cat "${test_stopfile}")"
+else
+    buildecho "stopfile ${test_stopfile} exists: $(cat "${test_stopfile}")"
+fi
+
 buildecho "export N98_MAGERUN2_TEST_MAGENTO_ROOT='${test_setup_directory}'"
