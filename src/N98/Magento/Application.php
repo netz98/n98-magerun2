@@ -641,7 +641,8 @@ class Application extends BaseApplication
      */
     protected function registerEventSubscribers()
     {
-        foreach ($this->config->getConfig()['event']['subscriber'] as $subscriberClass) {
+        $subscriberClasses = $this->config->getConfig()['event']['subscriber'];
+        foreach ($subscriberClasses as $subscriberClass) {
             $subscriber = new $subscriberClass();
             $this->dispatcher->addSubscriber($subscriber);
         }

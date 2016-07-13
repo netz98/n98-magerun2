@@ -5,8 +5,6 @@ namespace N98\Magento\Application\Console\EventSubscriber;
 use N98\Magento\Application\Console\Event;
 use N98\Magento\Application\Console\Events;
 use N98\Util\OperatingSystem;
-use Symfony\Component\Console\ConsoleEvents;
-use Symfony\Component\Console\Event\ConsoleEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class CheckRootUser implements EventSubscriberInterface
