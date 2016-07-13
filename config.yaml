@@ -39,6 +39,7 @@ detect:
 event:
   subscriber:
     - N98\Magento\Application\Console\EventSubscriber\CheckRootUser
+    - N98\Magento\Application\Console\EventSubscriber\DevUrnCatalogAutoPath
     - N98\Magento\Command\ComposerWrapper\EventSubscriber
 
 commands:

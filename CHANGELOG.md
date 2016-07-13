@@ -6,6 +6,7 @@ RECENT CHANGES
 * Fix: Fix sys:maintenance --on and --off options (report by Rob Egginton, fix by Tom Klingenberg, #211)
 * Fix: Replace remaining instances of Magento 1 local.xml with Magento 2 env.php (by Matthew O'Loughlin, #207)
 * Feature: Install command: magento-ce-2.1.0 version (by Tom Klingenberg, #223)
+* New: Automatically detect Phpstorm .idea folder for path in dev:urn-catalog:generate (by Tom Klingenberg)
 
 1.1.16
 ------
