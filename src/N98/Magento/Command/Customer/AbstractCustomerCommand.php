@@ -51,7 +51,7 @@ class AbstractCustomerCommand extends AbstractMagentoCommand
      */
     protected function getCustomer()
     {
-        return $this->getObjectManager()->get(Customer::class);
+        return $this->getObjectManager()->create(Customer::class);
     }
 
     /**
@@ -59,6 +59,6 @@ class AbstractCustomerCommand extends AbstractMagentoCommand
      */
     protected function getCustomerCollection()
     {
-        return $this->getObjectManager()->get(CustomerCollection::class);
+        return $this->getCustomer()->getCollection();
     }
 }
