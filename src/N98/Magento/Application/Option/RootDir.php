@@ -44,8 +44,8 @@ class RootDir
             if ('--root-dir' === $option) {
                 if (null !== $argument = array_shift($args)) {
                     $path = $argument;
-                    break;
                 }
+                break;
             }
             if ('--root-dir=' === substr($option, 0, 11)) {
                 if ($len > 11) {
