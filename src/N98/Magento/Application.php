@@ -8,6 +8,7 @@ use Magento\Mtf\EntryPoint\EntryPoint;
 use N98\Magento\Application\Config;
 use N98\Magento\Application\ConfigurationLoader;
 use N98\Magento\Application\Console\Events;
+use N98\Magento\Application\Option\RootDir as RootDirOption;
 use N98\Util\Console\Helper\MagentoHelper;
 use N98\Util\Console\Helper\TwigHelper;
 use N98\Util\OperatingSystem;
@@ -675,22 +676,34 @@ class Application extends BaseApplication
      */
     protected function _checkRootDirOption()
     {
+        if (null !== $rootDir = RootDirOption::getArgument()) {
+            $this->setRootDir($rootDir);
+
+            return;
+        }
+
+        // TODO old-style getopt() check kept for transition reasons, other getopt() uses 2b removed as well
         $specialGlobalOptions = getopt('', array('root-dir:'));
+        if (!$specialGlobalOptions) {
+            return;
+        }
+        trigger_error('root-dir option should have been detected earlier');
+        $this->setRootDir($specialGlobalOptions['root-dir']);
+    }
 
-        if (count($specialGlobalOptions) > 0) {
-            if (isset($specialGlobalOptions['root-dir'][0])
-                && $specialGlobalOptions['root-dir'][0] == '~'
-            ) {
-                $specialGlobalOptions['root-dir'] = OperatingSystem::getHomeDir() .
-                    substr($specialGlobalOptions['root-dir'], 1);
-            }
-            $folder = realpath($specialGlobalOptions['root-dir']);
-            $this->_directRootDir = true;
-            if (is_dir($folder)) {
-                chdir($folder);
+    /**
+     * @param string $path
+     */
+    private function setRootDir($path)
+    {
+        if (isset($path[0]) && '~' === $path[0]) {
+            $path = OperatingSystem::getHomeDir() . substr($path, 1);
+        }
 
-                return;
-            }
+        $folder = realpath($path);
+        $this->_directRootDir = true;
+        if (is_dir($folder)) {
+            chdir($folder);
         }
     }
 
