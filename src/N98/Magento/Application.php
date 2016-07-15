@@ -8,7 +8,7 @@ use Magento\Mtf\EntryPoint\EntryPoint;
 use N98\Magento\Application\Config;
 use N98\Magento\Application\ConfigurationLoader;
 use N98\Magento\Application\Console\Events;
-use N98\Magento\Application\Option\RootDir as RootDirOption;
+use N98\Magento\Application\OptionParser;
 use N98\Util\Console\Helper\MagentoHelper;
 use N98\Util\Console\Helper\TwigHelper;
 use N98\Util\OperatingSystem;
@@ -654,9 +654,7 @@ class Application extends BaseApplication
      */
     protected function _checkSkipConfigOption()
     {
-        $skipConfigOption = getopt('', array('skip-config'));
-
-        return count($skipConfigOption) > 0;
+        return OptionParser::init()->hasLongOption('skip-config');
     }
 
     /**
@@ -664,11 +662,7 @@ class Application extends BaseApplication
      */
     protected function _checkSkipMagento2CoreCommandsOption()
     {
-        $skipConfigOption = getopt('', array('skip-core-commands'));
-
-        getenv('MAGERUN_SKIP_CORE_COMMANDS') && $skipConfigOption[] = 1;
-
-        return count($skipConfigOption) > 0;
+        return OptionParser::init()->hasLongOption('skip-core-commands') || getenv('MAGERUN_SKIP_CORE_COMMANDS');
     }
 
     /**
@@ -676,23 +670,15 @@ class Application extends BaseApplication
      */
     protected function _checkRootDirOption()
     {
-        if (null !== $rootDir = RootDirOption::getArgument()) {
+        if (null !== $rootDir = OptionParser::init()->getLongOptionArgument('root-dir')) {
             $this->setRootDir($rootDir);
-
-            return;
         }
-
-        // TODO old-style getopt() check kept for transition reasons, other getopt() uses 2b removed as well
-        $specialGlobalOptions = getopt('', array('root-dir:'));
-        if (!$specialGlobalOptions) {
-            return;
-        }
-        trigger_error('root-dir option should have been detected earlier');
-        $this->setRootDir($specialGlobalOptions['root-dir']);
     }
 
     /**
-     * @param string $path
+     * Set root dir (chdir()) of magento directory
+     *
+     * @param string $path to Magento directory
      */
     private function setRootDir($path)
     {

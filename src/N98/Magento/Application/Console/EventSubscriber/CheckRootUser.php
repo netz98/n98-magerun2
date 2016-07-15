@@ -4,6 +4,7 @@ namespace N98\Magento\Application\Console\EventSubscriber;
 
 use N98\Magento\Application\Console\Event;
 use N98\Magento\Application\Console\Events;
+use N98\Magento\Application\OptionParser;
 use N98\Util\OperatingSystem;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -53,8 +54,6 @@ class CheckRootUser implements EventSubscriberInterface
 
     protected function _isSkipRootCheck()
     {
-        $skipRootCheckOption = getopt('', array('skip-root-check'));
-
-        return count($skipRootCheckOption) > 0;
+        return OptionParser::init()->hasLongOption('skip-root-check');
     }
 }
