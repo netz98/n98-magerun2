@@ -21,7 +21,7 @@ final class OptionParser
     }
 
     /**
-     * @param array $argv (optional)
+     * @param array $argv [optional]
      * @return OptionParser
      */
     public static function init(array $argv = null)
@@ -34,7 +34,7 @@ final class OptionParser
     }
 
     /**
-     * Check for long-opt option existance
+     * Check for long-opt option existence
      *
      * @param string $name of long option (e.g. root-dir for --root-dir)
      * @return null|true
