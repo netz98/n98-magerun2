@@ -40,7 +40,7 @@ EOT
                 'decrypt',
                 null,
                 InputOption::VALUE_NONE,
-                'Decrypt the config value using local.xml\'s crypt key'
+                'Decrypt the config value using env.php\'s crypt key'
             )
             ->addOption('update-script', null, InputOption::VALUE_NONE, 'Output as update script lines')
             ->addOption('magerun-script', null, InputOption::VALUE_NONE, 'Output for usage with config:set')
