@@ -1,11 +1,14 @@
 #!/bin/bash
 #
-# test_setup.sh - install magento to run tests on a local development box
+# install magento to run tests on a local development box
 #
+# usage: build/local/test_setup.sh
+#
+
 set -euo pipefail
 IFS=$'\n\t'
 
-source ./build/lib/setup.sh
+source ./build/sh/setup.sh
 
 # whether or not magento is already installed, normally a quick-check based on file existence.
 magento_is_installed() {
