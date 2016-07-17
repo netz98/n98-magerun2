@@ -1,6 +1,11 @@
 RECENT CHANGES
 ==============
 
+1.2.0
+-----
+
+* Add code generator features to dev:console command (by Christian Münch)
+
 1.1.17
 ------
 * Fix: Posix conform --root-dir parsing (report by Andreas Lutro, fix by Tom Klingenberg, #224)
