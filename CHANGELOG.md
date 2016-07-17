@@ -5,6 +5,7 @@ RECENT CHANGES
 -----
 
 * Add code generator features to dev:console command (by Christian Münch)
+* Add customer:create command (by Christian Münch)
 
 1.1.17
 ------

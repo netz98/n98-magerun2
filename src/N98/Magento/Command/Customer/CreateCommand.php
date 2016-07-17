@@ -2,8 +2,8 @@
 
 namespace N98\Magento\Command\Customer;
 
-use Magento\Customer\Api\CustomerRepositoryInterface;
-use Magento\Framework\App\State as AppState;
+use Magento\Customer\Api\AccountManagementInterface;
+use Magento\Framework\App\State;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -13,12 +13,12 @@ use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
 class CreateCommand extends AbstractCustomerCommand
 {
     /**
-     * @var CustomerRepositoryInterface
+     * @var AccountManagementInterface
      */
-    private $customerRepository;
+    private $accountManagement;
 
     /**
-     * @var AppState
+     * @var State
      */
     private $appState;
 
@@ -42,12 +42,13 @@ class CreateCommand extends AbstractCustomerCommand
     }
 
     /**
-     * @param CustomerRepositoryInterface $customerRepository
-     * @param AppState $appState
+     * @param AccountManagementInterface $accountManagement
      */
-    public function inject(CustomerRepositoryInterface $customerRepository, AppState $appState)
-    {
-        $this->customerRepository = $customerRepository;
+    public function inject(
+        AccountManagementInterface $accountManagement,
+        State $appState
+    ) {
+        $this->accountManagement = $accountManagement;
         $this->appState = $appState;
     }
 
@@ -60,8 +61,6 @@ class CreateCommand extends AbstractCustomerCommand
     {
         $this->detectMagento($output, true);
         if ($this->initMagento()) {
-
-            $this->appState->setAreaCode('adminhtml');
 
             $dialog = $this->getHelperSet()->get('dialog');
 
@@ -96,14 +95,25 @@ class CreateCommand extends AbstractCustomerCommand
                 $customer->setEmail($email);
                 $customer->setFirstname($firstname);
                 $customer->setLastname($lastname);
-                $customer->setPassword($password);
 
-                $this->customerRepository->save($customer->getDataModel());
-                $customer->setConfirmation(null);
-
+                try {
+                    $this->appState->emulateAreaCode('frontend', function() use ($customer, $password) {
+                        $this->accountManagement->createAccount(
+                            $customer->getDataModel(),
+                            $password
+                        );
+                    });
+                } catch (\Exception $e) {
+                    $output->writeln('<error>' . $e->getMessage() . '</error>');
+                }
 
                 if ($outputPlain) {
-                    $output->writeln('<info>Customer <comment>' . $email . '</comment> successfully created</info>');
+                    $output->writeln(
+                        sprintf(
+                            '<info>Customer <comment>%s</comment> successfully created</info>',
+                            $email
+                        )
+                    );
                 } else {
                     $table[] = array(
                         $email, $password, $firstname, $lastname
