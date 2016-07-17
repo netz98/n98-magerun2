@@ -61,7 +61,10 @@ class ConsoleCommand extends AbstractMagentoCommand
 
         $config = new Configuration();
 
-        $parser = new Parser(new Lexer());
+        $php5Parser = new Parser\Php5(new Lexer\Emulative());
+        $php7Parser = new Parser\Php7(new Lexer\Emulative());
+
+        $parser = new Parser\Multiple([$php5Parser, $php7Parser]);
         $cleaner = new CodeCleaner($parser);
         $config->setCodeCleaner($cleaner);
 
