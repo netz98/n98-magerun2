@@ -1,6 +1,6 @@
 <?php
 /*
- * @author Tom Klingenberg <mot@fsfe.org>
+ * @author Tom Klingenberg <https://github.com/ktomk>
  */
 
 namespace N98\Magento\Application;
@@ -59,7 +59,7 @@ class ConfigTest extends TestCase
         $this->assertInternalType('array', $config->getConfig());
         $this->assertGreaterThan(4, count($config->getConfig()));
 
-        $config->setConfigurationLoader($loader);
+        $config->setLoader($loader);
     }
 
     /**
@@ -71,7 +71,8 @@ class ConfigTest extends TestCase
     {
         $config = new Config();
         $config->setConfig(array(0, 1, 2));
-        $this->assertSame($config->getConfig()[1], 1);
+        $actual = $config->getConfig();
+        $this->assertSame($actual[1], 1);
     }
 
     /**

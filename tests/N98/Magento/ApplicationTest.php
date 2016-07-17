@@ -123,14 +123,12 @@ class ApplicationTest extends TestCase
 
     public function testComposer()
     {
-        $this->markTestSkipped('Currently not working');
-
         vfsStream::setup('root');
         vfsStream::create(
             array(
                 'htdocs' => array(
                     'app' => array(
-                        'Mage.php' => ''
+                        'bootstrag.php' => '',
                     )
                 ),
                 'vendor' => array(

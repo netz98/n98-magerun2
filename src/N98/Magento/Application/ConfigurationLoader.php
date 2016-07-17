@@ -290,7 +290,7 @@ class ConfigurationLoader
      * Check if there is a user config file. ~/.n98-magerun.yaml
      *
      * @param array $config
-     * @param string|null $magentoRootFolder [optional]
+     * @param string $magentoRootFolder [optional]
      *
      * @return array
      */
