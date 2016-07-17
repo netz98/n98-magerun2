@@ -80,7 +80,6 @@ HELP;
             $selectedFile = $files[$script]['fileinfo']->getPathname();
         }
 
-
         $scriptArray = array(
             'command' => 'script',
             'filename' => $selectedFile,

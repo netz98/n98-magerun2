@@ -66,7 +66,6 @@ HELP;
         $value = str_replace(array('\n', '\r'), array("\n", "\r"), $input->getArgument('value'));
         $value = $this->_formatValue($value, ($input->getOption('encrypt') ? 'encrypt' : false));
 
-
         $this->getConfigWriter()->save(
             $input->getArgument('path'),
             $value,

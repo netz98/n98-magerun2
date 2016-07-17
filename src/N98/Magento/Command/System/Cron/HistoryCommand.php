@@ -2,11 +2,11 @@
 
 namespace N98\Magento\Command\System\Cron;
 
+use Magento\Cron\Model\Schedule;
+use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
-use Magento\Cron\Model\Schedule;
 
 class HistoryCommand extends AbstractCronCommand
 {

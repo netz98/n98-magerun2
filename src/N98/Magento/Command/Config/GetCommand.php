@@ -81,7 +81,7 @@ HELP;
         }
 
         $collection->addFieldToFilter('path', array(
-            'like' => str_replace('*', '%', $searchPath)
+            'like' => str_replace('*', '%', $searchPath),
         ));
 
         if ($scopeId = $input->getOption('scope')) {

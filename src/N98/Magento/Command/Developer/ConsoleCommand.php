@@ -12,10 +12,10 @@ use Psy\CodeCleaner;
 use Psy\Command\ListCommand;
 use Psy\Configuration;
 use Psy\Output\ShellOutput;
+use Psy\ParserFactory;
 use Psy\Shell;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Psy\ParserFactory;
 
 class ConsoleCommand extends AbstractMagentoCommand
 {

@@ -89,16 +89,15 @@ class ViewCommand extends AbstractAttributeCommand
                 'Flat-Columns',
                 function ($values) {
                     return implode(',', array_keys((array) $values));
-                }
+                },
             ),
             'FlatIndexes' => array(
                 'Flat-Indexes',
                 function ($values) {
                     return implode(',', array_keys((array) $values));
-                }
-            )
+                },
+            ),
         );
-
 
         if ($isFrontend) {
             $table['Frontend/Label'] = array('Frontend-Label');

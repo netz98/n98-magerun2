@@ -119,7 +119,7 @@ abstract class AbstractCronCommand extends AbstractMagentoCommand
                 'h'  => $array[1],
                 'D'  => $array[2],
                 'M'  => $array[3],
-                'WD' => $array[4]
+                'WD' => $array[4],
             ];
         }
 

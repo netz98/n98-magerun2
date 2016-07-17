@@ -65,7 +65,6 @@ abstract class CheckAbstract implements StoreCheck
 
         $paramValues = $this->getParamValues($store, $typedParams);
 
-
         $name       = 'checkSettings';
         $method     = new \ReflectionMethod($this, $name);
         $parameters = $method->getParameters();

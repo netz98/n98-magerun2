@@ -90,7 +90,7 @@ class DevUrnCatalogAutoPath implements EventSubscriberInterface
             $root .= '/..';
         } while (is_dir($root) && $down--);
 
-        return null;
+        return;
     }
 
     /**
