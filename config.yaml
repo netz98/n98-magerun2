@@ -55,6 +55,7 @@ commands:
     - N98\Magento\Command\Config\DeleteCommand
     - N98\Magento\Command\Config\GetCommand
     - N98\Magento\Command\Config\SetCommand
+    - N98\Magento\Command\Customer\CreateCommand
     - N98\Magento\Command\Customer\InfoCommand
     - N98\Magento\Command\Customer\ListCommand
     - N98\Magento\Command\Database\ConsoleCommand
@@ -244,6 +245,34 @@ commands:
         backend-frontname: admin
         admin-email: john.doe@example.com
         encryption_key:
+
+  N98\Magento\Command\Developer\ConsoleCommand:
+    commands:
+      - N98\Magento\Command\Developer\Console\CallCommand
+      - N98\Magento\Command\Developer\Console\Config\MakeConfigDiCommand
+      - N98\Magento\Command\Developer\Console\Config\MakeConfigCrontabCommand
+      - N98\Magento\Command\Developer\Console\Config\MakeConfigEventsCommand
+      - N98\Magento\Command\Developer\Console\Config\MakeConfigFieldsetCommand
+      - N98\Magento\Command\Developer\Console\Config\MakeConfigMenuCommand
+      - N98\Magento\Command\Developer\Console\Config\MakeConfigRoutesCommand
+      - N98\Magento\Command\Developer\Console\Config\MakeConfigSystemCommand
+      - N98\Magento\Command\Developer\Console\Config\MakeConfigWidgetCommand
+      - N98\Magento\Command\Developer\Console\Config\MakeConfigWebapiCommand
+      - N98\Magento\Command\Developer\Console\ModuleCommand
+      - N98\Magento\Command\Developer\Console\MakeBlockCommand
+      #- N98\Magento\Command\Developer\Console\MakeEntityCommand
+      - N98\Magento\Command\Developer\Console\MakeHelperCommand
+      #- N98\Magento\Command\Developer\Console\MakeGridCommand
+      - N98\Magento\Command\Developer\Console\MakeModuleCommand
+      - N98\Magento\Command\Developer\Console\ModulesCommand
+      - N98\Magento\Command\Developer\Console\MakeClassCommand
+      - N98\Magento\Command\Developer\Console\MakeCommandCommand
+      - N98\Magento\Command\Developer\Console\MakeControllerCommand
+      - N98\Magento\Command\Developer\Console\MakeModelCommand
+      #- N98\Magento\Command\Developer\Console\MakeTableCommand
+      - N98\Magento\Command\Developer\Console\MakeInterfaceCommand
+      - N98\Magento\Command\Developer\Console\MakeThemeCommand
+      #- N98\Magento\Command\Developer\Console\TreeCommand
 
   N98\Magento\Command\System\CheckCommand:
     checks:

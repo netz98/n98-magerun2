@@ -27,7 +27,8 @@ class Magerun implements \Magento\Framework\AppInterface
      */
     public function launch()
     {
-        // TODO: Implement launch() method.
+        $appState = $this->objectManager->get('Magento\Framework\App\State');
+        $appState->setAreaCode('adminhtml');
     }
 
     /**

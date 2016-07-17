@@ -14,7 +14,7 @@
     ],
     "require": {
         "php": ">=5.3.3",
-        "psy/psysh": "~0.6",
+        "psy/psysh": "~0.7",
         "symfony/console": " ~2.3 <2.7",
         "symfony/event-dispatcher": "~2.3",
         "symfony/finder": "~2.3",
@@ -40,10 +40,6 @@
         {
             "name": "Christian Münch",
             "email": "c.muench@netz98.de"
-        },
-        {
-            "name": "Alexander Menk",
-            "email": "a.menk@netz98.de"
         }
     ],
     "bin": [

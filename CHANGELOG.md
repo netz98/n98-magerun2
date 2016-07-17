@@ -3,6 +3,8 @@ RECENT CHANGES
 
 1.2.0
 -----
+* New: Add customer:create command (by Christian Münch, #54)
+* New: Add code generator features to dev:console command (by Christian Münch)
 
 1.1.17
 ------
