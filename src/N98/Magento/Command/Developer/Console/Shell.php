@@ -2,6 +2,7 @@
 
 namespace N98\Magento\Command\Developer\Console;
 
+use Exception;
 use N98\Magento\Command\Developer\Console\Exception\NoModuleDefinedException;
 use N98\Util\BinaryString;
 use Psy\Configuration;
@@ -48,7 +49,6 @@ class Shell extends PsyShell
         }
     }
 
-
     /**
      * Renders a caught Exception.
      *
@@ -57,10 +57,11 @@ class Shell extends PsyShell
      *
      * Stores $e as the last Exception in the Shell Context.
      *
-     * @param \Exception      $e      An exception instance
-     * @param OutputInterface $output An OutputInterface instance
+     * @param Exception $e An exception instance
+     * @throws ErrorException
+     * @throws FatalErrorException
      */
-    public function writeException(\Exception $e)
+    public function writeException(Exception $e)
     {
         $this->resetCodeBuffer();
 
@@ -85,7 +86,6 @@ class Shell extends PsyShell
 
         throw $e;
     }
-
 
     /**
      * @return string

@@ -2,13 +2,13 @@
 
 namespace N98\Magento\Command\Developer\Console;
 
+use Magento\Framework\Code\Generator\ClassGenerator;
 use Magento\Framework\Controller\ResultFactory;
 use Magento\Framework\Module\Dir;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Magento\Framework\Code\Generator\ClassGenerator;
 
 class MakeControllerCommand extends AbstractGeneratorCommand
 {
@@ -18,8 +18,7 @@ class MakeControllerCommand extends AbstractGeneratorCommand
             ->setName('make:controller')
             ->addArgument('classpath', InputArgument::REQUIRED)
             ->addOption('result', 'r', InputOption::VALUE_OPTIONAL, 'Result type', 'page')
-            ->setDescription('Creates a controller action class')
-        ;
+            ->setDescription('Creates a controller action class');
     }
 
     /**
@@ -55,7 +54,6 @@ class MakeControllerCommand extends AbstractGeneratorCommand
             if ($input->getOption('result') == ResultFactory::TYPE_PAGE) {
                 $this->createLayoutFile();
             }
-
         } catch (Exception $e) {
             $output->writeln('<error>' . $e->getMessage() . '</error>');
         }
@@ -109,8 +107,8 @@ class MakeControllerCommand extends AbstractGeneratorCommand
                     ],
                     [
                         'name' => 'throws',
-                        'description' => '\Magento\Framework\Exception\NotFoundException'
-                    ]
+                        'description' => '\Magento\Framework\Exception\NotFoundException',
+                    ],
                 ],
             ],
         ];
@@ -120,7 +118,5 @@ class MakeControllerCommand extends AbstractGeneratorCommand
 
     protected function createLayoutFile()
     {
-
     }
-
 }

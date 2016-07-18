@@ -2,6 +2,7 @@
 
 namespace N98\Magento\Command\Developer\Console;
 
+use Magento\Framework\Module\ModuleListInterface;
 use N98\Magento\Command\Developer\Console\Structure\ModuleNameStructure;
 use N98\Util\BinaryString;
 use Psy\VarDumper\Presenter;
@@ -9,7 +10,6 @@ use Psy\VarDumper\PresenterAware;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Magento\Framework\Module\ModuleListInterface;
 
 class ModuleCommand extends AbstractGeneratorCommand implements PresenterAware
 {
@@ -24,8 +24,7 @@ class ModuleCommand extends AbstractGeneratorCommand implements PresenterAware
             ->setName('module')
             ->addArgument('module', InputArgument::OPTIONAL)
             ->setAliases(['mod'])
-            ->setDescription('Set current module context')
-        ;
+            ->setDescription('Set current module context');
     }
 
     /**
@@ -39,7 +38,7 @@ class ModuleCommand extends AbstractGeneratorCommand implements PresenterAware
     }
 
     /**
-     * @param InputInterface  $input
+     * @param InputInterface $input
      * @param OutputInterface $output
      *
      * @return int|void

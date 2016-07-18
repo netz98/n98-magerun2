@@ -6,8 +6,8 @@
 
 namespace N98\Magento\Command\Developer\Console;
 
-use Magento\Framework\Filesystem;
 use Magento\Framework\App\Filesystem\DirectoryList;
+use Magento\Framework\Filesystem;
 use Magento\Framework\Filesystem\Directory\WriteInterface;
 use N98\Magento\Command\Developer\Console\Structure\ThemeNameStructure;
 use N98\Magento\Command\Developer\Console\Util\Xml;
@@ -139,7 +139,6 @@ FILE_BODY;
 </theme>
 XML_CONTENT;
 
-
         $appDirWriter->writeFile($relativePath . '/theme.xml', $xmlContent);
         $output->writeln('<info>generated </info><comment>' . $relativePath . '/theme.xml</comment>');
     }
@@ -156,7 +155,6 @@ XML_CONTENT;
 <view xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Config/etc/view.xsd">
 </view>
 XML_CONTENT;
-
 
         $appDirWriter->writeFile($relativePath . '/etc/view.xml', $xmlContent);
         $output->writeln('<info>generated </info><comment>' . $relativePath . '/etc/view.xml</comment>');

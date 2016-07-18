@@ -29,8 +29,7 @@ class MakeConfigCrontabCommand extends AbstractSimpleConfigFileGeneratorCommand
         $this
             ->setName('make:config:crontab')
             ->addArgument('area', InputArgument::OPTIONAL, 'Area of crontab.xml file', 'global')
-            ->setDescription('Creates a new crontab.xml file')
-        ;
+            ->setDescription('Creates a new crontab.xml file');
     }
 
     /**
@@ -55,6 +54,4 @@ class MakeConfigCrontabCommand extends AbstractSimpleConfigFileGeneratorCommand
 
         $output->writeln('<info>generated </info><comment>' . $relativeConfigFilePath . '</comment>');
     }
-
-
 }

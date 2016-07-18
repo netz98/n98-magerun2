@@ -29,8 +29,7 @@ class MakeConfigWidgetCommand extends AbstractSimpleConfigFileGeneratorCommand
         $this
             ->setName('make:config:widget')
             ->addArgument('area', InputArgument::OPTIONAL, 'Area of widget.xml file', 'global')
-            ->setDescription('Creates a new widget.xml file')
-        ;
+            ->setDescription('Creates a new widget.xml file');
     }
 
     /**
@@ -55,6 +54,4 @@ class MakeConfigWidgetCommand extends AbstractSimpleConfigFileGeneratorCommand
 
         $output->writeln('<info>generated </info><comment>' . $relativeConfigFilePath . '</comment>');
     }
-
-
 }

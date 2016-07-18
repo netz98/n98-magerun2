@@ -63,7 +63,7 @@ class Xml
 
                 list($key, $value) = explode('=', $pair);
 
-                if(strpos($key, '@') !== 0) {
+                if (strpos($key, '@') !== 0) {
                     throw new \Exception("Invalid Attribute Key");
                 }
 
@@ -75,7 +75,6 @@ class Xml
                 } else {
                     $node->addAttribute($key, $value);
                 }
-
             }
         }
 
@@ -95,11 +94,10 @@ class Xml
     {
         $namespaces = $xml->getDocNamespaces();
 
-        if(array_key_exists($prefix, $namespaces)) {
+        if (array_key_exists($prefix, $namespaces)) {
             return $namespaces[$prefix];
         }
 
         throw new \Exception('Unknown namespace in ' . __FILE__);
     }
-
 }

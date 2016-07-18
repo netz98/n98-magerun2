@@ -10,12 +10,8 @@ use N98\Util\Unicode\Charset;
 use PhpParser\Lexer;
 use PhpParser\Parser;
 use Psy\CodeCleaner;
-use Psy\Command\ListCommand;
 use Psy\Configuration;
 use Psy\Output\ShellOutput;
-use Psy\ParserFactory;
-use Psy\TabCompletion\AutoCompleter;
-use Psy\TabCompletion\Matcher\CommandsMatcher;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -32,8 +28,7 @@ class ConsoleCommand extends AbstractMagentoCommand
             ->setName('dev:console')
             ->setDescription(
                 'Opens PHP interactive shell with initialized Mage::app() <comment>(Experimental)</comment>'
-            )
-        ;
+            );
     }
 
     /**
@@ -45,7 +40,7 @@ class ConsoleCommand extends AbstractMagentoCommand
     }
 
     /**
-     * @param InputInterface  $input
+     * @param InputInterface $input
      * @param OutputInterface $output
      *
      * @return int|void
@@ -74,16 +69,16 @@ class ConsoleCommand extends AbstractMagentoCommand
         $commandConfig = $this->getCommandConfig();
         $commandsToAdd = [];
         foreach ($commandConfig['commands'] as $command) {
-            $commandsToAdd[]= new $command();
+            $commandsToAdd[] = new $command();
         }
 
         $config->addCommands($commandsToAdd);
 
         $shell = new Shell($config);
         $shell->setScopeVariables([
-            'di' => $this->getObjectManager(),
-            'magerun' => $this->getApplication(),
-            'magerunInternal' => (object)['currentModule' => ''],
+            'di'              => $this->getObjectManager(),
+            'magerun'         => $this->getApplication(),
+            'magerunInternal' => (object) ['currentModule' => ''],
         ]);
 
         if ($initialized) {

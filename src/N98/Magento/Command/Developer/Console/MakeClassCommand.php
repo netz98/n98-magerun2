@@ -2,12 +2,10 @@
 
 namespace N98\Magento\Command\Developer\Console;
 
-use Magento\Framework\Module\Dir;
+use Magento\Framework\Code\Generator\ClassGenerator;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Magento\Framework\Code\Generator\ClassGenerator;
 use Zend\Code\Generator\FileGenerator;
 
 class MakeClassCommand extends AbstractGeneratorCommand
@@ -19,12 +17,11 @@ class MakeClassCommand extends AbstractGeneratorCommand
         $this
             ->setName('make:class')
             ->addArgument(self::CLASSPATH, InputArgument::REQUIRED)
-            ->setDescription('Creates a generic class')
-        ;
+            ->setDescription('Creates a generic class');
     }
 
     /**
-     * @param InputInterface  $input
+     * @param InputInterface $input
      * @param OutputInterface $output
      *
      * @return int|void
@@ -45,7 +42,7 @@ class MakeClassCommand extends AbstractGeneratorCommand
             $classGenerator->setName($classNameToGenerate);
 
             $fileGenerator = FileGenerator::fromArray([
-                'classes' => [$classGenerator]
+                'classes' => [$classGenerator],
             ]);
 
             $directoryWriter = $this->getCurrentModuleDirectoryWriter();
@@ -56,5 +53,4 @@ class MakeClassCommand extends AbstractGeneratorCommand
             $output->writeln('<error>' . $e->getMessage() . '</error>');
         }
     }
-
 }

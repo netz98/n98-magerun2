@@ -74,6 +74,4 @@ XML;
             \file_put_contents($filename, $xml);
         }
     }
-
-
 }

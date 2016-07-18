@@ -15,8 +15,7 @@ class MakeEntityCommand extends AbstractGeneratorCommand
     {
         $this
             ->setName('make:entity')
-            ->setDescription('Creates a new entity (model, resource model and table)')
-        ;
+            ->setDescription('Creates a new entity (model, resource model and table)');
     }
 
     /**

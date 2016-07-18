@@ -29,8 +29,7 @@ class MakeConfigDiCommand extends AbstractSimpleConfigFileGeneratorCommand
         $this
             ->setName('make:config:di')
             ->addArgument('area', InputArgument::OPTIONAL, 'Area of di.xml file', 'global')
-            ->setDescription('Creates a new di.xml file')
-        ;
+            ->setDescription('Creates a new di.xml file');
     }
 
     /**
@@ -55,6 +54,4 @@ class MakeConfigDiCommand extends AbstractSimpleConfigFileGeneratorCommand
 
         $output->writeln('<info>generated </info><comment>' . $relativeConfigFilePath . '</comment>');
     }
-
-
 }

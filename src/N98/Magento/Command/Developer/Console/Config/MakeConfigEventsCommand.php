@@ -29,8 +29,7 @@ class MakeConfigEventsCommand extends AbstractSimpleConfigFileGeneratorCommand
         $this
             ->setName('make:config:events')
             ->addArgument('area', InputArgument::OPTIONAL, 'Area of events.xml file', 'global')
-            ->setDescription('Creates a new events.xml file')
-        ;
+            ->setDescription('Creates a new events.xml file');
     }
 
     /**
@@ -55,6 +54,4 @@ class MakeConfigEventsCommand extends AbstractSimpleConfigFileGeneratorCommand
 
         $output->writeln('<info>generated </info><comment>' . $relativeConfigFilePath . '</comment>');
     }
-
-
 }

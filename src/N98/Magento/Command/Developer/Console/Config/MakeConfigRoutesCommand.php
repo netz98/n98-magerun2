@@ -91,10 +91,9 @@ class MakeConfigRoutesCommand extends AbstractSimpleConfigFileGeneratorCommand
         $routeId = $this->getCurrentModuleId();
         $moduleName = $this->getCurrentModuleName();
 
-        $xmlObj = Xml::addSimpleXmlNodesByXPath($xmlObj,
-            "router[@id=$type]/" .
-            "route[@id=$routeId,@frontName=$frontname]/" .
-            "module[@name=$moduleName]"
+        $xmlObj = Xml::addSimpleXmlNodesByXPath(
+            $xmlObj,
+            "router[@id=$type]/route[@id=$routeId,@frontName=$frontname]/module[@name=$moduleName]"
         );
 
         return $xmlObj->asXML();

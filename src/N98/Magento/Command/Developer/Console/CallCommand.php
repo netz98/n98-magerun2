@@ -2,14 +2,10 @@
 
 namespace N98\Magento\Command\Developer\Console;
 
-use Magento\Framework\Controller\ResultFactory;
-use Magento\Framework\Module\Dir;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\StringInput;
 use Symfony\Component\Console\Output\OutputInterface;
-use Magento\Framework\Code\Generator\ClassGenerator;
 
 /**
  * Bridge command to a outer n98-magerun commands
@@ -21,12 +17,11 @@ class CallCommand extends AbstractGeneratorCommand
         $this
             ->setName('call')
             ->addArgument('command_string', InputArgument::IS_ARRAY, 'command string')
-            ->setDescription('Calls a n98-magerun command in current context')
-        ;
+            ->setDescription('Calls a n98-magerun command in current context');
     }
 
     /**
-     * @param InputInterface  $input
+     * @param InputInterface $input
      * @param OutputInterface $output
      *
      * @return int|void

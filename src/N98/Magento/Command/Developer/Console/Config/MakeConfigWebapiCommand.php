@@ -29,8 +29,7 @@ class MakeConfigWebapiCommand extends AbstractSimpleConfigFileGeneratorCommand
         $this
             ->setName('make:config:webapi')
             ->addArgument('area', InputArgument::OPTIONAL, 'Area of webapi.xml file', 'global')
-            ->setDescription('Creates a new webapi.xml file')
-        ;
+            ->setDescription('Creates a new webapi.xml file');
     }
 
     /**
@@ -55,6 +54,4 @@ class MakeConfigWebapiCommand extends AbstractSimpleConfigFileGeneratorCommand
 
         $output->writeln('<info>generated </info><comment>' . $relativeConfigFilePath . '</comment>');
     }
-
-
 }

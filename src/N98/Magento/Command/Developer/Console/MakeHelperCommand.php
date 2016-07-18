@@ -2,12 +2,10 @@
 
 namespace N98\Magento\Command\Developer\Console;
 
-use Magento\Framework\Module\Dir;
+use Magento\Framework\Code\Generator\ClassGenerator;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Magento\Framework\Code\Generator\ClassGenerator;
 use Zend\Code\Generator\FileGenerator;
 
 class MakeHelperCommand extends AbstractGeneratorCommand
@@ -17,12 +15,11 @@ class MakeHelperCommand extends AbstractGeneratorCommand
         $this
             ->setName('make:helper')
             ->addArgument('classpath', InputArgument::REQUIRED)
-            ->setDescription('Creates a helper class')
-        ;
+            ->setDescription('Creates a helper class');
     }
 
     /**
-     * @param InputInterface  $input
+     * @param InputInterface $input
      * @param OutputInterface $output
      *
      * @return int|void
@@ -46,7 +43,7 @@ class MakeHelperCommand extends AbstractGeneratorCommand
 
             $fileGenerator = FileGenerator::fromArray(
                 [
-                    'classes' => [$classGenerator]
+                    'classes' => [$classGenerator],
                 ]
             );
 
@@ -54,10 +51,8 @@ class MakeHelperCommand extends AbstractGeneratorCommand
             $directoryWriter->writeFile($filePathToGenerate, $fileGenerator->generate());
 
             $output->writeln('<info>generated </info><comment>' . $filePathToGenerate . '</comment>');
-
         } catch (Exception $e) {
             $output->writeln('<error>' . $e->getMessage() . '</error>');
         }
     }
-
 }

@@ -3,10 +3,8 @@
 namespace N98\Magento\Command\Developer\Console;
 
 use Magento\Framework\Code\Generator\InterfaceGenerator;
-use Magento\Framework\Module\Dir;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Zend\Code\Generator\FileGenerator;
 
@@ -19,12 +17,11 @@ class MakeInterfaceCommand extends AbstractGeneratorCommand
         $this
             ->setName('make:interface')
             ->addArgument(self::CLASSPATH, InputArgument::REQUIRED)
-            ->setDescription('Creates a generic interface')
-        ;
+            ->setDescription('Creates a generic interface');
     }
 
     /**
-     * @param InputInterface  $input
+     * @param InputInterface $input
      * @param OutputInterface $output
      *
      * @return int|void
@@ -45,7 +42,7 @@ class MakeInterfaceCommand extends AbstractGeneratorCommand
             $classGenerator->setName($classNameToGenerate);
 
             $fileGenerator = FileGenerator::fromArray([
-                'classes' => [$classGenerator]
+                'classes' => [$classGenerator],
             ]);
 
             $directoryWriter = $this->getCurrentModuleDirectoryWriter();
@@ -56,5 +53,4 @@ class MakeInterfaceCommand extends AbstractGeneratorCommand
             $output->writeln('<error>' . $e->getMessage() . '</error>');
         }
     }
-
 }

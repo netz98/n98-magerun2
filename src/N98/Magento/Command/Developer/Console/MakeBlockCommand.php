@@ -2,13 +2,10 @@
 
 namespace N98\Magento\Command\Developer\Console;
 
-use Magento\Framework\Controller\ResultFactory;
-use Magento\Framework\Module\Dir;
+use Magento\Framework\Code\Generator\ClassGenerator;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Magento\Framework\Code\Generator\ClassGenerator;
 use Zend\Code\Generator\FileGenerator;
 
 class MakeBlockCommand extends AbstractGeneratorCommand
@@ -18,12 +15,11 @@ class MakeBlockCommand extends AbstractGeneratorCommand
         $this
             ->setName('make:block')
             ->addArgument('classpath', InputArgument::REQUIRED)
-            ->setDescription('Creates a generic block class')
-        ;
+            ->setDescription('Creates a generic block class');
     }
 
     /**
-     * @param InputInterface  $input
+     * @param InputInterface $input
      * @param OutputInterface $output
      *
      * @return int|void
@@ -59,7 +55,7 @@ class MakeBlockCommand extends AbstractGeneratorCommand
 
         $fileGenerator = FileGenerator::fromArray(
             [
-                'classes' => [$classGenerator]
+                'classes' => [$classGenerator],
             ]
         );
 
@@ -68,5 +64,4 @@ class MakeBlockCommand extends AbstractGeneratorCommand
 
         $output->writeln('<info>generated </info><comment>' . $filePathToGenerate . '</comment>');
     }
-
 }

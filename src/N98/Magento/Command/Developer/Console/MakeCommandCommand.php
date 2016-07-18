@@ -2,13 +2,12 @@
 
 namespace N98\Magento\Command\Developer\Console;
 
-use Magento\Framework\Module\Dir;
+use Magento\Framework\Code\Generator\ClassGenerator;
 use N98\Magento\Command\Developer\Console\Util\Config\DiFileWriter;
 use N98\Util\BinaryString;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Magento\Framework\Code\Generator\ClassGenerator;
 use Zend\Code\Generator\DocBlockGenerator;
 use Zend\Code\Generator\MethodGenerator;
 
@@ -78,7 +77,6 @@ class MakeCommandCommand extends AbstractGeneratorCommand
 \$this->setName('$commandName');
 \$this->setDescription('$commandName');
 BODY;
-;
         $classGenerator->addMethod(
             'configure',
             [],
@@ -177,6 +175,7 @@ BODY;
     protected function createDiFileWriter($diPath)
     {
         $configWriter = DiFileWriter::createByFilepath($diPath);
+
         return $configWriter;
     }
 }

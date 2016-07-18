@@ -19,12 +19,11 @@ class TreeCommand extends AbstractGeneratorCommand
         $this
             ->setName('tree')
             ->addArgument('subpath', InputArgument::OPTIONAL, 'Show only subpath', '/')
-            ->setDescription('Shows directory tree of current context')
-        ;
+            ->setDescription('Shows directory tree of current context');
     }
 
     /**
-     * @param InputInterface  $input
+     * @param InputInterface $input
      * @param OutputInterface $output
      *
      * @return int|void
@@ -37,16 +36,14 @@ class TreeCommand extends AbstractGeneratorCommand
         $finder
             ->files()
             ->in($reader->getAbsolutePath() . ltrim($input->getArgument('subpath'), '/'));
-        
+
         foreach ($finder as $file) {
             /** @var $file SplFileInfo */
             $formattedRelativePath = $file->getRelativePath() == '' ? '' : $file->getRelativePath() . '/';
 
             $output->writeln(
-                '<info>' . $formattedRelativePath . '</info>'
-                . '<comment>' . $file->getFilename() . '</comment>'
+                '<info>' . $formattedRelativePath . '</info>' . '<comment>' . $file->getFilename() . '</comment>'
             );
         }
-
     }
 }

@@ -29,8 +29,7 @@ class MakeConfigMenuCommand extends AbstractSimpleConfigFileGeneratorCommand
         $this
             ->setName('make:config:menu')
             ->addArgument('area', InputArgument::OPTIONAL, 'Area of menu.xml file', 'adminhtml')
-            ->setDescription('Creates a new menu.xml file')
-        ;
+            ->setDescription('Creates a new menu.xml file');
     }
 
     /**
@@ -55,6 +54,4 @@ class MakeConfigMenuCommand extends AbstractSimpleConfigFileGeneratorCommand
 
         $output->writeln('<info>generated </info><comment>' . $relativeConfigFilePath . '</comment>');
     }
-
-
 }

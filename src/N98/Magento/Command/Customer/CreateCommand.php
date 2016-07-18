@@ -4,11 +4,11 @@ namespace N98\Magento\Command\Customer;
 
 use Magento\Customer\Api\AccountManagementInterface;
 use Magento\Framework\App\State;
+use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
 
 class CreateCommand extends AbstractCustomerCommand
 {
@@ -37,8 +37,7 @@ class CreateCommand extends AbstractCustomerCommand
                 InputOption::VALUE_OPTIONAL,
                 'Output Format. One of [' . implode(',', RendererFactory::getFormats()) . ']'
             )
-            ->setDescription('Creates a new customer/user for shop frontend.')
-        ;
+            ->setDescription('Creates a new customer/user for shop frontend.');
     }
 
     /**
@@ -61,7 +60,6 @@ class CreateCommand extends AbstractCustomerCommand
     {
         $this->detectMagento($output, true);
         if ($this->initMagento()) {
-
             $dialog = $this->getHelperSet()->get('dialog');
 
             // Email
@@ -97,7 +95,7 @@ class CreateCommand extends AbstractCustomerCommand
                 $customer->setLastname($lastname);
 
                 try {
-                    $this->appState->emulateAreaCode('frontend', function() use ($customer, $password) {
+                    $this->appState->emulateAreaCode('frontend', function () use ($customer, $password) {
                         $this->accountManagement->createAccount(
                             $customer->getDataModel(),
                             $password
@@ -116,7 +114,7 @@ class CreateCommand extends AbstractCustomerCommand
                     );
                 } else {
                     $table[] = array(
-                        $email, $password, $firstname, $lastname
+                        $email, $password, $firstname, $lastname,
                     );
                 }
             } else {

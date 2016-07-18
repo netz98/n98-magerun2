@@ -15,8 +15,7 @@ class MakeGridCommand extends AbstractGeneratorCommand
     {
         $this
             ->setName('make:grid')
-            ->setDescription('Creates a new adminhtml grid')
-        ;
+            ->setDescription('Creates a new adminhtml grid');
     }
 
     /**
@@ -27,6 +26,6 @@ class MakeGridCommand extends AbstractGeneratorCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $output->writeln('currently not implemented');   
+        $output->writeln('currently not implemented');
     }
 }

@@ -29,8 +29,7 @@ class MakeConfigFieldsetCommand extends AbstractSimpleConfigFileGeneratorCommand
         $this
             ->setName('make:config:fieldset')
             ->addArgument('area', InputArgument::OPTIONAL, 'Area of menu.xml file', 'global')
-            ->setDescription('Creates a new fieldset.xml file')
-        ;
+            ->setDescription('Creates a new fieldset.xml file');
     }
 
     /**
@@ -55,6 +54,4 @@ class MakeConfigFieldsetCommand extends AbstractSimpleConfigFileGeneratorCommand
 
         $output->writeln('<info>generated </info><comment>' . $relativeConfigFilePath . '</comment>');
     }
-
-
 }

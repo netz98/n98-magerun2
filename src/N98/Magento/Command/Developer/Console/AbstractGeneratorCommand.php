@@ -3,10 +3,10 @@
 namespace N98\Magento\Command\Developer\Console;
 
 use Magento\Framework\Code\Generator\ClassGenerator;
+use Magento\Framework\Filesystem\Directory\ReadFactory as DirectoryReadFactory;
+use Magento\Framework\Filesystem\Directory\WriteFactory as DirectoryWriteFactory;
 use Magento\Framework\Filesystem\Directory\WriteInterface;
 use Magento\Framework\Module\Dir as ModuleDir;
-use Magento\Framework\Filesystem\Directory\WriteFactory as DirectoryWriteFactory;
-use Magento\Framework\Filesystem\Directory\ReadFactory as DirectoryReadFactory;
 use N98\Magento\Command\Developer\Console\Structure\ModuleNameStructure;
 use Symfony\Component\Console\Output\OutputInterface;
 use Zend\Code\Generator\FileGenerator;
@@ -72,7 +72,6 @@ abstract class AbstractGeneratorCommand extends AbstractConsoleCommand
             if (empty($currentModuleName)) {
                 throw new \InvalidArgumentException('No module defined');
             }
-
         } catch (\InvalidArgumentException $e) {
             throw new \InvalidArgumentException('Module not defined. Please use "module <name>" command');
         }
@@ -196,7 +195,7 @@ abstract class AbstractGeneratorCommand extends AbstractConsoleCommand
     ) {
         $fileGenerator = FileGenerator::fromArray(
             [
-                'classes' => [$classGenerator]
+                'classes' => [$classGenerator],
             ]
         );
 
@@ -204,7 +203,6 @@ abstract class AbstractGeneratorCommand extends AbstractConsoleCommand
             ->writeFile($filePathToGenerate, $fileGenerator->generate());
 
         $output->writeln('<info>generated </info><comment>' . $filePathToGenerate . '</comment>');
-
     }
 
     /**
@@ -214,5 +212,4 @@ abstract class AbstractGeneratorCommand extends AbstractConsoleCommand
     {
         self::$currentModuleDirWriter = null;
     }
-
 }
