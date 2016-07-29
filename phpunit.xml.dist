@@ -19,6 +19,7 @@
     <testsuites>
         <testsuite name="n98-magerun2-tests">
             <directory>./tests</directory>
+            <directory>./shared/tests</directory>
         </testsuite>
     </testsuites>
     <filter>
