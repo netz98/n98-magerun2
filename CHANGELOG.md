@@ -3,6 +3,8 @@ RECENT CHANGES
 
 1.2.0
 -----
+* Fix: Wrong template-hints config value (by Tommy Pyatt, #230)
+* Fix: Broken scope-id detection (by Christian Münch)
 * New: Add customer:create command (by Christian Münch, #54)
 * New: Add code generator features to dev:console command (by Christian Münch)
 
