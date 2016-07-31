@@ -6,6 +6,6 @@
 [subrepo]
 	remote = ../mr-shared
 	branch = master
-	commit = 8e616f79c946eb04ea4f3c8e4061b586c8f9f16d
-	parent = ccb49834a77ef776f44f2f2e21f2df3718ca5b1f
+	commit = ac358049f5fb95b17fb844a15b7c5733fb99015d
+	parent = 64658accd95a5ca49ce20bdddef2c22fed113427
 	cmdver = 0.3.0
