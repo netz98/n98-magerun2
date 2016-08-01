@@ -371,14 +371,14 @@ class Application extends BaseApplication
             return;
         }
 
-        $configOptions = new \Mage_Core_Model_Config_Options();
-        $currentVarDir = $configOptions->getVarDir();
+        $directoryList = $this->_objectManager->get('\Magento\Framework\App\Filesystem\DirectoryList');
+        $currentVarDir = $directoryList->getPath('var');
 
-        if ($currentVarDir == $tempVarDir) {
+        if ($currentVarDir === $tempVarDir) {
             $output->writeln(array(
                 sprintf('<warning>Fallback folder %s is used in n98-magerun</warning>', $tempVarDir),
                 '',
-                'n98-magerun is using the fallback folder. If there is another folder configured for Magento, this ' .
+                'n98-magerun2 is using the fallback folder. If there is another folder configured for Magento, this ' .
                 'can cause serious problems.',
                 'Please refer to https://github.com/netz98/n98-magerun/wiki/File-system-permissions ' .
                 'for more information.',
@@ -388,7 +388,7 @@ class Application extends BaseApplication
             $output->writeln(array(
                 sprintf('<warning>Folder %s found, but not used in n98-magerun</warning>', $tempVarDir),
                 '',
-                "This might cause serious problems. n98-magerun is using the configured var-folder " .
+                "This might cause serious problems. n98-magerun2 is using the configured var-folder " .
                 "<comment>$currentVarDir</comment>",
                 'Please refer to https://github.com/netz98/n98-magerun/wiki/File-system-permissions ' .
                 'for more information.',
