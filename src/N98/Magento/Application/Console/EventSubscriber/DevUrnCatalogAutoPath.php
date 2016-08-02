@@ -74,8 +74,15 @@ class DevUrnCatalogAutoPath implements EventSubscriberInterface
             return;
         }
 
+        $argv = $event->getInput();
+
+        if (!$this->canAddToken($argv)) {
+            $event->getOutput()->writeln("<info>Path hint <comment>'$file'</comment></info>");
+            return;
+        }
+
         $event->getOutput()->writeln("<info>automatically setting path to <comment>'$file'</comment></info>");
-        $this->addToken($event->getInput(), $file);
+        $this->addToken($argv, $file);
     }
 
     /**
@@ -95,8 +102,21 @@ class DevUrnCatalogAutoPath implements EventSubscriberInterface
             }
             $root .= '/..';
         } while (is_dir($root) && $down--);
+    }
 
-        return;
+    /**
+     * Check if capable to manipulate tokens as needed
+     *
+     * @link https://github.com/netz98/n98-magerun2/issues/233
+     *
+     * @param ArgvInput $arg
+     * @return bool
+     */
+    private function canAddToken(ArgvInput $arg)
+    {
+        $refl = new ReflectionObject($arg);
+
+        return $refl->hasProperty('tokens');
     }
 
     /**
