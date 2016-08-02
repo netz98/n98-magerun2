@@ -63,6 +63,14 @@ Build phar with:
         <exec command="php -f composer.phar -- install" dir="${project.basedir}" passthru="true" />
     </target>
 
+    <!-- like "dist" but w/o composer install afterwards as this is for the clean build an deleted anyway -->
+    <target name="dist_clean">
+        <exec command="php -f composer.phar -- install --no-dev" dir="${project.basedir}" passthru="true" />
+        <phingcall target="dist_unix">
+            <property name="compression" value="gzip" />
+        </phingcall>
+    </target>
+
     <target name="dist_hhvm">
         <exec command="php -f composer.phar -- install --no-dev" dir="${project.basedir}" passthru="true" />
         <phingcall target="dist_unix">

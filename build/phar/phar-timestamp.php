@@ -21,6 +21,8 @@ $file = $projectDir . '/' . $build['name'] . '.phar';
 
 list($signature) = $build->xpath('//patched-pharpackage/@signature') + array(null);
 
+echo "Phar file: ", realpath($file), "\n";
+
 echo "Signature: ", $signature, " (from build.xml) \n";
 $const = "Phar::" . strtoupper($signature);
 
