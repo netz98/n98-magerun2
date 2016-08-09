@@ -77,6 +77,7 @@ HELP;
 
         if ($input->getOption('only-command')) {
             $output->writeln($exec);
+            $returnValue = 0;
         } else {
             exec($exec, $commandOutput, $returnValue);
             $output->writeln($commandOutput);
@@ -84,5 +85,7 @@ HELP;
                 $output->writeln('<error>' . implode(PHP_EOL, $commandOutput) . '</error>');
             }
         }
+
+        return $returnValue ;
     }
 }
