@@ -3,8 +3,10 @@ RECENT CHANGES
 
 1.2.0
 -----
+* Fix: Fatal error in Phpstorm .idea folder detection for path in dev:urn-catalog:generate (by Tom Klingenberg, #233)
 * Fix: Wrong template-hints config value (by Tommy Pyatt, #230)
 * Fix: Broken scope-id detection (by Christian Münch)
+* Imp: Version constraints for Symfony console and Magento 2.1 (report by Pieter Hoste, #234)
 * New: Add customer:create command (by Christian Münch, #54)
 * New: Add code generator features to dev:console command (by Christian Münch)
 
