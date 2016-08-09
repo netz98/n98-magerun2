@@ -86,6 +86,6 @@ HELP;
             }
         }
 
-        return $returnValue ;
+        return $returnValue;
     }
 }
