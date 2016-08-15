@@ -25,8 +25,6 @@ class InstallComposer extends AbstractSubCommand
             $composerBin = 'composer.phar';
         } elseif (OperatingSystem::isProgramInstalled('composer')) {
             $composerBin = 'composer';
-        } elseif (OperatingSystem::isProgramInstalled('composer.bat')) {
-            $composerBin = 'composer';
         }
 
         if (empty($composerBin)) {
