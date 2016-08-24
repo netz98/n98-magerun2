@@ -1,6 +1,9 @@
 RECENT CHANGES
 ==============
 
+1.2.1
+-----
+
 1.2.0
 -----
 * Fix: Fatal error in Phpstorm .idea folder detection for path in dev:urn-catalog:generate (by Tom Klingenberg, #233)
