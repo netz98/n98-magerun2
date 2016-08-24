@@ -20,7 +20,6 @@ abstract class AbstractDatabaseCommand extends AbstractMagentoCommand
      */
     protected $isSocketConnect = false;
 
-
     /**
      * @param \Symfony\Component\Console\Output\OutputInterface $output
      */

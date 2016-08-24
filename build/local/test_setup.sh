@@ -8,7 +8,7 @@
 set -euo pipefail
 IFS=$'\n\t'
 
-source ./build/sh/setup.sh
+source ./shared/build/sh/setup.sh
 
 # whether or not magento is already installed, normally a quick-check based on file existence.
 magento_is_installed() {
@@ -35,6 +35,7 @@ test_setup_basename="n98-magerun2"
 test_setup_magerun_cmd="bin/${test_setup_basename}"
 test_setup_directory="./magento2/www"
 test_setup_db_host="127.0.0.1"
+test_setup_db_port="${test_setup_db_port:-3306}"
 test_setup_db_user="root"
 test_setup_db_pass=""
 test_setup_db_name="magento_magerun2_test"

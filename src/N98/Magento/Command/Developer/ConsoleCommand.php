@@ -5,17 +5,15 @@ namespace N98\Magento\Command\Developer;
 use Exception;
 use Magento\Framework\App\ProductMetadataInterface;
 use N98\Magento\Command\AbstractMagentoCommand;
+use N98\Magento\Command\Developer\Console\Shell;
 use N98\Util\Unicode\Charset;
 use PhpParser\Lexer;
 use PhpParser\Parser;
 use Psy\CodeCleaner;
-use Psy\Command\ListCommand;
 use Psy\Configuration;
 use Psy\Output\ShellOutput;
-use Psy\Shell;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Psy\ParserFactory;
 
 class ConsoleCommand extends AbstractMagentoCommand
 {
@@ -30,8 +28,7 @@ class ConsoleCommand extends AbstractMagentoCommand
             ->setName('dev:console')
             ->setDescription(
                 'Opens PHP interactive shell with initialized Mage::app() <comment>(Experimental)</comment>'
-            )
-        ;
+            );
     }
 
     /**
@@ -43,7 +40,7 @@ class ConsoleCommand extends AbstractMagentoCommand
     }
 
     /**
-     * @param InputInterface  $input
+     * @param InputInterface $input
      * @param OutputInterface $output
      *
      * @return int|void
@@ -58,14 +55,30 @@ class ConsoleCommand extends AbstractMagentoCommand
             // do nothing
         }
 
-        $parser = new Parser(new Lexer());
-        $cleaner = new CodeCleaner($parser);
-        $consoleOutput = new ShellOutput();
         $config = new Configuration();
+
+        $php5Parser = new Parser\Php5(new Lexer\Emulative());
+        $php7Parser = new Parser\Php7(new Lexer\Emulative());
+
+        $parser = new Parser\Multiple([$php5Parser, $php7Parser]);
+        $cleaner = new CodeCleaner($parser);
         $config->setCodeCleaner($cleaner);
+
+        $consoleOutput = new ShellOutput();
+
+        $commandConfig = $this->getCommandConfig();
+        $commandsToAdd = [];
+        foreach ($commandConfig['commands'] as $command) {
+            $commandsToAdd[] = new $command();
+        }
+
+        $config->addCommands($commandsToAdd);
+
         $shell = new Shell($config);
         $shell->setScopeVariables([
-            'di' => $this->getObjectManager(),
+            'di'              => $this->getObjectManager(),
+            'magerun'         => $this->getApplication(),
+            'magerunInternal' => (object) ['currentModule' => ''],
         ]);
 
         if ($initialized) {

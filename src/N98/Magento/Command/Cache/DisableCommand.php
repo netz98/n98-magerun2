@@ -1,4 +1,5 @@
 <?php
+
 namespace N98\Magento\Command\Cache;
 
 use N98\Util\Console\Helper\Table\Renderer\RendererFactory;

@@ -3,10 +3,10 @@
 namespace N98\Magento\Command\Database\Maintain;
 
 use N98\Magento\Command\AbstractMagentoCommand;
+use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
 
 class CheckTablesCommand extends AbstractMagentoCommand
 {
@@ -98,7 +98,6 @@ HELP;
                 'Output Format. One of [' . implode(',', RendererFactory::getFormats()) . ']'
             )
             ->setHelp($help);
-        ;
     }
 
     /**
@@ -143,10 +142,10 @@ HELP;
                     array('@check'),
                     array(
                         'check' => array(
-                            'tables' => $input->getOption('table')
-                        )
+                            'tables' => $input->getOption('table'),
+                        ),
                     )
-                )
+                ),
             );
             $tables = $resolvedTables[0];
         } else {
@@ -210,7 +209,7 @@ HELP;
             'operation' => 'ENGINE ' . $engine,
             'type'      => sprintf('%15s rows', (string) $affectedRows),
             'status'    => sprintf('%.3f secs', microtime(true) - $start),
-        )
+        ),
         );
     }
 

@@ -8,13 +8,13 @@ use N98\Util\Validator\FakeMetadataFactory;
 use RuntimeException;
 use Symfony\Component\Console\Helper\DialogHelper;
 use Symfony\Component\Console\Helper\Helper as AbstractHelper;
-use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Translation\Translator;
 use Symfony\Component\Validator\Constraint;
-use Symfony\Component\Validator\Validator;
 use Symfony\Component\Validator\Constraints;
 use Symfony\Component\Validator\ConstraintValidatorFactory;
+use Symfony\Component\Validator\Validator;
 
 /**
  * Helper to init some parameters
@@ -176,8 +176,8 @@ class ParameterHelper extends AbstractHelper
             array(
                 'email' => array(
                     new Constraints\NotBlank(),
-                    new Constraints\Email()
-                )
+                    new Constraints\Email(),
+                ),
             )
         );
 
@@ -202,7 +202,7 @@ class ParameterHelper extends AbstractHelper
         if ($needDigits) {
             $regex = array(
                 'pattern' => '/^(?=.*\d)(?=.*[a-zA-Z])/',
-                'message' => 'Password must contain letters and at least one digit'
+                'message' => 'Password must contain letters and at least one digit',
             );
             $validators[] = new Constraints\Regex($regex);
         }
@@ -211,7 +211,7 @@ class ParameterHelper extends AbstractHelper
 
         $constraints = new Constraints\Collection(
             array(
-                'password' => $validators
+                'password' => $validators,
             )
         );
 

@@ -2,10 +2,10 @@
 
 namespace N98\Magento\Command\GiftCard;
 
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\OutputInterface;
 
 class CreateCommand extends AbstractGiftCardCommand
 {
@@ -51,7 +51,7 @@ HELP;
                 'website_id'    => $input->getOption('website')
                     ?: $this->getObjectManager()->get('Magento\Store\Model\StoreManager')->getWebsite(true)->getId(),
                 'balance'       => $input->getArgument('amount'),
-                'date_expires'  => $input->getOption('expires')
+                'date_expires'  => $input->getOption('expires'),
             )
         );
         

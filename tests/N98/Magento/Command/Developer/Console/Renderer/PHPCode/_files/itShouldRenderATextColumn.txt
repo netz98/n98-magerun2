@@ -1,0 +1,11 @@
+$table = $installer->getConnection()->newTable(
+    $installer->getTable('mytable')
+)
+->addColumn(
+    'mycolumn',
+    \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
+    1024,
+    ['default' => 'my default', ],
+    'column comment'
+)
+->setComment('my comment');

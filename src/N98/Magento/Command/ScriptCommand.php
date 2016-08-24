@@ -33,7 +33,6 @@ class ScriptCommand extends AbstractMagentoCommand
      */
     protected $productMetadata = null;
 
-
     protected function configure()
     {
         $this

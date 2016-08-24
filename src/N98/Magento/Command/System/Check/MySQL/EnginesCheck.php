@@ -3,9 +3,9 @@
 namespace N98\Magento\Command\System\Check\MySQL;
 
 use Magento\Framework\App\ResourceConnection;
-use N98\Magento\Command\System\Check\SimpleCheck;
 use N98\Magento\Command\System\Check\Result;
 use N98\Magento\Command\System\Check\ResultCollection;
+use N98\Magento\Command\System\Check\SimpleCheck;
 
 class EnginesCheck implements SimpleCheck
 {

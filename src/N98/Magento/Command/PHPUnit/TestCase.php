@@ -42,7 +42,7 @@ class TestCase extends \PHPUnit_Framework_TestCase
             }
         }
         if (empty($root)) {
-            return null;
+            return;
         }
 
         # directory test

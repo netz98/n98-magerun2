@@ -2,13 +2,13 @@
 
 namespace N98\Magento\Command\System;
 
+use Magento\Framework\App\State as AppState;
 use N98\Magento\Command\AbstractMagentoCommand;
+use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
-use Magento\Framework\App\State as AppState;
 
 class InfoCommand extends AbstractMagentoCommand
 {

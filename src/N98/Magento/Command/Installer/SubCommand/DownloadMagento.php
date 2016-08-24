@@ -40,7 +40,7 @@ class DownloadMagento extends AbstractSubCommand
             throw new RuntimeException('A magento installation already exists in this folder');
         }
 
-        $args = new ProcessArguments(array($this->config['composer_bin'], 'create-project',));
+        $args = new ProcessArguments(array($this->config['composer_bin'], 'create-project', ));
         $args
             // Add composer options
             ->addArgs($package['options'])
@@ -133,7 +133,7 @@ class DownloadMagento extends AbstractSubCommand
             $this->output->writeln(array(
                 'You need to create a secury key. Login at magentocommerce.com.',
                 'Developers -> Secure Keys. <info>Use public key as username and private key as password</info>',
-                ''
+                '',
             ));
             $dialog = $this->getCommand()->getHelper('dialog');
 
@@ -150,7 +150,6 @@ class DownloadMagento extends AbstractSubCommand
                 20,
                 false
             );
-
 
             $password = $dialog->askHiddenResponseAndValidate(
                 $output,

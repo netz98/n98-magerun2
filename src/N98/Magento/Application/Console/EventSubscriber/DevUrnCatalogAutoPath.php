@@ -6,6 +6,8 @@
 namespace N98\Magento\Application\Console\EventSubscriber;
 
 use Magento\Developer\Console\Command\XmlCatalogGenerateCommand;
+use ReflectionException;
+use ReflectionObject;
 use Symfony\Component\Console\ConsoleEvents;
 use Symfony\Component\Console\Event\ConsoleCommandEvent;
 use Symfony\Component\Console\Input\ArgvInput;
@@ -72,34 +74,60 @@ class DevUrnCatalogAutoPath implements EventSubscriberInterface
             return;
         }
 
+        $argv = $event->getInput();
+
+        if (!$this->canAddToken($argv)) {
+            $event->getOutput()->writeln("<info>Path hint <comment>'$file'</comment></info>");
+            return;
+        }
+
         $event->getOutput()->writeln("<info>automatically setting path to <comment>'$file'</comment></info>");
-        $this->addToken($event->getInput(), $file);
+        $this->addToken($argv, $file);
     }
 
+    /**
+     * @param ConsoleCommandEvent $event
+     * @return string
+     */
     private function detectFile(ConsoleCommandEvent $event)
     {
         /** @var \N98\Magento\Application $app */
         $app = $event->getCommand()->getApplication();
 
         $root = $app->getMagentoRootFolder();
-        $down = 1;
+        $down = 2;
         do {
             if (is_dir($root . '/.idea')) {
                 return $root . '/.idea/misc.xml';
             }
             $root .= '/..';
         } while (is_dir($root) && $down--);
+    }
 
-        return null;
+    /**
+     * Check if capable to manipulate tokens as needed
+     *
+     * @link https://github.com/netz98/n98-magerun2/issues/233
+     *
+     * @param ArgvInput $arg
+     * @return bool
+     */
+    private function canAddToken(ArgvInput $arg)
+    {
+        $refl = new ReflectionObject($arg);
+
+        return $refl->hasProperty('tokens');
     }
 
     /**
      * @param ArgvInput $arg
      * @param string $file
+     * @return void
+     * @throws ReflectionException
      */
     private function addToken(ArgvInput $arg, $file)
     {
-        $refl = new \ReflectionObject($arg);
+        $refl = new ReflectionObject($arg);
         $prop = $refl->getProperty('tokens');
         $prop->setAccessible(true);
         $tokens = $prop->getValue($arg);

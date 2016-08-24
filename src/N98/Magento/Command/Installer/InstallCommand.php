@@ -147,7 +147,6 @@ HELP;
             return 0;
         }
 
-
         //$subCommandFactory->create('InstallComposerPackages')->execute();
         $subCommandFactory->create('CreateDatabase')->execute();
         $subCommandFactory->create('RemoveEmptyFolders')->execute();

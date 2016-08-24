@@ -154,7 +154,7 @@ abstract class AbstractMagentoCommand extends Command
             return $configArray['commands'][$commandClass];
         }
 
-        return null;
+        return;
     }
 
     /**

@@ -34,6 +34,14 @@ abstract class AbstractConfigCommand extends AbstractMagentoCommand
     }
 
     /**
+     * @return \Magento\Store\Model\StoreManagerInterface
+     */
+    protected function _getStoreManager()
+    {
+        return $this->getObjectManager()->get('\Magento\Store\Model\StoreManagerInterface');
+    }
+
+    /**
      * @return \Magento\Framework\App\Config\ScopePoolInterface
      */
     protected function getScopePool()
@@ -109,7 +117,8 @@ abstract class AbstractConfigCommand extends AbstractMagentoCommand
         }
 
         if ($scope == 'websites' && !is_numeric($scopeId)) {
-            $website = \Mage::app()->getWebsite($scopeId);
+            $website = $this->_getStoreManager()->getWebsite($scopeId);
+
             if (!$website) {
                 throw new \InvalidArgumentException('Invalid scope parameter. Website does not exist.');
             }
@@ -118,7 +127,8 @@ abstract class AbstractConfigCommand extends AbstractMagentoCommand
         }
 
         if ($scope == 'stores' && !is_numeric($scopeId)) {
-            $store = \Mage::app()->getStore($scopeId);
+            $store = $this->_getStoreManager()->getStore($scopeId);
+
             if (!$store) {
                 throw new \InvalidArgumentException('Invalid scope parameter. Store does not exist.');
             }

@@ -19,7 +19,6 @@ class CreateReadmeFile extends AbstractSubCommand
             $outFile = $this->config->getString('moduleDirectory') . '/readme.md';
         }
 
-
         \file_put_contents(
             $outFile,
             $this->getCommand()->getHelper('twig')->render(

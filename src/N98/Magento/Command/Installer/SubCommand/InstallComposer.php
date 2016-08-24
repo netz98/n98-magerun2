@@ -4,8 +4,8 @@ namespace N98\Magento\Command\Installer\SubCommand;
 
 use Composer\IO\ConsoleIO;
 use Composer\Util\RemoteFilesystem;
-use N98\Util\OperatingSystem;
 use N98\Magento\Command\SubCommand\AbstractSubCommand;
+use N98\Util\OperatingSystem;
 
 class InstallComposer extends AbstractSubCommand
 {
@@ -24,8 +24,6 @@ class InstallComposer extends AbstractSubCommand
         if (OperatingSystem::isProgramInstalled('composer.phar')) {
             $composerBin = 'composer.phar';
         } elseif (OperatingSystem::isProgramInstalled('composer')) {
-            $composerBin = 'composer';
-        } elseif (OperatingSystem::isProgramInstalled('composer.bat')) {
             $composerBin = 'composer';
         }
 

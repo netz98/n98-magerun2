@@ -1,0 +1,4 @@
+$table = $installer->getConnection()->newTable(
+    $installer->getTable('mytable')
+)
+->setComment('my comment');

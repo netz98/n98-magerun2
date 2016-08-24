@@ -1,13 +1,14 @@
 <?php
+
 namespace N98\Magento\Command\Cache;
 
 use Magento\Framework\App\Cache\TypeList as CacheTypeList;
 use Magento\Framework\App\DeploymentConfig;
 use N98\Magento\Command\AbstractMagentoCommand;
+use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
 
 class ListCommand extends AbstractMagentoCommand
 {
@@ -49,7 +50,6 @@ class ListCommand extends AbstractMagentoCommand
     ) {
         $this->cacheTypeList = $cacheTypeList;
     }
-
 
     /**
      * @param \Symfony\Component\Console\Input\InputInterface $input

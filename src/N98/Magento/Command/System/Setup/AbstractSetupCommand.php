@@ -2,9 +2,11 @@
 
 namespace N98\Magento\Command\System\Setup;
 
-use N98\Magento\Command\AbstractMagentoCommand;
+use InvalidArgumentException;
 use Magento\Framework\Module\ModuleListInterface;
 use Magento\Framework\Module\ResourceInterface;
+use N98\Magento\Api\ModuleListIterator;
+use N98\Magento\Command\AbstractMagentoCommand;
 
 /**
  * Class AbstractSetupCommand
@@ -36,10 +38,11 @@ abstract class AbstractSetupCommand extends AbstractMagentoCommand
     }
 
     /**
-     * Determine if a module exists. If it does, return the actual module name (not lowercased).
+     * Determine if a module exists. If it does, return the actual module name. Allows case-insensitive search.
+     *
      * @param  string $requestedModuleName
      * @return string
-     * @throws \InvalidArgumentException When the module doesn't exist
+     * @throws InvalidArgumentException When the module doesn't exist
      */
     public function getMagentoModuleName($requestedModuleName)
     {
@@ -50,7 +53,7 @@ abstract class AbstractSetupCommand extends AbstractMagentoCommand
             }
         }
         
-        throw new \InvalidArgumentException(sprintf('Module does not exist: "%s"', $requestedModuleName));
+        throw new InvalidArgumentException(sprintf('Module does not exist: "%s"', $requestedModuleName));
     }
 
     /**

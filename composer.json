@@ -14,10 +14,10 @@
     ],
     "require": {
         "php": ">=5.3.3",
-        "psy/psysh": "~0.6",
+        "psy/psysh": "~0.7",
         "symfony/console": " ~2.3 <2.7",
         "symfony/event-dispatcher": "~2.3",
-        "symfony/finder": "~2.3",
+        "symfony/finder": "~2.3||~3.0",
         "symfony/yaml": "~2.3",
         "symfony/process": "~2.3",
         "symfony/validator": "~2.3",
@@ -34,16 +34,15 @@
         "psr-0": {
             "N98": "src",
             "Composer": "src"
+        },
+        "psr-4": {
+            "N98\\": "shared/src/N98"
         }
     },
     "authors": [
         {
             "name": "Christian Münch",
             "email": "c.muench@netz98.de"
-        },
-        {
-            "name": "Alexander Menk",
-            "email": "a.menk@netz98.de"
         }
     ],
     "bin": [

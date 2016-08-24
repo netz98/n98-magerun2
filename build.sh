@@ -66,7 +66,7 @@ git log --oneline -1
 ulimit -Sn $(ulimit -Hn)
 
 set +e
-php -f build/vendor/phing/phing/bin/phing -dphar.readonly=0 -- -verbose dist
+php -f build/vendor/phing/phing/bin/phing -dphar.readonly=0 -- -verbose dist_clean
 BUILD_STATUS=$?
 set -e
 if [ ${BUILD_STATUS} -ne 0 ]; then
@@ -78,7 +78,7 @@ php -f build/phar/phar-timestamp.php
 
 php -f "${phar}" -- --version
 
-ls -l "${phar}"
+ls -al "${phar}"
 
 php -r 'echo "SHA1: ", sha1_file("'"${phar}"'"), "\nMD5.: ", md5_file("'"${phar}"'"), "\n";'
 

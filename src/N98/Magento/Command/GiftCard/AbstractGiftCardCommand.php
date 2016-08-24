@@ -2,8 +2,8 @@
 
 namespace N98\Magento\Command\GiftCard;
 
-use N98\Magento\Command\AbstractMagentoCommand;
 use Magento\GiftCardAccount\Model\Giftcardaccount;
+use N98\Magento\Command\AbstractMagentoCommand;
 
 abstract class AbstractGiftCardCommand extends AbstractMagentoCommand
 {
