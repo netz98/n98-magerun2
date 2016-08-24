@@ -93,6 +93,7 @@ commands:
     - N98\Magento\Command\System\MaintenanceCommand
     - N98\Magento\Command\System\Setup\ChangeVersionCommand
     - N98\Magento\Command\System\Setup\CompareVersionsCommand
+    - N98\Magento\Command\System\Setup\DowngradeVersionsCommand
     - N98\Magento\Command\System\Store\ListCommand
     - N98\Magento\Command\System\Url\ListCommand
     - N98\Magento\Command\System\Store\Config\BaseUrlListCommand

@@ -8,6 +8,7 @@ RECENT CHANGES
 * Fix: Broken scope-id detection (by Christian Münch)
 * Imp: Pass along return value in db:query command (by Tom Klingenberg)
 * Imp: Version constraints for Symfony console and Magento 2.1 (report by Pieter Hoste, #234)
+* New: Add sys:setup:downgrade-versions command (by Tom Klingenberg)
 * New: Add customer:create command (by Christian Münch, #54)
 * New: Add code generator features to dev:console command (by Christian Münch)
 

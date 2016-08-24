@@ -361,6 +361,16 @@ debugging. Alternatively you would have to alter the row in the database manuall
 
    $ n98-magerun2.phar sys:setup:change-version module version
 
+Downgrade Setup Versions
+""""""""""""""""""""""""
+
+Downgrade the versions in the database to the module version from its xml file if necessary. Useful while developing
+and switching branches between module version changes.
+
+.. code-block:: sh
+
+   $ n98-magerun2.phar sys:setup:downgrade-versions
+
 Interactive Development Console
 """""""""""""""""""""""""""""""
 
