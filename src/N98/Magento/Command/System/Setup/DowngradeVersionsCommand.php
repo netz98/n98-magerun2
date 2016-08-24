@@ -33,7 +33,7 @@ class DowngradeVersionsCommand extends AbstractSetupCommand
     {
         $this
             ->setName('sys:setup:downgrade-versions')
-            ->addOption('dry-run', null, InputOption::VALUE_NONE, 'write what to change but do not do any changes')
+            ->addOption('dry-run', null, InputOption::VALUE_NONE, 'Write what to change but do not do any changes')
             ->setDescription('Automatically downgrade schema and module versions');
         $help
             = <<<HELP
