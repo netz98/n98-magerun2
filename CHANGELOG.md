@@ -6,6 +6,7 @@ RECENT CHANGES
 
 1.2.1
 -----
+* Fix: Build fixes and release to test continuous build on files.magerun.net (by Tom Klingenberg)
 
 1.2.0
 -----
