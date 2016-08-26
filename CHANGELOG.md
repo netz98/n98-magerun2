@@ -3,6 +3,7 @@ RECENT CHANGES
 
 1.2.2
 -----
+* Fix: Script repository is the same as Magerun 1 (report by Jeroen Bleijenberg, #235)
 
 1.2.1
 -----

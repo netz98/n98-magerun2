@@ -2,6 +2,7 @@
 
 namespace N98\Magento\Command\Script\Repository;
 
+use N98\Magento\Application;
 use N98\Magento\Command\AbstractMagentoCommand;
 
 class AbstractRepositoryCommand extends AbstractMagentoCommand
@@ -16,8 +17,15 @@ class AbstractRepositoryCommand extends AbstractMagentoCommand
      */
     protected function getScripts()
     {
-        $config = $this->getApplication()->getConfig();
-        $loader = new ScriptLoader($config['script']['folders'], $this->getApplication()->getMagentoRootFolder());
+        /** @var $application Application */
+        $application = $this->getApplication();
+
+        $config = $application->getConfig();
+        $configScriptFolders = $config['script']['folders'];
+        $baseName = $application::APP_NAME;
+        $magentoRootFolder = $application->getMagentoRootFolder();
+
+        $loader = new ScriptLoader($configScriptFolders, $baseName, $magentoRootFolder);
         $files = $loader->getFiles();
 
         return $files;
