@@ -32,7 +32,7 @@ class VariablesCommandTest extends TestCase
         $commandTester = $this->getCommand(array(
             '--format' => 'csv',
         ));
-        $display       = $commandTester->getDisplay();
+        $display = $commandTester->getDisplay();
 
         $this->assertContains('have_query_cache', $display);
         $this->assertContains('innodb_log_buffer_size', $display);

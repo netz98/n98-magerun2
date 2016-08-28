@@ -32,7 +32,7 @@ class StatusCommandTest extends TestCase
         $commandTester = $this->getCommand(array(
             '--format' => 'csv',
         ));
-        $display       = $commandTester->getDisplay();
+        $display = $commandTester->getDisplay();
 
         $this->assertContains('Threads_connected', $display);
         $this->assertContains('Innodb_buffer_pool_wait_free', $display);

@@ -80,7 +80,7 @@ class ConfigTest extends TestCase
     public function configCommandAlias()
     {
         $config = new Config();
-        $input  = new ArgvInput();
+        $input = new ArgvInput();
         $actual = $config->checkConfigCommandAlias($input);
         $this->assertInstanceOf('Symfony\Component\Console\Input\InputInterface', $actual);
 
@@ -90,9 +90,9 @@ class ConfigTest extends TestCase
             $definition = new InputDefinition();
             $definition->addArgument(new InputArgument('command'));
 
-            $argv            = array('/path/to/command', 'list-help');
+            $argv = array('/path/to/command', 'list-help');
             $_SERVER['argv'] = $argv;
-            $input           = new ArgvInput($argv, $definition);
+            $input = new ArgvInput($argv, $definition);
             $this->assertSame('list-help', (string) $input);
             $actual = $config->checkConfigCommandAlias($input);
             $this->assertSame('list-help', $actual->getFirstArgument());
