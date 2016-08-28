@@ -249,7 +249,7 @@ final class ScriptLoader
      *
      * @see init()
      *
-     * @param $pathname
+     * @param string $pathname
      * @return mixed|null
      */
     private function detectLocationViaFolderByPathname($pathname)
@@ -266,7 +266,7 @@ final class ScriptLoader
     /**
      * private helper function to detect if a script is from within a module
      *
-     * @param $pathname
+     * @param string $pathname
      * @return null|string
      */
     private function detecLocationModuleByPathname($pathname)
