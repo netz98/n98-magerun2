@@ -6,7 +6,4 @@ use Magento\Framework\App\Helper\AbstractHelper;
 
 class BazHelper extends AbstractHelper
 {
-
-
 }
-

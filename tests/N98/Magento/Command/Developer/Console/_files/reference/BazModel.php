@@ -6,7 +6,4 @@ use Magento\Framework\Model\AbstractModel;
 
 class BazModel extends AbstractModel
 {
-
-
 }
-

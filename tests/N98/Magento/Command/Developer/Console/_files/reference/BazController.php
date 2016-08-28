@@ -7,7 +7,6 @@ use Magento\Framework\Controller\ResultFactory;
 
 class BazController extends Action
 {
-
     /**
      * Dispatch request
      *
@@ -18,7 +17,4 @@ class BazController extends Action
     {
         return $this->resultFactory->create(ResultFactory::TYPE_PAGE);
     }
-
-
 }
-
