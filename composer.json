@@ -39,6 +39,11 @@
             "N98\\": "shared/src/N98"
         }
     },
+    "autoload-dev": {
+        "psr-0": {
+            "N98": "tests"
+        }
+    },
     "authors": [
         {
             "name": "Christian Münch",
