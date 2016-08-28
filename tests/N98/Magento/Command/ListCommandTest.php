@@ -14,7 +14,7 @@ class ListCommandTest extends TestCase
         $commandTester = new CommandTester($command);
         $commandTester->execute(
             array(
-                'command' => 'list'
+                'command' => 'list',
             )
         );
     

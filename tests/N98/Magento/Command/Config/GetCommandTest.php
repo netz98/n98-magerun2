@@ -39,7 +39,7 @@ class GetCommandTest extends TestCase
             array(
                     'command'         => $getCommand->getName(),
                     'path'            => 'n98_magerun/foo/bar',
-                    '--update-script' => true
+                    '--update-script' => true,
             )
         );
         $this->assertContains(
@@ -51,7 +51,7 @@ class GetCommandTest extends TestCase
             array(
                     'command'          => $getCommand->getName(),
                     'path'             => 'n98_magerun/foo/bar',
-                    '--magerun-script' => true
+                    '--magerun-script' => true,
             )
         );
         $this->assertContains(

@@ -35,8 +35,8 @@ class MagentoHelper extends TestCase
         vfsStream::create(
             array(
                 'app' => array(
-                    'Mage.php' => ''
-                )
+                    'Mage.php' => '',
+                ),
             )
         );
 
@@ -57,9 +57,9 @@ class MagentoHelper extends TestCase
             array(
                 'htdocs' => array(
                     'app' => array(
-                        'Mage.php' => ''
-                    )
-                )
+                        'Mage.php' => '',
+                    ),
+                ),
             )
         );
 
@@ -87,7 +87,7 @@ class MagentoHelper extends TestCase
         vfsStream::setup('root');
         vfsStream::create(
             array(
-                'htdocs' => array()
+                'htdocs' => array(),
             )
         );
 
@@ -113,10 +113,10 @@ class MagentoHelper extends TestCase
                 'htdocs' => array(
                     'magento_root' => array(
                         'app' => array(
-                            'Mage.php' => ''
-                        )
-                    )
-                )
+                            'Mage.php' => '',
+                        ),
+                    ),
+                ),
             )
         );
 
@@ -145,8 +145,8 @@ class MagentoHelper extends TestCase
                     'app' => array(
                         'autoload.php'  => '',
                         'bootstrap.php' => '',
-                    )
-                )
+                    ),
+                ),
             )
         );
 

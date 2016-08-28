@@ -48,7 +48,7 @@ abstract class TestCase extends BaseTestCase
                         // fix end of file for class w content
                         '~    \}\n\n\n\}\n\n$~' => "    }\n}\n",
                         // fix beginning of class
-                        '~^(class .*)\n{\n\n~m' => "\\1\n{\n"
+                        '~^(class .*)\n{\n\n~m' => "\\1\n{\n",
                     ];
                     $buffer = preg_replace(array_keys($replacements), $replacements, $subject);
                     $expected = file_get_contents($path);

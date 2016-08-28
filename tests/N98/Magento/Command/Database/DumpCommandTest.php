@@ -40,7 +40,7 @@ class DumpCommandTest extends TestCase
                 '--add-time'     => true,
                 '--only-command' => true,
                 '--force'        => true,
-                '--compression'  => 'gz'
+                '--compression'  => 'gz',
             )
         );
 
@@ -114,7 +114,7 @@ class DumpCommandTest extends TestCase
                 '--only-command' => true,
                 '--force'        => true,
                 '--strip'        => '@development not_existing_table_1',
-                '--compression'  => 'gzip'
+                '--compression'  => 'gzip',
             )
         );
 

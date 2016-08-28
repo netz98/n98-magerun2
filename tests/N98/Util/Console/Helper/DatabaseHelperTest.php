@@ -67,7 +67,7 @@ class DatabaseHelperTest extends TestCase
 
         $definitions = array(
             'test123' => array('tables'  => 'catalog\_*'),
-            'dataflow' => array('tables' => 'dataflow_batch_import dataflow_batch_export')
+            'dataflow' => array('tables' => 'dataflow_batch_import dataflow_batch_export'),
         );
 
         $tables = $this->getHelper()->resolveTables(

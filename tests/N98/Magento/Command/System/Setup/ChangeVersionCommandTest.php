@@ -39,7 +39,7 @@ class ChangeVersionCommandTest extends TestCase
             array(
                 'command' => $this->command->getName(),
                 'module'  => 'magento_customer',
-                'version' => '2.0.0'
+                'version' => '2.0.0',
             )
         );
 
@@ -59,7 +59,7 @@ class ChangeVersionCommandTest extends TestCase
             array(
                 'command' => $this->command->getName(),
                 'module'  => 'non_existent_module',
-                'version' => '2.0.0'
+                'version' => '2.0.0',
             )
         );
     }

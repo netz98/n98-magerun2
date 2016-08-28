@@ -64,7 +64,7 @@ class ViewCommandTest extends TestCase
             array(
                 'command'       => $this->command->getName(),
                 'entityType'    => 'catalog_product',
-                'attributeCode' => 'foo_bar_attribute_that_should_never_ever_ever_exist'
+                'attributeCode' => 'foo_bar_attribute_that_should_never_ever_ever_exist',
 
             )
         );

@@ -22,7 +22,7 @@ class CheckTablesCommandTest extends TestCase
                 'command'  => $command->getName(),
                 '--format' => 'csv',
                 '--type'   => 'quick',
-                '--table'  => 'oauth_nonce'
+                '--table'  => 'oauth_nonce',
             )
         );
         $this->assertContains('oauth_nonce,check,quick,OK', $commandTester->getDisplay());
@@ -38,7 +38,7 @@ class CheckTablesCommandTest extends TestCase
                 'command'  => $command->getName(),
                 '--format' => 'csv',
                 '--type'   => 'quick',
-                '--table'  => 'catalog_product_entity_media_gallery*'
+                '--table'  => 'catalog_product_entity_media_gallery*',
             )
         );
         $timeRegex = '"\s+[0-9]+\srows","[0-9\.]+\ssecs"';

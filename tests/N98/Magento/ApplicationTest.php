@@ -57,19 +57,19 @@ class ApplicationTest extends TestCase
             ),
             'commands' => array(
                 'customCommands' => array(
-                    0 => 'N98MagerunTest\TestDummyCommand'
+                    0 => 'N98MagerunTest\TestDummyCommand',
                 ),
                 'aliases' => array(
                     array(
-                        'ssl' => 'sys:store:list'
-                    )
+                        'ssl' => 'sys:store:list',
+                    ),
                 ),
             ),
             'init' => array(
                 'options' => array(
                     'config_model' => 'N98MagerunTest\AlternativeConfigModel',
-                )
-            )
+                ),
+            ),
         );
 
         $application->setAutoExit(false);
@@ -110,9 +110,9 @@ class ApplicationTest extends TestCase
         $injectConfig = array(
             'plugin' => array(
                 'folders' => array(
-                    __DIR__ . '/_ApplicationTest/Modules'
-                )
-            )
+                    __DIR__ . '/_ApplicationTest/Modules',
+                ),
+            ),
         );
         $application->init($injectConfig);
 
@@ -128,7 +128,7 @@ class ApplicationTest extends TestCase
                 'htdocs' => array(
                     'app' => array(
                         'bootstrag.php' => '',
-                    )
+                    ),
                 ),
                 'vendor' => array(
                     'acme' => array(
@@ -137,9 +137,9 @@ class ApplicationTest extends TestCase
                             'src' => array(
                                 'Acme' => array(
                                     'FooCommand.php' => file_get_contents(__DIR__ . '/_ApplicationTest/Composer/FooCommand.php'),
-                                )
-                            )
-                        )
+                                ),
+                            ),
+                        ),
                     ),
                     'n98' => array(
                         'magerun' => array(

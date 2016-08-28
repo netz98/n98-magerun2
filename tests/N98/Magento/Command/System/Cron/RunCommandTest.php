@@ -16,7 +16,7 @@ class RunCommandTest extends TestCase
         $commandTester = new CommandTester($command);
         $commandTester->execute([
             'command' => $command->getName(),
-            'job'     => 'backend_clean_cache'
+            'job'     => 'backend_clean_cache',
         ]);
     
         $this->assertContains('Run Magento\Backend\Cron\CleanCache::execute done', $commandTester->getDisplay());

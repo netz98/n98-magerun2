@@ -117,8 +117,8 @@ class ConfigTest extends TestCase
                 'customCommands' => array(
                     'N98\Magento\Command\Config\GetCommand',
                     array('name' => 'N98\Magento\Command\Config\GetCommand'),
-                )
-            )
+                ),
+            ),
         );
 
         $output = new BufferedOutput();

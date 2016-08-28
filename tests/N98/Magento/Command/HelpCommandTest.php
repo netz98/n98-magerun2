@@ -14,7 +14,7 @@ class HelpCommandTest extends TestCase
         $commandTester = new CommandTester($command);
         $commandTester->execute(
             array(
-                'command' => 'help'
+                'command' => 'help',
             )
         );
     
