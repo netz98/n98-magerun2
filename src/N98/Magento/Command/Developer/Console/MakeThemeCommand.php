@@ -67,7 +67,7 @@ class MakeThemeCommand extends AbstractGeneratorCommand
                 $output,
                 $appDirWriter,
                 $relativePath,
-                ucfirst($input->getArgument('package')) . ' '. $input->getArgument('name')
+                ucfirst($input->getArgument('package')) . ' ' . $input->getArgument('name')
             );
         }
 

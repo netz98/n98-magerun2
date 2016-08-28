@@ -2,7 +2,6 @@
 
 namespace N98\Magento\Command\Developer\Console;
 
-
 use Magento\Framework\Filesystem\Directory\WriteInterface;
 
 class MakeInterfaceCommandTest extends TestCase
@@ -23,10 +22,10 @@ class MakeInterfaceCommandTest extends TestCase
             ->method('writeFile')
             ->with(
                 $this->anything(), // param1
-                $this->equalTo(file_get_contents(__DIR__ . '/_files/reference_interface.php'))
+                $this->equalTo(file_get_contents(__DIR__ . '/_files/reference/BazInterface.php'))
             );
 
         $command->setCurrentModuleDirectoryWriter($writerMock);
-        $commandTester->execute(['classpath' => 'foo.bar.baz']);
+        $commandTester->execute(['classpath' => 'foo.bar.bazInterface']);
     }
 }

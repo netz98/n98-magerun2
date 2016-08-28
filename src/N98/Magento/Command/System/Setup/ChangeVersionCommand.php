@@ -38,7 +38,7 @@ HELP;
         }
 
         $moduleVersion = $input->getArgument('version');
-        $moduleName    = $this->getMagentoModuleName($input->getArgument('module'));
+        $moduleName = $this->getMagentoModuleName($input->getArgument('module'));
 
         /** @var \Magento\Framework\Module\ResourceInterface $resource */
         $resource = $this->getMagentoModuleResource();

@@ -307,7 +307,6 @@ class MakeTableCommand extends AbstractGeneratorCommand
 
         $question = new Question('<question>Column default value:</question>');
         $question->setValidator(function ($answer) use ($column) {
-
             if ($column->isIntType() && !is_numeric($answer) && !empty($answer)) {
                 throw new \InvalidArgumentException('Invalid default value');
             }
@@ -358,7 +357,6 @@ class MakeTableCommand extends AbstractGeneratorCommand
     ) {
         $question = new Question('<question>Table name:</question>');
         $question->setValidator(function ($answer) {
-
             if (empty($answer)) {
                 throw new \RuntimeException('Table name could not be empty');
             }
@@ -384,7 +382,6 @@ class MakeTableCommand extends AbstractGeneratorCommand
     ) {
         $question = new Question('<question>Table comment:</question>');
         $question->setValidator(function ($answer) {
-
             if (empty($answer)) {
                 throw new \RuntimeException('Table comment could not be empty');
             }

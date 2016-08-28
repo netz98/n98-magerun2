@@ -98,7 +98,6 @@ final class ScriptLoader
             }
             $this->addFolder(self::LOCATION_PERSONAL, $homeDir . '/.' . $basename . '/' . self::BASENAME_SCRIPTS);
         }
-
     }
 
     /**

@@ -3,9 +3,9 @@
 namespace N98\Magento\Command\Database;
 
 use N98\Magento\Command\PHPUnit\TestCase;
+use SplFileInfo;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Tester\CommandTester;
-use SplFileInfo;
 
 /**
  * @see \N98\Magento\Command\Database\DumpCommand
@@ -144,7 +144,6 @@ class DumpCommandTest extends TestCase
             )
         );
         $this->assertNotContains(".sql.gz", $commandTester->getDisplay());
-
     }
 
     /**

@@ -4,10 +4,11 @@
  *          touching caches changes state and will result in different test result second time
  *          solutions: disabling/enabling, faking&mocking or having one defined test environment
  */
+
 namespace N98\Magento\Command\Cache;
 
-use Symfony\Component\Console\Tester\CommandTester;
 use N98\Magento\Command\PHPUnit\TestCase;
+use Symfony\Component\Console\Tester\CommandTester;
 
 class EnableCommandTest extends TestCase
 {

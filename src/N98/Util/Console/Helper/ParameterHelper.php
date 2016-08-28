@@ -229,7 +229,7 @@ class ParameterHelper extends AbstractHelper
     protected function _validateArgument(OutputInterface $output, $name, $value, $constraints)
     {
         $validator = $this->initValidator();
-        $errors    = null;
+        $errors = null;
 
         if (!empty($value)) {
             $errors = $validator->validateValue(array($name => $value), $constraints);

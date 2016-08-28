@@ -2,17 +2,16 @@
 
 namespace N98\Magento;
 
+use N98\Magento\Command\PHPUnit\TestCase;
 use N98\Util\ArrayFunctions;
+use org\bovigo\vfs\vfsStream;
 use Symfony\Component\Console\Input\StringInput;
 use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Console\Tester\CommandTester;
-use N98\Magento\Command\PHPUnit\TestCase;
 use Symfony\Component\Yaml\Yaml;
-use org\bovigo\vfs\vfsStream;
 
 class ApplicationTest extends TestCase
 {
-
     /**
      * @test
      */

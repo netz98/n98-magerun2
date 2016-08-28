@@ -227,7 +227,7 @@ class DatabaseHelper extends AbstractHelper
     public function getMysqlVariableValue($variable)
     {
         $statement = $this->getConnection()->query("SELECT @@{$variable};");
-        $result    = $statement->fetch(PDO::FETCH_ASSOC);
+        $result = $statement->fetch(PDO::FETCH_ASSOC);
         if ($result) {
             return $result;
         }
@@ -292,7 +292,7 @@ class DatabaseHelper extends AbstractHelper
                 }
                 if (!isset($resolved[$code])) {
                     $resolved[$code] = true;
-                    $tables          = $this->resolveTables(
+                    $tables = $this->resolveTables(
                         explode(' ', $definitions[$code]['tables']),
                         $definitions,
                         $resolved
@@ -305,7 +305,7 @@ class DatabaseHelper extends AbstractHelper
             // resolve wildcards
             if (strpos($entry, '*') !== false) {
                 $connection = $this->getConnection();
-                $sth        = $connection->prepare(
+                $sth = $connection->prepare(
                     'SHOW TABLES LIKE :like',
                     array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY)
                 );
@@ -339,7 +339,7 @@ class DatabaseHelper extends AbstractHelper
      */
     public function getTables($withoutPrefix = false)
     {
-        $db     = $this->getConnection();
+        $db = $this->getConnection();
         $prefix = $this->dbSettings['prefix'];
         if (strlen($prefix) > 0) {
             $statement = $db->prepare('SHOW TABLES LIKE :like', array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
@@ -373,7 +373,7 @@ class DatabaseHelper extends AbstractHelper
      */
     public function getTablesStatus($withoutPrefix = false)
     {
-        $db     = $this->getConnection();
+        $db = $this->getConnection();
         $prefix = $this->dbSettings['prefix'];
         if (strlen($prefix) > 0) {
             $statement = $db->prepare('SHOW TABLE STATUS LIKE :like', array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
@@ -444,8 +444,8 @@ class DatabaseHelper extends AbstractHelper
     public function dropTables($output)
     {
         $result = $this->getTables();
-        $query  = 'SET FOREIGN_KEY_CHECKS = 0; ';
-        $count  = 0;
+        $query = 'SET FOREIGN_KEY_CHECKS = 0; ';
+        $count = 0;
         foreach ($result as $tableName) {
             $query .= 'DROP TABLE IF EXISTS `' . $tableName . '`; ';
             $count++;

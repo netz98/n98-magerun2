@@ -38,7 +38,9 @@ XML;
             return;
         }
 
-        $argumentElementQuery = $xpath->query('//type[@name="Magento\Framework\Console\CommandList"]/arguments/argument');
+        $argumentElementQuery = $xpath->query(
+            '//type[@name="Magento\Framework\Console\CommandList"]/arguments/argument'
+        );
         if ($argumentElementQuery->length > 0) {
             $argumentElement = $argumentElementQuery->item(0);
         } else {

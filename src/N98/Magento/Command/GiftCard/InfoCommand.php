@@ -12,7 +12,7 @@ class InfoCommand extends AbstractGiftCardCommand
 {
     /**
      * Setup
-     * 
+     *
      * @return void
      */
     protected function configure()

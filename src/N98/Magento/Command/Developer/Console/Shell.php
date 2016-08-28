@@ -5,7 +5,6 @@ namespace N98\Magento\Command\Developer\Console;
 use Exception;
 use N98\Magento\Command\Developer\Console\Exception\NoModuleDefinedException;
 use N98\Util\BinaryString;
-use Psy\Configuration;
 use Psy\Exception\ErrorException;
 use Psy\Exception\FatalErrorException;
 use Psy\Exception\ParseErrorException;
@@ -104,7 +103,7 @@ class Shell extends PsyShell
      */
     public function setPrompt($prompt)
     {
-        $this->prompt =  $prompt;
+        $this->prompt = $prompt;
     }
 
     /**

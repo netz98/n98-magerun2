@@ -2,8 +2,8 @@
 namespace N98\Magento\Command\System;
 
 use Magento\Framework\App\MaintenanceMode;
-use Symfony\Component\Console\Tester\CommandTester;
 use N98\Magento\Command\PHPUnit\TestCase;
+use Symfony\Component\Console\Tester\CommandTester;
 
 class MaintenanceCommandTest extends TestCase
 {

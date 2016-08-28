@@ -2,13 +2,13 @@
 
 namespace N98\Magento\Command\Database\Maintain;
 
-use Symfony\Component\Console\Tester\CommandTester;
 use N98\Magento\Command\PHPUnit\TestCase;
+use Symfony\Component\Console\Tester\CommandTester;
 
 /**
  * @see \N98\Magento\Command\Database\Maintain\CheckTablesCommand
  */
-class CheckTablesTest extends TestCase
+class CheckTablesCommandTest extends TestCase
 {
     public function testExecuteMyIsam()
     {
@@ -26,7 +26,6 @@ class CheckTablesTest extends TestCase
             )
         );
         $this->assertContains('oauth_nonce,check,quick,OK', $commandTester->getDisplay());
-
     }
 
     public function testExecuteInnoDb()

@@ -5,7 +5,7 @@ namespace N98\Dummy\Controller\Foo\Bar;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\Controller\ResultFactory;
 
-class Baz extends Action
+class BazController extends Action
 {
 
     /**

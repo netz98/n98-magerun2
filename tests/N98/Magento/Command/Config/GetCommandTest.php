@@ -2,8 +2,8 @@
 
 namespace N98\Magento\Command\Config;
 
-use Symfony\Component\Console\Tester\CommandTester;
 use N98\Magento\Command\PHPUnit\TestCase;
+use Symfony\Component\Console\Tester\CommandTester;
 
 class GetCommandTest extends TestCase
 {
@@ -97,5 +97,4 @@ class GetCommandTest extends TestCase
         );
         $this->assertRegExp('/"Value":\s*"1234"/', $commandTester->getDisplay());
     }
-
 }

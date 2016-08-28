@@ -8,7 +8,6 @@
 
 namespace N98\Magento\Api;
 
-
 use BadMethodCallException;
 use Magento\Framework\Module\ResourceInterface as ModuleResourceInterface;
 

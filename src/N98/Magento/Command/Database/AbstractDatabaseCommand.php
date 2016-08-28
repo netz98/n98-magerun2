@@ -3,7 +3,6 @@
 namespace N98\Magento\Command\Database;
 
 use N98\Magento\Command\AbstractMagentoCommand;
-use N98\Magento\Command\Database\Compressor;
 use N98\Magento\Command\Database\Compressor\AbstractCompressor;
 use N98\Util\Console\Helper\DatabaseHelper;
 use Symfony\Component\Console\Output\OutputInterface;

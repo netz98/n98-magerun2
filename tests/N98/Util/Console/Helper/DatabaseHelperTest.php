@@ -4,7 +4,6 @@ namespace N98\Util\Console\Helper;
 
 use N98\Magento\Command\PHPUnit\TestCase;
 
-
 class DatabaseHelperTest extends TestCase
 {
     protected function getHelper()

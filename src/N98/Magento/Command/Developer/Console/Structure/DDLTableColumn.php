@@ -37,7 +37,7 @@ class DDLTableColumn
     private $type;
 
     /**
-     * @var bool
+     * @var boolean
      */
     private $unsigned;
 
@@ -47,12 +47,12 @@ class DDLTableColumn
     private $default;
 
     /**
-     * @var bool
+     * @var boolean
      */
     private $identity;
 
     /**
-     * @var bool
+     * @var boolean
      */
     private $primary;
 
@@ -67,7 +67,7 @@ class DDLTableColumn
     private $comment;
 
     /**
-     * @var bool
+     * @var boolean
      */
     private $nullable;
 
@@ -104,7 +104,7 @@ class DDLTableColumn
     }
 
     /**
-     * @return null
+     * @return boolean
      */
     public function getUnsigned()
     {
@@ -112,7 +112,7 @@ class DDLTableColumn
     }
 
     /**
-     * @param null $unsigned
+     * @param boolean $unsigned
      */
     public function setUnsigned($unsigned)
     {
@@ -152,7 +152,7 @@ class DDLTableColumn
     }
 
     /**
-     * @return null
+     * @return boolean
      */
     public function getPrimary()
     {
@@ -160,7 +160,7 @@ class DDLTableColumn
     }
 
     /**
-     * @param null $primary
+     * @param boolean $primary
      */
     public function setPrimary($primary)
     {
@@ -216,7 +216,7 @@ class DDLTableColumn
     }
 
     /**
-     * @return bool
+     * @return boolean
      */
     public function isIntType()
     {
@@ -224,7 +224,7 @@ class DDLTableColumn
     }
 
     /**
-     * @return bool
+     * @return boolean
      */
     public function isTypeWithSize()
     {

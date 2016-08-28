@@ -210,7 +210,6 @@ class FilesystemTest extends \PHPUnit_Framework_TestCase
     {
         $res = Filesystem::humanFileSize($bytes, $decimalPlaces);
         $this->assertSame($expected, $res);
-
     }
 
     /**

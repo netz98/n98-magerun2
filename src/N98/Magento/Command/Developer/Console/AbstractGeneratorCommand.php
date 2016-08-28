@@ -49,7 +49,7 @@ abstract class AbstractGeneratorCommand extends AbstractConsoleCommand
 
     /**
      * @param string $moduleName
-     * 
+     *
      * @return string
      */
     public function getModuleNamespace($moduleName)
