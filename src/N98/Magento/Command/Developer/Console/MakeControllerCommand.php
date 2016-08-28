@@ -94,18 +94,18 @@ class MakeControllerCommand extends AbstractGeneratorCommand
     private function createClassMethodDefinitions($body)
     {
         $executeMethodDefinition = [
-            'name' => 'execute',
+            'name'       => 'execute',
             'parameters' => [],
-            'body' => $body,
-            'docblock' => [
+            'body'       => $body,
+            'docblock'   => [
                 'shortDescription' => 'Dispatch request',
-                'tags' => [
+                'tags'             => [
                     [
-                        'name' => 'return',
+                        'name'        => 'return',
                         'description' => '\Magento\Framework\Controller\ResultInterface|ResponseInterface',
                     ],
                     [
-                        'name' => 'throws',
+                        'name'        => 'throws',
                         'description' => '\Magento\Framework\Exception\NotFoundException',
                     ],
                 ],

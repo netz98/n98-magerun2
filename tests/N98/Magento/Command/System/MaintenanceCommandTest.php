@@ -1,4 +1,5 @@
 <?php
+
 namespace N98\Magento\Command\System;
 
 use Magento\Framework\App\MaintenanceMode;

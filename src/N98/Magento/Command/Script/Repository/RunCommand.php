@@ -81,7 +81,7 @@ HELP;
         }
 
         $scriptArray = array(
-            'command' => 'script',
+            'command'  => 'script',
             'filename' => $selectedFile,
         );
         foreach ($input->getOption('define') as $define) {

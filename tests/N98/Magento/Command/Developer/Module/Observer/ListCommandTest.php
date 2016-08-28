@@ -1,4 +1,5 @@
 <?php
+
 namespace N98\Magento\Command\Developer\Module\Observer;
 
 use N98\Magento\Command\PHPUnit\TestCase;

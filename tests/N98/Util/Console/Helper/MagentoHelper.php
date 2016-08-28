@@ -110,7 +110,7 @@ class MagentoHelper extends TestCase
         vfsStream::create(
             array(
                 '.basedir' => 'root/htdocs/magento_root',
-                'htdocs' => array(
+                'htdocs'   => array(
                     'magento_root' => array(
                         'app' => array(
                             'Mage.php' => '',

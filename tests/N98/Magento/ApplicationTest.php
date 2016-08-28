@@ -86,7 +86,7 @@ class ApplicationTest extends TestCase
         $commandTester = new CommandTester($testDummyCommand);
         $commandTester->execute(
             array(
-                'command'    => $testDummyCommand->getName(),
+                'command' => $testDummyCommand->getName(),
             )
         );
         $this->assertContains('dummy', $commandTester->getDisplay());
@@ -134,7 +134,7 @@ class ApplicationTest extends TestCase
                     'acme' => array(
                         'magerun-test-module' => array(
                             'n98-magerun2.yaml' => file_get_contents(__DIR__ . '/_ApplicationTest/Composer/n98-magerun2.yaml'),
-                            'src' => array(
+                            'src'               => array(
                                 'Acme' => array(
                                     'FooCommand.php' => file_get_contents(__DIR__ . '/_ApplicationTest/Composer/FooCommand.php'),
                                 ),

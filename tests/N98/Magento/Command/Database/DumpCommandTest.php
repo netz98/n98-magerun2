@@ -85,10 +85,10 @@ class DumpCommandTest extends TestCase
         $command = $this->getCommand();
 
         $mandatory = array(
-            'command' => $command->getName(),
-            '--force' => true,
+            'command'               => $command->getName(),
+            '--force'               => true,
             '--print-only-filename' => true,
-            '--dry-run' => null,
+            '--dry-run'             => null,
         );
 
         $defaults = array(
@@ -129,7 +129,6 @@ class DumpCommandTest extends TestCase
         $this->assertNotContains("not_existing_table_1", $commandTester->getDisplay());
         $this->assertContains(".sql.gz", $commandTester->getDisplay());
 
-
         /**
          * Uncompressed
          */
@@ -162,8 +161,8 @@ class DumpCommandTest extends TestCase
         $commandTester = new CommandTester($command);
         $commandTester->execute(
             array(
-                'command' => $command->getName(),
-                '--strip' => '@stripped',
+                'command'  => $command->getName(),
+                '--strip'  => '@stripped',
                 'filename' => $dumpFile,
             )
         );

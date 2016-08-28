@@ -30,7 +30,7 @@ class CleanCommandTest extends TestCase
         $commandTester = new CommandTester($command);
         $commandTester->execute(array(
             'command' => $command->getName(),
-            'type' => array('config', 'layout'),
+            'type'    => array('config', 'layout'),
         ));
 
         $display = $commandTester->getDisplay();

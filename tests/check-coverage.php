@@ -26,7 +26,7 @@ $totalElements = 0;
 $checkedElements = 0;
 
 foreach ($metrics as $metric) {
-    $totalElements   += (int) $metric['elements'];
+    $totalElements += (int) $metric['elements'];
     $checkedElements += (int) $metric['coveredelements'];
 }
 

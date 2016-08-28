@@ -17,9 +17,9 @@ class TemplateHintsBlocksCommandTest extends TestCase
         $commandTester = new CommandTester($command);
         $commandTester->execute(
             array(
-                'command'  => $command->getName(),
-                '--on'     => true,
-                'store'    => 'admin',
+                'command' => $command->getName(),
+                '--on'    => true,
+                'store'   => 'admin',
             )
         );
         $this->assertRegExp('/Template Hints Blocks enabled/', $commandTester->getDisplay());
@@ -27,9 +27,9 @@ class TemplateHintsBlocksCommandTest extends TestCase
         $commandTester = new CommandTester($command);
         $commandTester->execute(
             array(
-                'command'  => $command->getName(),
-                '--off'    => true,
-                'store'    => 'admin',
+                'command' => $command->getName(),
+                '--off'   => true,
+                'store'   => 'admin',
             )
         );
 

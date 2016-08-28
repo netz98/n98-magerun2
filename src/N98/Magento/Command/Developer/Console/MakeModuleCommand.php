@@ -101,8 +101,8 @@ FILE_BODY;
         $composerFileBody = $this->getHelper('twig')->render(
             'dev/console/make/module/composer.json.twig',
             [
-                'vendor' => $moduleName->getVendorName(),
-                'module' => $moduleName->getShortModuleName(),
+                'vendor'    => $moduleName->getVendorName(),
+                'module'    => $moduleName->getShortModuleName(),
                 'namespace' => str_replace('\\', '\\\\', $this->getModuleNamespace($moduleName->getFullModuleName())),
             ]
         );

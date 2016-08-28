@@ -17,8 +17,8 @@ class ScriptCommandTest extends TestCase
         $commandTester = new CommandTester($command);
         $commandTester->execute(
             array(
-                'command'   => $command->getName(),
-                'filename'  => __DIR__ . '/_files/test.mr',
+                'command'  => $command->getName(),
+                'filename' => __DIR__ . '/_files/test.mr',
             )
         );
 

@@ -111,10 +111,10 @@ HELP;
 
         foreach ($collection as $item) {
             $table[] = array(
-                'path' => $item->getPath(),
-                'scope' => $item->getScope(),
+                'path'     => $item->getPath(),
+                'scope'    => $item->getScope(),
                 'scope_id' => $item->getScopeId(),
-                'value' => $this->_formatValue(
+                'value'    => $this->_formatValue(
                     $item->getValue(),
                     $input->getOption('decrypt') ? 'decrypt' : false
                 ),
