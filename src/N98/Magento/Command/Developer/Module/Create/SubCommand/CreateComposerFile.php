@@ -7,7 +7,7 @@ use N98\Magento\Command\SubCommand\AbstractSubCommand;
 class CreateComposerFile extends AbstractSubCommand
 {
     /**
-     * @return bool
+     * @return void
      */
     public function execute()
     {
@@ -26,7 +26,5 @@ class CreateComposerFile extends AbstractSubCommand
         );
 
         $this->output->writeln('<info>Created file: <comment>' . $outFile . '<comment></info>');
-
-        return true;
     }
 }

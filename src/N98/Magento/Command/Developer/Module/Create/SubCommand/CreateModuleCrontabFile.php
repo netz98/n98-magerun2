@@ -7,7 +7,7 @@ use N98\Magento\Command\SubCommand\AbstractSubCommand;
 class CreateModuleCrontabFile extends AbstractSubCommand
 {
     /**
-     * @return boolean|null
+     * @return void
      */
     public function execute()
     {
