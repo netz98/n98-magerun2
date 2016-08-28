@@ -25,6 +25,8 @@ env:
     - secure: "IEmCQNLHz63zsgcaVVbbeJDZ/Ayx58iJebr5zKDUN/Cbb5MZyW8WgQ5VIn3hlnJsPZrYLx0h3PPSqOB2qLKa02VQaljC50edjSVqT3UsIyC7S+xFA0Vnz492Lf6QFjO6ZiCOqtDiY4fPjOF16nyQO46V2tx4+2W7qVuGy6QHGZw="
     - DB=mysql
   matrix:
+    - SCRIPT_JOB="PHP-CS-FIXER"
+    - SCRIPT_JOB="BUILDSH"
     - MAGENTO_VERSION="magento-ce-2.0.0" INSTALL_SAMPLE_DATA=0
     - MAGENTO_VERSION="magento-ce-2.0.1" INSTALL_SAMPLE_DATA=0
     - MAGENTO_VERSION="magento-ce-2.0.2" INSTALL_SAMPLE_DATA=0
@@ -40,17 +42,8 @@ matrix:
     - php: 5.5
       env: MAGENTO_VERSION="magento-ce-2.1.0" INSTALL_SAMPLE_DATA=0
   include:
-    - php: 5.5
-      env: BUILDSH=1
-      script: build/travis/build.sh
-    - php: 5.6
-      env: BUILDSH=1
-      script: build/travis/build.sh
     - php: 7.0
-      env: BUILDSH=1
-      script: build/travis/build.sh
-    - php: 7.0
-      env: LINTSH=1
+      env: SCRIPT_JOB=LINTSH
       script: find {src,tests} -name "*.php" ! -path '*/String.php' -print0 | xargs
         -0 -n1 -P8 php -l | grep -v '^No syntax errors detected'; test $? -eq 1
 
@@ -66,5 +59,4 @@ before_script:
   - source build/travis/before_script.sh
 
 script:
-  - vendor/bin/php-cs-fixer --diff --dry-run -v fix
-  - vendor/bin/phpunit --debug
+  - build/travis/script.sh
