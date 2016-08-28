@@ -54,10 +54,6 @@ matrix:
       script: find {src,tests} -name "*.php" ! -path '*/String.php' -print0 | xargs
         -0 -n1 -P8 php -l | grep -v '^No syntax errors detected'; test $? -eq 1
 
-  allow_failures:
-    - php: 7.0
-      env: MAGENTO_VERSION="magento-ce-2.0.0-rc" DB=mysql INSTALL_SAMPLE_DATA=0
-
 before_install:
   - phpenv config-rm xdebug.ini
   - travis_retry composer self-update
