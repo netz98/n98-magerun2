@@ -68,7 +68,7 @@ XML;
 
     /**
      * @param string $filename
-     * @param int $options [optional]
+     * @param int|null $options [optional]
      * @return int|false
      */
     public function save($filename, $options = null)

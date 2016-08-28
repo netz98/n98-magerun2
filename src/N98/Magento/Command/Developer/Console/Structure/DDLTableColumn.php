@@ -136,7 +136,7 @@ class DDLTableColumn
     }
 
     /**
-     * @return null
+     * @return boolean
      */
     public function getIdentity()
     {
@@ -144,7 +144,7 @@ class DDLTableColumn
     }
 
     /**
-     * @param null $identity
+     * @param boolean $identity
      */
     public function setIdentity($identity)
     {
