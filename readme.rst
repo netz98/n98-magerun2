@@ -371,6 +371,15 @@ and switching branches between module version changes.
 
    $ n98-magerun2.phar sys:setup:downgrade-versions
 
+Dump Media folder
+"""""""""""""""""
+
+Creates a ZIP archive with media folder content.
+
+.. code-block:: sh
+
+   $ n98-magerun.phar media:dump [--strip] [filename]
+
 Interactive Development Console
 """""""""""""""""""""""""""""""
 
