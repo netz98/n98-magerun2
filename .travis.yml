@@ -41,6 +41,8 @@ matrix:
   fast_finish: true
   exclude:
     - php: 5.5
+      env: MAGENTO_VERSION="magento-ce-2.1.1" INSTALL_SAMPLE_DATA=0
+    - php: 5.5
       env: MAGENTO_VERSION="magento-ce-2.1.0" INSTALL_SAMPLE_DATA=0
   include:
     - php: 7.0
