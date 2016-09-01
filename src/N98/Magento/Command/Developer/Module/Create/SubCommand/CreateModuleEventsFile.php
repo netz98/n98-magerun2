@@ -7,7 +7,7 @@ use N98\Magento\Command\SubCommand\AbstractSubCommand;
 class CreateModuleEventsFile extends AbstractSubCommand
 {
     /**
-     * @return boolean|null
+     * @return void
      */
     public function execute()
     {

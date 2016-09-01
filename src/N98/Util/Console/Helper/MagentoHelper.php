@@ -124,7 +124,6 @@ class MagentoHelper extends AbstractHelper
         return false;
     }
 
-
     /**
      * @return string
      */
@@ -363,7 +362,7 @@ class MagentoHelper extends AbstractHelper
 
         $configFiles = [
             'app/etc/config.php',
-            'app/etc/env.php'
+            'app/etc/env.php',
         ];
 
         foreach ($configFiles as $configFileName) {

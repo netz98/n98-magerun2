@@ -7,7 +7,7 @@ use N98\Magento\Command\SubCommand\AbstractSubCommand;
 class CreateModmanFile extends AbstractSubCommand
 {
     /**
-     * @return bool
+     * @return void
      */
     public function execute()
     {
@@ -22,7 +22,5 @@ class CreateModmanFile extends AbstractSubCommand
         );
 
         $this->output->writeln('<info>Created file: <comment>' . $outFile . '<comment></info>');
-
-        return true;
     }
 }

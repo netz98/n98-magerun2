@@ -1,11 +1,12 @@
 <?php
+
 namespace N98\Magento\Command\Cache;
 
 use N98\Magento\Command\AbstractMagentoCommand;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Output\NullOutput;
+use Symfony\Component\Console\Output\OutputInterface;
 
 abstract class AbstractModifierCommand extends AbstractMagentoCommand
 {

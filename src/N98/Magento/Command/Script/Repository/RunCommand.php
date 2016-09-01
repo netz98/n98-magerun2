@@ -27,12 +27,12 @@ script:
 
 There are some pre defined script folders:
 
-- /usr/local/share/n98-magerun/scripts
-- ~/.n98-magerun/scripts
+- /usr/local/share/n98-magerun2/scripts
+- ~/.n98-magerun2/scripts
 
 If you like to run a standalone script you can also use the "script" command.
 
-See: n98-magerun.phar script <filename.magerun>
+See: n98-magerun2.phar script <filename.magerun>
 
 HELP;
 
@@ -80,9 +80,8 @@ HELP;
             $selectedFile = $files[$script]['fileinfo']->getPathname();
         }
 
-
         $scriptArray = array(
-            'command' => 'script',
+            'command'  => 'script',
             'filename' => $selectedFile,
         );
         foreach ($input->getOption('define') as $define) {

@@ -24,7 +24,7 @@ class TemplateHintsCommand extends AbstractMagentoStoreConfigCommand
     /**
      * @var string
      */
-    protected $configPath = 'dev/debug/template_hints';
+    protected $configPath = 'dev/debug/template_hints_storefront';
 
     /**
      * @var string

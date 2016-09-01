@@ -50,7 +50,7 @@ class AbstractSetupCommandTest extends TestCase
             array('magento_catalog'),
             array('magento_customer'),
             array('Magento_Catalog'),
-            array('MaGeNtO_cUstOmeR')
+            array('MaGeNtO_cUstOmeR'),
         );
     }
 

@@ -1,14 +1,20 @@
 <?php
 /**
- * this file is part of magerun
+ * this file is part of magerun-shared
  *
  * @author Tom Klingenberg <https://github.com/ktomk>
  */
+
 namespace N98;
 
 use Composer\Autoload\ClassLoader;
 use ErrorException;
 
+/**
+ * Bootstrap class for the Magerun applications (Symfony console based application)
+ *
+ * @package N98
+ */
 class MagerunBootstrap
 {
     /**
@@ -33,9 +39,10 @@ class MagerunBootstrap
      */
     public static function getLoader()
     {
+        $projectBasedir = __DIR__ . '/../../..';
         if (
-            !($loader = self::includeIfExists(__DIR__ . '/../../vendor/autoload.php'))
-            && !($loader = self::includeIfExists(__DIR__ . '/../../../../autoload.php'))
+            !($loader = self::includeIfExists($projectBasedir . '/vendor/autoload.php'))
+            && !($loader = self::includeIfExists($projectBasedir . '/../../autoload.php'))
         ) {
             throw new ErrorException(
                 'You must set up the project dependencies, run the following commands:' . PHP_EOL .

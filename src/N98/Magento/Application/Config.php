@@ -1,6 +1,6 @@
 <?php
 /*
- * @author Tom Klingenberg <mot@fsfe.org>
+ * @author Tom Klingenberg <https://github.com/ktomk>
  */
 
 namespace N98\Magento\Application;
@@ -56,7 +56,6 @@ class Config
      * @var OutputInterface
      */
     private $output;
-
 
     /**
      * Config constructor.
@@ -215,6 +214,16 @@ class Config
      */
     public function setConfigurationLoader(ConfigurationLoader $configurationLoader)
     {
+        trigger_error(__METHOD__ . ' use setLoader() instead', E_USER_DEPRECATED);
+
+        $this->setLoader($configurationLoader);
+    }
+
+    /**
+     * @param ConfigurationLoader $configurationLoader
+     */
+    public function setLoader(ConfigurationLoader $configurationLoader)
+    {
         $this->loader = $configurationLoader;
     }
 
@@ -307,13 +316,14 @@ class Config
     {
         $anchor = &$this->config;
         foreach ($keys as $key) {
+            if (!is_array($anchor)) {
+                return;
+            }
+
             if (!isset($anchor[$key])) {
-                return null;
+                return;
             }
             $anchor = &$anchor[$key];
-            if (!is_array($anchor)) {
-                return null;
-            }
         }
 
         return $anchor;

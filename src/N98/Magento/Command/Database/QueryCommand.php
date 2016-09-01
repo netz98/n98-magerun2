@@ -16,7 +16,7 @@ class QueryCommand extends AbstractDatabaseCommand
             ->setName('db:query')
             ->addArgument('query', InputArgument::OPTIONAL, 'SQL query')
             ->addOption('only-command', null, InputOption::VALUE_NONE, 'Print only mysql command. Do not execute')
-            ->setDescription('Executes an SQL query on the database defined in local.xml')
+            ->setDescription('Executes an SQL query on the database defined in env.php')
         ;
 
         $help = <<<HELP
@@ -77,6 +77,7 @@ HELP;
 
         if ($input->getOption('only-command')) {
             $output->writeln($exec);
+            $returnValue = 0;
         } else {
             exec($exec, $commandOutput, $returnValue);
             $output->writeln($commandOutput);
@@ -84,5 +85,7 @@ HELP;
                 $output->writeln('<error>' . implode(PHP_EOL, $commandOutput) . '</error>');
             }
         }
+
+        return $returnValue;
     }
 }

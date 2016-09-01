@@ -2,11 +2,11 @@
 
 namespace N98\Magento\Command\Database;
 
+use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
 
 class InfoCommand extends AbstractDatabaseCommand
 {
@@ -26,7 +26,7 @@ class InfoCommand extends AbstractDatabaseCommand
         $this->addDeprecatedAlias('database:info', 'Please use db:info');
 
         $help = <<<HELP
-This command is useful to print all informations about the current configured database in app/etc/local.xml.
+This command is useful to print all informations about the current configured database in app/etc/env.php.
 It can print connection string for JDBC, PDO connections.
 HELP;
         $this->setHelp($help);

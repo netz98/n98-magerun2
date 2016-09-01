@@ -110,7 +110,7 @@ class InfoCommand extends AbstractCustomerCommand
         if ($customerId <= 0) {
             $output->writeln('<error>Customer was not found</error>');
 
-            return null;
+            return;
         }
 
         $customer->load($customerId);

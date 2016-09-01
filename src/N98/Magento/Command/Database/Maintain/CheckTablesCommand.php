@@ -3,10 +3,10 @@
 namespace N98\Magento\Command\Database\Maintain;
 
 use N98\Magento\Command\AbstractMagentoCommand;
+use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
 
 class CheckTablesCommand extends AbstractMagentoCommand
 {
@@ -98,7 +98,6 @@ HELP;
                 'Output Format. One of [' . implode(',', RendererFactory::getFormats()) . ']'
             )
             ->setHelp($help);
-        ;
     }
 
     /**
@@ -130,11 +129,11 @@ HELP;
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->input  = $input;
+        $this->input = $input;
         $this->output = $output;
         $this->isTypeAllowed();
         $this->detectMagento($output);
-        $this->dbHelper     = $this->getHelper('database');
+        $this->dbHelper = $this->getHelper('database');
         $this->showProgress = $input->getOption('format') == null;
 
         if ($input->getOption('table')) {
@@ -143,10 +142,10 @@ HELP;
                     array('@check'),
                     array(
                         'check' => array(
-                            'tables' => $input->getOption('table')
-                        )
+                            'tables' => $input->getOption('table'),
+                        ),
                     )
-                )
+                ),
             );
             $tables = $resolvedTables[0];
         } else {
@@ -170,7 +169,7 @@ HELP;
 
         foreach ($tables as $tableName) {
             if (isset($allTableStatus[$tableName]) && isset($methods[$allTableStatus[$tableName]['Engine']])) {
-                $m           = '_check' . $allTableStatus[$tableName]['Engine'];
+                $m = '_check' . $allTableStatus[$tableName]['Engine'];
                 $tableOutput = array_merge($tableOutput, $this->$m($tableName));
             } else {
                 $tableOutput[] = array(
@@ -201,8 +200,8 @@ HELP;
     protected function _queryAlterTable($tableName, $engine)
     {
         /** @var \PDO $connection */
-        $connection   = $this->dbHelper->getConnection($this->output);
-        $start        = microtime(true);
+        $connection = $this->dbHelper->getConnection($this->output);
+        $start = microtime(true);
         $affectedRows = $connection->exec(sprintf('ALTER TABLE %s ENGINE=%s', $tableName, $engine));
 
         return array(array(
@@ -210,7 +209,7 @@ HELP;
             'operation' => 'ENGINE ' . $engine,
             'type'      => sprintf('%15s rows', (string) $affectedRows),
             'status'    => sprintf('%.3f secs', microtime(true) - $start),
-        )
+        ),
         );
     }
 
@@ -241,8 +240,8 @@ HELP;
      */
     protected function _checkMyISAM($tableName)
     {
-        $table  = array();
-        $type   = $this->input->getOption('type');
+        $table = array();
+        $type = $this->input->getOption('type');
         $result = $this->_query(sprintf('CHECK TABLE %s %s', $tableName, $type));
         if ($result['Msg_text'] == self::MESSAGE_CHECK_NOT_SUPPORTED) {
             return array();
@@ -280,7 +279,7 @@ HELP;
     {
         /** @var \PDO $connection */
         $connection = $this->dbHelper->getConnection($this->output);
-        $query      = $connection->prepare($sql);
+        $query = $connection->prepare($sql);
         $query->execute();
         $result = $query->fetch(\PDO::FETCH_ASSOC);
         return $result;

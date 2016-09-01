@@ -27,7 +27,7 @@ class ImportCommand extends AbstractDatabaseCommand
             )
             ->addOption('drop', null, InputOption::VALUE_NONE, 'Drop and recreate database before import')
             ->addOption('drop-tables', null, InputOption::VALUE_NONE, 'Drop tables before import')
-            ->setDescription('Imports database with mysql cli client according to database defined in local.xml');
+            ->setDescription('Imports database with mysql cli client according to database defined in env.php');
 
         $help = <<<HELP
 Imports an SQL file with mysql cli client into current configured database.
@@ -198,7 +198,7 @@ HELP;
             . $this->dbSettings['dbname'] . '</info>'
         );
         exec($exec, $commandOutput, $returnValue);
-        if ($returnValue <> 0) {
+        if ($returnValue != 0) {
             $output->writeln('<error>' . implode(PHP_EOL, $commandOutput) . '</error>');
         }
         $output->writeln('<info>Finished</info>');

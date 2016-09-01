@@ -1,3 +1,11 @@
+#
+# prepare test directory by installing the requested magento version (if any)
+#
+# this file is sourced because environment variables are exported
+#
+# usage: source build/travis/before_script.sh
+#
+
 . build/sh/magento_connect.sh
 
 # Prepare magento connect download

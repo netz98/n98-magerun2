@@ -28,6 +28,11 @@ class ScriptCommand extends AbstractMagentoCommand
      */
     protected $_stopOnError = false;
 
+    /**
+     * @var null|\Magento\Framework\App\ProductMetadata
+     */
+    protected $productMetadata = null;
+
     protected function configure()
     {
         $this
@@ -284,8 +289,8 @@ HELP;
         $rootFolder = $this->getApplication()->getMagentoRootFolder();
         if (!empty($rootFolder)) {
             $this->scriptVars['${magento.root}'] = $rootFolder;
-            $this->scriptVars['${magento.version}'] = \Magento\Framework\AppInterface::VERSION;
-            $this->scriptVars['${magento.edition}'] = 'Community'; // @TODO replace this if EE is available
+            $this->scriptVars['${magento.version}'] = $this->getMagentoVersion();
+            $this->scriptVars['${magento.edition}'] = $this->getMagentoEdition();
         }
 
         $this->scriptVars['${php.version}'] = substr(phpversion(), 0, strpos(phpversion(), '-'));
@@ -317,5 +322,36 @@ HELP;
         $commandString = str_replace(array_keys($this->scriptVars), $this->scriptVars, $commandString);
 
         return $commandString;
+    }
+
+    /**
+     * @return string
+     */
+    private function getMagentoVersion()
+    {
+        return $this->getProductMetadata()->getVersion();
+    }
+
+    /**
+     *
+     * @return mixed
+     */
+    private function getMagentoEdition()
+    {
+        return $this->getProductMetadata()->getEdition();
+    }
+
+    /**
+     * @return \Magento\Framework\App\ProductMetadata
+     */
+    private function getProductMetadata()
+    {
+        if (is_null($this->productMetadata)) {
+            $this->initMagento(); // obtaining the object-manager requires init Magento
+            $objectManager = $this->getApplication()->getObjectManager();
+            $this->productMetadata = $objectManager->get('\Magento\Framework\App\ProductMetadata');
+        }
+
+        return $this->productMetadata;
     }
 }

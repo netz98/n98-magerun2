@@ -30,7 +30,6 @@ class SelectMagentoVersion extends AbstractSubCommand
 
             $commandConfig = $this->commandConfig;
 
-
             $type = $this->getCommand()->getHelper('dialog')->askAndValidate(
                 $this->output,
                 $question,

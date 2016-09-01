@@ -3,10 +3,10 @@
 namespace N98\Magento\Command\System\Store\Config;
 
 use N98\Magento\Command\AbstractMagentoCommand;
+use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
 
 class BaseUrlListCommand extends AbstractMagentoCommand
 {
@@ -51,13 +51,12 @@ class BaseUrlListCommand extends AbstractMagentoCommand
         }
         $this->initMagento();
 
-
         foreach ($this->storeManager->getStores() as $store) {
             $table[$store->getId()] = array(
                 $store->getId(),
                 $store->getCode(),
                 $store->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_WEB),
-                $store->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_WEB, true)
+                $store->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_WEB, true),
             );
         }
 

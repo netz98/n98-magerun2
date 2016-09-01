@@ -37,9 +37,7 @@ class InstallMagento extends AbstractSubCommand
 
         $defaults = $this->commandConfig['installation']['defaults'];
 
-        $useDefaultConfigParams = $this->getCommand()->parseBoolOption(
-            $this->input->getOption('useDefaultConfigParams')
-        );
+        $useDefaultConfigParams = $this->hasFlagOrOptionalBoolOption('useDefaultConfigParams');
 
         $sessionSave = $useDefaultConfigParams ? $defaults['session-save'] : $dialog->ask(
             $this->output,
@@ -159,23 +157,23 @@ class InstallMagento extends AbstractSubCommand
         $this->_getDefaultSessionFolder($sessionSave);
 
         $argv = array(
-            'language' => $locale,
-            'timezone' => $timezone,
-            'db-host' => $this->_prepareDbHost(),
-            'db-name' => $this->config->getString('db_name'),
-            'db-user' => $this->config->getString('db_user'),
-            'base-url' => $baseUrl,
-            'use-rewrites' => 1,
-            'use-secure' => 0,
-            'use-secure-admin' => 1,
-            'admin-user' => $adminUsername,
-            'admin-lastname' => $adminLastname,
-            'admin-firstname' => $adminFirstname,
-            'admin-email' => $adminEmail,
-            'admin-password' => $adminPassword,
-            'session-save' => $sessionSave,
+            'language'          => $locale,
+            'timezone'          => $timezone,
+            'db-host'           => $this->_prepareDbHost(),
+            'db-name'           => $this->config->getString('db_name'),
+            'db-user'           => $this->config->getString('db_user'),
+            'base-url'          => $baseUrl,
+            'use-rewrites'      => 1,
+            'use-secure'        => 0,
+            'use-secure-admin'  => 1,
+            'admin-user'        => $adminUsername,
+            'admin-lastname'    => $adminLastname,
+            'admin-firstname'   => $adminFirstname,
+            'admin-email'       => $adminEmail,
+            'admin-password'    => $adminPassword,
+            'session-save'      => $sessionSave,
             'backend-frontname' => $adminFrontname,
-            'currency' => $currency,
+            'currency'          => $currency,
         );
 
         $dbPass = $this->config->getString('db_pass');

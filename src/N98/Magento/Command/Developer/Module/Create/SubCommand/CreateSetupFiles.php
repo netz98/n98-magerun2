@@ -7,7 +7,7 @@ use N98\Magento\Command\SubCommand\AbstractSubCommand;
 class CreateSetupFiles extends AbstractSubCommand
 {
     /**
-     * @return bool
+     * @return void
      */
     public function execute()
     {

@@ -6,13 +6,18 @@
         "issues": "https://github.com/netz98/n98-magerun2/issues"
     },
     "homepage": "http://netz98.github.com/n98-magerun2/",
-    "keywords": ["magento", "installer", "cli", "magerun2"],
+    "keywords": [
+        "magento",
+        "installer",
+        "cli",
+        "magerun2"
+    ],
     "require": {
         "php": ">=5.3.3",
-        "psy/psysh": "~0.6",
+        "psy/psysh": "~0.7",
         "symfony/console": " ~2.3 <2.7",
         "symfony/event-dispatcher": "~2.3",
-        "symfony/finder": "~2.3",
+        "symfony/finder": "~2.3||~3.0",
         "symfony/yaml": "~2.3",
         "symfony/process": "~2.3",
         "symfony/validator": "~2.3",
@@ -23,23 +28,30 @@
     },
     "require-dev": {
         "phpunit/phpunit": "~4.1.0",
-        "mikey179/vfsStream": "~1.4"
+        "mikey179/vfsStream": "~1.4",
+        "friendsofphp/php-cs-fixer": "~1.12.0"
     },
     "autoload": {
         "psr-0": {
             "N98": "src",
             "Composer": "src"
+        },
+        "psr-4": {
+            "N98\\": "shared/src/N98"
+        }
+    },
+    "autoload-dev": {
+        "psr-0": {
+            "N98": "tests"
         }
     },
     "authors": [
         {
             "name": "Christian Münch",
             "email": "c.muench@netz98.de"
-        },
-        {
-            "name": "Alexander Menk",
-            "email": "a.menk@netz98.de"
         }
     ],
-    "bin": ["bin/n98-magerun2"]
+    "bin": [
+        "bin/n98-magerun2"
+    ]
 }

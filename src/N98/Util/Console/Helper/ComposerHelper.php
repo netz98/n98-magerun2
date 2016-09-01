@@ -124,8 +124,6 @@ class ComposerHelper extends AbstractHelper implements InputAwareInterface
             $composerBin = 'composer.phar';
         } elseif (OperatingSystem::isProgramInstalled('composer')) {
             $composerBin = 'composer';
-        } elseif (OperatingSystem::isProgramInstalled('composer.bat')) {
-            $composerBin = 'composer';
         }
 
         return $composerBin;

@@ -3,10 +3,9 @@
 namespace N98\Magento\Application\Console;
 
 use N98\Magento\Application;
-use Symfony\Component\EventDispatcher\Event as BaseEvent;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\EventDispatcher\Event as BaseEvent;
 
 class Event extends BaseEvent
 {

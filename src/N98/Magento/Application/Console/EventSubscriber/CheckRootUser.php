@@ -5,12 +5,14 @@ namespace N98\Magento\Application\Console\EventSubscriber;
 use N98\Magento\Application\Console\Event;
 use N98\Magento\Application\Console\Events;
 use N98\Util\OperatingSystem;
-use Symfony\Component\Console\ConsoleEvents;
-use Symfony\Component\Console\Event\ConsoleEvent;
+use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class CheckRootUser implements EventSubscriberInterface
 {
+    /**
+     * @var string
+     */
     const WARNING_ROOT_USER = '<error>It\'s not recommended to run n98-magerun as root user</error>';
 
     /**
@@ -22,9 +24,9 @@ class CheckRootUser implements EventSubscriberInterface
      */
     public static function getSubscribedEvents()
     {
-        return [
-            Events::RUN_BEFORE     => 'checkRunningAsRootUser'
-        ];
+        return array(
+            Events::RUN_BEFORE => 'checkRunningAsRootUser',
+        );
     }
 
     /**
@@ -35,7 +37,7 @@ class CheckRootUser implements EventSubscriberInterface
      */
     public function checkRunningAsRootUser(Event $event)
     {
-        if ($this->_isSkipRootCheck()) {
+        if ($this->_isSkipRootCheck($event->getInput())) {
             return;
         }
 
@@ -44,22 +46,21 @@ class CheckRootUser implements EventSubscriberInterface
             return;
         }
 
-        $output = $event->getOutput();
-        if (OperatingSystem::isLinux() || OperatingSystem::isMacOs()) {
-            if (function_exists('posix_getuid')) {
-                if (posix_getuid() === 0) {
-                    $output->writeln('');
-                    $output->writeln(self::WARNING_ROOT_USER);
-                    $output->writeln('');
-                }
-            }
+        if (OperatingSystem::isRoot()) {
+            $output = $event->getOutput();
+            $output->writeln(array(
+                '',
+                self::WARNING_ROOT_USER,
+                '',
+            ));
         }
     }
 
-    protected function _isSkipRootCheck()
+    /**
+     * @return bool
+     */
+    protected function _isSkipRootCheck(InputInterface $input)
     {
-        $skipRootCheckOption = getopt('', array('skip-root-check'));
-
-        return count($skipRootCheckOption) > 0;
+        return $input->hasParameterOption('--skip-root-check');
     }
 }

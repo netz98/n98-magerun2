@@ -1,0 +1,11 @@
+$table = $installer->getConnection()->newTable(
+    $installer->getTable('mytable')
+)
+->addColumn(
+    'mycolumn',
+    \Magento\Framework\DB\Ddl\Table::TYPE_INTEGER,
+    null,
+    ['unsigned' => true, 'nullable' => false, 'default' => '200', 'primary' => false, 'identity' => false, ],
+    'column comment'
+)
+->setComment('my comment');

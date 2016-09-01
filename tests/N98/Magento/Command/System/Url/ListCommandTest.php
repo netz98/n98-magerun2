@@ -2,12 +2,11 @@
 
 namespace N98\Magento\Command\System\Url;
 
-use Symfony\Component\Console\Tester\CommandTester;
 use N98\Magento\Command\PHPUnit\TestCase;
+use Symfony\Component\Console\Tester\CommandTester;
 
 class ListCommandTest extends TestCase
 {
-    
     public function testExecute()
     {
         $application = $this->getApplication();

@@ -2,9 +2,9 @@
 
 namespace N98\Magento\Command\Eav\Attribute;
 
-use N98\Magento\Command\AbstractMagentoCommand;
 use Magento\Eav\Model\Config;
 use Magento\Eav\Model\Entity\Attribute\AbstractAttribute;
+use N98\Magento\Command\AbstractMagentoCommand;
 
 abstract class AbstractAttributeCommand extends AbstractMagentoCommand
 {

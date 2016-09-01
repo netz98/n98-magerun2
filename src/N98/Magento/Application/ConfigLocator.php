@@ -48,13 +48,18 @@ class ConfigLocator
      */
     public function getUserConfigFile()
     {
-        $personalConfigFilePath = $this->getUserConfigFilePath();
+        $userConfigFile = null;
 
-        try {
-            $userConfigFile = ConfigFile::createFromFile($personalConfigFilePath);
-            $userConfigFile->applyVariables($this->magentoRootFolder);
-        } catch (InvalidArgumentException $e) {
-            $userConfigFile = null;
+        $personalConfigFilePaths = $this->getUserConfigFilePaths();
+
+        foreach ($personalConfigFilePaths as $personalConfigFilePath) {
+            try {
+                $userConfigFile = ConfigFile::createFromFile($personalConfigFilePath);
+                $userConfigFile->applyVariables($this->magentoRootFolder);
+                break;
+            } catch (InvalidArgumentException $e) {
+                $userConfigFile = null;
+            }
         }
 
         return $userConfigFile;
@@ -68,7 +73,7 @@ class ConfigLocator
     public function getProjectConfigFile()
     {
         if (!strlen($this->magentoRootFolder)) {
-            return null;
+            return;
         }
 
         $projectConfigFilePath = $this->magentoRootFolder . '/app/etc/' . $this->customConfigFilename;
@@ -93,13 +98,13 @@ class ConfigLocator
     public function getStopFileConfigFile($magerunStopFileFolder)
     {
         if (empty($magerunStopFileFolder)) {
-            return null;
+            return;
         }
 
         $stopFileConfigFilePath = $magerunStopFileFolder . '/.' . $this->customConfigFilename;
 
         if (!file_exists($stopFileConfigFilePath)) {
-            return null;
+            return;
         }
 
         try {
@@ -113,13 +118,16 @@ class ConfigLocator
     }
 
     /**
-     * @return string
+     * @return array
      */
-    private function getUserConfigFilePath()
+    private function getUserConfigFilePaths()
     {
+        $paths = array();
+
         $homeDirectory = OperatingSystem::getHomeDir();
-        if (!$homeDirectory) {
-            throw new RuntimeException('Unable to get home-directory to obtain user-config-file.');
+
+        if (!strlen($homeDirectory)) {
+            return $paths;
         }
 
         if (!is_dir($homeDirectory)) {
@@ -127,10 +135,12 @@ class ConfigLocator
         }
 
         $basename = $this->customConfigFilename;
-        if (!OperatingSystem::isWindows()) {
-            $basename = ".$basename";
-        }
 
-        return $homeDirectory . '/' . $basename;
+        if (OperatingSystem::isWindows()) {
+            $paths[] = $homeDirectory . '/' . $basename;
+        }
+        $paths[] = $homeDirectory . '/.' . $basename;
+
+        return $paths;
     }
 }

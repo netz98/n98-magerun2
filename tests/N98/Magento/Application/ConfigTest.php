@@ -1,6 +1,6 @@
 <?php
 /*
- * @author Tom Klingenberg <mot@fsfe.org>
+ * @author Tom Klingenberg <https://github.com/ktomk>
  */
 
 namespace N98\Magento\Application;
@@ -14,7 +14,6 @@ use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Output\BufferedOutput;
-use Symfony\Component\Console\Output\NullOutput;
 
 /**
  * Class ConfigTest
@@ -59,7 +58,7 @@ class ConfigTest extends TestCase
         $this->assertInternalType('array', $config->getConfig());
         $this->assertGreaterThan(4, count($config->getConfig()));
 
-        $config->setConfigurationLoader($loader);
+        $config->setLoader($loader);
     }
 
     /**
@@ -71,7 +70,8 @@ class ConfigTest extends TestCase
     {
         $config = new Config();
         $config->setConfig(array(0, 1, 2));
-        $this->assertSame($config->getConfig()[1], 1);
+        $actual = $config->getConfig();
+        $this->assertSame($actual[1], 1);
     }
 
     /**
@@ -80,7 +80,7 @@ class ConfigTest extends TestCase
     public function configCommandAlias()
     {
         $config = new Config();
-        $input  = new ArgvInput();
+        $input = new ArgvInput();
         $actual = $config->checkConfigCommandAlias($input);
         $this->assertInstanceOf('Symfony\Component\Console\Input\InputInterface', $actual);
 
@@ -90,9 +90,9 @@ class ConfigTest extends TestCase
             $definition = new InputDefinition();
             $definition->addArgument(new InputArgument('command'));
 
-            $argv            = array('/path/to/command', 'list-help');
+            $argv = array('/path/to/command', 'list-help');
             $_SERVER['argv'] = $argv;
-            $input           = new ArgvInput($argv, $definition);
+            $input = new ArgvInput($argv, $definition);
             $this->assertSame('list-help', (string) $input);
             $actual = $config->checkConfigCommandAlias($input);
             $this->assertSame('list-help', $actual->getFirstArgument());
@@ -117,8 +117,8 @@ class ConfigTest extends TestCase
                 'customCommands' => array(
                     'N98\Magento\Command\Config\GetCommand',
                     array('name' => 'N98\Magento\Command\Config\GetCommand'),
-                )
-            )
+                ),
+            ),
         );
 
         $output = new BufferedOutput();

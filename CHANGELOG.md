@@ -1,10 +1,52 @@
 RECENT CHANGES
 ==============
 
+1.2.2
+-----
+* Fix: Script repository is the same as Magerun 1 (report by Jeroen Bleijenberg, #235)
+
+1.2.1
+-----
+* Fix: Build fixes and release to test continuous build on files.magerun.net (by Tom Klingenberg)
+
+1.2.0
+-----
+* Fix: Fatal error in Phpstorm .idea folder detection for path in dev:urn-catalog:generate (by Tom Klingenberg, #233)
+* Fix: Wrong template-hints config value (by Tommy Pyatt, #230)
+* Fix: Broken scope-id detection (by Christian Münch)
+* Imp: Pass along return value in db:query command (by Tom Klingenberg)
+* Imp: Version constraints for Symfony console and Magento 2.1 (report by Pieter Hoste, #234)
+* New: Add sys:setup:downgrade-versions command (by Tom Klingenberg)
+* New: Add customer:create command (by Christian Münch, #54)
+* New: Add code generator features to dev:console command (by Christian Münch)
+
+1.1.17
+------
+* Fix: Posix conform --root-dir parsing (report by Andreas Lutro, fix by Tom Klingenberg, #224)
+* Fix: Fix sys:maintenance --on and --off options (report by Rob Egginton, fix by Tom Klingenberg, #211)
+* Fix: Replace remaining instances of Magento 1 local.xml with Magento 2 env.php (by Matthew O'Loughlin, #207)
+* Feature: Install command: magento-ce-2.1.0 version (by Tom Klingenberg, #223)
+* New: Automatically detect Phpstorm .idea folder for path in dev:urn-catalog:generate (by Tom Klingenberg)
+
+1.1.16
+------
+
+1.1.15
+------
+* Fix: Magento 2.1 version compatibility (by p-makowski, #214)
+* Fix: help description of system:setup:compare-versions (by p-makowski, #214)
+* Fix: PHP version requirements in documentation (report by Carsten Bohuslav, #204)
+* Fix: Install command use-default-config-params option (fix by Tom Klingenberg)
+* Fix: Install command replace-htaccess-file option (report by Matthias Zeis, fix by Tom Klingenberg, #191)
+* Fix: Fix undefined index access in cron:list (report by redboxmarcins, fix by Tom Klingenberg, #201)
+* Imp: Build with timestamp alignment and in clean directory (by Tom Klingenberg)
+* New: Add Homebrew installation (by Matthéo Geoffray, #203)
+
 1.1.14
 ------
 * Fix: Regression test for #199 (report by Pieter Hoste, fix by Tom Klingenberg, #200)
 * Fix: Travis build exited too early (by Tom Klingenberg)
+* Feature: Install command: magento-ce-2.0.7 version (by Raul E Watson, #202)
 
 1.1.13
 ------

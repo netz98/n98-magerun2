@@ -2,12 +2,12 @@
 
 namespace N98\Magento\Command\Database;
 
+use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
+use N98\Util\Filesystem;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
-use N98\Util\Filesystem;
 
 abstract class AbstractShowCommand extends AbstractDatabaseCommand
 {
@@ -80,7 +80,7 @@ abstract class AbstractShowCommand extends AbstractDatabaseCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->_input  = $input;
+        $this->_input = $input;
         $this->_output = $output;
         $this->initVariables($this->_input->getArgument('search'));
         $outputVars = $this->_allVariables;
@@ -92,7 +92,7 @@ abstract class AbstractShowCommand extends AbstractDatabaseCommand
         reset($this->_importantVars);
         $hasDescription = isset($this->_importantVars[key($this->_importantVars)]['desc']) &&
             false === $this->_input->getOption('no-description');
-        $header         = array('Variable Name', 'Value');
+        $header = array('Variable Name', 'Value');
         if (true === $hasDescription) {
             $header[] = 'Description';
         }
@@ -109,7 +109,7 @@ abstract class AbstractShowCommand extends AbstractDatabaseCommand
     protected function generateRows(array $outputVars, $hasDescription)
     {
         $rows = array();
-        $i    = 0;
+        $i = 0;
         foreach ($outputVars as $variableName => $variableValue) {
             $rows[$i] = array($variableName, $variableValue);
             if (
@@ -176,7 +176,7 @@ abstract class AbstractShowCommand extends AbstractDatabaseCommand
     protected function initVariables($variable = null)
     {
         /** @var \N98\Util\Console\Helper\DatabaseHelper $database */
-        $database            = $this->getHelper('database');
+        $database = $this->getHelper('database');
         $this->_allVariables = $database->{$this->showMethod}($variable);
     }
 

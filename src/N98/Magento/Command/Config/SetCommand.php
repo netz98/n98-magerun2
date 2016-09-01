@@ -37,7 +37,7 @@ class SetCommand extends AbstractConfigCommand
                 'encrypt',
                 null,
                 InputOption::VALUE_NONE,
-                'The config value should be encrypted using local.xml\'s crypt key'
+                'The config value should be encrypted using env.php\'s crypt key'
             );
 
         $help = <<<HELP
@@ -65,7 +65,6 @@ HELP;
 
         $value = str_replace(array('\n', '\r'), array("\n", "\r"), $input->getArgument('value'));
         $value = $this->_formatValue($value, ($input->getOption('encrypt') ? 'encrypt' : false));
-
 
         $this->getConfigWriter()->save(
             $input->getArgument('path'),

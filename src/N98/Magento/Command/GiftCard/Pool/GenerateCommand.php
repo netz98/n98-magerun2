@@ -2,18 +2,16 @@
 
 namespace N98\Magento\Command\GiftCard\Pool;
 
+use Magento\GiftCardAccount\Model\Pool;
 use N98\Magento\Command\GiftCard\AbstractGiftCardCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Input\InputArgument;
-use Magento\GiftCardAccount\Model\Pool;
 
 class GenerateCommand extends AbstractGiftCardCommand
 {
     /**
      * Setup
-     * 
+     *
      * @return void
      */
     protected function configure()

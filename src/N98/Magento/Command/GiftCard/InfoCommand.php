@@ -2,17 +2,17 @@
 
 namespace N98\Magento\Command\GiftCard;
 
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Input\InputOption;
-use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
 use Magento\GiftCardAccount\Model\Giftcardaccount;
+use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\OutputInterface;
 
 class InfoCommand extends AbstractGiftCardCommand
 {
     /**
      * Setup
-     * 
+     *
      * @return void
      */
     protected function configure()
@@ -63,7 +63,7 @@ HELP;
             array('Website ID', $card->getWebsiteId()),
             array('Remaining Balance', $card->getBalance()),
             array('State', $card->getStateText()),
-            array('Is Redeemable', $card->getIsRedeemable())
+            array('Is Redeemable', $card->getIsRedeemable()),
         );
         
         $this->getHelper('table')

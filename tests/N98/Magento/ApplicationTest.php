@@ -2,17 +2,16 @@
 
 namespace N98\Magento;
 
+use N98\Magento\Command\PHPUnit\TestCase;
 use N98\Util\ArrayFunctions;
+use org\bovigo\vfs\vfsStream;
 use Symfony\Component\Console\Input\StringInput;
 use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Console\Tester\CommandTester;
-use N98\Magento\Command\PHPUnit\TestCase;
 use Symfony\Component\Yaml\Yaml;
-use org\bovigo\vfs\vfsStream;
 
 class ApplicationTest extends TestCase
 {
-
     /**
      * @test
      */
@@ -58,19 +57,19 @@ class ApplicationTest extends TestCase
             ),
             'commands' => array(
                 'customCommands' => array(
-                    0 => 'N98MagerunTest\TestDummyCommand'
+                    0 => 'N98MagerunTest\TestDummyCommand',
                 ),
                 'aliases' => array(
                     array(
-                        'ssl' => 'sys:store:list'
-                    )
+                        'ssl' => 'sys:store:list',
+                    ),
                 ),
             ),
             'init' => array(
                 'options' => array(
                     'config_model' => 'N98MagerunTest\AlternativeConfigModel',
-                )
-            )
+                ),
+            ),
         );
 
         $application->setAutoExit(false);
@@ -87,7 +86,7 @@ class ApplicationTest extends TestCase
         $commandTester = new CommandTester($testDummyCommand);
         $commandTester->execute(
             array(
-                'command'    => $testDummyCommand->getName(),
+                'command' => $testDummyCommand->getName(),
             )
         );
         $this->assertContains('dummy', $commandTester->getDisplay());
@@ -111,9 +110,9 @@ class ApplicationTest extends TestCase
         $injectConfig = array(
             'plugin' => array(
                 'folders' => array(
-                    __DIR__ . '/_ApplicationTest/Modules'
-                )
-            )
+                    __DIR__ . '/_ApplicationTest/Modules',
+                ),
+            ),
         );
         $application->init($injectConfig);
 
@@ -123,26 +122,24 @@ class ApplicationTest extends TestCase
 
     public function testComposer()
     {
-        $this->markTestSkipped('Currently not working');
-
         vfsStream::setup('root');
         vfsStream::create(
             array(
                 'htdocs' => array(
                     'app' => array(
-                        'Mage.php' => ''
-                    )
+                        'bootstrag.php' => '',
+                    ),
                 ),
                 'vendor' => array(
                     'acme' => array(
                         'magerun-test-module' => array(
                             'n98-magerun2.yaml' => file_get_contents(__DIR__ . '/_ApplicationTest/Composer/n98-magerun2.yaml'),
-                            'src' => array(
+                            'src'               => array(
                                 'Acme' => array(
                                     'FooCommand.php' => file_get_contents(__DIR__ . '/_ApplicationTest/Composer/FooCommand.php'),
-                                )
-                            )
-                        )
+                                ),
+                            ),
+                        ),
                     ),
                     'n98' => array(
                         'magerun' => array(

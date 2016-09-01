@@ -1,0 +1,37 @@
+{% macro render_column(column) %}
+{% import _self as render %}
+{% autoescape false %}
+->addColumn(
+    '{{ column.name }}',
+    \Magento\Framework\DB\Ddl\Table::TYPE_{{ column.type|upper }},
+    {% if column.size %}{{ column.size }}{% else %}null{% endif %},
+    [
+        {{- render.column_bool_value('unsigned', column.unsigned) -}}
+        {{- render.column_bool_value('nullable', column.nullable) -}}
+        {{- render.column_text_value('default', column.default) -}}
+        {{- render.column_bool_value('primary', column.primary) -}}
+        {{- render.column_bool_value('identity', column.identity) -}}
+    ],
+    '{{ column.comment }}'
+)
+{% endautoescape %}
+{% endmacro %}
+
+{% macro column_text_value(name, value) %}
+    {%- autoescape false -%}
+        {{ "'%s' => '%s', "|format(name, value) }}
+    {%- endautoescape -%}
+{% endmacro %}
+
+{% macro column_bool_value(name, value) %}
+{%- autoescape false -%}
+    {%- if not value is null -%}
+        {%- if value == false -%}
+            {{ "'%s' => %s, "|format(name, 'false') }}
+        {%- endif -%}
+        {%- if value == true -%}
+            {{ "'%s' => %s, "|format(name, 'true') }}
+        {%- endif -%}
+    {%- endif -%}
+{%- endautoescape -%}
+{% endmacro %}

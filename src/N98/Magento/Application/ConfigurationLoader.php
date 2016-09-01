@@ -280,7 +280,7 @@ class ConfigurationLoader
     {
         $replace = array(
             '%module%' => $file ? $file->getPath() : '',
-            '%root%' => $magentoRootFolder,
+            '%root%'   => $magentoRootFolder,
         );
 
         return str_replace(array_keys($replace), $replace, $rawConfig);
@@ -290,7 +290,7 @@ class ConfigurationLoader
      * Check if there is a user config file. ~/.n98-magerun.yaml
      *
      * @param array $config
-     * @param string|null $magentoRootFolder [optional]
+     * @param string $magentoRootFolder [optional]
      *
      * @return array
      */

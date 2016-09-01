@@ -1,0 +1,11 @@
+; DO NOT EDIT (unless you know what you are doing)
+;
+; This subdirectory is a git "subrepo", and this file is maintained by the
+; git-subrepo command. See https://github.com/git-commands/git-subrepo#readme
+;
+[subrepo]
+	remote = ../mr-shared
+	branch = master
+	commit = ac358049f5fb95b17fb844a15b7c5733fb99015d
+	parent = 64658accd95a5ca49ce20bdddef2c22fed113427
+	cmdver = 0.3.0

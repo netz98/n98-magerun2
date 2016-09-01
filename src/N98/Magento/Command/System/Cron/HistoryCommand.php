@@ -2,11 +2,11 @@
 
 namespace N98\Magento\Command\System\Cron;
 
+use Magento\Cron\Model\Schedule;
+use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
-use Magento\Cron\Model\Schedule;
 
 class HistoryCommand extends AbstractCronCommand
 {
@@ -53,8 +53,8 @@ class HistoryCommand extends AbstractCronCommand
             $output->writeln('<info>Times shown in <comment>' . $timezone . '</comment></info>');
         }
 
-        $date       = $this->getObjectManager()->create('Magento\Framework\Stdlib\DateTime\DateTime');
-        $offset     = $date->calculateOffset($timezone);
+        $date = $this->getObjectManager()->create('Magento\Framework\Stdlib\DateTime\DateTime');
+        $offset = $date->calculateOffset($timezone);
         $this->_cronScheduleCollection
             ->addFieldToFilter('status', array('neq' => Schedule::STATUS_PENDING))
             ->addOrder('finished_at', \Magento\Framework\Data\Collection::SORT_ORDER_DESC);

@@ -165,7 +165,7 @@ HELP;
             $table[] = array(
                 $result->getResultGroup(),
                 strip_tags($result->getMessage()),
-                $result->getStatus()
+                $result->getStatus(),
             );
         }
 

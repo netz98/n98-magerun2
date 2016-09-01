@@ -7,7 +7,7 @@ use N98\Magento\Command\SubCommand\AbstractSubCommand;
 class CreateModuleFolders extends AbstractSubCommand
 {
     /**
-     * @return bool
+     * @return void
      */
     public function execute()
     {
@@ -64,7 +64,5 @@ class CreateModuleFolders extends AbstractSubCommand
             mkdir($setupFolder, 0777, true);
             $this->output->writeln('<info>Created directory: <comment>' . $setupFolder . '<comment></info>');
         }
-
-        return true;
     }
 }

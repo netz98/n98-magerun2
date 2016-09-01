@@ -1,4 +1,10 @@
 #!/bin/bash
+#
+# Verify Magento Repository credentials
+#
+# usage: build/sh/magento_verify_repo_credentials.sh
+#
+
 set -euo pipefail
 IFS=$'\n\t'
 
