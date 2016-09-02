@@ -61,6 +61,7 @@ commands:
     - N98\Magento\Command\Config\Data\AclCommand
     - N98\Magento\Command\Config\Data\DiCommand
     - N98\Magento\Command\Customer\CreateCommand
+    - N98\Magento\Command\Customer\ChangePasswordCommand
     - N98\Magento\Command\Customer\InfoCommand
     - N98\Magento\Command\Customer\ListCommand
     - N98\Magento\Command\Database\ConsoleCommand
@@ -495,7 +496,7 @@ commands:
       - N98\Magento\Command\Developer\Console\MakeCommandCommand
       - N98\Magento\Command\Developer\Console\MakeControllerCommand
       - N98\Magento\Command\Developer\Console\MakeModelCommand
-      #- N98\Magento\Command\Developer\Console\MakeTableCommand
+      - N98\Magento\Command\Developer\Console\MakeTableCommand
       - N98\Magento\Command\Developer\Console\MakeInterfaceCommand
       - N98\Magento\Command\Developer\Console\MakeThemeCommand
       #- N98\Magento\Command\Developer\Console\TreeCommand
