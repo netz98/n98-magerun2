@@ -69,7 +69,7 @@ fi
 cd "${build_dir}"
 
 echo "building in $(pwd -P)"
-git log --oneline -1
+git --no-pager log --oneline -1
 
 ulimit -Sn $(ulimit -Hn)
 
