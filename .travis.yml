@@ -27,6 +27,7 @@ env:
   matrix:
     - SCRIPT_JOB="PHP-CS-FIXER"
     - SCRIPT_JOB="BUILDSH"
+    - MAGENTO_VERSION="magento-ce-2.1.1" INSTALL_SAMPLE_DATA=0
     - MAGENTO_VERSION="magento-ce-2.1.0" INSTALL_SAMPLE_DATA=0
     - MAGENTO_VERSION="magento-ce-2.0.7" INSTALL_SAMPLE_DATA=0
     - MAGENTO_VERSION="magento-ce-2.0.6" INSTALL_SAMPLE_DATA=0
@@ -39,6 +40,8 @@ env:
 matrix:
   fast_finish: true
   exclude:
+    - php: 5.5
+      env: MAGENTO_VERSION="magento-ce-2.1.1" INSTALL_SAMPLE_DATA=0
     - php: 5.5
       env: MAGENTO_VERSION="magento-ce-2.1.0" INSTALL_SAMPLE_DATA=0
   include:
