@@ -3,7 +3,9 @@ RECENT CHANGES
 
 1.2.2
 -----
+* Feature: Add Magento CE 2.0.7 and 2.1.1 (by Raul E Watson, #237)
 * Fix: Script repository is the same as Magerun 1 (report by Jeroen Bleijenberg, #235)
+* Code Standard Fixes (by Tom Klingenberg)
 
 1.2.1
 -----
@@ -18,7 +20,7 @@ RECENT CHANGES
 * Imp: Version constraints for Symfony console and Magento 2.1 (report by Pieter Hoste, #234)
 * New: Add sys:setup:downgrade-versions command (by Tom Klingenberg)
 * New: Add customer:create command (by Christian Münch, #54)
-* New: Add code generator features to dev:console command (by Christian Münch)
+* New: Add code generator features to dev:console command (by Chrπistian Münch)
 
 1.1.17
 ------
