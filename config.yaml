@@ -6,7 +6,7 @@ twig:
 
 plugin:
   folders:
-    - /usr/local/share/n98-magerun/modules
+    - /usr/local/share/n98-magerun2/modules
 
 helpers:
   composer: N98\Util\Console\Helper\ComposerHelper
@@ -18,7 +18,7 @@ helpers:
 
 script:
   folders:
-    - /usr/local/share/n98-magerun/scripts
+    - /usr/local/share/n98-magerun2/scripts
 
 init:
   code: admin

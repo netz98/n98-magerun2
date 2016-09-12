@@ -5,8 +5,8 @@ RECENT CHANGES
 -----
 * Fix: Prevent hang on Travis (by Christian Münch, #238)
 * Fix: Script repository is the same as Magerun 1 (report by Jeroen Bleijenberg, #235)
-* Fix: Code Standard Fixes (by Tom Klingenberg)
 * New: Add Magento CE 2.0.7 and 2.1.1 (by Raul E Watson, #237)
+* New: PHP-CS-Fixer integration (by Tom Klingenberg)
 
 1.2.1
 -----
