@@ -4,6 +4,7 @@ namespace N98\Magento\Framework\App;
 
 use Magento\Framework\App\Bootstrap;
 use Magento\Framework\ObjectManagerInterface;
+use RuntimeException;
 
 class Magerun implements \Magento\Framework\AppInterface
 {
@@ -37,7 +38,7 @@ class Magerun implements \Magento\Framework\AppInterface
     public function getObjectManager()
     {
         if ($this->objectManager === null) {
-            throw new \RuntimeException('Please initialize Magento to use the object manager.');
+            throw new RuntimeException('Please initialize Magento to use the object manager.');
         }
 
         return $this->objectManager;
@@ -56,6 +57,6 @@ class Magerun implements \Magento\Framework\AppInterface
      */
     public function catchException(Bootstrap $bootstrap, \Exception $exception)
     {
-        // TODO: Implement catchException() method.
+        return false;
     }
 }

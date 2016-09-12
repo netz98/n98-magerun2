@@ -1,8 +1,9 @@
 <?php
+
 namespace N98\Magento\Command\Developer\Module;
 
-use Symfony\Component\Console\Tester\CommandTester;
 use N98\Magento\Command\PHPUnit\TestCase;
+use Symfony\Component\Console\Tester\CommandTester;
 
 class ListCommandTest extends TestCase
 {

@@ -2,8 +2,8 @@
 
 namespace N98\Magento\Command;
 
-use Symfony\Component\Console\Tester\CommandTester;
 use N98\Magento\Command\PHPUnit\TestCase;
+use Symfony\Component\Console\Tester\CommandTester;
 
 class ScriptCommandTest extends TestCase
 {
@@ -17,8 +17,8 @@ class ScriptCommandTest extends TestCase
         $commandTester = new CommandTester($command);
         $commandTester->execute(
             array(
-                'command'   => $command->getName(),
-                'filename'  => __DIR__ . '/_files/test.mr',
+                'command'  => $command->getName(),
+                'filename' => __DIR__ . '/_files/test.mr',
             )
         );
 

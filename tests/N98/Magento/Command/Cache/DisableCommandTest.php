@@ -7,8 +7,8 @@
 
 namespace N98\Magento\Command\Cache;
 
-use Symfony\Component\Console\Tester\CommandTester;
 use N98\Magento\Command\PHPUnit\TestCase;
+use Symfony\Component\Console\Tester\CommandTester;
 
 class DisableCommandTest extends TestCase
 {

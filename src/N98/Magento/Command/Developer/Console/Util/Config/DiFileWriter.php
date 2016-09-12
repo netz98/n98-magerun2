@@ -38,7 +38,9 @@ XML;
             return;
         }
 
-        $argumentElementQuery = $xpath->query('//type[@name="Magento\Framework\Console\CommandList"]/arguments/argument');
+        $argumentElementQuery = $xpath->query(
+            '//type[@name="Magento\Framework\Console\CommandList"]/arguments/argument'
+        );
         if ($argumentElementQuery->length > 0) {
             $argumentElement = $argumentElementQuery->item(0);
         } else {
@@ -64,14 +66,25 @@ XML;
         return $this;
     }
 
+    /**
+     * @param string $filename
+     * @param int|null $options [optional]
+     * @return int|false
+     */
     public function save($filename, $options = null)
     {
-        if (parent::save($filename, $options)) {
-            // Reformat
-            $xml = file_get_contents($filename);
-            $xml = Xml::formatString($xml);
-
-            \file_put_contents($filename, $xml);
+        $result = parent::save($filename, $options);
+        if (false === $result) {
+            return false;
         }
+
+        if ($result === 0) {
+            return 0;
+        }
+
+        $buffer = file_get_contents($filename);
+        $formattedXml = Xml::formatString($buffer);
+
+        return file_put_contents($filename, $formattedXml);
     }
 }

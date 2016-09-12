@@ -2,7 +2,6 @@
 
 namespace N98\Magento\Command\System;
 
-use Magento\Catalog\Helper\Output;
 use Magento\Framework\App\MaintenanceMode;
 use N98\Magento\Command\AbstractMagentoCommand;
 use Symfony\Component\Console\Input\InputInterface;

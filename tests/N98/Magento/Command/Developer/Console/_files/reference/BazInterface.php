@@ -2,9 +2,6 @@
 
 namespace N98\Dummy\Foo\Bar;
 
-class Baz
+interface BazInterface
 {
-
-
 }
-

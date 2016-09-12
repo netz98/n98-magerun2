@@ -3,9 +3,9 @@
 namespace N98\Magento\Command\Database;
 
 use N98\Magento\Command\PHPUnit\TestCase;
+use SplFileInfo;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Tester\CommandTester;
-use SplFileInfo;
 
 /**
  * @see \N98\Magento\Command\Database\DumpCommand
@@ -40,7 +40,7 @@ class DumpCommandTest extends TestCase
                 '--add-time'     => true,
                 '--only-command' => true,
                 '--force'        => true,
-                '--compression'  => 'gz'
+                '--compression'  => 'gz',
             )
         );
 
@@ -85,10 +85,10 @@ class DumpCommandTest extends TestCase
         $command = $this->getCommand();
 
         $mandatory = array(
-            'command' => $command->getName(),
-            '--force' => true,
+            'command'               => $command->getName(),
+            '--force'               => true,
             '--print-only-filename' => true,
-            '--dry-run' => null,
+            '--dry-run'             => null,
         );
 
         $defaults = array(
@@ -114,7 +114,7 @@ class DumpCommandTest extends TestCase
                 '--only-command' => true,
                 '--force'        => true,
                 '--strip'        => '@development not_existing_table_1',
-                '--compression'  => 'gzip'
+                '--compression'  => 'gzip',
             )
         );
 
@@ -128,7 +128,6 @@ class DumpCommandTest extends TestCase
         $this->assertRegExp("/--ignore-table=$db.sales_order_item/", $commandTester->getDisplay());
         $this->assertNotContains("not_existing_table_1", $commandTester->getDisplay());
         $this->assertContains(".sql.gz", $commandTester->getDisplay());
-
 
         /**
          * Uncompressed
@@ -144,7 +143,6 @@ class DumpCommandTest extends TestCase
             )
         );
         $this->assertNotContains(".sql.gz", $commandTester->getDisplay());
-
     }
 
     /**
@@ -163,8 +161,8 @@ class DumpCommandTest extends TestCase
         $commandTester = new CommandTester($command);
         $commandTester->execute(
             array(
-                'command' => $command->getName(),
-                '--strip' => '@stripped',
+                'command'  => $command->getName(),
+                '--strip'  => '@stripped',
                 'filename' => $dumpFile,
             )
         );

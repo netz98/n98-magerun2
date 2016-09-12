@@ -5,7 +5,6 @@ namespace N98\Magento\Command\Developer\Console;
 use Magento\Framework\App\ObjectManager;
 use Psy\Command\ReflectingCommand;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 
 abstract class AbstractConsoleCommand extends ReflectingCommand

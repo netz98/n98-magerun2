@@ -8,7 +8,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class BazCommand extends Command
 {
-
     /**
      * Configures the current command.
      */
@@ -27,7 +26,4 @@ class BazCommand extends Command
     {
         $output->writeln('BazCommand');
     }
-
-
 }
-

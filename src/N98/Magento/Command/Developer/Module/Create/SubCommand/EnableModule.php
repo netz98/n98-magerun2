@@ -8,17 +8,17 @@ use Symfony\Component\Console\Input\ArrayInput;
 class EnableModule extends AbstractSubCommand
 {
     /**
-     * @return bool
+     * @return void
      */
     public function execute()
     {
         if (!$this->config->getBool('shouldEnableModule')) {
-            return false;
+            return;
         }
 
         if ($this->config->getBool('isModmanMode')) {
             $this->output->writeln('<error>Module cannot be activated in modman mode</error>');
-            return false;
+            return;
         }
 
         $application = $this->getCommand()->getApplication();

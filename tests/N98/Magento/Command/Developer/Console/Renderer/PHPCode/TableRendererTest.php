@@ -96,5 +96,3 @@ class TableRendererTest extends TestCase
         $this->table->setComment('my comment');
     }
 }
-
-

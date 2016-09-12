@@ -2,8 +2,8 @@
 
 namespace N98\Magento\Command\Developer\Report;
 
-use Symfony\Component\Console\Tester\CommandTester;
 use N98\Magento\Command\PHPUnit\TestCase;
+use Symfony\Component\Console\Tester\CommandTester;
 
 class CountCommandTest extends TestCase
 {
@@ -16,7 +16,7 @@ class CountCommandTest extends TestCase
         $commandTester = new CommandTester($command);
         $commandTester->execute(
             array(
-                'command' => $command->getName()
+                'command' => $command->getName(),
             )
         );
 

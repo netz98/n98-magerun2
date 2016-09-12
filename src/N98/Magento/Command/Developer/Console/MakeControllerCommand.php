@@ -4,7 +4,6 @@ namespace N98\Magento\Command\Developer\Console;
 
 use Magento\Framework\Code\Generator\ClassGenerator;
 use Magento\Framework\Controller\ResultFactory;
-use Magento\Framework\Module\Dir;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -89,24 +88,24 @@ class MakeControllerCommand extends AbstractGeneratorCommand
     }
 
     /**
-     * @param $body
+     * @param string $body
      * @return array
      */
     private function createClassMethodDefinitions($body)
     {
         $executeMethodDefinition = [
-            'name' => 'execute',
+            'name'       => 'execute',
             'parameters' => [],
-            'body' => $body,
-            'docblock' => [
+            'body'       => $body,
+            'docblock'   => [
                 'shortDescription' => 'Dispatch request',
-                'tags' => [
+                'tags'             => [
                     [
-                        'name' => 'return',
+                        'name'        => 'return',
                         'description' => '\Magento\Framework\Controller\ResultInterface|ResponseInterface',
                     ],
                     [
-                        'name' => 'throws',
+                        'name'        => 'throws',
                         'description' => '\Magento\Framework\Exception\NotFoundException',
                     ],
                 ],

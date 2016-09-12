@@ -53,8 +53,8 @@ class HistoryCommand extends AbstractCronCommand
             $output->writeln('<info>Times shown in <comment>' . $timezone . '</comment></info>');
         }
 
-        $date       = $this->getObjectManager()->create('Magento\Framework\Stdlib\DateTime\DateTime');
-        $offset     = $date->calculateOffset($timezone);
+        $date = $this->getObjectManager()->create('Magento\Framework\Stdlib\DateTime\DateTime');
+        $offset = $date->calculateOffset($timezone);
         $this->_cronScheduleCollection
             ->addFieldToFilter('status', array('neq' => Schedule::STATUS_PENDING))
             ->addOrder('finished_at', \Magento\Framework\Data\Collection::SORT_ORDER_DESC);

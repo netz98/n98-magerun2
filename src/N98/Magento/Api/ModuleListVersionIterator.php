@@ -8,7 +8,6 @@
 
 namespace N98\Magento\Api;
 
-
 use ArrayIterator;
 use IteratorIterator;
 use Magento\Framework\Module\ModuleListInterface;

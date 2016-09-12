@@ -28,7 +28,8 @@
     },
     "require-dev": {
         "phpunit/phpunit": "~4.1.0",
-        "mikey179/vfsStream": "~1.4"
+        "mikey179/vfsStream": "~1.4",
+        "friendsofphp/php-cs-fixer": "~1.12.0"
     },
     "autoload": {
         "psr-0": {
@@ -37,6 +38,11 @@
         },
         "psr-4": {
             "N98\\": "shared/src/N98"
+        }
+    },
+    "autoload-dev": {
+        "psr-0": {
+            "N98": "tests"
         }
     },
     "authors": [

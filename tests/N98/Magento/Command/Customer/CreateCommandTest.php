@@ -3,8 +3,8 @@
 namespace N98\Magento\Command\Customer;
 
 use Magento\Store\Model\StoreManagerInterface;
-use Symfony\Component\Console\Tester\CommandTester;
 use N98\Magento\Command\PHPUnit\TestCase;
+use Symfony\Component\Console\Tester\CommandTester;
 
 class CreateCommandTest extends TestCase
 {

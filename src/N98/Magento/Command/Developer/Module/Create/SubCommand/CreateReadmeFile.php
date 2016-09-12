@@ -9,7 +9,7 @@ class CreateReadmeFile extends AbstractSubCommand
     /**
      * @see https://raw.github.com/sprankhub/Magento-Extension-Sample-Readme/master/readme.markdown
      *
-     * @return bool
+     * @return void
      */
     public function execute()
     {
@@ -28,7 +28,5 @@ class CreateReadmeFile extends AbstractSubCommand
         );
 
         $this->output->writeln('<info>Created file: <comment>' . $outFile . '<comment></info>');
-
-        return true;
     }
 }

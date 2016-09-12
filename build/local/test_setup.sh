@@ -25,8 +25,10 @@ magento_is_installed() {
 ensure_magento2_auth()
 {
     local directory="${test_setup_directory}"
-    cd "${directory}"
-    php -f vendor/bin/composer -- config http-basic.repo.magento.com "${MAGENTO_CONNECT_USERNAME}" "${MAGENTO_CONNECT_PASSWORD}"
+    (
+        cd "${directory}"
+        php -f vendor/bin/composer -- config http-basic.repo.magento.com "${MAGENTO_CONNECT_USERNAME}" "${MAGENTO_CONNECT_PASSWORD}"
+    )
 }
 
 source ./build/sh/magento_connect.sh
@@ -57,5 +59,3 @@ if [ ! -f "${test_stopfile}" ]; then
 else
     buildecho "stopfile ${test_stopfile} exists: $(cat "${test_stopfile}")"
 fi
-
-buildecho "export N98_MAGERUN2_TEST_MAGENTO_ROOT='${test_setup_directory}'"

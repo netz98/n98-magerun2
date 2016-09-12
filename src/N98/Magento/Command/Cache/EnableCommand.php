@@ -2,7 +2,6 @@
 
 namespace N98\Magento\Command\Cache;
 
-use Magento\Framework\App\Cache\Type\ConfigSegment;
 use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;

@@ -280,7 +280,7 @@ class ConfigurationLoader
     {
         $replace = array(
             '%module%' => $file ? $file->getPath() : '',
-            '%root%' => $magentoRootFolder,
+            '%root%'   => $magentoRootFolder,
         );
 
         return str_replace(array_keys($replace), $replace, $rawConfig);

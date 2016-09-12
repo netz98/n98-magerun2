@@ -71,6 +71,5 @@ class DeleteCommandTest extends TestCase
                 $commandTester->getDisplay()
             );
         }
-
     }
 }

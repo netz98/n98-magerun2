@@ -9,7 +9,6 @@ use N98\Magento\Api\Module;
 use N98\Magento\Api\ModuleInterface;
 use N98\Magento\Api\ModuleListVersionIterator;
 use N98\Magento\Api\ModuleVersion;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;

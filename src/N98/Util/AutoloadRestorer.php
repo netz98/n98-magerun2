@@ -39,7 +39,7 @@ class AutoloadRestorer
     private function getUnregisteredLoaders()
     {
         $unregistered = array();
-        $current      = spl_autoload_functions();
+        $current = spl_autoload_functions();
         foreach ($this->snapshot as $callback) {
             if (in_array($callback, $current, true)) {
                 continue;

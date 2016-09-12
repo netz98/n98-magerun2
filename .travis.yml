@@ -16,51 +16,44 @@ branches:
     - /^(bugfix|feature)\/.*$/
 
 php:
-  - 5.5
-  - 5.6
   - 7.0
+  - 5.6
+  - 5.5
 
 env:
   global:
     - secure: "IEmCQNLHz63zsgcaVVbbeJDZ/Ayx58iJebr5zKDUN/Cbb5MZyW8WgQ5VIn3hlnJsPZrYLx0h3PPSqOB2qLKa02VQaljC50edjSVqT3UsIyC7S+xFA0Vnz492Lf6QFjO6ZiCOqtDiY4fPjOF16nyQO46V2tx4+2W7qVuGy6QHGZw="
     - DB=mysql
   matrix:
-    - MAGENTO_VERSION="magento-ce-2.0.0" INSTALL_SAMPLE_DATA=0
-    - MAGENTO_VERSION="magento-ce-2.0.1" INSTALL_SAMPLE_DATA=0
-    - MAGENTO_VERSION="magento-ce-2.0.2" INSTALL_SAMPLE_DATA=0
-    - MAGENTO_VERSION="magento-ce-2.0.4" INSTALL_SAMPLE_DATA=0
-    - MAGENTO_VERSION="magento-ce-2.0.5" INSTALL_SAMPLE_DATA=0
-    - MAGENTO_VERSION="magento-ce-2.0.6" INSTALL_SAMPLE_DATA=0
-    - MAGENTO_VERSION="magento-ce-2.0.7" INSTALL_SAMPLE_DATA=0
+    - SCRIPT_JOB="PHP-CS-FIXER"
+    - SCRIPT_JOB="BUILDSH"
+    - MAGENTO_VERSION="magento-ce-2.1.1" INSTALL_SAMPLE_DATA=0
     - MAGENTO_VERSION="magento-ce-2.1.0" INSTALL_SAMPLE_DATA=0
+    - MAGENTO_VERSION="magento-ce-2.0.7" INSTALL_SAMPLE_DATA=0
+    - MAGENTO_VERSION="magento-ce-2.0.6" INSTALL_SAMPLE_DATA=0
+    - MAGENTO_VERSION="magento-ce-2.0.5" INSTALL_SAMPLE_DATA=0
+    - MAGENTO_VERSION="magento-ce-2.0.4" INSTALL_SAMPLE_DATA=0
+    - MAGENTO_VERSION="magento-ce-2.0.2" INSTALL_SAMPLE_DATA=0
+    - MAGENTO_VERSION="magento-ce-2.0.1" INSTALL_SAMPLE_DATA=0
+    - MAGENTO_VERSION="magento-ce-2.0.0" INSTALL_SAMPLE_DATA=0
 
 matrix:
   fast_finish: true
   exclude:
     - php: 5.5
+      env: MAGENTO_VERSION="magento-ce-2.1.1" INSTALL_SAMPLE_DATA=0
+    - php: 5.5
       env: MAGENTO_VERSION="magento-ce-2.1.0" INSTALL_SAMPLE_DATA=0
   include:
-    - php: 5.5
-      env: BUILDSH=1
-      script: build/travis/build.sh
-    - php: 5.6
-      env: BUILDSH=1
-      script: build/travis/build.sh
     - php: 7.0
-      env: BUILDSH=1
-      script: build/travis/build.sh
-    - php: 7.0
-      env: LINTSH=1
+      env: SCRIPT_JOB=LINTSH
       script: find {src,tests} -name "*.php" ! -path '*/String.php' -print0 | xargs
         -0 -n1 -P8 php -l | grep -v '^No syntax errors detected'; test $? -eq 1
-
-  allow_failures:
-    - php: 7.0
-      env: MAGENTO_VERSION="magento-ce-2.0.0-rc" DB=mysql INSTALL_SAMPLE_DATA=0
 
 before_install:
   - phpenv config-rm xdebug.ini
   - travis_retry composer self-update
+  - travis_retry composer global require hirak/prestissimo
 
 install:
   - travis_retry composer install --prefer-dist --no-interaction --ignore-platform-reqs
@@ -69,4 +62,4 @@ before_script:
   - source build/travis/before_script.sh
 
 script:
-  - vendor/bin/phpunit --debug
+  - build/travis/script.sh

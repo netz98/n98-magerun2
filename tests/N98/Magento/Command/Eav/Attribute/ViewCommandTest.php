@@ -3,8 +3,8 @@
 namespace N98\Magento\Command\Eav\Attribute;
 
 use N98\Magento\Application;
-use Symfony\Component\Console\Tester\CommandTester;
 use N98\Magento\Command\PHPUnit\TestCase;
+use Symfony\Component\Console\Tester\CommandTester;
 
 class ViewCommandTest extends TestCase
 {
@@ -64,7 +64,7 @@ class ViewCommandTest extends TestCase
             array(
                 'command'       => $this->command->getName(),
                 'entityType'    => 'catalog_product',
-                'attributeCode' => 'foo_bar_attribute_that_should_never_ever_ever_exist'
+                'attributeCode' => 'foo_bar_attribute_that_should_never_ever_ever_exist',
 
             )
         );
