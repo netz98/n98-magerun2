@@ -1,6 +1,9 @@
 RECENT CHANGES
 ==============
 
+1.2.3
+-----
+
 1.2.2
 -----
 * Fix: Prevent hang on Travis (by Christian Münch, #238)
