@@ -3,9 +3,10 @@ RECENT CHANGES
 
 1.2.2
 -----
-* Feature: Add Magento CE 2.0.7 and 2.1.1 (by Raul E Watson, #237)
+* Fix: Prevent hang on Travis (by Christian Münch, #238)
 * Fix: Script repository is the same as Magerun 1 (report by Jeroen Bleijenberg, #235)
-* Code Standard Fixes (by Tom Klingenberg)
+* Fix: Code Standard Fixes (by Tom Klingenberg)
+* New: Add Magento CE 2.0.7 and 2.1.1 (by Raul E Watson, #237)
 
 1.2.1
 -----
