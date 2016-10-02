@@ -2,8 +2,8 @@
 
 namespace N98\Magento\Command\Developer\Console;
 
-use N98\Magento\Command\Developer\Console\Util\Config\DiFileWriter;
 use N98\Magento\Command\Developer\Console\PHPUnit\TestCase;
+use N98\Magento\Command\Developer\Console\Util\Config\DiFileWriter;
 
 class MakeCommandCommandTest extends TestCase
 {
