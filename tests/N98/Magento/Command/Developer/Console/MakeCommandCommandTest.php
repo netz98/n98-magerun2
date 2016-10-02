@@ -3,7 +3,6 @@
 namespace N98\Magento\Command\Developer\Console;
 
 use N98\Magento\Command\Developer\Console\Util\Config\DiFileWriter;
-
 use N98\Magento\Command\Developer\Console\PHPUnit\TestCase;
 
 class MakeCommandCommandTest extends TestCase
