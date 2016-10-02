@@ -21,6 +21,6 @@ ${bar}=${foo}.gz
 db:dump --dry-run --print-only-filename ${foo}
 
 # Set a config var and change it to previous value in one "session"
-config:get web/secure/base_url
+config:get web/unsecure/base_url
 config:get web/seo/use_rewrites
 config:set "web/seo/use_rewrites" 1

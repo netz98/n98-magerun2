@@ -9,7 +9,7 @@ namespace N98\Magento\Command\Developer\Console\Renderer\PHPCode;
 use Magento\Framework\DB\Ddl\Table;
 use N98\Magento\Command\Developer\Console\Structure\DDLTable;
 use N98\Magento\Command\Developer\Console\Structure\DDLTableColumn;
-use N98\Magento\Command\Developer\Console\TestCase;
+use N98\Magento\Command\Developer\Console\PHPUnit\TestCase;
 
 class TableRendererTest extends TestCase
 {
