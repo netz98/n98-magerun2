@@ -12,6 +12,7 @@ use PhpParser\Parser;
 use Psy\CodeCleaner;
 use Psy\Configuration;
 use Psy\Output\ShellOutput;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -26,6 +27,7 @@ class ConsoleCommand extends AbstractMagentoCommand
     {
         $this
             ->setName('dev:console')
+            ->addArgument('cmd', InputArgument::OPTIONAL, 'Direct code to run')
             ->setDescription(
                 'Opens PHP interactive shell with initialized Mage::app() <comment>(Experimental)</comment>'
             );
@@ -102,6 +104,18 @@ To exit the shell, type <comment>^D</comment>.
 help;
 
         $consoleOutput->writeln($help);
+
+        $cmd = $input->getArgument('cmd');
+
+        if ($cmd === '-') {
+            $cmd = 'php://stdin';
+            $cmd = @\file_get_contents($cmd);
+        }
+
+        if (!empty($cmd)) {
+            $code = preg_split('/[\n;]+/', $cmd);
+            $shell->addInput($code);
+        }
 
         $shell->run($input, $consoleOutput);
     }

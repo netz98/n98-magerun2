@@ -58,6 +58,8 @@ abstract class AbstractConsoleCommand extends ReflectingCommand
      */
     public function callMagerunCommand($commandName, InputInterface $input, OutputInterface $output)
     {
+        $commandName = rtrim($commandName, ';');
+        /** @var \N98\Magento\Command\AbstractMagentoCommand $command */
         $command = $this->getScopeVariable('magerun')->find($commandName);
 
         return $command->run($input, $output);

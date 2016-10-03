@@ -5,6 +5,7 @@ namespace N98\Magento\Command\Developer\Console;
 use Exception;
 use N98\Magento\Command\Developer\Console\Exception\NoModuleDefinedException;
 use N98\Util\BinaryString;
+use Psy\Exception\BreakException;
 use Psy\Exception\ErrorException;
 use Psy\Exception\FatalErrorException;
 use Psy\Exception\ParseErrorException;
@@ -28,6 +29,11 @@ class Shell extends PsyShell
      */
     private $consoleOutput;
 
+    /**
+     * @param InputInterface|null $input
+     * @param OutputInterface|null $output
+     * @return int
+     */
     public function run(InputInterface $input = null, OutputInterface $output = null)
     {
         $this->registerHelpersFromMainApplication();
@@ -64,26 +70,34 @@ class Shell extends PsyShell
     {
         $this->resetCodeBuffer();
 
+        if ($e instanceof BreakException) {
+            return;
+        }
+
         if ($e instanceof NoModuleDefinedException) {
             $this->getConsoleOutput()->writeln('<warning>' . $e->getMessage() . '</warning>');
+
             return;
         } elseif ($e instanceof ErrorException) {
             if (BinaryString::startsWith($e->getMessage(), 'PHP error:  Use of undefined constant')) {
                 $this->getConsoleOutput()->writeln('<warning>Unknown command</warning>');
-                return;
             }
+
+            return;
         } elseif ($e instanceof FatalErrorException) {
             if (BinaryString::startsWith($e->getMessage(), 'PHP Fatal error:  Call to undefined function')) {
                 $this->getConsoleOutput()->writeln('<warning>Unknown function</warning>');
-                return;
             }
+
+            return;
         } elseif ($e instanceof ParseErrorException) {
             $message = substr($e->getMessage(), 0, strpos($e->getMessage(), ' on line'));
             $this->getConsoleOutput()->writeln('<error>' . $message . '</error>');
+
             return;
         }
 
-        throw $e;
+        parent::writeException($e);
     }
 
     /**

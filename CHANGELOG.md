@@ -1,8 +1,10 @@
 RECENT CHANGES
 ==============
 
-1.2.3
+1.3.0
 -----
+* New: Interactive console: Support for initial code argument (by Christian Münch)
+* New: Introduced test framework (by Christian Münch)
 
 1.2.2
 -----
