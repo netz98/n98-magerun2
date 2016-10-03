@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "fe5c9021490d5485f08d5b5f74b4acaf",
-    "content-hash": "37954fd1cbe78c6340e55d44879afefc",
+    "hash": "becd51873376e658d3ecd20eb55cc22e",
+    "content-hash": "e1d569537b75b1679c9b58519176a6e2",
     "packages": [
         {
             "name": "composer/ca-bundle",
@@ -1585,16 +1585,16 @@
         },
         {
             "name": "n98/magerun2-test-framework",
-            "version": "1.0.1",
+            "version": "1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/netz98/n98-magerun2-test-framework.git",
-                "reference": "26b682f05c1ee42ef1a875a073c1092551871e14"
+                "reference": "244b246cb324651738595c385f0a3d2630cfe001"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/netz98/n98-magerun2-test-framework/zipball/26b682f05c1ee42ef1a875a073c1092551871e14",
-                "reference": "26b682f05c1ee42ef1a875a073c1092551871e14",
+                "url": "https://api.github.com/repos/netz98/n98-magerun2-test-framework/zipball/244b246cb324651738595c385f0a3d2630cfe001",
+                "reference": "244b246cb324651738595c385f0a3d2630cfe001",
                 "shasum": ""
             },
             "require": {
@@ -1627,7 +1627,7 @@
                 "magerun2",
                 "phpunit"
             ],
-            "time": "2016-10-02 20:04:21"
+            "time": "2016-10-03 11:26:12"
         },
         {
             "name": "phpunit/php-code-coverage",
