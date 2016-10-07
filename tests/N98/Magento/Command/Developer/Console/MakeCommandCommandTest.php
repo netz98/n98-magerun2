@@ -2,7 +2,6 @@
 
 namespace N98\Magento\Command\Developer\Console;
 
-use N98\Magento\Command\Developer\Console\PHPUnit\TestCase;
 use N98\Magento\Command\Developer\Console\Util\Config\DiFileWriter;
 
 class MakeCommandCommandTest extends TestCase
@@ -26,8 +25,7 @@ class MakeCommandCommandTest extends TestCase
         $commandTester = $this->createCommandTester($command);
         $command->setCurrentModuleName('N98_Dummy');
 
-        $path = __DIR__ . '/_files/reference/BazCommand.php';
-        $writerMock = $this->mockWriterFileWriteFileAssertion($path);
+        $writerMock = $this->mockWriterFileCWriteFileAssertion('bazCommand');
 
         $command->setCurrentModuleDirectoryWriter($writerMock);
         $commandTester->execute(['classpath' => 'foo.bar.baz']);

@@ -34,7 +34,7 @@ class ScriptCommandTest extends TestCase
         $this->assertContains('foo.sql', $buffer);
         $this->assertContains('BAR: foo.sql.gz', $buffer);
         $this->assertContains('Magento Websites', $buffer);
-        $this->assertContains('web/unsecure/base_url', $buffer);
+        $this->assertContains('web/secure/base_url', $buffer);
         $this->assertContains('web/seo/use_rewrites => 1', $buffer);
     }
 }

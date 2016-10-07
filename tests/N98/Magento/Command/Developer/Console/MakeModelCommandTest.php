@@ -2,8 +2,6 @@
 
 namespace N98\Magento\Command\Developer\Console;
 
-use N98\Magento\Command\Developer\Console\PHPUnit\TestCase;
-
 class MakeModelCommandTest extends TestCase
 {
     /**
@@ -16,8 +14,7 @@ class MakeModelCommandTest extends TestCase
         $commandTester = $this->createCommandTester($command);
         $command->setCurrentModuleName('N98_Dummy');
 
-        $path = __DIR__ . '/_files/reference/BazModel.php';
-        $writerMock = $this->mockWriterFileWriteFileAssertion($path);
+        $writerMock = $this->mockWriterFileCWriteFileAssertion('bazModel');
 
         $command->setCurrentModuleDirectoryWriter($writerMock);
         $commandTester->execute(['classpath' => 'foo.bar.bazModel']);
