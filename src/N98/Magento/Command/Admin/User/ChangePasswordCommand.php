@@ -58,6 +58,7 @@ class ChangePasswordCommand extends AbstractAdminUserCommand
                 throw new Exception(implode(PHP_EOL, $result));
             }
             $user->setPassword($password);
+            $user->setForceNewPassword(true);
             $user->save();
             $output->writeln('<info>Password successfully changed</info>');
         } catch (Exception $e) {

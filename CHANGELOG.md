@@ -3,6 +3,7 @@ RECENT CHANGES
 
 1.3.0
 -----
+* Fix: Prevent Mysql deadlock on admin password change (by Tom KLingenberg, #242)
 * New: Interactive console: Support for initial code argument (by Christian Münch)
 * New: Introduced test framework (by Christian Münch)
 
