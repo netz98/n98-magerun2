@@ -1,6 +1,6 @@
 <?php
 
-namespace N98\Magento\Command\PHPUnit;
+namespace N98\Magento\Command;
 
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\DB\Adapter\AdapterInterface;
@@ -14,7 +14,7 @@ use RuntimeException;
  * @codeCoverageIgnore
  * @package N98\Magento\Command\PHPUnit
  */
-class TestCase extends \PHPUnit_Framework_TestCase
+abstract class TestCase extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var Application
@@ -100,7 +100,7 @@ class TestCase extends \PHPUnit_Framework_TestCase
 
             /** @var Application|PHPUnit_Framework_MockObject_MockObject $application */
             $application = $this->getMock('N98\Magento\Application', array('getMagentoRootFolder'));
-            $loader = require __DIR__ . '/../../../../../vendor/autoload.php';
+            $loader = require __DIR__ . '/../../../../vendor/autoload.php';
             $application->setAutoloader($loader);
             $application->expects($this->any())->method('getMagentoRootFolder')->will($this->returnValue($root));
             $application->init();

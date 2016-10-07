@@ -3,7 +3,7 @@
 namespace N98\Magento\Command\Developer\Console;
 
 use Magento\Framework\Filesystem\Directory\WriteInterface;
-use N98\Magento\Command\PHPUnit\TestCase as BaseTestCase;
+use N98\Magento\Command\TestCase as BaseTestCase;
 use PHPUnit_Framework_MockObject_MockObject;
 use Psy\Context;
 use Symfony\Component\Console\Tester\CommandTester;
@@ -53,11 +53,12 @@ abstract class TestCase extends BaseTestCase
                     $buffer = preg_replace(array_keys($replacements), $replacements, $subject);
                     $expected = file_get_contents($path);
 
-                    $this->assertEquals($buffer, $expected);
+                    $this->assertEquals($expected, $buffer);
 
                     return $buffer === $expected;
                 })
             );
+
         return $writerMock;
     }
 }
