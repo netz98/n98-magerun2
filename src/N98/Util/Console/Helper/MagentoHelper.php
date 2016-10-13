@@ -235,33 +235,26 @@ class MagentoHelper extends AbstractHelper
      */
     protected function checkMagerunFile(array $folders)
     {
+        $stopFile = '.' . pathinfo($this->_customConfigFilename, PATHINFO_FILENAME);
+
         foreach ($this->searchFolders($folders) as $searchFolder) {
-            $stopFile = '.' . pathinfo($this->_customConfigFilename, PATHINFO_FILENAME);
-            $finder = Finder::create();
-            $finder
-                ->files()
-                ->ignoreUnreadableDirs(true)
-                ->depth(0)
-                ->followLinks()
-                ->ignoreDotFiles(false)
-                ->name($stopFile)
-                ->in($searchFolder);
-
-            $count = $finder->count();
-            if ($count > 0) {
-                $this->_magerunStopFileFound = true;
-                $this->_magerunStopFileFolder = $searchFolder;
-                $magerunFilePath = $searchFolder . '/' . $stopFile;
-                $magerunFileContent = trim(file_get_contents($magerunFilePath));
-                $message = sprintf(
-                    'Found stopfile \'%s\' file with content <info>%s</info>',
-                    $stopFile,
-                    $magerunFileContent
-                );
-                $this->writeDebug($message);
-
-                array_push($folders, $searchFolder . '/' . $magerunFileContent);
+            $magerunFilePath = $searchFolder . '/' . $stopFile;
+            if (!is_readable($magerunFilePath) || !is_file($magerunFilePath)) {
+                continue;
             }
+            $this->_magerunStopFileFound = true;
+            $this->_magerunStopFileFolder = $searchFolder;
+            $magerunFileContent = trim(file_get_contents($magerunFilePath));
+            $message = sprintf(
+                'Found stopfile \'%s\' file with content <info>%s</info> from \'%s\'',
+                $stopFile,
+                $magerunFileContent,
+                $searchFolder
+            );
+            $this->writeDebug($message);
+
+            array_push($folders, $searchFolder . '/' . $magerunFileContent);
+            break;
         }
 
         return $folders;
