@@ -239,6 +239,12 @@ class MagentoHelper extends AbstractHelper
 
         foreach ($this->searchFolders($folders) as $searchFolder) {
             $magerunFilePath = $searchFolder . '/' . $stopFile;
+            if (is_link($magerunFilePath) && !file_exists($magerunFilePath)) {
+                throw new \RuntimeException(
+                    sprintf("Stopfile is broken symlink: '%s'", $magerunFilePath),
+                    2
+                );
+            }
             if (!is_readable($magerunFilePath) || !is_file($magerunFilePath)) {
                 continue;
             }
