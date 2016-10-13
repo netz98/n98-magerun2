@@ -254,7 +254,7 @@ class Application extends BaseApplication
         if (!$this->_directRootDir) {
             $subFolders = $this->config->getDetectSubFolders();
         } else {
-            $subFolders = array();
+            $subFolders = array($folder);
         }
 
         $this->_magentoDetected = $magentoHelper->detect($folder, $subFolders);
