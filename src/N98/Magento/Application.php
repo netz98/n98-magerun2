@@ -230,8 +230,8 @@ class Application extends BaseApplication
         }
 
         $this->getHelperSet()->set(new MagentoHelper($input, $output), 'magento');
-        $magentoHelper = $this->getHelperSet()->get('magento');
         /* @var $magentoHelper MagentoHelper */
+        $magentoHelper = $this->getHelperSet()->get('magento');
         if (!$this->_directRootDir) {
             $subFolders = $this->config->getDetectSubFolders();
         } else {

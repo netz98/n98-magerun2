@@ -132,6 +132,9 @@ class MagentoHelper extends AbstractHelper
         return $this->_magentoRootFolder;
     }
 
+    /**
+     * @return int
+     */
     public function getEdition()
     {
         return $this->_magentoMajorVersion;

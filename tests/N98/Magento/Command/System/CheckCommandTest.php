@@ -16,9 +16,10 @@ class CheckCommandTest extends TestCase
         $commandTester = new CommandTester($command);
         $commandTester->execute(array('command' => $command->getName()));
 
-        $this->assertRegExp('/SETTINGS/', $commandTester->getDisplay());
-        $this->assertRegExp('/FILESYSTEM/', $commandTester->getDisplay());
-        $this->assertRegExp('/PHP/', $commandTester->getDisplay());
-        $this->assertRegExp('/MYSQL/', $commandTester->getDisplay());
+        $display = $commandTester->getDisplay();
+        $this->assertRegExp('/SETTINGS/', $display);
+        $this->assertRegExp('/FILESYSTEM/', $display);
+        $this->assertRegExp('/PHP/', $display);
+        $this->assertRegExp('/MYSQL/', $display);
     }
 }
