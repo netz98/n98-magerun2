@@ -138,6 +138,11 @@ class Application extends BaseApplication
     protected $_objectManager = null;
 
     /**
+     * @var boolean
+     */
+    private $autoExit = true;
+
+    /**
      * @param ClassLoader $autoloader
      */
     public function __construct($autoloader = null)
@@ -198,6 +203,20 @@ class Application extends BaseApplication
         $inputDefinition->addOption($skipMagento2CoreCommands);
 
         return $inputDefinition;
+    }
+
+    /**
+     * Sets whether to automatically exit after a command execution or not.
+     *
+     * Implemented on this level to allow early exit on configuration exceptions
+     * @see run()
+     *
+     * @param bool $boolean Whether to automatically exit after a command execution or not
+     */
+    public function setAutoExit($boolean)
+    {
+        $this->autoExit = (bool) $boolean;
+        parent::setAutoExit($boolean);
     }
 
     /**
@@ -561,6 +580,11 @@ class Application extends BaseApplication
         } catch (Exception $e) {
             $output = new ConsoleOutput();
             $this->renderException($e, $output->getErrorOutput());
+            $exitCode = max(1, min(255, (int) $e->getCode()));
+            if ($this->autoExit) {
+                die($exitCode);
+            }
+            return $exitCode;
         }
 
         $return = parent::run($input, $output);
