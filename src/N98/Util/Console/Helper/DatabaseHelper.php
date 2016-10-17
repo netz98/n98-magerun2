@@ -246,24 +246,26 @@ class DatabaseHelper extends AbstractHelper
     public function getTableDefinitions(array $commandConfig)
     {
         $tableDefinitions = array();
-        if (isset($commandConfig['table-groups'])) {
-            $tableGroups = $commandConfig['table-groups'];
-            foreach ($tableGroups as $index => $definition) {
-                $description = isset($definition['description']) ? $definition['description'] : '';
-                if (!isset($definition['id'])) {
-                    throw new RuntimeException('Invalid definition of table-groups (id missing) Index: ' . $index);
-                }
-                if (!isset($definition['tables'])) {
-                    throw new RuntimeException(
-                        'Invalid definition of table-groups (tables missing) Id: ' . $definition['id']
-                    );
-                }
+        if (!isset($commandConfig['table-groups'])) {
+            return $tableDefinitions;
+        }
 
-                $tableDefinitions[$definition['id']] = array(
-                    'tables'      => $definition['tables'],
-                    'description' => $description,
+        $tableGroups = $commandConfig['table-groups'];
+        foreach ($tableGroups as $index => $definition) {
+            $description = isset($definition['description']) ? $definition['description'] : '';
+            if (!isset($definition['id'])) {
+                throw new RuntimeException('Invalid definition of table-groups (id missing) Index: ' . $index);
+            }
+            if (!isset($definition['tables'])) {
+                throw new RuntimeException(
+                    'Invalid definition of table-groups (tables missing) Id: ' . $definition['id']
                 );
             }
+
+            $tableDefinitions[$definition['id']] = array(
+                'tables'      => $definition['tables'],
+                'description' => $description,
+            );
         }
 
         return $tableDefinitions;
