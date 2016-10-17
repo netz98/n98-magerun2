@@ -3,8 +3,8 @@
 namespace N98\Magento\Command\Database;
 
 use N98\Magento\Command\Database\Compressor\AbstractCompressor;
+use N98\Util\Console\Helper\DatabaseHelper;
 use N98\Util\OperatingSystem;
-use RuntimeException;
 use Symfony\Component\Console\Helper\DialogHelper;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -138,36 +138,16 @@ HELP;
      * @return array
      *
      * @deprecated Use database helper
-     * @throws RuntimeException
      */
-    public function getTableDefinitions()
+    private function getTableDefinitions()
     {
-        $this->commandConfig = $this->getCommandConfig();
+        /** @var DatabaseHelper $database */
+        $database = $this->getHelper('database');
+        $tableDefinitions = $database->getTableDefinitions(
+            $this->getCommandConfig()
+        );
 
-        if (is_null($this->tableDefinitions)) {
-            $this->tableDefinitions = array();
-            if (isset($this->commandConfig['table-groups'])) {
-                $tableGroups = $this->commandConfig['table-groups'];
-                foreach ($tableGroups as $index => $definition) {
-                    $description = isset($definition['description']) ? $definition['description'] : '';
-                    if (!isset($definition['id'])) {
-                        throw new RuntimeException('Invalid definition of table-groups (id missing) Index: ' . $index);
-                    }
-                    if (!isset($definition['id'])) {
-                        throw new RuntimeException(
-                            'Invalid definition of table-groups (tables missing) Id: ' . $definition['id']
-                        );
-                    }
-
-                    $this->tableDefinitions[$definition['id']] = array(
-                        'tables'      => $definition['tables'],
-                        'description' => $description,
-                    );
-                }
-            };
-        }
-
-        return $this->tableDefinitions;
+        return $tableDefinitions;
     }
 
     /**
