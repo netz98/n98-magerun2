@@ -128,7 +128,17 @@ commands:
       - id: sales
         description: Sales data (orders, invoices, creditmemos etc)
         tables: >
-          sales_order* sales_recurring_* sales_refunded_* sales_payment_*
+          sales_order
+            sales_order_address
+            sales_order_aggregated_created
+            sales_order_aggregated_updated
+            sales_order_grid
+            sales_order_item
+            sales_order_payment
+            sales_order_status_history
+            sales_order_tax
+            sales_order_tax_item
+          sales_recurring_* sales_refunded_* sales_payment_*
           enterprise_sales_* enterprise_customer_sales_* sales_bestsellers_*
 
       - id: customers
