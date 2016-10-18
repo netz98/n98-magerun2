@@ -93,22 +93,6 @@ abstract class AbstractDatabaseCommand extends AbstractMagentoCommand
     }
 
     /**
-     * @param array $excludes
-     * @param array $definitions
-     * @param array $resolved Which definitions where already resolved -> prevent endless loops
-     *
-     * @return array
-     *
-     * @deprecated Please use database helper
-     *
-     * @throws \Exception
-     */
-    protected function resolveTables(array $excludes, array $definitions, array $resolved = array())
-    {
-        return $this->getDatabaseHelper()->resolveTables($excludes, $definitions, $resolved);
-    }
-
-    /**
      * @return DatabaseHelper
      */
     protected function getDatabaseHelper()
