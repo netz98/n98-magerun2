@@ -100,7 +100,18 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
 
             /** @var Application|PHPUnit_Framework_MockObject_MockObject $application */
             $application = $this->getMock('N98\Magento\Application', array('getMagentoRootFolder'));
-            $loader = require __DIR__ . '/../../../../vendor/autoload.php';
+
+            // Get the composer bootstrap
+            if (defined('PHPUNIT_COMPOSER_INSTALL')) {
+                $loader = require PHPUNIT_COMPOSER_INSTALL;
+            } elseif (file_exists(__DIR__ . '/../../../../../../autoload.php')) {
+                // Installed via composer, already in vendor
+                $loader = require __DIR__ . '/../../../../../../autoload.php';
+            } else {
+                // Check if testing root package without PHPUnit
+                $loader = require __DIR__ . '/../../../../vendor/autoload.php';
+            }
+
             $application->setAutoloader($loader);
             $application->expects($this->any())->method('getMagentoRootFolder')->will($this->returnValue($root));
             $application->init();
