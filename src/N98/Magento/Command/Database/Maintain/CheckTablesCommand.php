@@ -142,7 +142,7 @@ HELP;
                     array('@check'),
                     array(
                         'check' => array(
-                            'tables' => $input->getOption('table'),
+                            'tables' => array($input->getOption('table')),
                         ),
                     )
                 ),

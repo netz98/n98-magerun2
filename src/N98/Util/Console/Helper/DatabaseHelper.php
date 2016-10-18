@@ -252,18 +252,31 @@ class DatabaseHelper extends AbstractHelper
 
         $tableGroups = $commandConfig['table-groups'];
         foreach ($tableGroups as $index => $definition) {
-            $description = isset($definition['description']) ? $definition['description'] : '';
             if (!isset($definition['id'])) {
-                throw new RuntimeException('Invalid definition of table-groups (id missing) Index: ' . $index);
+                throw new RuntimeException("Invalid definition of table-groups (id missing) at index: $index");
             }
-            if (!isset($definition['tables'])) {
-                throw new RuntimeException(
-                    'Invalid definition of table-groups (tables missing) Id: ' . $definition['id']
-                );
+            $id = $definition['id'];
+            if (isset($definitions[$id])) {
+                throw new RuntimeException("Invalid definition of table-groups (duplicate id) id: $id");
             }
 
-            $tableDefinitions[$definition['id']] = array(
-                'tables'      => $definition['tables'],
+            if (!isset($definition['tables'])) {
+                throw new RuntimeException("Invalid definition of table-groups (tables missing) id: $id");
+            }
+            $tables = $definition['tables'];
+
+            if (is_string($tables)) {
+                $tables = preg_split('~\s+~', $tables, -1, PREG_SPLIT_NO_EMPTY);
+            }
+            if (!is_array($tables)) {
+                throw new RuntimeException("Invalid tables definition of table-groups id: $id");
+            }
+            $tables = array_map('trim', $tables);
+
+            $description = isset($definition['description']) ? $definition['description'] : '';
+
+            $tableDefinitions[$id] = array(
+                'tables'      => $tables,
                 'description' => $description,
             );
         }
@@ -295,7 +308,7 @@ class DatabaseHelper extends AbstractHelper
                 if (!isset($resolved[$code])) {
                     $resolved[$code] = true;
                     $tables = $this->resolveTables(
-                        explode(' ', $definitions[$code]['tables']),
+                        $definitions[$code]['tables'],
                         $definitions,
                         $resolved
                     );
