@@ -507,6 +507,7 @@ class Application extends BaseApplication
      */
     public function getConfig()
     {
+        // TODO(TK) getter for config / getter for config array
         return $this->config->getConfig();
     }
 

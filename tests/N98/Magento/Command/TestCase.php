@@ -5,8 +5,8 @@ namespace N98\Magento\Command;
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\DB\Adapter\AdapterInterface;
 use N98\Magento\Application;
+use N98\Magento\TestApplication;
 use PHPUnit_Framework_MockObject_MockObject;
-use RuntimeException;
 
 /**
  * Class TestCase
@@ -17,51 +17,9 @@ use RuntimeException;
 abstract class TestCase extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var Application
+     * @var TestApplication
      */
-    private $application = null;
-
-    /**
-     * @var string|null
-     */
-    private $root;
-
-    /**
-     * @param string $varname name of the environment variable containing the test-root
-     * @param string $basename name of the stopfile containing the test-root
-     *
-     * @return string|null
-     */
-    public static function getTestMagentoRootFromEnvironment($varname, $basename)
-    {
-        $root = getenv($varname);
-        if (empty($root) && strlen($basename)) {
-            $stopfile = getcwd() . '/' . $basename;
-            if (is_readable($stopfile) && $buffer = rtrim(file_get_contents($stopfile))) {
-                $root = $buffer;
-            }
-        }
-        if (empty($root)) {
-            return;
-        }
-
-        # directory test
-        if (!is_dir($root)) {
-            throw new RuntimeException(
-                sprintf("%s path '%s' is not a directory", $varname, $root)
-            );
-        }
-
-        # resolve root to realpath to be independent to current working directory
-        $rootRealpath = realpath($root);
-        if (false === $rootRealpath) {
-            throw new RuntimeException(
-                sprintf("Failed to resolve %s path '%s' with realpath()", $varname, $root)
-            );
-        }
-
-        return $rootRealpath;
-    }
+    private $testApplication;
 
     /**
      * getter for the magento root directory of the test-suite
@@ -72,22 +30,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
      */
     public function getTestMagentoRoot()
     {
-        if ($this->root) {
-            return $this->root;
-        }
-
-        $varname = 'N98_MAGERUN2_TEST_MAGENTO_ROOT';
-        $basename = '.n98-magerun2';
-
-        $root = self::getTestMagentoRootFromEnvironment($varname, $basename);
-
-        if (null === $root) {
-            $this->markTestSkipped(
-                "Please specify environment variable $varname with path to your test magento installation!"
-            );
-        }
-
-        return $this->root = $root;
+        return $this->getTestApplication()->getTestMagentoRoot();
     }
 
     /**
@@ -95,32 +38,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
      */
     public function getApplication()
     {
-        if ($this->application === null) {
-            $root = $this->getTestMagentoRoot();
-
-            /** @var Application|PHPUnit_Framework_MockObject_MockObject $application */
-            $application = $this->getMock('N98\Magento\Application', array('getMagentoRootFolder'));
-
-            // Get the composer bootstrap
-            if (defined('PHPUNIT_COMPOSER_INSTALL')) {
-                $loader = require PHPUNIT_COMPOSER_INSTALL;
-            } elseif (file_exists(__DIR__ . '/../../../../../../autoload.php')) {
-                // Installed via composer, already in vendor
-                $loader = require __DIR__ . '/../../../../../../autoload.php';
-            } else {
-                // Check if testing root package without PHPUnit
-                $loader = require __DIR__ . '/../../../../vendor/autoload.php';
-            }
-
-            $application->setAutoloader($loader);
-            $application->expects($this->any())->method('getMagentoRootFolder')->will($this->returnValue($root));
-            $application->init();
-            $application->initMagento();
-
-            $this->application = $application;
-        }
-
-        return $this->application;
+        return $this->getTestApplication()->getApplication();
     }
 
     /**
@@ -131,5 +49,17 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
         $resource = $this->getApplication()->getObjectManager()->get(ResourceConnection::class);
 
         return $resource->getConnection('write');
+    }
+
+    /**
+     * @return TestApplication
+     */
+    private function getTestApplication()
+    {
+        if (null === $this->testApplication) {
+            $this->testApplication = new TestApplication();
+        }
+
+        return $this->testApplication;
     }
 }
