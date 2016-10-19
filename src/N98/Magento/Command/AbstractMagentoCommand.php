@@ -32,6 +32,11 @@ abstract class AbstractMagentoCommand extends Command
     /**
      * @var string
      */
+    const CONFIG_KEY_COMMANDS = 'commands';
+
+    /**
+     * @var string
+     */
     protected $_magentoRootFolder = null;
 
     /**
@@ -150,8 +155,8 @@ abstract class AbstractMagentoCommand extends Command
             $commandClass = get_class($this);
         }
         $configArray = $this->getApplication()->getConfig();
-        if (isset($configArray['commands'][$commandClass])) {
-            return $configArray['commands'][$commandClass];
+        if (isset($configArray[self::CONFIG_KEY_COMMANDS][$commandClass])) {
+            return $configArray[self::CONFIG_KEY_COMMANDS][$commandClass];
         }
 
         return;
