@@ -32,6 +32,21 @@ class DatabaseHelper extends AbstractHelper
     protected $_tables;
 
     /**
+     * @var string
+     */
+    private $connectionType = 'default';
+
+    /**
+     * Set connection type when several db used.
+     *
+     * @param $connectionType
+     */
+    public function setConnectionType($connectionType)
+    {
+        $this->connectionType = $connectionType;
+    }
+
+    /**
      * @param OutputInterface $output
      *
      * @throws RuntimeException
@@ -47,15 +62,15 @@ class DatabaseHelper extends AbstractHelper
         $config = $magentoHelper->getBaseConfig(); // @TODO Use \Magento\Framework\App\DeploymentConfig ?
 
         if (!isset($config['db'])) {
-            $output->writeln('<error>DB settings was not found in config.xml file</error>');
+            $output->writeln('<error>DB settings was not found in app/etc/env.php file</error>');
             return;
         }
 
-        if (!isset($config['db']['connection']['default'])) {
-            throw new RuntimeException('Cannot find default connection config in app/etc/config.php');
+        if (!isset($config['db']['connection'][$this->connectionType])) {
+            throw new RuntimeException(sprintf('Cannot find "%s" connection config in app/etc/env.php', $this->connectionType));
         }
 
-        $this->dbSettings = (array) $config['db']['connection']['default'];
+        $this->dbSettings = (array) $config['db']['connection'][$this->connectionType];
 
         $this->dbSettings['prefix'] = '';
         if (isset($config['db']['table_prefix'])) {

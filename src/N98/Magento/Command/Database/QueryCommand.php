@@ -12,6 +12,7 @@ class QueryCommand extends AbstractDatabaseCommand
 {
     protected function configure()
     {
+        parent::configure();
         $this
             ->setName('db:query')
             ->addArgument('query', InputArgument::OPTIONAL, 'SQL query')

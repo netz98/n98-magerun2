@@ -5,6 +5,8 @@ namespace N98\Magento\Command\Database;
 use N98\Magento\Command\AbstractMagentoCommand;
 use N98\Magento\Command\Database\Compressor\AbstractCompressor;
 use N98\Util\Console\Helper\DatabaseHelper;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 abstract class AbstractDatabaseCommand extends AbstractMagentoCommand
@@ -18,6 +20,33 @@ abstract class AbstractDatabaseCommand extends AbstractMagentoCommand
      * @var bool
      */
     protected $isSocketConnect = false;
+
+    /**
+     * Common configuration for all DB commands
+     */
+    protected function configure()
+    {
+        $this->addOption(
+            'connection',
+            null,
+            InputOption::VALUE_REQUIRED,
+            'Select DB connection type for Magento configurations with several databases',
+            'default'
+        );
+    }
+
+    /**
+     * Initialize db connection settings
+     *
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     */
+    protected function initialize(InputInterface $input, OutputInterface $output)
+    {
+        parent::initialize($input, $output);
+        $dbHelper = $this->getDatabaseHelper();
+        $dbHelper->setConnectionType($input->getOption('connection'));
+    }
 
     /**
      * @param \Symfony\Component\Console\Output\OutputInterface $output
