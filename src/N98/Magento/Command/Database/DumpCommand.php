@@ -25,6 +25,7 @@ class DumpCommand extends AbstractDatabaseCommand
 
     protected function configure()
     {
+        parent::configure();
         $this
             ->setName('db:dump')
             ->addArgument('filename', InputArgument::OPTIONAL, 'Dump filename')

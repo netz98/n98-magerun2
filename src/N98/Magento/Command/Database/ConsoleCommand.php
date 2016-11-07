@@ -9,6 +9,7 @@ class ConsoleCommand extends AbstractDatabaseCommand
 {
     protected function configure()
     {
+        parent::configure();
         $this
             ->setName('db:console')
             ->setAliases(array('mysql-client'))

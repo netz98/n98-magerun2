@@ -44,6 +44,7 @@ abstract class AbstractShowCommand extends AbstractDatabaseCommand
 
     protected function configure()
     {
+        parent::configure();
         $this
             ->addArgument(
                 'search',
