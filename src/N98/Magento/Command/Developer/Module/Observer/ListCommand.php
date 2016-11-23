@@ -18,6 +18,13 @@ class ListCommand extends AbstractMagentoCommand
         'adminhtml',
         'frontend',
         'crontab',
+        'webapi_rest',
+        'webapi_soap',
+        'doc',
+
+        // 'admin' has been declared deprecated since
+        // https://github.com/magento/magento2/commit/5448233594d94688b146564d7bdb882d6e88058a#diff-5bc6336cfbfd5aeb18404416f508b6c4
+        'admin',
     ];
 
     protected function configure()
