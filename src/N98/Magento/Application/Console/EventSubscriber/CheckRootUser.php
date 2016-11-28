@@ -6,6 +6,7 @@ use N98\Magento\Application\Console\Event;
 use N98\Magento\Application\Console\Events;
 use N98\Util\OperatingSystem;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class CheckRootUser implements EventSubscriberInterface
@@ -37,7 +38,10 @@ class CheckRootUser implements EventSubscriberInterface
      */
     public function checkRunningAsRootUser(Event $event)
     {
-        if ($this->_isSkipRootCheck($event->getInput())) {
+
+        $skipRootCheck = $this->_isSkipRootCheck($event->getInput());
+        if ($skipRootCheck) {
+            $this->debugWriteln($event, "Skipping root-check by '--skip-root-check' option ");
             return;
         }
 
@@ -62,5 +66,17 @@ class CheckRootUser implements EventSubscriberInterface
     protected function _isSkipRootCheck(InputInterface $input)
     {
         return $input->hasParameterOption('--skip-root-check');
+    }
+
+    /**
+     * @param Event $event
+     * @param string $message
+     */
+    private function debugWriteln(Event $event, $message)
+    {
+        $output = $event->getOutput();
+        if (OutputInterface::VERBOSITY_DEBUG <= $output->getVerbosity()) {
+            $output->writeln($message);
+        }
     }
 }

@@ -6,6 +6,7 @@ RECENT CHANGES
 * Fix: Add missing areas to the observer list (by Pieter Hoste, #249)
 * Fix: Do not drop all sales_order_status* tables (report by Brent Jameson, fix by Tom KLingenberg, #239)
 * Fix: Prevent Mysql deadlock on admin password change (by Tom KLingenberg, #242)
+* New: Debug output on --skip-root-check option (by Tom Klingenberg)
 * New: Interactive console: Support for initial code argument (by Christian Münch)
 * New: Introduced test framework (by Christian Münch)
 
