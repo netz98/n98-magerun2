@@ -38,7 +38,6 @@ class CheckRootUser implements EventSubscriberInterface
      */
     public function checkRunningAsRootUser(Event $event)
     {
-
         $skipRootCheck = $this->_isSkipRootCheck($event->getInput());
         if ($skipRootCheck) {
             $this->debugWriteln($event, "Skipping root-check by '--skip-root-check' option ");

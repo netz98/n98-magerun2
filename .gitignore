@@ -8,6 +8,7 @@ vendor/
 phpunit.xml
 
 # Build files
+.php_cs.cache
 composer.phar
 n98-magerun2.phar
 build/out/
