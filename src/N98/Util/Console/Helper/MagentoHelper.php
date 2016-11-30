@@ -133,14 +133,6 @@ class MagentoHelper extends AbstractHelper
     }
 
     /**
-     * @return int
-     */
-    public function getEdition()
-    {
-        return $this->_magentoMajorVersion;
-    }
-
-    /**
      * @return bool
      */
     public function isEnterpriseEdition()
