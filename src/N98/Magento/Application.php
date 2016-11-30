@@ -2,13 +2,14 @@
 
 namespace N98\Magento;
 
+use BadMethodCallException;
 use Composer\Autoload\ClassLoader;
 use Exception;
 use Magento\Framework\ObjectManager\ObjectManager;
-use Magento\Mtf\EntryPoint\EntryPoint;
 use N98\Magento\Application\Config;
 use N98\Magento\Application\ConfigurationLoader;
 use N98\Magento\Application\Console\Events;
+use N98\Magento\Application\DetectionResult;
 use N98\Util\Console\Helper\MagentoHelper;
 use N98\Util\Console\Helper\TwigHelper;
 use N98\Util\OperatingSystem;
@@ -43,10 +44,6 @@ class Application extends BaseApplication
      * @var int
      */
     const MAGENTO_MAJOR_VERSION_1 = 1;
-
-    /**
-     * @var int
-     */
     const MAGENTO_MAJOR_VERSION_2 = 2;
 
     /**
@@ -76,39 +73,20 @@ class Application extends BaseApplication
     private $configurationLoaderInjected;
 
     /**
-     * @var string
+     * @var string [optional] root folder not detected, but set via public setter
+     * @see setMagentoRootFolder()
      */
-    protected $_magentoRootFolder = null;
+    private $magentoRootFolderInjected;
 
     /**
-     * @var bool
+     * @var int Magento Major Version to operate on by this Magerun application
      */
-    protected $_magentoEnterprise = false;
-
-    /**
-     * @var int
-     */
-    protected $_magentoMajorVersion = self::MAGENTO_MAJOR_VERSION_2;
-
-    /**
-     * @var EntryPoint
-     */
-    protected $_magento2EntryPoint = null;
+    private $magerunMajorVersion = self::MAGENTO_MAJOR_VERSION_2;
 
     /**
      * @var bool
      */
     protected $_isPharMode = false;
-
-    /**
-     * @var bool
-     */
-    protected $_magerunStopFileFound = false;
-
-    /**
-     * @var string
-     */
-    protected $_magerunStopFileFolder = null;
 
     /**
      * @var bool
@@ -128,9 +106,9 @@ class Application extends BaseApplication
     protected $_directRootDir = false;
 
     /**
-     * @var bool
+     * @var DetectionResult of the Magento application (e.g. v1/v2, Enterprise/Community, root-path)
      */
-    protected $_magentoDetected = false;
+    private $detectionResult;
 
     /**
      * @var ObjectManager
@@ -209,6 +187,7 @@ class Application extends BaseApplication
      * Sets whether to automatically exit after a command execution or not.
      *
      * Implemented on this level to allow early exit on configuration exceptions
+     *
      * @see run()
      *
      * @param bool $boolean Whether to automatically exit after a command execution or not
@@ -228,41 +207,18 @@ class Application extends BaseApplication
      */
     public function detectMagento(InputInterface $input = null, OutputInterface $output = null)
     {
-        // do not detect magento twice
-        if ($this->_magentoDetected) {
+        if ($this->detectionResult) {
             return;
         }
 
-        if (null === $input) {
-            $input = new ArgvInput();
-        }
+        $this->detectionResult = $result = $this->getDetectionResult($input, $output);
 
-        if (null === $output) {
-            $output = new ConsoleOutput();
+        if ($result->isDetected()) {
+            $magentoMajorVersion = $result->getMajorVersion();
+            if ($magentoMajorVersion !== $this->magerunMajorVersion) {
+                $this->_initMagento1();
+            }
         }
-
-        if ($this->getMagentoRootFolder() === null) {
-            $this->_checkRootDirOption($input);
-            $folder = OperatingSystem::getCwd();
-        } else {
-            $folder = $this->getMagentoRootFolder();
-        }
-
-        $this->getHelperSet()->set(new MagentoHelper($input, $output), 'magento');
-        /* @var $magentoHelper MagentoHelper */
-        $magentoHelper = $this->getHelperSet()->get('magento');
-        if (!$this->_directRootDir) {
-            $subFolders = $this->config->getDetectSubFolders();
-        } else {
-            $subFolders = array($folder);
-        }
-
-        $this->_magentoDetected = $magentoHelper->detect($folder, $subFolders);
-        $this->_magentoRootFolder = $magentoHelper->getRootFolder();
-        $this->_magentoEnterprise = $magentoHelper->isEnterpriseEdition();
-        $this->_magentoMajorVersion = $magentoHelper->getMajorVersion();
-        $this->_magerunStopFileFound = $magentoHelper->isMagerunStopFileFound();
-        $this->_magerunStopFileFolder = $magentoHelper->getMagerunStopFileFolder();
     }
 
     /**
@@ -298,12 +254,13 @@ class Application extends BaseApplication
      */
     protected function registerMagentoCoreCommands(OutputInterface $output)
     {
-        if (!$this->getMagentoRootFolder()) {
+        $magentoRootFolder = $this->getMagentoRootFolder();
+        if (!$magentoRootFolder) {
             return;
         }
 
         // Magento was found -> register core cli commands
-        $this->requireOnce($this->_magentoRootFolder . '/app/bootstrap.php');
+        $this->requireOnce($magentoRootFolder . '/app/bootstrap.php');
 
         $coreCliApplication = new \Magento\Framework\Console\Cli();
         $coreCliApplicationCommands = $coreCliApplication->all();
@@ -369,8 +326,8 @@ class Application extends BaseApplication
 
         $this->detectMagento(null, $output);
         /* If magento is not installed yet, don't check */
-        if ($this->_magentoRootFolder === null
-            || !file_exists($this->_magentoRootFolder . '/app/etc/env.php')
+        if ($this->detectionResult->getRootFolder() === null
+            || !file_exists($this->getMagentoRootFolder() . '/app/etc/env.php')
         ) {
             return;
         }
@@ -379,7 +336,7 @@ class Application extends BaseApplication
             $this->initMagento();
         } catch (Exception $e) {
             $message = 'Cannot initialize Magento. Please check your configuration. '
-                . 'Some n98-magerun command will not work. Got message: ';
+                . 'Some n98-magerun command will not work. Got message: '
                 . $e->getMessage();
             if (OutputInterface::VERBOSITY_VERY_VERBOSE <= $output->getVerbosity()) {
                 $message .= "\n" . $e->getTraceAsString();
@@ -426,11 +383,11 @@ class Application extends BaseApplication
      */
     public function initMagento($soft = false)
     {
-        if ($this->getMagentoRootFolder() === null) {
+        if ($this->getMagentoRootFolder(true) === null) {
             return false;
         }
 
-        $isMagento2 = $this->_magentoMajorVersion === self::MAGENTO_MAJOR_VERSION_2;
+        $isMagento2 = $this->detectionResult->getMajorVersion() === self::MAGENTO_MAJOR_VERSION_2;
         if ($isMagento2) {
             $this->_initMagento2();
         } else {
@@ -458,15 +415,28 @@ class Application extends BaseApplication
      */
     public function isMagentoEnterprise()
     {
-        return $this->_magentoEnterprise;
+        return $this->detectionResult->isEnterpriseEdition();
     }
 
     /**
+     * @param bool $preventException [optional] on uninitialized magento root folder (returns null then, caution!)
      * @return string
      */
-    public function getMagentoRootFolder()
+    public function getMagentoRootFolder($preventException = false)
     {
-        return $this->_magentoRootFolder;
+        if (null !== $this->magentoRootFolderInjected) {
+            return $this->magentoRootFolderInjected;
+        }
+
+        if ($preventException) {
+            return $this->detectionResult ? $this->detectionResult->getRootFolder() : null;
+        }
+
+        if (!$this->detectionResult) {
+            throw new BadMethodCallException('Magento-root-folder is not yet detected (nor set)');
+        }
+
+        return $this->detectionResult->getRootFolder();
     }
 
     /**
@@ -474,7 +444,7 @@ class Application extends BaseApplication
      */
     public function setMagentoRootFolder($magentoRootFolder)
     {
-        $this->_magentoRootFolder = $magentoRootFolder;
+        $this->magentoRootFolderInjected = $magentoRootFolder;
     }
 
     /**
@@ -482,7 +452,7 @@ class Application extends BaseApplication
      */
     public function getMagentoMajorVersion()
     {
-        return $this->_magentoMajorVersion;
+        return $this->detectionResult ? $this->detectionResult->getMajorVersion() : null;
     }
 
     /**
@@ -519,11 +489,14 @@ class Application extends BaseApplication
     }
 
     /**
+     * @deprecated 1.3.0
      * @return boolean
      */
     public function isMagerunStopFileFound()
     {
-        return $this->_magerunStopFileFound;
+        trigger_error('Deprecated method "isMagerunStopFileFound" called.', E_USER_DEPRECATED);
+
+        return $this->detectionResult->isMagerunStopFileFound();
     }
 
     /**
@@ -584,6 +557,7 @@ class Application extends BaseApplication
             if ($this->autoExit) {
                 die($exitCode);
             }
+
             return $exitCode;
         }
 
@@ -617,13 +591,8 @@ class Application extends BaseApplication
         $this->dispatcher = new EventDispatcher();
         $this->setDispatcher($this->dispatcher);
 
-        if (null === $input) {
-            $input = new ArgvInput();
-        }
-
-        if (null === $output) {
-            $output = new ConsoleOutput();
-        }
+        $input = $input ?: new ArgvInput();
+        $output = $output ?: new ConsoleOutput();
 
         if (null !== $this->config) {
             throw new UnexpectedValueException(sprintf('Config already initialized'));
@@ -637,8 +606,13 @@ class Application extends BaseApplication
         }
         $config->loadPartialConfig($loadExternalConfig);
         $this->detectMagento($input, $output);
+
         $configLoader = $config->getLoader();
-        $configLoader->loadStageTwo($this->_magentoRootFolder, $loadExternalConfig, $this->_magerunStopFileFolder);
+        $configLoader->loadStageTwo(
+            $this->getMagentoRootFolder(true),
+            $loadExternalConfig,
+            $this->detectionResult->getMagerunStopFileFolder()
+        );
         $config->load();
 
         if ($autoloader = $this->autoloader) {
@@ -666,8 +640,7 @@ class Application extends BaseApplication
     public function reinit($initConfig = array(), InputInterface $input = null, OutputInterface $output = null)
     {
         $this->_isInitialized = false;
-        $this->_magentoDetected = false;
-        $this->_magentoRootFolder = null;
+        $this->detectionResult = null;
         $this->config = null;
         $this->init($initConfig, $input, $output);
     }
@@ -765,7 +738,7 @@ class Application extends BaseApplication
      */
     protected function _initMagento2()
     {
-        $this->requireOnce($this->_magentoRootFolder . '/app/bootstrap.php');
+        $this->requireOnce($this->getMagentoRootFolder() . '/app/bootstrap.php');
 
         $params = $_SERVER;
         $params[\Magento\Store\Model\StoreManager::PARAM_RUN_CODE] = 'admin';
@@ -791,9 +764,9 @@ class Application extends BaseApplication
         $file = $version === '2' ? $version : '';
         $magentoHint = <<<MAGENTOHINT
 You are running a Magento $version.x instance. This version of n98-magerun is not compatible
-with Magento $version.x. Please use n98-magerun$version (version $version) for this shop.
+with Magento $version.x. Please use n98-magerun$file (version $version) for this shop.
 
-A current version of the software can be downloaded on github.
+A current version of the software can be downloaded from the website:
 
 <info>Download with curl
 ------------------</info>
@@ -839,7 +812,7 @@ MAGENTOHINT;
             $this->config->setLoader($configurationLoader);
         } else {
             /* inject loader to be used later when config is created in */
-            /* @see N98\Magento\Application::init() */
+            /* @see \N98\Magento\Application::init() */
             $this->configurationLoaderInjected = $configurationLoader;
         }
     }
@@ -859,5 +832,35 @@ MAGENTOHINT;
     public function getObjectManager()
     {
         return $this->_objectManager;
+    }
+
+    /**
+     * @param InputInterface $input [optional]
+     * @param OutputInterface $output [optional]
+     * @return DetectionResult
+     */
+    private function getDetectionResult(InputInterface $input = null, OutputInterface $output = null)
+    {
+        $input = $input ?: new ArgvInput();
+        $output = $output ?: new ConsoleOutput();
+
+        $folder = $this->getMagentoRootFolder(true);
+        if ($folder === null) {
+            $this->_checkRootDirOption($input);
+            $folder = OperatingSystem::getCwd();
+        }
+        if ($this->_directRootDir) {
+            $subFolders = array($folder);
+        } else {
+            $subFolders = $this->config->getDetectSubFolders();
+        }
+
+        $this->getHelperSet()->set(new MagentoHelper($input, $output), 'magento');
+        /* @var $magentoHelper MagentoHelper */
+        $magentoHelper = $this->getHelperSet()->get('magento');
+
+        $detection = new Application\DetectionResult($magentoHelper, $folder, $subFolders);
+
+        return $detection;
     }
 }

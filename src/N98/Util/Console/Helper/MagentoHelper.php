@@ -5,6 +5,7 @@ namespace N98\Util\Console\Helper;
 use ArrayIterator;
 use CallbackFilterIterator;
 use N98\Magento\Application;
+use N98\Magento\Application\DetectionResultInterface;
 use RuntimeException;
 use Symfony\Component\Console\Helper\Helper as AbstractHelper;
 use Symfony\Component\Console\Input\ArgvInput;
@@ -19,7 +20,7 @@ use UnexpectedValueException;
  *
  * @package N98\Util\Console\Helper
  */
-class MagentoHelper extends AbstractHelper
+class MagentoHelper extends AbstractHelper implements DetectionResultInterface
 {
     /**
      * @var string
@@ -327,7 +328,13 @@ class MagentoHelper extends AbstractHelper
                 $this->_magentoMajorVersion = Application::MAGENTO_MAJOR_VERSION_1;
             }
 
-            $this->writeDebug('Found Magento in folder <info>' . $this->_magentoRootFolder . '</info>');
+            $this->writeDebug(
+                sprintf(
+                    'Found Magento <info> v%d </info> in folder <info>%s</info>',
+                    $this->_magentoMajorVersion,
+                    $this->_magentoRootFolder
+                )
+            );
 
             return true;
         }

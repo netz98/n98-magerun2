@@ -3,6 +3,7 @@ RECENT CHANGES
 
 1.3.0
 -----
+* Fix: Fatal error when running Magerun 2 inside a Magento 1 tree (by Tom KLingenberg, #253)
 * Fix: Add missing areas to the observer list (by Pieter Hoste, #249)
 * Fix: Do not drop all sales_order_status* tables (report by Brent Jameson, fix by Tom KLingenberg, #239)
 * Fix: Prevent Mysql deadlock on admin password change (by Tom KLingenberg, #242)
