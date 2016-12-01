@@ -1,6 +1,9 @@
 RECENT CHANGES
 ==============
 
+1.3.1
+-----
+
 1.3.0
 -----
 * Fix: Fatal error when running Magerun 2 inside a Magento 1 tree (by Tom KLingenberg, #253)
