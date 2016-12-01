@@ -1,6 +1,17 @@
 RECENT CHANGES
 ==============
 
+1.3.0
+-----
+* Fix: Fatal error when running Magerun 2 inside a Magento 1 tree (by Tom KLingenberg, #253)
+* Fix: Add missing areas to the observer list (by Pieter Hoste, #249)
+* Fix: Do not drop all sales_order_status* tables (report by Brent Jameson, fix by Tom KLingenberg, #239)
+* Fix: Prevent Mysql deadlock on admin password change (by Tom KLingenberg, #242)
+* New: Add Magento CE 2.1.2 (by Raul E Watson, #252)
+* New: Debug output on --skip-root-check option (by Tom Klingenberg)
+* New: Interactive console: Support for initial code argument (by Christian Münch)
+* New: Introduced test framework (by Christian Münch)
+
 1.2.2
 -----
 * Fix: Prevent hang on Travis (by Christian Münch, #238)

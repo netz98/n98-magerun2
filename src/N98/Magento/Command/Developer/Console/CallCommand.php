@@ -32,7 +32,7 @@ class CallCommand extends AbstractGeneratorCommand
         $commandStringArray = array_map('trim', $commandStringArray);
 
         $commandName = $commandStringArray[0];
-        $proxyInput = new StringInput(implode(' ', array_slice($commandStringArray, 1)));
+        $proxyInput = new StringInput(implode(' ', $commandStringArray));
 
         return $this->callMagerunCommand($commandName, $proxyInput, $output);
     }

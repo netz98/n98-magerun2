@@ -32,6 +32,21 @@ class DatabaseHelper extends AbstractHelper
     protected $_tables;
 
     /**
+     * @var string
+     */
+    private $connectionType = 'default';
+
+    /**
+     * Set connection type when several db used.
+     *
+     * @param $connectionType
+     */
+    public function setConnectionType($connectionType)
+    {
+        $this->connectionType = $connectionType;
+    }
+
+    /**
      * @param OutputInterface $output
      *
      * @throws RuntimeException
@@ -47,15 +62,15 @@ class DatabaseHelper extends AbstractHelper
         $config = $magentoHelper->getBaseConfig(); // @TODO Use \Magento\Framework\App\DeploymentConfig ?
 
         if (!isset($config['db'])) {
-            $output->writeln('<error>DB settings was not found in config.xml file</error>');
+            $output->writeln('<error>DB settings was not found in app/etc/env.php file</error>');
             return;
         }
 
-        if (!isset($config['db']['connection']['default'])) {
-            throw new RuntimeException('Cannot find default connection config in app/etc/config.php');
+        if (!isset($config['db']['connection'][$this->connectionType])) {
+            throw new RuntimeException(sprintf('Cannot find "%s" connection config in app/etc/env.php', $this->connectionType));
         }
 
-        $this->dbSettings = (array) $config['db']['connection']['default'];
+        $this->dbSettings = (array) $config['db']['connection'][$this->connectionType];
 
         $this->dbSettings['prefix'] = '';
         if (isset($config['db']['table_prefix'])) {
@@ -246,24 +261,39 @@ class DatabaseHelper extends AbstractHelper
     public function getTableDefinitions(array $commandConfig)
     {
         $tableDefinitions = array();
-        if (isset($commandConfig['table-groups'])) {
-            $tableGroups = $commandConfig['table-groups'];
-            foreach ($tableGroups as $index => $definition) {
-                $description = isset($definition['description']) ? $definition['description'] : '';
-                if (!isset($definition['id'])) {
-                    throw new RuntimeException('Invalid definition of table-groups (id missing) Index: ' . $index);
-                }
-                if (!isset($definition['tables'])) {
-                    throw new RuntimeException(
-                        'Invalid definition of table-groups (tables missing) Id: ' . $definition['id']
-                    );
-                }
+        if (!isset($commandConfig['table-groups'])) {
+            return $tableDefinitions;
+        }
 
-                $tableDefinitions[$definition['id']] = array(
-                    'tables'      => $definition['tables'],
-                    'description' => $description,
-                );
+        $tableGroups = $commandConfig['table-groups'];
+        foreach ($tableGroups as $index => $definition) {
+            if (!isset($definition['id'])) {
+                throw new RuntimeException("Invalid definition of table-groups (id missing) at index: $index");
             }
+            $id = $definition['id'];
+            if (isset($definitions[$id])) {
+                throw new RuntimeException("Invalid definition of table-groups (duplicate id) id: $id");
+            }
+
+            if (!isset($definition['tables'])) {
+                throw new RuntimeException("Invalid definition of table-groups (tables missing) id: $id");
+            }
+            $tables = $definition['tables'];
+
+            if (is_string($tables)) {
+                $tables = preg_split('~\s+~', $tables, -1, PREG_SPLIT_NO_EMPTY);
+            }
+            if (!is_array($tables)) {
+                throw new RuntimeException("Invalid tables definition of table-groups id: $id");
+            }
+            $tables = array_map('trim', $tables);
+
+            $description = isset($definition['description']) ? $definition['description'] : '';
+
+            $tableDefinitions[$id] = array(
+                'tables'      => $tables,
+                'description' => $description,
+            );
         }
 
         return $tableDefinitions;
@@ -293,7 +323,7 @@ class DatabaseHelper extends AbstractHelper
                 if (!isset($resolved[$code])) {
                     $resolved[$code] = true;
                     $tables = $this->resolveTables(
-                        explode(' ', $definitions[$code]['tables']),
+                        $definitions[$code]['tables'],
                         $definitions,
                         $resolved
                     );

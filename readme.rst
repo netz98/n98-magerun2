@@ -378,9 +378,22 @@ Opens PHP interactive shell with initialized Magento Admin-Store.
 
 .. code-block:: sh
 
-   $ n98-magerun2.phar dev:console
+   $ n98-magerun2.phar dev:console <arg>
 
 Variable ``$di`` is made available with a ``Magento\Framework\ObjectManagerInterface`` instance to allow creation of object instances.
+
+The interactive console works as `REPL <https://en.wikipedia.org/wiki/Read%E2%80%93eval%E2%80%93print_loop>`_ .
+It's possible to enter any PHP code. The code will be executed immediately.
+The interactive console also comes with a lot of embedded commands.
+
+It's possible to add initial commands to the interactive console. Commands should be delimited by a semicolon.
+You can mix PHP-Code with embedded interactive console commands.
+
+Example:
+
+.. code-block:: sh
+
+   $ n98-magerun2.phar dev:console "$a = 1; call cache:flush; ls;"
 
 n98-magerun Shell
 """""""""""""""""

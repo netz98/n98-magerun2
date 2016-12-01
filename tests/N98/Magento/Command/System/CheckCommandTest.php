@@ -2,7 +2,7 @@
 
 namespace N98\Magento\Command\System;
 
-use N98\Magento\Command\PHPUnit\TestCase;
+use N98\Magento\Command\TestCase;
 use Symfony\Component\Console\Tester\CommandTester;
 
 class CheckCommandTest extends TestCase
@@ -16,9 +16,10 @@ class CheckCommandTest extends TestCase
         $commandTester = new CommandTester($command);
         $commandTester->execute(array('command' => $command->getName()));
 
-        $this->assertRegExp('/SETTINGS/', $commandTester->getDisplay());
-        $this->assertRegExp('/FILESYSTEM/', $commandTester->getDisplay());
-        $this->assertRegExp('/PHP/', $commandTester->getDisplay());
-        $this->assertRegExp('/MYSQL/', $commandTester->getDisplay());
+        $display = $commandTester->getDisplay();
+        $this->assertRegExp('/SETTINGS/', $display);
+        $this->assertRegExp('/FILESYSTEM/', $display);
+        $this->assertRegExp('/PHP/', $display);
+        $this->assertRegExp('/MYSQL/', $display);
     }
 }

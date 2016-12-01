@@ -13,6 +13,7 @@ class ImportCommand extends AbstractDatabaseCommand
 {
     protected function configure()
     {
+        parent::configure();
         $this
             ->setName('db:import')
             ->addArgument('filename', InputArgument::OPTIONAL, 'Dump filename')

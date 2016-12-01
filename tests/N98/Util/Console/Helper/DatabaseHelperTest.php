@@ -2,7 +2,7 @@
 
 namespace N98\Util\Console\Helper;
 
-use N98\Magento\Command\PHPUnit\TestCase;
+use N98\Magento\Command\TestCase;
 
 class DatabaseHelperTest extends TestCase
 {
@@ -66,8 +66,8 @@ class DatabaseHelperTest extends TestCase
         $this->assertNotContains('catalogrule', $tables);
 
         $definitions = array(
-            'test123'  => array('tables' => 'catalog\_*'),
-            'dataflow' => array('tables' => 'dataflow_batch_import dataflow_batch_export'),
+            'test123'  => array('tables' => array('catalog\_*')),
+            'dataflow' => array('tables' => array('dataflow_batch_import dataflow_batch_export')),
         );
 
         $tables = $this->getHelper()->resolveTables(

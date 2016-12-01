@@ -12,6 +12,7 @@ class InfoCommand extends AbstractDatabaseCommand
 {
     protected function configure()
     {
+        parent::configure();
         $this
             ->setName('db:info')
             ->addArgument('setting', InputArgument::OPTIONAL, 'Only output value of named setting')

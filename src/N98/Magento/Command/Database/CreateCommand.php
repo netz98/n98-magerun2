@@ -9,6 +9,7 @@ class CreateCommand extends AbstractDatabaseCommand
 {
     protected function configure()
     {
+        parent::configure();
         $this
             ->setName('db:create')
             ->setDescription('Create currently configured database')

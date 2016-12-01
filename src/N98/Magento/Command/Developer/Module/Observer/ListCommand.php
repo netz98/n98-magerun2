@@ -18,6 +18,13 @@ class ListCommand extends AbstractMagentoCommand
         'adminhtml',
         'frontend',
         'crontab',
+        'webapi_rest',
+        'webapi_soap',
+        'doc',
+
+        // 'admin' has been declared deprecated since 5448233
+        // https://github.com/magento/magento2/commit/5448233#diff-5bc6336cfbfd5aeb18404416f508b6c4
+        'admin',
     ];
 
     protected function configure()
@@ -50,9 +57,7 @@ class ListCommand extends AbstractMagentoCommand
     }
 
     /**
-     * @param \Symfony\Component\Console\Input\InputInterface $input
-     * @param \Symfony\Component\Console\Output\OutputInterface $output
-     * @return int|void
+     * {@inheritdoc}
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {

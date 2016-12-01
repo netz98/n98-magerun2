@@ -5,6 +5,7 @@ namespace N98\Util\Console\Helper;
 use ArrayIterator;
 use CallbackFilterIterator;
 use N98\Magento\Application;
+use N98\Magento\Application\DetectionResultInterface;
 use RuntimeException;
 use Symfony\Component\Console\Helper\Helper as AbstractHelper;
 use Symfony\Component\Console\Input\ArgvInput;
@@ -19,7 +20,7 @@ use UnexpectedValueException;
  *
  * @package N98\Util\Console\Helper
  */
-class MagentoHelper extends AbstractHelper
+class MagentoHelper extends AbstractHelper implements DetectionResultInterface
 {
     /**
      * @var string
@@ -132,11 +133,6 @@ class MagentoHelper extends AbstractHelper
         return $this->_magentoRootFolder;
     }
 
-    public function getEdition()
-    {
-        return $this->_magentoMajorVersion;
-    }
-
     /**
      * @return bool
      */
@@ -232,33 +228,32 @@ class MagentoHelper extends AbstractHelper
      */
     protected function checkMagerunFile(array $folders)
     {
+        $stopFile = '.' . pathinfo($this->_customConfigFilename, PATHINFO_FILENAME);
+
         foreach ($this->searchFolders($folders) as $searchFolder) {
-            $stopFile = '.' . pathinfo($this->_customConfigFilename, PATHINFO_FILENAME);
-            $finder = Finder::create();
-            $finder
-                ->files()
-                ->ignoreUnreadableDirs(true)
-                ->depth(0)
-                ->followLinks()
-                ->ignoreDotFiles(false)
-                ->name($stopFile)
-                ->in($searchFolder);
-
-            $count = $finder->count();
-            if ($count > 0) {
-                $this->_magerunStopFileFound = true;
-                $this->_magerunStopFileFolder = $searchFolder;
-                $magerunFilePath = $searchFolder . '/' . $stopFile;
-                $magerunFileContent = trim(file_get_contents($magerunFilePath));
-                $message = sprintf(
-                    'Found stopfile \'%s\' file with content <info>%s</info>',
-                    $stopFile,
-                    $magerunFileContent
+            $magerunFilePath = $searchFolder . '/' . $stopFile;
+            if (is_link($magerunFilePath) && !file_exists($magerunFilePath)) {
+                throw new \RuntimeException(
+                    sprintf("Stopfile is broken symlink: '%s'", $magerunFilePath),
+                    2
                 );
-                $this->writeDebug($message);
-
-                array_push($folders, $searchFolder . '/' . $magerunFileContent);
             }
+            if (!is_readable($magerunFilePath) || !is_file($magerunFilePath)) {
+                continue;
+            }
+            $this->_magerunStopFileFound = true;
+            $this->_magerunStopFileFolder = $searchFolder;
+            $magerunFileContent = trim(file_get_contents($magerunFilePath));
+            $message = sprintf(
+                'Found stopfile \'%s\' file with content <info>%s</info> from \'%s\'',
+                $stopFile,
+                $magerunFileContent,
+                $searchFolder
+            );
+            $this->writeDebug($message);
+
+            array_push($folders, $searchFolder . '/' . $magerunFileContent);
+            break;
         }
 
         return $folders;
@@ -333,7 +328,13 @@ class MagentoHelper extends AbstractHelper
                 $this->_magentoMajorVersion = Application::MAGENTO_MAJOR_VERSION_1;
             }
 
-            $this->writeDebug('Found Magento in folder <info>' . $this->_magentoRootFolder . '</info>');
+            $this->writeDebug(
+                sprintf(
+                    'Found Magento <info> v%d </info> in folder <info>%s</info>',
+                    $this->_magentoMajorVersion,
+                    $this->_magentoRootFolder
+                )
+            );
 
             return true;
         }

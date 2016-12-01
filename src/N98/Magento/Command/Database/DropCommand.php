@@ -12,6 +12,7 @@ class DropCommand extends AbstractDatabaseCommand
 {
     protected function configure()
     {
+        parent::configure();
         $this
             ->setName('db:drop')
             ->addOption('tables', 't', InputOption::VALUE_NONE, 'Drop all tables instead of dropping the database')
