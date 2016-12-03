@@ -44,6 +44,7 @@ event:
 
 commands:
   customCommands:
+    - N98\Magento\Command\Admin\NotificationsCommand
     - N98\Magento\Command\Admin\User\ListCommand
     - N98\Magento\Command\Admin\User\DeleteUserCommand
     - N98\Magento\Command\Admin\User\ChangePasswordCommand
