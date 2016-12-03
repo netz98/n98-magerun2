@@ -18,7 +18,7 @@ class NotificationsCommandTest extends TestCase
         $commandTester->execute(
             array(
                 'command' => $command->getName(),
-                '--on'    => true
+                '--on'    => true,
             )
         );
         $this->assertRegExp('/Admin Notifications hidden/', $commandTester->getDisplay());
@@ -27,7 +27,7 @@ class NotificationsCommandTest extends TestCase
         $commandTester->execute(
             array(
                 'command' => $command->getName(),
-                '--off'   => true
+                '--off'   => true,
             )
         );
 
