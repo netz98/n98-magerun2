@@ -52,6 +52,14 @@ matrix:
       env: SCRIPT_JOB=LINTSH
       script: find {src,tests} -name "*.php" ! -path '*/String.php' -print0 | xargs
         -0 -n1 -P8 php -l | grep -v '^No syntax errors detected'; test $? -eq 1
+    - php: 7.1
+      env: SCRIPT_JOB=LINTSH
+      script: find {src,tests} -name "*.php" ! -path '*/String.php' -print0 | xargs
+        -0 -n1 -P8 php -l | grep -v '^No syntax errors detected'; test $? -eq 1
+    - php: 7.1
+      env: SCRIPT_JOB="PHP-CS-FIXER"
+    - php: 7.1
+      env: SCRIPT_JOB="BUILDSH"
 
 before_install:
   - phpenv config-rm xdebug.ini
