@@ -79,7 +79,7 @@ class DDLTable
     /**
      * @param array|DDLTableColumn[] $columnDefinitions
      */
-    public function setColumns($columnDefinitions)
+    public function setColumns(array $columnDefinitions)
     {
         $this->columnDefinitions = $columnDefinitions;
     }

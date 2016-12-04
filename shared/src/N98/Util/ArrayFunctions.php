@@ -41,8 +41,8 @@ class ArrayFunctions
 
     /**
      * @param array $matrix
-     * @param string $key key to filter
-     * @param mixed $value to compare against (strict comparison)
+     * @param string|int $key key to filter
+     * @param string|int|float|null|array|object $value to compare against (strict comparison)
      * @return array
      */
     public static function matrixFilterByValue(array $matrix, $key, $value)
