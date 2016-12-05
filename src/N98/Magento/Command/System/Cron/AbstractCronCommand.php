@@ -32,9 +32,15 @@ abstract class AbstractCronCommand extends AbstractMagentoCommand
     protected $_cronScheduleCollection;
 
     /**
+     * @var \Magento\Framework\Stdlib\DateTime\TimezoneInterface
+     */
+    protected $_timezone;
+
+    /**
      * @param \Magento\Framework\App\State $state
      * @param \Magento\Framework\Event\ManagerInterface $eventManager
      * @param \Magento\Cron\Model\ConfigInterface $cronConfig
+     * @param \Magento\Framework\Stdlib\DateTime\TimezoneInterface $timezone
      * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
      * @param \Magento\Cron\Model\ResourceModel\Schedule\Collection $cronScheduleCollection
      */
@@ -42,6 +48,7 @@ abstract class AbstractCronCommand extends AbstractMagentoCommand
         \Magento\Framework\App\State $state,
         \Magento\Framework\Event\ManagerInterface $eventManager,
         \Magento\Cron\Model\ConfigInterface $cronConfig,
+        \Magento\Framework\Stdlib\DateTime\TimezoneInterface $timezone,
         \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
         \Magento\Cron\Model\ResourceModel\Schedule\Collection $cronScheduleCollection
     ) {
@@ -50,6 +57,7 @@ abstract class AbstractCronCommand extends AbstractMagentoCommand
         $this->_cronConfig = $cronConfig;
         $this->_scopeConfig = $scopeConfig;
         $this->_cronScheduleCollection = $cronScheduleCollection;
+        $this->_timezone = $timezone;
     }
 
     /**

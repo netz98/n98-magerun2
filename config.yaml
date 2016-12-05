@@ -90,6 +90,7 @@ commands:
     - N98\Magento\Command\System\Cron\HistoryCommand
     - N98\Magento\Command\System\Cron\ListCommand
     - N98\Magento\Command\System\Cron\RunCommand
+    - N98\Magento\Command\System\Cron\ScheduleCommand
     - N98\Magento\Command\System\InfoCommand
     - N98\Magento\Command\System\MaintenanceCommand
     - N98\Magento\Command\System\Setup\ChangeVersionCommand
