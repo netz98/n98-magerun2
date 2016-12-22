@@ -77,7 +77,10 @@ class DatabaseHelper extends AbstractHelper
             $this->dbSettings['prefix'] = (string) $config['db']['table_prefix'];
         }
 
-        if (strpos($this->dbSettings['host'], ':') !== false) {
+        if (
+            isset($this->dbSettings['host'])
+            && strpos($this->dbSettings['host'], ':') !== false
+        ) {
             list($this->dbSettings['host'], $this->dbSettings['port']) = explode(':', $this->dbSettings['host']);
         }
 
