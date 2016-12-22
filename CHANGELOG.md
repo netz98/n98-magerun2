@@ -4,6 +4,7 @@ RECENT CHANGES
 1.3.1
 -----
 * Fix: Regex in VariablesCommandTest (by Jürgen Thelen, #255)
+* New: Port of design:demo-notice command (by Jürgen Thelen, #69)
 * New: Build with PHP 7.1 for some jobs (by Tom Klingenberg, #256)
 * New: Port of admin:notifications command (by Jürgen Thelen, #29)
 
