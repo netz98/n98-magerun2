@@ -60,15 +60,15 @@ HELP;
             '<info>Scheduling </info><comment>' . $jobConfig['instance'] . '::' . $jobConfig['method'] . '</comment> '
         );
 
-        // add one second from the current time, just because it feels better ...
-        $scheduledAtTime = $this->_timezone->scopeTimeStamp() + 1;
+        $createdAtTime   = $this->_timezone->scopeTimeStamp();
+        $scheduledAtTime = $createdAtTime;
 
         $schedule = $this->_cronScheduleCollection->getNewEmptyItem();
         $schedule
             ->setJobCode($jobCode)
             ->setStatus(Schedule::STATUS_PENDING)
-            ->setCreatedAt(strftime('%Y-%m-%d %H:%M:%S', $this->_timezone->scopeTimeStamp()))
-            ->setScheduledAt($scheduledAtTime)
+            ->setCreatedAt(strftime('%Y-%m-%d %H:%M:%S', $createdAtTime))
+            ->setScheduledAt(strftime('%Y-%m-%d %H:%M', $scheduledAtTime))
             ->save();
 
         $output->writeln('<info>done</info>');
