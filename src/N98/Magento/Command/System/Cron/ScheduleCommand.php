@@ -3,7 +3,6 @@
 namespace N98\Magento\Command\System\Cron;
 
 use Magento\Cron\Model\Schedule;
-use Symfony\Component\Console\Helper\DialogHelper;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -60,7 +59,7 @@ HELP;
             '<info>Scheduling </info><comment>' . $jobConfig['instance'] . '::' . $jobConfig['method'] . '</comment> '
         );
 
-        $createdAtTime   = $this->timezone->scopeTimeStamp();
+        $createdAtTime = $this->timezone->scopeTimeStamp();
         $scheduledAtTime = $createdAtTime;
 
         $schedule = $this->cronScheduleCollection->getNewEmptyItem();
