@@ -10,11 +10,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class HistoryCommand extends AbstractCronCommand
 {
-    /**
-     * @var array
-     */
-    protected $infos;
-
     protected function configure()
     {
         $this

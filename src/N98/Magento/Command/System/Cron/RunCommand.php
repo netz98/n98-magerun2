@@ -10,12 +10,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class RunCommand extends AbstractCronCommand
 {
-    const REGEX_RUN_MODEL = '#^([a-z0-9_]+/[a-z0-9_]+)::([a-z0-9_]+)$#i';
-    /**
-     * @var array
-     */
-    protected $infos;
-
     protected function configure()
     {
         $this
