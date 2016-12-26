@@ -70,14 +70,14 @@ HELP;
         );
 
         try {
-            $schedule = $this->_cronScheduleCollection->getNewEmptyItem();
+            $schedule = $this->cronScheduleCollection->getNewEmptyItem();
             $schedule
                 ->setJobCode($jobCode)
                 ->setStatus(Schedule::STATUS_RUNNING)
                 ->setExecutedAt(strftime('%Y-%m-%d %H:%M:%S', time()))
                 ->save();
 
-            $this->_state->emulateAreaCode('crontab', $callback, array($schedule));
+            $this->state->emulateAreaCode('crontab', $callback, array($schedule));
 
             $schedule
                 ->setStatus(Schedule::STATUS_SUCCESS)

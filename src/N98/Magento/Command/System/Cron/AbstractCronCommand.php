@@ -11,32 +11,27 @@ abstract class AbstractCronCommand extends AbstractMagentoCommand
     /**
      * @var \Magento\Framework\App\State
      */
-    protected $_state;
-
-    /**
-     * @var \Magento\Framework\Event\ManagerInterface
-     */
-    protected $_eventManager;
+    protected $state;
 
     /**
      * @var \Magento\Cron\Model\ConfigInterface
      */
-    protected $_cronConfig;
+    protected $cronConfig;
 
     /**
      * @var \Magento\Framework\App\Config\ScopeConfigInterface
      */
-    protected $_scopeConfig;
+    protected $scopeConfig;
 
     /**
      * @var \Magento\Cron\Model\ResourceModel\Schedule\Collection
      */
-    protected $_cronScheduleCollection;
+    protected $cronScheduleCollection;
 
     /**
      * @var \Magento\Framework\Stdlib\DateTime\TimezoneInterface
      */
-    protected $_timezone;
+    protected $timezone;
 
     /**
      * @param \Magento\Framework\App\State $state
@@ -54,12 +49,11 @@ abstract class AbstractCronCommand extends AbstractMagentoCommand
         \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
         \Magento\Cron\Model\ResourceModel\Schedule\Collection $cronScheduleCollection
     ) {
-        $this->_state = $state;
-        $this->_eventManager = $eventManager;
-        $this->_cronConfig = $cronConfig;
-        $this->_scopeConfig = $scopeConfig;
-        $this->_cronScheduleCollection = $cronScheduleCollection;
-        $this->_timezone = $timezone;
+        $this->state = $state;
+        $this->cronConfig = $cronConfig;
+        $this->scopeConfig = $scopeConfig;
+        $this->cronScheduleCollection = $cronScheduleCollection;
+        $this->timezone = $timezone;
     }
 
     /**
@@ -69,7 +63,7 @@ abstract class AbstractCronCommand extends AbstractMagentoCommand
     {
         $table = array();
 
-        $jobs = $this->_cronConfig->getJobs();
+        $jobs = $this->cronConfig->getJobs();
 
         foreach ($jobs as $jobGroupCode => $jobGroup) {
             foreach ($jobGroup as $job) {
@@ -97,7 +91,7 @@ abstract class AbstractCronCommand extends AbstractMagentoCommand
      */
     protected function getJobConfig($jobCode)
     {
-        foreach ($this->_cronConfig->getJobs() as $jobGroup) {
+        foreach ($this->cronConfig->getJobs() as $jobGroup) {
             foreach ($jobGroup as $job) {
                 if ($job['name'] == $jobCode) {
                     return $job;

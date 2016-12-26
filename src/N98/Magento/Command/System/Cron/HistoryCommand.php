@@ -47,7 +47,7 @@ class HistoryCommand extends AbstractCronCommand
         }
 
         $timezone = $input->getOption('timezone')
-            ? $input->getOption('timezone') : $this->_scopeConfig->getValue('general/locale/timezone');
+            ? $input->getOption('timezone') : $this->scopeConfig->getValue('general/locale/timezone');
 
         if (!$input->getOption('format')) {
             $output->writeln('<info>Times shown in <comment>' . $timezone . '</comment></info>');
@@ -55,12 +55,12 @@ class HistoryCommand extends AbstractCronCommand
 
         $date = $this->getObjectManager()->create('Magento\Framework\Stdlib\DateTime\DateTime');
         $offset = $date->calculateOffset($timezone);
-        $this->_cronScheduleCollection
+        $this->cronScheduleCollection
             ->addFieldToFilter('status', array('neq' => Schedule::STATUS_PENDING))
             ->addOrder('finished_at', \Magento\Framework\Data\Collection::SORT_ORDER_DESC);
 
         $table = array();
-        foreach ($this->_cronScheduleCollection as $job) {
+        foreach ($this->cronScheduleCollection as $job) {
             $table[] = array(
                 $job->getJobCode(),
                 $job->getStatus(),

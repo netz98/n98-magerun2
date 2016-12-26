@@ -60,10 +60,10 @@ HELP;
             '<info>Scheduling </info><comment>' . $jobConfig['instance'] . '::' . $jobConfig['method'] . '</comment> '
         );
 
-        $createdAtTime   = $this->_timezone->scopeTimeStamp();
+        $createdAtTime   = $this->timezone->scopeTimeStamp();
         $scheduledAtTime = $createdAtTime;
 
-        $schedule = $this->_cronScheduleCollection->getNewEmptyItem();
+        $schedule = $this->cronScheduleCollection->getNewEmptyItem();
         $schedule
             ->setJobCode($jobCode)
             ->setStatus(Schedule::STATUS_PENDING)
