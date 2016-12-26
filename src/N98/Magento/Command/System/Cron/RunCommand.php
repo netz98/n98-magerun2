@@ -68,20 +68,20 @@ HELP;
             $schedule
                 ->setJobCode($jobCode)
                 ->setStatus(Schedule::STATUS_RUNNING)
-                ->setExecutedAt(strftime('%Y-%m-%d %H:%M:%S', time()))
+                ->setExecutedAt(strftime('%Y-%m-%d %H:%M:%S', $this->timezone->scopeTimeStamp()))
                 ->save();
 
             $this->state->emulateAreaCode('crontab', $callback, array($schedule));
 
             $schedule
                 ->setStatus(Schedule::STATUS_SUCCESS)
-                ->setFinishedAt(strftime('%Y-%m-%d %H:%M:%S', time()))
+                ->setFinishedAt(strftime('%Y-%m-%d %H:%M:%S', $this->timezone->scopeTimeStamp()))
                 ->save();
         } catch (Exception $e) {
             $schedule
                 ->setStatus(Schedule::STATUS_ERROR)
                 ->setMessages($e->getMessage())
-                ->setFinishedAt(strftime('%Y-%m-%d %H:%M:%S', time()))
+                ->setFinishedAt(strftime('%Y-%m-%d %H:%M:%S', $this->timezone->scopeTimeStamp()))
                 ->save();
         }
 
