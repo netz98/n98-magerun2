@@ -3,6 +3,8 @@
 namespace N98\Magento\Command\System\Cron;
 
 use N98\Magento\Command\AbstractMagentoCommand;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
 
 abstract class AbstractCronCommand extends AbstractMagentoCommand
 {
@@ -132,5 +134,36 @@ abstract class AbstractCronCommand extends AbstractMagentoCommand
         }
 
         return ['m' => '-', 'h' => '-', 'D' => '-', 'M' => '-', 'WD' => '-'];
+    }
+
+    /**
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     * @param array $jobs
+     * @return string
+     * @throws \InvalidArgumentException
+     * @throws \Exception
+     */
+    protected function askJobCode(InputInterface $input, OutputInterface $output, $jobs)
+    {
+        foreach ($jobs as $key => $job) {
+            $question[] = '<comment>[' . ($key + 1) . ']</comment> ' . $job['Job'] . PHP_EOL;
+        }
+        $question[] = '<question>Please select job: </question>' . PHP_EOL;
+
+        /** @var $dialog DialogHelper */
+        $dialog = $this->getHelper('dialog');
+        $jobCode = $dialog->askAndValidate(
+            $output,
+            $question,
+            function ($typeInput) use ($jobs) {
+                if (!isset($jobs[$typeInput - 1])) {
+                    throw new \InvalidArgumentException('Invalid job');
+                }
+                return $jobs[$typeInput - 1]['Job'];
+            }
+        );
+
+        return $jobCode;
     }
 }
