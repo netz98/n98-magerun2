@@ -2,6 +2,7 @@
 
 namespace N98\Magento\Command\System\Cron;
 
+use Exception;
 use Magento\Cron\Model\Schedule;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -30,31 +31,7 @@ HELP;
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $jobCode = $input->getArgument('job');
-        $jobs = $this->getJobs();
-
-        if (!$jobCode) {
-            $this->writeSection($output, 'Cronjob');
-            $jobCode = $this->askJobCode($input, $output, $jobs);
-        }
-
-        $jobConfig = $this->getJobConfig($jobCode);
-
-        if (empty($jobCode) || !isset($jobConfig['instance'])) {
-            throw new \InvalidArgumentException('No job config found!');
-        }
-
-        $model = $this->getObjectManager()->get($jobConfig['instance']);
-
-        if (!$model || !is_callable(array($model, $jobConfig['method']))) {
-            throw new \RuntimeException(
-                sprintf(
-                    'Invalid callback: %s::%s does not exist',
-                    $jobConfig['instance'],
-                    $jobConfig['method']
-                )
-            );
-        }
+        list($jobCode, $jobConfig, $model) = $this->getJobForExecuteMethod($input, $output);
 
         $callback = array($model, $jobConfig['method']);
 
@@ -62,14 +39,15 @@ HELP;
             '<info>Run </info><comment>' . $jobConfig['instance'] . '::' . $jobConfig['method'] . '</comment> '
         );
 
-        try {
-            $schedule = $this->cronScheduleCollection->getNewEmptyItem();
-            $schedule
-                ->setJobCode($jobCode)
-                ->setStatus(Schedule::STATUS_RUNNING)
-                ->setExecutedAt(strftime('%Y-%m-%d %H:%M:%S', $this->timezone->scopeTimeStamp()))
-                ->save();
+        /* @var $schedule \Magento\Cron\Model\Schedule */
+        $schedule = $this->cronScheduleCollection->getNewEmptyItem();
+        $schedule
+            ->setJobCode($jobCode)
+            ->setStatus(Schedule::STATUS_RUNNING)
+            ->setExecutedAt(strftime('%Y-%m-%d %H:%M:%S', $this->timezone->scopeTimeStamp()))
+            ->save();
 
+        try {
             $this->state->emulateAreaCode('crontab', $callback, array($schedule));
 
             $schedule

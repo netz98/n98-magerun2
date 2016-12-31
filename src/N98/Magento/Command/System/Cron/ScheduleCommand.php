@@ -29,31 +29,7 @@ HELP;
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $jobCode = $input->getArgument('job');
-        $jobs = $this->getJobs();
-
-        if (!$jobCode) {
-            $this->writeSection($output, 'Cronjob');
-            $jobCode = $this->askJobCode($input, $output, $jobs);
-        }
-
-        $jobConfig = $this->getJobConfig($jobCode);
-
-        if (empty($jobCode) || !isset($jobConfig['instance'])) {
-            throw new \InvalidArgumentException('No job config found!');
-        }
-
-        $model = $this->getObjectManager()->get($jobConfig['instance']);
-
-        if (!$model || !is_callable(array($model, $jobConfig['method']))) {
-            throw new \RuntimeException(
-                sprintf(
-                    'Invalid callback: %s::%s does not exist',
-                    $jobConfig['instance'],
-                    $jobConfig['method']
-                )
-            );
-        }
+        list($jobCode, $jobConfig) = $this->getJobForExecuteMethod($input, $output);
 
         $output->write(
             '<info>Scheduling </info><comment>' . $jobConfig['instance'] . '::' . $jobConfig['method'] . '</comment> '
@@ -62,6 +38,7 @@ HELP;
         $createdAtTime = $this->timezone->scopeTimeStamp();
         $scheduledAtTime = $createdAtTime;
 
+        /* @var $schedule \Magento\Cron\Model\Schedule */
         $schedule = $this->cronScheduleCollection->getNewEmptyItem();
         $schedule
             ->setJobCode($jobCode)
