@@ -7,17 +7,16 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class RunCommand extends AbstractCronCommand
+class ScheduleCommand extends AbstractCronCommand
 {
     protected function configure()
     {
         $this
-            ->setName('sys:cron:run')
+            ->setName('sys:cron:schedule')
             ->addArgument('job', InputArgument::OPTIONAL, 'Job code')
-            ->setDescription('Runs a cronjob by job code');
+            ->setDescription('Schedule a cronjob for execution right now, by job code');
         $help = <<<HELP
 If no `job` argument is passed you can select a job from a list.
-See it in action: http://www.youtube.com/watch?v=QkzkLgrfNaM
 HELP;
         $this->setHelp($help);
     }
@@ -56,33 +55,20 @@ HELP;
             );
         }
 
-        $callback = array($model, $jobConfig['method']);
-
         $output->write(
-            '<info>Run </info><comment>' . $jobConfig['instance'] . '::' . $jobConfig['method'] . '</comment> '
+            '<info>Scheduling </info><comment>' . $jobConfig['instance'] . '::' . $jobConfig['method'] . '</comment> '
         );
 
-        try {
-            $schedule = $this->cronScheduleCollection->getNewEmptyItem();
-            $schedule
-                ->setJobCode($jobCode)
-                ->setStatus(Schedule::STATUS_RUNNING)
-                ->setExecutedAt(strftime('%Y-%m-%d %H:%M:%S', $this->timezone->scopeTimeStamp()))
-                ->save();
+        $createdAtTime = $this->timezone->scopeTimeStamp();
+        $scheduledAtTime = $createdAtTime;
 
-            $this->state->emulateAreaCode('crontab', $callback, array($schedule));
-
-            $schedule
-                ->setStatus(Schedule::STATUS_SUCCESS)
-                ->setFinishedAt(strftime('%Y-%m-%d %H:%M:%S', $this->timezone->scopeTimeStamp()))
-                ->save();
-        } catch (Exception $e) {
-            $schedule
-                ->setStatus(Schedule::STATUS_ERROR)
-                ->setMessages($e->getMessage())
-                ->setFinishedAt(strftime('%Y-%m-%d %H:%M:%S', $this->timezone->scopeTimeStamp()))
-                ->save();
-        }
+        $schedule = $this->cronScheduleCollection->getNewEmptyItem();
+        $schedule
+            ->setJobCode($jobCode)
+            ->setStatus(Schedule::STATUS_PENDING)
+            ->setCreatedAt(strftime('%Y-%m-%d %H:%M:%S', $createdAtTime))
+            ->setScheduledAt(strftime('%Y-%m-%d %H:%M', $scheduledAtTime))
+            ->save();
 
         $output->writeln('<info>done</info>');
     }

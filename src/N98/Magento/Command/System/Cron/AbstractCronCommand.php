@@ -3,38 +3,42 @@
 namespace N98\Magento\Command\System\Cron;
 
 use N98\Magento\Command\AbstractMagentoCommand;
+use Symfony\Component\Console\Helper\DialogHelper;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
 
 abstract class AbstractCronCommand extends AbstractMagentoCommand
 {
     /**
      * @var \Magento\Framework\App\State
      */
-    protected $_state;
-
-    /**
-     * @var \Magento\Framework\Event\ManagerInterface
-     */
-    protected $_eventManager;
+    protected $state;
 
     /**
      * @var \Magento\Cron\Model\ConfigInterface
      */
-    protected $_cronConfig;
+    protected $cronConfig;
 
     /**
      * @var \Magento\Framework\App\Config\ScopeConfigInterface
      */
-    protected $_scopeConfig;
+    protected $scopeConfig;
 
     /**
      * @var \Magento\Cron\Model\ResourceModel\Schedule\Collection
      */
-    protected $_cronScheduleCollection;
+    protected $cronScheduleCollection;
+
+    /**
+     * @var \Magento\Framework\Stdlib\DateTime\TimezoneInterface
+     */
+    protected $timezone;
 
     /**
      * @param \Magento\Framework\App\State $state
      * @param \Magento\Framework\Event\ManagerInterface $eventManager
      * @param \Magento\Cron\Model\ConfigInterface $cronConfig
+     * @param \Magento\Framework\Stdlib\DateTime\TimezoneInterface $timezone
      * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
      * @param \Magento\Cron\Model\ResourceModel\Schedule\Collection $cronScheduleCollection
      */
@@ -42,14 +46,15 @@ abstract class AbstractCronCommand extends AbstractMagentoCommand
         \Magento\Framework\App\State $state,
         \Magento\Framework\Event\ManagerInterface $eventManager,
         \Magento\Cron\Model\ConfigInterface $cronConfig,
+        \Magento\Framework\Stdlib\DateTime\TimezoneInterface $timezone,
         \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
         \Magento\Cron\Model\ResourceModel\Schedule\Collection $cronScheduleCollection
     ) {
-        $this->_state = $state;
-        $this->_eventManager = $eventManager;
-        $this->_cronConfig = $cronConfig;
-        $this->_scopeConfig = $scopeConfig;
-        $this->_cronScheduleCollection = $cronScheduleCollection;
+        $this->state = $state;
+        $this->cronConfig = $cronConfig;
+        $this->scopeConfig = $scopeConfig;
+        $this->cronScheduleCollection = $cronScheduleCollection;
+        $this->timezone = $timezone;
     }
 
     /**
@@ -59,7 +64,7 @@ abstract class AbstractCronCommand extends AbstractMagentoCommand
     {
         $table = array();
 
-        $jobs = $this->_cronConfig->getJobs();
+        $jobs = $this->cronConfig->getJobs();
 
         foreach ($jobs as $jobGroupCode => $jobGroup) {
             foreach ($jobGroup as $job) {
@@ -87,7 +92,7 @@ abstract class AbstractCronCommand extends AbstractMagentoCommand
      */
     protected function getJobConfig($jobCode)
     {
-        foreach ($this->_cronConfig->getJobs() as $jobGroup) {
+        foreach ($this->cronConfig->getJobs() as $jobGroup) {
             foreach ($jobGroup as $job) {
                 if ($job['name'] == $jobCode) {
                     return $job;
@@ -124,5 +129,36 @@ abstract class AbstractCronCommand extends AbstractMagentoCommand
         }
 
         return ['m' => '-', 'h' => '-', 'D' => '-', 'M' => '-', 'WD' => '-'];
+    }
+
+    /**
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     * @param array $jobs
+     * @return string
+     * @throws \InvalidArgumentException
+     * @throws \Exception
+     */
+    protected function askJobCode(InputInterface $input, OutputInterface $output, $jobs)
+    {
+        foreach ($jobs as $key => $job) {
+            $question[] = '<comment>[' . ($key + 1) . ']</comment> ' . $job['Job'] . PHP_EOL;
+        }
+        $question[] = '<question>Please select job: </question>' . PHP_EOL;
+
+        /** @var $dialog DialogHelper */
+        $dialog = $this->getHelper('dialog');
+        $jobCode = $dialog->askAndValidate(
+            $output,
+            $question,
+            function ($typeInput) use ($jobs) {
+                if (!isset($jobs[$typeInput - 1])) {
+                    throw new \InvalidArgumentException('Invalid job');
+                }
+                return $jobs[$typeInput - 1]['Job'];
+            }
+        );
+
+        return $jobCode;
     }
 }
