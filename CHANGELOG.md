@@ -5,6 +5,7 @@ RECENT CHANGES
 -----
 * Fix: Class names in data setup twig template (by Jurgisl, #262)
 * Fix: Regex in VariablesCommandTest (by Jürgen Thelen, #255)
+* Imp: Dispatch adminhtml_cache_flush_all with cache:flush (report by Viktor Steinwand, #263)
 * New: Add sys:cron:schedule command (by Pieter Hoste, #257)
 * New: Port of design:demo-notice command (by Jürgen Thelen, #69)
 * New: Build with PHP 7.1 for some jobs (by Tom Klingenberg, #256)
