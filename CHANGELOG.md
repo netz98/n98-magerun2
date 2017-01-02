@@ -3,6 +3,7 @@ RECENT CHANGES
 
 1.3.1
 -----
+* Fix: Support for db-setting arrays (e.g. driver_options) (by Tom Klingenberg)
 * Fix: Class names in data setup twig template (by Jurgisl, #262)
 * Fix: Regex in VariablesCommandTest (by Jürgen Thelen, #255)
 * Imp: Dispatch adminhtml_cache_flush_all with cache:flush (report by Viktor Steinwand, #263)

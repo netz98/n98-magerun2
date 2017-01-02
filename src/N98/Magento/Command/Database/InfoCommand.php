@@ -48,6 +48,12 @@ HELP;
 
         $settings = array();
         foreach ($this->dbSettings as $key => $value) {
+            if (is_array($value)) {
+                if (OutputInterface::VERBOSITY_DEBUG <= $output->getVerbosity() ) {
+                    $output->writeln(sprintf("<error>Skipping db-settings key '%s' as being array</error>", $key));
+                }
+                continue;
+            }
             $settings[$key] = (string) $value;
         }
 
