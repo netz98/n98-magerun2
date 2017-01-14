@@ -6,9 +6,7 @@ use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Framework\Filesystem;
 use Magento\Framework\Filesystem\Directory\Read;
 use Magento\Framework\Filesystem\Directory\WriteInterface;
-
 use N98\Magento\Command\AbstractMagentoCommand;
-
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -218,7 +216,6 @@ EOT;
     {
         $this->detectMagento($output, true);
         if (!$this->initMagento()) {
-
             return;
         }
         $this->output = $output;
@@ -232,5 +229,4 @@ EOT;
 
         $output->writeln($this->getMessages());
     }
-
 }

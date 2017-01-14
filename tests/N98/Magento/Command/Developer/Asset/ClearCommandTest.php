@@ -5,19 +5,15 @@ namespace N98\Magento\Command\Developer\Asset;
 use Magento\Framework\Filesystem;
 use Magento\Framework\Filesystem\Directory\Read;
 use Magento\Framework\Filesystem\Directory\Write;
-
 use N98\Magento\Application;
 use N98\Magento\Command\TestCase;
-
+use PHPUnit_Framework_MockObject_MockObject as MockObject;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Output\Output;
 use Symfony\Component\Console\Tester\CommandTester;
 
-use PHPUnit_Framework_MockObject_MockObject as MockObject;
-
 class ClearCommandTest extends TestCase
 {
-
     /**
      * @param MockObject|ClearCommand $sut
      * @param array $params
@@ -44,7 +40,7 @@ class ClearCommandTest extends TestCase
     {
         return [
             ['existing-directory', true],
-            ['non-existing-directory', false]
+            ['non-existing-directory', false],
         ];
     }
 
@@ -104,25 +100,25 @@ class ClearCommandTest extends TestCase
                 'Magento/luma',
                 ['var/view_preprocessed/css/frontend/Magento/luma'],
                 1,
-                ['var/view_preprocessed/css/frontend/Magento/luma']
+                ['var/view_preprocessed/css/frontend/Magento/luma'],
             ],
             [
                 'Magento/luma',
                 ['var/view_preprocessed/css/frontend/Magento/Luma'],
                 0,
-                []
+                [],
             ],
             [
                 'Magento/luma',
                 ['var/view_preprocessed/css/frontend/Magento/lumas'],
                 0,
-                []
+                [],
             ],
             [
                 'Magento/luma',
                 ['var/view_preprocessed/css/frontend/Magento/luma/en_US'],
                 0,
-                []
+                [],
             ],
         ];
     }
@@ -265,7 +261,7 @@ class ClearCommandTest extends TestCase
                 '.',
                 '..',
                 'foo',
-                'bar'
+                'bar',
             ]);
 
         /** @var MockObject|ClearCommand $sut */
@@ -302,7 +298,7 @@ class ClearCommandTest extends TestCase
                 'getFilesystem',
                 'getDirectoryWrite',
                 'findThemePaths',
-                'deleteDirectory'
+                'deleteDirectory',
             ])
             ->getMock();
         $sut
@@ -314,7 +310,7 @@ class ClearCommandTest extends TestCase
             ->method('findThemePaths')
             ->willReturn([
                 'var/view_preprocessed/css/frontend/Magento/Luma',
-                'var/view_preprocessed/source/frontend/Magento/Luma'
+                'var/view_preprocessed/source/frontend/Magento/Luma',
             ]);
         $sut
             ->expects($this->exactly(2))
@@ -331,7 +327,7 @@ class ClearCommandTest extends TestCase
     {
         return [
             [['command' => 'dev:asset:clear', '--theme' => ['Magento/luma']]],
-            [['command' => 'dev:asset:clear', '--theme' => ['Magento/luma', 'Magento/backend']]]
+            [['command' => 'dev:asset:clear', '--theme' => ['Magento/luma', 'Magento/backend']]],
         ];
     }
 
@@ -378,7 +374,7 @@ class ClearCommandTest extends TestCase
     {
         return [
             [['command' => 'dev:asset:clear', '--theme' => ['Magento/luma']], 'clearThemes'],
-            [['command' => 'dev:asset:clear'], 'clearAllThemes']
+            [['command' => 'dev:asset:clear'], 'clearAllThemes'],
         ];
     }
 
@@ -400,5 +396,4 @@ class ClearCommandTest extends TestCase
 
         $this->mockedCommandExecute($sut, $params);
     }
-
 }
