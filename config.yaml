@@ -70,7 +70,7 @@ commands:
     - N98\Magento\Command\Database\StatusCommand
     - N98\Magento\Command\Database\Maintain\CheckTablesCommand
     - N98\Magento\Command\Database\InfoCommand
-    - N98\Magento\Command\Design\DemoNoticeCommand
+    - N98\Magento\Command\Developer\Asset\ClearCommand
     - N98\Magento\Command\Developer\ConsoleCommand
     - N98\Magento\Command\Developer\Module\CreateCommand
     - N98\Magento\Command\Developer\Report\CountCommand
@@ -91,7 +91,6 @@ commands:
     - N98\Magento\Command\System\Cron\HistoryCommand
     - N98\Magento\Command\System\Cron\ListCommand
     - N98\Magento\Command\System\Cron\RunCommand
-    - N98\Magento\Command\System\Cron\ScheduleCommand
     - N98\Magento\Command\System\InfoCommand
     - N98\Magento\Command\System\MaintenanceCommand
     - N98\Magento\Command\System\Setup\ChangeVersionCommand

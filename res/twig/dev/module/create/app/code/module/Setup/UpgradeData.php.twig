@@ -4,13 +4,13 @@ namespace {{ vendorNamespace }}\{{ moduleName }}\Setup;
 
 use Magento\Framework\Setup\UpgradeDataInterface;
 use Magento\Framework\Setup\ModuleContextInterface;
-use Magento\Framework\Setup\ModuleDataSetupInterface;
+use Magento\Framework\Setup\SchemaSetupInterface;
 
 /**
  * {@inheritdoc}
  * @codeCoverageIgnore
  */
-class UpgradeData implements UpgradeDataInterface
+class UpgradeSchema implements UpgradeDataInterface
 {
     /**
      * {@inheritdoc}

@@ -3,64 +3,73 @@
 namespace N98\Magento\Command\Config;
 
 use N98\Magento\Command\TestCase;
+use Symfony\Component\Console\Tester\CommandTester;
 
 class DeleteCommandTest extends TestCase
 {
-    /**
-     * @test
-     */
-    public function deleteOne()
-    {
-        $input = array(
-            'command' => 'config:set',
-            'path'    => 'n98_magerun/foo/bar',
-            'value'   => '1234',
-        );
-        $this->assertDisplayContains($input, 'n98_magerun/foo/bar => 1234');
-
-        $input = array(
-            'command' => 'config:delete',
-            'path'    => 'n98_magerun/foo/bar',
-        );
-        $this->assertDisplayContains($input, '| n98_magerun/foo/bar | default | 0  |');
-    }
-
-    /**
-     * @test
-     */
-    public function deleteAll()
-    {
-        $input = array(
-            'command'    => 'config:set',
-            'path'       => 'n98_magerun/foo/bar',
-            '--scope'    => 'stores',
-            '--scope-id' => null, # placeholder
-            'value'      => 'fake-value',
-        );
-
-        foreach ($this->getStores() as $store) {
-            $input['--scope-id'] = $store->getId();
-            $this->assertDisplayContains($input, "n98_magerun/foo/bar => fake-value");
-        }
-
-        $input = array(
-            'command' => 'config:delete',
-            'path'    => 'n98_magerun/foo/bar',
-            '--all'   => true,
-        );
-        $this->assertDisplayContains($input, '| n98_magerun/foo/bar | stores   |');
-    }
-
-    /**
-     * @return array|\Magento\Store\Api\Data\StoreInterface[]
-     */
-    private function getStores()
+    public function testExecute()
     {
         $application = $this->getApplication();
+        $application->add(new DeleteCommand());
+        $setCommand = $this->getApplication()->find('config:set');
+        $deleteCommand = $this->getApplication()->find('config:delete');
+
+        /**
+         * Add a new entry
+         */
+        $commandTester = new CommandTester($setCommand);
+        $commandTester->execute(
+            array(
+                'command' => $setCommand->getName(),
+                'path'    => 'n98_magerun/foo/bar',
+                'value'   => '1234',
+            )
+        );
+        $this->assertContains('n98_magerun/foo/bar => 1234', $commandTester->getDisplay());
+
+        $commandTester = new CommandTester($deleteCommand);
+        $commandTester->execute(
+            array(
+                'command' => $deleteCommand->getName(),
+                'path'    => 'n98_magerun/foo/bar',
+            )
+        );
+        $this->assertContains('| n98_magerun/foo/bar | default | 0  |', $commandTester->getDisplay());
 
         /* @var $storeManager \Magento\Store\Model\StoreManager */
         $storeManager = $application->getObjectManager()->get('Magento\Store\Model\StoreManager');
 
-        return $storeManager->getStores();
+        /**
+         * Delete all
+         */
+        foreach ($storeManager->getStores() as $store) {
+            // add multiple entries
+            $commandTester = new CommandTester($setCommand);
+            $commandTester->execute(
+                array(
+                    'command'    => $setCommand->getName(),
+                    'path'       => 'n98_magerun/foo/bar',
+                    '--scope'    => 'stores',
+                    '--scope-id' => $store->getId(),
+                    'value'      => 'store-' . $store->getId(),
+                )
+            );
+        }
+
+        $commandTester = new CommandTester($deleteCommand);
+        $commandTester->execute(
+            array(
+                'command' => $deleteCommand->getName(),
+                'path'    => 'n98_magerun/foo/bar',
+                '--all'   => true,
+            )
+        );
+
+        foreach ($storeManager->getStores() as $store) {
+            $this->assertContains(
+                '| n98_magerun/foo/bar | stores   | ' . $store->getId() . '  |',
+                $commandTester->getDisplay()
+            );
+        }
     }
 }

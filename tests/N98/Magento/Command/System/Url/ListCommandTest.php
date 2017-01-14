@@ -3,22 +3,30 @@
 namespace N98\Magento\Command\System\Url;
 
 use N98\Magento\Command\TestCase;
+use Symfony\Component\Console\Tester\CommandTester;
 
 class ListCommandTest extends TestCase
 {
     public function testExecute()
     {
-        $input = array(
-            'linetemplate'     => 'prefix {url} suffix',
-            'command'          => 'sys:url:list',
-            'stores'           => 0, // admin store
-            '--add-categories' => true,
-            '--add-products'   => true,
-            '--add-cmspages'   => true,
+        $application = $this->getApplication();
+        $application->add(new ListCommand());
+        $command = $this->getApplication()->find('sys:url:list');
+
+        $commandTester = new CommandTester($command);
+        $commandTester->execute(
+            array(
+                'command'          => $command->getName(),
+                'stores'           => 0, // admin store
+                'linetemplate'     => 'prefix {url} suffix',
+                '--add-categories' => true,
+                '--add-products'   => true,
+                '--add-cmspages'   => true,
+            )
         );
 
-        $this->assertDisplayContains($input, 'prefix');
-        $this->assertDisplayContains($input, 'http');
-        $this->assertDisplayContains($input, 'suffix');
+        $this->assertRegExp('/prefix/', $commandTester->getDisplay());
+        $this->assertRegExp('/http/', $commandTester->getDisplay());
+        $this->assertRegExp('/suffix/', $commandTester->getDisplay());
     }
 }
