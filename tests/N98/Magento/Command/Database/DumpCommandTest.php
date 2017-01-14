@@ -5,48 +5,25 @@ namespace N98\Magento\Command\Database;
 use N98\Magento\Command\TestCase;
 use SplFileInfo;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Tester\CommandTester;
 
 /**
  * @see \N98\Magento\Command\Database\DumpCommand
  */
 class DumpCommandTest extends TestCase
 {
-    /**
-     * @return Command
-     */
-    protected function getCommand()
-    {
-        $dumpCommand = new DumpCommand();
-        if (!$dumpCommand->isEnabled()) {
-            $this->markTestSkipped('DumpCommand is not enabled.');
-        }
-
-        $application = $this->getApplication();
-        $application->add($dumpCommand);
-        $command = $this->getApplication()->find('db:dump');
-
-        return $command;
-    }
-
     public function testExecute()
     {
-        $command = $this->getCommand();
-
-        $commandTester = new CommandTester($command);
-        $commandTester->execute(
-            array(
-                'command'        => $command->getName(),
-                '--add-time'     => true,
-                '--only-command' => true,
-                '--force'        => true,
-                '--compression'  => 'gz',
-            )
+        $input = array(
+            'command'        => 'db:dump',
+            '--add-time'     => true,
+            '--only-command' => true,
+            '--force'        => true,
+            '--compression'  => 'gz',
         );
 
-        $this->assertRegExp('/mysqldump/', $commandTester->getDisplay());
-        $this->assertRegExp('/\.sql/', $commandTester->getDisplay());
-        $this->assertContains(".sql.gz", $commandTester->getDisplay());
+        $this->assertDisplayContains($input, 'mysqldump');
+        $this->assertDisplayContains($input, '.sql');
+        $this->assertDisplayContains($input, ".sql.gz");
     }
 
     /**
@@ -82,10 +59,8 @@ class DumpCommandTest extends TestCase
      */
     public function filenamePatterns($regex, array $options)
     {
-        $command = $this->getCommand();
-
         $mandatory = array(
-            'command'               => $command->getName(),
+            'command'               => 'db:dump',
             '--force'               => true,
             '--print-only-filename' => true,
             '--dry-run'             => null,
@@ -95,54 +70,44 @@ class DumpCommandTest extends TestCase
             '--add-time' => true,
         );
 
-        $commandTester = new CommandTester($command);
-        $commandTester->execute($mandatory + $options + $defaults);
-        $this->assertRegExp($regex, $commandTester->getDisplay());
+        $this->assertDisplayRegExp($mandatory + $options + $defaults, $regex);
     }
 
     public function testWithStripOption()
     {
-        $command = $this->getCommand();
-
-        $this->getApplication()->initMagento();
-
-        $commandTester = new CommandTester($command);
-        $commandTester->execute(
-            array(
-                'command'        => $command->getName(),
-                '--add-time'     => true,
-                '--only-command' => true,
-                '--force'        => true,
-                '--strip'        => '@development not_existing_table_1',
-                '--compression'  => 'gzip',
-            )
+        $input = array(
+            'command'        => 'db:dump',
+            '--add-time'     => true,
+            '--only-command' => true,
+            '--force'        => true,
+            '--strip'        => '@development not_existing_table_1',
+            '--compression'  => 'gzip',
         );
 
         $dbConfig = $this->getDatabaseConnection()->getConfig();
         $db = $dbConfig['dbname'];
 
-        $this->assertRegExp("/--ignore-table=$db.customer_entity/", $commandTester->getDisplay());
-        $this->assertRegExp("/--ignore-table=$db.customer_address_entity/", $commandTester->getDisplay());
-        $this->assertRegExp("/--ignore-table=$db.sales_order/", $commandTester->getDisplay());
-        $this->assertRegExp("/--ignore-table=$db.sales_order_item/", $commandTester->getDisplay());
-        $this->assertRegExp("/--ignore-table=$db.sales_order_item/", $commandTester->getDisplay());
-        $this->assertNotContains("not_existing_table_1", $commandTester->getDisplay());
-        $this->assertContains(".sql.gz", $commandTester->getDisplay());
+        $this->assertDisplayRegExp($input, "/--ignore-table=$db.customer_entity/");
+        $this->assertDisplayRegExp($input, "/--ignore-table=$db.customer_address_entity/");
+        $this->assertDisplayRegExp($input, "/--ignore-table=$db.sales_order/");
+        $this->assertDisplayRegExp($input, "/--ignore-table=$db.sales_order_item/");
+        $this->assertDisplayRegExp($input, "/--ignore-table=$db.sales_order_item/");
+        $this->assertDisplayNotContains($input, "not_existing_table_1");
+        $this->assertDisplayContains($input, ".sql.gz");
 
         /**
          * Uncompressed
          */
-        $commandTester = new CommandTester($command);
-        $commandTester->execute(
+        $this->assertDisplayNotContains(
             array(
-                'command'        => $command->getName(),
+                'command'        => 'db:dump',
                 '--add-time'     => true,
                 '--only-command' => true,
                 '--force'        => true,
                 '--strip'        => '@development',
-            )
+            ),
+            ".sql.gz"
         );
-        $this->assertNotContains(".sql.gz", $commandTester->getDisplay());
     }
 
     /**
@@ -157,11 +122,9 @@ class DumpCommandTest extends TestCase
         }
         $this->assertFalse(is_readable($dumpFile), 'Precondition that the file does not exists');
 
-        $command = $this->getCommand();
-        $commandTester = new CommandTester($command);
-        $commandTester->execute(
+        $this->assertExecute(
             array(
-                'command'  => $command->getName(),
+                'command'  => 'db:dump',
                 '--strip'  => '@stripped',
                 'filename' => $dumpFile,
             )

@@ -3,36 +3,27 @@
 namespace N98\Magento\Command\Developer;
 
 use N98\Magento\Command\TestCase;
-use Symfony\Component\Console\Tester\CommandTester;
 
 class TemplateHintsBlocksCommandTest extends TestCase
 {
     public function testExecute()
     {
-        $application = $this->getApplication();
-        $application->add(new TemplateHintsBlocksCommand());
-        $application->setAutoExit(false);
-        $command = $this->getApplication()->find('dev:template-hints-blocks');
-
-        $commandTester = new CommandTester($command);
-        $commandTester->execute(
+        $this->assertDisplayContains(
             array(
-                'command' => $command->getName(),
+                'command' => 'dev:template-hints-blocks',
                 '--on'    => true,
                 'store'   => 'admin',
-            )
+            ),
+            'Template Hints Blocks enabled'
         );
-        $this->assertRegExp('/Template Hints Blocks enabled/', $commandTester->getDisplay());
 
-        $commandTester = new CommandTester($command);
-        $commandTester->execute(
+        $this->assertDisplayContains(
             array(
-                'command' => $command->getName(),
+                'command' => 'dev:template-hints-blocks',
                 '--off'   => true,
                 'store'   => 'admin',
-            )
+            ),
+            'Template Hints Blocks disabled'
         );
-
-        $this->assertRegExp('/Template Hints Blocks disabled/', $commandTester->getDisplay());
     }
 }

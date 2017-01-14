@@ -13,39 +13,48 @@ class CreateCommandTest extends TestCase
      */
     public function testExecute()
     {
-        $command = $this->_getCommand();
         $generatedEmail = uniqid() . '@example.com';
 
-        $storeManager = $this->getApplication()->getObjectManager()->get(StoreManagerInterface::class);
-        $website = $storeManager->getWebsite();
-
-        $commandTester = new CommandTester($command);
-        $options = array(
-            'command'   => $command->getName(),
+        $input = array(
+            'command'   => 'customer:create',
             'email'     => $generatedEmail,
             'password'  => 'password123',
             'firstname' => 'John',
             'lastname'  => 'Doe',
-            'website'   => $website->getCode(),
+            'website'   => $this->getWebsiteCode(),
         );
-        $commandTester->execute($options);
-        $this->assertRegExp('/successfully created/', $commandTester->getDisplay());
+        $this->assertDisplayContains($input, 'successfully created');
 
         // Format option
-        $commandTester = new CommandTester($command);
         $generatedEmail = uniqid() . '@example.com';
-        $options['email'] = $generatedEmail;
-        $options['--format'] = 'csv';
-        $this->assertEquals(0, $commandTester->execute($options));
-        $this->assertContains('email,password,firstname,lastname', $commandTester->getDisplay());
-        $this->assertContains($generatedEmail . ',password123,John,Doe', $commandTester->getDisplay());
+        $input['email'] = $generatedEmail;
+        $input['--format'] = 'csv';
+
+        $this->assertDisplayContains($input, 'email,password,firstname,lastname');
+        $this->assertdisplayContains($input, $generatedEmail . ',password123,John,Doe');
+    }
+
+    /**
+     * @return string
+     */
+    private function getWebsiteCode()
+    {
+        $storeManager = $this->getApplication()->getObjectManager()->get(StoreManagerInterface::class);
+        $website = $storeManager->getWebsite();
+
+        return $website->getCode();
     }
 
     public function testWithWrongPassword()
     {
         $this->markTestIncomplete('We currently cannot deal with interactive commands');
 
-        $command = $this->_getCommand();
+        $application = $this->getApplication();
+        $application->add(new CreateCommand());
+
+        // try to create a customer with a password < 6 chars
+        $command = $this->getApplication()->find('customer:create');
+
         $generatedEmail = uniqid() . '@example.com';
 
         // mock dialog
@@ -67,20 +76,9 @@ class CreateCommandTest extends TestCase
         );
         $commandTester = new CommandTester($command);
         $commandTester->execute($options);
-        $this->assertRegExp('/The password must have at least 6 characters. Leading or trailing spaces will be ignored./', $commandTester->getDisplay());
-    }
-
-    /**
-     * @return CreateCommand
-     */
-    protected function _getCommand()
-    {
-        $application = $this->getApplication();
-        $application->add(new CreateCommand());
-
-        // try to create a customer with a password < 6 chars
-        $command = $this->getApplication()->find('customer:create');
-
-        return $command;
+        $this->assertRegExp(
+            '/The password must have at least 6 characters. Leading or trailing spaces will be ignored./',
+            $commandTester->getDisplay()
+        );
     }
 }

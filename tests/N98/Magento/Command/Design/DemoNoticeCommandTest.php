@@ -1,29 +1,29 @@
 <?php
 
-namespace N98\Magento\Command\Developer;
+namespace N98\Magento\Command\Design;
 
 use N98\Magento\Command\TestCase;
 
-class SymlinksCommandTest extends TestCase
+class DemoNoticeCommandTest extends TestCase
 {
     public function testExecute()
     {
         $this->assertDisplayContains(
             array(
-                'command'  => 'dev:symlinks',
+                'command'  => 'design:demo-notice',
                 '--global' => true,
                 '--on'     => true,
             ),
-            'Symlinks allowed'
+            'Demo Notice enabled'
         );
 
         $this->assertDisplayContains(
             array(
-                'command'  => 'dev:symlinks',
+                'command'  => 'design:demo-notice',
                 '--global' => true,
                 '--off'    => true,
             ),
-            'Symlinks denied'
+            'Demo Notice disabled'
         );
     }
 }

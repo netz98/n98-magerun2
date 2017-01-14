@@ -3,69 +3,45 @@
 namespace N98\Magento\Command\Database;
 
 use N98\Magento\Command\TestCase;
-use Symfony\Component\Console\Tester\CommandTester;
 
 class StatusCommandTest extends TestCase
 {
-    /**
-     * @param array $options
-     *
-     * @return CommandTester
-     */
-    protected function getCommand(array $options)
-    {
-        $application = $this->getApplication();
-        $application->add(new StatusCommand());
-        $command = $this->getApplication()->find('db:status');
-
-        $commandTester = new CommandTester($command);
-        $commandTester->execute(
-            array_merge(array(
-                'command' => $command->getName(),
-            ), $options)
-        );
-        return $commandTester;
-    }
-
     public function testExecute()
     {
-        $commandTester = $this->getCommand(array(
+        $input = array(
+            'command'  => 'db:status',
             '--format' => 'csv',
-        ));
-        $display = $commandTester->getDisplay();
-
-        $this->assertContains('Threads_connected', $display);
-        $this->assertContains('Innodb_buffer_pool_wait_free', $display);
-        $this->assertContains('InnoDB Buffer Pool hit', $display);
-        $this->assertContains('Full table scans', $display);
+        );
+        $this->assertDisplayContains($input, 'Threads_connected');
+        $this->assertDisplayContains($input, 'Innodb_buffer_pool_wait_free');
+        $this->assertDisplayContains($input, 'InnoDB Buffer Pool hit');
+        $this->assertDisplayContains($input, 'Full table scans');
     }
 
     public function testSearch()
     {
-        $commandTester = $this->getCommand(array(
+        $input = array(
+            'command'  => 'db:status',
             '--format' => 'csv',
             'search'   => 'Innodb%',
-        ));
-
-        $display = $commandTester->getDisplay();
-
-        $this->assertContains('Innodb_buffer_pool_read_ahead_rnd', $display);
-        $this->assertContains('Innodb_buffer_pool_wait_free', $display);
-        $this->assertContains('InnoDB Buffer Pool hit', $display);
-        $this->assertContains('Innodb_dblwr_pages_written', $display);
-        $this->assertContains('Innodb_os_log_written', $display);
+        );
+        $this->assertDisplayContains($input, 'Innodb_buffer_pool_read_ahead_rnd');
+        $this->assertDisplayContains($input, 'Innodb_buffer_pool_wait_free');
+        $this->assertDisplayContains($input, 'InnoDB Buffer Pool hit');
+        $this->assertDisplayContains($input, 'Innodb_dblwr_pages_written');
+        $this->assertDisplayContains($input, 'Innodb_os_log_written');
     }
 
     public function testRounding()
     {
-        $commandTester = $this->getCommand(array(
+        $this->assertDisplayRegExp(
+            array(
+            'command'    => 'db:status',
             '--format'   => 'csv',
             '--rounding' => '2',
             'search'     => '%size%',
-        ));
-        $this->assertRegExp(
-            '~Innodb_page_size,[0-9\.]+K,~',
-            $commandTester->getDisplay()
+            ),
+            '~Innodb_page_size,[0-9\.]+K,~'
         );
     }
 }

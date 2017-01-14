@@ -3,7 +3,6 @@
 namespace N98\Magento\Command\Cache;
 
 use N98\Magento\Command\TestCase;
-use Symfony\Component\Console\Tester\CommandTester;
 
 class ListCommandTest extends TestCase
 {
@@ -25,10 +24,10 @@ class ListCommandTest extends TestCase
      */
     public function testTypesIsNotEmpty()
     {
-        $commandTester = new CommandTester($this->command);
-        $commandTester->execute(array('command' => $this->command->getName()));
-
-        $this->assertNotEmpty($this->command->getTypes());
+        /* @var $command ListCommand */
+        $command = $this->assertExecute('cache:list')->getCommand();
+        $this->assertNotEmpty($command->getTypes())
+        ;
     }
 
     /**
@@ -36,10 +35,10 @@ class ListCommandTest extends TestCase
      */
     public function testEnabledFilter()
     {
-        $commandTester = new CommandTester($this->command);
-        $commandTester->execute(array('command' => $this->command->getName(), '--enabled' => 1));
+        /* @var $command ListCommand */
+        $command = $this->assertExecute(array('command' => 'cache:list', '--enabled' => 1))->getCommand();
 
-        $cacheTypes = $this->command->getTypes();
+        $cacheTypes = $command->getTypes();
         $disabledCacheTypes = 0;
 
         foreach ($cacheTypes as $cacheType) {
