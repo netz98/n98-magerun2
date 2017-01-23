@@ -9,6 +9,7 @@ use N98\Magento\Command\CommandAware;
 use N98\Magento\Command\CommandConfigAware;
 use N98\Magento\Command\System\Check\Result;
 use N98\Magento\Command\System\Check\ResultCollection;
+use N98\Util\Console\Helper\InjectionHelper;
 use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
 use N98\Util\Unicode\Charset;
 use Symfony\Component\Console\Input\InputInterface;
@@ -181,7 +182,9 @@ HELP;
      */
     private function _createCheck($checkGroupClass)
     {
-        $check = $this->getObjectManager()->get($checkGroupClass);
+        /* @var $injection InjectionHelper */
+        $injection = $this->getHelper('injection');
+        $check = $injection->constructorInjection($checkGroupClass, $this->getObjectManager());
 
         if ($check instanceof CommandAware) {
             $check->setCommand($this);

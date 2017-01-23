@@ -26,48 +26,51 @@ class InjectionHelper extends AbstractHelper
     public function methodInjection($object, $methodName, ObjectManager $objectManager)
     {
         $parameters = $this->getMethod($object, $methodName);
-
-        $argumentsToInject = [];
-        foreach ($parameters as $parameter) {
-            $argumentsToInject[] = $objectManager->get($parameter[1]);
-        }
+        $argumentsToInject = array_map([$objectManager, 'get'], $parameters);
 
         call_user_func_array([$object, $methodName], $argumentsToInject);
     }
 
+    public function constructorInjection($class, ObjectManager $objectManager)
+    {
+        $parameters = $this->getMethod($class, '__construct');
+        $argumentsToInject = array_map([$objectManager, 'get'], $parameters);
+
+        $refl = new \ReflectionClass($class);
+        $object = $refl->newInstanceArgs($argumentsToInject);
+
+        return $object;
+    }
+
     /**
-     * Read class constructor signature
+     * Read class method signature
      *
-     * @param Object $object
+     * @param string $class
      * @param string $methodName
-     * @return array|null
+     * @return array
      * @throws \ReflectionException
      */
-    protected function getMethod($object, $methodName)
+    protected function getMethod($class, $methodName)
     {
-        $object = new \ReflectionObject($object);
-        $result = null;
-        $method = $object->getMethod($methodName);
-        if ($method) {
-            $result = [];
-            /** @var $parameter \ReflectionParameter */
-            foreach ($method->getParameters() as $parameter) {
-                try {
-                    $result[] = [
-                        $parameter->getName(),
-                        $parameter->getClass() !== null ? $parameter->getClass()->getName() : null,
-                        !$parameter->isOptional(),
-                        $parameter->isOptional()
-                            ? ($parameter->isDefaultValueAvailable() ? $parameter->getDefaultValue() : null)
-                            : null,
-                    ];
-                } catch (\ReflectionException $e) {
-                    $message = $e->getMessage();
-                    throw new \ReflectionException($message, 0, $e);
-                }
-            }
+        $refl = new \ReflectionClass($class);
+        if (!$refl->hasMethod($methodName)) {
+            return [];
         }
 
+        $method = $refl->getMethod($methodName);
+        if (!$method) {
+            throw new \InvalidArgumentException(
+                sprintf("Unable to obtain method \"%s\" for class \"%s\"", $class, $methodName)
+            );
+        }
+
+        $result = array_map([$this, 'getParameterClass'], $method->getParameters());
+
         return $result;
+    }
+
+    private function getParameterClass(\ReflectionParameter $parameter)
+    {
+        return $parameter->getClass() !== null ? $parameter->getClass()->getName() : null;
     }
 }
