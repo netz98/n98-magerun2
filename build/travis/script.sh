@@ -19,6 +19,24 @@ case "${SCRIPT_JOB}" in
     echo "run phpunit in magento 2 mode:"
     php -f "./${MAGENTO_VERSION}/bin/magento" deploy:mode:show
     vendor/bin/phpunit --debug
+
+    # run phpunit in magento2 mode "production"
+    echo "memory_limit=-1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
+    (
+      cd "./${MAGENTO_VERSION}"
+      rm -rf var/{cache,di,generation,view_preprocessed}
+      php -f bin/magento -- deploy:mode:set --skip-compilation production
+      php -f bin/magento -- setup:static-content:deploy
+      php -f bin/magento -- setup:di:compile
+      if ! php -f bin/magento -- deploy:mode:show | grep -q production; then
+        >&2 echo "error: failed to switch to production mode"
+        exit 1
+      fi
+    )
+    echo "run phpunit in magento 2 mode:"
+    php -f "./${MAGENTO_VERSION}/bin/magento" deploy:mode:show
+    vendor/bin/phpunit --debug
+
     ;;
 
     "PHP-CS-FIXER" )
