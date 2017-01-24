@@ -31,6 +31,12 @@ class InjectionHelper extends AbstractHelper
         call_user_func_array([$object, $methodName], $argumentsToInject);
     }
 
+    /**
+     * @param string $class
+     * @param ObjectManager $objectManager
+     *
+     * @return object
+     */
     public function constructorInjection($class, ObjectManager $objectManager)
     {
         $parameters = $this->getMethod($class, '__construct');
