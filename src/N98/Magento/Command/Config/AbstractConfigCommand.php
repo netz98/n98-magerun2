@@ -7,6 +7,8 @@ use N98\Magento\Command\AbstractMagentoCommand;
 
 abstract class AbstractConfigCommand extends AbstractMagentoCommand
 {
+    const DISPLAY_NULL_UNKOWN_VALUE = "NULL (NULL/\"unkown\" value)";
+
     /**
      * \Magento\Framework\App\Config\Storage\WriterInterface
      */
@@ -83,13 +85,17 @@ abstract class AbstractConfigCommand extends AbstractMagentoCommand
      */
     protected function _formatValue($value, $encryptionType)
     {
-        if ($encryptionType == 'encrypt') {
-            $value = $this->getEncryptionModel()->encrypt($value);
-        } elseif ($encryptionType == 'decrypt') {
-            $value = $this->getEncryptionModel()->decrypt($value);
+        if ($value === null) {
+            $formatted = $value;
+        } elseif ($encryptionType === 'encrypt') {
+            $formatted = $this->getEncryptionModel()->encrypt($value);
+        } elseif ($encryptionType === 'decrypt') {
+            $formatted = $this->getEncryptionModel()->decrypt($value);
+        } else {
+            $formatted = $value;
         }
 
-        return $value;
+        return $formatted;
     }
 
     /**
