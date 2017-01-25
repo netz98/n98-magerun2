@@ -3,11 +3,13 @@ RECENT CHANGES
 
 1.3.1
 -----
+* Fix: Magento object manager usage in production mode (by Tom Klingenberg, #241)
 * Fix: Support for db-setting arrays (e.g. driver_options) (by Tom Klingenberg)
 * Fix: Class names in data setup twig template (by Jurgisl, #262)
 * Fix: Regex in VariablesCommandTest (by Jürgen Thelen, #255)
 * Imp: Better handle incomplete Magento 2 installments (by Tom Klingenberg)
 * Imp: Dispatch adminhtml_cache_flush_all with cache:flush (report by Viktor Steinwand, #263)
+* New: Add current Magento2 versions (by Tom Klingenberg)
 * New: Add sys:cron:schedule command (by Pieter Hoste, #257)
 * New: Port of design:demo-notice command (by Jürgen Thelen, #69)
 * New: Build with PHP 7.1 for some jobs (by Tom Klingenberg, #256)
