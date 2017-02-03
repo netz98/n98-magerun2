@@ -7,6 +7,92 @@ use Symfony\Component\Console\Tester\CommandTester;
 
 class GetCommandTest extends TestCase
 {
+    /**
+     * @test
+     */
+    public function nullValues()
+    {
+        $this->assertDisplayRegExp(
+            array(
+                'command'   => 'config:set',
+                '--no-null' => null,
+                'path'      => 'n98_magerun/foo/bar',
+                'value'     => 'NULL',
+            ),
+            '~^n98_magerun/foo/bar => NULL$~'
+        );
+
+        $this->assertDisplayContains(
+            array(
+                'command'          => 'config:get',
+                '--magerun-script' => null,
+                'path'             => 'n98_magerun/foo/bar',
+            ),
+            'config:set --no-null --scope-id=0 --scope=default'
+        );
+
+        $this->assertDisplayContains(
+            array(
+                'command' => 'config:set',
+                'path'    => 'n98_magerun/foo/bar',
+                'value'   => 'NULL',
+            ),
+            'n98_magerun/foo/bar => NULL (NULL/"unkown" value)'
+        );
+
+        $this->assertDisplayContains(
+            array(
+                'command' => 'config:get',
+                'path'    => 'n98_magerun/foo/bar',
+            ),
+            '| n98_magerun/foo/bar | default | 0        | NULL (NULL/"unkown" value) |'
+        );
+
+        $this->assertDisplayContains(
+            array(
+                'command'          => 'config:get',
+                '--magerun-script' => true, # needed to not use the previous output cache
+                'path'             => 'n98_magerun/foo/bar',
+            ),
+            'config:set --scope-id=0 --scope=default -- \'n98_magerun/foo/bar\' NULL'
+        );
+    }
+
+    public function provideFormatsWithNull()
+    {
+        return array(
+            array(null, '| n98_magerun/foo/bar | default | 0        | NULL (NULL/"unkown" value) |'),
+            array('csv', 'n98_magerun/foo/bar,default,0,NULL'),
+            array('json', '"Value": null'),
+            array('xml', '<Value>NULL</Value>'),
+        );
+    }
+
+    /**
+     * @test
+     * @dataProvider provideFormatsWithNull
+     */
+    public function nullWithFormat($format, $expected)
+    {
+        $this->assertDisplayContains(
+            array(
+                'command' => 'config:set',
+                'path'    => 'n98_magerun/foo/bar',
+                'value'   => 'NULL',
+            ),
+            'n98_magerun/foo/bar => NULL (NULL/"unkown" value)'
+        );
+
+        $this->assertDisplayContains(
+            array(
+                'command'  => 'config:get',
+                '--format' => $format,
+                'path'     => 'n98_magerun/foo/bar',
+            ),
+            $expected
+        );
+    }
+
     public function testExecute()
     {
         $application = $this->getApplication();

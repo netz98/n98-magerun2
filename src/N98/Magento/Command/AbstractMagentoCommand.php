@@ -10,6 +10,7 @@ use Mage;
 use Magento\Framework\ObjectManager\ObjectManager;
 use N98\Magento\Command\SubCommand\ConfigBag;
 use N98\Magento\Command\SubCommand\SubCommandFactory;
+use N98\Util\Console\Helper\InjectionHelper;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\FormatterHelper;
 use Symfony\Component\Console\Input\InputInterface;
@@ -446,6 +447,8 @@ abstract class AbstractMagentoCommand extends Command
         if (method_exists($this, 'inject')) {
             $this->detectMagento($output);
             $this->initMagento();
+
+            /* @var $injectionHelper InjectionHelper */
             $injectionHelper = $this->getHelper('injection');
             $injectionHelper->methodInjection(
                 $this,
