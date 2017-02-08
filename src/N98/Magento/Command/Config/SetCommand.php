@@ -44,7 +44,8 @@ class SetCommand extends AbstractConfigCommand
                 null,
                 InputOption::VALUE_NONE,
                 "Do not treat value NULL as " . self::DISPLAY_NULL_UNKOWN_VALUE . " value"
-            );
+            )
+        ;
 
         $help = <<<HELP
 Set a store config value by path.
@@ -66,8 +67,9 @@ HELP;
             return;
         }
 
-        $this->_validateScopeParam($input->getOption('scope'));
-        $scopeId = $this->_convertScopeIdParam($input->getOption('scope'), $input->getOption('scope-id'));
+        $scope = $input->getOption('scope');
+        $this->_validateScopeParam($scope);
+        $scopeId = $this->_convertScopeIdParam($scope, $input->getOption('scope-id'));
 
         $valueDisplay = $value = $input->getArgument('value');
 
@@ -85,7 +87,7 @@ HELP;
         $this->getConfigWriter()->save(
             $input->getArgument('path'),
             $value,
-            $input->getOption('scope'),
+            $scope,
             $scopeId
         );
 
