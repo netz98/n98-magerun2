@@ -81,7 +81,7 @@ HELP;
             $valueDisplay = self::DISPLAY_NULL_UNKOWN_VALUE;
         } else {
             $value = str_replace(array('\n', '\r'), array("\n", "\r"), $value);
-            $value = $this->_formatValue($value, ($input->getOption('encrypt') ? 'encrypt' : false));
+            $value = $this->_formatValue($value, ($input->getOption('encrypt') ? 'encrypt' : ''));
         }
 
         $this->getConfigWriter()->save(

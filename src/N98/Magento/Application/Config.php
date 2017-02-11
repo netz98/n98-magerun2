@@ -43,7 +43,7 @@ class Config
     private $loader;
 
     /**
-     * @var array
+     * @var array|null
      */
     private $initConfig;
 
@@ -233,7 +233,7 @@ class Config
     public function getLoader()
     {
         if (!$this->loader) {
-            $this->loader = $this->createLoader($this->initConfig, $this->isPharMode, $this->output);
+            $this->loader = $this->createLoader((array) $this->initConfig, $this->isPharMode, $this->output);
             $this->initConfig = null;
         }
 

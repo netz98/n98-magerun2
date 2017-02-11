@@ -20,6 +20,11 @@ abstract class AbstractConfigCommand extends AbstractMagentoCommand
     protected $_scopePool;
 
     /**
+     * @var array
+     */
+    protected $_scopes = array();
+
+    /**
      * @return \Magento\Framework\Encryption\EncryptorInterface
      */
     protected function getEncryptionModel()

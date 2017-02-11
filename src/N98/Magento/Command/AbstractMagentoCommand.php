@@ -6,11 +6,12 @@ use Composer\Factory as ComposerFactory;
 use Composer\IO\ConsoleIO;
 use Composer\Package\Loader\ArrayLoader as PackageLoader;
 use Composer\Package\PackageInterface;
-use Mage;
 use Magento\Framework\ObjectManager\ObjectManager;
+use Magento\Framework\ObjectManagerInterface;
 use N98\Magento\Command\SubCommand\ConfigBag;
 use N98\Magento\Command\SubCommand\SubCommandFactory;
 use N98\Util\Console\Helper\InjectionHelper;
+use N98\Util\Console\Helper\MagentoHelper;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\FormatterHelper;
 use Symfony\Component\Console\Input\InputInterface;
@@ -80,70 +81,11 @@ abstract class AbstractMagentoCommand extends Command
     }
 
     /**
-     * @return ObjectManager
+     * @return ObjectManagerInterface
      */
     protected function getObjectManager()
     {
         return $this->getApplication()->getObjectManager();
-    }
-
-    /**
-     * @param array $codeArgument
-     * @param bool $status
-     * @return void
-     */
-    protected function saveCacheStatus($codeArgument, $status)
-    {
-        $cacheTypes = $this->_getCacheModel()->getTypes();
-        $enable = Mage::app()->useCache();
-        foreach ($cacheTypes as $cacheCode => $cacheModel) {
-            if (empty($codeArgument) || in_array($cacheCode, $codeArgument)) {
-                $enable[$cacheCode] = $status ? 1 : 0;
-            }
-        }
-
-        Mage::app()->saveUseCache($enable);
-    }
-
-    private function _initWebsites()
-    {
-        $this->_websiteCodeMap = array();
-        /** @var \Mage_Core_Model_Website[] $websites */
-        $websites = Mage::app()->getWebsites(false);
-        foreach ($websites as $website) {
-            $this->_websiteCodeMap[$website->getId()] = $website->getCode();
-        }
-    }
-
-    /**
-     * @param int $websiteId
-     * @return string
-     */
-    protected function _getWebsiteCodeById($websiteId)
-    {
-        if (empty($this->_websiteCodeMap)) {
-            $this->_initWebsites();
-        }
-
-        if (isset($this->_websiteCodeMap[$websiteId])) {
-            return $this->_websiteCodeMap[$websiteId];
-        }
-
-        return '';
-    }
-
-    /**
-     * @param string $websiteCode
-     * @return int
-     */
-    protected function _getWebsiteIdByCode($websiteCode)
-    {
-        if (empty($this->_websiteCodeMap)) {
-            $this->_initWebsites();
-        }
-        $websiteMap = array_flip($this->_websiteCodeMap);
-
-        return $websiteMap[$websiteCode];
     }
 
     /**
@@ -152,7 +94,7 @@ abstract class AbstractMagentoCommand extends Command
      */
     protected function getCommandConfig($commandClass = null)
     {
-        if ($commandClass == null) {
+        if ($commandClass === null) {
             $commandClass = get_class($this);
         }
         $configArray = $this->getApplication()->getConfig();
@@ -160,7 +102,7 @@ abstract class AbstractMagentoCommand extends Command
             return $configArray[self::CONFIG_KEY_COMMANDS][$commandClass];
         }
 
-        return;
+        return [];
     }
 
     /**
@@ -225,29 +167,6 @@ abstract class AbstractMagentoCommand extends Command
     }
 
     /**
-     * Die if not Enterprise
-     */
-    protected function requireEnterprise(OutputInterface $output)
-    {
-        if (!$this->_magentoEnterprise) {
-            $output->writeln('<error>Enterprise Edition is required but was not detected</error>');
-            exit;
-        }
-    }
-
-    /**
-     * @return \Mage_Core_Helper_Data
-     */
-    protected function getCoreHelper()
-    {
-        if ($this->_magentoMajorVersion == self::MAGENTO_MAJOR_VERSION_2) {
-            return Mage::helper('Mage_Core_Helper_Data');
-        }
-
-        return Mage::helper('core');
-    }
-
-    /**
      * @param InputInterface $input
      * @param OutputInterface $output
      * @return \Composer\Downloader\DownloadManager
@@ -258,10 +177,10 @@ abstract class AbstractMagentoCommand extends Command
     }
 
     /**
-     * @param array|PackageInterface $config
-     * @return \Composer\Package\CompletePackage
+     * @param array $config
+     * @return PackageInterface
      */
-    public function createComposerPackageByConfig($config)
+    public function createComposerPackageByConfig(array $config)
     {
         $packageLoader = new PackageLoader();
 
@@ -274,7 +193,7 @@ abstract class AbstractMagentoCommand extends Command
      * @param array|PackageInterface $config
      * @param string $targetFolder
      * @param bool $preferSource
-     * @return \Composer\Package\CompletePackage
+     * @return \Composer\Package\PackageInterface
      */
     public function downloadByComposerConfig(
         InputInterface $input,
@@ -290,7 +209,7 @@ abstract class AbstractMagentoCommand extends Command
             $package = $config;
         }
 
-        $helper = new \N98\Util\Console\Helper\MagentoHelper();
+        $helper = new MagentoHelper();
         $helper->detect($targetFolder);
         if ($this->isSourceTypeRepository($package->getSourceType()) && $helper->getRootFolder() == $targetFolder) {
             $package->setInstallationSource('source');

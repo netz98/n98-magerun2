@@ -135,7 +135,7 @@ abstract class AbstractMagentoStoreConfigCommand extends AbstractMagentoCommand
             );
         }
 
-        $this->_beforeSave($store, $isFalse);
+        $this->beforeSave($store, $isFalse);
 
         if ($store->getId() == \Magento\Store\Model\Store::DEFAULT_STORE_ID) {
             $scope = 'default'; // @TODO Constant was removed in Magento2 ?
@@ -160,7 +160,7 @@ abstract class AbstractMagentoStoreConfigCommand extends AbstractMagentoCommand
                     . ($runOnStoreView ? ' <comment>for store</comment> <info>' . $store->getCode() . '</info>' : '');
         $output->writeln($comment);
 
-        $this->_afterSave($store, $isFalse);
+        $this->afterSave($store, $isFalse);
 
         $input = new StringInput('cache:flush');
         $this->getApplication()->run($input, new NullOutput());
@@ -172,7 +172,7 @@ abstract class AbstractMagentoStoreConfigCommand extends AbstractMagentoCommand
      * @return mixed
      * @throws Exception
      */
-    protected function _initStore(InputInterface $input, OutputInterface $output)
+    protected function initStore(InputInterface $input, OutputInterface $output)
     {
         /** @var $parameter ParameterHelper */
         $parameter = $this->getHelper('parameter');
@@ -184,7 +184,7 @@ abstract class AbstractMagentoStoreConfigCommand extends AbstractMagentoCommand
      * @param \Magento\Store\Model\Store $store
      * @param bool $disabled
      */
-    protected function _beforeSave(\Magento\Store\Model\Store $store, $disabled)
+    protected function beforeSave(\Magento\Store\Model\Store $store, $disabled)
     {
     }
 
@@ -192,7 +192,7 @@ abstract class AbstractMagentoStoreConfigCommand extends AbstractMagentoCommand
      * @param \Magento\Store\Model\Store $store
      * @param bool $disabled
      */
-    protected function _afterSave(\Magento\Store\Model\Store $store, $disabled)
+    protected function afterSave(\Magento\Store\Model\Store $store, $disabled)
     {
     }
 }

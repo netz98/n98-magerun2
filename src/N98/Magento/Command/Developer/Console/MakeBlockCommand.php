@@ -24,13 +24,9 @@ class MakeBlockCommand extends AbstractGeneratorCommand
      *
      * @return int|void
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function catchedExecute(InputInterface $input, OutputInterface $output)
     {
-        try {
-            $this->createClassFile($input, $output);
-        } catch (Exception $e) {
-            $output->writeln('<error>' . $e->getMessage() . '</error>');
-        }
+        $this->createClassFile($input, $output);
     }
 
     /**

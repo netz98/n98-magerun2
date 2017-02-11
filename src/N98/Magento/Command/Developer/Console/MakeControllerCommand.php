@@ -21,40 +21,36 @@ class MakeControllerCommand extends AbstractGeneratorCommand
     }
 
     /**
-     * @param InputInterface  $input
+     * @param InputInterface $input
      * @param OutputInterface $output
      *
      * @return int|void
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function catchedExecute(InputInterface $input, OutputInterface $output)
     {
-        try {
-            $actionFileName = $this->getNormalizedPathByArgument($input->getArgument('classpath'));
-            $classNameToGenerate = $this->getCurrentModuleNamespace()
-                . '\\Controller\\'
-                . $this->getNormalizedClassnameByArgument($input->getArgument('classpath'));
-            $filePathToGenerate = 'Controller/' . $actionFileName . '.php';
+        $actionFileName = $this->getNormalizedPathByArgument($input->getArgument('classpath'));
+        $classNameToGenerate = $this->getCurrentModuleNamespace()
+            . '\\Controller\\'
+            . $this->getNormalizedClassnameByArgument($input->getArgument('classpath'));
+        $filePathToGenerate = 'Controller/' . $actionFileName . '.php';
 
-            $classGenerator = $this->create(ClassGenerator::class);
+        $classGenerator = $this->create(ClassGenerator::class);
 
-            /** @var $classGenerator ClassGenerator */
-            $classGenerator->setExtendedClass('Action');
+        /** @var $classGenerator ClassGenerator */
+        $classGenerator->setExtendedClass('Action');
 
-            $body = $this->createClassBody($input);
-            $executeMethodDefinition = $this->createClassMethodDefinitions($body);
+        $body = $this->createClassBody($input);
+        $executeMethodDefinition = $this->createClassMethodDefinitions($body);
 
-            $classGenerator->addMethods([$executeMethodDefinition]);
-            $classGenerator->setName($classNameToGenerate);
-            $classGenerator->addUse('Magento\Framework\App\Action\Action');
-            $classGenerator->addUse('Magento\Framework\Controller\ResultFactory');
+        $classGenerator->addMethods([$executeMethodDefinition]);
+        $classGenerator->setName($classNameToGenerate);
+        $classGenerator->addUse('Magento\Framework\App\Action\Action');
+        $classGenerator->addUse('Magento\Framework\Controller\ResultFactory');
 
-            $this->writeClassToFile($output, $classGenerator, $filePathToGenerate);
+        $this->writeClassToFile($output, $classGenerator, $filePathToGenerate);
 
-            if ($input->getOption('result') == ResultFactory::TYPE_PAGE) {
-                $this->createLayoutFile();
-            }
-        } catch (Exception $e) {
-            $output->writeln('<error>' . $e->getMessage() . '</error>');
+        if ($input->getOption('result') == ResultFactory::TYPE_PAGE) {
+            $this->createLayoutFile();
         }
     }
 

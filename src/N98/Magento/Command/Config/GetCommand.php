@@ -120,7 +120,7 @@ HELP;
                 'scope_id' => $item->getScopeId(),
                 'value'    => $this->_formatValue(
                     $item->getValue(),
-                    $input->getOption('decrypt') ? 'decrypt' : false
+                    $input->getOption('decrypt') ? 'decrypt' : ''
                 ),
             );
         }
