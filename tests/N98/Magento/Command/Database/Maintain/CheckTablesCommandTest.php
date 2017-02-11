@@ -3,6 +3,7 @@
 namespace N98\Magento\Command\Database\Maintain;
 
 use N98\Magento\Command\TestCase;
+use Symfony\Component\Console\Tester\CommandTester;
 
 /**
  * @see \N98\Magento\Command\Database\Maintain\CheckTablesCommand
@@ -13,34 +14,53 @@ class CheckTablesCommandTest extends TestCase
     {
         $this->markTestSkipped('Currently we have no myisam tables in a magento2 installation');
 
-        $this->assertDisplayContains(
+        $command = $this->getCommand();
+
+        $commandTester = new CommandTester($command);
+        $commandTester->execute(
             array(
-                'command'  => 'db:maintain:check-tables',
+                'command'  => $command->getName(),
                 '--format' => 'csv',
                 '--type'   => 'quick',
                 '--table'  => 'oauth_nonce',
-            ),
-            'oauth_nonce,check,quick,OK'
+            )
         );
+        $this->assertContains('oauth_nonce,check,quick,OK', $commandTester->getDisplay());
     }
 
     public function testExecuteInnoDb()
     {
-        $input = array(
-            'command'  => 'db:maintain:check-tables',
-            '--format' => 'csv',
-            '--type'   => 'quick',
-            '--table'  => 'catalog_product_entity_media_gallery*',
+        $command = $this->getCommand();
+
+        $commandTester = new CommandTester($command);
+        $commandTester->execute(
+            array(
+                'command'  => $command->getName(),
+                '--format' => 'csv',
+                '--type'   => 'quick',
+                '--table'  => 'catalog_product_entity_media_gallery*',
+            )
         );
         $timeRegex = '"\s+[0-9]+\srows","[0-9\.]+\ssecs"';
+        $this->assertRegExp(
+            '~catalog_product_entity_media_gallery,"ENGINE InnoDB",' . $timeRegex . '~',
+            $commandTester->getDisplay()
+        );
+        $this->assertRegExp(
+            '~catalog_product_entity_media_gallery_value,"ENGINE InnoDB",' . $timeRegex . '~',
+            $commandTester->getDisplay()
+        );
+    }
 
-        $this->assertDisplayRegExp(
-            $input,
-            '~catalog_product_entity_media_gallery,"ENGINE InnoDB",' . $timeRegex . '~'
-        );
-        $this->assertDisplayRegExp(
-            $input,
-            '~catalog_product_entity_media_gallery_value,"ENGINE InnoDB",' . $timeRegex . '~'
-        );
+    /**
+     * @return \Symfony\Component\Console\Command\Command
+     */
+    protected function getCommand()
+    {
+        $application = $this->getApplication();
+        $application->add(new CheckTablesCommand());
+        $command = $this->getApplication()->find('db:maintain:check-tables');
+
+        return $command;
     }
 }

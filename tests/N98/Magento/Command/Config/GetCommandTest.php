@@ -3,6 +3,7 @@
 namespace N98\Magento\Command\Config;
 
 use N98\Magento\Command\TestCase;
+use Symfony\Component\Console\Tester\CommandTester;
 
 class GetCommandTest extends TestCase
 {
@@ -94,76 +95,92 @@ class GetCommandTest extends TestCase
 
     public function testExecute()
     {
+        $application = $this->getApplication();
+        $application->add(new GetCommand());
+        $setCommand = $this->getApplication()->find('config:set');
+        $getCommand = $this->getApplication()->find('config:get');
+
         /**
-         * Add a new entry (to test for it)
+         * Add a new entry
          */
-        $this->assertDisplayContains(
+        $commandTester = new CommandTester($setCommand);
+        $commandTester->execute(
             array(
-                'command' => 'config:set',
-                'path'    => 'n98_magerun/foo/bar',
-                'value'   => '1234',
-            ),
-            'n98_magerun/foo/bar => 1234'
+                    'command' => $setCommand->getName(),
+                    'path'    => 'n98_magerun/foo/bar',
+                    'value'   => '1234',
+            )
         );
 
-        $this->assertDisplayContains(
+        $commandTester = new CommandTester($getCommand);
+        $commandTester->execute(
             array(
-                'command' => 'config:get',
-                'path'    => 'n98_magerun/foo/bar',
-            ),
-            '| n98_magerun/foo/bar | default | 0        | 1234  |'
+                    'command' => $getCommand->getName(),
+                    'path'    => 'n98_magerun/foo/bar',
+            )
+        );
+        $this->assertContains('| n98_magerun/foo/bar | default | 0        | 1234  |', $commandTester->getDisplay());
+
+        $commandTester->execute(
+            array(
+                    'command'         => $getCommand->getName(),
+                    'path'            => 'n98_magerun/foo/bar',
+                    '--update-script' => true,
+            )
+        );
+        $this->assertContains(
+            "\$installer->setConfigData('n98_magerun/foo/bar', '1234');",
+            $commandTester->getDisplay()
         );
 
-        $this->assertDisplayContains(
+        $commandTester->execute(
             array(
-                'command'         => 'config:get',
-                'path'            => 'n98_magerun/foo/bar',
-                '--update-script' => true,
-            ),
-            "\$installer->setConfigData('n98_magerun/foo/bar', '1234');"
+                    'command'          => $getCommand->getName(),
+                    'path'             => 'n98_magerun/foo/bar',
+                    '--magerun-script' => true,
+            )
         );
-
-        $this->assertDisplayContains(
-            array(
-                'command'          => 'config:get',
-                'path'             => 'n98_magerun/foo/bar',
-                '--magerun-script' => true,
-            ),
-            "config:set --scope-id=0 --scope=default -- 'n98_magerun/foo/bar' '1234'"
+        $this->assertContains(
+            "config:set --scope-id=0 --scope=default -- 'n98_magerun/foo/bar' '1234'",
+            $commandTester->getDisplay()
         );
 
         /**
          * Dump CSV
          */
-        $input = array(
-            'command'  => 'config:get',
-            'path'     => 'n98_magerun/foo/bar',
-            '--format' => 'csv',
+        $commandTester->execute(
+            array(
+                'command'  => $getCommand->getName(),
+                'path'     => 'n98_magerun/foo/bar',
+                '--format' => 'csv',
+            )
         );
-        $this->assertDisplayContains($input, 'Path,Scope,Scope-ID,Value');
-        $this->assertDisplayContains($input, 'n98_magerun/foo/bar,default,0,1234');
+        $this->assertContains('Path,Scope,Scope-ID,Value', $commandTester->getDisplay());
+        $this->assertContains('n98_magerun/foo/bar,default,0,1234', $commandTester->getDisplay());
 
         /**
          * Dump XML
          */
-        $input = array(
-            'command'  => 'config:get',
-            'path'     => 'n98_magerun/foo/bar',
-            '--format' => 'xml',
+        $commandTester->execute(
+            array(
+                'command'  => $getCommand->getName(),
+                'path'     => 'n98_magerun/foo/bar',
+                '--format' => 'xml',
+            )
         );
-        $this->assertDisplayContains($input, '<table>');
-        $this->assertDisplayContains($input, '<Value>1234</Value>');
+        $this->assertContains('<table>', $commandTester->getDisplay());
+        $this->assertContains('<Value>1234</Value>', $commandTester->getDisplay());
 
         /**
-         * Dump JSON
+         * Dump XML
          */
-        $this->assertDisplayRegExp(
+        $commandTester->execute(
             array(
-                'command'  => 'config:get',
+                'command'  => $getCommand->getName(),
                 'path'     => 'n98_magerun/foo/bar',
                 '--format' => 'json',
-            ),
-            '/"Value":\s*"1234"/'
+            )
         );
+        $this->assertRegExp('/"Value":\s*"1234"/', $commandTester->getDisplay());
     }
 }

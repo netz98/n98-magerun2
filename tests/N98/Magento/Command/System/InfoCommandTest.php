@@ -3,6 +3,7 @@
 namespace N98\Magento\Command\System;
 
 use N98\Magento\Command\TestCase;
+use Symfony\Component\Console\Tester\CommandTester;
 
 class InfoCommandTest extends TestCase
 {
@@ -12,17 +13,21 @@ class InfoCommandTest extends TestCase
     /**
      * @var $command InfoCommand
      */
-    private $command;
+    protected $command = null;
 
     public function setUp()
     {
+        $application = $this->getApplication();
+        $application->add(new InfoCommand());
+
         /**
          * @var $command InfoCommand
          */
         $this->command = $this->getApplication()->find('sys:info');
 
         // The command is executed here
-        $this->assertExecute('sys:info');
+        $commandTester = new CommandTester($this->command);
+        $commandTester->execute(array('command' => $this->command->getName()));
     }
 
     public function testInstallDate()
@@ -32,7 +37,7 @@ class InfoCommandTest extends TestCase
 
     public function testCryptKey()
     {
-        $this->assertRegExp('/^[a-f0-9]{32}$/', $this->command->getInfo(self::CRYPT_KEY_INFO));
+        $this->assertNotFalse(preg_match('/^[a-f0-9]{32}$/', $this->command->getInfo(self::CRYPT_KEY_INFO)));
     }
 
     public function testCounts()

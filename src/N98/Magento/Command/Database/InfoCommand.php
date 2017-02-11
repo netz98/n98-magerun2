@@ -2,8 +2,6 @@
 
 namespace N98\Magento\Command\Database;
 
-use InvalidArgumentException;
-use N98\Util\Console\Helper\DatabaseHelper;
 use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -36,10 +34,9 @@ HELP;
     }
 
     /**
-     * @param InputInterface  $input
-     * @param OutputInterface $output
-     *
-     * @throws InvalidArgumentException
+     * @param \Symfony\Component\Console\Input\InputInterface   $input
+     * @param \Symfony\Component\Console\Output\OutputInterface $output
+     * @throws \InvalidArgumentException
      * @return void
      */
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -48,54 +45,26 @@ HELP;
 
         $settings = array();
         foreach ($this->dbSettings as $key => $value) {
-            if (is_array($value)) {
-                if (OutputInterface::VERBOSITY_DEBUG <= $output->getVerbosity()) {
-                    $output->writeln(sprintf("<error>Skipping db-settings key '%s' as being array</error>", $key));
-                }
-                continue;
-            }
             $settings[$key] = (string) $value;
         }
 
-        $isSocketConnect = $this->isSocketConnect;
-
-        // note: there is no need to specify the default port neither for PDO, nor JDBC nor CLI.
-        $portOrDefault = isset($this->dbSettings['port']) ? $this->dbSettings['port'] : 3306;
-
-        if ($isSocketConnect) {
-            $pdoConnectionString = sprintf(
-                'mysql:unix_socket=%s;dbname=%s',
-                $this->dbSettings['unix_socket'],
-                $this->dbSettings['dbname']
-            );
-        } else {
-            $pdoConnectionString = sprintf(
-                'mysql:host=%s;port=%s;dbname=%s',
-                $this->dbSettings['host'],
-                $portOrDefault,
-                $this->dbSettings['dbname']
-            );
-        }
+        $pdoConnectionString = sprintf(
+            'mysql:host=%s;dbname=%s',
+            $this->dbSettings['host'],
+            $this->dbSettings['dbname']
+        );
         $settings['PDO-Connection-String'] = $pdoConnectionString;
 
-        if ($isSocketConnect) {
-            // isn't supported according to this post: http://stackoverflow.com/a/18493673/145829
-            $jdbcConnectionString = 'Connecting using JDBC through a unix socket isn\'t supported!';
-        } else {
-            $jdbcConnectionString = sprintf(
-                'jdbc:mysql://%s:%s/%s?username=%s&password=%s',
-                $this->dbSettings['host'],
-                $portOrDefault,
-                $this->dbSettings['dbname'],
-                $this->dbSettings['username'],
-                $this->dbSettings['password']
-            );
-        }
+        $jdbcConnectionString = sprintf(
+            'jdbc:mysql://%s/%s?username=%s&password=%s',
+            $this->dbSettings['host'],
+            $this->dbSettings['dbname'],
+            $this->dbSettings['username'],
+            $this->dbSettings['password']
+        );
         $settings['JDBC-Connection-String'] = $jdbcConnectionString;
 
-        /* @var $database DatabaseHelper */
-        $database = $this->getHelper('database');
-        $mysqlCliString = 'mysql ' . $database->getMysqlClientToolConnectionString();
+        $mysqlCliString = 'mysql ' . $this->getHelper('database')->getMysqlClientToolConnectionString();
         $settings['MySQL-Cli-String'] = $mysqlCliString;
 
         $rows = array();
@@ -105,7 +74,7 @@ HELP;
 
         if (($settingArgument = $input->getArgument('setting')) !== null) {
             if (!isset($settings[$settingArgument])) {
-                throw new InvalidArgumentException('Unknown setting: ' . $settingArgument);
+                throw new \InvalidArgumentException('Unknown setting: ' . $settingArgument);
             }
             $output->writeln((string) $settings[$settingArgument]);
         } else {

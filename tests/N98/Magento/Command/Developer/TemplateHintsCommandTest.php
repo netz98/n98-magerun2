@@ -3,27 +3,36 @@
 namespace N98\Magento\Command\Developer;
 
 use N98\Magento\Command\TestCase;
+use Symfony\Component\Console\Tester\CommandTester;
 
 class TemplateHintsCommandTest extends TestCase
 {
     public function testExecute()
     {
-        $this->assertDisplayContains(
+        $application = $this->getApplication();
+        $application->add(new TemplateHintsCommand());
+        $application->setAutoExit(false);
+        $command = $this->getApplication()->find('dev:template-hints');
+
+        $commandTester = new CommandTester($command);
+        $commandTester->execute(
             array(
-                'command' => 'dev:template-hints',
+                'command' => $command->getName(),
                 '--on'    => true,
                 'store'   => 'admin',
-            ),
-            'Template Hints enabled'
+            )
         );
+        $this->assertRegExp('/Template Hints enabled/', $commandTester->getDisplay());
 
-        $this->assertDisplayContains(
+        $commandTester = new CommandTester($command);
+        $commandTester->execute(
             array(
-                'command' => 'dev:template-hints',
+                'command' => $command->getName(),
                 '--off'   => true,
                 'store'   => 'admin',
-            ),
-            'Template Hints disabled'
+            )
         );
+
+        $this->assertRegExp('/Template Hints disabled/', $commandTester->getDisplay());
     }
 }

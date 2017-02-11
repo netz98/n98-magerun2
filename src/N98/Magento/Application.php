@@ -260,16 +260,7 @@ class Application extends BaseApplication
         }
 
         // Magento was found -> register core cli commands
-        try {
-            $this->requireOnce($magentoRootFolder . '/app/bootstrap.php');
-        } catch (Exception $ex) {
-            $this->renderException($ex, $output);
-            $output->writeln(
-                "<info>Use --skip-core-commands to not require the Magento app/bootstrap.php which caused " .
-                "the exception.</info>"
-            );
-            return;
-        }
+        $this->requireOnce($magentoRootFolder . '/app/bootstrap.php');
 
         $coreCliApplication = new \Magento\Framework\Console\Cli();
         $coreCliApplicationCommands = $coreCliApplication->all();

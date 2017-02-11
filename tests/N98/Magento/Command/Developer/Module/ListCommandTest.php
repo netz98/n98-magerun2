@@ -3,6 +3,7 @@
 namespace N98\Magento\Command\Developer\Module;
 
 use N98\Magento\Command\TestCase;
+use Symfony\Component\Console\Tester\CommandTester;
 
 class ListCommandTest extends TestCase
 {
@@ -10,13 +11,27 @@ class ListCommandTest extends TestCase
     const MODULE_OCCURENCE_CHECK = 'Magento_Catalog';
 
     /**
+     * @var $command ListCommand
+     */
+    protected $command = null;
+
+    public function setUp()
+    {
+        $application = $this->getApplication();
+        $application->add(new ListCommand);
+
+        $this->command = $this->getApplication()->find('dev:module:list');
+    }
+
+    /**
      * Test whether the $moduleList property is filled
      */
     public function testBasicList()
     {
-        /* @var $command ListCommand */
-        $command = $this->assertExecute('dev:module:list')->getCommand();
-        $this->assertNotEmpty($command->getModuleList());
+        $commandTester = new CommandTester($this->command);
+        $commandTester->execute(array('command' => $this->command->getName()));
+
+        $this->assertNotEmpty($this->command->getModuleList());
     }
 
     /**
@@ -24,7 +39,10 @@ class ListCommandTest extends TestCase
      */
     public function testMagentoCatalogOccurs()
     {
-        $this->assertDisplayContains('dev:module:list', self::MODULE_OCCURENCE_CHECK);
+        $commandTester = new CommandTester($this->command);
+        $commandTester->execute(array('command' => $this->command->getName()));
+
+        $this->assertNotFalse(strpos($commandTester->getDisplay(), self::MODULE_OCCURENCE_CHECK));
     }
 
     /**
@@ -32,10 +50,9 @@ class ListCommandTest extends TestCase
      */
     public function testVendorList()
     {
-        /* @var $command ListCommand */
-        $command = $this->assertExecute(
-            array('command' => 'dev:module:list', '--vendor' => self::NONEXISTENT_VENDOR)
-        )->getCommand();
-        $this->assertEmpty($command->getModuleList());
+        $commandTester = new CommandTester($this->command);
+        $commandTester->execute(array('command' => $this->command->getName(), '--vendor' => self::NONEXISTENT_VENDOR));
+
+        $this->assertEmpty($this->command->getModuleList());
     }
 }

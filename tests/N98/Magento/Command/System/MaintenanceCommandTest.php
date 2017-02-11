@@ -4,6 +4,7 @@ namespace N98\Magento\Command\System;
 
 use Magento\Framework\App\MaintenanceMode;
 use N98\Magento\Command\TestCase;
+use Symfony\Component\Console\Tester\CommandTester;
 
 class MaintenanceCommandTest extends TestCase
 {
@@ -16,11 +17,11 @@ class MaintenanceCommandTest extends TestCase
 
     public function setUp()
     {
-        $this->maintenanceFile =
-            $this->getApplication()->getMagentoRootFolder() .
-            '/' . MaintenanceMode::FLAG_DIR .
-            '/' . MaintenanceMode::FLAG_FILENAME
-            ;
+        $application = $this->getApplication();
+        $application->add(new MaintenanceCommand);
+
+        $this->command = $this->getApplication()->find('sys:maintenance');
+        $this->maintenanceFile = $this->getApplication()->getMagentoRootFolder() . DIRECTORY_SEPARATOR . MaintenanceMode::FLAG_DIR . DIRECTORY_SEPARATOR . MaintenanceMode::FLAG_FILENAME;
     }
 
     public function testSimpleFlag()
@@ -47,39 +48,49 @@ class MaintenanceCommandTest extends TestCase
 
     protected function simpleFlagDisable()
     {
-        $this->assertDisplayContains(
-            ['command' => 'sys:maintenance', '--off'],
-            strip_tags(MaintenanceCommand::DISABLED_MESSAGE)
-        );
+        $commandTester = new CommandTester($this->command);
+        $commandTester->execute(['command' => $this->command->getName(), '--off']);
+
+        $this->assertEquals(strip_tags(MaintenanceCommand::DISABLED_MESSAGE) . PHP_EOL, $commandTester->getDisplay());
     }
 
     protected function simpleFlagEnable()
     {
-        $this->assertDisplayContains(
-            ['command' => 'sys:maintenance', '--on'],
-            strip_tags(MaintenanceCommand::ENABLED_MESSAGE)
-        );
+        $commandTester = new CommandTester($this->command);
+        $commandTester->execute(['command' => $this->command->getName(), '--on']);
+
+        $this->assertEquals(strip_tags(MaintenanceCommand::ENABLED_MESSAGE) . PHP_EOL, $commandTester->getDisplay());
     }
 
     protected function ipFlagDisable()
     {
-        $this->assertDisplayContains(
-            ['command' => 'sys:maintenance', '--off' => 'd'],
+        $commandTester = new CommandTester($this->command);
+        $commandTester->execute(['command' => $this->command->getName(), '--off' => 'd']);
+
+        $this->assertEquals(
             strip_tags(
-                MaintenanceCommand::DISABLED_MESSAGE . PHP_EOL .
-                MaintenanceCommand::DELETED_IP_MESSAGE . PHP_EOL
-            )
+                MaintenanceCommand::DISABLED_MESSAGE .
+                PHP_EOL .
+                MaintenanceCommand::DELETED_IP_MESSAGE .
+                PHP_EOL
+            ),
+            $commandTester->getDisplay()
         );
     }
 
     protected function ipFlagEnable()
     {
-        $this->assertDisplayContains(
-            ['command' => 'sys:maintenance', '--on' => '127.0.0.1,127.0.0.1'],
+        $commandTester = new CommandTester($this->command);
+        $commandTester->execute(['command' => $this->command->getName(), '--on' => '127.0.0.1,127.0.0.1']);
+
+        $this->assertEquals(
             strip_tags(
-                MaintenanceCommand::ENABLED_MESSAGE . PHP_EOL .
-                MaintenanceCommand::WROTE_IP_MESSAGE . PHP_EOL
-            )
+                MaintenanceCommand::ENABLED_MESSAGE .
+                PHP_EOL .
+                MaintenanceCommand::WROTE_IP_MESSAGE .
+                PHP_EOL
+            ),
+            $commandTester->getDisplay()
         );
     }
 }
