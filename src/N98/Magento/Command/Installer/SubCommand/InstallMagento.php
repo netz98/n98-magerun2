@@ -4,14 +4,20 @@ namespace N98\Magento\Command\Installer\SubCommand;
 
 use Exception;
 use N98\Magento\Command\SubCommand\AbstractSubCommand;
+use N98\Util\Exec;
 use N98\Util\OperatingSystem;
+use RuntimeException;
+use Symfony\Component\Console\Output\OutputInterface;
 
 class InstallMagento extends AbstractSubCommand
 {
     /**
-     * @var int
+     * @deprecated since since 1.3.1; Use constant from Exec-Utility instead
+     * @see Exec::CODE_CLEAN_EXIT
      */
     const EXEC_STATUS_OK = 0;
+
+    const MAGENTO_INSTALL_SCRIPT_PATH = 'bin/magento';
 
     /**
      * @var \Closure
@@ -196,35 +202,19 @@ class InstallMagento extends AbstractSubCommand
 
         $this->config->setArray('installation_args', $argv);
 
-        $installArgs = '';
-        foreach ($argv as $argName => $argValue) {
-            if (is_null($argValue)) {
-                $installArgs .= '--' . $argName . ' ';
-            } elseif (is_bool($argValue)) {
-                if ($argValue) {
-                    $argValue = '1';
-                } else {
-                    $argValue = '0';
-                }
-                $installArgs .= '--' . $argName . '=' . $argValue . ' ';
-            } else {
-                $installArgs .= '--' . $argName . '=' . escapeshellarg($argValue) . ' ';
-            }
-        }
-
-        $this->output->writeln('<info>Start installation process.</info>');
-        $this->_runInstaller($installArgs);
+        $this->runInstallScriptCommand($this->output, $this->config->getString('installationFolder'), $argv);
     }
 
     /**
+     * @deprecated since 1.3.1 (obsolete)
      * @return string
      * @throws Exception
      */
     protected function getInstallScriptPath()
     {
-        $installerScript = $this->config->getString('installationFolder') . '/bin/magento';
+        $installerScript = $this->config->getString('installationFolder') . '/' . self::MAGENTO_INSTALL_SCRIPT_PATH;
         if (!file_exists($installerScript)) {
-            throw new \RuntimeException('Installation script was not found.', 1);
+            throw new RuntimeException('Installation script was not found.', 1);
         }
 
         return $installerScript;
@@ -261,30 +251,55 @@ class InstallMagento extends AbstractSubCommand
     }
 
     /**
-     * @param string $installArgs
+     * Invoke Magento PHP install script bin/magento setup:install
      *
-     * @throws Exception
+     * @param OutputInterface $output
+     * @param string $installationFolder folder where magento is installed in, must exists setup script in
+     * @param array $argv
+     * @return void
      */
-    protected function _runInstaller($installArgs)
+    private function runInstallScriptCommand(OutputInterface $output, $installationFolder, array $argv)
     {
+        $installArgs = '';
+        foreach ($argv as $argName => $argValue) {
+            if (is_null($argValue)) {
+                $installArgs .= '--' . $argName . ' ';
+            } elseif (is_bool($argValue)) {
+                $installArgs .= '--' . $argName . '=' . (int) $argValue . ' ';
+            } else {
+                $installArgs .= '--' . $argName . '=' . escapeshellarg($argValue) . ' ';
+            }
+        }
+
+        $output->writeln('<info>Start installation process.</info>');
+
+        $installCommand = sprintf(
+            '%s -ddisplay_startup_errors=1 -ddisplay_errors=1 -derror_reporting=-1 -f %s -- setup:install %s',
+            OperatingSystem::getPhpBinary(),
+            escapeshellarg($installationFolder . '/' . self::MAGENTO_INSTALL_SCRIPT_PATH),
+            $installArgs
+        );
+
+        $output->writeln('<comment>' . $installCommand . '</comment>');
+        $installException = null;
         $installationOutput = null;
         $returnStatus = null;
-
-        if (OperatingSystem::isWindows()) {
-            $installCommand = 'php ' . $this->getInstallScriptPath() . ' setup:install ' . $installArgs;
-        } else {
-            $installCommand = '/usr/bin/env php ' . $this->getInstallScriptPath() . ' setup:install ' . $installArgs;
+        try {
+            Exec::run($installCommand, $installationOutput, $returnStatus);
+        } catch (Exception $installException) {
+            /* fall-through intended */
         }
 
-        $this->output->writeln('<comment>' . $installCommand . '</comment>');
-        exec($installCommand, $installationOutput, $returnStatus);
-        $installationOutput = implode(PHP_EOL, $installationOutput);
-        if ($returnStatus !== self::EXEC_STATUS_OK) {
-            throw new \RuntimeException('Installation failed.' . $installationOutput, 1);
-        } else {
-            $this->output->writeln('<info>Successfully installed Magento</info>');
-            $encryptionKey = trim(substr($installationOutput, strpos($installationOutput, ':') + 1));
-            $this->output->writeln('<comment>Encryption Key:</comment> <info>' . $encryptionKey . '</info>');
+        if (isset($installException) || $returnStatus !== Exec::CODE_CLEAN_EXIT) {
+            $this->getCommand()->getApplication()->setAutoExit(true);
+            throw new RuntimeException(
+                sprintf('Installation failed (Exit code %s). %s', $returnStatus, $installationOutput),
+                1,
+                $installException
+            );
         }
+        $output->writeln('<info>Successfully installed Magento</info>');
+        $encryptionKey = trim(substr(strstr($installationOutput, ':'), 1));
+        $output->writeln('<comment>Encryption Key:</comment> <info>' . $encryptionKey . '</info>');
     }
 }
