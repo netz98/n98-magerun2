@@ -12,6 +12,7 @@ RECENT CHANGES
 * Imp: Support NULL values in config:set and config:get (by Tom Klingenberg, #208)
 * Imp: Better handle incomplete Magento 2 installments (by Tom Klingenberg)
 * Imp: Dispatch adminhtml_cache_flush_all with cache:flush (report by Viktor Steinwand, #263)
+* New: Compilation of the bash autocomplete-file (by Tom Klingenberg)
 * New: Add current Magento2 versions (thanks Pieter Hoste, #270)
 * New: Add current Magento2 versions (by Tom Klingenberg)
 * New: Add sys:cron:schedule command (by Pieter Hoste, #257)
