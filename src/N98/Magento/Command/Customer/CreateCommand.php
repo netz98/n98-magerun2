@@ -59,75 +59,77 @@ class CreateCommand extends AbstractCustomerCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->detectMagento($output, true);
-        if ($this->initMagento()) {
-            $dialog = $this->getHelperSet()->get('dialog');
+        if (!$this->initMagento()) {
+            return;
+        }
 
-            // Email
-            $email = $this->getHelperSet()->get('parameter')->askEmail($input, $output);
+        $dialog = $this->getHelperSet()->get('dialog');
 
-            // Password
-            $password = $this->getHelperSet()->get('parameter')->askPassword($input, $output, 'password', false);
+        // Email
+        $email = $this->getHelperSet()->get('parameter')->askEmail($input, $output);
 
-            // Firstname
-            if (($firstname = $input->getArgument('firstname')) == null) {
-                $firstname = $dialog->ask($output, '<question>Firstname:</question>');
-            }
+        // Password
+        $password = $this->getHelperSet()->get('parameter')->askPassword($input, $output, 'password', false);
 
-            // Lastname
-            if (($lastname = $input->getArgument('lastname')) == null) {
-                $lastname = $dialog->ask($output, '<question>Lastname:</question>');
-            }
+        // Firstname
+        if (($firstname = $input->getArgument('firstname')) == null) {
+            $firstname = $dialog->ask($output, '<question>Firstname:</question>');
+        }
 
-            $website = $this->getHelperSet()->get('parameter')->askWebsite($input, $output);
+        // Lastname
+        if (($lastname = $input->getArgument('lastname')) == null) {
+            $lastname = $dialog->ask($output, '<question>Lastname:</question>');
+        }
 
-            // create new customer
-            $customer = $this->getCustomer();
+        $website = $this->getHelperSet()->get('parameter')->askWebsite($input, $output);
+
+        // create new customer
+        $customer = $this->getCustomer();
+        $customer->setWebsiteId($website->getId());
+        $customer->loadByEmail($email);
+
+        $outputPlain = $input->getOption('format') === null;
+
+        $table = array();
+        if (!$customer->getId()) {
             $customer->setWebsiteId($website->getId());
-            $customer->loadByEmail($email);
+            $customer->setEmail($email);
+            $customer->setFirstname($firstname);
+            $customer->setLastname($lastname);
 
-            $outputPlain = $input->getOption('format') === null;
-
-            $table = array();
-            if (!$customer->getId()) {
-                $customer->setWebsiteId($website->getId());
-                $customer->setEmail($email);
-                $customer->setFirstname($firstname);
-                $customer->setLastname($lastname);
-
-                try {
-                    $this->appState->emulateAreaCode('frontend', function () use ($customer, $password) {
-                        $this->accountManagement->createAccount(
-                            $customer->getDataModel(),
-                            $password
-                        );
-                    });
-                } catch (\Exception $e) {
-                    $output->writeln('<error>' . $e->getMessage() . '</error>');
-                }
-
-                if ($outputPlain) {
-                    $output->writeln(
-                        sprintf(
-                            '<info>Customer <comment>%s</comment> successfully created</info>',
-                            $email
-                        )
+            try {
+                $this->appState->emulateAreaCode('frontend', function () use ($customer, $password) {
+                    $this->accountManagement->createAccount(
+                        $customer->getDataModel(),
+                        $password
                     );
-                } else {
-                    $table[] = array(
-                        $email, $password, $firstname, $lastname,
-                    );
-                }
+                });
+            } catch (\Exception $e) {
+                $output->writeln('<error>' . $e->getMessage() . '</error>');
+            }
+
+            if ($outputPlain) {
+                $output->writeln(
+                    sprintf(
+                        '<info>Customer <comment>%s</comment> successfully created</info>',
+                        $email
+                    )
+                );
             } else {
-                if ($outputPlain) {
-                    $output->writeln('<error>Customer ' . $email . ' already exists</error>');
-                }
+                $table[] = array(
+                    $email, $password, $firstname, $lastname,
+                );
             }
+        } else {
+            if ($outputPlain) {
+                $output->writeln('<error>Customer ' . $email . ' already exists</error>');
+            }
+        }
 
-            if (!$outputPlain) {
-                $this->getHelper('table')
-                    ->setHeaders(array('email', 'password', 'firstname', 'lastname'))
-                    ->renderByFormat($output, $table, $input->getOption('format'));
-            }
+        if (!$outputPlain) {
+            $this->getHelper('table')
+                ->setHeaders(array('email', 'password', 'firstname', 'lastname'))
+                ->renderByFormat($output, $table, $input->getOption('format'));
         }
     }
 }

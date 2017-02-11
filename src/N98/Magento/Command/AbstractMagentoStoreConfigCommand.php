@@ -102,21 +102,23 @@ abstract class AbstractMagentoStoreConfigCommand extends AbstractMagentoCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->detectMagento($output);
-        if ($this->initMagento()) {
-            $runOnStoreView = false;
-            if ($this->scope == self::SCOPE_STORE_VIEW
-                || ($this->scope == self::SCOPE_STORE_VIEW_GLOBAL && !$input->getOption('global'))
-            ) {
-                $runOnStoreView = true;
-            }
+        if (!$this->initMagento()) {
+            return;
+        }
 
-            if ($runOnStoreView) {
-                $store = $this->_initStore($input, $output);
-            } else {
-                $storeManager = $this->getObjectManager()->get('Magento\Store\Model\StoreManagerInterface');
-                /* @var $storeManager \Magento\Store\Model\StoreManagerInterface */
-                $store = $storeManager->getStore(\Magento\Store\Model\Store::DEFAULT_STORE_ID);
-            }
+        $runOnStoreView = false;
+        if ($this->scope == self::SCOPE_STORE_VIEW
+            || ($this->scope == self::SCOPE_STORE_VIEW_GLOBAL && !$input->getOption('global'))
+        ) {
+            $runOnStoreView = true;
+        }
+
+        if ($runOnStoreView) {
+            $store = $this->initStore($input, $output);
+        } else {
+            $storeManager = $this->getObjectManager()->get('Magento\Store\Model\StoreManagerInterface');
+            /* @var $storeManager \Magento\Store\Model\StoreManagerInterface */
+            $store = $storeManager->getStore(\Magento\Store\Model\Store::DEFAULT_STORE_ID);
         }
 
         if ($input->getOption('on')) {
