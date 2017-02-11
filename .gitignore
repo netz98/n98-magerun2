@@ -11,7 +11,7 @@ phpunit.xml
 .php_cs.cache
 composer.phar
 n98-magerun2.phar
-build/out/
+build/output/
 
 # Miscellaneous (Kraut und Rueben)
 .DS_Store
