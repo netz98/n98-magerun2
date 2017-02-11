@@ -3,6 +3,7 @@ RECENT CHANGES
 
 1.3.1
 -----
+* Fix: Minor PHP version for Magento 2 extensions (by Alexander Turiak, #269)
 * Fix: Magento object manager usage in production mode (by Tom Klingenberg, #241)
 * Fix: Support for db-setting arrays (e.g. driver_options) (by Tom Klingenberg)
 * Fix: Class names in data setup twig template (by Jurgisl, #262)
