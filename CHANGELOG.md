@@ -1,6 +1,9 @@
 RECENT CHANGES
 ==============
 
+1.3.2
+-----
+
 1.3.1
 -----
 * Fix: Install command using wrong php binary and eating installer errors (report by David Lambauer, fix by Tom Klingenberg, #267)
