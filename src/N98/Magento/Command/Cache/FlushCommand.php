@@ -29,6 +29,10 @@ class FlushCommand extends AbstractModifierCommand
 
         $cacheManager = $this->getCacheManager();
 
+        /* @var $eventManager \Magento\Framework\Event\ManagerInterface */
+        $eventManager = $this->getObjectManager()->get('Magento\Framework\Event\ManagerInterface');
+        $eventManager->dispatch('adminhtml_cache_flush_all');
+
         $availableTypes = $cacheManager->getAvailableTypes();
         foreach ($availableTypes as $cacheType) {
             $cacheManager->flush(array($cacheType));

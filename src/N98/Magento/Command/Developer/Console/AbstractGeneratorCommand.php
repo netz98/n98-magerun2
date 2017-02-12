@@ -2,12 +2,14 @@
 
 namespace N98\Magento\Command\Developer\Console;
 
+use Exception;
 use Magento\Framework\Code\Generator\ClassGenerator;
 use Magento\Framework\Filesystem\Directory\ReadFactory as DirectoryReadFactory;
 use Magento\Framework\Filesystem\Directory\WriteFactory as DirectoryWriteFactory;
 use Magento\Framework\Filesystem\Directory\WriteInterface;
 use Magento\Framework\Module\Dir as ModuleDir;
 use N98\Magento\Command\Developer\Console\Structure\ModuleNameStructure;
+use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Zend\Code\Generator\FileGenerator;
 use Zend\Filter\Word\SeparatorToSeparator;
@@ -18,6 +20,32 @@ abstract class AbstractGeneratorCommand extends AbstractConsoleCommand
      * @var WriteInterface
      */
     protected static $currentModuleDirWriter = null;
+
+    /**
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     *
+     * @return int|void
+     */
+    protected function execute(InputInterface $input, OutputInterface $output)
+    {
+        try {
+            $this->catchedExecute($input, $output);
+        } catch (Exception $e) {
+            $output->writeln('<error>' . $e->getMessage() . '</error>');
+        }
+    }
+
+    /**
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     *
+     * @return int|void
+     */
+    protected function catchedExecute(InputInterface $input, OutputInterface $output)
+    {
+        /* intentionally left blank, implement or implement execute() */
+    }
 
     /**
      * @param string $type
@@ -134,6 +162,7 @@ abstract class AbstractGeneratorCommand extends AbstractConsoleCommand
     public function getCurrentModuleDirectoryReader()
     {
         $directoryRead = $this->get(DirectoryWriteFactory::class);
+
         /** @var $directoryRead DirectoryReadFactory */
         return $directoryRead->create($this->getCurrentModulePath());
     }

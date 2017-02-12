@@ -86,6 +86,37 @@ You can now use the tools:
 
     $ n98-magerun2 {command}
 
+Autocompletion
+--------------
+
+Files for autocompletion with Magerun can be found inside the folder `res/autocompletion`, In
+the following some more information about a specific one (Bash), there are
+more (e.g. Fish, Zsh).
+
+Bash
+""""
+
+Bash completion is available pre-generated, all commands and their respective
+options are availble on tab. To get completion for an otion type two dashes
+("--") and then tab.
+
+To install the completion files, copy **n98-magerun.phar.bash** to your bash
+compatdir folder for autocompletion.
+
+On my Ubuntu system this can be done with the following command:
+
+.. code-block:: sh
+
+   # cp res/autocompletion/bash/n98-magerun.phar.bash /etc/bash_completion.d
+
+The concrete folder can be obtained via pkg-config::
+
+.. code-block:: sh
+
+# pkg-config --variable=compatdir bash-completion
+
+Detailed information is available in the bash-completions FAQ: https://github.com/scop/bash-completion#faq
+
 Usage / Commands
 ----------------
 
@@ -298,7 +329,7 @@ If no code is specified, all cache types will be enabled.
 Run `cache:list` command to see all codes.
 
 EAV Attributes
-"""""""""""""""""
+""""""""""""""
 
 View the data for a particular attribute:
 
@@ -307,7 +338,7 @@ View the data for a particular attribute:
    $ n98-magerun2.phar eav:attribute:view [--format[="..."]] entityType attributeCode
 
 Generate Gift Card Pool
-"""""""""""""""""
+"""""""""""""""""""""""
 
 Generates a new gift card pool.
 
@@ -316,7 +347,7 @@ Generates a new gift card pool.
    $ n98-magerun2.phar giftcard:pool:generate
 
 Create a Gift Card
-"""""""""""""""""
+""""""""""""""""""
 
 .. code-block:: sh
 
@@ -326,14 +357,14 @@ You may specify a website ID or use the default. You may also optionally add an 
 using the `--expires` option. Dates should be in `YYYY-MM-DD` format.
 
 View Gift Card Information
-"""""""""""""""""
+""""""""""""""""""""""""""
 
 .. code-block:: sh
 
    $ n98-magerun2.phar giftcard:info [--format[="..."]] [code]
 
 Remove a Gift Card
-"""""""""""""""""
+""""""""""""""""""
 
 .. code-block:: sh
 
@@ -354,7 +385,7 @@ Compares module version with saved setup version in `setup_module` table and dis
 Change Setup Version
 """"""""""""""""""""
 
-Changes the version of a module. This command is useful if you want to re-run an upgrade script again possibly for 
+Changes the version of a module. This command is useful if you want to re-run an upgrade script again possibly for
 debugging. Alternatively you would have to alter the row in the database manually.
 
 .. code-block:: sh

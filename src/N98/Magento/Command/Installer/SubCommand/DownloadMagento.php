@@ -40,7 +40,7 @@ class DownloadMagento extends AbstractSubCommand
             throw new RuntimeException('A magento installation already exists in this folder');
         }
 
-        $args = new ProcessArguments(array($this->config['composer_bin'], 'create-project', ));
+        $args = new ProcessArguments(array($this->config['composer_bin'], 'create-project'));
         $args
             // Add composer options
             ->addArgs($package['options'])

@@ -102,21 +102,23 @@ abstract class AbstractMagentoStoreConfigCommand extends AbstractMagentoCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->detectMagento($output);
-        if ($this->initMagento()) {
-            $runOnStoreView = false;
-            if ($this->scope == self::SCOPE_STORE_VIEW
-                || ($this->scope == self::SCOPE_STORE_VIEW_GLOBAL && !$input->getOption('global'))
-            ) {
-                $runOnStoreView = true;
-            }
+        if (!$this->initMagento()) {
+            return;
+        }
 
-            if ($runOnStoreView) {
-                $store = $this->_initStore($input, $output);
-            } else {
-                $storeManager = $this->getObjectManager()->get('Magento\Store\Model\StoreManagerInterface');
-                /* @var $storeManager \Magento\Store\Model\StoreManagerInterface */
-                $store = $storeManager->getStore(\Magento\Store\Model\Store::DEFAULT_STORE_ID);
-            }
+        $runOnStoreView = false;
+        if ($this->scope == self::SCOPE_STORE_VIEW
+            || ($this->scope == self::SCOPE_STORE_VIEW_GLOBAL && !$input->getOption('global'))
+        ) {
+            $runOnStoreView = true;
+        }
+
+        if ($runOnStoreView) {
+            $store = $this->initStore($input, $output);
+        } else {
+            $storeManager = $this->getObjectManager()->get('Magento\Store\Model\StoreManagerInterface');
+            /* @var $storeManager \Magento\Store\Model\StoreManagerInterface */
+            $store = $storeManager->getStore(\Magento\Store\Model\Store::DEFAULT_STORE_ID);
         }
 
         if ($input->getOption('on')) {
@@ -133,7 +135,7 @@ abstract class AbstractMagentoStoreConfigCommand extends AbstractMagentoCommand
             );
         }
 
-        $this->_beforeSave($store, $isFalse);
+        $this->beforeSave($store, $isFalse);
 
         if ($store->getId() == \Magento\Store\Model\Store::DEFAULT_STORE_ID) {
             $scope = 'default'; // @TODO Constant was removed in Magento2 ?
@@ -158,7 +160,7 @@ abstract class AbstractMagentoStoreConfigCommand extends AbstractMagentoCommand
                     . ($runOnStoreView ? ' <comment>for store</comment> <info>' . $store->getCode() . '</info>' : '');
         $output->writeln($comment);
 
-        $this->_afterSave($store, $isFalse);
+        $this->afterSave($store, $isFalse);
 
         $input = new StringInput('cache:flush');
         $this->getApplication()->run($input, new NullOutput());
@@ -170,7 +172,7 @@ abstract class AbstractMagentoStoreConfigCommand extends AbstractMagentoCommand
      * @return mixed
      * @throws Exception
      */
-    protected function _initStore(InputInterface $input, OutputInterface $output)
+    protected function initStore(InputInterface $input, OutputInterface $output)
     {
         /** @var $parameter ParameterHelper */
         $parameter = $this->getHelper('parameter');
@@ -182,7 +184,7 @@ abstract class AbstractMagentoStoreConfigCommand extends AbstractMagentoCommand
      * @param \Magento\Store\Model\Store $store
      * @param bool $disabled
      */
-    protected function _beforeSave(\Magento\Store\Model\Store $store, $disabled)
+    protected function beforeSave(\Magento\Store\Model\Store $store, $disabled)
     {
     }
 
@@ -190,7 +192,7 @@ abstract class AbstractMagentoStoreConfigCommand extends AbstractMagentoCommand
      * @param \Magento\Store\Model\Store $store
      * @param bool $disabled
      */
-    protected function _afterSave(\Magento\Store\Model\Store $store, $disabled)
+    protected function afterSave(\Magento\Store\Model\Store $store, $disabled)
     {
     }
 }

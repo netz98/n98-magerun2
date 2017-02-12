@@ -24,35 +24,31 @@ class MakeHelperCommand extends AbstractGeneratorCommand
      *
      * @return int|void
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function catchedExecute(InputInterface $input, OutputInterface $output)
     {
-        try {
-            $classFileName = $this->getNormalizedPathByArgument($input->getArgument('classpath'));
-            $classNameToGenerate = $this->getCurrentModuleNamespace()
-                . '\\Helper\\'
-                . $this->getNormalizedClassnameByArgument($input->getArgument('classpath'));
-            $filePathToGenerate = 'Helper/' . $classFileName . '.php';
+        $classFileName = $this->getNormalizedPathByArgument($input->getArgument('classpath'));
+        $classNameToGenerate = $this->getCurrentModuleNamespace()
+            . '\\Helper\\'
+            . $this->getNormalizedClassnameByArgument($input->getArgument('classpath'));
+        $filePathToGenerate = 'Helper/' . $classFileName . '.php';
 
-            $classGenerator = $this->create(ClassGenerator::class);
+        $classGenerator = $this->create(ClassGenerator::class);
 
-            /** @var $classGenerator ClassGenerator */
-            $classGenerator->setExtendedClass('AbstractHelper');
-            $classGenerator->addUse('Magento\Framework\App\Helper\AbstractHelper');
+        /** @var $classGenerator ClassGenerator */
+        $classGenerator->setExtendedClass('AbstractHelper');
+        $classGenerator->addUse('Magento\Framework\App\Helper\AbstractHelper');
 
-            $classGenerator->setName($classNameToGenerate);
+        $classGenerator->setName($classNameToGenerate);
 
-            $fileGenerator = FileGenerator::fromArray(
-                [
-                    'classes' => [$classGenerator],
-                ]
-            );
+        $fileGenerator = FileGenerator::fromArray(
+            [
+                'classes' => [$classGenerator],
+            ]
+        );
 
-            $directoryWriter = $this->getCurrentModuleDirectoryWriter();
-            $directoryWriter->writeFile($filePathToGenerate, $fileGenerator->generate());
+        $directoryWriter = $this->getCurrentModuleDirectoryWriter();
+        $directoryWriter->writeFile($filePathToGenerate, $fileGenerator->generate());
 
-            $output->writeln('<info>generated </info><comment>' . $filePathToGenerate . '</comment>');
-        } catch (Exception $e) {
-            $output->writeln('<error>' . $e->getMessage() . '</error>');
-        }
+        $output->writeln('<info>generated </info><comment>' . $filePathToGenerate . '</comment>');
     }
 }

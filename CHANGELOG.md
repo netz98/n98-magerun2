@@ -1,6 +1,26 @@
 RECENT CHANGES
 ==============
 
+1.3.1
+-----
+* Fix: Install command using wrong php binary and eating installer errors (report by David Lambauer, fix by Tom Klingenberg, #267)
+* Fix: Minor PHP version for Magento 2 extensions (by Alexander Turiak, #269)
+* Fix: Magento object manager usage in production mode (by Tom Klingenberg, #241)
+* Fix: Support for db-setting arrays (e.g. driver_options) (by Tom Klingenberg)
+* Fix: Class names in data setup twig template (by Jurgisl, #262)
+* Fix: Regex in VariablesCommandTest (by Jürgen Thelen, #255)
+* Imp: Build phar reproduceable and from dev requirements (by Tom Klingenberg)
+* Imp: Support NULL values in config:set and config:get (by Tom Klingenberg, #208)
+* Imp: Better handle incomplete Magento 2 installments (by Tom Klingenberg)
+* Imp: Dispatch adminhtml_cache_flush_all with cache:flush (report by Viktor Steinwand, #263)
+* New: Compilation of the bash autocomplete-file (by Tom Klingenberg)
+* New: Add current Magento2 versions (thanks Pieter Hoste, #270)
+* New: Add current Magento2 versions (by Tom Klingenberg)
+* New: Add sys:cron:schedule command (by Pieter Hoste, #257)
+* New: Port of design:demo-notice command (by Jürgen Thelen, #69)
+* New: Build with PHP 7.1 for some jobs (by Tom Klingenberg, #256)
+* New: Port of admin:notifications command (by Jürgen Thelen, #29)
+
 1.3.0
 -----
 * Fix: Fatal error when running Magerun 2 inside a Magento 1 tree (by Tom KLingenberg, #253)

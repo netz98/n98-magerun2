@@ -8,38 +8,35 @@
 namespace N98\Magento\Command\Cache;
 
 use N98\Magento\Command\TestCase;
-use Symfony\Component\Console\Tester\CommandTester;
 
 class DisableCommandTest extends TestCase
 {
     const NONEXISTENT_CACHE_TYPE = 'FAKE_CACHE_TYPE';
-    /**
-     * @var $command ListCommand
-     */
-    protected $command = null;
-
-    public function setUp()
-    {
-        $application = $this->getApplication();
-        $application->add(new DisableCommand);
-        $application->add(new ListCommand);
-
-        $this->command = $this->getApplication()->find('cache:disable');
-    }
 
     public function testDisableNonexistentCache()
     {
-        $commandTester = new CommandTester($this->command);
-        $commandTester->execute(array('command' => $this->command->getName(), 'type' => self::NONEXISTENT_CACHE_TYPE));
+        $expectedOutput = $this->getExpectedOutput();
 
-        // Strip tags because of console formatting (<info> etc)
-        $expectedOutput = strip_tags(
-            sprintf(DisableCommand::INVALID_TYPES_MESSAGE, self::NONEXISTENT_CACHE_TYPE) .
-            PHP_EOL .
-            DisableCommand::ABORT_MESSAGE .
-            PHP_EOL
+        $input = array(
+            'command' => 'cache:disable',
+            'type'    => self::NONEXISTENT_CACHE_TYPE,
         );
 
-        $this->assertEquals($expectedOutput, $commandTester->getDisplay());
+        $this->assertDisplayContains($input, $expectedOutput);
+    }
+
+    /**
+     * @return string
+     */
+    private function getExpectedOutput()
+    {
+        $buffer =
+            sprintf(
+                DisableCommand::INVALID_TYPES_MESSAGE,
+                self::NONEXISTENT_CACHE_TYPE
+            ) . PHP_EOL . DisableCommand::ABORT_MESSAGE . PHP_EOL;
+
+        // Strip tags because of console formatting (<info> etc)
+        return strip_tags($buffer);
     }
 }

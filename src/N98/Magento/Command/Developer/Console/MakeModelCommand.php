@@ -24,35 +24,31 @@ class MakeModelCommand extends AbstractGeneratorCommand
      *
      * @return int|void
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function catchedExecute(InputInterface $input, OutputInterface $output)
     {
-        try {
-            $modelFileName = $this->getNormalizedPathByArgument($input->getArgument('classpath'));
-            $classNameToGenerate = $this->getCurrentModuleNamespace()
-                . '\\Model\\'
-                . $this->getNormalizedClassnameByArgument($input->getArgument('classpath'));
-            $filePathToGenerate = 'Model/' . $modelFileName . '.php';
+        $modelFileName = $this->getNormalizedPathByArgument($input->getArgument('classpath'));
+        $classNameToGenerate = $this->getCurrentModuleNamespace()
+            . '\\Model\\'
+            . $this->getNormalizedClassnameByArgument($input->getArgument('classpath'));
+        $filePathToGenerate = 'Model/' . $modelFileName . '.php';
 
-            $classGenerator = $this->create(ClassGenerator::class);
+        $classGenerator = $this->create(ClassGenerator::class);
 
-            /** @var $classGenerator ClassGenerator */
-            $classGenerator->setExtendedClass('AbstractModel');
-            $classGenerator->addUse('Magento\Framework\Model\AbstractModel');
+        /** @var $classGenerator ClassGenerator */
+        $classGenerator->setExtendedClass('AbstractModel');
+        $classGenerator->addUse('Magento\Framework\Model\AbstractModel');
 
-            $classGenerator->setName($classNameToGenerate);
+        $classGenerator->setName($classNameToGenerate);
 
-            $modelFileGenerator = FileGenerator::fromArray(
-                [
-                    'classes' => [$classGenerator],
-                ]
-            );
+        $modelFileGenerator = FileGenerator::fromArray(
+            [
+                'classes' => [$classGenerator],
+            ]
+        );
 
-            $directoryWriter = $this->getCurrentModuleDirectoryWriter();
-            $directoryWriter->writeFile($filePathToGenerate, $modelFileGenerator->generate());
+        $directoryWriter = $this->getCurrentModuleDirectoryWriter();
+        $directoryWriter->writeFile($filePathToGenerate, $modelFileGenerator->generate());
 
-            $output->writeln('<info>generated </info><comment>' . $filePathToGenerate . '</comment>');
-        } catch (Exception $e) {
-            $output->writeln('<error>' . $e->getMessage() . '</error>');
-        }
+        $output->writeln('<info>generated </info><comment>' . $filePathToGenerate . '</comment>');
     }
 }

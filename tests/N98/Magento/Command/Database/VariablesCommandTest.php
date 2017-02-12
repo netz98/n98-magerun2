@@ -3,68 +3,47 @@
 namespace N98\Magento\Command\Database;
 
 use N98\Magento\Command\TestCase;
-use Symfony\Component\Console\Tester\CommandTester;
 
 class VariablesCommandTest extends TestCase
 {
-    /**
-     * @param array $options
-     *
-     * @return CommandTester
-     */
-    protected function getCommand(array $options)
-    {
-        $application = $this->getApplication();
-        $application->add(new StatusCommand());
-        $command = $this->getApplication()->find('db:variables');
-
-        $commandTester = new CommandTester($command);
-        $commandTester->execute(
-            array_merge(array(
-                'command' => $command->getName(),
-            ), $options)
-        );
-        return $commandTester;
-    }
-
     public function testExecute()
     {
-        $commandTester = $this->getCommand(array(
+        $input = array(
+            'command'  => 'db:variables',
             '--format' => 'csv',
-        ));
-        $display = $commandTester->getDisplay();
+        );
 
-        $this->assertContains('have_query_cache', $display);
-        $this->assertContains('innodb_log_buffer_size', $display);
-        $this->assertContains('max_connections', $display);
-        $this->assertContains('thread_cache_size', $display);
+        $this->assertDisplayContains($input, 'have_query_cache');
+        $this->assertDisplayContains($input, 'innodb_log_buffer_size');
+        $this->assertDisplayContains($input, 'max_connections');
+        $this->assertDisplayContains($input, 'thread_cache_size');
     }
 
     public function testSearch()
     {
-        $commandTester = $this->getCommand(array(
+        $input = array(
+            'command'  => 'db:variables',
             '--format' => 'csv',
             'search'   => 'Innodb%',
-        ));
+        );
 
-        $display = $commandTester->getDisplay();
-
-        $this->assertContains('innodb_concurrency_tickets', $display);
-        $this->assertContains('innodb_file_format_check', $display);
-        $this->assertContains('innodb_force_load_corrupted', $display);
-        $this->assertContains('innodb_log_file_size', $display);
-        $this->assertContains('innodb_read_io_threads', $display);
+        $this->assertDisplayContains($input, 'innodb_concurrency_tickets');
+        $this->assertDisplayContains($input, 'innodb_file_format_check');
+        $this->assertDisplayContains($input, 'innodb_force_load_corrupted');
+        $this->assertDisplayContains($input, 'innodb_log_file_size');
+        $this->assertDisplayContains($input, 'innodb_read_io_threads');
     }
 
     public function testRounding()
     {
-        $commandTester = $this->getCommand(array(
+        $input = array(
+            'command'    => 'db:variables',
             '--format'   => 'csv',
             '--rounding' => '2',
             'search'     => '%size%',
-        ));
+        );
 
-        $this->assertRegExp('~max_binlog_stmt_cache_size," [0-9\.]+[A-Z]"~', $commandTester->getDisplay());
-        $this->assertRegExp('~myisam_max_sort_file_size,"  [0-9\.]+[A-Z]"~', $commandTester->getDisplay());
+        $this->assertDisplayRegExp($input, '~max_binlog_stmt_cache_size," [0-9\.]+[A-Z]"~');
+        $this->assertDisplayRegExp($input, '~myisam_max_sort_file_size," +[0-9\.]+[A-Z]"~');
     }
 }

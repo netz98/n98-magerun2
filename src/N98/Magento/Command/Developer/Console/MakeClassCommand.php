@@ -26,31 +26,27 @@ class MakeClassCommand extends AbstractGeneratorCommand
      *
      * @return int|void
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function catchedExecute(InputInterface $input, OutputInterface $output)
     {
-        try {
-            $classFileName = $this->getNormalizedPathByArgument($input->getArgument(self::CLASSPATH));
+        $classFileName = $this->getNormalizedPathByArgument($input->getArgument(self::CLASSPATH));
 
-            $classNameToGenerate = $this->getCurrentModuleNamespace()
-                . '\\'
-                . $this->getNormalizedClassnameByArgument($input->getArgument(self::CLASSPATH));
+        $classNameToGenerate = $this->getCurrentModuleNamespace()
+            . '\\'
+            . $this->getNormalizedClassnameByArgument($input->getArgument(self::CLASSPATH));
 
-            $filePathToGenerate = $classFileName . '.php';
+        $filePathToGenerate = $classFileName . '.php';
 
-            /** @var $classGenerator ClassGenerator */
-            $classGenerator = $this->create(ClassGenerator::class);
-            $classGenerator->setName($classNameToGenerate);
+        /** @var $classGenerator ClassGenerator */
+        $classGenerator = $this->create(ClassGenerator::class);
+        $classGenerator->setName($classNameToGenerate);
 
-            $fileGenerator = FileGenerator::fromArray([
-                'classes' => [$classGenerator],
-            ]);
+        $fileGenerator = FileGenerator::fromArray([
+            'classes' => [$classGenerator],
+        ]);
 
-            $directoryWriter = $this->getCurrentModuleDirectoryWriter();
-            $directoryWriter->writeFile($filePathToGenerate, $fileGenerator->generate());
+        $directoryWriter = $this->getCurrentModuleDirectoryWriter();
+        $directoryWriter->writeFile($filePathToGenerate, $fileGenerator->generate());
 
-            $output->writeln('<info>generated </info><comment>' . $filePathToGenerate . '</comment>');
-        } catch (Exception $e) {
-            $output->writeln('<error>' . $e->getMessage() . '</error>');
-        }
+        $output->writeln('<info>generated </info><comment>' . $filePathToGenerate . '</comment>');
     }
 }

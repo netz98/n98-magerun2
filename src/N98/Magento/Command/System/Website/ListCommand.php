@@ -11,11 +11,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 class ListCommand extends AbstractMagentoCommand
 {
     /**
-     * @var array
-     */
-    protected $infos;
-
-    /**
      * @var \Magento\Store\Model\StoreManagerInterface
      */
     protected $storeManager;

@@ -3,7 +3,6 @@
 namespace N98\Magento\Command\Script\Repository;
 
 use N98\Magento\Command\TestCase;
-use Symfony\Component\Console\Tester\CommandTester;
 
 class ListCommandTest extends TestCase
 {
@@ -14,18 +13,8 @@ class ListCommandTest extends TestCase
         $config['script']['folders'][] = __DIR__ . '/_scripts';
         $application->setConfig($config);
 
-        $application->add(new RunCommand());
-        $command = $this->getApplication()->find('script:repo:list');
-
-        $commandTester = new CommandTester($command);
-        $commandTester->execute(
-            array(
-                'command' => $command->getName(),
-            )
-        );
-
-        $this->assertContains('Cache Flush Command Test (Hello World)', $commandTester->getDisplay());
-        $this->assertContains('Foo command', $commandTester->getDisplay());
-        $this->assertContains('Bar command', $commandTester->getDisplay());
+        $this->assertDisplayContains('script:repo:list', 'Cache Flush Command Test (Hello World)');
+        $this->assertDisplayContains('script:repo:list', 'Foo command');
+        $this->assertDisplayContains('script:repo:list', 'Bar command');
     }
 }

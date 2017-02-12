@@ -44,6 +44,7 @@ event:
 
 commands:
   customCommands:
+    - N98\Magento\Command\Admin\NotificationsCommand
     - N98\Magento\Command\Admin\User\ListCommand
     - N98\Magento\Command\Admin\User\DeleteUserCommand
     - N98\Magento\Command\Admin\User\ChangePasswordCommand
@@ -69,6 +70,7 @@ commands:
     - N98\Magento\Command\Database\StatusCommand
     - N98\Magento\Command\Database\Maintain\CheckTablesCommand
     - N98\Magento\Command\Database\InfoCommand
+    - N98\Magento\Command\Design\DemoNoticeCommand
     - N98\Magento\Command\Developer\ConsoleCommand
     - N98\Magento\Command\Developer\Module\CreateCommand
     - N98\Magento\Command\Developer\Report\CountCommand
@@ -89,6 +91,7 @@ commands:
     - N98\Magento\Command\System\Cron\HistoryCommand
     - N98\Magento\Command\System\Cron\ListCommand
     - N98\Magento\Command\System\Cron\RunCommand
+    - N98\Magento\Command\System\Cron\ScheduleCommand
     - N98\Magento\Command\System\InfoCommand
     - N98\Magento\Command\System\MaintenanceCommand
     - N98\Magento\Command\System\Setup\ChangeVersionCommand
@@ -167,6 +170,20 @@ commands:
 
   N98\Magento\Command\Installer\InstallCommand:
     magento-packages:
+      - name: magento-ce-2.1.4
+        package: magento/project-community-edition
+        version: 2.1.4
+        options:
+          prefer-dist: true
+          stability: alpha
+          repository-url: https://repo.magento.com
+      - name: magento-ce-2.1.3
+        package: magento/project-community-edition
+        version: 2.1.3
+        options:
+          prefer-dist: true
+          stability: alpha
+          repository-url: https://repo.magento.com
       - name: magento-ce-2.1.2
         package: magento/project-community-edition
         version: 2.1.2
@@ -184,6 +201,41 @@ commands:
       - name: magento-ce-2.1.0
         package: magento/project-community-edition
         version: 2.1.0
+        options:
+          prefer-dist: true
+          stability: alpha
+          repository-url: https://repo.magento.com
+      - name: magento-ce-2.0.12
+        package: magento/project-community-edition
+        version: 2.0.12
+        options:
+          prefer-dist: true
+          stability: alpha
+          repository-url: https://repo.magento.com
+      - name: magento-ce-2.0.11
+        package: magento/project-community-edition
+        version: 2.0.11
+        options:
+          prefer-dist: true
+          stability: alpha
+          repository-url: https://repo.magento.com
+      - name: magento-ce-2.0.10
+        package: magento/project-community-edition
+        version: 2.0.11
+        options:
+          prefer-dist: true
+          stability: alpha
+          repository-url: https://repo.magento.com
+      - name: magento-ce-2.0.9
+        package: magento/project-community-edition
+        version: 2.0.11
+        options:
+          prefer-dist: true
+          stability: alpha
+          repository-url: https://repo.magento.com
+      - name: magento-ce-2.0.8
+        package: magento/project-community-edition
+        version: 2.0.11
         options:
           prefer-dist: true
           stability: alpha

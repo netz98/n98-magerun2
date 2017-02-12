@@ -2,100 +2,101 @@
 #
 # build from clean checkout
 #
+# usage: ./build.sh from project root
 set -euo pipefail
 IFS=$'\n\t'
 
-name="$(awk '/<project name="([^"]*)"/ && !done {print gensub(/<project name="([^"]*)".*/, "\\1", "g"); done=1}' build.xml
-)"
-phar="${name}.phar"
+exit_trap() {
+  local status=$?
+  if [[ -d "${base_dir}/${build_dir}" ]]; then
+    echo "trap: removing '${build_dir}'.."
+    rm -rf "${base_dir}/${build_dir}"
+  fi
+  echo "exit ($status)."
+}
 
-echo "Building ${phar}..."
-
-echo "$0 executed in $(pwd -P)"
-
-build_dir="build/output"
-
-if [ -d "${build_dir}" ]; then
-    rm -rf "${build_dir}"
-fi
-if [ -d "${build_dir}" ]; then
-    echo "Can not remove build-dir '${build_dir}'"
-fi
-mkdir "${build_dir}"
-if [ ! -d "${build_dir}" ]; then
-    echo "Can not create build-dir '${build_dir}'"
+establish_build_dir() {
+  local build_dir="${1}"
+  rm -rf "${build_dir}"
+  if [[ -d "${build_dir}" ]]; then
+    >&2 echo "Error: Can not remove build-dir '${build_dir}'"
     echo "aborting."
     exit 1
+  fi
+  mkdir "${build_dir}"
+  if [[ ! -d "${build_dir}" ]]; then
+    >&2 echo "Error: Can not create build-dir '${build_dir}'"
+    echo "aborting."
+    exit 1
+  fi
+}
+
+name="$(awk '/<project name="([^"]*)"/ && !done {print gensub(/<project name="([^"]*)".*/, "\\1", "g"); done=1}' build.xml)"
+nice_name="$(php -r "echo str_replace(' ', '', ucwords(strtr('${name}', '-', ' ')));")"
+phar="${name}.phar"
+echo "Building ${phar}..."
+
+base_dir="$(pwd -P)"
+build_dir="build/output"
+
+echo "$0 executed in ${base_dir}"
+
+trap exit_trap EXIT
+
+establish_build_dir "${build_dir}"
+
+git clone --quiet --no-local --depth 1 -- . "${build_dir}"
+
+composer_bin="${base_dir}/vendor/bin/composer"
+phing_bin="${base_dir}/vendor/bin/phing"
+
+# Set COMPOSER_HOME if HOME and COMPOSER_HOME not set (shell with no home-dir, e.g. build server with webhook)
+if [[ -z ${HOME+x} && -z ${COMPOSER_HOME+x} ]]; then
+  echo "provision: create COMPOSER_HOME directory for composer (no HOME)"
+  mkdir -p "build/composer-home"
+  export COMPOSER_HOME="$(pwd -P)/build/composer-home"
 fi
 
-git clone --no-local -- . "${build_dir}"
-
-composer="${build_dir}/composer.phar"
-
-if [ -e "${composer}" ]; then
+# build systems that do not have a composer install running get one for free
+if [[ ! -f "${phing_bin}" ]]; then
+    echo "provision: download composer.phar and install build dependencies ..."
+    composer="composer.phar"
+    rm -rf vendor
+    wget -q -O "${composer}" https://getcomposer.org/download/1.3.2/composer.phar
+    chmod +x "${composer}"
+    php -f "${composer}" -- --version
+    php -f "${composer}" -- --profile -q install --prefer-dist --no-interaction --ignore-platform-reqs
     rm "${composer}"
 fi
 
-# Set COMPOSER_HOME if HOME and COMPOSER_HOME not set (shell with no home-dir, e.g. build server with webhook)
-if [ -z ${HOME+x} ]; then
-    if [ -z ${COMPOSER_HOME+x} ]; then
-        mkdir -p "build/composer-home"
-        export COMPOSER_HOME="$(pwd -P)/build/composer-home"
-    fi
-fi
-
-if [ ! -e "${composer}" ]; then
-    echo "Downloading composer.phar..."
-    wget -O "${composer}" https://getcomposer.org/download/1.1.3/composer.phar
-    chmod +x "${composer}"
-fi
-
-"${composer}" --version
-php --version
-
-if ! "${composer}" -d="${build_dir}" --profile -q install --no-dev --no-interaction; then
-    echo "failed to install from composer.lock, installing without lockfile now"
-    rm "${build_dir}"/composer.lock
-    "${composer}" -d="${build_dir}" --profile -q install --no-dev --no-interaction
-fi
-
-"${composer}" -d="${build_dir}"/build --profile -q install --no-interaction
-
-if [ -e "${phar}" ]; then
-    echo "Remove earlier created ${phar} file"
-    rm "${phar}"
-fi
+echo "with: $(php --version|head -n 1)"
+echo "with: $("${composer_bin}" --version)"
+echo "with: $("${phing_bin}" -version)"
 
 cd "${build_dir}"
 
 echo "building in $(pwd -P)"
-git --no-pager log --oneline -1
+echo "build version: $(git --no-pager log --oneline -1)"
 
-echo "setting ulimits (new setting is to $(ulimit -Hn))..."
+echo "provision: ulimits (soft) set from $(ulimit -Sn) to $(ulimit -Hn) (hard) for faster phar builds..."
 ulimit -Sn $(ulimit -Hn)
+timestamp="$(git log --format=format:%ct HEAD -1)" # reproduceable build
+echo "build timestamp: ${timestamp}"
 
-echo "invoking phing dist_clean target..."
-set +e
-php -f build/vendor/phing/phing/bin/phing -dphar.readonly=0 -- -verbose dist_clean
-BUILD_STATUS=$?
-set -e
-if [ ${BUILD_STATUS} -ne 0 ]; then
-    >&2 echo "error: phing build failed with exit status ${BUILD_STATUS}"
-    exit ${BUILD_STATUS}
-fi
+php -f "${phing_bin}" -dphar.readonly=0 -- \
+  -Dcomposer_suffix="${nice_name}${timestamp}" \
+  -Dcomposer_bin="${composer_bin}" \
+  dist_clean
 
 php -f build/phar/phar-timestamp.php
 
 php -f "${phar}" -- --version
-
 ls -al "${phar}"
 
-php -r 'echo "SHA1: ", sha1_file("'"${phar}"'"), "\nMD5.: ", md5_file("'"${phar}"'"), "\n";'
-
 cd -
-
-cp -vip "${build_dir}"/"${phar}" "${phar}"
-
+cp -vp "${build_dir}"/"${phar}" "${phar}"
 rm -rf "${build_dir}"
+
+trap - EXIT
 
 echo "done."

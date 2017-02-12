@@ -7,7 +7,6 @@ use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Output\Output;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class GetCommand extends AbstractConfigCommand
@@ -23,8 +22,8 @@ class GetCommand extends AbstractConfigCommand
             ->setName('config:get')
             ->setDescription('Get a core config item')
             ->setHelp(
-<<<EOT
-If <info>path</info> is not set, all available config items will be listed.
+                <<<EOT
+                If <info>path</info> is not set, all available config items will be listed.
 The <info>path</info> may contain wildcards (*).
 If <info>path</info> ends with a trailing slash, all child items will be listed. E.g.
 
@@ -34,7 +33,12 @@ is the same as
 EOT
             )
             ->addArgument('path', InputArgument::OPTIONAL, 'The config path')
-            ->addOption('scope', null, InputOption::VALUE_REQUIRED, 'The config value\'s scope')
+            ->addOption(
+                'scope',
+                null,
+                InputOption::VALUE_REQUIRED,
+                'The config value\'s scope (default, websites, stores)'
+            )
             ->addOption('scope-id', null, InputOption::VALUE_REQUIRED, 'The config value\'s scope ID')
             ->addOption(
                 'decrypt',
@@ -84,8 +88,8 @@ HELP;
             'like' => str_replace('*', '%', $searchPath),
         ));
 
-        if ($scopeId = $input->getOption('scope')) {
-            $collection->addFieldToFilter('scope', array('eq' => $scopeId));
+        if ($scope = $input->getOption('scope')) {
+            $collection->addFieldToFilter('scope', array('eq' => $scope));
         }
 
         if ($scopeId = $input->getOption('scope-id')) {
@@ -116,7 +120,7 @@ HELP;
                 'scope_id' => $item->getScopeId(),
                 'value'    => $this->_formatValue(
                     $item->getValue(),
-                    $input->getOption('decrypt') ? 'decrypt' : false
+                    $input->getOption('decrypt') ? 'decrypt' : ''
                 ),
             );
         }
@@ -145,13 +149,39 @@ HELP;
                 $row['path'],
                 $row['scope'],
                 $row['scope_id'],
-                $row['value'],
+                $this->renderTableValue($row['value'], $format),
             );
         }
-        $this->getHelper('table')
+
+        /* @var $tableHelper \N98\Util\Console\Helper\TableHelper */
+        $tableHelper = $this->getHelper('table');
+        $tableHelper
             ->setHeaders(array('Path', 'Scope', 'Scope-ID', 'Value'))
             ->setRows($formattedTable)
             ->renderByFormat($output, $formattedTable, $format);
+    }
+
+    private function renderTableValue($value, $format)
+    {
+        if ($value === null) {
+            switch ($format) {
+                case null:
+                    $value = self::DISPLAY_NULL_UNKOWN_VALUE;
+                    break;
+                case 'json':
+                    break;
+                case 'csv':
+                case 'xml':
+                    $value = 'NULL';
+                    break;
+                default:
+                    throw new \UnexpectedValueException(
+                        sprintf("Unhandled format %s", var_export($value, true))
+                    );
+            }
+        }
+
+        return $value;
     }
 
     /**
@@ -194,13 +224,21 @@ HELP;
     protected function renderAsMagerunScript(OutputInterface $output, $table)
     {
         foreach ($table as $row) {
-            $value = str_replace(array("\n", "\r"), array('\n', '\r'), $row['value']);
+            $value = $row['value'];
+            if ($value !== null) {
+                $value = str_replace(array("\n", "\r"), array('\n', '\r'), $value);
+            }
+
+            $disaplayValue = $value === null ? "NULL" : escapeshellarg($value);
+            $protectNullString = $value === "NULL" ? '--no-null ' : '';
+
             $line = sprintf(
-                'config:set --scope-id=%s --scope=%s -- %s %s',
+                'config:set %s--scope-id=%s --scope=%s -- %s %s',
+                $protectNullString,
                 $row['scope_id'],
                 $row['scope'],
                 escapeshellarg($row['path']),
-                escapeshellarg($value)
+                $disaplayValue
             );
             $output->writeln($line);
         }

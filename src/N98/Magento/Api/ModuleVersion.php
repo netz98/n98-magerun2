@@ -19,7 +19,7 @@ class ModuleVersion implements ModuleInterface
     private $module;
 
     /**
-     * @var ModuleResource
+     * @var ModuleResourceInterface
      */
     private $resource;
 

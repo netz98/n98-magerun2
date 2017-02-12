@@ -2,14 +2,45 @@
 
 namespace N98\Magento\Command\Developer\Console;
 
+use Magento\Framework\App\State;
 use Magento\Framework\Filesystem\Directory\WriteInterface;
 use N98\Magento\Command\TestCase as BaseTestCase;
 use PHPUnit_Framework_MockObject_MockObject;
 use Psy\Context;
+use Symfony\Component\Console\Input\ArgvInput;
+use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Tester\CommandTester;
 
 abstract class TestCase extends BaseTestCase
 {
+    protected function setUp()
+    {
+        if ($this->runsInProductionMode()) {
+            $this->markTestSkipped('Developer command is not available in production mode');
+        }
+
+        parent::setUp();
+    }
+
+    private function runsInProductionMode()
+    {
+        $di = $this->getApplication()->getObjectManager();
+
+        $input = new ArgvInput();
+        $output = new ConsoleOutput();
+
+        /* @var $mode \Magento\Deploy\Model\Mode */
+        $mode = $di->create(
+            'Magento\Deploy\Model\Mode',
+            [
+                'input'  => $input,
+                'output' => $output,
+            ]
+        );
+
+        return $mode->getMode() === State::MODE_PRODUCTION;
+    }
+
     /**
      * @param AbstractConsoleCommand $command
      * @return CommandTester

@@ -5,7 +5,7 @@ namespace N98\Magento;
 use BadMethodCallException;
 use Composer\Autoload\ClassLoader;
 use Exception;
-use Magento\Framework\ObjectManager\ObjectManager;
+use Magento\Framework\ObjectManagerInterface;
 use N98\Magento\Application\Config;
 use N98\Magento\Application\ConfigurationLoader;
 use N98\Magento\Application\Console\Events;
@@ -38,7 +38,7 @@ class Application extends BaseApplication
     /**
      * @var string
      */
-    const APP_VERSION = '1.3.0';
+    const APP_VERSION = '1.3.1';
 
     /**
      * @var int
@@ -111,7 +111,7 @@ class Application extends BaseApplication
     private $detectionResult;
 
     /**
-     * @var ObjectManager
+     * @var ObjectManagerInterface
      */
     protected $_objectManager = null;
 
@@ -255,12 +255,22 @@ class Application extends BaseApplication
     protected function registerMagentoCoreCommands(OutputInterface $output)
     {
         $magentoRootFolder = $this->getMagentoRootFolder();
-        if (!$magentoRootFolder) {
+        if (0 === strlen($magentoRootFolder)) {
             return;
         }
 
         // Magento was found -> register core cli commands
-        $this->requireOnce($magentoRootFolder . '/app/bootstrap.php');
+        try {
+            $this->requireOnce($magentoRootFolder . '/app/bootstrap.php');
+        } catch (Exception $ex) {
+            $this->renderException($ex, $output);
+            $output->writeln(
+                "<info>Use --skip-core-commands to not require the Magento app/bootstrap.php which caused " .
+                "the exception.</info>"
+            );
+
+            return;
+        }
 
         $coreCliApplication = new \Magento\Framework\Console\Cli();
         $coreCliApplicationCommands = $coreCliApplication->all();
@@ -420,7 +430,7 @@ class Application extends BaseApplication
 
     /**
      * @param bool $preventException [optional] on uninitialized magento root folder (returns null then, caution!)
-     * @return string
+     * @return string|null
      */
     public function getMagentoRootFolder($preventException = false)
     {
@@ -448,7 +458,7 @@ class Application extends BaseApplication
     }
 
     /**
-     * @return int
+     * @return int|null
      */
     public function getMagentoMajorVersion()
     {
@@ -505,7 +515,7 @@ class Application extends BaseApplication
      * @param InputInterface $input An Input instance
      * @param OutputInterface $output An Output instance
      *
-     * @return integer 0 if everything went fine, or an error code
+     * @return int 0 if everything went fine, or an error code
      */
     public function doRun(InputInterface $input, OutputInterface $output)
     {
@@ -677,7 +687,7 @@ class Application extends BaseApplication
 
     /**
      * @param InputInterface $input
-     * @return string
+     * @return void
      */
     protected function _checkRootDirOption(InputInterface $input)
     {
@@ -827,7 +837,7 @@ MAGENTOHINT;
     }
 
     /**
-     * @return ObjectManager
+     * @return ObjectManagerInterface
      */
     public function getObjectManager()
     {

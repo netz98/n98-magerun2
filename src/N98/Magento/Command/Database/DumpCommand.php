@@ -45,8 +45,7 @@ class DumpCommand extends AbstractDatabaseCommand
                 'only-command',
                 null,
                 InputOption::VALUE_NONE,
-                'Print only mysqldump command. 
-                Do not execute'
+                'Print only mysqldump command. Do not execute'
             )
             ->addOption(
                 'print-only-filename',
@@ -65,8 +64,8 @@ class DumpCommand extends AbstractDatabaseCommand
                 'human-readable',
                 null,
                 InputOption::VALUE_NONE,
-                'Use a single insert with column names per row. Useful to track database differences. Use ' .
-                'db:import --optimize for speeding up the import.'
+                'Use a single insert with column names per row. Useful to track database differences. Use db:import ' .
+                '--optimize for speeding up the import.'
             )
             ->addOption(
                 'add-routines',
@@ -85,12 +84,13 @@ class DumpCommand extends AbstractDatabaseCommand
             ->setDescription('Dumps database with mysqldump cli client according to informations from env.php');
 
         $help = <<<HELP
-Dumps configured magento database with `mysqldump`.
-You must have installed the MySQL client tools.
+Dumps configured magento database with `mysqldump`. You must have installed
+the MySQL client tools.
 
 On debian systems run `apt-get install mysql-client` to do that.
 
 The command reads app/etc/env.php to find the correct settings.
+
 If you like to skip data of some tables you can use the --strip option.
 The strip option creates only the structure of the defined tables and
 forces `mysqldump` to skip the data.
@@ -118,10 +118,11 @@ Extended: https://github.com/netz98/n98-magerun/wiki/Stripped-Database-Dumps
 
 See it in action: http://youtu.be/ttjZHY6vThs
 
-- If you like to prepend a timestamp to the dump name the --add-time option can be used.
+- If you like to prepend a timestamp to the dump name the --add-time option
+  can be used.
 
-- The command comes with a compression function. Add i.e. `--compression=gz` to dump directly in
- gzip compressed file.
+- The command comes with a compression function. Add i.e. `--compression=gz`
+  to dump directly in gzip compressed file.
 
 HELP;
         $this->setHelp($help);
@@ -142,13 +143,16 @@ HELP;
      */
     private function getTableDefinitions()
     {
-        /** @var DatabaseHelper $database */
-        $database = $this->getHelper('database');
-        $tableDefinitions = $database->getTableDefinitions(
-            $this->getCommandConfig()
-        );
+        $this->commandConfig = $this->getCommandConfig();
 
-        return $tableDefinitions;
+        if (is_null($this->tableDefinitions)) {
+            /* @var $dbHelper DatabaseHelper */
+            $dbHelper = $this->getHelper('database');
+
+            $this->tableDefinitions = $dbHelper->getTableDefinitions($this->commandConfig);
+        }
+
+        return $this->tableDefinitions;
     }
 
     /**
@@ -158,40 +162,71 @@ HELP;
      */
     public function getTableDefinitionHelp()
     {
-        $messages = array();
+        $messages = PHP_EOL;
         $this->commandConfig = $this->getCommandConfig();
-        $messages[] = '';
-        $messages[] = '<comment>Strip option</comment>';
-        $messages[] = ' Separate each table to strip by a space.';
-        $messages[] = ' You can use wildcards like * and ? in the table names to strip multiple tables.';
-        $messages[] = ' In addition you can specify pre-defined table groups, that start with an @';
-        $messages[] = ' Example: "dataflow_batch_export unimportant_module_* @log';
-        $messages[] = '';
-        $messages[] = '<comment>Available Table Groups</comment>';
+        $messages .= <<<HELP
+<comment>Strip option</comment>
+ If you like to skip data of some tables you can use the --strip option.
+ The strip option creates only the structure of the defined tables and
+ forces `mysqldump` to skip the data.
+
+ Separate each table to strip by a space.
+ You can use wildcards like * and ? in the table names to strip multiple
+ tables. In addition you can specify pre-defined table groups, that start
+ with an
+
+ Example: "dataflow_batch_export unimportant_module_* @log
+
+    $ n98-magerun.phar db:dump --strip="@stripped"
+
+<comment>Available Table Groups</comment>
+
+HELP;
 
         $definitions = $this->getTableDefinitions();
+        $list = array();
+        $maxNameLen = 0;
         foreach ($definitions as $id => $definition) {
-            $description = isset($definition['description']) ? $definition['description'] : '';
-            /** @TODO:
-             * Column-Wise formatting of the options, see InputDefinition::asText for code to pad by the max length,
-             * but I do not like to copy and paste ..
-             */
-            $messages[] = ' <info>@' . $id . '</info> ' . $description;
+            $name = '@' . $id;
+            $description = isset($definition['description']) ? $definition['description'] . '.' : '';
+            $nameLen = strlen($name);
+            if ($nameLen > $maxNameLen) {
+                $maxNameLen = $nameLen;
+            }
+            $list[] = array($name, $description);
         }
 
-        return implode(PHP_EOL, $messages);
+        $decrSize = 78 - $maxNameLen - 3;
+
+        foreach ($list as $entry) {
+            list($name, $description) = $entry;
+            $delta = max(0, $maxNameLen - strlen($name));
+            $spacer = $delta ? str_repeat(' ', $delta) : '';
+            $buffer = wordwrap($description, $decrSize);
+            $buffer = strtr($buffer, array("\n" => "\n" . str_repeat(' ', 3 + $maxNameLen)));
+            $messages .= sprintf(" <info>%s</info>%s  %s\n", $name, $spacer, $buffer);
+        }
+
+        $messages .= <<<HELP
+
+Extended: https://github.com/netz98/n98-magerun/wiki/Stripped-Database-Dumps
+HELP;
+
+        return $messages;
     }
 
     public function getHelp()
     {
-        return parent::getHelp() . PHP_EOL
-        . $this->getCompressionHelp() . PHP_EOL
-        . $this->getTableDefinitionHelp();
+        return
+            parent::getHelp() . PHP_EOL
+            . $this->getCompressionHelp() . PHP_EOL
+            . $this->getTableDefinitionHelp();
     }
 
     /**
      * @param InputInterface $input
      * @param OutputInterface $output
+     *
      * @return int|void
      */
     protected function execute(InputInterface $input, OutputInterface $output)
