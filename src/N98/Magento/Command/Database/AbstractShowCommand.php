@@ -195,7 +195,11 @@ abstract class AbstractShowCommand extends AbstractDatabaseCommand
                     $v = Filesystem::humanFileSize($v, $rounding);
                 }
                 if (isset($this->_specialFormat[$k])) {
-                    $v = $this->{$this->_specialFormat[$k]}($v);
+                    $formatter = $this->_specialFormat[$k];
+                    if (is_string($formatter) && method_exists($this, $formatter)) {
+                        $formatter = array($this, $formatter);
+                    }
+                    $v = call_user_func($formatter, $v);
                 }
             }
             unset($v);

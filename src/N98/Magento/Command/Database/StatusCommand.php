@@ -2,6 +2,8 @@
 
 namespace N98\Magento\Command\Database;
 
+use N98\Util\TimeElapsed;
+
 class StatusCommand extends AbstractShowCommand
 {
     protected $showMethod = 'getGlobalStatus';
@@ -61,7 +63,7 @@ class StatusCommand extends AbstractShowCommand
      * @var array
      */
     protected $_specialFormat = array(
-        'Uptime' => 'timeElapsedString',
+        'Uptime' => array('N98\Util\TimeElapsed', 'short'),
     );
 
     protected function configure()
@@ -150,44 +152,13 @@ HELP;
      *
      * @param      $datetime
      * @param bool $full
+     * @deprecated since 1.3.2, use callback "N98\Util\TimeElapsed::short" instead
+     * @see \N98\Util\TimeElapsed::short()
      *
      * @return string
      */
     protected function timeElapsedString($datetime, $full = false)
     {
-        if (is_numeric($datetime)) {
-            $datetime = time() - $datetime;
-            $datetime = '@' . $datetime;
-        }
-
-        $now = new \DateTime;
-        $ago = new \DateTime($datetime);
-        $diff = $now->diff($ago);
-
-        $diff->w = floor($diff->d / 7);
-        $diff->d -= $diff->w * 7;
-
-        $string = array(
-            'y' => 'year',
-            'm' => 'month',
-            'w' => 'week',
-            'd' => 'day',
-            'h' => 'hour',
-            'i' => 'minute',
-            's' => 'second',
-        );
-        foreach ($string as $k => &$v) {
-            if ($diff->$k) {
-                $v = $diff->$k . ' ' . $v . ($diff->$k > 1 ? 's' : '');
-            } else {
-                unset($string[$k]);
-            }
-        }
-
-        if (!$full) {
-            $string = array_slice($string, 0, 1);
-        }
-
-        return $string ? implode(', ', $string) . ' ago' : 'just now';
+        return $full ? TimeElapsed::full($datetime) : TimeElapsed::short($datetime);
     }
 }
