@@ -90,6 +90,7 @@ class ComposerHelper extends AbstractHelper implements InputAwareInterface
      */
     public function setConfigValue($key, $values, $useGlobalConfig = true)
     {
+        $commandArgs = array();
         if ($useGlobalConfig) {
             $commandArgs[] = 'global';
         }

@@ -141,6 +141,7 @@ abstract class AbstractCronCommand extends AbstractMagentoCommand
      */
     protected function askJobCode(InputInterface $input, OutputInterface $output, $jobs)
     {
+        $question = array();
         foreach ($jobs as $key => $job) {
             $question[] = '<comment>[' . ($key + 1) . ']</comment> ' . $job['Job'] . PHP_EOL;
         }

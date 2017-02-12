@@ -135,7 +135,6 @@ HELP;
 
                 // comment
                 case '#':
-                    continue;
                     break;
 
                 // set var

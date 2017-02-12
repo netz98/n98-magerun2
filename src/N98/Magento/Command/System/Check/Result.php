@@ -24,17 +24,17 @@ class Result
     /**
      * @var string
      */
-    protected $_status;
-
-    /**
-     * @var array[string]
-     */
-    protected $_messages;
+    private $status;
 
     /**
      * @var string
      */
-    protected $_resultGroup;
+    private $message;
+
+    /**
+     * @var string
+     */
+    private $resultGroup;
 
     /**
      * @param string $status
@@ -43,9 +43,9 @@ class Result
      */
     public function __construct($status = self::STATUS_OK, $message = '', $resultGroup = '')
     {
-        $this->_status = $status;
-        $this->_message = $message;
-        $this->_resultGroup = $resultGroup;
+        $this->setStatus($status);
+        $this->message = $message;
+        $this->resultGroup = $resultGroup;
     }
 
     /**
@@ -53,7 +53,7 @@ class Result
      */
     public function isValid()
     {
-        return $this->_status === self::STATUS_OK;
+        return $this->status === self::STATUS_OK;
     }
 
     /**
@@ -72,7 +72,7 @@ class Result
             );
         }
 
-        $this->_status = $status;
+        $this->status = $status;
 
         return $this;
     }
@@ -82,7 +82,7 @@ class Result
      */
     public function getStatus()
     {
-        return $this->_status;
+        return $this->status;
     }
 
     /**
@@ -90,7 +90,7 @@ class Result
      */
     public function getMessage()
     {
-        return $this->_message;
+        return $this->message;
     }
 
     /**
@@ -99,7 +99,7 @@ class Result
      */
     public function setMessage($message)
     {
-        $this->_message = $message;
+        $this->message = $message;
 
         return $this;
     }
@@ -109,7 +109,7 @@ class Result
      */
     public function getResultGroup()
     {
-        return $this->_resultGroup;
+        return $this->resultGroup;
     }
 
     /**
@@ -117,6 +117,6 @@ class Result
      */
     public function setResultGroup($resultGroup)
     {
-        $this->_resultGroup = $resultGroup;
+        $this->resultGroup = $resultGroup;
     }
 }

@@ -22,11 +22,13 @@ interface ModuleVersionInterface
 
     /**
      * @param string $version
+     * @return void
      */
     public function setDataVersion($version);
 
     /**
      * @param string $version
+     * @return void
      */
     public function setDbVersion($version);
 }
