@@ -11,7 +11,12 @@ namespace N98\Magento\Api;
 use BadMethodCallException;
 use Magento\Framework\Module\ResourceInterface as ModuleResourceInterface;
 
-class ModuleVersion implements ModuleInterface
+/**
+ * Class ModuleVersion
+ *
+ * @package N98\Magento\Api
+ */
+class ModuleVersion implements ModuleInterface, ModuleVersionInterface
 {
     /**
      * @var Module
@@ -46,7 +51,7 @@ class ModuleVersion implements ModuleInterface
     }
 
     /**
-     * @return string
+     * {@inheritdoc}
      */
     public function getDataVersion()
     {
@@ -55,11 +60,12 @@ class ModuleVersion implements ModuleInterface
         if ($version === false) {
             throw new BadMethodCallException(sprintf("Module '%s' data-version is not available.", $name));
         }
+
         return $version;
     }
 
     /**
-     * @return string
+     * {@inheritdoc}
      */
     public function getDbVersion()
     {
@@ -68,11 +74,12 @@ class ModuleVersion implements ModuleInterface
         if ($version === false) {
             throw new BadMethodCallException(sprintf("Module '%s' db-version is not available.", $name));
         }
+
         return $version;
     }
 
     /**
-     * @param string $version
+     * {@inheritdoc}
      */
     public function setDataVersion($version)
     {
@@ -80,7 +87,7 @@ class ModuleVersion implements ModuleInterface
     }
 
     /**
-     * @param string $version
+     * {@inheritdoc}
      */
     public function setDbVersion($version)
     {

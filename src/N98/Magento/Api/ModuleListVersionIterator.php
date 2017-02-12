@@ -14,7 +14,7 @@ use Magento\Framework\Module\ModuleListInterface;
 use Magento\Framework\Module\ResourceInterface as ModuleResourceInterface;
 
 /**
- * Class ModuleListIterator
+ * Class ModuleListVersionIterator
  *
  * @package N98\Magento\Api
  */

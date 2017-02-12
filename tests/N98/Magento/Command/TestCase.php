@@ -8,6 +8,7 @@ use N98\Magento\Application;
 use N98\Magento\MagerunCommandTester;
 use N98\Magento\TestApplication;
 use PHPUnit_Framework_MockObject_MockObject;
+use PHPUnit_Framework_TestCase;
 
 /**
  * Class TestCase
@@ -15,7 +16,7 @@ use PHPUnit_Framework_MockObject_MockObject;
  * @codeCoverageIgnore
  * @package N98\Magento\Command\PHPUnit
  */
-abstract class TestCase extends \PHPUnit_Framework_TestCase
+abstract class TestCase extends PHPUnit_Framework_TestCase
 {
     /**
      * @var TestApplication
