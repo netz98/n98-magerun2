@@ -15,6 +15,22 @@ exit_trap() {
   echo "exit ($status)."
 }
 
+establish_build_dir() {
+  local build_dir="${1}"
+  rm -rf "${build_dir}"
+  if [[ -d "${build_dir}" ]]; then
+    >&2 echo "Error: Can not remove build-dir '${build_dir}'"
+    echo "aborting."
+    exit 1
+  fi
+  mkdir "${build_dir}"
+  if [[ ! -d "${build_dir}" ]]; then
+    >&2 echo "Error: Can not create build-dir '${build_dir}'"
+    echo "aborting."
+    exit 1
+  fi
+}
+
 name="$(awk '/<project name="([^"]*)"/ && !done {print gensub(/<project name="([^"]*)".*/, "\\1", "g"); done=1}' build.xml)"
 nice_name="$(php -r "echo str_replace(' ', '', ucwords(strtr('${name}', '-', ' ')));")"
 phar="${name}.phar"
@@ -27,18 +43,7 @@ echo "$0 executed in ${base_dir}"
 
 trap exit_trap EXIT
 
-rm -rf "${build_dir}"
-if [[ -d "${build_dir}" ]]; then
-  >&2 echo "Error: Can not remove build-dir '${build_dir}'"
-  echo "aborting."
-  exit 1
-fi
-mkdir "${build_dir}"
-if [[ ! -d "${build_dir}" ]]; then
-  >&2 echo "Error: Can not create build-dir '${build_dir}'"
-  echo "aborting."
-  exit 1
-fi
+establish_build_dir "${build_dir}"
 
 git clone --quiet --no-local --depth 1 -- . "${build_dir}"
 
@@ -50,6 +55,18 @@ if [[ -z ${HOME+x} && -z ${COMPOSER_HOME+x} ]]; then
   echo "provision: create COMPOSER_HOME directory for composer (no HOME)"
   mkdir -p "build/composer-home"
   export COMPOSER_HOME="$(pwd -P)/build/composer-home"
+fi
+
+# build systems that do not have a composer install running get one for free
+if [[ ! -f "${phing_bin}" ]]; then
+    echo "provision: download composer.phar and install build dependencies ..."
+    composer="composer.phar"
+    rm -rf vendor
+    wget -q -O "${composer}" https://getcomposer.org/download/1.3.2/composer.phar
+    chmod +x "${composer}"
+    php -f "${composer}" -- --version
+    php -f "${composer}" -- --profile -q install --prefer-dist --no-interaction --ignore-platform-reqs
+    rm "${composer}"
 fi
 
 echo "with: $(php --version|head -n 1)"
