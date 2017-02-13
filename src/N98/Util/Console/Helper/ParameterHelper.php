@@ -68,8 +68,8 @@ class ParameterHelper extends AbstractHelper
             $store = $storeManager->getStore($input->getArgument($argumentName));
         } catch (Exception $e) {
             $stores = array();
+            $question = array();
             $i = 0;
-
             foreach ($storeManager->getStores($withDefaultStore) as $store) {
                 $stores[$i] = $store->getId();
                 $question[] = sprintf(

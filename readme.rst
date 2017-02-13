@@ -100,14 +100,14 @@ Bash completion is available pre-generated, all commands and their respective
 options are availble on tab. To get completion for an otion type two dashes
 ("--") and then tab.
 
-To install the completion files, copy **n98-magerun.phar.bash** to your bash
+To install the completion files, copy **n98-magerun2.phar.bash** to your bash
 compatdir folder for autocompletion.
 
 On my Ubuntu system this can be done with the following command:
 
 .. code-block:: sh
 
-   # cp res/autocompletion/bash/n98-magerun.phar.bash /etc/bash_completion.d
+   # cp res/autocompletion/bash/n98-magerun2.phar.bash /etc/bash_completion.d
 
 The concrete folder can be obtained via pkg-config::
 

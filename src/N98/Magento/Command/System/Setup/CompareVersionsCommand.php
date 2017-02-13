@@ -208,20 +208,20 @@ HELP;
     }
 
     /**
-     * @param InputInterface $inputa
+     * @param InputInterface $input
      * @param OutputInterface $output
      * @param $headers
      * @param $table
      * @param $junit
      * @param $errors
      */
-    private function output(InputInterface $inputa, OutputInterface $output, $headers, $table, $junit, $errors)
+    private function output(InputInterface $input, OutputInterface $output, $headers, $table, $junit, $errors)
     {
         if ($junit) {
             $this->logJUnit($table, $junit);
         } else {
             // sort errors to bottom and decorate status with colors if no output format is specified
-            if (!$inputa->getOption('format')) {
+            if (!$input->getOption('format')) {
                 $this->sortAndDecorate($table);
             }
 
@@ -229,10 +229,10 @@ HELP;
             $tableHelper = $this->getHelper('table');
             $tableHelper
                 ->setHeaders($headers)
-                ->renderByFormat($output, $table, $inputa->getOption('format'));
+                ->renderByFormat($output, $table, $input->getOption('format'));
 
             // output summary line if no output format is specified
-            if (!$inputa->getOption('format')) {
+            if (!$input->getOption('format')) {
                 $this->writeSection($output, $this->buildSetupResultMessage($errors), $errors ? 'error' : 'info');
             }
         }

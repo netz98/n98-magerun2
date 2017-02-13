@@ -1,6 +1,10 @@
 RECENT CHANGES
 ==============
 
+1.3.2
+-----
+* Fix: Wrong version identifiers 2.0.8 - 2.0.10 (by Tom Klingenberg, #229)
+
 1.3.1
 -----
 * Fix: Install command using wrong php binary and eating installer errors (report by David Lambauer, fix by Tom Klingenberg, #267)
