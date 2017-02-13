@@ -1,6 +1,9 @@
 RECENT CHANGES
 ==============
 
+1.3.3
+-----
+
 1.3.2
 -----
 * Fix: Wrong version identifiers 2.0.8 - 2.0.10 (by Tom Klingenberg, #229)
