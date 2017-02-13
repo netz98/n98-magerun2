@@ -111,13 +111,13 @@ abstract class AbstractShowCommand extends AbstractDatabaseCommand
     {
         $rows = array();
         $i = 0;
-        foreach ($outputVars as $variableName => $variableValue) {
-            $rows[$i] = array($variableName, $variableValue);
+        foreach ($outputVars as $name => $value) {
+            $rows[$i] = array($name, $value);
             if (
                 true === $hasDescription &&
-                isset($this->_importantVars[$variableName], $this->_importantVars[$variableName]['desc'])
+                isset($this->_importantVars[$name]['desc'])
             ) {
-                $rows[$i][] = $this->formatDesc($this->_importantVars[$variableName]['desc']);
+                $rows[$i][] = $this->formatDesc($this->_importantVars[$name]['desc']);
             }
             $i++;
         }
@@ -125,11 +125,12 @@ abstract class AbstractShowCommand extends AbstractDatabaseCommand
         if (false === $hasDescription) {
             return $rows;
         }
-        foreach ($rows as $k => $r) {
-            if (2 === count($r)) {
-                $rows[$k] = $this->getVariableDescription($r);
+        foreach ($rows as $i => $row) {
+            if (2 === count($row)) {
+                $rows[$i] = $this->getVariableDescription($row);
             }
         }
+
         return $rows;
     }
 

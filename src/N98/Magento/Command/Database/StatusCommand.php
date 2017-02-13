@@ -112,7 +112,9 @@ HELP;
             $rows[] = array(
                 'Full table scans',
                 sprintf('%.2f', $tableScanRate * 100) . '%',
-                $this->formatDesc('HINT: "Handler_read_rnd_next" is reset to zero when reached the value of 2^32 (4G).'),
+                $this->formatDesc(
+                    'HINT: "Handler_read_rnd_next" is reset to zero when reached the value of 2^32 (4G).'
+                ),
             );
         }
         if (isset($this->_allVariables['Innodb_buffer_pool_read_requests'])) {
@@ -129,6 +131,7 @@ HELP;
                 ),
             );
         }
+
         return $rows;
     }
 
@@ -140,6 +143,7 @@ HELP;
     protected function allowRounding($name)
     {
         $isSize = false !== strpos($name, '_size');
+
         return $isSize;
     }
 
