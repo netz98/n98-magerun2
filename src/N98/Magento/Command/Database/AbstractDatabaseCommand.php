@@ -4,6 +4,7 @@ namespace N98\Magento\Command\Database;
 
 use N98\Magento\Command\AbstractMagentoCommand;
 use N98\Magento\Command\Database\Compressor\AbstractCompressor;
+use N98\Magento\Command\Database\Compressor\Compressor;
 use N98\Util\Console\Helper\DatabaseHelper;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -67,6 +68,7 @@ abstract class AbstractDatabaseCommand extends AbstractMagentoCommand
     public function __get($name)
     {
         if ($name == '_connection') {
+            // TODO(tk): deprecate
             return $this->getDatabaseHelper()->getConnection();
         }
     }
@@ -90,7 +92,7 @@ abstract class AbstractDatabaseCommand extends AbstractMagentoCommand
 
     /**
      * @param string $type
-     * @return AbstractCompressor
+     * @return Compressor
      * @deprecated Since 1.1.12; use AbstractCompressor::create() instead
      */
     protected function getCompressor($type)

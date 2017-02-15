@@ -43,7 +43,7 @@ class DumpCommandTest extends TestCase
             # testAddTimePrefixFilenameSpecified
             ['/^[0-9]{4}-[0-9]{2}-[0-9]{2}_[0-9]{6}_foo\.sql$/', ['filename' => 'foo.sql', '--add-time' => 'prefix', ]],
             # testAddTimeOffFilenameSpecified
-            ['/^foo.sql$/', ['filename' => 'foo.sql', '--add-time' => false, ]],
+            ['/^foo.sql$/', ['filename' => 'foo.sql', '--add-time' => 'no', ]],
             # testAddTimeFilenameSpecifiedRelative
             ['/^..\/foo_[0-9]{4}-[0-9]{2}-[0-9]{2}_[0-9]{6}\.sql$/', ['filename' => '../foo.sql', ]],
         ];

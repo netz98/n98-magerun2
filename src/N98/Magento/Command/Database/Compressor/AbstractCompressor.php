@@ -5,7 +5,7 @@ namespace N98\Magento\Command\Database\Compressor;
 use InvalidArgumentException;
 use N98\Util\OperatingSystem;
 
-abstract class AbstractCompressor
+abstract class AbstractCompressor implements Compressor
 {
     /**
      * @param string $type
