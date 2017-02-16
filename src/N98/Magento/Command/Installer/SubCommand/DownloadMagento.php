@@ -44,6 +44,7 @@ class DownloadMagento extends AbstractSubCommand
         $args
             // Add composer options
             ->addArgs($package['options'])
+            ->addArg('--no-dev')
             // Add arguments
             ->addArg($package['package'])
             ->addArg($this->config->getString('installationFolder'))
