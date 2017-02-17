@@ -4,6 +4,7 @@ namespace N98\Magento\Command\System\Cron;
 
 use Exception;
 use Magento\Cron\Model\Schedule;
+use Magento\Framework\App\Area;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -31,6 +32,11 @@ HELP;
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $this->state->setAreaCode(Area::AREA_CRONTAB);
+        $objectManager = $this->getObjectManager();
+        $configLoader = $objectManager->get('Magento\Framework\ObjectManager\ConfigLoaderInterface');
+        $objectManager->configure($configLoader->load(Area::AREA_CRONTAB));
+
         list($jobCode, $jobConfig, $model) = $this->getJobForExecuteMethod($input, $output);
 
         $callback = array($model, $jobConfig['method']);
@@ -48,7 +54,7 @@ HELP;
             ->save();
 
         try {
-            $this->state->emulateAreaCode('crontab', $callback, array($schedule));
+            $this->state->emulateAreaCode(Area::AREA_CRONTAB, $callback, array($schedule));
 
             $schedule
                 ->setStatus(Schedule::STATUS_SUCCESS)
