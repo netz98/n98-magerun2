@@ -3,6 +3,7 @@ RECENT CHANGES
 
 1.3.3
 -----
+* Fix: install Magento2 without development dependencies (by Tom Klingenberg, #272)
 * Fix: db:dump stdout output (report by Flip Hess, fix by Tom Klingenberg, #258)
 
 1.3.2
