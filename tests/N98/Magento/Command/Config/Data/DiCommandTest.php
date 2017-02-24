@@ -2,7 +2,7 @@
 
 namespace N98\Magento\Command\Config\Data;
 
-use N98\Magento\Command\PHPUnit\TestCase;
+use N98\Magento\Command\TestCase;
 use Symfony\Component\Console\Tester\CommandTester;
 
 class DiCommandTest extends TestCase
@@ -20,11 +20,11 @@ class DiCommandTest extends TestCase
             array(
                 'command' => 'config:data:di',
                 '--scope' => 'global',
-                'type'    => 'Magento\Framework\App\Response\Http'
+                'type'    => 'Psr\Log\LoggerInterface'
             )
         );
 
-        $this->assertContains('Magento\Framework\App\Response\Http', $commandTester->getDisplay());
+        $this->assertContains('preference', $commandTester->getDisplay());
     }
 
     /**
@@ -33,7 +33,7 @@ class DiCommandTest extends TestCase
      */
     public function itShouldLoadFrontendConfig()
     {
-        $command = $this->getApplication()->find('di:dump');
+        $command = $this->getApplication()->find('config:data:di');
 
         $commandTester = new CommandTester($command);
         $commandTester->execute(
@@ -44,6 +44,6 @@ class DiCommandTest extends TestCase
             )
         );
 
-        $this->assertContains('Magento\Framework\App\FrontControllerInterface', $commandTester->getDisplay());
+        $this->assertContains('Magento\Framework\App\FrontController', $commandTester->getDisplay());
     }
 }
