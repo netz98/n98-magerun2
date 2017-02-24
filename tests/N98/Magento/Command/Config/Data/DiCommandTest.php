@@ -18,7 +18,7 @@ class DiCommandTest extends TestCase
         $commandTester = new CommandTester($command);
         $commandTester->execute(
             array(
-                'command' => 'di:dump',
+                'command' => 'config:data:di',
                 '--scope' => 'global',
                 'type'    => 'Magento\Framework\App\Response\Http'
             )
@@ -38,7 +38,7 @@ class DiCommandTest extends TestCase
         $commandTester = new CommandTester($command);
         $commandTester->execute(
             array(
-                'command' => 'di:dump',
+                'command' => 'config:data:dump',
                 '--scope' => 'frontend',
                 'type'    => '\Magento\Framework\App\FrontControllerInterface'
             )
