@@ -1,18 +1,18 @@
 {
     "name": "{{vendorNamespace | lower }}/module-{{ moduleName | lower }}",
+    "description": "{% if description %}{{ description }}{% else %}Add your description here{% endif %}",
+    "type": "magento2-module",
     "license": [
         "proprietary"
     ],
-    "type": "magento2-module",
-    "description": "{% if description %}{{ description }}{% else %}Add your description here{% endif %}",
-    "require": {
-    },
     "authors":[
         {
             "name":"{% if authorName %}{{ authorName }}{% else %}Add your name here{% endif %}",
             "email":"{% if authorEmail %}{{ authorEmail  }}{% else %}Add your email address here{% endif %}"
         }
     ],
+    "require": {
+    },
     "autoload": {
         "files": [
             "registration.php"
