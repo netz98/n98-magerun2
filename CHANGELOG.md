@@ -1,6 +1,12 @@
 RECENT CHANGES
 ==============
 
+1.4.0
+-----
+* New: dev:module:bundle command (by Christian Münch)
+* New: config:data:acl command (by Christian Münch)
+* New: config:data:di command (by Christian Münch)
+
 1.3.3
 -----
 * Fix: db:dump stdout output (report by Flip Hess, fix by Tom Klingenberg, #258)
