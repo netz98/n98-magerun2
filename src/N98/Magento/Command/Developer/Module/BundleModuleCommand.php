@@ -91,7 +91,6 @@ class BundleModuleCommand extends AbstractMagentoCommand
 
             $zipArchive->close();
 
-            //$archiveManager->pack($modulePath, $outputFilename);
             $output->writeln('<info>Created archive:</info> <comment>' . $outputFilename . '</comment>');
         }
     }
