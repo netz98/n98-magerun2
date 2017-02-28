@@ -27,6 +27,7 @@ env:
     - SCRIPT_JOB="PHP-CS-FIXER"
     - SCRIPT_JOB="BUILDSH"
     - SCRIPT_JOB="BASH-AUTOCOMPLETION"
+    - MAGENTO_VERSION="magento-ce-2.1.5" INSTALL_SAMPLE_DATA=0
     - MAGENTO_VERSION="magento-ce-2.1.4" INSTALL_SAMPLE_DATA=0
     - MAGENTO_VERSION="magento-ce-2.1.3" INSTALL_SAMPLE_DATA=0
     - MAGENTO_VERSION="magento-ce-2.1.2" INSTALL_SAMPLE_DATA=0
@@ -49,6 +50,8 @@ matrix:
   fast_finish: true
   exclude:
     # Newer Magento versions uses newer PHP versions
+    - php: 5.5
+      env: MAGENTO_VERSION="magento-ce-2.1.6" INSTALL_SAMPLE_DATA=0
     - php: 5.5
       env: MAGENTO_VERSION="magento-ce-2.1.4" INSTALL_SAMPLE_DATA=0
     - php: 5.5
