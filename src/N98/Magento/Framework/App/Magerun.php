@@ -28,11 +28,18 @@ class Magerun implements \Magento\Framework\AppInterface
      */
     public function launch()
     {
-        // FIXME(tk) why initialize the area code that early?
-        return;
-        /* @var $appState \Magento\Framework\App\State */
-        $appState = $this->objectManager->get('Magento\Framework\App\State');
-        $appState->setAreaCode('adminhtml');
+        /*
+         * this method is intentionally left empty
+         *
+         * earlier the area-code was set to "adminhtml" but this should be done
+         * within a Command::execute() implementation if the command needs a specific
+         * area.
+         *
+         * this might even extend to bootstrapping the application as it configures
+         * the ObjectManager:
+         *
+         * @see \N98\Magento\Application::_initMagento2()
+         */
     }
 
     /**
