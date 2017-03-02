@@ -96,6 +96,10 @@ class ViewCommand extends AbstractMagentoCommand
         $output->writeln($cacheData);
     }
 
+    /**
+     * @param string $serialized
+     * @return string
+     */
     private function decorateSerialized($serialized)
     {
         if (version_compare(phpversion(), '7.0', '>=')) {
