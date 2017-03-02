@@ -90,16 +90,26 @@ class ViewCommand extends AbstractMagentoCommand
         }
 
         if ($input->getOption('unserialize')) {
-            if (version_compare(phpversion(), '7.0', '>=')) {
-                $cacheData = unserialize($cacheData, false);
-            } else {
-                $cacheData = unserialize($cacheData);
-            }
-            if ($cacheData !== false) {
-                $cacheData = json_encode($cacheData, JSON_PRETTY_PRINT);
-            }
+            $cacheData = $this->decorateSerialized($cacheData);
         }
 
         $output->writeln($cacheData);
+    }
+
+    private function decorateSerialized($serialized)
+    {
+        if (version_compare(phpversion(), '7.0', '>=')) {
+            $unserialized = unserialize($serialized, false);
+        } else {
+            $unserialized = unserialize($serialized);
+        }
+
+        if ($unserialized === false) {
+            $buffer = $serialized;
+        } else {
+            $buffer = json_encode($unserialized, JSON_PRETTY_PRINT);
+        }
+
+        return $buffer;
     }
 }
