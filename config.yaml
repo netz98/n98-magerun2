@@ -57,6 +57,7 @@ commands:
     - N98\Magento\Command\Config\DeleteCommand
     - N98\Magento\Command\Config\GetCommand
     - N98\Magento\Command\Config\SetCommand
+    - N98\Magento\Command\Config\Data\DiCommand
     - N98\Magento\Command\Customer\CreateCommand
     - N98\Magento\Command\Customer\InfoCommand
     - N98\Magento\Command\Customer\ListCommand
@@ -79,6 +80,7 @@ commands:
     - N98\Magento\Command\Developer\TemplateHintsBlocksCommand
     - N98\Magento\Command\Developer\TemplateHintsCommand
     - N98\Magento\Command\Developer\Theme\ListCommand
+    - N98\Magento\Command\Developer\Module\BundleModuleCommand
     - N98\Magento\Command\Eav\Attribute\ViewCommand
     - N98\Magento\Command\Generation\FlushCommand
     - N98\Magento\Command\GiftCard\Pool\GenerateCommand

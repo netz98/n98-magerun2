@@ -39,13 +39,13 @@ XML;
         }
 
         $argumentElementQuery = $xpath->query(
-            '//type[@name="Magento\Framework\Console\CommandList"]/arguments/argument'
+            '//type[@name="Magento\Framework\Console\CommandListInterface"]/arguments/argument'
         );
         if ($argumentElementQuery->length > 0) {
             $argumentElement = $argumentElementQuery->item(0);
         } else {
             $typeElement = $this->createElement('type');
-            $typeElement->setAttribute('name', 'Magento\Framework\Console\CommandList');
+            $typeElement->setAttribute('name', 'Magento\Framework\Console\CommandListInterface');
 
             $argumentsElement = $this->createElement('arguments');
             $typeElement->appendChild($argumentsElement);
