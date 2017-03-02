@@ -3,8 +3,11 @@ RECENT CHANGES
 
 1.3.3
 -----
+* Fix; Set forceUseDb option to type VALUE_NONE (by Juan Alonso, #273)
 * Fix: install Magento2 without development dependencies (by Tom Klingenberg, #272)
 * Fix: db:dump stdout output (report by Flip Hess, fix by Tom Klingenberg, #258)
+* Imp: composer.json templates (by Christian Münch, Tom Klingenberg)
+* New: Port of cache:report (by Jürgen Thelen, #39)
 * New: Add current Magento2 version 2.1.5 (by Tom Klingenberg)
 
 1.3.2
