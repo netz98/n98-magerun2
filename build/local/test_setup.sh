@@ -47,7 +47,7 @@ if [ "" != "$(installed_version)" ]; then
 else
     ensure_environment
     ensure_mysql_db
-    ensure_magento "magento-ce-2.1.2"
+    ensure_magento "magento-ce-2.1.5"
     ensure_magento2_auth
 fi
 

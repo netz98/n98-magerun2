@@ -2,9 +2,12 @@
 
 namespace N98\Magento\Command\Database;
 
-use N98\Magento\Command\Database\Compressor\AbstractCompressor;
+use InvalidArgumentException;
+use N98\Magento\Command\Database\Compressor\Compressor;
+use N98\Util\Console\Enabler;
 use N98\Util\Console\Helper\DatabaseHelper;
-use N98\Util\OperatingSystem;
+use N98\Util\Exec;
+use N98\Util\VerifyOrDie;
 use Symfony\Component\Console\Helper\DialogHelper;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -129,14 +132,6 @@ HELP;
     }
 
     /**
-     * @return bool
-     */
-    public function isEnabled()
-    {
-        return function_exists('exec') && !OperatingSystem::isWindows();
-    }
-
-    /**
      * @return array
      *
      * @deprecated Use database helper
@@ -231,6 +226,12 @@ HELP;
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        // communicate early what is required for this command to run (is enabled)
+        $enabler = new Enabler($this);
+        $enabler->functionExists('exec');
+        $enabler->functionExists('passthru');
+        $enabler->operatingSystemIsNotWindows();
+
         $this->detectDbSettings($output);
 
         if ($this->nonCommandOutput($input)) {
@@ -266,6 +267,7 @@ HELP;
         }
 
         $database = $this->getDatabaseHelper();
+
         $stripTables = $this->stripTables($input, $output);
         if ($stripTables) {
             // dump structure for strip-tables
@@ -343,28 +345,28 @@ HELP;
         if ($input->getOption('stdout')) {
             passthru($command, $returnValue);
         } else {
-            exec($command, $commandOutput, $returnValue);
+            Exec::run($command, $commandOutput, $returnValue);
         }
 
         if ($returnValue > 0) {
-            $output->writeln([
-                '<error>' . implode(PHP_EOL, $commandOutput) . '</error>',
-                '<error>Return Code: ' . $returnValue . '. ABORTED.</error>',
-            ]);
+            $output->writeln('<error>' . $commandOutput . '</error>');
+            $output->writeln('<error>Return Code: ' . $returnValue . '. ABORTED.</error>');
+
             return false;
         }
+
         return true;
     }
 
     /**
      * @param InputInterface $input
      * @param OutputInterface $output
-     * @return false|array
+     * @return array
      */
     private function stripTables(InputInterface $input, OutputInterface $output)
     {
         if (!$input->getOption('strip')) {
-            return false;
+            return array();
         }
 
         $stripTables = $this->getDatabaseHelper()->resolveTables(
@@ -374,7 +376,7 @@ HELP;
 
         if ($this->nonCommandOutput($input)) {
             $output->writeln(
-                '<comment>No-data export for: <info>' . implode(' ', $stripTables) . '</info></comment>'
+                sprintf('<comment>No-data export for: <info>%s</info></comment>', implode(' ', $stripTables))
             );
         }
 
@@ -388,33 +390,22 @@ HELP;
      */
     protected function postDumpPipeCommands()
     {
-        return ' | sed -e ' . escapeshellarg('s/DEFINER[ ]*=[ ]*[^*]*\*/\*/');
+        return ' | LANG=C LC_CTYPE=C LC_ALL=C sed -e ' . escapeshellarg('s/DEFINER[ ]*=[ ]*[^*]*\*/\*/');
     }
 
     /**
      * @param InputInterface $input
      * @param OutputInterface $output
-     * @param AbstractCompressor $compressor
+     * @param Compressor $compressor
+     *
      * @return string
      */
-    protected function getFileName(
-        InputInterface $input,
-        OutputInterface $output,
-        AbstractCompressor $compressor
-    ) {
-        $namePrefix = '';
-        $nameSuffix = '';
+    protected function getFileName(InputInterface $input, OutputInterface $output, Compressor $compressor)
+    {
         $nameExtension = '.sql';
 
-        if ($input->getOption('add-time') !== false) {
-            $timeStamp = date('Y-m-d_His');
-
-            if ($input->getOption('add-time') == 'suffix') {
-                $nameSuffix = '_' . $timeStamp;
-            } else {
-                $namePrefix = $timeStamp . '_';
-            }
-        }
+        $optionAddTime = $input->getOption('add-time');
+        list($namePrefix, $nameSuffix) = $this->getFileNamePrefixSuffix($optionAddTime);
 
         if (
             (
@@ -423,7 +414,9 @@ HELP;
             )
             && !$input->getOption('stdout')
         ) {
-            $defaultName = $namePrefix . $this->dbSettings['dbname'] . $nameSuffix . $nameExtension;
+            $defaultName = VerifyOrDie::filename(
+                $namePrefix . $this->dbSettings['dbname'] . $nameSuffix . $nameExtension
+            );
             if (isset($isDir) && $isDir) {
                 $defaultName = rtrim($fileName, '/') . '/' . $defaultName;
             }
@@ -439,7 +432,7 @@ HELP;
                 $fileName = $defaultName;
             }
         } else {
-            if ($input->getOption('add-time')) {
+            if ($optionAddTime) {
                 $pathParts = pathinfo($fileName);
                 $fileName = ($pathParts['dirname'] == '.' ? '' : $pathParts['dirname'] . '/') .
                     $namePrefix . $pathParts['filename'] . $nameSuffix . '.' . $pathParts['extension'];
@@ -449,6 +442,36 @@ HELP;
         $fileName = $compressor->getFileName($fileName);
 
         return $fileName;
+    }
+
+    /**
+     * @param null|bool|string $optionAddTime [optional] true for default "suffix", other string values: "prefix", "no"
+     * @return array
+     */
+    private function getFileNamePrefixSuffix($optionAddTime = null)
+    {
+        $namePrefix = '';
+        $nameSuffix = '';
+        if ($optionAddTime === null) {
+            return array($namePrefix, $nameSuffix);
+        }
+
+        $timeStamp = date('Y-m-d_His');
+
+        if (in_array($optionAddTime, array('suffix', true), true)) {
+            $nameSuffix = '_' . $timeStamp;
+        } elseif ($optionAddTime === 'prefix') {
+            $namePrefix = $timeStamp . '_';
+        } elseif ($optionAddTime !== 'no') {
+            throw new InvalidArgumentException(
+                sprintf(
+                    'Invalid --add-time value %s, possible values are none (for) "suffix", "prefix" or "no"',
+                    var_export($optionAddTime, true)
+                )
+            );
+        }
+
+        return array($namePrefix, $nameSuffix);
     }
 
     /**

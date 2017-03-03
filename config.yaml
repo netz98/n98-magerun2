@@ -53,6 +53,8 @@ commands:
     - N98\Magento\Command\Cache\EnableCommand
     - N98\Magento\Command\Cache\FlushCommand
     - N98\Magento\Command\Cache\ListCommand
+    - N98\Magento\Command\Cache\ReportCommand
+    - N98\Magento\Command\Cache\ViewCommand
     - N98\Magento\Command\Config\DeleteCommand
     - N98\Magento\Command\Config\GetCommand
     - N98\Magento\Command\Config\SetCommand
@@ -170,6 +172,13 @@ commands:
 
   N98\Magento\Command\Installer\InstallCommand:
     magento-packages:
+      - name: magento-ce-2.1.5
+        package: magento/project-community-edition
+        version: 2.1.5
+        options:
+          prefer-dist: true
+          stability: alpha
+          repository-url: https://repo.magento.com
       - name: magento-ce-2.1.4
         package: magento/project-community-edition
         version: 2.1.4

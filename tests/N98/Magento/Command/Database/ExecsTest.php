@@ -11,7 +11,7 @@ use N98\Magento\Command\Database\Compressor\Uncompressed;
 /**
  * Class ExecsTest
  *
- * @covers N98\Magento\Command\Database\Execs
+ * @covers \N98\Magento\Command\Database\Execs
  * @package N98\Magento\Command\Database
  */
 class ExecsTest extends \PHPUnit_Framework_TestCase
