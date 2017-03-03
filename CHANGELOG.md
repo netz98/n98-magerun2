@@ -1,6 +1,9 @@
 RECENT CHANGES
 ==============
 
+1.3.4
+-----
+
 1.3.3
 -----
 * Fix; Set forceUseDb option to type VALUE_NONE (by Juan Alonso, #273)
