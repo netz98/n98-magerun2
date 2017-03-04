@@ -79,6 +79,7 @@ commands:
     - N98\Magento\Command\Developer\TemplateHintsBlocksCommand
     - N98\Magento\Command\Developer\TemplateHintsCommand
     - N98\Magento\Command\Developer\Theme\ListCommand
+    - N98\Magento\Command\Eav\Attribute\ListCommand
     - N98\Magento\Command\Eav\Attribute\ViewCommand
     - N98\Magento\Command\Generation\FlushCommand
     - N98\Magento\Command\GiftCard\Pool\GenerateCommand
