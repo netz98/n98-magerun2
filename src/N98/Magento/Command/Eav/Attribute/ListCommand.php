@@ -92,7 +92,7 @@ class ListCommand extends AbstractMagentoCommand
             $row = [
                 $attribute->getAttributeCode(),
                 $attribute->getId(),
-                $entityType->getEntityTypeCode(),
+                $entityType->getEntityTypeCode() . ' (#' . $entityType->getEntityTypeId() . ')',
                 $attribute->getFrontendLabel(),
             ];
             if ($addBackend) {
