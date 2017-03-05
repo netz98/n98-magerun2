@@ -16,7 +16,7 @@ abstract class TestCase extends BaseTestCase
     protected function setUp()
     {
         if ($this->runsInProductionMode()) {
-            $this->markTestSkipped('Developer command is not available in production mode');
+            $this->markTestSkipped('This command is not available in production mode');
         }
 
         parent::setUp();

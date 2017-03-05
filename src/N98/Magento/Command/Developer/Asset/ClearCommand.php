@@ -194,8 +194,13 @@ EOT;
         if (!$this->initMagento()) {
             return;
         }
-        $this->output = $output;
 
+        if ($this->runsInProductionMode($input, $output)) {
+            $output->writeln('This command is not available in production mode');
+            return;
+        }
+
+        $this->output = $output;
         $themes = $input->getOption('theme');
         if ($themes) {
             $this->clearThemes($themes);

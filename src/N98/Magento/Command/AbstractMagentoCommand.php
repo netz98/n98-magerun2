@@ -6,6 +6,8 @@ use Composer\Factory as ComposerFactory;
 use Composer\IO\ConsoleIO;
 use Composer\Package\Loader\ArrayLoader as PackageLoader;
 use Composer\Package\PackageInterface;
+use Magento\Deploy\Model\Mode;
+use Magento\Framework\App\State;
 use Magento\Framework\ObjectManager\ObjectManager;
 use Magento\Framework\ObjectManagerInterface;
 use N98\Magento\Command\SubCommand\ConfigBag;
@@ -404,5 +406,25 @@ abstract class AbstractMagentoCommand extends Command
             $commandConfig,
             $configBag
         );
+    }
+
+    /**
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     * @return bool
+     */
+    public function runsInProductionMode(
+        InputInterface $input,
+        OutputInterface $output
+    ) {
+        $mode = $this->getObjectManager()->create(
+            Mode::class,
+            [
+                'input'  => $input,
+                'output' => $output,
+            ]
+        );
+
+        return $mode->getMode() === State::MODE_PRODUCTION;
     }
 }
