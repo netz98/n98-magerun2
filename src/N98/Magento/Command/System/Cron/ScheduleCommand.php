@@ -29,6 +29,11 @@ HELP;
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $this->state->setAreaCode(Area::AREA_CRONTAB);
+        $objectManager = $this->getObjectManager();
+        $configLoader = $objectManager->get('Magento\Framework\ObjectManager\ConfigLoaderInterface');
+        $objectManager->configure($configLoader->load(Area::AREA_CRONTAB));
+
         list($jobCode, $jobConfig) = $this->getJobForExecuteMethod($input, $output);
 
         $output->write(
