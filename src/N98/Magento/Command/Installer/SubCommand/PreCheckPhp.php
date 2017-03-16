@@ -42,7 +42,7 @@ class PreCheckPhp extends AbstractSubCommand
      */
     protected function checkXDebug()
     {
-        if (extension_loaded('xdebug') && xdebug_is_enabled() && ini_get('xdebug.max_nesting_level') < 200) {
+        if (extension_loaded('xdebug') && xdebug_is_enabled() && ini_get('xdebug.max_nesting_level') != -1 && ini_get('xdebug.max_nesting_level') < 200) {
             $errorMessage = 'Please change PHP ini setting "xdebug.max_nesting_level". '
                             . 'Please change it to a value >= 200. '
                             . 'Your current value is ' . ini_get('xdebug.max_nesting_level');
