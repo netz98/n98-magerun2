@@ -6,6 +6,7 @@ RECENT CHANGES
 * New: Command eav:attribute:list (by Jürgen Thelen, #99)
 * New: Command dev:asset:clear (by Jürgen Thelen, #141)
 * New: Command config:data:acl (by Christian Münch)
+* New: Command config:data:di (by Christian Münch)
 * New: Command search:engine:list (by Christian Münch)
 * Fix: sys:cron:schedule 'area code is not set' exception. (by Pieter Hoste, #277)
 * Fix: Allow -1 as value for infinite max nesting level for xdebug (by Peter Jaap, #278) 
