@@ -65,6 +65,8 @@ class DiCommand extends AbstractMagentoCommand
             $config = $configData;
         }
 
-        $dumper->dump($cloner->cloneVar($config), [$output, 'writeln']);
+        $dumpContent = $dumper->dump($cloner->cloneVar($config), true);
+
+        $output->write($dumpContent);
     }
 }
