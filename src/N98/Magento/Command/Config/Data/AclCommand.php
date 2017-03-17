@@ -32,8 +32,9 @@ class AclCommand extends AbstractMagentoCommand
     }
 
     /**
-     * @param InputInterface $input
+     * @param InputInterface  $input
      * @param OutputInterface $output
+     *
      * @return int|void
      */
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -54,7 +55,7 @@ class AclCommand extends AbstractMagentoCommand
 
     /**
      * @param TreeHelper $tree
-     * @param array $row
+     * @param array      $row
      */
     protected function renderNode($tree, $row)
     {
@@ -73,6 +74,7 @@ class AclCommand extends AbstractMagentoCommand
 
     /**
      * @param $row
+     *
      * @return string
      */
     private function formatNode($row)
@@ -82,9 +84,8 @@ class AclCommand extends AbstractMagentoCommand
 
     /**
      * @param $array
-     * @return void
      */
-    function recursiveSort(array &$array)
+    public function recursiveSort(array &$array)
     {
         uasort($array, [$this, 'compareNodes']);
 
@@ -98,6 +99,7 @@ class AclCommand extends AbstractMagentoCommand
     /**
      * @param array $a
      * @param array $b
+     *
      * @return int
      */
     private function compareNodes(array $a, array $b)
