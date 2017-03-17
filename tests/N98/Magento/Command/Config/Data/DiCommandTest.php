@@ -17,11 +17,11 @@ class DiCommandTest extends TestCase
 
         $commandTester = new CommandTester($command);
         $commandTester->execute(
-            array(
+            [
                 'command' => 'config:data:di',
                 '--scope' => 'global',
-                'type'    => 'Psr\Log\LoggerInterface'
-            )
+                'type'    => 'Psr\Log\LoggerInterface',
+            ]
         );
 
         $this->assertContains('preference', $commandTester->getDisplay());
@@ -37,11 +37,11 @@ class DiCommandTest extends TestCase
 
         $commandTester = new CommandTester($command);
         $commandTester->execute(
-            array(
+            [
                 'command' => 'config:data:dump',
                 '--scope' => 'frontend',
-                'type'    => '\Magento\Framework\App\FrontControllerInterface'
-            )
+                'type'    => '\Magento\Framework\App\FrontControllerInterface',
+            ]
         );
 
         $this->assertContains('Magento\Framework\App\FrontController', $commandTester->getDisplay());
