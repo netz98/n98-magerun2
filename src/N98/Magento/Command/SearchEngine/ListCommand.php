@@ -10,10 +10,15 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class ListCommand extends AbstractMagentoCommand
 {
+    /**
+     * @var \Magento\Search\Model\Adminhtml\System\Config\Source\Engine
+     */
+    private $searchEngineConfig;
+
     protected function configure()
     {
         $this
-            ->setName('search-engine:list')
+            ->setName('search:engine:list')
             ->setDescription('Lists all registered search engines')
             ->addOption(
                 'format',
@@ -22,6 +27,14 @@ class ListCommand extends AbstractMagentoCommand
                 'Output Format. One of [' . implode(',', RendererFactory::getFormats()) . ']'
             )
         ;
+    }
+
+    /**
+     * @param \Magento\Search\Model\Adminhtml\System\Config\Source\Engine $searchEngineConfig
+     */
+    public function inject(\Magento\Search\Model\Adminhtml\System\Config\Source\Engine $searchEngineConfig)
+    {
+        $this->searchEngineConfig = $searchEngineConfig;
     }
 
     /**
@@ -36,18 +49,17 @@ class ListCommand extends AbstractMagentoCommand
             return;
         }
 
-        $userList = $this->userModel->getCollection();
+        $searchEngines = $this->searchEngineConfig->toOptionArray();
+
         $table = array();
-        foreach ($userList as $user) {
-            $table[] = array(
-                $user->getId(),
-                $user->getUsername(),
-                $user->getEmail(),
-                $user->getIsActive() ? 'active' : 'inactive',
-            );
+        foreach ($searchEngines as $searchEngine) {
+            $table[] = [
+                $searchEngine['value'],
+                $searchEngine['label'],
+            ];
         }
         $this->getHelper('table')
-            ->setHeaders(array('id', 'username', 'email', 'status'))
+            ->setHeaders(array('code', 'label'))
             ->renderByFormat($output, $table, $input->getOption('format'));
     }
 }
