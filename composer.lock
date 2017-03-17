@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "f6c6351eb714d58c5b95467873a5433e",
+    "content-hash": "688a861055ab1b2314d30b2372fd1888",
     "packages": [
         {
             "name": "composer/ca-bundle",
@@ -584,6 +584,50 @@
                 "php"
             ],
             "time": "2017-02-10T20:20:03+00:00"
+        },
+        {
+            "name": "pbergman/tree-helper",
+            "version": "1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/pbergman/tree-printer.git",
+                "reference": "2017e02b61510bb5530a5e22c186dacac3aed829"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/pbergman/tree-printer/zipball/2017e02b61510bb5530a5e22c186dacac3aed829",
+                "reference": "2017e02b61510bb5530a5e22c186dacac3aed829",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4.0",
+                "symfony/console": "~2.6"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "PBergman": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Philip Bergman",
+                    "email": "pbergman@live.nl"
+                }
+            ],
+            "description": "A symfony console helper to print a tree",
+            "keywords": [
+                "array",
+                "builder",
+                "console",
+                "symfony",
+                "tree"
+            ],
+            "time": "2015-03-26T21:53:32+00:00"
         },
         {
             "name": "psr/log",
