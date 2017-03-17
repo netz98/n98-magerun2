@@ -204,13 +204,6 @@ Lists all websites.
 
    $ n98-magerun2.phar sys:website:list [--format[="..."]]
 
-List Magento cache status
-"""""""""""""""""""""""""
-
-.. code-block:: sh
-
-   $ n98-magerun2.phar cache:list
-
 Set Config
 """"""""""
 
@@ -330,6 +323,28 @@ Enable Magento cache
 
 If no code is specified, all cache types will be enabled.
 Run `cache:list` command to see all codes.
+
+Clear static view files
+"""""""""""""""""""""""
+
+.. code-block:: sh
+
+   $ n98-magerun2.phar dev:asset:clear [--theme="..."]
+
+Options:
+    --theme     The specific theme(s) to clear
+
+To clear assets for all themes:
+
+.. code-block:: sh
+
+   $ n98-magerun2.phar dev:asset:clear
+
+To clear assets for specific theme(s) only:
+
+.. code-block:: sh
+
+   $ n98-magerun2.phar dev:asset:clear --theme=Magento/luma
 
 EAV Attributes
 """"""""""""""
