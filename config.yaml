@@ -90,6 +90,7 @@ commands:
     - N98\Magento\Command\GiftCard\InfoCommand
     - N98\Magento\Command\GiftCard\RemoveCommand
     - N98\Magento\Command\OpenBrowserCommand
+    - N98\Magento\Command\SearchEngine\ListCommand
     - N98\Magento\Command\Script\Repository\ListCommand
     - N98\Magento\Command\Script\Repository\RunCommand
     - N98\Magento\Command\System\CheckCommand
