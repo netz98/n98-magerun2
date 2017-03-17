@@ -1,12 +1,17 @@
 RECENT CHANGES
 ==============
 
-1.3.4
+1.4.0
 -----
+* New: Command eav:attribute:list (by Jürgen Thelen, #99)
+* New: Command dev:asset:clear (by Jürgen Thelen, #141)
+* New: Command config:data:acl (by Christian Münch)
+* Fix: sys:cron:schedule 'area code is not set' exception. (by Pieter Hoste, #277)
+* Fix: Allow -1 as value for infinite max nesting level for xdebug (by Peter Jaap, #278) 
 
 1.3.3
 -----
-* Fix; Set forceUseDb option to type VALUE_NONE (by Juan Alonso, #273)
+* Fix: Set forceUseDb option to type VALUE_NONE (by Juan Alonso, #273)
 * Fix: install Magento2 without development dependencies (by Tom Klingenberg, #272)
 * Fix: db:dump stdout output (report by Flip Hess, fix by Tom Klingenberg, #258)
 * Imp: composer.json templates (by Christian Münch, Tom Klingenberg)
