@@ -44,7 +44,10 @@ class DiCommand extends AbstractMagentoCommand
 
         /** @var ConfigLoaderInterface $configLoader */
         $configLoader = $this->getObjectManager()->get(ConfigLoaderInterface::class);
-        $configData = $configLoader->load($input->getOption('scope'));
+        $configDataPrimary = $configLoader->load('primary');
+        $configDataScope = $configLoader->load($input->getOption('scope'));
+
+        $configData = array_merge($configDataPrimary, $configDataScope);
 
         $cloner = new VarCloner();
         $cloner->setMaxItems(-1);

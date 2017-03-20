@@ -11,7 +11,25 @@ class DiCommandTest extends TestCase
      * @test
      * @outputBuffering off
      */
-    public function itShouldLoadGlobalConfig()
+    public function itShouldLoadPrimaryConfig()
+    {
+        $command = $this->getApplication()->find('config:data:di');
+
+        $commandTester = new CommandTester($command);
+        $commandTester->execute(
+            [
+                'command' => 'config:data:di',
+            ]
+        );
+
+        $this->assertContains('LoggerInterface', $commandTester->getDisplay());
+    }
+
+    /**
+     * @test
+     * @outputBuffering off
+     */
+    public function itShouldLoadGlobalConfigScope()
     {
         $command = $this->getApplication()->find('config:data:di');
 
@@ -20,18 +38,17 @@ class DiCommandTest extends TestCase
             [
                 'command' => 'config:data:di',
                 '--scope' => 'global',
-                'type'    => 'Psr\Log\LoggerInterface',
             ]
         );
 
-        $this->assertContains('preference', $commandTester->getDisplay());
+        $this->assertContains('Magento\Catalog\Api\Data\ProductInterface', $commandTester->getDisplay());
     }
 
     /**
      * @test
      * @outputBuffering off
      */
-    public function itShouldLoadFrontendConfig()
+    public function itShouldLoadFrontendConfigScope()
     {
         $command = $this->getApplication()->find('config:data:di');
 
