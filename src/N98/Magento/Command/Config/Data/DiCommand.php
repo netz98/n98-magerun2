@@ -56,17 +56,6 @@ class DiCommand extends AbstractMagentoCommand
             return;
         }
 
-        if ($this->runsInProductionMode($input, $output)
-            && version_compare($this->productMetadata->getVersion(), '2.1.0', '<')
-        ) {
-            $output->writeln(sprintf(
-                'This command is not available in production mode for Magento versions <2.1.0. Current version: %s',
-                $this->productMetadata->getVersion()
-            ));
-
-            return;
-        }
-
         /** @var ConfigLoaderInterface $configLoader */
         $configLoader = $this->getObjectManager()->get(ConfigLoaderInterface::class);
         $configDataPrimary = $configLoader->load('primary');
