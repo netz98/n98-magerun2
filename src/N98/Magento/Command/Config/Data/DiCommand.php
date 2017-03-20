@@ -72,7 +72,7 @@ class DiCommand extends AbstractMagentoCommand
         $configDataPrimary = $configLoader->load('primary');
         $configDataScope = $configLoader->load($input->getOption('scope'));
 
-        $configData = array_merge($configDataPrimary, $configDataScope);
+        $configData = array_merge_recursive($configDataPrimary, $configDataScope);
 
         $cloner = new VarCloner();
         $cloner->setMaxItems(-1);
