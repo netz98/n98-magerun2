@@ -13,6 +13,11 @@ use Symfony\Component\VarDumper\Dumper\CliDumper;
 
 class DiCommand extends AbstractMagentoCommand
 {
+    /**
+     * @var \Magento\Framework\App\ProductMetadataInterface
+     */
+    private $productMetadata;
+
     protected function configure()
     {
         $this
@@ -30,6 +35,14 @@ class DiCommand extends AbstractMagentoCommand
     }
 
     /**
+     * @param \Magento\Framework\App\ProductMetadataInterface $productMetadata
+     */
+    public function inject(\Magento\Framework\App\ProductMetadataInterface $productMetadata)
+    {
+        $this->productMetadata = $productMetadata;
+    }
+
+    /**
      * @param \Symfony\Component\Console\Input\InputInterface   $input
      * @param \Symfony\Component\Console\Output\OutputInterface $output
      *
@@ -38,7 +51,19 @@ class DiCommand extends AbstractMagentoCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->detectMagento($output, true);
+
         if (!$this->initMagento()) {
+            return;
+        }
+
+        if ($this->runsInProductionMode($input, $output)
+            && version_compare($this->productMetadata->getVersion(), '2.1.0', '<')
+        ) {
+            $output->writeln(sprintf(
+                'This command is not available in production mode for Magento versions <2.1.0. Current version: %s',
+                $this->productMetadata->getVersion()
+            ));
+
             return;
         }
 
