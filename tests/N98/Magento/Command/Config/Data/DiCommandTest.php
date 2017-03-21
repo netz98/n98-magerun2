@@ -12,6 +12,18 @@ use Symfony\Component\Console\Tester\CommandTester;
 class DiCommandTest extends TestCase
 {
     /**
+     * @return void
+     */
+    protected function setUp()
+    {
+        if ($this->runsInProductionMode()) {
+            $this->markTestSkipped('This command is not available in production mode');
+        }
+
+        parent::setUp();
+    }
+
+    /**
      * @return bool
      */
     private function runsInProductionMode()
