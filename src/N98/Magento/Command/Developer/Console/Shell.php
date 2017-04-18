@@ -76,7 +76,7 @@ class Shell extends PsyShell
 
         if ($e instanceof NoModuleDefinedException) {
             $this->getConsoleOutput()->writeln('<warning>' . $e->getMessage() . '</warning>');
-            
+
             return;
         } elseif ($e instanceof ErrorException) {
             if (BinaryString::startsWith($e->getMessage(), 'PHP error:  Use of undefined constant')) {
@@ -93,7 +93,7 @@ class Shell extends PsyShell
         } elseif ($e instanceof ParseErrorException) {
             $message = substr($e->getMessage(), 0, strpos($e->getMessage(), ' on line'));
             $this->getConsoleOutput()->writeln('<error>' . $message . '</error>');
-            
+
             return;
         }
 
