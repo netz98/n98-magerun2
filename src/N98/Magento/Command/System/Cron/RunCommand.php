@@ -3,9 +3,9 @@
 namespace N98\Magento\Command\System\Cron;
 
 use Exception;
-use RuntimeException;
 use Magento\Cron\Model\Schedule;
 use Magento\Framework\App\Area;
+use RuntimeException;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
