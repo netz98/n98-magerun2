@@ -5,6 +5,7 @@ namespace N98\Magento\Command\System\Cron;
 use Exception;
 use Magento\Cron\Model\Schedule;
 use Magento\Framework\App\Area;
+use RuntimeException;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -66,6 +67,14 @@ HELP;
                 ->setMessages($e->getMessage())
                 ->setFinishedAt(strftime('%Y-%m-%d %H:%M:%S', $this->timezone->scopeTimeStamp()))
                 ->save();
+        }
+        
+        if (isset($e)) {
+            throw new RuntimeException(
+                sprintf('Cron-job "%s" threw exception %s', $jobCode, get_class($e)),
+                0,
+                $e
+            );
         }
 
         $output->writeln('<info>done</info>');
