@@ -36,7 +36,8 @@ class DumpCommand extends AbstractDatabaseCommand
                 'add-time',
                 't',
                 InputOption::VALUE_OPTIONAL,
-                'Adds time to filename (only if filename was not provided)'
+                'Append or prepend a timestamp to filename if a filename is provided. 
+                Possible values are "suffix", "prefix" or "no".'
             )
             ->addOption(
                 'compression',
