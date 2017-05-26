@@ -48,7 +48,7 @@ HELP;
 
     /**
      * Optimize a dump by converting single INSERTs per line to INSERTs with multiple lines
-     *
+     * as well as wrapping everything into one transaction.
      * @param $fileName
      * @return string temporary filename
      */
@@ -57,14 +57,13 @@ HELP;
         $in = fopen($fileName, 'r');
         $result = tempnam(sys_get_temp_dir(), 'dump') . '.sql';
         $out = fopen($result, 'w');
-
+        fwrite($out, 'SET autocommit=0;' . "\n");
         $currentTable = '';
         $maxlen = 8 * 1024 * 1024; // 8 MB
         $len = 0;
         while ($line = fgets($in)) {
             if (strtolower(substr($line, 0, 11)) == 'insert into') {
-                preg_match('/^insert into `(.*)` \(.*\) values (.*);/i', $line, $m);
-
+                preg_match('/^insert into `(.*)` \([^)]*\) values (.*);/i', $line, $m);
                 if (count($m) < 3) { // fallback for very long lines or other cases where the preg_match fails
                     if ($currentTable != '') {
                         fwrite($out, ";\n");
@@ -73,13 +72,11 @@ HELP;
                     $currentTable = '';
                     continue;
                 }
-
                 $table = $m[1];
                 $values = $m[2];
-
-                if ($table != $currentTable or ($len > $maxlen - 1000)) {
+                if ($table != $currentTable || ($len > $maxlen - 1000)) {
                     if ($currentTable != '') {
-                        fwrite($out, ";\n\n");
+                        fwrite($out, ";\n");
                     }
                     $currentTable = $table;
                     $insert = 'INSERT INTO `' . $table . '` VALUES ' . $values;
@@ -97,9 +94,10 @@ HELP;
                 fwrite($out, $line);
             }
         }
+        fwrite($out, ";\n");
+        fwrite($out, 'COMMIT;' . "\n");
         fclose($in);
         fclose($out);
-
         return $result;
     }
 
