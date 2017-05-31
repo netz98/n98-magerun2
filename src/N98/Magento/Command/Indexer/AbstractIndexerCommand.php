@@ -13,7 +13,8 @@ class AbstractIndexerCommand extends AbstractMagentoCommand
     protected function getIndexerList()
     {
         $list = array();
-        $indexCollection = $this->getObjectManager()->get('Magento\Indexer\Model\Indexer\Collection');
+        $indexCollection = $this->getIndexerCollection();
+
         foreach ($indexCollection as $indexer) {
             /* @var $indexer \Magento\Indexer\Model\Indexer */
             $lastReadbleRuntime = $this->getRuntime($indexer);
@@ -31,6 +32,14 @@ class AbstractIndexerCommand extends AbstractMagentoCommand
     }
 
     /**
+     * @return \Magento\Indexer\Model\Indexer\Collection
+     */
+    protected function getIndexerCollection()
+    {
+        return $this->getObjectManager()->get('Magento\Indexer\Model\Indexer\Collection');
+    }
+
+    /**
      * Returns a readable runtime
      *
      * @param $indexer
@@ -45,6 +54,7 @@ class AbstractIndexerCommand extends AbstractMagentoCommand
             return 'index not finished';
         }
         $lastRuntime = $dateTimeUtils->getDifferenceAsString($startTime, $endTime);
+
         return $lastRuntime;
     }
 

@@ -109,6 +109,7 @@ commands:
     - N98\Magento\Command\System\Store\Config\BaseUrlListCommand
     - N98\Magento\Command\System\Website\ListCommand
     - N98\Magento\Command\Indexer\ListCommand
+    - N98\Magento\Command\Indexer\RecreateTriggersCommand
     - N98\Magento\Command\Installer\InstallCommand
     - N98\Magento\Command\Developer\Module\ListCommand
     - N98\Magento\Command\Developer\Module\Observer\ListCommand
