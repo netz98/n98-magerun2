@@ -276,24 +276,17 @@ HELP;
                 '--no-data ' . $database->getMysqlClientToolConnectionString() .
                 ' ' . implode(' ', $stripTables) . $this->postDumpPipeCommands()
             );
-
-            // dump data for all other tables
-            $ignore = '';
-            foreach ($stripTables as $stripTable) {
-                $ignore .= '--ignore-table=' . $this->dbSettings['dbname'] . '.' . $stripTable . ' ';
-            }
-            $execs->add(
-                $ignore . $database->getMysqlClientToolConnectionString() . $this->postDumpPipeCommands()
-            );
-
-            return $execs;
-        } else {
-            $execs->add(
-                $database->getMysqlClientToolConnectionString() . $this->postDumpPipeCommands()
-            );
-
-            return $execs;
         }
+
+        // dump data for all other tables
+        $ignore = '';
+        foreach ($stripTables as $stripTable) {
+            $ignore .= '--ignore-table=' . $this->dbSettings['dbname'] . '.' . $stripTable . ' ';
+        }
+
+        $execs->add($ignore . $database->getMysqlClientToolConnectionString() . $this->postDumpPipeCommands());
+
+        return $execs;
     }
 
     /**
