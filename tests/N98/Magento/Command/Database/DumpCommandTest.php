@@ -110,6 +110,39 @@ class DumpCommandTest extends TestCase
         );
     }
 
+    public function testWithExcludeOption()
+    {
+        $input = array(
+            'command'        => 'db:dump',
+            '--add-time'     => true,
+            '--only-command' => true,
+            '--force'        => true,
+            '--exclude'      => 'core_config_data',
+            '--compression'  => 'gzip',
+        );
+
+        $dbConfig = $this->getDatabaseConnection()->getConfig();
+        $db = $dbConfig['dbname'];
+
+        $this->assertDisplayRegExp($input, "/--ignore-table=$db.core_config_data/");
+        $this->assertDisplayNotContains($input, "not_existing_table_1");
+        $this->assertDisplayContains($input, ".sql.gz");
+
+        /**
+         * Uncompressed
+         */
+        $this->assertDisplayNotContains(
+            array(
+                'command'        => 'db:dump',
+                '--add-time'     => true,
+                '--only-command' => true,
+                '--force'        => true,
+                '--exclude'      => 'core_config_data',
+            ),
+            ".sql.gz"
+        );
+    }
+
     /**
      * @test
      * @link https://github.com/netz98/n98-magerun2/issues/200
