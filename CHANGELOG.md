@@ -3,6 +3,7 @@ RECENT CHANGES
 
 1.4.1
 -----
+* New: Add current Magento2 versions (by Kristof Ringleff)
 
 1.4.0
 -----
