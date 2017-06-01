@@ -444,6 +444,16 @@ Example:
 
    $ n98-magerun2.phar dev:console "$a = 1; call cache:flush; ls;"
 
+
+The interactive console comes with a extendable code generator tool to create i.e. modules, cli commands,
+controllers, blocks, helpers etc.
+
+The console can be in a module context which allows you to generate code for a selected module.
+
+The basic idea of the stateful console was developed by `Jacques Bodin-Hullin https://github.com/jacquesbh`_ in this
+great tool `Installer https://github.com/jacquesbh/installer`_.
+
+
 n98-magerun Shell
 """""""""""""""""
 
