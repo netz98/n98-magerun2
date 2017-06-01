@@ -84,6 +84,12 @@ class DumpCommand extends AbstractDatabaseCommand
                 InputOption::VALUE_OPTIONAL,
                 'Tables to strip (dump only structure of those tables)'
             )
+            ->addOption(
+                'exclude',
+                'e',
+                InputOption::VALUE_OPTIONAL,
+                'Tables to exclude from the dump'
+            )
             ->addOption('force', 'f', InputOption::VALUE_NONE, 'Do not prompt if all options are defined')
             ->setDescription('Dumps database with mysqldump cli client according to informations from env.php');
 
@@ -276,24 +282,19 @@ HELP;
                 '--no-data ' . $database->getMysqlClientToolConnectionString() .
                 ' ' . implode(' ', $stripTables) . $this->postDumpPipeCommands()
             );
-
-            // dump data for all other tables
-            $ignore = '';
-            foreach ($stripTables as $stripTable) {
-                $ignore .= '--ignore-table=' . $this->dbSettings['dbname'] . '.' . $stripTable . ' ';
-            }
-            $execs->add(
-                $ignore . $database->getMysqlClientToolConnectionString() . $this->postDumpPipeCommands()
-            );
-
-            return $execs;
-        } else {
-            $execs->add(
-                $database->getMysqlClientToolConnectionString() . $this->postDumpPipeCommands()
-            );
-
-            return $execs;
         }
+
+        $excludeTables = $this->excludeTables($input, $output);
+
+        // dump data for all other tables
+        $ignore = '';
+        foreach (array_merge($excludeTables, $stripTables) as $ignoreTable) {
+            $ignore .= '--ignore-table=' . $this->dbSettings['dbname'] . '.' . $ignoreTable . ' ';
+        }
+
+        $execs->add($ignore . $database->getMysqlClientToolConnectionString() . $this->postDumpPipeCommands());
+
+        return $execs;
     }
 
     /**
@@ -382,6 +383,31 @@ HELP;
         }
 
         return $stripTables;
+    }
+
+    /**
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     * @return array
+     */
+    private function excludeTables(InputInterface $input, OutputInterface $output)
+    {
+        if (!$input->getOption('exclude')) {
+            return array();
+        }
+
+        $excludeTables = $this->getDatabaseHelper()->resolveTables(
+            explode(' ', $input->getOption('exclude')),
+            $this->getTableDefinitions()
+        );
+
+        if ($this->nonCommandOutput($input)) {
+            $output->writeln(
+                sprintf('<comment>Excluded: <info>%s</info></comment>', implode(' ', $excludeTables))
+            );
+        }
+
+        return $excludeTables;
     }
 
     /**
