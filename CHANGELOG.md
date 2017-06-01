@@ -3,7 +3,8 @@ RECENT CHANGES
 
 1.4.1
 -----
-* New: Add current Magento2 versions (by Kristof Ringleff)
+* New: Port db:dump --exclude from Magerun 1 (by Torrey Tsui, #294)
+* New: Add current Magento2 versions (by Kristof Ringleff, #292)
 
 1.4.0
 -----
