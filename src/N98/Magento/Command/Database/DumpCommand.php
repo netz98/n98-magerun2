@@ -36,8 +36,8 @@ class DumpCommand extends AbstractDatabaseCommand
                 'add-time',
                 't',
                 InputOption::VALUE_OPTIONAL,
-                'Append or prepend a timestamp to filename if a filename is provided. 
-                Possible values are "suffix", "prefix" or "no".'
+                'Append or prepend a timestamp to filename if a filename is provided. ' .
+                'Possible values are "suffix", "prefix" or "no".'
             )
             ->addOption(
                 'compression',
@@ -57,7 +57,12 @@ class DumpCommand extends AbstractDatabaseCommand
                 InputOption::VALUE_NONE,
                 'Execute and prints no output except the dump filename'
             )
-            ->addOption('dry-run', null, InputOption::VALUE_NONE, 'do everything but the dump')
+            ->addOption(
+                'dry-run',
+                null,
+                InputOption::VALUE_NONE,
+                'do everything but the dump'
+            )
             ->addOption(
                 'no-single-transaction',
                 null,
@@ -90,8 +95,13 @@ class DumpCommand extends AbstractDatabaseCommand
                 InputOption::VALUE_OPTIONAL,
                 'Tables to exclude from the dump'
             )
-            ->addOption('force', 'f', InputOption::VALUE_NONE, 'Do not prompt if all options are defined')
-            ->setDescription('Dumps database with mysqldump cli client according to informations from env.php');
+            ->addOption(
+                'force',
+                'f',
+                InputOption::VALUE_NONE,
+                'Do not prompt if all options are defined'
+            )
+            ->setDescription('Dumps database with mysqldump cli client');
 
         $help = <<<HELP
 Dumps configured magento database with `mysqldump`. You must have installed
@@ -100,31 +110,6 @@ the MySQL client tools.
 On debian systems run `apt-get install mysql-client` to do that.
 
 The command reads app/etc/env.php to find the correct settings.
-
-If you like to skip data of some tables you can use the --strip option.
-The strip option creates only the structure of the defined tables and
-forces `mysqldump` to skip the data.
-
-Dumps your database and excludes some tables. This is useful i.e. for development.
-
-Separate each table to strip by a space.
-You can use wildcards like * and ? in the table names to strip multiple tables.
-In addition you can specify pre-defined table groups, that start with an @
-Example: "dataflow_batch_export unimportant_module_* @log
-
-   $ n98-magerun.phar db:dump --strip="@stripped"
-
-Available Table Groups:
-
-* @log Log tables
-* @dataflowtemp Temporary tables of the dataflow import/export tool
-* @stripped Standard definition for a stripped dump (logs and dataflow)
-* @sales Sales data (orders, invoices, creditmemos etc)
-* @customers Customer data
-* @trade Current trade data (customers and orders). You usally do not want those in developer systems.
-* @development Removes logs and trade data so developers do not have to work with real customer data
-
-Extended: https://github.com/netz98/n98-magerun/wiki/Stripped-Database-Dumps
 
 See it in action: http://youtu.be/ttjZHY6vThs
 
@@ -273,13 +258,16 @@ HELP;
             $execs->addOptions('--routines ');
         }
 
+        /* @var $database DatabaseHelper */
         $database = $this->getDatabaseHelper();
+
+        $mysqlClientToolConnectionString = $database->getMysqlClientToolConnectionString();
 
         $stripTables = $this->stripTables($input, $output);
         if ($stripTables) {
             // dump structure for strip-tables
             $execs->add(
-                '--no-data ' . $database->getMysqlClientToolConnectionString() .
+                '--no-data ' . $mysqlClientToolConnectionString .
                 ' ' . implode(' ', $stripTables) . $this->postDumpPipeCommands()
             );
         }
@@ -292,7 +280,7 @@ HELP;
             $ignore .= '--ignore-table=' . $this->dbSettings['dbname'] . '.' . $ignoreTable . ' ';
         }
 
-        $execs->add($ignore . $database->getMysqlClientToolConnectionString() . $this->postDumpPipeCommands());
+        $execs->add($ignore . $mysqlClientToolConnectionString . $this->postDumpPipeCommands());
 
         return $execs;
     }
@@ -371,10 +359,7 @@ HELP;
             return array();
         }
 
-        $stripTables = $this->getDatabaseHelper()->resolveTables(
-            explode(' ', $input->getOption('strip')),
-            $this->getTableDefinitions()
-        );
+        $stripTables = $this->resolveDatabaseTables($input->getOption('strip'));
 
         if ($this->nonCommandOutput($input)) {
             $output->writeln(
@@ -396,10 +381,7 @@ HELP;
             return array();
         }
 
-        $excludeTables = $this->getDatabaseHelper()->resolveTables(
-            explode(' ', $input->getOption('exclude')),
-            $this->getTableDefinitions()
-        );
+        $excludeTables = $this->resolveDatabaseTables($input->getOption('exclude'));
 
         if ($this->nonCommandOutput($input)) {
             $output->writeln(
@@ -408,6 +390,20 @@ HELP;
         }
 
         return $excludeTables;
+    }
+
+    /**
+     * @param string $list space separated list of tables
+     * @return array
+     */
+    private function resolveDatabaseTables($list)
+    {
+        $database = $this->getDatabaseHelper();
+
+        return $database->resolveTables(
+            explode(' ', $list),
+            $database->getTableDefinitions($this->getCommandConfig())
+        );
     }
 
     /**
