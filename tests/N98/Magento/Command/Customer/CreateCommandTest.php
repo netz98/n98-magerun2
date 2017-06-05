@@ -31,7 +31,7 @@ class CreateCommandTest extends TestCase
         $input['--format'] = 'csv';
 
         $this->assertDisplayContains($input, 'email,password,firstname,lastname');
-        $this->assertdisplayContains($input, $generatedEmail . ',password123,John,Doe');
+        $this->assertdisplayContains($input, $generatedEmail . ',Password123,John,Doe');
     }
 
     /**

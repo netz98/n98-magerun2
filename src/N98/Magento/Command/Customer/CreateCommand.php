@@ -3,7 +3,8 @@
 namespace N98\Magento\Command\Customer;
 
 use Magento\Customer\Api\AccountManagementInterface;
-use Magento\Framework\App\State;
+use Magento\Framework\App\State as AppState;
+use Magento\Framework\Exception\LocalizedException;
 use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -18,7 +19,7 @@ class CreateCommand extends AbstractCustomerCommand
     private $accountManagement;
 
     /**
-     * @var State
+     * @var AppState
      */
     private $appState;
 
@@ -42,10 +43,11 @@ class CreateCommand extends AbstractCustomerCommand
 
     /**
      * @param AccountManagementInterface $accountManagement
+     * @param AppState $appState
      */
     public function inject(
         AccountManagementInterface $accountManagement,
-        State $appState
+        AppState $appState
     ) {
         $this->accountManagement = $accountManagement;
         $this->appState = $appState;
@@ -62,8 +64,6 @@ class CreateCommand extends AbstractCustomerCommand
         if (!$this->initMagento()) {
             return;
         }
-
-        $this->setAdminArea();
 
         $dialog = $this->getHelperSet()->get('dialog');
 
@@ -100,14 +100,21 @@ class CreateCommand extends AbstractCustomerCommand
             $customer->setEmail($email);
             $customer->setFirstname($firstname);
             $customer->setLastname($lastname);
+            $customer->setStoreId($website->getDefaultGroup()->getId());
 
             try {
-                $this->appState->emulateAreaCode('frontend', function () use ($customer, $password) {
-                    $this->accountManagement->createAccount(
-                        $customer->getDataModel(),
-                        $password
-                    );
-                });
+                try {
+                    $this->appState->emulateAreaCode('frontend', function () use ($customer, $password) {
+                        $this->accountManagement->createAccount(
+                            $customer->getDataModel(),
+                            $password
+                        );
+                    });
+                } catch (LocalizedException $e) {
+                    if ($e->getRawMessage() !== 'Design config must have area and store.') {
+                        throw $e;
+                    }
+                }
 
                 if ($outputPlain) {
                     $output->writeln(
@@ -118,7 +125,10 @@ class CreateCommand extends AbstractCustomerCommand
                     );
                 } else {
                     $table[] = array(
-                        $email, $password, $firstname, $lastname,
+                        $email,
+                        $password,
+                        $firstname,
+                        $lastname,
                     );
                 }
             } catch (\Exception $e) {
@@ -138,14 +148,5 @@ class CreateCommand extends AbstractCustomerCommand
         }
 
         return $isError ? 1 : 0;
-    }
-
-    /**
-     * Required to avoid "Area code not set" exceptions from Mage framework
-     */
-    public function setAdminArea()
-    {
-        $appState = $this->getObjectManager()->get('Magento\Framework\App\State');
-        $appState->setAreaCode('adminhtml');
     }
 }
