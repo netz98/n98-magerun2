@@ -9,3 +9,5 @@
 /.n98-magerun2
 
 .idea
+
+.php_cs.cache

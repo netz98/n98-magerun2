@@ -1,0 +1,22 @@
+-   repo: git://github.com/pre-commit/pre-commit-hooks
+    sha: v0.7.0
+    hooks:
+    -   id: check-added-large-files
+    -   id: check-json
+    -   id: check-xml
+    -   id: check-merge-conflict
+    -   id: check-byte-order-marker
+-   repo: git://github.com/netz98/pre-commit-php.git
+    sha: 3c9f2b073a8d35e539c0e6a77693dc14fb4f1faf
+    hooks:
+    -   id: php-cs-fixer
+        args:
+        - -q
+        - --config-file=.php_cs
+    -   id: php-lint-all
+    -   id: php-unit
+        args:
+            - "-c"
+            - "tests/unit"
+            - "--debug"
+
