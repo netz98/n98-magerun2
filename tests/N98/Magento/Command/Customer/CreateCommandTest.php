@@ -18,7 +18,7 @@ class CreateCommandTest extends TestCase
         $input = array(
             'command'   => 'customer:create',
             'email'     => $generatedEmail,
-            'password'  => 'password123',
+            'password'  => 'Password123',
             'firstname' => 'John',
             'lastname'  => 'Doe',
             'website'   => $this->getWebsiteCode(),

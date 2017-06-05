@@ -63,6 +63,8 @@ class CreateCommand extends AbstractCustomerCommand
             return;
         }
 
+        $this->setAdminArea();
+
         $dialog = $this->getHelperSet()->get('dialog');
 
         // Email
@@ -119,7 +121,6 @@ class CreateCommand extends AbstractCustomerCommand
                         $email, $password, $firstname, $lastname,
                     );
                 }
-
             } catch (\Exception $e) {
                 $isError = true;
                 $output->writeln('<error>' . $e->getMessage() . '</error>');
@@ -137,5 +138,14 @@ class CreateCommand extends AbstractCustomerCommand
         }
 
         return $isError ? 1 : 0;
+    }
+
+    /**
+     * Required to avoid "Area code not set" exceptions from Mage framework
+     */
+    public function setAdminArea()
+    {
+        $appState = $this->getObjectManager()->get('Magento\Framework\App\State');
+        $appState->setAreaCode('adminhtml');
     }
 }
