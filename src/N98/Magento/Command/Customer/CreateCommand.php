@@ -54,7 +54,7 @@ class CreateCommand extends AbstractCustomerCommand
     /**
      * @param InputInterface $input
      * @param OutputInterface $output
-     * @return int|null|void
+     * @return int
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -91,6 +91,8 @@ class CreateCommand extends AbstractCustomerCommand
         $outputPlain = $input->getOption('format') === null;
 
         $table = array();
+        $isError = false;
+
         if (!$customer->getId()) {
             $customer->setWebsiteId($website->getId());
             $customer->setEmail($email);
@@ -104,25 +106,27 @@ class CreateCommand extends AbstractCustomerCommand
                         $password
                     );
                 });
-            } catch (\Exception $e) {
-                $output->writeln('<error>' . $e->getMessage() . '</error>');
-            }
 
-            if ($outputPlain) {
-                $output->writeln(
-                    sprintf(
-                        '<info>Customer <comment>%s</comment> successfully created</info>',
-                        $email
-                    )
-                );
-            } else {
-                $table[] = array(
-                    $email, $password, $firstname, $lastname,
-                );
+                if ($outputPlain) {
+                    $output->writeln(
+                        sprintf(
+                            '<info>Customer <comment>%s</comment> successfully created</info>',
+                            $email
+                        )
+                    );
+                } else {
+                    $table[] = array(
+                        $email, $password, $firstname, $lastname,
+                    );
+                }
+
+            } catch (\Exception $e) {
+                $isError = true;
+                $output->writeln('<error>' . $e->getMessage() . '</error>');
             }
         } else {
             if ($outputPlain) {
-                $output->writeln('<error>Customer ' . $email . ' already exists</error>');
+                $output->writeln('<warning>Customer ' . $email . ' already exists</warning>');
             }
         }
 
@@ -131,5 +135,7 @@ class CreateCommand extends AbstractCustomerCommand
                 ->setHeaders(array('email', 'password', 'firstname', 'lastname'))
                 ->renderByFormat($output, $table, $input->getOption('format'));
         }
+
+        return $isError ? 1 : 0;
     }
 }
