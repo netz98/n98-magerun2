@@ -2,10 +2,8 @@
 netz98 magerun CLI tools for Magento 2
 ======================================
 
-.. image:: https://img.shields.io/website-up-down-green-red/http/shields.io.svg?style=plastic   :target: http://magerun.net/
+The n98 magerun cli tools provides some handy tools to work with Magento from command line.
 
-The n98 magerun cli tools provides some handy tools to work with Magento from command line. Please also check out the `n98-magerun Website
-<http://magerun.net/>`_ for further information, releases or tutorials.
 
 Build Status
 ------------
@@ -30,14 +28,15 @@ Build Status
 |                        |    :target: https://codecov.io/github/netz98/n98-magerun2?branch=develop                       |
 +------------------------+------------------------------------------------------------------------------------------------+
 
-DEVELOPMENT IN GIT BRANCH **develop**.
+Development is done in **develop** branch.
 
 This software is only running with Magento 2.
+
 If you use Magento 1 please use another stable version (https://github.com/netz98/n98-magerun).
 
 Compatibility
 -------------
-The tools will automatically be tested for multiple PHP versions (5.5, 5.6, 7.0). It's currently running in various Linux distributions and Mac OS X.
+The tools will automatically be tested for multiple PHP versions. It's currently running in various Linux distributions and Mac OS X.
 Microsoft Windows is not fully supported (some Commands like `db:dump` or `install` are excluded).
 
 Installation
@@ -45,30 +44,67 @@ Installation
 
 There are three ways to install the tools:
 
-Download phar file
-""""""""""""""""""
+Download and Install Phar File
+""""""""""""""""""""""""""""""
+
+Download the latest stable N98-Magerun phar-file from the file-server_:
 
 .. code-block:: sh
 
     wget https://files.magerun.net/n98-magerun2.phar
 
-or if you have problems with SSL certificate:
+or if you prefer to use Curl:
 
 .. code-block:: sh
 
    curl -O https://files.magerun.net/n98-magerun2.phar
 
-You can make the .phar file executable.
+Verify the download by comparing the SHA256 checksum with the one on the website:
+
+.. code-block:: sh
+
+    shasum -a256 n98-magerun2.phar
+
+If it shows the same checksum as on the website, you downloaded the file successfully.
+
+Now you can make the phar-file executable:
 
 .. code-block:: sh
 
     chmod +x ./n98-magerun2.phar
+
+The base-installation is now complete and you can verify it:
+
+.. code-block:: sh
+
+    ./n98-magerun.phar --version
+
+The command should execute successfully and show you the version number of N98-Magerun like:
+
+.. code-block:: sh
+
+    n98-magerun2 version 1.3.2 by netz98 GmbH
+
+You now have successfully installed Magerun! You can tailor the installation further like installing it system-wide and
+enable autocomplete - read on for more information about these and other features.
 
 If you want to use the command system wide you can copy it to `/usr/local/bin`.
 
 .. code-block:: sh
 
     sudo cp ./n98-magerun2.phar /usr/local/bin/
+
+Install with Composer
+"""""""""""""""""""""
+Require Magerun within the Magento (or any other) project and you can then
+execute it from the vendor’s bin folder:
+
+.. code-block:: sh
+
+    composer require n98/magerun2
+    # ...
+    ./vendor/bin/n98-magerun2 --version
+    n98-magerun2 version 1.3.2 by netz98 GmbH
 
 Install with Homebrew
 """""""""""""""""""""

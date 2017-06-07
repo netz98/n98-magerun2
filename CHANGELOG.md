@@ -3,12 +3,13 @@ RECENT CHANGES
 
 1.5.0
 -----
-* Imp: Optimize description of --add-time option (by Christian Münch, #281)
+* Fix: Add Phar checksum guide to readme (report by Max Chadwick, fix by Tom Klingenberg, #279)
 * Fix: Prevent exceptions in dev:console from being suppressed and hidden (by Jason Woods, #282)
 * Fix: Sync optimize() with Magerun1 (by Alexander Menk, #291)
 * Fix: Updates script command to have non-zero exit code (by Christian Münch)
 * Fix: customer:create shows incorrect notice (by Christian Münch, #289)
 * Imp: Streamline db:dump with Magerun (by Tom Klingenberg)
+* Imp: Optimize description of --add-time option (by Christian Münch, #281)
 * New: Add current Magento2 versions (by Kristof Ringleff, #292)
 * New: Port db:dump --exclude from Magerun 1 (by Torrey Tsui, #294)
 * New: Command index:trigger:recreate (by Christian Münch)
