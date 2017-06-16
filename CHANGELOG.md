@@ -1,6 +1,9 @@
 RECENT CHANGES
 ==============
 
+1.5.1
+-----
+
 1.5.0
 -----
 * Fix: Add Phar checksum guide to readme (report by Max Chadwick, fix by Tom Klingenberg, #279)
