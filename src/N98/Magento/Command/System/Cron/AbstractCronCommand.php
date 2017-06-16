@@ -30,15 +30,27 @@ abstract class AbstractCronCommand extends AbstractMagentoCommand
     protected $cronScheduleCollection;
 
     /**
+     * @var \Magento\Framework\App\ProductMetadataInterface $productMetadata
+     */
+    private $productMetadata;
+
+    /**
      * @var \Magento\Framework\Stdlib\DateTime\TimezoneInterface
      */
     protected $timezone;
 
     /**
+     * @var \Magento\Framework\Stdlib\DateTime\DateTime
+     */
+    private $dateTime;
+
+    /**
      * @param \Magento\Framework\App\State $state
      * @param \Magento\Framework\Event\ManagerInterface $eventManager
      * @param \Magento\Cron\Model\ConfigInterface $cronConfig
+     * @param \Magento\Framework\App\ProductMetadataInterface $productMetadata
      * @param \Magento\Framework\Stdlib\DateTime\TimezoneInterface $timezone
+     * @param \Magento\Framework\Stdlib\DateTime\DateTime $dateTime
      * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
      * @param \Magento\Cron\Model\ResourceModel\Schedule\Collection $cronScheduleCollection
      */
@@ -46,7 +58,9 @@ abstract class AbstractCronCommand extends AbstractMagentoCommand
         \Magento\Framework\App\State $state,
         \Magento\Framework\Event\ManagerInterface $eventManager,
         \Magento\Cron\Model\ConfigInterface $cronConfig,
+        \Magento\Framework\App\ProductMetadataInterface $productMetadata,
         \Magento\Framework\Stdlib\DateTime\TimezoneInterface $timezone,
+        \Magento\Framework\Stdlib\DateTime\DateTime $dateTime,
         \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
         \Magento\Cron\Model\ResourceModel\Schedule\Collection $cronScheduleCollection
     ) {
@@ -54,7 +68,9 @@ abstract class AbstractCronCommand extends AbstractMagentoCommand
         $this->cronConfig = $cronConfig;
         $this->scopeConfig = $scopeConfig;
         $this->cronScheduleCollection = $cronScheduleCollection;
+        $this->productMetadata = $productMetadata;
         $this->timezone = $timezone;
+        $this->dateTime = $dateTime;
     }
 
     /**
@@ -203,12 +219,19 @@ abstract class AbstractCronCommand extends AbstractMagentoCommand
      * Get timestamp used for time related database fields in the cron tables
      *
      * Note: The timestamp used will change from Magento 2.1.7 to 2.2.0 and
-     *       these changes can be branched on Magento version in this method.
+     *       these changes are branched by Magento version in this method.
      *
      * @return int
      */
     protected function getCronTimestamp()
     {
+        /* @var $version string e.g. "2.1.7" */
+        $version = $this->productMetadata->getVersion();
+
+        if (version_compare($version, "2.2.0") >= 0) {
+            return $this->dateTime->gmtTimestamp();
+        }
+
         return $this->timezone->scopeTimeStamp();
     }
 }

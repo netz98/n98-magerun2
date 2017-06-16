@@ -3,7 +3,7 @@ RECENT CHANGES
 
 1.5.1
 -----
-* Imp: Extract timestamp creation for cron commands (by Tom Klingenberg, #296)
+* Fix: GMT timestamps for Magento 2.2.0 (by Tom Klingenberg, #296)
 
 1.5.0
 -----
