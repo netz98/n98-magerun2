@@ -46,7 +46,6 @@ abstract class AbstractCronCommand extends AbstractMagentoCommand
 
     /**
      * @param \Magento\Framework\App\State $state
-     * @param \Magento\Framework\Event\ManagerInterface $eventManager
      * @param \Magento\Cron\Model\ConfigInterface $cronConfig
      * @param \Magento\Framework\App\ProductMetadataInterface $productMetadata
      * @param \Magento\Framework\Stdlib\DateTime\TimezoneInterface $timezone
@@ -56,7 +55,6 @@ abstract class AbstractCronCommand extends AbstractMagentoCommand
      */
     public function inject(
         \Magento\Framework\App\State $state,
-        \Magento\Framework\Event\ManagerInterface $eventManager,
         \Magento\Cron\Model\ConfigInterface $cronConfig,
         \Magento\Framework\App\ProductMetadataInterface $productMetadata,
         \Magento\Framework\Stdlib\DateTime\TimezoneInterface $timezone,
