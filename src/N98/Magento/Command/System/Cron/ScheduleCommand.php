@@ -41,7 +41,7 @@ HELP;
             '<info>Scheduling </info><comment>' . $jobConfig['instance'] . '::' . $jobConfig['method'] . '</comment> '
         );
 
-        $createdAtTime = $this->timezone->scopeTimeStamp();
+        $createdAtTime = $this->getCronTimestamp();
         $scheduledAtTime = $createdAtTime;
 
         /* @var $schedule \Magento\Cron\Model\Schedule */

@@ -198,4 +198,17 @@ abstract class AbstractCronCommand extends AbstractMagentoCommand
 
         return array($jobCode, $jobConfig, $model);
     }
+
+    /**
+     * Get timestamp used for time related database fields in the cron tables
+     *
+     * Note: The timestamp used will change from Magento 2.1.7 to 2.2.0 and
+     *       these changes can be branched on Magento version in this method.
+     *
+     * @return int
+     */
+    protected function getCronTimestamp()
+    {
+        return $this->timezone->scopeTimeStamp();
+    }
 }

@@ -51,7 +51,7 @@ HELP;
         $schedule
             ->setJobCode($jobCode)
             ->setStatus(Schedule::STATUS_RUNNING)
-            ->setExecutedAt(strftime('%Y-%m-%d %H:%M:%S', $this->timezone->scopeTimeStamp()))
+            ->setExecutedAt(strftime('%Y-%m-%d %H:%M:%S', $this->getCronTimestamp()))
             ->save();
 
         try {
@@ -59,16 +59,16 @@ HELP;
 
             $schedule
                 ->setStatus(Schedule::STATUS_SUCCESS)
-                ->setFinishedAt(strftime('%Y-%m-%d %H:%M:%S', $this->timezone->scopeTimeStamp()))
+                ->setFinishedAt(strftime('%Y-%m-%d %H:%M:%S', $this->getCronTimestamp()))
                 ->save();
         } catch (Exception $e) {
             $schedule
                 ->setStatus(Schedule::STATUS_ERROR)
                 ->setMessages($e->getMessage())
-                ->setFinishedAt(strftime('%Y-%m-%d %H:%M:%S', $this->timezone->scopeTimeStamp()))
+                ->setFinishedAt(strftime('%Y-%m-%d %H:%M:%S', $this->getCronTimestamp()))
                 ->save();
         }
-        
+
         if (isset($e)) {
             throw new RuntimeException(
                 sprintf('Cron-job "%s" threw exception %s', $jobCode, get_class($e)),
