@@ -136,7 +136,7 @@ Bash
 """"
 
 Bash completion is available pre-generated, all commands and their respective
-options are availble on tab. To get completion for an otion type two dashes
+options are availble on tab. To get completion for an option type two dashes
 ("--") and then tab.
 
 To install the completion files, copy **n98-magerun2.phar.bash** to your bash
