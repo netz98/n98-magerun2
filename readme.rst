@@ -150,9 +150,7 @@ On my Ubuntu system this can be done with the following command:
 
 The concrete folder can be obtained via pkg-config::
 
-.. code-block:: sh
-
-# pkg-config --variable=compatdir bash-completion
+   # pkg-config --variable=compatdir bash-completion
 
 Detailed information is available in the bash-completions FAQ: https://github.com/scop/bash-completion#faq
 
@@ -297,6 +295,31 @@ Options:
     --scope     The config scope (default, websites, stores)
     --scope-id  The config value's scope ID
     --all       Deletes all entries of a path (ignores --scope and --scope-id)
+
+Display ACL Tree
+""""""""""""""""
+
+.. code-block:: sh
+
+   $ n98-magerun2.phar config:data:acl
+
+Help:
+    Prints acl.xml data as table
+
+Print Dependency Injection Config Data
+""""""""""""""""""""""""""""""""""""""
+
+.. code-block:: sh
+
+   $ n98-magerun2.phar config:data:di
+
+
+Arguments:
+    type           Type (class)
+
+
+Options:
+    --scope (-s)   Config scope (global, adminhtml, frontend, webapi_rest, webapi_soap, ...) (default: "global")
 
 List Magento cache status
 """""""""""""""""""""""""
