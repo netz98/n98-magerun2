@@ -311,7 +311,7 @@ Print Dependency Injection Config Data
 
 .. code-block:: sh
 
-   $ n98-magerun2.phar config:data:di
+   $ n98-magerun2.phar config:data:di <type>
 
 
 Arguments:
