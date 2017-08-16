@@ -101,24 +101,34 @@ HELP;
     {
         $check = $this->_createCheck($checkGroupClass);
 
-        switch (true) {
-            case $check instanceof Check\SimpleCheck:
-                $check->check($results);
-                break;
+        $areaCode = 'adminhtml';
 
-            case $check instanceof Check\StoreCheck:
-                $this->checkStores($results, $checkGroupClass, $check);
-                break;
-
-            case $check instanceof Check\WebsiteCheck:
-                $this->checkWebsites($results, $checkGroupClass, $check);
-                break;
-
-            default:
-                throw new LogicException(
-                    sprintf('Unhandled check-class "%s"', $checkGroupClass)
-                );
+        if ($check instanceof \N98\Magento\Framework\AreaAware) {
+            $areaCode = $check->getAreaCode();
         }
+
+        $appState = $this->getObjectManager()->get('Magento\Framework\App\State');
+
+        $appState->emulateAreaCode($areaCode, function () use ($check, $results, $checkGroupClass) {
+            switch (true) {
+                case $check instanceof Check\SimpleCheck:
+                    $check->check($results);
+                    break;
+
+                case $check instanceof Check\StoreCheck:
+                    $this->checkStores($results, $checkGroupClass, $check);
+                    break;
+
+                case $check instanceof Check\WebsiteCheck:
+                    $this->checkWebsites($results, $checkGroupClass, $check);
+                    break;
+
+                default:
+                    throw new LogicException(
+                        sprintf('Unhandled check-class "%s"', $checkGroupClass)
+                    );
+            }
+        });
     }
 
     /**
@@ -160,18 +170,18 @@ HELP;
      */
     protected function _printTable(InputInterface $input, OutputInterface $output, ResultCollection $results)
     {
-        $table = array();
+        $table = [];
         foreach ($results as $result) {
             /* @var $result Result */
-            $table[] = array(
+            $table[] = [
                 $result->getResultGroup(),
                 strip_tags($result->getMessage()),
                 $result->getStatus(),
-            );
+            ];
         }
 
         $this->getHelper('table')
-            ->setHeaders(array('Group', 'Message', 'Result'))
+            ->setHeaders(['Group', 'Message', 'Result'])
             ->renderByFormat($output, $table, $input->getOption('format'));
     }
 
