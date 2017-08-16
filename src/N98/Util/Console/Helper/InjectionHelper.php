@@ -2,7 +2,7 @@
 
 namespace N98\Util\Console\Helper;
 
-use Magento\Framework\ObjectManager\ObjectManager;
+use Magento\Framework\ObjectManagerInterface;
 use Symfony\Component\Console\Helper\Helper as AbstractHelper;
 
 class InjectionHelper extends AbstractHelper
@@ -20,10 +20,10 @@ class InjectionHelper extends AbstractHelper
     }
 
     /**
-     * @param Object $object
+     * @param \Magento\Framework\ObjectManagerInterface $object
      * @param string $methodName
      */
-    public function methodInjection($object, $methodName, ObjectManager $objectManager)
+    public function methodInjection($object, $methodName, ObjectManagerInterface $objectManager)
     {
         $parameters = $this->getMethod($object, $methodName);
         $argumentsToInject = array_map([$objectManager, 'get'], $parameters);
@@ -33,11 +33,11 @@ class InjectionHelper extends AbstractHelper
 
     /**
      * @param string $class
-     * @param ObjectManager $objectManager
+     * @param \Magento\Framework\ObjectManagerInterface $objectManager
      *
      * @return object
      */
-    public function constructorInjection($class, ObjectManager $objectManager)
+    public function constructorInjection($class, ObjectManagerInterface $objectManager)
     {
         $parameters = $this->getMethod($class, '__construct');
         $argumentsToInject = array_map([$objectManager, 'get'], $parameters);
