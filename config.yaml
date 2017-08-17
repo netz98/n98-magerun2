@@ -149,16 +149,23 @@ commands:
             sales_order_status_history
             sales_order_tax
             sales_order_tax_item
+          sales_invoice sales_invoice_* sales_invoiced_*
+          sales_shipment sales_shipment_* sales_shipping_*
+          sales_creditmemo sales_creditmemo_*
           sales_recurring_* sales_refunded_* sales_payment_*
           enterprise_sales_* enterprise_customer_sales_* sales_bestsellers_*
 
+      - id: quotes
+        description: Cart (quote) data
+        tables: quote quote_*
+
       - id: customers
         description: Customer data - Should not be used without @sales
-        tables: customer_address* customer_entity*
+        tables: customer_address* customer_entity* customer_visitor
 
       - id: trade
         description: Current trade data (customers and orders). You usally do not want those in developer systems.
-        tables: @customers @sales
+        tables: @customers @sales @quotes
 
       - id: development
         description: Removes logs and trade data so developers do not have to work with real customer data
