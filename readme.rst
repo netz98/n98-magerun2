@@ -383,6 +383,107 @@ Enable Magento cache
 If no code is specified, all cache types will be enabled.
 Run `cache:list` command to see all codes.
 
+Dump database
+"""""""""""""
+
+Dumps configured Magento database with `mysqldump`.
+
+* Requires MySQL CLI tools
+
+**Arguments**
+
+    filename        Dump filename
+
+**Options**
+
+  --add-time
+        Adds time to filename (only if filename was not provided)
+
+  --compression (-c)
+        Compress the dump file using one of the supported algorithms
+
+  --only-command
+        Print only mysqldump command. Do not execute
+
+  --print-only-filename
+        Execute and prints not output except the dump filename
+
+  --dry-run
+        Do everything but the actual dump
+
+  --no-single-transaction
+        Do not use single-transaction (not recommended, this is blocking)
+
+  --human-readable
+        Use a single insert with column names per row.
+
+  --add-routines
+        Include stored routines in dump (procedures & functions).
+
+  --stdout
+        Dump to stdout
+
+  --strip
+        Tables to strip (dump only structure of those tables)
+
+  --exclude
+        Tables to exclude entirely from the dump (including structure)
+
+  --force (-f)
+        Do not prompt if all options are defined
+
+
+.. code-block:: sh
+
+   $ n98-magerun.phar db:dump
+
+Only the mysqldump command:
+
+.. code-block:: sh
+
+   $ n98-magerun.phar db:dump --only-command [filename]
+
+Or directly to stdout:
+
+.. code-block:: sh
+
+   $ n98-magerun.phar db:dump --stdout
+
+Use compression (gzip cli tool has to be installed):
+
+.. code-block:: sh
+
+   $ n98-magerun.phar db:dump --compression="gzip"
+
+Stripped Database Dump
+^^^^^^^^^^^^^^^^^^^^^^
+
+Dumps your database and excludes some tables. This is useful for development or staging environments
+where you may to provision a restricted database.
+
+Separate each table to strip by a space.
+You can use wildcards like * and ? in the table names to strip multiple tables.
+In addition you can specify pre-defined table groups, that start with an @
+Example: "dataflow_batch_export unimportant_module_* @log
+
+.. code-block:: sh
+
+   $ n98-magerun.phar db:dump --strip="@stripped"
+
+Available Table Groups:
+
+* @log Log tables
+* @dataflowtemp Temporary tables of the dataflow import/export tool
+* @importexporttemp Temporary tables of the Import/Export module
+* @stripped Standard definition for a stripped dump (logs, sessions, dataflow and importexport)
+* @sales Sales data (orders, invoices, creditmemos etc)
+* @quotes Cart (quote) data
+* @customers Customer data
+* @trade Current trade data (customers and orders). You usally do not want those in developer systems.
+* @search Search related tables (catalogsearch_)
+* @development Removes logs, sessions and trade data so developers do not have to work with real customer data
+* @idx Tables with _idx suffix and index event tables
+
 Clear static view files
 """""""""""""""""""""""
 

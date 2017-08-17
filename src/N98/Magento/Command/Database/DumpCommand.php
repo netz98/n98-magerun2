@@ -61,7 +61,7 @@ class DumpCommand extends AbstractDatabaseCommand
                 'dry-run',
                 null,
                 InputOption::VALUE_NONE,
-                'do everything but the dump'
+                'Do everything but the actual dump'
             )
             ->addOption(
                 'no-single-transaction',
@@ -82,7 +82,11 @@ class DumpCommand extends AbstractDatabaseCommand
                 InputOption::VALUE_NONE,
                 'Include stored routines in dump (procedures & functions)'
             )
-            ->addOption('stdout', null, InputOption::VALUE_NONE, 'Dump to stdout')
+            ->addOption('stdout',
+                null,
+                InputOption::VALUE_NONE,
+                'Dump to stdout'
+            )
             ->addOption(
                 'strip',
                 's',
@@ -93,7 +97,7 @@ class DumpCommand extends AbstractDatabaseCommand
                 'exclude',
                 'e',
                 InputOption::VALUE_OPTIONAL,
-                'Tables to exclude from the dump'
+                'Tables to exclude entirely from the dump (including structure)'
             )
             ->addOption(
                 'force',
