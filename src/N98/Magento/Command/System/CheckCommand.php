@@ -3,6 +3,7 @@
 namespace N98\Magento\Command\System;
 
 use LogicException;
+use Magento\Framework\App\State;
 use Magento\Store\Model\StoreManagerInterface;
 use N98\Magento\Command\AbstractMagentoCommand;
 use N98\Magento\Command\CommandAware;
@@ -35,6 +36,11 @@ class CheckCommand extends AbstractMagentoCommand
      */
     private $config;
 
+    /**
+     * @var State
+     */
+    private $appState;
+
     protected function configure()
     {
         $this
@@ -45,8 +51,7 @@ class CheckCommand extends AbstractMagentoCommand
                 null,
                 InputOption::VALUE_OPTIONAL,
                 'Output Format. One of [' . implode(',', RendererFactory::getFormats()) . ']'
-            )
-        ;
+            );
 
         $help = <<<HELP
 - Checks missing files and folders
@@ -57,8 +62,9 @@ HELP;
         $this->setHelp($help);
     }
 
-    public function inject(StoreManagerInterface $storeManager)
+    public function inject(State $appState, StoreManagerInterface $storeManager)
     {
+        $this->appState = $appState;
         $this->storeManager = $storeManager;
     }
 
@@ -107,9 +113,7 @@ HELP;
             $areaCode = $check->getAreaCode();
         }
 
-        $appState = $this->getObjectManager()->get('Magento\Framework\App\State');
-
-        $appState->emulateAreaCode($areaCode, function () use ($check, $results, $checkGroupClass) {
+        $this->appState->emulateAreaCode($areaCode, function () use ($check, $results, $checkGroupClass) {
             switch (true) {
                 case $check instanceof Check\SimpleCheck:
                     $check->check($results);
@@ -128,7 +132,8 @@ HELP;
                         sprintf('Unhandled check-class "%s"', $checkGroupClass)
                     );
             }
-        });
+        }
+        );
     }
 
     /**
@@ -226,7 +231,7 @@ HELP;
 
     /**
      * @param ResultCollection $results
-     * @param string $checkGroupClass name
+     * @param string           $checkGroupClass name
      * @param Check\StoreCheck $check
      */
     private function checkStores(ResultCollection $results, $checkGroupClass, Check\StoreCheck $check)
@@ -240,8 +245,8 @@ HELP;
     }
 
     /**
-     * @param ResultCollection $results
-     * @param string $checkGroupClass name
+     * @param ResultCollection   $results
+     * @param string             $checkGroupClass name
      * @param Check\WebsiteCheck $check
      */
     private function checkWebsites(ResultCollection $results, $checkGroupClass, Check\WebsiteCheck $check)
