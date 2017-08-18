@@ -149,9 +149,14 @@ commands:
             sales_order_status_history
             sales_order_tax
             sales_order_tax_item
-          sales_invoice sales_invoice_* sales_invoiced_*
-          sales_shipment sales_shipment_* sales_shipping_*
-          sales_creditmemo sales_creditmemo_*
+          sales_invoice
+            sales_invoice_*
+            sales_invoiced_*
+          sales_shipment
+            sales_shipment_*
+            sales_shipping_*
+          sales_creditmemo
+            sales_creditmemo_*
           sales_recurring_* sales_refunded_* sales_payment_*
           enterprise_sales_* enterprise_customer_sales_* sales_bestsellers_*
 
