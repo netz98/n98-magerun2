@@ -159,6 +159,9 @@ commands:
             sales_creditmemo_*
           sales_recurring_* sales_refunded_* sales_payment_*
           enterprise_sales_* enterprise_customer_sales_* sales_bestsellers_*
+          paypal_billing_agreement*
+          paypal_payment_transaction
+          paypal_settlement_report*
 
       - id: quotes
         description: Cart (quote) data
@@ -166,7 +169,16 @@ commands:
 
       - id: customers
         description: Customer data - Should not be used without @sales
-        tables: customer_address* customer_entity* customer_visitor
+        tables: >
+          customer_address*
+          customer_entity*
+          customer_grid_flat
+          customer_log
+          customer_visitor
+          newsletter_subscriber
+          product_alert*
+          vault_payment_token*
+          wishlist*
 
       - id: trade
         description: Current trade data (customers and orders). You usally do not want those in developer systems.
