@@ -77,7 +77,7 @@ The base-installation is now complete and you can verify it:
 
 .. code-block:: sh
 
-    ./n98-magerun.phar --version
+    ./n98-magerun2.phar --version
 
 The command should execute successfully and show you the version number of N98-Magerun like:
 
@@ -435,25 +435,25 @@ Dumps configured Magento database with `mysqldump`.
 
 .. code-block:: sh
 
-   $ n98-magerun.phar db:dump
+   $ n98-magerun2.phar db:dump
 
 Only the mysqldump command:
 
 .. code-block:: sh
 
-   $ n98-magerun.phar db:dump --only-command [filename]
+   $ n98-magerun2.phar db:dump --only-command [filename]
 
 Or directly to stdout:
 
 .. code-block:: sh
 
-   $ n98-magerun.phar db:dump --stdout
+   $ n98-magerun2.phar db:dump --stdout
 
 Use compression (gzip cli tool has to be installed):
 
 .. code-block:: sh
 
-   $ n98-magerun.phar db:dump --compression="gzip"
+   $ n98-magerun2.phar db:dump --compression="gzip"
 
 Stripped Database Dump
 ^^^^^^^^^^^^^^^^^^^^^^
@@ -468,7 +468,7 @@ Example: "dataflow_batch_export unimportant_module_* @log
 
 .. code-block:: sh
 
-   $ n98-magerun.phar db:dump --strip="@stripped"
+   $ n98-magerun2.phar db:dump --strip="@stripped"
 
 Available Table Groups:
 
