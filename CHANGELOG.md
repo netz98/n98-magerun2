@@ -1,9 +1,15 @@
 RECENT CHANGES
 ==============
 
-1.5.1
+1.6.0
 -----
+
+* Feature: Add Magento Open Source Edition 2.1.8 (by Alexander Menk)
+* Feature: App state injection support in sys:check command (by Manuel Schmid)
+* Feature: Improve db:dump command (by Scott Buchanan, #303 #304)
 * Fix: GMT timestamps for Magento 2.2.0 (by Tom Klingenberg, #296)
+* Fix: Typo in install command (by Tom Klingenberg, #297)
+* Fix: Typo in readme (Chris Orlando, #301)
 
 1.5.0
 -----
