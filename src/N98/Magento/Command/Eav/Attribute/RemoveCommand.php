@@ -67,6 +67,11 @@ class RemoveCommand extends AbstractMagentoCommand
             return;
         }
 
+        if ($this->runsInProductionMode($input, $output)) {
+            $output->writeln('This command is not available in production mode');
+            return;
+        }
+
         $entityType = $input->getArgument('entityType');
 
         try {

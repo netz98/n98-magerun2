@@ -2,9 +2,11 @@
 
 namespace N98\Magento\Command\Eav\Attribute;
 
+use Magento\Deploy\Model\Mode;
 use Magento\Eav\Model\Config as EavConfig;
 use Magento\Eav\Setup\EavSetup;
 use Magento\Eav\Setup\EavSetupFactory;
+use Magento\Framework\App\State;
 use N98\Magento\Command\TestCase;
 use Symfony\Component\Console\Tester\CommandTester;
 
@@ -25,6 +27,10 @@ class RemoveCommandTest extends TestCase
      */
     protected function setUp()
     {
+        if ($this->runsInProductionMode()) {
+            $this->markTestSkipped('This command is not available in production mode');
+        }
+
         $application = $this->getApplication();
         $application->add(new RemoveCommand());
 
@@ -32,6 +38,22 @@ class RemoveCommandTest extends TestCase
         $this->commandTester = new CommandTester($this->command);
     }
 
+    /**
+     * @return bool
+     */
+    private function runsInProductionMode()
+    {
+        $objectManager = $this->getApplication()->getObjectManager();
+        $mode = $objectManager->create(
+            Mode::class,
+            [
+                'input'  => new ArgvInput(),
+                'output' => new ConsoleOutput(),
+            ]
+        );
+
+        return $mode->getMode() === State::MODE_PRODUCTION;
+    }
     /**
      * @param string $entityType
      * @param string $attributeCode
