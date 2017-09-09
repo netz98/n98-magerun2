@@ -46,10 +46,10 @@ class ScriptCommand extends AbstractMagentoCommand
 Example:
 
    # Set multiple config
-   config:set "web/cookie/cookie_domain" example.com
+   config:store:set "web/cookie/cookie_domain" example.com
 
    # Set with multiline values with "\n"
-   config:set "general/store_information/address" "First line\nSecond line\nThird line"
+   config:store:set "general/store_information/address" "First line\nSecond line\nThird line"
 
    # This is a comment
    cache:flush
@@ -67,7 +67,7 @@ Create file `test.magerun` and make it executable (`chmod +x test.magerun`):
 
    #!/usr/bin/env n98-magerun.phar script
 
-   config:set "web/cookie/cookie_domain" example.com
+   config:store:set "web/cookie/cookie_domain" example.com
    cache:flush
 
    # Run a shell script with "!" as first char

@@ -1,6 +1,6 @@
 <?php
 
-namespace N98\Magento\Command\Config;
+namespace N98\Magento\Command\Config\Store;
 
 use N98\Magento\Command\TestCase;
 
@@ -13,7 +13,7 @@ class GetCommandTest extends TestCase
     {
         $this->assertDisplayRegExp(
             array(
-                'command'   => 'config:set',
+                'command'   => 'config:store:set',
                 '--no-null' => null,
                 'path'      => 'n98_magerun/foo/bar',
                 'value'     => 'NULL',
@@ -23,16 +23,16 @@ class GetCommandTest extends TestCase
 
         $this->assertDisplayContains(
             array(
-                'command'          => 'config:get',
+                'command'          => 'config:store:get',
                 '--magerun-script' => null,
                 'path'             => 'n98_magerun/foo/bar',
             ),
-            'config:set --no-null --scope-id=0 --scope=default'
+            'config:store:set --no-null --scope-id=0 --scope=default'
         );
 
         $this->assertDisplayContains(
             array(
-                'command' => 'config:set',
+                'command' => 'config:store:set',
                 'path'    => 'n98_magerun/foo/bar',
                 'value'   => 'NULL',
             ),
@@ -41,7 +41,7 @@ class GetCommandTest extends TestCase
 
         $this->assertDisplayContains(
             array(
-                'command' => 'config:get',
+                'command' => 'config:store:get',
                 'path'    => 'n98_magerun/foo/bar',
             ),
             '| n98_magerun/foo/bar | default | 0        | NULL (NULL/"unkown" value) |'
@@ -49,11 +49,11 @@ class GetCommandTest extends TestCase
 
         $this->assertDisplayContains(
             array(
-                'command'          => 'config:get',
+                'command'          => 'config:store:get',
                 '--magerun-script' => true, # needed to not use the previous output cache
                 'path'             => 'n98_magerun/foo/bar',
             ),
-            'config:set --scope-id=0 --scope=default -- \'n98_magerun/foo/bar\' NULL'
+            'config:store:set --scope-id=0 --scope=default -- \'n98_magerun/foo/bar\' NULL'
         );
     }
 
@@ -75,7 +75,7 @@ class GetCommandTest extends TestCase
     {
         $this->assertDisplayContains(
             array(
-                'command' => 'config:set',
+                'command' => 'config:store:set',
                 'path'    => 'n98_magerun/foo/bar',
                 'value'   => 'NULL',
             ),
@@ -84,7 +84,7 @@ class GetCommandTest extends TestCase
 
         $this->assertDisplayContains(
             array(
-                'command'  => 'config:get',
+                'command'  => 'config:store:get',
                 '--format' => $format,
                 'path'     => 'n98_magerun/foo/bar',
             ),
@@ -99,7 +99,7 @@ class GetCommandTest extends TestCase
          */
         $this->assertDisplayContains(
             array(
-                'command' => 'config:set',
+                'command' => 'config:store:set',
                 'path'    => 'n98_magerun/foo/bar',
                 'value'   => '1234',
             ),
@@ -108,7 +108,7 @@ class GetCommandTest extends TestCase
 
         $this->assertDisplayContains(
             array(
-                'command' => 'config:get',
+                'command' => 'config:store:get',
                 'path'    => 'n98_magerun/foo/bar',
             ),
             '| n98_magerun/foo/bar | default | 0        | 1234  |'
@@ -116,7 +116,7 @@ class GetCommandTest extends TestCase
 
         $this->assertDisplayContains(
             array(
-                'command'         => 'config:get',
+                'command'         => 'config:store:get',
                 'path'            => 'n98_magerun/foo/bar',
                 '--update-script' => true,
             ),
@@ -125,18 +125,18 @@ class GetCommandTest extends TestCase
 
         $this->assertDisplayContains(
             array(
-                'command'          => 'config:get',
+                'command'          => 'config:store:get',
                 'path'             => 'n98_magerun/foo/bar',
                 '--magerun-script' => true,
             ),
-            "config:set --scope-id=0 --scope=default -- 'n98_magerun/foo/bar' '1234'"
+            "config:store:set --scope-id=0 --scope=default -- 'n98_magerun/foo/bar' '1234'"
         );
 
         /**
          * Dump CSV
          */
         $input = array(
-            'command'  => 'config:get',
+            'command'  => 'config:store:get',
             'path'     => 'n98_magerun/foo/bar',
             '--format' => 'csv',
         );
@@ -147,7 +147,7 @@ class GetCommandTest extends TestCase
          * Dump XML
          */
         $input = array(
-            'command'  => 'config:get',
+            'command'  => 'config:store:get',
             'path'     => 'n98_magerun/foo/bar',
             '--format' => 'xml',
         );
@@ -159,7 +159,7 @@ class GetCommandTest extends TestCase
          */
         $this->assertDisplayRegExp(
             array(
-                'command'  => 'config:get',
+                'command'  => 'config:store:get',
                 'path'     => 'n98_magerun/foo/bar',
                 '--format' => 'json',
             ),

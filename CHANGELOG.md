@@ -1,6 +1,12 @@
 RECENT CHANGES
 ==============
 
+2.0.0
+-----
+
+* Major Break: config:get, config:set, config:delete commands are renamed (by Christian Münch)
+    -> config:store:get, config:store:set, config:store:delete 
+
 1.6.0
 -----
 

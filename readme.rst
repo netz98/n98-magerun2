@@ -243,7 +243,7 @@ Set Config
 
 .. code-block:: sh
 
-   $ n98-magerun2.phar config:set [--scope[="..."]] [--scope-id[="..."]] [--encrypt] path value
+   $ n98-magerun2.phar config:store:set [--scope[="..."]] [--scope-id[="..."]] [--encrypt] path value
 
 Arguments:
     path        The config path
@@ -259,7 +259,7 @@ Get Config
 
 .. code-block:: sh
 
-   $ n98-magerun2.phar config:get [--scope="..."] [--scope-id="..."] [--decrypt] [--format[="..."]] [path]
+   $ n98-magerun2.phar config:store:get [--scope="..."] [--scope-id="..."] [--decrypt] [--format[="..."]] [path]
 
 Arguments:
     path        The config path
@@ -269,7 +269,7 @@ Options:
     --scope-id          The config value's scope ID
     --decrypt           Decrypt the config value using crypt key defined in env.php
     --update-script     Output as update script lines
-    --magerun-script    Output for usage with config:set
+    --magerun-script    Output for usage with config:store:set
     --format            Output as json, xml or csv
 
 Help:
@@ -279,14 +279,14 @@ Example:
 
 .. code-block:: sh
 
-   $ n98-magerun2.phar config:get web/* --magerun-script
+   $ n98-magerun2.phar config:store:get web/* --magerun-script
 
 Delete Config
 """""""""""""
 
 .. code-block:: sh
 
-   $ n98-magerun2.phar config:delete [--scope[="..."]] [--scope-id[="..."]] [--all] path
+   $ n98-magerun2.phar config:store:delete [--scope[="..."]] [--scope-id[="..."]] [--all] path
 
 Arguments:
     path        The config path
@@ -637,10 +637,10 @@ Example:
 .. code-block::
 
    # Set multiple config
-   config:set "web/cookie/cookie_domain" example.com
+   config:store:set "web/cookie/cookie_domain" example.com
 
    # Set with multiline values with "\n"
-   config:set "general/store_information/address" "First line\nSecond line\nThird line"
+   config:store:set "general/store_information/address" "First line\nSecond line\nThird line"
 
    # This is a comment
    cache:flush
@@ -664,7 +664,7 @@ Create file `test.magerun` and make it executable (`chmod +x test.magerun`):
 
    #!/usr/bin/env n98-magerun2.phar script
 
-   config:set "web/cookie/cookie_domain" example.com
+   config:store:set "web/cookie/cookie_domain" example.com
    cache:flush
 
    # Run a shell script with "!" as first char
