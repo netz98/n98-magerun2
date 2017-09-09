@@ -115,8 +115,8 @@ class ConfigTest extends TestCase
         $array = array(
             'commands' => array(
                 'customCommands' => array(
-                    'N98\Magento\Command\Config\GetCommand',
-                    array('name' => 'N98\Magento\Command\Config\GetCommand'),
+                    'N98\Magento\Command\Config\Store\GetCommand',
+                    array('name' => 'N98\Magento\Command\Config\Store\GetCommand'),
                 ),
             ),
         );

@@ -55,9 +55,9 @@ commands:
     - N98\Magento\Command\Cache\ListCommand
     - N98\Magento\Command\Cache\ReportCommand
     - N98\Magento\Command\Cache\ViewCommand
-    - N98\Magento\Command\Config\DeleteCommand
-    - N98\Magento\Command\Config\GetCommand
-    - N98\Magento\Command\Config\SetCommand
+    - N98\Magento\Command\Config\Store\DeleteCommand
+    - N98\Magento\Command\Config\Store\GetCommand
+    - N98\Magento\Command\Config\Store\SetCommand
     - N98\Magento\Command\Config\Data\AclCommand
     - N98\Magento\Command\Config\Data\DiCommand
     - N98\Magento\Command\Customer\CreateCommand

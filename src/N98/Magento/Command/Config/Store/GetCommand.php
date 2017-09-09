@@ -1,8 +1,9 @@
 <?php
 
-namespace N98\Magento\Command\Config;
+namespace N98\Magento\Command\Config\Store;
 
 use Magento\Config\Model\ResourceModel\Config\Data\Collection;
+use N98\Magento\Command\Config\AbstractConfigCommand;
 use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -19,17 +20,17 @@ class GetCommand extends AbstractConfigCommand
     protected function configure()
     {
         $this
-            ->setName('config:get')
-            ->setDescription('Get a core config item')
+            ->setName('config:store:get')
+            ->setDescription('Get a store config item')
             ->setHelp(
                 <<<EOT
                 If <info>path</info> is not set, all available config items will be listed.
 The <info>path</info> may contain wildcards (*).
 If <info>path</info> ends with a trailing slash, all child items will be listed. E.g.
 
-    config:get web/
+    config:store:get web/
 is the same as
-    config:get web/*
+    config:store:get web/*
 EOT
             )
             ->addArgument('path', InputArgument::OPTIONAL, 'The config path')
@@ -47,7 +48,7 @@ EOT
                 'Decrypt the config value using env.php\'s crypt key'
             )
             ->addOption('update-script', null, InputOption::VALUE_NONE, 'Output as update script lines')
-            ->addOption('magerun-script', null, InputOption::VALUE_NONE, 'Output for usage with config:set')
+            ->addOption('magerun-script', null, InputOption::VALUE_NONE, 'Output for usage with config:store:set')
             ->addOption(
                 'format',
                 null,
@@ -233,7 +234,7 @@ HELP;
             $protectNullString = $value === "NULL" ? '--no-null ' : '';
 
             $line = sprintf(
-                'config:set %s--scope-id=%s --scope=%s -- %s %s',
+                'config:store:set %s--scope-id=%s --scope=%s -- %s %s',
                 $protectNullString,
                 $row['scope_id'],
                 $row['scope'],

@@ -1,9 +1,10 @@
 <?php
 
-namespace N98\Magento\Command\Config;
+namespace N98\Magento\Command\Config\Store;
 
 use Magento\Config\Model\ResourceModel\Config\Data\Collection;
 use Magento\Framework\App\Config\Storage\WriterInterface;
+use N98\Magento\Command\Config\AbstractConfigCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -28,7 +29,7 @@ class DeleteCommand extends AbstractConfigCommand
     protected function configure()
     {
         $this
-            ->setName('config:delete')
+            ->setName('config:store:delete')
             ->setDescription('Deletes a store config item')
             ->addArgument('path', InputArgument::REQUIRED, 'The config path')
             ->addOption(

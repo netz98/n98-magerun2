@@ -1,7 +1,8 @@
 <?php
 
-namespace N98\Magento\Command\Config;
+namespace N98\Magento\Command\Config\Store;
 
+use N98\Magento\Command\Config\AbstractConfigCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -21,9 +22,9 @@ class SetCommand extends AbstractConfigCommand
     protected function configure()
     {
         $this
-            ->setName('config:set')
-            ->setDescription('Set a core config item')
-            ->addArgument('path', InputArgument::REQUIRED, 'The config path')
+            ->setName('config:store:set')
+            ->setDescription('Set a store config item')
+            ->addArgument('path', InputArgument::REQUIRED, 'The store config path like "general/local/code"')
             ->addArgument('value', InputArgument::REQUIRED, 'The config value')
             ->addOption(
                 'scope',

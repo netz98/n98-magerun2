@@ -1,6 +1,6 @@
 <?php
 
-namespace N98\Magento\Command\Config;
+namespace N98\Magento\Command\Config\Store;
 
 use N98\Magento\Command\TestCase;
 
@@ -12,14 +12,14 @@ class DeleteCommandTest extends TestCase
     public function deleteOne()
     {
         $input = array(
-            'command' => 'config:set',
+            'command' => 'config:store:set',
             'path'    => 'n98_magerun/foo/bar',
             'value'   => '1234',
         );
         $this->assertDisplayContains($input, 'n98_magerun/foo/bar => 1234');
 
         $input = array(
-            'command' => 'config:delete',
+            'command' => 'config:store:delete',
             'path'    => 'n98_magerun/foo/bar',
         );
         $this->assertDisplayContains($input, '| n98_magerun/foo/bar | default | 0  |');
@@ -31,7 +31,7 @@ class DeleteCommandTest extends TestCase
     public function deleteAll()
     {
         $input = array(
-            'command'    => 'config:set',
+            'command'    => 'config:store:set',
             'path'       => 'n98_magerun/foo/bar',
             '--scope'    => 'stores',
             '--scope-id' => null, # placeholder
@@ -44,7 +44,7 @@ class DeleteCommandTest extends TestCase
         }
 
         $input = array(
-            'command' => 'config:delete',
+            'command' => 'config:store:delete',
             'path'    => 'n98_magerun/foo/bar',
             '--all'   => true,
         );

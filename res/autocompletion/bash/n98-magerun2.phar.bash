@@ -92,13 +92,13 @@ _n98-magerun2()
             catalog:product:attributes:cleanup)
             opts="${opts} "
             ;;
-            config:delete)
+            config:store:delete)
             opts="${opts} --scope --scope-id --all"
             ;;
-            config:get)
+            config:store:get)
             opts="${opts} --scope --scope-id --decrypt --update-script --magerun-script --format"
             ;;
-            config:set)
+            config:store:set)
             opts="${opts} --scope --scope-id --encrypt --no-null"
             ;;
             cron:run)
