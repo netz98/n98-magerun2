@@ -473,7 +473,7 @@ Example: "dataflow_batch_export unimportant_module_* @log
 Available Table Groups:
 
 * @customers Customer data
-* @development Removes logs, sessions and trade data so developers do not have to work with real customer data
+* @development Removes logs, sessions, trade data and admin users so developers do not have to work with real customer data or admin user accounts
 * @ee_changelog Changelog tables of new indexer since EE 1.13
 * @idx Tables with _idx suffix and index event tables
 * @log Log tables
