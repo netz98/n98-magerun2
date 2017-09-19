@@ -124,6 +124,10 @@ commands:
 
   N98\Magento\Command\Database\DumpCommand:
     table-groups:
+      - id: admin
+        description: Admin tables
+        tables: admin* authorization*
+
       - id: log
         description: Log tables
         tables: log_url log_url_info log_visitor log_visitor_info log_visitor_online report_event report_compared_product_index report_viewed_*
@@ -186,7 +190,7 @@ commands:
 
       - id: development
         description: Removes logs and trade data so developers do not have to work with real customer data
-        tables: @trade @stripped @search
+        tables: @admin @trade @stripped @search
 
       - id: ee_changelog
         description: Changelog tables of new indexer since EE 1.13
