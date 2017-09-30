@@ -417,6 +417,17 @@ commands:
             - mbstring
             - zip
 
+      db:
+        host: localhost
+        user: root
+        pass:
+        port: 3306
+        name: magento
+
+      base-url: http://magento2.localdomain/
+
+      sample-data: true
+
       defaults:
         currency: EUR
         locale: de_DE

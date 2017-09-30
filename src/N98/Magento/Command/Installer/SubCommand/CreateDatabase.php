@@ -60,7 +60,9 @@ class CreateDatabase extends AbstractSubCommand
             do {
 
                 // Host
-                $dbHostDefault = $this->input->getOption('dbHost') ? $this->input->getOption('dbHost') : 'localhost';
+                $dbHostDefault = $this->input->getOption('dbHost') ?
+                    $this->input->getOption('dbHost') :
+                    $this->commandConfig['installation']['db']['host'];
                 $this->config->setString(
                     'db_host',
                     $dialog->askAndValidate(
@@ -74,7 +76,9 @@ class CreateDatabase extends AbstractSubCommand
                 );
 
                 // Port
-                $dbPortDefault = $this->input->getOption('dbPort') ? $this->input->getOption('dbPort') : 3306;
+                $dbPortDefault = $this->input->getOption('dbPort') ?
+                    $this->input->getOption('dbPort') :
+                    $this->commandConfig['installation']['db']['port'];
                 $this->config->setInt(
                     'db_port',
                     intval($dialog->askAndValidate(
@@ -88,7 +92,9 @@ class CreateDatabase extends AbstractSubCommand
                 );
 
                 // User
-                $dbUserDefault = $this->input->getOption('dbUser') ? $this->input->getOption('dbUser') : 'root';
+                $dbUserDefault = $this->input->getOption('dbUser') ?
+                    $this->input->getOption('dbUser') :
+                    $this->commandConfig['installation']['db']['user'];
                 $this->config->setString(
                     'db_user',
                     $dialog->askAndValidate(
@@ -102,7 +108,9 @@ class CreateDatabase extends AbstractSubCommand
                 );
 
                 // Password
-                $dbPassDefault = $this->input->getOption('dbPass') ? $this->input->getOption('dbPass') : '';
+                $dbPassDefault = $this->input->getOption('dbPass') ?
+                    $this->input->getOption('dbPass') :
+                    $this->commandConfig['installation']['db']['pass'];
                 $this->config->setString(
                     'db_pass',
                     $dialog->ask(
@@ -114,7 +122,9 @@ class CreateDatabase extends AbstractSubCommand
                 );
 
                 // DB-Name
-                $dbNameDefault = $this->input->getOption('dbName') ? $this->input->getOption('dbName') : 'magento';
+                $dbNameDefault = $this->input->getOption('dbName') ?
+                    $this->input->getOption('dbName') :
+                    $this->commandConfig['installation']['db']['name'];
                 $this->config->setString(
                     'db_name',
                     $dialog->askAndValidate(

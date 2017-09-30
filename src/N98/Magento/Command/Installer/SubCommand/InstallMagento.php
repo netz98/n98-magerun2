@@ -7,6 +7,7 @@ use N98\Magento\Command\SubCommand\AbstractSubCommand;
 use N98\Util\Exec;
 use N98\Util\OperatingSystem;
 use RuntimeException;
+use Symfony\Component\Console\Helper\DialogHelper;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class InstallMagento extends AbstractSubCommand
@@ -39,6 +40,7 @@ class InstallMagento extends AbstractSubCommand
 
         $this->getCommand()->getApplication()->setAutoExit(false);
 
+        /** @var DialogHelper $dialog */
         $dialog = $this->getCommand()->getHelper('dialog');
 
         $defaults = $this->commandConfig['installation']['defaults'];
@@ -148,9 +150,11 @@ class InstallMagento extends AbstractSubCommand
             ? $this->input->getOption('baseUrl')
             : $dialog->askAndValidate(
                 $this->output,
-                '<question>Please enter the base url:</question> ',
+                '<question>Please enter the base url:</question> <comment>[' .
+                $defaultBaseUrl . ']</comment>:',
                 $validateBaseUrl,
-                false
+                false,
+                $this->commandConfig['installation']['base-url']
             );
         $baseUrl = rtrim($baseUrl, '/') . '/'; // normalize baseUrl
 
