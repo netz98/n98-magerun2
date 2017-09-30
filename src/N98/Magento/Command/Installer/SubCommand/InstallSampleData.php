@@ -20,7 +20,11 @@ class InstallSampleData extends AbstractSubCommand
         $installationFolder = $this->config->getString('installationFolder');
         chdir($installationFolder);
 
-        $flag = $this->getOptionalBooleanOption('installSampleData', 'Install sample data?');
+        $flag = $this->getOptionalBooleanOption(
+            'installSampleData',
+            'Install sample data?',
+            $this->commandConfig['installation']['sample-data']
+        );
 
         if ($flag) {
             $this->runSampleDataInstaller();
