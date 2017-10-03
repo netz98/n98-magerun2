@@ -127,15 +127,15 @@ commands:
     table-groups:
       - id: admin
         description: Admin tables
-        tables: admin* authorization*
+        tables: 'admin* authorization*'
 
       - id: log
         description: Log tables
-        tables: log_url log_url_info log_visitor log_visitor_info log_visitor_online report_event report_compared_product_index report_viewed_*
+        tables: 'log_url log_url_info log_visitor log_visitor_info log_visitor_online report_event report_compared_product_index report_viewed_*'
 
       - id: sessions
         description: Database session tables
-        tables: core_session
+        tables: 'core_session'
 
       - id: stripped
         description: Standard definition for a stripped dump (logs, sessions)
@@ -170,7 +170,7 @@ commands:
 
       - id: quotes
         description: Cart (quote) data
-        tables: quote quote_*
+        tables: 'quote quote_*'
 
       - id: customers
         description: Customer data - Should not be used without @sales
