@@ -146,6 +146,7 @@ class InstallMagento extends AbstractSubCommand
             return $url;
         };
 
+        $defaultBaseUrl = $this->commandConfig['installation']['base-url'];
         $baseUrl = ($this->input->getOption('baseUrl') !== null)
             ? $this->input->getOption('baseUrl')
             : $dialog->askAndValidate(
@@ -154,7 +155,7 @@ class InstallMagento extends AbstractSubCommand
                 $defaultBaseUrl . ']</comment>:',
                 $validateBaseUrl,
                 false,
-                $this->commandConfig['installation']['base-url']
+                $defaultBaseUrl
             );
         $baseUrl = rtrim($baseUrl, '/') . '/'; // normalize baseUrl
 
