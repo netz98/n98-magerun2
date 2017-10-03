@@ -38,7 +38,7 @@ class ConfigBag extends \ArrayObject
 
     /**
      * @param string $key
-     * @param bool $value
+     * @param string $value
      *
      * @return $this
      */
@@ -54,7 +54,7 @@ class ConfigBag extends \ArrayObject
 
     /**
      * @param string $key
-     * @param bool $value
+     * @param float $value
      *
      * @return $this
      */

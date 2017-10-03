@@ -4,6 +4,7 @@ namespace N98\Magento\Command\Installer\SubCommand;
 
 use N98\Magento\Command\SubCommand\AbstractSubCommand;
 use N98\Util\BinaryString;
+use Symfony\Component\Console\Helper\DialogHelper;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -12,7 +13,7 @@ class CreateDatabase extends AbstractSubCommand
     /**
      * @var array
      */
-    protected $_argv;
+    private $argv;
 
     /**
      * @var \Closure
@@ -56,13 +57,12 @@ class CreateDatabase extends AbstractSubCommand
                 throw new \InvalidArgumentException("Database configuration is invalid", null);
             }
         } else {
+            /** @var DialogHelper $dialog */
             $dialog = $this->getCommand()->getHelperSet()->get('dialog');
             do {
-
                 // Host
                 $dbHostDefault = $this->input->getOption('dbHost') ?
-                    $this->input->getOption('dbHost') :
-                    $this->commandConfig['installation']['db']['host'];
+                    $this->input->getOption('dbHost') : $this->commandConfig['installation']['db']['host'];
                 $this->config->setString(
                     'db_host',
                     $dialog->askAndValidate(
@@ -77,8 +77,7 @@ class CreateDatabase extends AbstractSubCommand
 
                 // Port
                 $dbPortDefault = $this->input->getOption('dbPort') ?
-                    $this->input->getOption('dbPort') :
-                    $this->commandConfig['installation']['db']['port'];
+                    $this->input->getOption('dbPort') : $this->commandConfig['installation']['db']['port'];
                 $this->config->setInt(
                     'db_port',
                     intval($dialog->askAndValidate(
@@ -93,8 +92,7 @@ class CreateDatabase extends AbstractSubCommand
 
                 // User
                 $dbUserDefault = $this->input->getOption('dbUser') ?
-                    $this->input->getOption('dbUser') :
-                    $this->commandConfig['installation']['db']['user'];
+                    $this->input->getOption('dbUser') : $this->commandConfig['installation']['db']['user'];
                 $this->config->setString(
                     'db_user',
                     $dialog->askAndValidate(
@@ -109,8 +107,7 @@ class CreateDatabase extends AbstractSubCommand
 
                 // Password
                 $dbPassDefault = $this->input->getOption('dbPass') ?
-                    $this->input->getOption('dbPass') :
-                    $this->commandConfig['installation']['db']['pass'];
+                    $this->input->getOption('dbPass') : $this->commandConfig['installation']['db']['pass'];
                 $this->config->setString(
                     'db_pass',
                     $dialog->ask(
@@ -123,8 +120,7 @@ class CreateDatabase extends AbstractSubCommand
 
                 // DB-Name
                 $dbNameDefault = $this->input->getOption('dbName') ?
-                    $this->input->getOption('dbName') :
-                    $this->commandConfig['installation']['db']['name'];
+                    $this->input->getOption('dbName') : $this->commandConfig['installation']['db']['name'];
                 $this->config->setString(
                     'db_name',
                     $dialog->askAndValidate(
@@ -185,8 +181,6 @@ class CreateDatabase extends AbstractSubCommand
             return $db;
         } catch (\Exception $e) {
             $output->writeln('<error>' . $e->getMessage() . '</error>');
-        } catch (\PDOException $e) {
-            $output->writeln('<error>' . $e->getMessage() . '</error>');
         }
 
         return false;
@@ -195,12 +189,12 @@ class CreateDatabase extends AbstractSubCommand
     /**
      * @return array
      */
-    public function getCliArguments()
+    private function getCliArguments()
     {
-        if ($this->_argv === null) {
-            $this->_argv = $_SERVER['argv'];
+        if ($this->argv === null) {
+            $this->argv = $_SERVER['argv'];
         }
 
-        return $this->_argv;
+        return $this->argv;
     }
 }
