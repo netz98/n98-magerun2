@@ -28,10 +28,20 @@ class FlushCommand extends AbstractMagentoCommand
     {
         $this->detectMagento($output);
 
+        $generationFlushDirectories = [
+            $this->getApplication()->getMagentoRootFolder() . '/var/generation',
+            $this->getApplication()->getMagentoRootFolder() . '/generated/code',
+        ];
+
         $finder = Finder::create()
             ->directories()
-            ->depth(0)
-            ->in($this->getApplication()->getMagentoRootFolder() . '/var/generation');
+            ->depth(0);
+
+        foreach ($generationFlushDirectories as $directoryToFlush) {
+            if (is_dir($directoryToFlush)) {
+                $finder->in($directoryToFlush);
+            }
+        }
 
         $vendorNameToFilter = $input->getArgument('vendorName');
 
