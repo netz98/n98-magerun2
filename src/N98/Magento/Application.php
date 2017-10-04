@@ -5,7 +5,9 @@ namespace N98\Magento;
 use BadMethodCallException;
 use Composer\Autoload\ClassLoader;
 use Exception;
+use Magento\Framework\Autoload\AutoloaderRegistry;
 use Magento\Framework\ObjectManagerInterface;
+use N98\Magento\Application\AutoloaderDecorator;
 use N98\Magento\Application\Config;
 use N98\Magento\Application\ConfigurationLoader;
 use N98\Magento\Application\Console\Events;
@@ -749,6 +751,13 @@ class Application extends BaseApplication
     protected function _initMagento2()
     {
         $this->requireOnce($this->getMagentoRootFolder() . '/app/bootstrap.php');
+
+        AutoloaderRegistry::registerAutoloader(
+            new AutoloaderDecorator(
+                AutoloaderRegistry::getAutoloader(),
+                $this->getAutoloader()
+            )
+        );
 
         $params = $_SERVER;
         $params[\Magento\Store\Model\StoreManager::PARAM_RUN_CODE] = 'admin';

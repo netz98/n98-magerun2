@@ -44,8 +44,13 @@ class MakeBlockCommand extends AbstractGeneratorCommand
         $classGenerator = $this->create(ClassGenerator::class);
 
         /** @var $classGenerator ClassGenerator */
-        $classGenerator->setExtendedClass('Template');
         $classGenerator->addUse('Magento\Framework\View\Element\Template');
+
+        if (version_compare($this->getMagentoVersion()->getVersion(), '2.2.0', '<')) {
+            $classGenerator->setExtendedClass('Template');
+        } else {
+            $classGenerator->setExtendedClass('Magento\Framework\View\Element\Template');
+        }
 
         $classGenerator->setName($classNameToGenerate);
 

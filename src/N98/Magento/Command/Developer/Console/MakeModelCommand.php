@@ -35,8 +35,13 @@ class MakeModelCommand extends AbstractGeneratorCommand
         $classGenerator = $this->create(ClassGenerator::class);
 
         /** @var $classGenerator ClassGenerator */
-        $classGenerator->setExtendedClass('AbstractModel');
         $classGenerator->addUse('Magento\Framework\Model\AbstractModel');
+
+        if (version_compare($this->getMagentoVersion()->getVersion(), '2.2.0', '<')) {
+            $classGenerator->setExtendedClass('AbstractModel');
+        } else {
+            $classGenerator->setExtendedClass('Magento\Framework\Model\AbstractModel');
+        }
 
         $classGenerator->setName($classNameToGenerate);
 

@@ -14,7 +14,7 @@ class ScriptCommandTest extends TestCase
         // Check pre defined vars
         $this->assertDisplayRegExp($input, '~^\Qmagento.root: \E/.+\R$~m');
         $this->assertDisplayRegExp($input, '~^\Qmagento.edition: \E(Community|Enterprise)\R$~m');
-        $this->assertDisplayRegExp($input, '~^\Qmagento.version: \E\d\.\d+\.\d+\R$~m');
+        $this->assertDisplayRegExp($input, '~^\Qmagento.version: \E\d\.\d+\.\d+.*\R$~m');
 
         $this->assertDisplayContains($input, 'magerun.version: ' . $this->getApplication()->getVersion());
 

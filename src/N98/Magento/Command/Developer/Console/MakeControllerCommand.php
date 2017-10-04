@@ -37,7 +37,11 @@ class MakeControllerCommand extends AbstractGeneratorCommand
         $classGenerator = $this->create(ClassGenerator::class);
 
         /** @var $classGenerator ClassGenerator */
-        $classGenerator->setExtendedClass('Action');
+        if (version_compare($this->getMagentoVersion()->getVersion(), '2.2.0', '<')) {
+            $classGenerator->setExtendedClass('Action');
+        } else {
+            $classGenerator->setExtendedClass('Magento\Framework\App\Action\Action');
+        }
 
         $body = $this->createClassBody($input);
         $executeMethodDefinition = $this->createClassMethodDefinitions($body);

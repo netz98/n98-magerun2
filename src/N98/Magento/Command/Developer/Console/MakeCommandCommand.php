@@ -49,11 +49,16 @@ class MakeCommandCommand extends AbstractGeneratorCommand
         $classGenerator = $this->create(ClassGenerator::class);
         /** @var $classGenerator ClassGenerator */
         $classGenerator->setName($classNameToGenerate);
-        $classGenerator->setExtendedClass('Command');
+
         $classGenerator->addUse('Symfony\Component\Console\Command\Command');
         $classGenerator->addUse('Symfony\Component\Console\Input\InputInterface');
         $classGenerator->addUse('Symfony\Component\Console\Output\OutputInterface');
-        $classGenerator->addUse('Symfony\Component\Console\Command\Command');
+
+        if (version_compare($this->getMagentoVersion()->getVersion(), '2.2.0', '<')) {
+            $classGenerator->setExtendedClass('Command');
+        } else {
+            $classGenerator->setExtendedClass('Symfony\Component\Console\Command\Command');
+        }
 
         $commandName = $this->prepareCommandName($input);
 
@@ -110,16 +115,19 @@ BODY;
             ),
         ));
 
+        $inputParamType = '\Symfony\Component\Console\Input\InputInterface';
+        $outputParamType = '\Symfony\Component\Console\Output\OutputInterface';
+
         $classGenerator->addMethod(
             'execute',
             [
                 [
                     'name' => 'input',
-                    'type' => 'InputInterface',
+                    'type' => $inputParamType,
                 ],
                 [
                     'name' => 'output',
-                    'type' => 'OutputInterface',
+                    'type' => $outputParamType,
                 ],
             ],
             MethodGenerator::FLAG_PUBLIC,
