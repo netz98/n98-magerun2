@@ -156,6 +156,8 @@ class TestApplication
                 $loader = require __DIR__ . '/../../../vendor/autoload.php';
             }
 
+            /** @var $loader \Composer\Autoload\ClassLoader */
+
             $application->setAutoloader($loader);
             $application->expects($this->any())->method('getMagentoRootFolder')->will($this->returnValue($root));
             $application->init();

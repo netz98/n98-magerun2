@@ -18,7 +18,7 @@ case "${SCRIPT_JOB}" in
     # run phpunit in magento2 mode "default"
     echo "run phpunit in magento 2 mode:"
     php -f "./${MAGENTO_VERSION}/bin/magento" deploy:mode:show
-    vendor/bin/phpunit --debug
+    vendor/bin/phpunit --debug --exclude-group "${PHPUNIT_EXCLUDE_GROUPS}"
 
     # run phpunit in magento2 mode "production"
     echo "memory_limit=-1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
@@ -35,7 +35,7 @@ case "${SCRIPT_JOB}" in
     )
     echo "run phpunit in magento 2 mode:"
     php -f "./${MAGENTO_VERSION}/bin/magento" deploy:mode:show
-    vendor/bin/phpunit --debug
+    vendor/bin/phpunit --debug --exclude-group "${PHPUNIT_EXCLUDE_GROUPS}"
 
     ;;
 

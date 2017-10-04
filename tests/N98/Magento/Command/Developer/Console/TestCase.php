@@ -51,6 +51,10 @@ abstract class TestCase extends BaseTestCase
 
         $command->setContext(new Context());
         $command->setScopeVariable('di', $di);
+        $command->setScopeVariable(
+            'magentoVersion',
+            $this->getApplication()->getObjectManager()->get(\Magento\Framework\App\ProductMetadataInterface::class)
+        );
 
         $commandTester = new CommandTester($command);
 

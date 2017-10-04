@@ -4,6 +4,11 @@ namespace N98\Magento\Command\Script\Repository;
 
 use N98\Magento\Command\TestCase;
 
+/**
+ * Class ListCommandTest
+ * @package N98\Magento\Command\Script\Repository
+ * @group exclude-2.2
+ */
 class ListCommandTest extends TestCase
 {
     public function testExecute()

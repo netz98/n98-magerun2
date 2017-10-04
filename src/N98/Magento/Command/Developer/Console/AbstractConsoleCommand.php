@@ -84,4 +84,20 @@ abstract class AbstractConsoleCommand extends ReflectingCommand
 
         return $command->run($input, $output);
     }
+
+    /**
+     * @return \N98\Magento\Application
+     */
+    public function getMagerunApplication()
+    {
+        return $this->getScopeVariable('magerun');
+    }
+
+    /**
+     * @return \Magento\Framework\App\ProductMetadataInterface
+     */
+    public function getMagentoVersion()
+    {
+        return $this->getScopeVariable('magentoVersion');
+    }
 }
