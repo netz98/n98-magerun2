@@ -2,6 +2,11 @@
 
 namespace N98\Magento\Command;
 
+/**
+ * Class ScriptCommandTest
+ * @package N98\Magento\Command
+ * @group exclude-2.2
+ */
 class ScriptCommandTest extends TestCase
 {
     public function testExecute()
