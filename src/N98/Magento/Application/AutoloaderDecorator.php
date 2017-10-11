@@ -107,9 +107,13 @@ class AutoloaderDecorator implements AutoloaderInterface
      */
     public function findFile($className)
     {
-        if ($this->n98MagerunAutoloader->findFile($className)) {
-            return true;
+        $filename = $this->n98MagerunAutoloader->findFile($className);
+
+        if ($filename !== false) {
+            return $filename;
         }
+
+        // Fallback to original Magento autoloader
 
         return $this->magentoAutoloader->findFile($className);
     }
