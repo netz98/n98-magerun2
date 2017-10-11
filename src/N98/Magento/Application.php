@@ -752,12 +752,17 @@ class Application extends BaseApplication
     {
         $this->requireOnce($this->getMagentoRootFolder() . '/app/bootstrap.php');
 
-        AutoloaderRegistry::registerAutoloader(
-            new AutoloaderDecorator(
-                AutoloaderRegistry::getAutoloader(),
-                $this->getAutoloader()
-            )
-        );
+        $magentoAutoloader = AutoloaderRegistry::getAutoloader();
+
+        // Prevent an infinite loop of autoloaders
+        if (!$magentoAutoloader instanceof AutoloaderDecorator) {
+            AutoloaderRegistry::registerAutoloader(
+                new AutoloaderDecorator(
+                    $magentoAutoloader,
+                    $this->getAutoloader()
+                )
+            );
+        }
 
         $params = $_SERVER;
         $params[\Magento\Store\Model\StoreManager::PARAM_RUN_CODE] = 'admin';
