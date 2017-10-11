@@ -9,7 +9,6 @@ use RuntimeException;
  * Class ExecTest
  *
  * @package N98\Util
- * @group exclude-2.2
  */
 class ExecTest extends \PHPUnit_Framework_TestCase
 {
