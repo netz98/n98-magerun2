@@ -3,11 +3,11 @@
  * *
  *  * Copyright © Elias Kotlyar - All rights reserved.
  *  * See LICENSE.md bundled with this module for license details.
- *
  */
 
 namespace N98\Magento\Command\Media;
 
+use Magento\Framework\App\Filesystem\DirectoryList;
 use N98\Magento\Command\AbstractMagentoCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -19,6 +19,11 @@ use ZipArchive;
 
 class DumpCommand extends AbstractMagentoCommand
 {
+    /**
+     * @var \Magento\Framework\Filesystem
+     */
+    private $filesystem;
+
     protected function configure()
     {
         $this
@@ -27,6 +32,14 @@ class DumpCommand extends AbstractMagentoCommand
             ->addArgument('filename', InputArgument::OPTIONAL, 'Dump filename')
             ->setDescription('Creates an archive with content of media folder.')
         ;
+    }
+
+    /**
+     * @param \Magento\Framework\Filesystem $filesystem
+     */
+    public function inject(\Magento\Framework\Filesystem $filesystem)
+    {
+        $this->filesystem = $filesystem;
     }
 
     /**
@@ -39,12 +52,14 @@ class DumpCommand extends AbstractMagentoCommand
     {
         $commandConfig = $this->getCommandConfig();
 
+        $mediaDirectoryReader = $this->filesystem->getDirectoryRead(DirectoryList::MEDIA);
+
         $this->detectMagento($output);
-        $finder = new Finder();
-        $finder
+        $finder = Finder::create()
             ->files()
             ->followLinks(true)
-            ->in($this->getApplication()->getMagentoRootFolder() . DIRECTORY_SEPARATOR . 'pub' . DIRECTORY_SEPARATOR . 'media');
+            ->in($mediaDirectoryReader->getAbsolutePath());
+
         if ($input->getOption('strip')) {
             $finder->exclude($commandConfig['strip']['folders']);
         }
