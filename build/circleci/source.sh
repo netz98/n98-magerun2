@@ -11,7 +11,7 @@ buildecho()
 export CLOVER_XML="${CIRCLE_ARTIFACTS:-.}/clover.xml"
 buildecho "clover.xml: '${CLOVER_XML}', exported as \$CLOVER_XML."
 
-export MAGENTO_VERSION="magento-ce-2.0.0"
+export MAGENTO_VERSION="magento-ce-2.2.0"
 export DB=mysql
 export INSTALL_SAMPLE_DATA=0
 export COVERAGE=10
