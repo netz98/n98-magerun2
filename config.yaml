@@ -91,6 +91,7 @@ commands:
     - N98\Magento\Command\GiftCard\CreateCommand
     - N98\Magento\Command\GiftCard\InfoCommand
     - N98\Magento\Command\GiftCard\RemoveCommand
+    - N98\Magento\Command\Media\DumpCommand
     - N98\Magento\Command\OpenBrowserCommand
     - N98\Magento\Command\SearchEngine\ListCommand
     - N98\Magento\Command\Script\Repository\ListCommand
@@ -117,8 +118,7 @@ commands:
     - N98\Magento\Command\ScriptCommand
     - N98\Magento\Command\ShellCommand
     - N98\Magento\Command\SelfUpdateCommand
-    - N98\Magento\Command\Media\DumpCommand
-    
+
   disabled:
     - dummy
 
@@ -471,6 +471,11 @@ commands:
       - N98\Magento\Command\Developer\Console\MakeInterfaceCommand
       - N98\Magento\Command\Developer\Console\MakeThemeCommand
       #- N98\Magento\Command\Developer\Console\TreeCommand
+
+  N98\Magento\Command\Media\DumpCommand:
+    strip:
+      folders:
+        - 'catalog/product/cache'
 
   N98\Magento\Command\System\CheckCommand:
     checks:
