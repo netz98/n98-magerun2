@@ -7,7 +7,6 @@ use N98\Magento\Command\TestCase;
 /**
  * Class RunCommandTest
  * @package N98\Magento\Command\Script\Repository
- * @group exclude-2.2
  */
 class RunCommandTest extends TestCase
 {
