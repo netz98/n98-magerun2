@@ -54,7 +54,7 @@ class DatabaseHelper extends AbstractHelper
     }
 
     /**
-     * @param OutputInterface $output
+     * @param OutputInterface|null $output
      *
      * @throws RuntimeException
      * @return void
@@ -270,8 +270,8 @@ class DatabaseHelper extends AbstractHelper
      * in difference to @see getMysqlVariableValue(), this method allows to specify the type of the variable as well
      * as to use any variable identifier even such that need quoting.
      *
-     * @param string $name mysql variable name
-     * @param string $type [optional] variable type, can be a system variable ("@@", default) or a session variable
+     * @param string      $name mysql variable name
+     * @param string|null $type [optional] variable type, can be a system variable ("@@", default) or a session variable
      *                     ("@").
      *
      * @return string variable value, null if variable was not defined
@@ -467,8 +467,8 @@ class DatabaseHelper extends AbstractHelper
     /**
      * Get list of database tables
      *
-     * @param bool $withoutPrefix [optional] remove prefix from the returned table names. prefix is obtained from
-     *                            magento database configuration. defaults to false.
+     * @param bool|null $withoutPrefix [optional] remove prefix from the returned table names. prefix is obtained from
+     *                                 magento database configuration. defaults to false.
      *
      * @return array
      * @throws RuntimeException

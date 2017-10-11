@@ -57,7 +57,7 @@ class DumpCommand extends AbstractMagentoCommand
         $this->detectMagento($output);
         $finder = Finder::create()
             ->files()
-            ->followLinks(true)
+            ->followLinks()
             ->in($mediaDirectoryReader->getAbsolutePath());
 
         if ($input->getOption('strip')) {
@@ -65,10 +65,12 @@ class DumpCommand extends AbstractMagentoCommand
         }
 
         $filename = (string) $input->getArgument('filename');
+
         if (is_dir($filename)) { // support for dot dir
             $filename = realpath($filename);
             $filename .= '/';
         }
+
         if (empty($filename) || is_dir($filename)) {
             $filename .= 'media_' . date('Ymd_his') . '.zip';
         }
@@ -77,6 +79,7 @@ class DumpCommand extends AbstractMagentoCommand
         $zip->open($filename, ZIPARCHIVE::CREATE);
         $zip->addEmptyDir('media');
         $lastFolder = '';
+
         foreach ($finder as $file) {
             /* @var $file SplFileInfo */
             $currentFolder = pathinfo($file->getRelativePathname(), PATHINFO_DIRNAME);
