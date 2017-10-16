@@ -4,8 +4,17 @@ RECENT CHANGES
 2.0.0
 -----
 
-* Major Break: config:get, config:set, config:delete commands are renamed (by Christian Münch)
-    -> config:store:get, config:store:set, config:store:delete 
+* Major Break: config:get, config:set, config:delete commands are renamed
+    -> config:store:get, config:store:set, config:store:delete
+    (by Christian Münch)
+* New: Command eav:attribute:remove (by Jürgen Thelen, #307)
+* Imp: Strip admin tables (by Max Chadwick, #309)
+* Imp: Updated Magento releases (by Kristof Ringleff, #311)
+* Imp: More config values for install command (by Manuele Menozzi, #312)
+* New: Command media:dump (by Elias Kotlyar, #319)    
+* Fix: Undefined index during cronjob execution (by Anton Evers, #201)
+* Imp: Code imrovements (by Tom Klingenberg)
+* Fix: Magento 2.2 Compatibility (by Christian Münch)
 
 1.6.0
 -----
