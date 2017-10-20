@@ -383,6 +383,15 @@ Enable Magento cache
 If no code is specified, all cache types will be enabled.
 Run `cache:list` command to see all codes.
 
+Create a backup
+""""""""""""""""""""
+
+.. code-block:: sh
+
+   $ n98-magerun2.phar backup:create
+
+Uses db:dump to create an SQL dump in the web root, the creates a tar.gz of the entire Magento web root. The backup is created in directory above document root. MySQL dump is removed after backup is complete.
+
 Dump database
 """""""""""""
 
