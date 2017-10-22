@@ -132,8 +132,8 @@ class DownloadMagento extends AbstractSubCommand
             ));
 
             $this->output->writeln(array(
-                'You need to create a security key. Login at magentocommerce.com.',
-                'Developers -> Secure Keys. <info>Use public key as username and private key as password</info>',
+                'You need to create a security key. Login at https://marketplace.magento.com/customer/accessKeys/.',
+                'My Profile -> Access Keys. <info>Use public key as username and private key as password</info>',
                 '',
             ));
             $dialog = $this->getCommand()->getHelper('dialog');
