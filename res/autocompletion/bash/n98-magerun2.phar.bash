@@ -8,9 +8,16 @@
 
 _n98-magerun2()
 {
-    local state com cur
+    local cur script coms opts com
+    COMPREPLY=()
+    _get_comp_words_by_ref -n : cur words
 
-    cur=${words[${#words[@]}]}
+    # for an alias, get the real script behind it
+    if [[ $(type -t ${words[0]}) == "alias" ]]; then
+        script=$(alias ${words[0]} | sed -E "s/alias ${words[0]}='(.*)'/\1/")
+    else
+        script=${words[0]}
+    fi
 
     # lookup for command
     for word in ${words[@]:1}; do
@@ -20,434 +27,410 @@ _n98-magerun2()
         fi
     done
 
-    if [[ ${cur} == --* ]]; then
-        state="option"
-        opts=("--help:Display this help message" "--quiet:Do not output any message" "--verbose:Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug" "--version:Display this application version" "--ansi:Force ANSI output" "--no-ansi:Disable ANSI output" "--no-interaction:Do not ask any interactive question" "--root-dir:Force magento root dir. No auto detection" "--skip-config:Do not load any custom config." "--skip-root-check:Do not check if n98-magerun runs as root" "--skip-core-commands:Do not include Magento 2 core commands")
-    elif [[ $cur == $com ]]; then
-        state="command"
-        coms=("help:Displays help for a command" "install:Install magento" "list:Lists commands" "open-browser:Open current project in browser \(experimental\)" "script:Runs multiple n98-magerun commands" "shell:Runs n98-magerun as shell" "admin\:notifications:Toggles admin notifications" "admin\:user\:change-password:Changes the password of a adminhtml user." "admin\:user\:create:Creates an administrator" "admin\:user\:delete:Delete the account of a adminhtml user." "admin\:user\:list:List admin users." "admin\:user\:unlock:Unlock Admin Account" "app\:config\:dump:Create dump of application" "cache\:clean:Clean magento cache" "cache\:disable:Disables Magento caches" "cache\:enable:Enables Magento caches" "cache\:flush:Flush magento cache storage" "cache\:list:Lists all magento caches" "cache\:report:View inside the cache" "cache\:status:Checks cache status" "cache\:view:Prints a cache entry" "catalog\:images\:resize:Creates resized product images" "catalog\:product\:attributes\:cleanup:Removes unused product attributes." "config\:data\:acl:Prints acl.xml data as table" "config\:data\:di:Dump dependency injection config" "config\:store\:delete:Deletes a store config item" "config\:store\:get:Get a store config item" "config\:store\:set:Set a store config item" "cron\:run:Runs jobs by schedule" "customer\:create:Creates a new customer/user for shop frontend." "customer\:hash\:upgrade:Upgrade customer\'s hash according to the latest algorithm" "customer\:info:Loads basic customer info by email address." "customer\:list:Lists all magento customers" "db\:console:Opens mysql client by database config from env.php" "db\:create:Create currently configured database" "db\:drop:Drop current database" "db\:dump:Dumps database with mysqldump cli client" "db\:import:Imports database with mysql cli client according to database defined in env.php" "db\:info:Dumps database informations" "db\:maintain\:check-tables:Check database tables" "db\:query:Executes an SQL query on the database defined in env.php" "db\:status:Shows important server status information or custom selected status values" "db\:variables:Shows important variables or custom selected" "deploy\:mode\:set:Set application mode." "deploy\:mode\:show:Displays current application mode." "design\:demo-notice:Toggles demo store notice for a store view" "dev\:asset\:clear:Clear static assets" "dev\:console:Opens PHP interactive shell with initialized Mage::app\(\) \(Experimental\)" "dev\:module\:create:Create and register a new magento module." "dev\:module\:list:List all installed modules" "dev\:module\:observer\:list:Lists all registered observers" "dev\:report\:count:Get count of report files" "dev\:source-theme\:deploy:Collects and publishes source files for theme." "dev\:symlinks:Toggle allow symlinks setting" "dev\:template-hints:Toggles template hints" "dev\:template-hints-blocks:Toggles template hints block names" "dev\:tests\:run:Runs tests" "dev\:theme\:list:Lists all available themes" "dev\:urn-catalog\:generate:Generates the catalog of URNs to \*.xsd mappings for the IDE to highlight xml." "dev\:xml\:convert:Converts XML file using XSL style sheets" "eav\:attribute\:list:List EAV attributes" "eav\:attribute\:remove:Remove attribute for a given attribute code" "eav\:attribute\:view:View information about an EAV attribute" "generation\:flush:Flushs generated code like factories and proxies" "i18n\:collect-phrases:Discovers phrases in the codebase" "i18n\:pack:Saves language package" "i18n\:uninstall:Uninstalls language packages" "index\:list:Lists all magento indexes" "index\:trigger\:recreate:ReCreate all triggers" "indexer\:info:Shows allowed Indexers" "indexer\:reindex:Reindexes Data" "indexer\:reset:Resets indexer status to invalid" "indexer\:set-mode:Sets index mode type" "indexer\:show-mode:Shows Index Mode" "indexer\:status:Shows status of Indexer" "info\:adminuri:Displays the Magento Admin URI" "info\:backups\:list:Prints list of available backup files" "info\:currency\:list:Displays the list of available currencies" "info\:dependencies\:show-framework:Shows number of dependencies on Magento framework" "info\:dependencies\:show-modules:Shows number of dependencies between modules" "info\:dependencies\:show-modules-circular:Shows number of circular dependencies between modules" "info\:language\:list:Displays the list of available language locales" "info\:timezone\:list:Displays the list of available timezones" "maintenance\:allow-ips:Sets maintenance mode exempt IPs" "maintenance\:disable:Disables maintenance mode" "maintenance\:enable:Enables maintenance mode" "maintenance\:status:Displays maintenance mode status" "media\:dump:Creates an archive with content of media folder." "module\:disable:Disables specified modules" "module\:enable:Enables specified modules" "module\:status:Displays status of modules" "module\:uninstall:Uninstalls modules installed by composer" "sampledata\:deploy:Deploy sample data modules" "sampledata\:remove:Remove all sample data packages from composer.json" "sampledata\:reset:Reset all sample data modules for re-installation" "script\:repo\:list:Lists all scripts in repository" "script\:repo\:run:Run script from repository" "search\:engine\:list:Lists all registered search engines" "setup\:backup:Takes backup of Magento Application code base, media and database" "setup\:config\:set:Creates or modifies the deployment configuration" "setup\:cron\:run:Runs cron job scheduled for setup application" "setup\:db-data\:upgrade:Installs and upgrades data in the DB" "setup\:db-schema\:upgrade:Installs and upgrades the DB schema" "setup\:db\:status:Checks if DB schema or data requires upgrade" "setup\:di\:compile:Generates DI configuration and all missing classes that can be auto-generated" "setup\:install:Installs the Magento application" "setup\:performance\:generate-fixtures:Generates fixtures" "setup\:rollback:Rolls back Magento Application codebase, media and database" "setup\:static-content\:deploy:Deploys static view files" "setup\:store-config\:set:Installs the store configuration" "setup\:uninstall:Uninstalls the Magento application" "setup\:upgrade:Upgrades the Magento application, DB data, and schema" "sys\:check:Checks Magento System" "sys\:cron\:history:Last executed cronjobs with status." "sys\:cron\:list:Lists all cronjobs" "sys\:cron\:run:Runs a cronjob by job code" "sys\:cron\:schedule:Schedule a cronjob for execution right now, by job code" "sys\:info:Prints infos about the current magento system." "sys\:maintenance:Toggles maintenance mode if --on or --off preferences are not set" "sys\:setup\:change-version:Change module resource version" "sys\:setup\:compare-versions:Compare module version with setup_module table." "sys\:setup\:downgrade-versions:Automatically downgrade schema and module versions" "sys\:store\:config\:base-url\:list:Lists all base urls" "sys\:store\:list:Lists all installed store-views" "sys\:url\:list:Get all urls." "sys\:website\:list:Lists all websites" "theme\:uninstall:Uninstalls theme")
-    fi
+    # completing for an option
+    if [[ ${cur} == --* ]] ; then
+        opts="--help --quiet --verbose --version --ansi --no-ansi --no-interaction --root-dir --skip-config --skip-root-check --skip-core-commands"
 
-    case $state in
-        command)
-            _describe 'command' coms
-        ;;
-        option)
-            case "$com" in
-                help)
-            opts+=("--xml:To output help as XML" "--format:The output format \(txt, xml, json, or md\)" "--raw:To output raw command help")
+        case "$com" in
+            help)
+            opts="${opts} --xml --format --raw"
             ;;
             install)
-            opts+=("--magentoVersion:Magento version" "--magentoVersionByName:Magento version name instead of order number" "--installationFolder:Installation folder" "--dbHost:Database host" "--dbUser:Database user" "--dbPass:Database password" "--dbName:Database name" "--dbPort:Database port" "--installSampleData:Install sample data" "--useDefaultConfigParams:Use default installation parameters defined in the yaml file" "--baseUrl:Installation base url" "--replaceHtaccessFile:Generate htaccess file \(for non vhost environment\)" "--noDownload:If set skips download step. Used when installationFolder is already a Magento installation that has to be installed on the given database." "--only-download:Downloads \(and extracts\) source code" "--forceUseDb:If --noDownload passed, force to use given database if it already exists.")
+            opts="${opts} --magentoVersion --magentoVersionByName --installationFolder --dbHost --dbUser --dbPass --dbName --dbPort --installSampleData --useDefaultConfigParams --baseUrl --replaceHtaccessFile --noDownload --only-download --forceUseDb"
             ;;
             list)
-            opts+=("--xml:To output list as XML" "--raw:To output raw command list" "--format:The output format \(txt, xml, json, or md\)")
+            opts="${opts} --xml --raw --format"
             ;;
             open-browser)
-            opts+=()
+            opts="${opts} "
             ;;
             script)
-            opts+=("--define:Defines a variable" "--stop-on-error:Stops execution of script on error")
+            opts="${opts} --define --stop-on-error"
             ;;
             shell)
-            opts+=()
+            opts="${opts} "
             ;;
             admin:notifications)
-            opts+=("--on:Switch on" "--off:Switch off")
+            opts="${opts} --on --off"
             ;;
             admin:user:change-password)
-            opts+=()
+            opts="${opts} "
             ;;
             admin:user:create)
-            opts+=("--admin-user:\(Required\) Admin user" "--admin-password:\(Required\) Admin password" "--admin-email:\(Required\) Admin email" "--admin-firstname:\(Required\) Admin first name" "--admin-lastname:\(Required\) Admin last name" "--magento-init-params:Add to any command to customize Magento initialization parameters\
-For example: "MAGE_MODE=developer\&MAGE_DIRS\[base\]\[path\]=/var/www/example.com\&MAGE_DIRS\[cache\]\[path\]=/var/tmp/cache"")
+            opts="${opts} --admin-user --admin-password --admin-email --admin-firstname --admin-lastname --magento-init-params"
             ;;
             admin:user:delete)
-            opts+=("--force:Force")
+            opts="${opts} --force"
             ;;
             admin:user:list)
-            opts+=("--format:Output Format. One of \[csv,json,xml\]")
+            opts="${opts} --format"
             ;;
             admin:user:unlock)
-            opts+=()
+            opts="${opts} "
             ;;
             app:config:dump)
-            opts+=()
+            opts="${opts} "
             ;;
             cache:clean)
-            opts+=()
+            opts="${opts} "
             ;;
             cache:disable)
-            opts+=("--format:Output Format. One of \[csv,json,xml\]")
+            opts="${opts} --format"
             ;;
             cache:enable)
-            opts+=("--format:Output Format. One of \[csv,json,xml\]")
+            opts="${opts} --format"
             ;;
             cache:flush)
-            opts+=()
+            opts="${opts} "
             ;;
             cache:list)
-            opts+=("--enabled:Filter the list to display only enabled \[1\] or disabled \[0\] cache types" "--format:Output Format. One of \[csv,json,xml\]")
+            opts="${opts} --enabled --format"
             ;;
             cache:report)
-            opts+=("--fpc:Use full page cache instead of core cache" "--tags:Output tags" "--mtime:Output last modification time" "--filter-id:Filter output by ID \(substring\)" "--filter-tag:Filter output by TAG \(separate multiple tags by comma\)" "--format:Output Format. One of \[csv, json, xml\]")
+            opts="${opts} --fpc --tags --mtime --filter-id --filter-tag --format"
             ;;
             cache:status)
-            opts+=("--bootstrap:add or override parameters of the bootstrap")
+            opts="${opts} --bootstrap"
             ;;
             cache:view)
-            opts+=("--fpc:Use full page cache instead of core cache" "--unserialize:Unserialize output")
+            opts="${opts} --fpc --unserialize"
             ;;
             catalog:images:resize)
-            opts+=()
+            opts="${opts} "
             ;;
             catalog:product:attributes:cleanup)
-            opts+=()
+            opts="${opts} "
             ;;
             config:data:acl)
-            opts+=()
+            opts="${opts} "
             ;;
             config:data:di)
-            opts+=("--scope:Config scope \(global, adminhtml, frontend, webapi_rest, webapi_soap, ...\)")
+            opts="${opts} --scope"
             ;;
             config:store:delete)
-            opts+=("--scope:The config value\'s scope \(default, websites, stores\)" "--scope-id:The config value\'s scope ID" "--all:Delete all entries by path")
+            opts="${opts} --scope --scope-id --all"
             ;;
             config:store:get)
-            opts+=("--scope:The config value\'s scope \(default, websites, stores\)" "--scope-id:The config value\'s scope ID" "--decrypt:Decrypt the config value using env.php\'s crypt key" "--update-script:Output as update script lines" "--magerun-script:Output for usage with config:store:set" "--format:Output Format. One of \[csv,json,xml\]")
+            opts="${opts} --scope --scope-id --decrypt --update-script --magerun-script --format"
             ;;
             config:store:set)
-            opts+=("--scope:The config value\'s scope \(default, websites, stores\)" "--scope-id:The config value\'s scope ID" "--encrypt:The config value should be encrypted using env.php\'s crypt key" "--no-null:Do not treat value NULL as NULL \(NULL/"unkown" value\) value")
+            opts="${opts} --scope --scope-id --encrypt --no-null"
             ;;
             cron:run)
-            opts+=("--group:Run jobs only from specified group" "--bootstrap:Add or override parameters of the bootstrap")
+            opts="${opts} --group --bootstrap"
             ;;
             customer:create)
-            opts+=("--format:Output Format. One of \[csv,json,xml\]")
+            opts="${opts} --format"
             ;;
             customer:hash:upgrade)
-            opts+=()
+            opts="${opts} "
             ;;
             customer:info)
-            opts+=()
+            opts="${opts} "
             ;;
             customer:list)
-            opts+=("--format:Output Format. One of \[csv,json,xml\]")
+            opts="${opts} --format"
             ;;
             db:console)
-            opts+=("--connection:Select DB connection type for Magento configurations with several databases")
+            opts="${opts} --connection"
             ;;
             db:create)
-            opts+=("--connection:Select DB connection type for Magento configurations with several databases")
+            opts="${opts} --connection"
             ;;
             db:drop)
-            opts+=("--connection:Select DB connection type for Magento configurations with several databases" "--tables:Drop all tables instead of dropping the database" "--force:Force")
+            opts="${opts} --connection --tables --force"
             ;;
             db:dump)
-            opts+=("--connection:Select DB connection type for Magento configurations with several databases" "--add-time:Append or prepend a timestamp to filename if a filename is provided. Possible values are "suffix", "prefix" or "no"." "--compression:Compress the dump file using one of the supported algorithms" "--only-command:Print only mysqldump command. Do not execute" "--print-only-filename:Execute and prints no output except the dump filename" "--dry-run:Do everything but the actual dump" "--no-single-transaction:Do not use single-transaction \(not recommended, this is blocking\)" "--human-readable:Use a single insert with column names per row. Useful to track database differences. Use db:import --optimize for speeding up the import." "--add-routines:Include stored routines in dump \(procedures \& functions\)" "--stdout:Dump to stdout" "--strip:Tables to strip \(dump only structure of those tables\)" "--exclude:Tables to exclude entirely from the dump \(including structure\)" "--force:Do not prompt if all options are defined")
+            opts="${opts} --connection --add-time --compression --only-command --print-only-filename --dry-run --no-single-transaction --human-readable --add-routines --stdout --strip --exclude --force"
             ;;
             db:import)
-            opts+=("--connection:Select DB connection type for Magento configurations with several databases" "--compression:The compression of the specified file" "--only-command:Print only mysql command. Do not execute" "--only-if-empty:Imports only if database is empty" "--optimize:Convert verbose INSERTs to short ones before import \(not working with compression\)" "--drop:Drop and recreate database before import" "--drop-tables:Drop tables before import")
+            opts="${opts} --connection --compression --only-command --only-if-empty --optimize --drop --drop-tables"
             ;;
             db:info)
-            opts+=("--connection:Select DB connection type for Magento configurations with several databases" "--format:Output Format. One of \[csv,json,xml\]")
+            opts="${opts} --connection --format"
             ;;
             db:maintain:check-tables)
-            opts+=("--type:Check type \(one of QUICK, FAST, MEDIUM, EXTENDED, CHANGED\)" "--repair:Repair tables \(only MyISAM\)" "--table:Process only given table \(wildcards are supported\)" "--format:Output Format. One of \[csv,json,xml\]")
+            opts="${opts} --type --repair --table --format"
             ;;
             db:query)
-            opts+=("--connection:Select DB connection type for Magento configurations with several databases" "--only-command:Print only mysql command. Do not execute")
+            opts="${opts} --connection --only-command"
             ;;
             db:status)
-            opts+=("--connection:Select DB connection type for Magento configurations with several databases" "--format:Output Format. One of \[csv,json,xml\]" "--rounding:Amount of decimals to display. If -1 then disabled" "--no-description:Disable description")
+            opts="${opts} --connection --format --rounding --no-description"
             ;;
             db:variables)
-            opts+=("--connection:Select DB connection type for Magento configurations with several databases" "--format:Output Format. One of \[csv,json,xml\]" "--rounding:Amount of decimals to display. If -1 then disabled" "--no-description:Disable description")
+            opts="${opts} --connection --format --rounding --no-description"
             ;;
             deploy:mode:set)
-            opts+=("--skip-compilation:Skips the clearing and regeneration of static content \(generated code, preprocessed CSS, and assets in pub/static/\)")
+            opts="${opts} --skip-compilation"
             ;;
             deploy:mode:show)
-            opts+=()
+            opts="${opts} "
             ;;
             design:demo-notice)
-            opts+=("--on:Switch on" "--off:Switch off" "--global:Set value on default scope")
+            opts="${opts} --on --off --global"
             ;;
             dev:asset:clear)
-            opts+=("--theme:Clear assets for specific theme\(s\) only")
+            opts="${opts} --theme"
             ;;
             dev:console)
-            opts+=()
+            opts="${opts} "
             ;;
             dev:module:create)
-            opts+=("--minimal:Create only module file" "--add-blocks:Adds blocks" "--add-helpers:Adds helpers" "--add-models:Adds models" "--add-setup:Adds SQL setup" "--add-all:Adds blocks, helpers and models" "--enable:Enable module after creation" "--modman:Create all files in folder with a modman file." "--add-readme:Adds a readme.md file to generated module" "--add-composer:Adds a composer.json file to generated module" "--author-name:Author for readme.md or composer.json" "--author-email:Author for readme.md or composer.json" "--description:Description for readme.md or composer.json")
+            opts="${opts} --minimal --add-blocks --add-helpers --add-models --add-setup --add-all --enable --modman --add-readme --add-composer --author-name --author-email --description"
             ;;
             dev:module:list)
-            opts+=("--vendor:Show modules of a specific vendor \(case insensitive\)" "--format:Output Format. One of \[csv,json,xml\]")
+            opts="${opts} --vendor --format"
             ;;
             dev:module:observer:list)
-            opts+=("--format:Output Format. One of \[csv,json,xml\]" "--sort:Sort output ascending by event name")
+            opts="${opts} --format --sort"
             ;;
             dev:report:count)
-            opts+=()
+            opts="${opts} "
             ;;
             dev:source-theme:deploy)
-            opts+=("--type:Type of source files: \[less\]" "--locale:Locale: \[en_US\]" "--area:Area: \[frontend\|adminhtml\]" "--theme:Theme: \[Vendor/theme\]")
+            opts="${opts} --type --locale --area --theme"
             ;;
             dev:symlinks)
-            opts+=("--on:Switch on" "--off:Switch off" "--global:Set value on default scope")
+            opts="${opts} --on --off --global"
             ;;
             dev:template-hints)
-            opts+=("--on:Switch on" "--off:Switch off")
+            opts="${opts} --on --off"
             ;;
             dev:template-hints-blocks)
-            opts+=("--on:Switch on" "--off:Switch off")
+            opts="${opts} --on --off"
             ;;
             dev:tests:run)
-            opts+=()
+            opts="${opts} "
             ;;
             dev:theme:list)
-            opts+=("--format:Output Format. One of \[csv,json,xml\]")
+            opts="${opts} --format"
             ;;
             dev:urn-catalog:generate)
-            opts+=("--ide:Format in which catalog will be generated. Supported: \[phpstorm\]")
+            opts="${opts} --ide"
             ;;
             dev:xml:convert)
-            opts+=("--overwrite:Overwrite XML file")
+            opts="${opts} --overwrite"
             ;;
             eav:attribute:list)
-            opts+=("--add-source:Add source models to list" "--add-backend:Add backend type to list" "--filter-type:Filter attributes by entity type" "--format:Output Format. One of \[csv,json,xml\]")
+            opts="${opts} --add-source --add-backend --filter-type --format"
             ;;
             eav:attribute:remove)
-            opts+=()
+            opts="${opts} "
             ;;
             eav:attribute:view)
-            opts+=("--format:Output Format. One of \[csv,json,xml\]")
+            opts="${opts} --format"
             ;;
             generation:flush)
-            opts+=()
+            opts="${opts} "
             ;;
             i18n:collect-phrases)
-            opts+=("--output:Path \(including filename\) to an output file. With no file specified, defaults to stdout." "--magento:Use the --magento parameter to parse the current Magento codebase. Omit the parameter if a directory is specified.")
+            opts="${opts} --output --magento"
             ;;
             i18n:pack)
-            opts+=("--mode:Save mode for dictionary\
-- "replace" - replace language pack by new one\
-- "merge" - merge language packages, by default "replace"" "--allow-duplicates:Use the --allow-duplicates parameter to allow saving duplicates of translate. Otherwise omit the parameter.")
+            opts="${opts} --mode --allow-duplicates"
             ;;
             i18n:uninstall)
-            opts+=("--backup-code:Take code and configuration files backup \(excluding temporary files\)")
+            opts="${opts} --backup-code"
             ;;
             index:list)
-            opts+=("--format:Output Format. One of \[csv,json,xml\]")
+            opts="${opts} --format"
             ;;
             index:trigger:recreate)
-            opts+=()
+            opts="${opts} "
             ;;
             indexer:info)
-            opts+=()
+            opts="${opts} "
             ;;
             indexer:reindex)
-            opts+=()
+            opts="${opts} "
             ;;
             indexer:reset)
-            opts+=()
+            opts="${opts} "
             ;;
             indexer:set-mode)
-            opts+=()
+            opts="${opts} "
             ;;
             indexer:show-mode)
-            opts+=()
+            opts="${opts} "
             ;;
             indexer:status)
-            opts+=()
+            opts="${opts} "
             ;;
             info:adminuri)
-            opts+=()
+            opts="${opts} "
             ;;
             info:backups:list)
-            opts+=()
+            opts="${opts} "
             ;;
             info:currency:list)
-            opts+=()
+            opts="${opts} "
             ;;
             info:dependencies:show-framework)
-            opts+=("--output:Report filename")
+            opts="${opts} --output"
             ;;
             info:dependencies:show-modules)
-            opts+=("--output:Report filename")
+            opts="${opts} --output"
             ;;
             info:dependencies:show-modules-circular)
-            opts+=("--output:Report filename")
+            opts="${opts} --output"
             ;;
             info:language:list)
-            opts+=()
+            opts="${opts} "
             ;;
             info:timezone:list)
-            opts+=()
+            opts="${opts} "
             ;;
             maintenance:allow-ips)
-            opts+=("--none:Clear allowed IP addresses" "--magento-init-params:Add to any command to customize Magento initialization parameters\
-For example: "MAGE_MODE=developer\&MAGE_DIRS\[base\]\[path\]=/var/www/example.com\&MAGE_DIRS\[cache\]\[path\]=/var/tmp/cache"")
+            opts="${opts} --none --magento-init-params"
             ;;
             maintenance:disable)
-            opts+=("--ip:Allowed IP addresses \(use 'none' to clear allowed IP list\)" "--magento-init-params:Add to any command to customize Magento initialization parameters\
-For example: "MAGE_MODE=developer\&MAGE_DIRS\[base\]\[path\]=/var/www/example.com\&MAGE_DIRS\[cache\]\[path\]=/var/tmp/cache"")
+            opts="${opts} --ip --magento-init-params"
             ;;
             maintenance:enable)
-            opts+=("--ip:Allowed IP addresses \(use 'none' to clear allowed IP list\)" "--magento-init-params:Add to any command to customize Magento initialization parameters\
-For example: "MAGE_MODE=developer\&MAGE_DIRS\[base\]\[path\]=/var/www/example.com\&MAGE_DIRS\[cache\]\[path\]=/var/tmp/cache"")
+            opts="${opts} --ip --magento-init-params"
             ;;
             maintenance:status)
-            opts+=("--magento-init-params:Add to any command to customize Magento initialization parameters\
-For example: "MAGE_MODE=developer\&MAGE_DIRS\[base\]\[path\]=/var/www/example.com\&MAGE_DIRS\[cache\]\[path\]=/var/tmp/cache"")
+            opts="${opts} --magento-init-params"
             ;;
             media:dump)
-            opts+=("--strip:Excludes image cache")
+            opts="${opts} --strip"
             ;;
             module:disable)
-            opts+=("--force:Bypass dependencies check" "--all:Disable all modules" "--clear-static-content:Clear generated static view files. Necessary, if the module\(s\) have static view files" "--magento-init-params:Add to any command to customize Magento initialization parameters\
-For example: "MAGE_MODE=developer\&MAGE_DIRS\[base\]\[path\]=/var/www/example.com\&MAGE_DIRS\[cache\]\[path\]=/var/tmp/cache"")
+            opts="${opts} --force --all --clear-static-content --magento-init-params"
             ;;
             module:enable)
-            opts+=("--force:Bypass dependencies check" "--all:Enable all modules" "--clear-static-content:Clear generated static view files. Necessary, if the module\(s\) have static view files" "--magento-init-params:Add to any command to customize Magento initialization parameters\
-For example: "MAGE_MODE=developer\&MAGE_DIRS\[base\]\[path\]=/var/www/example.com\&MAGE_DIRS\[cache\]\[path\]=/var/tmp/cache"")
+            opts="${opts} --force --all --clear-static-content --magento-init-params"
             ;;
             module:status)
-            opts+=("--magento-init-params:Add to any command to customize Magento initialization parameters\
-For example: "MAGE_MODE=developer\&MAGE_DIRS\[base\]\[path\]=/var/www/example.com\&MAGE_DIRS\[cache\]\[path\]=/var/tmp/cache"")
+            opts="${opts} --magento-init-params"
             ;;
             module:uninstall)
-            opts+=("--remove-data:Remove data installed by module\(s\)" "--backup-code:Take code and configuration files backup \(excluding temporary files\)" "--backup-media:Take media backup" "--backup-db:Take complete database backup" "--clear-static-content:Clear generated static view files. Necessary, if the module\(s\) have static view files" "--magento-init-params:Add to any command to customize Magento initialization parameters\
-For example: "MAGE_MODE=developer\&MAGE_DIRS\[base\]\[path\]=/var/www/example.com\&MAGE_DIRS\[cache\]\[path\]=/var/tmp/cache"")
+            opts="${opts} --remove-data --backup-code --backup-media --backup-db --clear-static-content --magento-init-params"
             ;;
             sampledata:deploy)
-            opts+=()
+            opts="${opts} "
             ;;
             sampledata:remove)
-            opts+=()
+            opts="${opts} "
             ;;
             sampledata:reset)
-            opts+=()
+            opts="${opts} "
             ;;
             script:repo:list)
-            opts+=("--format:Output Format. One of \[csv,json,xml\]")
+            opts="${opts} --format"
             ;;
             script:repo:run)
-            opts+=("--define:Defines a variable" "--stop-on-error:Stops execution of script on error")
+            opts="${opts} --define --stop-on-error"
             ;;
             search:engine:list)
-            opts+=("--format:Output Format. One of \[csv,json,xml\]")
+            opts="${opts} --format"
             ;;
             setup:backup)
-            opts+=("--code:Take code and configuration files backup \(excluding temporary files\)" "--media:Take media backup" "--db:Take complete database backup" "--magento-init-params:Add to any command to customize Magento initialization parameters\
-For example: "MAGE_MODE=developer\&MAGE_DIRS\[base\]\[path\]=/var/www/example.com\&MAGE_DIRS\[cache\]\[path\]=/var/tmp/cache"")
+            opts="${opts} --code --media --db --magento-init-params"
             ;;
             setup:config:set)
-            opts+=("--backend-frontname:Backend frontname \(will be autogenerated if missing\)" "--key:Encryption key" "--session-save:Session save handler" "--definition-format:Type of definitions used by Object Manager" "--db-host:Database server host" "--db-name:Database name" "--db-user:Database server username" "--db-engine:Database server engine" "--db-password:Database server password" "--db-prefix:Database table prefix" "--db-model:Database type" "--db-init-statements:Database  initial set of commands" "--skip-db-validation:If specified, then db connection validation will be skipped" "--http-cache-hosts:http Cache hosts" "--magento-init-params:Add to any command to customize Magento initialization parameters\
-For example: "MAGE_MODE=developer\&MAGE_DIRS\[base\]\[path\]=/var/www/example.com\&MAGE_DIRS\[cache\]\[path\]=/var/tmp/cache"")
+            opts="${opts} --backend-frontname --key --session-save --definition-format --db-host --db-name --db-user --db-engine --db-password --db-prefix --db-model --db-init-statements --skip-db-validation --http-cache-hosts --magento-init-params"
             ;;
             setup:cron:run)
-            opts+=("--magento-init-params:Add to any command to customize Magento initialization parameters\
-For example: "MAGE_MODE=developer\&MAGE_DIRS\[base\]\[path\]=/var/www/example.com\&MAGE_DIRS\[cache\]\[path\]=/var/tmp/cache"")
+            opts="${opts} --magento-init-params"
             ;;
             setup:db-data:upgrade)
-            opts+=("--magento-init-params:Add to any command to customize Magento initialization parameters\
-For example: "MAGE_MODE=developer\&MAGE_DIRS\[base\]\[path\]=/var/www/example.com\&MAGE_DIRS\[cache\]\[path\]=/var/tmp/cache"")
+            opts="${opts} --magento-init-params"
             ;;
             setup:db-schema:upgrade)
-            opts+=("--magento-init-params:Add to any command to customize Magento initialization parameters\
-For example: "MAGE_MODE=developer\&MAGE_DIRS\[base\]\[path\]=/var/www/example.com\&MAGE_DIRS\[cache\]\[path\]=/var/tmp/cache"")
+            opts="${opts} --magento-init-params"
             ;;
             setup:db:status)
-            opts+=("--magento-init-params:Add to any command to customize Magento initialization parameters\
-For example: "MAGE_MODE=developer\&MAGE_DIRS\[base\]\[path\]=/var/www/example.com\&MAGE_DIRS\[cache\]\[path\]=/var/tmp/cache"")
+            opts="${opts} --magento-init-params"
             ;;
             setup:di:compile)
-            opts+=()
+            opts="${opts} "
             ;;
             setup:install)
-            opts+=("--backend-frontname:Backend frontname \(will be autogenerated if missing\)" "--key:Encryption key" "--session-save:Session save handler" "--definition-format:Type of definitions used by Object Manager" "--db-host:Database server host" "--db-name:Database name" "--db-user:Database server username" "--db-engine:Database server engine" "--db-password:Database server password" "--db-prefix:Database table prefix" "--db-model:Database type" "--db-init-statements:Database  initial set of commands" "--skip-db-validation:If specified, then db connection validation will be skipped" "--http-cache-hosts:http Cache hosts" "--base-url:URL the store is supposed to be available at" "--language:Default language code" "--timezone:Default time zone code" "--currency:Default currency code" "--use-rewrites:Use rewrites" "--use-secure:Use secure URLs. Enable this option only if SSL is available." "--base-url-secure:Base URL for SSL connection" "--use-secure-admin:Run admin interface with SSL" "--admin-use-security-key:Whether to use a "security key" feature in Magento Admin URLs and forms" "--admin-user:\(Required\) Admin user" "--admin-password:\(Required\) Admin password" "--admin-email:\(Required\) Admin email" "--admin-firstname:\(Required\) Admin first name" "--admin-lastname:\(Required\) Admin last name" "--cleanup-database:Cleanup the database before installation" "--sales-order-increment-prefix:Sales order number prefix" "--use-sample-data:Use sample data" "--magento-init-params:Add to any command to customize Magento initialization parameters\
-For example: "MAGE_MODE=developer\&MAGE_DIRS\[base\]\[path\]=/var/www/example.com\&MAGE_DIRS\[cache\]\[path\]=/var/tmp/cache"")
+            opts="${opts} --backend-frontname --key --session-save --definition-format --db-host --db-name --db-user --db-engine --db-password --db-prefix --db-model --db-init-statements --skip-db-validation --http-cache-hosts --base-url --language --timezone --currency --use-rewrites --use-secure --base-url-secure --use-secure-admin --admin-use-security-key --admin-user --admin-password --admin-email --admin-firstname --admin-lastname --cleanup-database --sales-order-increment-prefix --use-sample-data --magento-init-params"
             ;;
             setup:performance:generate-fixtures)
-            opts+=("--skip-reindex:Skip reindex")
+            opts="${opts} --skip-reindex"
             ;;
             setup:rollback)
-            opts+=("--code-file:Basename of the code backup file in var/backups" "--media-file:Basename of the media backup file in var/backups" "--db-file:Basename of the db backup file in var/backups" "--magento-init-params:Add to any command to customize Magento initialization parameters\
-For example: "MAGE_MODE=developer\&MAGE_DIRS\[base\]\[path\]=/var/www/example.com\&MAGE_DIRS\[cache\]\[path\]=/var/tmp/cache"")
+            opts="${opts} --code-file --media-file --db-file --magento-init-params"
             ;;
             setup:static-content:deploy)
-            opts+=("--dry-run:If specified, then no files will be actually deployed." "--no-javascript:Do not deploy JavaScript files" "--no-css:Do not deploy CSS files." "--no-less:Do not deploy LESS files." "--no-images:Do not deploy images." "--no-fonts:Do not deploy font files." "--no-html:Do not deploy HTML files." "--no-misc:Do not deploy other types of files \(.md, .jbf, .csv, etc...\)." "--no-html-minify:Do not minify HTML files." "--theme:Generate static view files for only the specified themes." "--exclude-theme:Do not generate files for the specified themes." "--language:Generate files only for the specified languages." "--exclude-language:Do not generate files for the specified languages." "--area:Generate files only for the specified areas." "--exclude-area:Do not generate files for the specified areas." "--jobs:Enable parallel processing using the specified number of jobs." "--symlink-locale:Create symlinks for the files of those locales, which are passed for deployment, but have no customizations")
+            opts="${opts} --dry-run --no-javascript --no-css --no-less --no-images --no-fonts --no-html --no-misc --no-html-minify --theme --exclude-theme --language --exclude-language --area --exclude-area --jobs --symlink-locale"
             ;;
             setup:store-config:set)
-            opts+=("--base-url:URL the store is supposed to be available at" "--language:Default language code" "--timezone:Default time zone code" "--currency:Default currency code" "--use-rewrites:Use rewrites" "--use-secure:Use secure URLs. Enable this option only if SSL is available." "--base-url-secure:Base URL for SSL connection" "--use-secure-admin:Run admin interface with SSL" "--admin-use-security-key:Whether to use a "security key" feature in Magento Admin URLs and forms" "--magento-init-params:Add to any command to customize Magento initialization parameters\
-For example: "MAGE_MODE=developer\&MAGE_DIRS\[base\]\[path\]=/var/www/example.com\&MAGE_DIRS\[cache\]\[path\]=/var/tmp/cache"")
+            opts="${opts} --base-url --language --timezone --currency --use-rewrites --use-secure --base-url-secure --use-secure-admin --admin-use-security-key --magento-init-params"
             ;;
             setup:uninstall)
-            opts+=("--magento-init-params:Add to any command to customize Magento initialization parameters\
-For example: "MAGE_MODE=developer\&MAGE_DIRS\[base\]\[path\]=/var/www/example.com\&MAGE_DIRS\[cache\]\[path\]=/var/tmp/cache"")
+            opts="${opts} --magento-init-params"
             ;;
             setup:upgrade)
-            opts+=("--keep-generated:Prevents generated files from being deleted. \
-We discourage using this option except when deploying to production. \
-Consult your system integrator or administrator for more information." "--magento-init-params:Add to any command to customize Magento initialization parameters\
-For example: "MAGE_MODE=developer\&MAGE_DIRS\[base\]\[path\]=/var/www/example.com\&MAGE_DIRS\[cache\]\[path\]=/var/tmp/cache"")
+            opts="${opts} --keep-generated --magento-init-params"
             ;;
             sys:check)
-            opts+=("--format:Output Format. One of \[csv,json,xml\]")
+            opts="${opts} --format"
             ;;
             sys:cron:history)
-            opts+=("--timezone:Timezone to show finished at in" "--format:Output Format. One of \[csv,json,xml\]")
+            opts="${opts} --timezone --format"
             ;;
             sys:cron:list)
-            opts+=("--format:Output Format. One of \[csv,json,xml\]")
+            opts="${opts} --format"
             ;;
             sys:cron:run)
-            opts+=()
+            opts="${opts} "
             ;;
             sys:cron:schedule)
-            opts+=()
+            opts="${opts} "
             ;;
             sys:info)
-            opts+=("--format:Output Format. One of \[csv,json,xml\]")
+            opts="${opts} --format"
             ;;
             sys:maintenance)
-            opts+=("--on:Set to \[1\] to enable maintenance mode. Optionally supply a comma separated list of IP addresses to exclude from being affected" "--off:Set to \[1\] to disable maintenance mode. Set to \[d\] to also delete the list with excluded IP addresses.")
+            opts="${opts} --on --off"
             ;;
             sys:setup:change-version)
-            opts+=()
+            opts="${opts} "
             ;;
             sys:setup:compare-versions)
-            opts+=("--ignore-data:Ignore data updates" "--log-junit:Log output to a JUnit xml file." "--format:Output Format. One of \[csv,json,xml\]")
+            opts="${opts} --ignore-data --log-junit --format"
             ;;
             sys:setup:downgrade-versions)
-            opts+=("--dry-run:Write what to change but do not do any changes")
+            opts="${opts} --dry-run"
             ;;
             sys:store:config:base-url:list)
-            opts+=("--format:Output Format. One of \[csv,json,xml\]")
+            opts="${opts} --format"
             ;;
             sys:store:list)
-            opts+=("--format:Output Format. One of \[csv,json,xml\]")
+            opts="${opts} --format"
             ;;
             sys:url:list)
-            opts+=("--add-categories:Adds categories" "--add-products:Adds products" "--add-cmspages:Adds cms pages" "--add-all:Adds categories, products and cms pages")
+            opts="${opts} --add-categories --add-products --add-cmspages --add-all"
             ;;
             sys:website:list)
-            opts+=("--format:Output Format. One of \[csv,json,xml\]")
+            opts="${opts} --format"
             ;;
             theme:uninstall)
-            opts+=("--backup-code:Take code backup \(excluding temporary files\)" "--clear-static-content:Clear generated static view files.")
+            opts="${opts} --backup-code --clear-static-content"
             ;;
 
-            esac
+        esac
 
-            _describe 'option' opts
-        ;;
-        *)
-            # fallback to file completion
-            _arguments '*:file:_files'
-    esac
+        COMPREPLY=($(compgen -W "${opts}" -- ${cur}))
+        __ltrim_colon_completions "$cur"
+
+        return 0;
+    fi
+
+    # completing for a command
+    if [[ $cur == $com ]]; then
+        coms="help install list open-browser script shell admin:notifications admin:user:change-password admin:user:create admin:user:delete admin:user:list admin:user:unlock app:config:dump cache:clean cache:disable cache:enable cache:flush cache:list cache:report cache:status cache:view catalog:images:resize catalog:product:attributes:cleanup config:data:acl config:data:di config:store:delete config:store:get config:store:set cron:run customer:create customer:hash:upgrade customer:info customer:list db:console db:create db:drop db:dump db:import db:info db:maintain:check-tables db:query db:status db:variables deploy:mode:set deploy:mode:show design:demo-notice dev:asset:clear dev:console dev:module:create dev:module:list dev:module:observer:list dev:report:count dev:source-theme:deploy dev:symlinks dev:template-hints dev:template-hints-blocks dev:tests:run dev:theme:list dev:urn-catalog:generate dev:xml:convert eav:attribute:list eav:attribute:remove eav:attribute:view generation:flush i18n:collect-phrases i18n:pack i18n:uninstall index:list index:trigger:recreate indexer:info indexer:reindex indexer:reset indexer:set-mode indexer:show-mode indexer:status info:adminuri info:backups:list info:currency:list info:dependencies:show-framework info:dependencies:show-modules info:dependencies:show-modules-circular info:language:list info:timezone:list maintenance:allow-ips maintenance:disable maintenance:enable maintenance:status media:dump module:disable module:enable module:status module:uninstall sampledata:deploy sampledata:remove sampledata:reset script:repo:list script:repo:run search:engine:list setup:backup setup:config:set setup:cron:run setup:db-data:upgrade setup:db-schema:upgrade setup:db:status setup:di:compile setup:install setup:performance:generate-fixtures setup:rollback setup:static-content:deploy setup:store-config:set setup:uninstall setup:upgrade sys:check sys:cron:history sys:cron:list sys:cron:run sys:cron:schedule sys:info sys:maintenance sys:setup:change-version sys:setup:compare-versions sys:setup:downgrade-versions sys:store:config:base-url:list sys:store:list sys:url:list sys:website:list theme:uninstall"
+
+        COMPREPLY=($(compgen -W "${coms}" -- ${cur}))
+        __ltrim_colon_completions "$cur"
+
+        return 0
+    fi
 }
 
-compdef _n98-magerun2 n98-magerun2.phar n98-magerun2 magerun2
+complete -o default -F _n98-magerun2 n98-magerun2.phar n98-magerun2 magerun2
