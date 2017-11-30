@@ -210,7 +210,7 @@ commands:
     magento-packages:
       - name: magento-ce-2.2.1
         package: magento/project-community-edition
-        version: 2.2.0
+        version: 2.2.1
         options:
           prefer-dist: true
           stability: alpha
