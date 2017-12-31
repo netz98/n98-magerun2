@@ -68,18 +68,6 @@ class MagentoHelper extends AbstractHelper implements DetectionResultInterface
     protected $_customConfigFilename = 'n98-magerun2.yaml';
 
     /**
-     * Returns the canonical name of this helper.
-     *
-     * @return string The canonical name
-     *
-     * @api
-     */
-    public function getName()
-    {
-        return 'magento';
-    }
-
-    /**
      * @param InputInterface $input
      * @param OutputInterface $output
      */
@@ -95,6 +83,18 @@ class MagentoHelper extends AbstractHelper implements DetectionResultInterface
 
         $this->input = $input;
         $this->output = $output;
+    }
+
+    /**
+     * Returns the canonical name of this helper.
+     *
+     * @return string The canonical name
+     *
+     * @api
+     */
+    public function getName()
+    {
+        return 'magento';
     }
 
     /**
@@ -126,46 +126,6 @@ class MagentoHelper extends AbstractHelper implements DetectionResultInterface
     }
 
     /**
-     * @return string
-     */
-    public function getRootFolder()
-    {
-        return $this->_magentoRootFolder;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isEnterpriseEdition()
-    {
-        return $this->_magentoEnterprise;
-    }
-
-    /**
-     * @return int
-     */
-    public function getMajorVersion()
-    {
-        return $this->_magentoMajorVersion;
-    }
-
-    /**
-     * @return boolean
-     */
-    public function isMagerunStopFileFound()
-    {
-        return $this->_magerunStopFileFound;
-    }
-
-    /**
-     * @return string
-     */
-    public function getMagerunStopFileFolder()
-    {
-        return $this->_magerunStopFileFolder;
-    }
-
-    /**
      * @param string $folder
      *
      * @return array
@@ -179,40 +139,6 @@ class MagentoHelper extends AbstractHelper implements DetectionResultInterface
             $explodedFolder = implode('/', array_slice($folderParts, 0, $key + 1));
             if ($explodedFolder !== '') {
                 $folders[] = $explodedFolder;
-            }
-        }
-
-        return $folders;
-    }
-
-    /**
-     * Check for modman file and .basedir
-     *
-     * @param array $folders
-     *
-     * @return array
-     */
-    protected function checkModman(array $folders)
-    {
-        foreach ($this->searchFolders($folders) as $searchFolder) {
-            $finder = Finder::create();
-            $finder
-                ->files()
-                ->ignoreUnreadableDirs(true)
-                ->depth(0)
-                ->followLinks()
-                ->ignoreDotFiles(false)
-                ->name('.basedir')
-                ->in($searchFolder);
-
-            $count = $finder->count();
-            if ($count > 0) {
-                $baseFolderContent = trim(file_get_contents($searchFolder . '/.basedir'));
-                $this->writeDebug('Found modman .basedir file with content <info>' . $baseFolderContent . '</info>');
-
-                if (!empty($baseFolderContent)) {
-                    array_push($folders, $searchFolder . '/../' . $baseFolderContent);
-                }
             }
         }
 
@@ -286,6 +212,53 @@ class MagentoHelper extends AbstractHelper implements DetectionResultInterface
     }
 
     /**
+     * @param string $message
+     * @return void
+     */
+    private function writeDebug($message)
+    {
+        if (OutputInterface::VERBOSITY_DEBUG <= $this->output->getVerbosity()) {
+            $this->output->writeln(
+                '<debug>' . $message . '</debug>'
+            );
+        }
+    }
+
+    /**
+     * Check for modman file and .basedir
+     *
+     * @param array $folders
+     *
+     * @return array
+     */
+    protected function checkModman(array $folders)
+    {
+        foreach ($this->searchFolders($folders) as $searchFolder) {
+            $finder = Finder::create();
+            $finder
+                ->files()
+                ->ignoreUnreadableDirs(true)
+                ->depth(0)
+                ->followLinks()
+                ->ignoreDotFiles(false)
+                ->name('.basedir')
+                ->in($searchFolder);
+
+            $count = $finder->count();
+            if ($count > 0) {
+                $baseFolderContent = trim(file_get_contents($searchFolder . '/.basedir'));
+                $this->writeDebug('Found modman .basedir file with content <info>' . $baseFolderContent . '</info>');
+
+                if (!empty($baseFolderContent)) {
+                    array_push($folders, $searchFolder . '/../' . $baseFolderContent);
+                }
+            }
+        }
+
+        return $folders;
+    }
+
+    /**
      * @param string $searchFolder
      *
      * @return bool
@@ -343,6 +316,58 @@ class MagentoHelper extends AbstractHelper implements DetectionResultInterface
     }
 
     /**
+     * @api
+     *
+     * @return string
+     */
+    public function getRootFolder()
+    {
+        return $this->_magentoRootFolder;
+    }
+
+    /**
+     * @api
+     *
+     * @return bool
+     */
+    public function isEnterpriseEdition()
+    {
+        return $this->_magentoEnterprise;
+    }
+
+    /**
+     * @api
+     *
+     * @return int
+     */
+    public function getMajorVersion()
+    {
+        return $this->_magentoMajorVersion;
+    }
+
+    /**
+     * @api
+     *
+     * @return boolean
+     */
+    public function isMagerunStopFileFound()
+    {
+        return $this->_magerunStopFileFound;
+    }
+
+    /**
+     * @api
+     *
+     * @return string
+     */
+    public function getMagerunStopFileFolder()
+    {
+        return $this->_magerunStopFileFolder;
+    }
+
+    /**
+     * @api
+     *
      * @return array
      * @throws RuntimeException
      */
@@ -412,18 +437,5 @@ class MagentoHelper extends AbstractHelper implements DetectionResultInterface
         }
 
         $this->baseConfig = array_merge($this->baseConfig, $config);
-    }
-
-    /**
-     * @param string $message
-     * @return void
-     */
-    private function writeDebug($message)
-    {
-        if (OutputInterface::VERBOSITY_DEBUG <= $this->output->getVerbosity()) {
-            $this->output->writeln(
-                '<debug>' . $message . '</debug>'
-            );
-        }
     }
 }

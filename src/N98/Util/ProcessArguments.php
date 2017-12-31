@@ -15,14 +15,25 @@ use Symfony\Component\Process\ProcessBuilder;
  */
 class ProcessArguments
 {
+    /**
+     * @var array
+     */
     private $arguments;
 
-    public static function create(array $arguments = array())
+    /**
+     * @param array $arguments
+     * @return \N98\Util\ProcessArguments
+     */
+    public static function create(array $arguments = [])
     {
         return new self($arguments);
     }
 
-    public function __construct(array $arguments = array())
+    /**
+     * ProcessArguments constructor.
+     * @param array $arguments
+     */
+    public function __construct(array $arguments = [])
     {
         $this->arguments = $arguments;
     }

@@ -22,6 +22,8 @@ class InjectionHelper extends AbstractHelper
     /**
      * @param \Magento\Framework\ObjectManagerInterface $object
      * @param string $methodName
+     * @param \Magento\Framework\ObjectManagerInterface $objectManager
+     * @throws \ReflectionException
      */
     public function methodInjection($object, $methodName, ObjectManagerInterface $objectManager)
     {
@@ -36,6 +38,7 @@ class InjectionHelper extends AbstractHelper
      * @param \Magento\Framework\ObjectManagerInterface $objectManager
      *
      * @return object
+     * @throws \ReflectionException
      */
     public function constructorInjection($class, ObjectManagerInterface $objectManager)
     {
@@ -54,7 +57,6 @@ class InjectionHelper extends AbstractHelper
      * @param string $class
      * @param string $methodName
      * @return array
-     * @throws \ReflectionException
      */
     protected function getMethod($class, $methodName)
     {
@@ -75,6 +77,10 @@ class InjectionHelper extends AbstractHelper
         return $result;
     }
 
+    /**
+     * @param \ReflectionParameter $parameter
+     * @return null|string
+     */
     private function getParameterClass(\ReflectionParameter $parameter)
     {
         return $parameter->getClass() !== null ? $parameter->getClass()->getName() : null;
