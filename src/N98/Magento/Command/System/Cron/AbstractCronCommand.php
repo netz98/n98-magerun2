@@ -108,7 +108,7 @@ abstract class AbstractCronCommand extends AbstractMagentoCommand
     {
         foreach ($this->cronConfig->getJobs() as $jobGroup) {
             foreach ($jobGroup as $jobKey => $job) {
-                if (isset($job['name']) && ($job['name'] == $jobCode || $jobKey == $jobCode)) {
+                if ((isset($job['name']) && $job['name'] == $jobCode) || ($jobKey == $jobCode)) {
                     return $job;
                 }
             }
