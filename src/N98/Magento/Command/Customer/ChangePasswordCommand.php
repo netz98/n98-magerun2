@@ -85,6 +85,11 @@ HELP;
             $website = $this->getHelper('parameter')->askWebsite($input, $output);
 
             $changePassword = function () use ($email, $website, $password) {
+                // Fix for proxy which does not respect "emulateAreaCode".
+                /** @var \Magento\Theme\Model\View\Design $design */
+                $design = $this->getObjectManager()->get(\Magento\Theme\Model\View\Design::class);
+                $design->setArea('frontend');
+
                 $customer = $this->customerRepository->get($email, $website->getId());
                 $passwordHash = $this->encryptor->getHash($password, true);
                 $this->customerRepository->save($customer, $passwordHash);
