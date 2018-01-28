@@ -1,6 +1,11 @@
 RECENT CHANGES
 ==============
 
+2.1.2
+-----
+
+* Update composer dependencies
+
 2.1.1
 -----
 
