@@ -1,6 +1,13 @@
 RECENT CHANGES
 ==============
 
+2.1.1
+-----
+
+* Upgrade embedded composer package 
+* Fix: Fix "area code not set" error message in customer commands (by Christian Münch)
+* Fix wrong headlines in cutomer:list command (by Christian Münch)
+
 2.1.0
 -----
 
