@@ -105,6 +105,12 @@ class CreateCommand extends AbstractCustomerCommand
             try {
                 try {
                     $this->appState->emulateAreaCode('frontend', function () use ($customer, $password) {
+
+                        // Fix for proxy which does not respect "emulateAreaCode".
+                        /** @var \Magento\Theme\Model\View\Design $design */
+                        $design = $this->getObjectManager()->get(\Magento\Theme\Model\View\Design::class);
+                        $design->setArea('frontend');
+
                         $this->accountManagement->createAccount(
                             $customer->getDataModel(),
                             $password
