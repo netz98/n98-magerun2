@@ -40,7 +40,7 @@ class Application extends BaseApplication
     /**
      * @var string
      */
-    const APP_VERSION = '2.0.0';
+    const APP_VERSION = '2.1.0';
 
     /**
      * @var int
@@ -234,9 +234,9 @@ class Application extends BaseApplication
         $config = $this->config->getConfig();
 
         // Twig
-        $twigBaseDirs = array(
+        $twigBaseDirs = [
             __DIR__ . '/../../../res/twig',
-        );
+        ];
         if (isset($config['twig']['baseDirs']) && is_array($config['twig']['baseDirs'])) {
             $twigBaseDirs = array_merge(array_reverse($config['twig']['baseDirs']), $twigBaseDirs);
         }
@@ -348,8 +348,8 @@ class Application extends BaseApplication
             $this->initMagento();
         } catch (Exception $e) {
             $message = 'Cannot initialize Magento. Please check your configuration. '
-                . 'Some n98-magerun command will not work. Got message: '
-                . $e->getMessage();
+            . 'Some n98-magerun command will not work. Got message: '
+            . $e->getMessage();
             if (OutputInterface::VERBOSITY_VERY_VERBOSE <= $output->getVerbosity()) {
                 $message .= "\n" . $e->getTraceAsString();
             }
@@ -362,7 +362,7 @@ class Application extends BaseApplication
         $currentVarDir = $directoryList->getPath('var');
 
         if ($currentVarDir === $tempVarDir) {
-            $output->writeln(array(
+            $output->writeln([
                 sprintf('<warning>Fallback folder %s is used in n98-magerun</warning>', $tempVarDir),
                 '',
                 'n98-magerun2 is using the fallback folder. If there is another folder configured for Magento, this ' .
@@ -370,9 +370,9 @@ class Application extends BaseApplication
                 'Please refer to https://github.com/netz98/n98-magerun/wiki/File-system-permissions ' .
                 'for more information.',
                 '',
-            ));
+            ]);
         } else {
-            $output->writeln(array(
+            $output->writeln([
                 sprintf('<warning>Folder %s found, but not used in n98-magerun</warning>', $tempVarDir),
                 '',
                 "This might cause serious problems. n98-magerun2 is using the configured var-folder " .
@@ -380,7 +380,7 @@ class Application extends BaseApplication
                 'Please refer to https://github.com/netz98/n98-magerun/wiki/File-system-permissions ' .
                 'for more information.',
                 '',
-            ));
+            ]);
 
             return false;
         }
@@ -561,7 +561,7 @@ class Application extends BaseApplication
         $this->configureIO($input, $output);
 
         try {
-            $this->init(array(), $input, $output);
+            $this->init([], $input, $output);
         } catch (Exception $e) {
             $output = new ConsoleOutput();
             $this->renderException($e, $output->getErrorOutput());
@@ -590,7 +590,7 @@ class Application extends BaseApplication
      *
      * @return void
      */
-    public function init(array $initConfig = array(), InputInterface $input = null, OutputInterface $output = null)
+    public function init(array $initConfig = [], InputInterface $input = null, OutputInterface $output = null)
     {
         if ($this->_isInitialized) {
             return;
@@ -649,7 +649,7 @@ class Application extends BaseApplication
      * @param InputInterface $input [optional]
      * @param OutputInterface $output [optional]
      */
-    public function reinit($initConfig = array(), InputInterface $input = null, OutputInterface $output = null)
+    public function reinit($initConfig = [], InputInterface $input = null, OutputInterface $output = null)
     {
         $this->_isInitialized = false;
         $this->detectionResult = null;
@@ -809,12 +809,12 @@ MAGENTOHINT;
         /** @var $formatter FormatterHelper */
         $formatter = $this->getHelperSet()->get('formatter');
 
-        $output->writeln(array(
+        $output->writeln([
             '',
             $formatter->formatBlock('Compatibility Notice', 'bg=blue;fg=white', true),
             '',
             $magentoHint,
-        ));
+        ]);
 
         throw new RuntimeException('This version of n98-magerun is not compatible with Magento ' . $version);
     }
@@ -847,7 +847,7 @@ MAGENTOHINT;
     protected function _addOutputStyles(OutputInterface $output)
     {
         $output->getFormatter()->setStyle('debug', new OutputFormatterStyle('magenta', 'white'));
-        $output->getFormatter()->setStyle('warning', new OutputFormatterStyle('red', 'yellow', array('bold')));
+        $output->getFormatter()->setStyle('warning', new OutputFormatterStyle('red', 'yellow', ['bold']));
     }
 
     /**
@@ -874,7 +874,7 @@ MAGENTOHINT;
             $folder = OperatingSystem::getCwd();
         }
         if ($this->_directRootDir) {
-            $subFolders = array($folder);
+            $subFolders = [$folder];
         } else {
             $subFolders = $this->config->getDetectSubFolders();
         }
