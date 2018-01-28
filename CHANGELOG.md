@@ -1,6 +1,20 @@
 RECENT CHANGES
 ==============
 
+2.1.0
+-----
+
+* Imp: Polish code - Comvert array syntax and corrected docblocks (by Christian Münch)
+* Fix: Fixed running cronjobs configured in database, scheduled imports for example (by Johan Spoelstra)
+* New: Add customer:change-password command (by Christian Münch)
+* Imp: Add requirements for Magento 2.2 / make:module in dev:console (by Christian Münch)
+* Fix: Fix version for Magento CE 2.1.10 download (by Mystix)
+* Fix: Ignore the public folder when gathering the magerun scripts (by Mark Simon)
+* Imp: Add 2.2.1 + 2.1.10 to install command (by Alexander Menk, #335)
+* Imp: Add Magento-Root to sys:info command (by Christian Münch)
+* Imp: Magento keys are now found in Magento Marketplace (by Jonas Hünig. #325)
+* Fix: Fix bash autocompletion, fixes (Tom Klingenberg, Floddy, #331)
+
 2.0.0
 -----
 
