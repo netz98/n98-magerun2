@@ -510,7 +510,7 @@ Stripped Database Dump
 ^^^^^^^^^^^^^^^^^^^^^^
 
 Dumps your database and excludes some tables. This is useful for development or staging environments
-where you may to provision a restricted database.
+where you may want to provision a restricted database.
 
 Separate each table to strip by a space.
 You can use wildcards like * and ? in the table names to strip multiple tables.
