@@ -129,7 +129,7 @@ commands:
     table-groups:
       - id: admin
         description: Admin tables
-        tables: admin* authorization*
+        tables: admin*
 
       - id: log
         description: Log tables
