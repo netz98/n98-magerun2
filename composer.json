@@ -23,7 +23,7 @@
         "symfony/finder": "~2.3||~3.0",
         "symfony/process": "~2.3",
         "symfony/validator": "~2.3",
-        "symfony/yaml": "~2.3",
+        "symfony/yaml": "~2.3||^3.0",
         "twig/twig": "~1.0",
         "pbergman/tree-helper": "^1.0"
     },
