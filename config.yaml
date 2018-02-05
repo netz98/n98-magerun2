@@ -201,7 +201,10 @@ commands:
 
       - id: search
         description: Search related tables
-        tables: "catalogsearch_*"
+        tables: >
+          catalogsearch_*
+          search_query
+          search_synonyms
 
       - id: idx
         description: Tables with _idx suffix
