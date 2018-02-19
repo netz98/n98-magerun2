@@ -144,7 +144,7 @@ abstract class AbstractMagentoStoreConfigCommand extends AbstractMagentoCommand
         }
 
         $configSetCommands = [
-            'command'    => 'config:set',
+            'command'    => 'config:store:set',
             'path'       => $this->configPath,
             'value'      => $isFalse ? 1 : 0,
             '--scope'    => $scope,
