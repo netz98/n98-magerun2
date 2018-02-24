@@ -21,11 +21,11 @@ Cleans expired cache entries.
 
 If you would like to clean only one cache type use like:
 
-   $ n98-magerun.phar cache:clean full_page
+   $ n98-magerun2.phar cache:clean full_page
 
 If you would like to clean multiple cache types at once use like:
 
-   $ n98-magerun.phar cache:clean full_page block_html
+   $ n98-magerun2.phar cache:clean full_page block_html
 
 If you would like to remove all cache entries use `cache:flush`
 
