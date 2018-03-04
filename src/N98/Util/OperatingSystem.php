@@ -73,11 +73,26 @@ class OperatingSystem
             return WindowsSystem::isProgramInstalled($program);
         }
 
+        return '' !== self::locateProgram($program);
+    }
+
+    /**
+     * Returns the absolute path to the program that should be located or an empty string if the programm
+     * could not be found.
+     *
+     * @param string $program
+     * @return string
+     */
+    public static function locateProgram($program)
+    {
+        if (self::isWindows()) {
+            return WindowsSystem::locateProgram($program);
+        }
+
         $out = null;
         $return = null;
         @exec('which ' . $program, $out, $return);
-
-        return $return === 0;
+        return ($return === 0 && isset($out[0])) ? $out[0] : '';
     }
 
     /**
@@ -133,5 +148,19 @@ class OperatingSystem
         }
 
         return '/usr/bin/env php';
+    }
+
+    /**
+     * Retrieve path to current php binary.
+     *
+     * @return string
+     */
+    public static function getCurrentPhpBinary()
+    {
+        if (isset($_SERVER['_'])) {
+            return $_SERVER['_'];
+        }
+
+        return self::getPhpBinary();
     }
 }
