@@ -91,9 +91,21 @@ class WindowsSystem
      */
     public static function isProgramInstalled($program)
     {
+        return '' !== self::locateProgram($program);
+    }
+
+    /**
+     * Returns the absolute path to the program that should be located or an empty string if the programm
+     * could not be found.
+     *
+     * @param string $program
+     * @return string
+     */
+    public static function locateProgram($program)
+    {
         // programs with an invalid name do not exist
         if (false !== strpbrk($program, self::FORBIDDEN_CHARS)) {
-            return false;
+            return '';
         }
 
         $isExecutable = self::isExecutableName($program);
@@ -109,17 +121,17 @@ class WindowsSystem
             $file = $path . '/' . $program;
 
             if ($isExecutable && is_readable($file)) {
-                return true;
+                return $file;
             }
 
             foreach ($exts as $ext => $index) {
                 $fileEx = $file . $ext;
                 if (is_readable($fileEx)) {
-                    return true;
+                    return $fileEx;
                 }
             }
         }
 
-        return false;
+        return '';
     }
 }
