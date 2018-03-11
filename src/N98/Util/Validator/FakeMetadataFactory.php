@@ -8,7 +8,10 @@ use Symfony\Component\Validator\MetadataFactoryInterface;
 
 class FakeMetadataFactory implements MetadataFactoryInterface
 {
-    protected $metadatas = array();
+    /**
+     * @var array
+     */
+    protected $metadatas = [];
 
     public function getMetadataFor($class)
     {
@@ -27,6 +30,10 @@ class FakeMetadataFactory implements MetadataFactoryInterface
         return $this->metadatas[$class];
     }
 
+    /**
+     * @param mixed $class
+     * @return bool
+     */
     public function hasMetadataFor($class)
     {
         if (is_object($class)) {
@@ -40,6 +47,9 @@ class FakeMetadataFactory implements MetadataFactoryInterface
         return isset($this->metadatas[$class]);
     }
 
+    /**
+     * @param \Symfony\Component\Validator\Mapping\ClassMetadata $metadata
+     */
     public function addMetadata(ClassMetadata $metadata)
     {
         $this->metadatas[$metadata->getClassName()] = $metadata;

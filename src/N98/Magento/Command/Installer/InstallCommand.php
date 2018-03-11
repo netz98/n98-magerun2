@@ -81,7 +81,13 @@ class InstallCommand extends AbstractMagentoCommand
                 'forceUseDb',
                 null,
                 InputOption::VALUE_NONE,
-                'If --noDownload passed, force to use given database if it already exists.'
+                'If --forceUseDb passed, force to use given database if it already exists.'
+            )
+            ->addOption(
+                'composer-use-same-php-binary',
+                null,
+                InputOption::VALUE_NONE,
+                'If --composer-use-same-php-binary passed, will invoke composer with the same PHP binary'
             )
             ->setDescription('Install magento');
 

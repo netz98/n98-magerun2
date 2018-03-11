@@ -61,7 +61,7 @@ HELP;
 
         if (count($table) > 0) {
             $helper = $this->getHelper('table');
-            $helper->setHeaders(['id', 'email', 'firstname', 'lastname', 'website', 'created_at']);
+            $helper->setHeaders(['id', 'firstname', 'lastname', 'email', 'website', 'created_at']);
             $helper->renderByFormat($output, $table, $input->getOption('format'));
         } else {
             $output->writeln('<comment>No customers found</comment>');

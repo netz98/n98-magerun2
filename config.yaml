@@ -61,6 +61,7 @@ commands:
     - N98\Magento\Command\Config\Data\AclCommand
     - N98\Magento\Command\Config\Data\DiCommand
     - N98\Magento\Command\Customer\CreateCommand
+    - N98\Magento\Command\Customer\ChangePasswordCommand
     - N98\Magento\Command\Customer\InfoCommand
     - N98\Magento\Command\Customer\ListCommand
     - N98\Magento\Command\Database\ConsoleCommand
@@ -128,7 +129,7 @@ commands:
     table-groups:
       - id: admin
         description: Admin tables
-        tables: admin* authorization*
+        tables: admin*
 
       - id: log
         description: Log tables
@@ -200,7 +201,10 @@ commands:
 
       - id: search
         description: Search related tables
-        tables: "catalogsearch_*"
+        tables: >
+          catalogsearch_*
+          search_query
+          search_synonyms
 
       - id: idx
         description: Tables with _idx suffix
@@ -208,9 +212,37 @@ commands:
 
   N98\Magento\Command\Installer\InstallCommand:
     magento-packages:
+      - name: magento-ce-2.2.2
+        package: magento/project-community-edition
+        version: 2.2.2
+        options:
+          prefer-dist: true
+          stability: alpha
+          repository-url: https://repo.magento.com
+      - name: magento-ce-2.2.1
+        package: magento/project-community-edition
+        version: 2.2.1
+        options:
+          prefer-dist: true
+          stability: alpha
+          repository-url: https://repo.magento.com
       - name: magento-ce-2.2.0
         package: magento/project-community-edition
         version: 2.2.0
+        options:
+          prefer-dist: true
+          stability: alpha
+          repository-url: https://repo.magento.com
+      - name: magento-ce-2.1.11
+        package: magento/project-community-edition
+        version: 2.1.11
+        options:
+          prefer-dist: true
+          stability: alpha
+          repository-url: https://repo.magento.com
+      - name: magento-ce-2.1.10
+        package: magento/project-community-edition
+        version: 2.1.10
         options:
           prefer-dist: true
           stability: alpha
@@ -467,7 +499,7 @@ commands:
       - N98\Magento\Command\Developer\Console\MakeCommandCommand
       - N98\Magento\Command\Developer\Console\MakeControllerCommand
       - N98\Magento\Command\Developer\Console\MakeModelCommand
-      #- N98\Magento\Command\Developer\Console\MakeTableCommand
+      - N98\Magento\Command\Developer\Console\MakeTableCommand
       - N98\Magento\Command\Developer\Console\MakeInterfaceCommand
       - N98\Magento\Command\Developer\Console\MakeThemeCommand
       #- N98\Magento\Command\Developer\Console\TreeCommand

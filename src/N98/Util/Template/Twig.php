@@ -31,6 +31,9 @@ class Twig
      * @param array $variables
      *
      * @return string
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
      */
     public function render($filename, $variables)
     {
@@ -39,9 +42,12 @@ class Twig
 
     /**
      * @param string $string
-     * @param array  $variables
+     * @param array $variables
      *
      * @return string
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
      */
     public function renderString($string, $variables)
     {
@@ -75,7 +81,7 @@ class Twig
     }
 
     /**
-     * @param stdClass $stdClassObject
+     * @param mixed $stdClassObject
      *
      * @return array
      */

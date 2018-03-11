@@ -180,6 +180,57 @@ Global config parameters:
   --skip-root-check
       Do not check if n98-magerun2 runs as root.
 
+Open Shop in Browser
+""""""""""""""""""""
+
+.. code-block:: sh
+
+   $ n98-magerun2.phar open-browser [store]
+
+Customer Info
+"""""""""""""
+
+Loads basic customer info by email address.
+
+.. code-block:: sh
+
+   $ n98-magerun2.phar  customer:info [email] [website]
+
+
+Create customer
+"""""""""""""""
+
+Creates a new customer/user for shop frontend.
+
+.. code-block:: sh
+
+   $ n98-magerun2.phar  customer:create [email] [password] [firstname] [lastname] [website]
+
+Example:
+
+.. code-block:: sh
+
+  $ n98-magerun2.phar customer:create foo@example.com password123 John Doe base
+
+List Customers
+""""""""""""""
+
+List customers. The output is limited to 1000 (can be changed by overriding config).
+If search parameter is given the customers are filtered (searchs in firstname, lastname and email).
+
+.. code-block:: sh
+
+   $ n98-magerun2.phar  customer:list [--format[="..."]] [search]
+
+Change customer password
+""""""""""""""""""""""""
+
+.. code-block:: sh
+
+   $ n98-magerun2.phar customer:change-password [email] [password] [website]
+
+- Website parameter must only be given if more than one websites are available.
+
 Magento Installer
 """""""""""""""""
 
@@ -459,7 +510,7 @@ Stripped Database Dump
 ^^^^^^^^^^^^^^^^^^^^^^
 
 Dumps your database and excludes some tables. This is useful for development or staging environments
-where you may to provision a restricted database.
+where you may want to provision a restricted database.
 
 Separate each table to strip by a space.
 You can use wildcards like * and ? in the table names to strip multiple tables.

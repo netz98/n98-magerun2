@@ -68,6 +68,9 @@ _n98-magerun2()
             admin:user:unlock)
             opts="${opts} "
             ;;
+            app:config:dump)
+            opts="${opts} "
+            ;;
             cache:clean)
             opts="${opts} "
             ;;
@@ -83,14 +86,26 @@ _n98-magerun2()
             cache:list)
             opts="${opts} --enabled --format"
             ;;
+            cache:report)
+            opts="${opts} --fpc --tags --mtime --filter-id --filter-tag --format"
+            ;;
             cache:status)
             opts="${opts} --bootstrap"
+            ;;
+            cache:view)
+            opts="${opts} --fpc --unserialize"
             ;;
             catalog:images:resize)
             opts="${opts} "
             ;;
             catalog:product:attributes:cleanup)
             opts="${opts} "
+            ;;
+            config:data:acl)
+            opts="${opts} "
+            ;;
+            config:data:di)
+            opts="${opts} --scope"
             ;;
             config:store:delete)
             opts="${opts} --scope --scope-id --all"
@@ -126,7 +141,7 @@ _n98-magerun2()
             opts="${opts} --connection --tables --force"
             ;;
             db:dump)
-            opts="${opts} --connection --add-time --compression --only-command --print-only-filename --dry-run --no-single-transaction --human-readable --add-routines --stdout --strip --force"
+            opts="${opts} --connection --add-time --compression --only-command --print-only-filename --dry-run --no-single-transaction --human-readable --add-routines --stdout --strip --exclude --force"
             ;;
             db:import)
             opts="${opts} --connection --compression --only-command --only-if-empty --optimize --drop --drop-tables"
@@ -154,6 +169,9 @@ _n98-magerun2()
             ;;
             design:demo-notice)
             opts="${opts} --on --off --global"
+            ;;
+            dev:asset:clear)
+            opts="${opts} --theme"
             ;;
             dev:console)
             opts="${opts} "
@@ -194,6 +212,12 @@ _n98-magerun2()
             dev:xml:convert)
             opts="${opts} --overwrite"
             ;;
+            eav:attribute:list)
+            opts="${opts} --add-source --add-backend --filter-type --format"
+            ;;
+            eav:attribute:remove)
+            opts="${opts} "
+            ;;
             eav:attribute:view)
             opts="${opts} --format"
             ;;
@@ -211,6 +235,9 @@ _n98-magerun2()
             ;;
             index:list)
             opts="${opts} --format"
+            ;;
+            index:trigger:recreate)
+            opts="${opts} "
             ;;
             indexer:info)
             opts="${opts} "
@@ -266,6 +293,9 @@ _n98-magerun2()
             maintenance:status)
             opts="${opts} --magento-init-params"
             ;;
+            media:dump)
+            opts="${opts} --strip"
+            ;;
             module:disable)
             opts="${opts} --force --all --clear-static-content --magento-init-params"
             ;;
@@ -292,6 +322,9 @@ _n98-magerun2()
             ;;
             script:repo:run)
             opts="${opts} --define --stop-on-error"
+            ;;
+            search:engine:list)
+            opts="${opts} --format"
             ;;
             setup:backup)
             opts="${opts} --code --media --db --magento-init-params"
@@ -324,7 +357,7 @@ _n98-magerun2()
             opts="${opts} --code-file --media-file --db-file --magento-init-params"
             ;;
             setup:static-content:deploy)
-            opts="${opts} --dry-run --no-javascript --no-css --no-less --no-images --no-fonts --no-html --no-misc --no-html-minify --theme --exclude-theme --language --exclude-language --area --exclude-area --jobs"
+            opts="${opts} --dry-run --no-javascript --no-css --no-less --no-images --no-fonts --no-html --no-misc --no-html-minify --theme --exclude-theme --language --exclude-language --area --exclude-area --jobs --symlink-locale"
             ;;
             setup:store-config:set)
             opts="${opts} --base-url --language --timezone --currency --use-rewrites --use-secure --base-url-secure --use-secure-admin --admin-use-security-key --magento-init-params"
@@ -391,7 +424,7 @@ _n98-magerun2()
 
     # completing for a command
     if [[ $cur == $com ]]; then
-        coms="help install list open-browser script shell admin:notifications admin:user:change-password admin:user:create admin:user:delete admin:user:list admin:user:unlock cache:clean cache:disable cache:enable cache:flush cache:list cache:status catalog:images:resize catalog:product:attributes:cleanup config:delete config:get config:set cron:run customer:create customer:hash:upgrade customer:info customer:list db:console db:create db:drop db:dump db:import db:info db:maintain:check-tables db:query db:status db:variables deploy:mode:set deploy:mode:show design:demo-notice dev:console dev:module:create dev:module:list dev:module:observer:list dev:report:count dev:source-theme:deploy dev:symlinks dev:template-hints dev:template-hints-blocks dev:tests:run dev:theme:list dev:urn-catalog:generate dev:xml:convert eav:attribute:view generation:flush i18n:collect-phrases i18n:pack i18n:uninstall index:list indexer:info indexer:reindex indexer:reset indexer:set-mode indexer:show-mode indexer:status info:adminuri info:backups:list info:currency:list info:dependencies:show-framework info:dependencies:show-modules info:dependencies:show-modules-circular info:language:list info:timezone:list maintenance:allow-ips maintenance:disable maintenance:enable maintenance:status module:disable module:enable module:status module:uninstall sampledata:deploy sampledata:remove sampledata:reset script:repo:list script:repo:run setup:backup setup:config:set setup:cron:run setup:db-data:upgrade setup:db-schema:upgrade setup:db:status setup:di:compile setup:install setup:performance:generate-fixtures setup:rollback setup:static-content:deploy setup:store-config:set setup:uninstall setup:upgrade sys:check sys:cron:history sys:cron:list sys:cron:run sys:cron:schedule sys:info sys:maintenance sys:setup:change-version sys:setup:compare-versions sys:setup:downgrade-versions sys:store:config:base-url:list sys:store:list sys:url:list sys:website:list theme:uninstall"
+        coms="help install list open-browser script shell admin:notifications admin:user:change-password admin:user:create admin:user:delete admin:user:list admin:user:unlock app:config:dump cache:clean cache:disable cache:enable cache:flush cache:list cache:report cache:status cache:view catalog:images:resize catalog:product:attributes:cleanup config:data:acl config:data:di config:store:delete config:store:get config:store:set cron:run customer:create customer:hash:upgrade customer:info customer:list db:console db:create db:drop db:dump db:import db:info db:maintain:check-tables db:query db:status db:variables deploy:mode:set deploy:mode:show design:demo-notice dev:asset:clear dev:console dev:module:create dev:module:list dev:module:observer:list dev:report:count dev:source-theme:deploy dev:symlinks dev:template-hints dev:template-hints-blocks dev:tests:run dev:theme:list dev:urn-catalog:generate dev:xml:convert eav:attribute:list eav:attribute:remove eav:attribute:view generation:flush i18n:collect-phrases i18n:pack i18n:uninstall index:list index:trigger:recreate indexer:info indexer:reindex indexer:reset indexer:set-mode indexer:show-mode indexer:status info:adminuri info:backups:list info:currency:list info:dependencies:show-framework info:dependencies:show-modules info:dependencies:show-modules-circular info:language:list info:timezone:list maintenance:allow-ips maintenance:disable maintenance:enable maintenance:status media:dump module:disable module:enable module:status module:uninstall sampledata:deploy sampledata:remove sampledata:reset script:repo:list script:repo:run search:engine:list setup:backup setup:config:set setup:cron:run setup:db-data:upgrade setup:db-schema:upgrade setup:db:status setup:di:compile setup:install setup:performance:generate-fixtures setup:rollback setup:static-content:deploy setup:store-config:set setup:uninstall setup:upgrade sys:check sys:cron:history sys:cron:list sys:cron:run sys:cron:schedule sys:info sys:maintenance sys:setup:change-version sys:setup:compare-versions sys:setup:downgrade-versions sys:store:config:base-url:list sys:store:list sys:url:list sys:website:list theme:uninstall"
 
         COMPREPLY=($(compgen -W "${coms}" -- ${cur}))
         __ltrim_colon_completions "$cur"

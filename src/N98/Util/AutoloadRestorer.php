@@ -36,6 +36,9 @@ class AutoloadRestorer
         }
     }
 
+    /**
+     * @return array
+     */
     private function getUnregisteredLoaders()
     {
         $unregistered = array();

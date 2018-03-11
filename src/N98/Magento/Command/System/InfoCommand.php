@@ -150,7 +150,7 @@ class InfoCommand extends AbstractMagentoCommand
             $settingArgument = strtolower($settingArgument);
             $this->infos = array_change_key_case($this->infos, CASE_LOWER);
             if (!isset($this->infos[$settingArgument])) {
-                throw new InvalidArgumentException('Unknown key: ' . $settingArgument);
+                throw new \InvalidArgumentException('Unknown key: ' . $settingArgument);
             }
             $output->writeln((string) $this->infos[$settingArgument]);
         } else {
@@ -225,6 +225,7 @@ class InfoCommand extends AbstractMagentoCommand
         $this->infos['Name'] = $this->productMetadata->getName();
         $this->infos['Version'] = $this->productMetadata->getVersion();
         $this->infos['Edition'] = $this->productMetadata->getEdition();
+        $this->infos['Root'] = $this->_magentoRootFolder;
     }
 
     protected function addVendors()

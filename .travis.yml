@@ -29,7 +29,7 @@ env:
     - SCRIPT_JOB="PHP-CS-FIXER"
     - SCRIPT_JOB="BUILDSH"
     - SCRIPT_JOB="BASH-AUTOCOMPLETION"
-    - MAGENTO_VERSION="magento-ce-2.2.0" INSTALL_SAMPLE_DATA=0 PHPUNIT_EXCLUDE_GROUPS=exclude-2.2
+    - MAGENTO_VERSION="magento-ce-2.2.2" INSTALL_SAMPLE_DATA=0 PHPUNIT_EXCLUDE_GROUPS=exclude-2.2
     - MAGENTO_VERSION="magento-ce-2.1.9" INSTALL_SAMPLE_DATA=0 PHPUNIT_EXCLUDE_GROUPS=exclude-2.1
     - MAGENTO_VERSION="magento-ce-2.0.16" INSTALL_SAMPLE_DATA=0 PHPUNIT_EXCLUDE_GROUPS=exclude-2.0
 
@@ -38,9 +38,9 @@ matrix:
   exclude:
     # Newer Magento versions uses newer PHP versions
     - php: 5.6
-      env: MAGENTO_VERSION="magento-ce-2.2.0" INSTALL_SAMPLE_DATA=0 PHPUNIT_EXCLUDE_GROUPS=exclude-2.2
+      env: MAGENTO_VERSION="magento-ce-2.2.2" INSTALL_SAMPLE_DATA=0 PHPUNIT_EXCLUDE_GROUPS=exclude-2.2
     - php: 5.5
-      env: MAGENTO_VERSION="magento-ce-2.2.0" INSTALL_SAMPLE_DATA=0 PHPUNIT_EXCLUDE_GROUPS=exclude-2.2
+      env: MAGENTO_VERSION="magento-ce-2.2.2" INSTALL_SAMPLE_DATA=0 PHPUNIT_EXCLUDE_GROUPS=exclude-2.2
     - php: 5.5
       env: MAGENTO_VERSION="magento-ce-2.1.9" INSTALL_SAMPLE_DATA=0 PHPUNIT_EXCLUDE_GROUPS=exclude-2.1
     # Old Magento versions cannot run in PHP 7.1

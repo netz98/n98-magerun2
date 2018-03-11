@@ -29,10 +29,10 @@ if [[ ! -e "bin/${name}" ]]; then
 	exit 1
 fi
 
-echo "creating bash autocomplete file (this takes a little moment).."
+echo "creating bash autocomplete file (this takes a little moment) ..."
 
 header > "${outfile}"
-vendor/bin/symfony-autocomplete -- "bin/${name}" \
+vendor/bin/symfony-autocomplete --shell=bash -- "bin/${name}" \
   | sed '1d ; $ s/$/.phar '"${name} ${base}"'/' \
   >> "${outfile}"
 # sed: remove first line and expand last line to more command names (aliases)

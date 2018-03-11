@@ -51,6 +51,9 @@ class JUnitSession
         return $this->document;
     }
 
+    /**
+     * @return string
+     */
     public function getName()
     {
         return $this->name;

@@ -27,6 +27,10 @@ class Enabler
      */
     private $command;
 
+    /**
+     * Enabler constructor.
+     * @param \Symfony\Component\Console\Command\Command $command
+     */
     public function __construct(Command $command)
     {
         $this->command = $command;
