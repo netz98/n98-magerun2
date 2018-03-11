@@ -405,7 +405,9 @@ Remove all cache entries
 
 .. code-block:: sh
 
-   $ n98-magerun2.phar cache:flush
+   $ n98-magerun2.phar cache:flush [code]
+
+Be aware that cache:flush cleares the backend of each cache, so other caches might get cleared as well
 
 List Magento caches
 """""""""""""""""""
