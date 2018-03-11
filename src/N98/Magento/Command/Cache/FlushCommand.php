@@ -2,6 +2,7 @@
 
 namespace N98\Magento\Command\Cache;
 
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -11,6 +12,7 @@ class FlushCommand extends AbstractModifierCommand
     {
         $this
             ->setName('cache:flush')
+            ->addArgument('type', InputArgument::IS_ARRAY | InputArgument::OPTIONAL, 'Cache type code like "config"')
             ->setDescription('Flush magento cache storage')
         ;
     }
@@ -33,10 +35,14 @@ class FlushCommand extends AbstractModifierCommand
         $eventManager = $this->getObjectManager()->get('Magento\Framework\Event\ManagerInterface');
         $eventManager->dispatch('adminhtml_cache_flush_all');
 
+        $typesToClean = $input->getArgument('type');
+        
         $availableTypes = $cacheManager->getAvailableTypes();
         foreach ($availableTypes as $cacheType) {
-            $cacheManager->flush(array($cacheType));
-            $output->writeln('<info><comment>' . $cacheType . '</comment> cache flushed</info>');
+            if (count($typesToClean) == 0 || in_array($cacheType, $typesToClean)) {
+                $cacheManager->flush(array($cacheType));
+                $output->writeln('<info><comment>' . $cacheType . '</comment> cache flushed</info>');
+            }
         }
     }
 }
