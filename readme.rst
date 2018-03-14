@@ -125,6 +125,18 @@ You can now use the tools:
 
     $ n98-magerun2 {command}
 
+Update
+------
+
+There is a `self-update` command available.
+This works only for phar-distribution.
+
+.. code-block:: sh
+
+   $ n98-magerun2.phar self-update [--dry-run]
+
+With `--dry-run` option it is possible to download and test the phar file without replacing the old one.
+
 Autocompletion
 --------------
 
