@@ -178,14 +178,17 @@ commands:
         description: Customer data - Should not be used without @sales
         tables: >
           customer_address*
-          customer_entity*
+          customer_entity
+            customer_entity_*
           customer_grid_flat
           customer_log
           customer_visitor
           newsletter_subscriber
           product_alert*
-          vault_payment_token*
-          wishlist*
+          vault_payment_token
+            vault_payment_token_*
+          wishlist
+            wishlist_*
 
       - id: trade
         description: Current trade data (customers and orders). You usally do not want those in developer systems.
