@@ -137,7 +137,7 @@ commands:
 
       - id: sessions
         description: Database session tables
-        tables: core_session
+        tables: session persistent_session
 
       - id: stripped
         description: Standard definition for a stripped dump (logs, sessions)
