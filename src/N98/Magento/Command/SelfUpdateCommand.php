@@ -5,6 +5,7 @@ namespace N98\Magento\Command;
 use Composer\Downloader\FilesystemException;
 use Composer\IO\ConsoleIO;
 use Composer\Util\RemoteFilesystem;
+use N98\Util\Markdown\VersionFilePrinter;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -179,8 +180,8 @@ EOT
 
     /**
      * @param \Symfony\Component\Console\Output\OutputInterface $output
-     * @param $loadUnstable
-     * @param $rfs
+     * @param bool $loadUnstable
+     * @param RemoteFilesystem $rfs
      */
     private function showChangelog(OutputInterface $output, $loadUnstable, $rfs)
     {
@@ -199,7 +200,11 @@ EOT
         }
 
         if ($changeLogContent) {
-            $output->writeln($changeLogContent);
+            $versionFilePrinter = new VersionFilePrinter($changeLogContent);
+            $previousVersion = $this->getApplication()->getVersion();
+            $output->writeln(
+                $versionFilePrinter->printFromVersion($previousVersion)
+            );
         }
 
         if ($loadUnstable) {
