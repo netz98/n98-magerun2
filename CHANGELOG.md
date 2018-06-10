@@ -1,6 +1,25 @@
 RECENT CHANGES
 ==============
 
+2.2.0
+-----
+
+- Add --dry-run option to self-update command (by Christian Münch)
+- Added downloads: CE 2.1.12, 2.1.13, 2.2.3 & 2.2.4 (by Marc)
+- Fix db:dump "@sessions" table group (by Tjerk Ameel)
+- Fix: db:dump fixed table-group @customer (by Matthias Herold)
+- Cache type parameter documentation for cache:flush (by Sebastian Lechte)
+- Add types parameter to cache:flush (like on cache:clean) (by Jonas Huenig)
+- Correct --forceUseDb help description (by Stephan Hochdörfer)
+- Remove used use statement as reported by php-cs-fixer (by Stephan Hochdörfer)
+- Add option to force Composer to use same PHP binary (by Stephan Hochdörfer)
+- cache:clean > fixing help message (by Rafael Corrêa Gomes)
+- Fix issue #333 - dev:template-hints not working with Magento 2.2.0 (by Christian Münch)
+- Added additional tables to "search" table-group (by Erfan)
+- Reverted composer/composer constraint to v1.0 (by Pieter Hoste)
+- Unstripping "authorization*" in db:dump (by Edward Simpson)
+- Fix grammar in readme by (Erik Hansen)
+
 2.1.2
 -----
 
