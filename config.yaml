@@ -215,6 +215,13 @@ commands:
 
   N98\Magento\Command\Installer\InstallCommand:
     magento-packages:
+      - name: magento-ce-2.2.5
+        package: magento/project-community-edition
+        version: 2.2.5
+        options:
+          prefer-dist: true 
+          stability: alpha
+          repository-url: https://repo.magento.com
       - name: magento-ce-2.2.4
         package: magento/project-community-edition
         version: 2.2.4
@@ -248,6 +255,13 @@ commands:
         version: 2.2.0
         options:
           prefer-dist: true
+          stability: alpha
+          repository-url: https://repo.magento.com
+      - name: magento-ce-2.1.14
+        package: magento/project-community-edition
+        version: 2.1.14
+        options:
+          prefer-dist: true 
           stability: alpha
           repository-url: https://repo.magento.com
       - name: magento-ce-2.1.13
