@@ -652,7 +652,7 @@ Creates a ZIP archive with media folder content.
 
 .. code-block:: sh
 
-   $ n98-magerun.phar media:dump [--strip] [filename]
+   $ n98-magerun2.phar media:dump [--strip] [filename]
 
 Interactive Development Console
 """""""""""""""""""""""""""""""
