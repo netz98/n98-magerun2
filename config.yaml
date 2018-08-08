@@ -189,6 +189,8 @@ commands:
             vault_payment_token_*
           wishlist
             wishlist_*
+          company
+            company_*
 
       - id: trade
         description: Current trade data (customers and orders). You usally do not want those in developer systems.
