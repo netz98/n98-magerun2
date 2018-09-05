@@ -482,6 +482,9 @@ Dumps configured Magento database with `mysqldump`.
   --human-readable
         Use a single insert with column names per row.
 
+  --git-friendly
+        Use one insert statement, but with line breaks instead of separate insert statements.
+
   --add-routines
         Include stored routines in dump (procedures & functions).
 
