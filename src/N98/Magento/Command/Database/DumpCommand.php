@@ -80,7 +80,7 @@ class DumpCommand extends AbstractDatabaseCommand
                 'git-friendly',
                 null,
                 InputOption::VALUE_NONE,
-                'Use one insert statement, but with line breaks. Similar to --human-readable, but you wont need to use --optimize to speed up the import.'
+                'Use one insert statement, but with line breaks instead of separate insert statements. Similar to --human-readable, but you wont need to use --optimize to speed up the import.'
             )
             ->addOption(
                 'add-routines',
