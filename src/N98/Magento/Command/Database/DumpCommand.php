@@ -77,6 +77,12 @@ class DumpCommand extends AbstractDatabaseCommand
                 '--optimize for speeding up the import.'
             )
             ->addOption(
+                'git-friendly',
+                null,
+                InputOption::VALUE_NONE,
+                'Use one insert statement, but with line breaks. Similar to --human-readable, but you wont need to use --optimize to speed up the import.'
+            )
+            ->addOption(
                 'add-routines',
                 null,
                 InputOption::VALUE_NONE,
@@ -262,6 +268,11 @@ HELP;
             $execs->addOptions('--routines ');
         }
 
+        $postDumpGitFriendlyPipeCommands = '';
+        if ($input->getOption('git-friendly')) {
+            $postDumpGitFriendlyPipeCommands = ' | sed \'s$VALUES ($VALUES\n($g\' | sed \'s$),($),\n($g\'';
+        }
+
         /* @var $database DatabaseHelper */
         $database = $this->getDatabaseHelper();
 
@@ -284,7 +295,7 @@ HELP;
             $ignore .= '--ignore-table=' . $this->dbSettings['dbname'] . '.' . $ignoreTable . ' ';
         }
 
-        $execs->add($ignore . $mysqlClientToolConnectionString . $this->postDumpPipeCommands());
+        $execs->add($ignore . $mysqlClientToolConnectionString . $postDumpGitFriendlyPipeCommands . $this->postDumpPipeCommands());
 
         return $execs;
     }
@@ -418,6 +429,16 @@ HELP;
     protected function postDumpPipeCommands()
     {
         return ' | LANG=C LC_CTYPE=C LC_ALL=C sed -e ' . escapeshellarg('s/DEFINER[ ]*=[ ]*[^*]*\*/\*/');
+    }
+
+    /**
+     * Command which makes the dump git friendly. Piped to mysqldump command.
+     *
+     * @return string
+     */
+    protected function postDumpGitFriendlyPipeCommands()
+    {
+        return ' | sed \'s$VALUES ($VALUES\n($g\' | sed \'s$),($),\n($g\'';
     }
 
     /**
