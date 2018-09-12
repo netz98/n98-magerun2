@@ -22,6 +22,11 @@ class ChangePasswordCommand extends AbstractCustomerCommand
     private $customerRepository;
 
     /**
+     * @var \Magento\Customer\Model\ResourceModel\Customer
+     */
+    private $customerResource;
+
+    /**
      * @var \Magento\Customer\Model\CustomerRegistry $customerRegistry
      */
     private $customerRegistry;
@@ -55,11 +60,13 @@ HELP;
     public function inject(
         \Magento\Framework\App\State $state,
         \Magento\Customer\Api\CustomerRepositoryInterface $customerRepository,
+        \Magento\Customer\Model\ResourceModel\Customer $customerResource,
         \Magento\Customer\Model\CustomerRegistry $customerRegistry,
         \Magento\Framework\Encryption\EncryptorInterface $encryptor
     ) {
         $this->state = $state;
         $this->customerRepository = $customerRepository;
+        $this->customerResource = $customerResource;
         $this->customerRegistry = $customerRegistry;
         $this->encryptor = $encryptor;
     }
@@ -90,12 +97,32 @@ HELP;
                 $design = $this->getObjectManager()->get(\Magento\Theme\Model\View\Design::class);
                 $design->setArea('frontend');
 
-                $customer = $this->customerRepository->get($email, $website->getId());
+                $customer = $this->customerRegistry->retrieveByEmail($email, $website->getId());
                 $passwordHash = $this->encryptor->getHash($password, true);
-                $this->customerRepository->save($customer, $passwordHash);
+
+                if ($customer->getId()) {
+                    $customerSecure = $this->customerRegistry->retrieveSecureData($customer->getId());
+
+                    $customer->setRpToken($passwordHash ? null : $customerSecure->getRpToken());
+                    $customer->setRpTokenCreatedAt($passwordHash ? null : $customerSecure->getRpTokenCreatedAt());
+                    $customer->setPasswordHash($passwordHash ?: $customerSecure->getPasswordHash());
+
+                    $customer->setFailuresNum($customerSecure->getFailuresNum());
+                    $customer->setFirstFailure($customerSecure->getFirstFailure());
+                    $customer->setLockExpires($customerSecure->getLockExpires());
+                } elseif ($passwordHash) {
+                    $customer->setPasswordHash($passwordHash);
+                }
+
+                $this->customerResource->save($customer);
+
+                if ($passwordHash && $customer->getId()) {
+                    $this->customerRegistry->remove($customer->getId());
+                }
             };
 
             try {
+                $this->state->setAreaCode(Area::AREA_FRONTEND);
                 $this->state->emulateAreaCode(Area::AREA_FRONTEND, $changePassword);
 
                 $output->writeln('<info>Password successfully changed</info>');
