@@ -5,6 +5,7 @@ namespace N98\Magento\Command\System\Cron;
 use Exception;
 use Magento\Cron\Model\Schedule;
 use Magento\Framework\App\Area;
+use Magento\Framework\App\AreaList;
 use RuntimeException;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -37,6 +38,9 @@ HELP;
         $objectManager = $this->getObjectManager();
         $configLoader = $objectManager->get('Magento\Framework\ObjectManager\ConfigLoaderInterface');
         $objectManager->configure($configLoader->load(Area::AREA_CRONTAB));
+
+        $areaList = $objectManager->get(AreaList::class);
+        $areaList->getArea(Area::AREA_CRONTAB)->load(Area::PART_TRANSLATE);
 
         list($jobCode, $jobConfig, $model) = $this->getJobForExecuteMethod($input, $output);
 
