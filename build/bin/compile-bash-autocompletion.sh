@@ -12,7 +12,7 @@ header()
     cat <<EOF
 #!/bin/bash
 # Installation:
-#  Copy to /etc/bash_completion.d/n98-magerun.phar
+#  Copy to /etc/bash_completion.d/n98-magerun2.phar
 # or
 #  Append to ~/.bash_completion
 # open new or restart existing shell session

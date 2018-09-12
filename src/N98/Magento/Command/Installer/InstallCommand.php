@@ -101,7 +101,7 @@ class InstallCommand extends AbstractMagentoCommand
 
 Example of an unattended Magento CE 2.0.0 installation:
 
-   $ n98-magerun.phar install --dbHost="localhost" --dbUser="mydbuser" \
+   $ n98-magerun2.phar install --dbHost="localhost" --dbUser="mydbuser" \
      --dbPass="mysecret" --dbName="magentodb" --installSampleData=yes \
      --useDefaultConfigParams=yes \
      --magentoVersionByName="magento-ce-2.0.0" \
