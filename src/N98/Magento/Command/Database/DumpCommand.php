@@ -37,7 +37,8 @@ class DumpCommand extends AbstractDatabaseCommand
                 't',
                 InputOption::VALUE_OPTIONAL,
                 'Append or prepend a timestamp to filename if a filename is provided. ' .
-                'Possible values are "suffix", "prefix" or "no".'
+                'Possible values are "suffix", "prefix" or "no".',
+                ''
             )
             ->addOption(
                 'compression',
@@ -452,7 +453,14 @@ HELP;
     {
         $nameExtension = '.sql';
 
-        $optionAddTime = $input->getOption('add-time');
+        $optionAddTime = 'no';
+        if ($input->hasParameterOption('--add-time')) {
+            $optionAddTime = $input->getOption('add-time');
+            if (empty($optionAddTime)) {
+                $optionAddTime = 'suffix';
+            }
+        }
+
         list($namePrefix, $nameSuffix) = $this->getFileNamePrefixSuffix($optionAddTime);
 
         if (
