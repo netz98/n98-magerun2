@@ -175,7 +175,7 @@ HELP;
 
  Example: "dataflow_batch_export unimportant_module_* @log
 
-    $ n98-magerun.phar db:dump --strip="@stripped"
+    $ n98-magerun2.phar db:dump --strip="@stripped"
 
 <comment>Available Table Groups</comment>
 

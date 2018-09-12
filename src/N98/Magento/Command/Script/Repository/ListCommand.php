@@ -32,7 +32,7 @@ Scripts must have the file extension *.magerun*.
 After that you can list all scripts with the *script:repo:list* command.
 The first line of the script can contain a comment (line prefixed with #) which will be displayed as description.
 
-   $ n98-magerun.phar script:repo:list
+   $ n98-magerun2.phar script:repo:list
 HELP;
         $this->setHelp($help);
     }

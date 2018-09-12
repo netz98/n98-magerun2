@@ -59,13 +59,13 @@ Optionally you can work with unix pipes.
 
    \$ echo "cache:flush" | n98-magerun-dev script
 
-   \$ n98-magerun.phar script < filename
+   \$ n98-magerun2.phar script < filename
 
 It is even possible to create executable scripts:
 
 Create file `test.magerun` and make it executable (`chmod +x test.magerun`):
 
-   #!/usr/bin/env n98-magerun.phar script
+   #!/usr/bin/env n98-magerun2.phar script
 
    config:store:set "web/cookie/cookie_domain" example.com
    cache:flush
@@ -98,7 +98,7 @@ Variables can be passed to a script with "--define (-d)" option.
 
 Example:
 
-   $ n98-magerun.phar script -d foo=bar filename
+   $ n98-magerun2.phar script -d foo=bar filename
 
    # This will register the variable \${foo} with value bar.
 
