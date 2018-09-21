@@ -221,25 +221,32 @@ commands:
 
   N98\Magento\Command\Installer\InstallCommand:
     magento-packages:
+      - name: magento-ce-2.2.6
+        package: magento/project-community-edition
+        version: 2.2.6
+        options:
+          prefer-dist: true
+          stability: alpha
+          repository-url: https://repo.magento.com
       - name: magento-ce-2.2.5
         package: magento/project-community-edition
         version: 2.2.5
         options:
-          prefer-dist: true 
+          prefer-dist: true
           stability: alpha
           repository-url: https://repo.magento.com
       - name: magento-ce-2.2.4
         package: magento/project-community-edition
         version: 2.2.4
         options:
-          prefer-dist: true 
+          prefer-dist: true
           stability: alpha
           repository-url: https://repo.magento.com
       - name: magento-ce-2.2.3
         package: magento/project-community-edition
         version: 2.2.3
         options:
-          prefer-dist: true 
+          prefer-dist: true
           stability: alpha
           repository-url: https://repo.magento.com
       - name: magento-ce-2.2.2
@@ -263,25 +270,32 @@ commands:
           prefer-dist: true
           stability: alpha
           repository-url: https://repo.magento.com
+      - name: magento-ce-2.1.15
+        package: magento/project-community-edition
+        version: 2.1.15
+        options:
+          prefer-dist: true
+          stability: alpha
+          repository-url: https://repo.magento.com
       - name: magento-ce-2.1.14
         package: magento/project-community-edition
         version: 2.1.14
         options:
-          prefer-dist: true 
+          prefer-dist: true
           stability: alpha
           repository-url: https://repo.magento.com
       - name: magento-ce-2.1.13
         package: magento/project-community-edition
         version: 2.1.13
         options:
-          prefer-dist: true 
+          prefer-dist: true
           stability: alpha
           repository-url: https://repo.magento.com
       - name: magento-ce-2.1.12
         package: magento/project-community-edition
         version: 2.1.12
         options:
-          prefer-dist: true 
+          prefer-dist: true
           stability: alpha
           repository-url: https://repo.magento.com
       - name: magento-ce-2.1.11
