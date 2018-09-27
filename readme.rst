@@ -106,25 +106,6 @@ execute it from the vendor’s bin folder:
     ./vendor/bin/n98-magerun2 --version
     n98-magerun2 version 1.3.2 by netz98 GmbH
 
-Install with Homebrew
-"""""""""""""""""""""
-
-First you need to have homebrew installed: http://brew.sh/
-
-Install homebrew-php tap: https://github.com/Homebrew/homebrew-php#installation
-
-Once homebrew and the tap are installed, you can install the tools with it:
-
-.. code-block:: sh
-
-    brew install n98-magerun2
-
-You can now use the tools:
-
-.. code-block:: sh
-
-    $ n98-magerun2 {command}
-
 Update
 ------
 
