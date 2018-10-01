@@ -44,8 +44,6 @@ HELP;
 
         list($jobCode, $jobConfig, $model) = $this->getJobForExecuteMethod($input, $output);
 
-        $callback = array($model, $jobConfig['method']);
-
         $output->write(
             '<info>Run </info><comment>' . $jobConfig['instance'] . '::' . $jobConfig['method'] . '</comment> '
         );
@@ -59,7 +57,7 @@ HELP;
             ->save();
 
         try {
-            $this->state->emulateAreaCode(Area::AREA_CRONTAB, $callback, array($schedule));
+            call_user_func([$model, $jobConfig['method']], $schedule);
 
             $schedule
                 ->setStatus(Schedule::STATUS_SUCCESS)
