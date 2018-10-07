@@ -129,7 +129,7 @@ commands:
     table-groups:
       - id: admin
         description: Admin tables
-        tables: admin*
+        tables: admin* magento_logging_event magento_logging_event_changes
 
       - id: log
         description: Log tables
@@ -169,6 +169,8 @@ commands:
           paypal_billing_agreement*
           paypal_payment_transaction
           paypal_settlement_report*
+          magento_rma magento_rma_grid magento_rma_status_history magento_rma_shipping_label magento_rma_item_entity
+          magento_sales_order_grid_archive magento_sales_creditmemo_grid_archive magento_sales_invoice_grid_archive magento_sales_shipment_grid_archive
 
       - id: quotes
         description: Cart (quote) data
@@ -191,6 +193,10 @@ commands:
             wishlist_*
           company
             company_*
+          magento_giftcardaccount
+          magento_customerbalance magento_customerbalance_history
+          magento_customersegment_customer
+          magento_reward magento_reward_history
 
       - id: trade
         description: Current trade data (customers and orders). You usally do not want those in developer systems.
