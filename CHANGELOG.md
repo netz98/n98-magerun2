@@ -1,6 +1,26 @@
 RECENT CHANGES
 ==============
 
+2.3.0
+-----
+
+- Add CE 2.2.6 and 2.1.15 (by Bono de Visser)
+- Add CE 2.1.14, 2.2.5 (by Marc)
+- Add to the stripped db dump command the dotmailer group with email sensitive data (by Calin Dumitrescu)
+- Additional enterprise-only tables missing from the table group configuration (by Matthew O'Loughlin)
+- Emulation-Mode not needed after set current area. This resolves #245 on empty cache (by Julian Wundrak)
+- Homebrew php tap is deprecated (by Anton Evers)
+- Updated docs (by kolaente)
+- Implemented option to create git friendly dumps / resolves #386 (by kolaente)
+- Update readme with dotmailer group (by Calin Dumitrescu)
+- Update README (by Daniël van der Linden)
+- Strip company_* tables for the Commerce B2B extension when using @customers (by Daniël van der Linden)
+- Update readme.rst (by Leandro F. L)
+- Fix: #377 sys:cron:run - translation is not loaded (by Christian Münch)
+- Fix: #381 Area code not set (by Christian Münch)
+- Fix: #302 Replace n98-magerun.phar witg n98-magerun2.phar Christian Münch)
+- Fix: #388 Add correct default for --add-time option (by Christian Münch)
+
 2.2.0
 -----
 
