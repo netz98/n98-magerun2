@@ -2,6 +2,7 @@
 
 namespace N98\Magento\Command\Developer\Console;
 
+use Magento\Framework\Component\ComponentRegistrar;
 use N98\Magento\Command\Developer\Console\Util\Config\DiFileWriter;
 
 class MakeCommandCommandTest extends TestCase
@@ -11,6 +12,13 @@ class MakeCommandCommandTest extends TestCase
      */
     public function testOutput()
     {
+        // fake path because Magento checks every path...
+        ComponentRegistrar::register(
+            ComponentRegistrar::MODULE,
+            'N98_Dummy',
+            __DIR__
+        );
+
         $diFileWriterMock = $this->getMockBuilder(DiFileWriter::class)
             ->setMethods(['save'])
             ->getMock();

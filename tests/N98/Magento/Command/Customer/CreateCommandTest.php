@@ -6,6 +6,10 @@ use Magento\Store\Model\StoreManagerInterface;
 use N98\Magento\Command\TestCase;
 use Symfony\Component\Console\Tester\CommandTester;
 
+/**
+ * Class CreateCommandTest
+ * @package N98\Magento\Command\Customer
+ */
 class CreateCommandTest extends TestCase
 {
     /**
@@ -40,7 +44,7 @@ class CreateCommandTest extends TestCase
     private function getWebsiteCode()
     {
         $storeManager = $this->getApplication()->getObjectManager()->get(StoreManagerInterface::class);
-        $website = $storeManager->getWebsite();
+        $website = $storeManager->getWebsite('base');
 
         return $website->getCode();
     }

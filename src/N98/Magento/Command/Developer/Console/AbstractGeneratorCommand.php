@@ -53,7 +53,10 @@ abstract class AbstractGeneratorCommand extends AbstractConsoleCommand
      */
     public function getCurrentModulePath($type = '')
     {
-        return $this->get(ModuleDir::class)->getDir($this->getCurrentModuleName()->getFullModuleName(), $type);
+        $fullModuleName = $this->getCurrentModuleName()->getFullModuleName();
+
+        return $this->get(ModuleDir::class)
+            ->getDir($fullModuleName, $type);
     }
 
     /**
