@@ -3,8 +3,10 @@
 namespace N98\Magento\Command\Customer;
 
 use Magento\Customer\Api\AccountManagementInterface;
+use Magento\Framework\App\State;
 use Magento\Framework\App\State as AppState;
 use Magento\Framework\Exception\LocalizedException;
+use Magento\Theme\Model\View\Design;
 use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -96,19 +98,29 @@ class CreateCommand extends AbstractCustomerCommand
         $isError = false;
 
         if (!$customer->getId()) {
+            $storeId = $website->getDefaultGroup()->getId();
             $customer->setWebsiteId($website->getId());
             $customer->setEmail($email);
             $customer->setFirstname($firstname);
             $customer->setLastname($lastname);
-            $customer->setStoreId($website->getDefaultGroup()->getId());
+            $customer->setStoreId($storeId);
 
             try {
                 try {
+
+                    /** @var State $state */
+                    try {
+                        $state = $this->getApplication()->getObjectManager()->get(State::class);
+                        $state->setAreaCode('adminhtml');
+                    } catch (LocalizedException $e) {
+                        // ignore area code exception
+                    }
+
                     $this->appState->emulateAreaCode('frontend', function () use ($customer, $password) {
 
                         // Fix for proxy which does not respect "emulateAreaCode".
                         /** @var \Magento\Theme\Model\View\Design $design */
-                        $design = $this->getObjectManager()->get(\Magento\Theme\Model\View\Design::class);
+                        $design = $this->getObjectManager()->get(Design::class);
                         $design->setArea('frontend');
 
                         $this->accountManagement->createAccount(
