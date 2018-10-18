@@ -488,7 +488,7 @@ HELP;
                 $fileName = $defaultName;
             }
         } else {
-            if ($optionAddTime) {
+            if ($optionAddTime && $fileName !== null) {
                 $pathParts = pathinfo($fileName);
                 $fileName = ($pathParts['dirname'] == '.' ? '' : $pathParts['dirname'] . '/') .
                     $namePrefix . $pathParts['filename'] . $nameSuffix . '.' . $pathParts['extension'];
