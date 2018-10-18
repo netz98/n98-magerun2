@@ -1,6 +1,11 @@
 RECENT CHANGES
 ==============
 
+2.3.1
+-----
+
+- --stdout broken in 2.3.0 (by Peter Jaap / Christian Münch)
+
 2.3.0
 -----
 
