@@ -5,6 +5,7 @@ namespace N98\Magento;
 use BadMethodCallException;
 use Composer\Autoload\ClassLoader;
 use Exception;
+use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Framework\Autoload\AutoloaderRegistry;
 use Magento\Framework\ObjectManagerInterface;
 use N98\Magento\Application\AutoloaderDecorator;
@@ -337,10 +338,11 @@ class Application extends BaseApplication
         }
 
         $this->detectMagento(null, $output);
+        /** @var DirectoryList $directoryList */
+        $directoryList = $this->_objectManager->get(DirectoryList::class);
+        $configDir = rtrim($directoryList->getPath(DirectoryList::CONFIG), DIRECTORY_SEPARATOR);
         /* If magento is not installed yet, don't check */
-        if ($this->detectionResult->getRootFolder() === null
-            || !file_exists($this->getMagentoRootFolder() . '/app/etc/env.php')
-        ) {
+        if ($this->detectionResult->getRootFolder() === null || !file_exists($configDir . '/env.php')) {
             return;
         }
 
@@ -358,8 +360,7 @@ class Application extends BaseApplication
             return;
         }
 
-        $directoryList = $this->_objectManager->get('\Magento\Framework\App\Filesystem\DirectoryList');
-        $currentVarDir = $directoryList->getPath('var');
+        $currentVarDir = $directoryList->getPath(DirectoryList::VAR_DIR);
 
         if ($currentVarDir === $tempVarDir) {
             $output->writeln([

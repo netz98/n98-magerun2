@@ -36,7 +36,7 @@ class DownloadMagento extends AbstractSubCommand
         $package = $this->config['magentoVersionData'];
         $this->config->setArray('magentoPackage', $package);
 
-        if (file_exists($this->config->getString('installationFolder') . '/app/etc/env.php')) {
+        if (file_exists($this->config->getString('installationFolder') . '/' . $this->getConfigDir() . '/env.php')) {
             throw new RuntimeException('A magento installation already exists in this folder');
         }
 
@@ -168,5 +168,21 @@ class DownloadMagento extends AbstractSubCommand
 
             $composerHelper->setConfigValue($configKey, [$username, $password]);
         }
+    }
+
+    /**
+     * This method emulates the behavior of the `Magento\Framework\App\Filesystem\DirectoryList` component which, in
+     * the end, reads the config directory path from the `$_SERVER['MAGE_DIR']['etc']['path']` if it exists and falls
+     * back on the `app/etc` default value otherwise. Obviously is not possible to use the `DirectoryList` component
+     * here because Magento has not been downloaded yet; so we have to emulate the original behavior.
+     *
+     * @return string
+     */
+    private function getConfigDir()
+    {
+        if (isset($_SERVER['MAGE_DIRS']['etc']['path'])) {
+            return trim($_SERVER['MAGE_DIRS']['etc']['path'], DIRECTORY_SEPARATOR);
+        }
+        return 'app/etc';
     }
 }

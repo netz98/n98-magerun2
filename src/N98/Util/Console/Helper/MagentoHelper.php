@@ -4,6 +4,7 @@ namespace N98\Util\Console\Helper;
 
 use ArrayIterator;
 use CallbackFilterIterator;
+use Magento\Framework\App\Filesystem\DirectoryList;
 use N98\Magento\Application;
 use N98\Magento\Application\DetectionResultInterface;
 use RuntimeException;
@@ -385,14 +386,19 @@ class MagentoHelper extends AbstractHelper implements DetectionResultInterface
         $this->baseConfig = [];
 
         $application = $this->getApplication();
+        $application->detectMagento(null, $this->output);
+        $application->initMagento();
+        /** @var DirectoryList $directoryList */
+        $directoryList = $application->getObjectManager()->get(DirectoryList::class);
+        $configDir = rtrim($directoryList->getPath(DirectoryList::CONFIG), DIRECTORY_SEPARATOR);
 
         $configFiles = [
-            'app/etc/config.php',
-            'app/etc/env.php',
+            $configDir . '/config.php',
+            $configDir . '/env.php',
         ];
 
-        foreach ($configFiles as $configFileName) {
-            $this->addBaseConfig($application->getMagentoRootFolder(), $configFileName);
+        foreach ($configFiles as $configFile) {
+            $this->addBaseConfig($configFile);
         }
     }
 
@@ -420,20 +426,18 @@ class MagentoHelper extends AbstractHelper implements DetectionResultInterface
     }
 
     /**
-     * @param string $root
-     * @param string $configFileName
+     * @param $configFile
      */
-    private function addBaseConfig($root, $configFileName)
+    private function addBaseConfig($configFile)
     {
-        $configFile = $root . '/' . $configFileName;
         if (!(is_file($configFile) && is_readable($configFile))) {
-            throw new RuntimeException(sprintf('%s is not readable', $configFileName));
+            throw new RuntimeException(sprintf('%s is not readable', $configFile));
         }
 
         $config = @include $configFile;
 
         if (!is_array($config)) {
-            throw new RuntimeException(sprintf('%s is corrupted. Please check it.', $configFileName));
+            throw new RuntimeException(sprintf('%s is corrupted. Please check it.', $configFile));
         }
 
         $this->baseConfig = array_merge($this->baseConfig, $config);
