@@ -490,8 +490,12 @@ HELP;
         } else {
             if ($optionAddTime && $fileName !== null) {
                 $pathParts = pathinfo($fileName);
-                $fileName = ($pathParts['dirname'] == '.' ? '' : $pathParts['dirname'] . '/') .
-                    $namePrefix . $pathParts['filename'] . $nameSuffix . '.' . $pathParts['extension'];
+
+                $fileName = ($pathParts['dirname'] === '.' ? '' : $pathParts['dirname'] . '/')
+                    . $namePrefix
+                    . (isset($pathParts['filename']) ? $pathParts['filename'] : '')
+                    . $nameSuffix
+                    . (isset($pathParts['extension']) ? ('.' . $pathParts['extension']) : '');
             }
         }
 
