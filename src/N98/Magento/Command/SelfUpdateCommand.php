@@ -100,12 +100,18 @@ EOT
                 $this->downloadNewVersion($output, $rfs, $remoteFilename, $tempFilename);
                 $this->checkNewPharFile($tempFilename, $localFilename);
 
+                $changelog = $this->getChangelog($output, $loadUnstable, $rfs);
+
                 if (!$isDryRun) {
                     $this->replaceExistingPharFile($tempFilename, $localFilename);
                 }
 
+                $output->writeln('');
+                $output->writeln('');
+                $output->writeln($changelog);
+                $output->writeln('<info>---------------------------------</info>');
                 $output->writeln('<info>Successfully updated n98-magerun2</info>');
-                $this->showChangelog($output, $loadUnstable, $rfs);
+                $output->writeln('<info>---------------------------------</info>');
 
                 $this->_exit(0);
             } catch (\Exception $e) {
@@ -182,9 +188,12 @@ EOT
      * @param \Symfony\Component\Console\Output\OutputInterface $output
      * @param bool $loadUnstable
      * @param RemoteFilesystem $rfs
+     * @return string
      */
-    private function showChangelog(OutputInterface $output, $loadUnstable, $rfs)
+    private function getChangelog(OutputInterface $output, $loadUnstable, $rfs)
     {
+        $changelog = '';
+
         if ($loadUnstable) {
             $changeLogContent = $rfs->getContents(
                 'raw.github.com',
@@ -202,9 +211,7 @@ EOT
         if ($changeLogContent) {
             $versionFilePrinter = new VersionFilePrinter($changeLogContent);
             $previousVersion = $this->getApplication()->getVersion();
-            $output->writeln(
-                $versionFilePrinter->printFromVersion($previousVersion)
-            );
+            $changelog .= $versionFilePrinter->printFromVersion($previousVersion) . "\n";
         }
 
         if ($loadUnstable) {
@@ -215,8 +222,11 @@ EOT
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 </comment>
 UNSTABLE_FOOTER;
-            $output->writeln($unstableFooterMessage);
+
+            $changelog .= $unstableFooterMessage . "\n";
         }
+
+        return $changelog;
     }
 
     /**
