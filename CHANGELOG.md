@@ -4,7 +4,8 @@ RECENT CHANGES
 2.3.2
 -----
 
-- Fix for #407 phar mismatch after self-update
+- Fix for #407 phar mismatch after self-update (by Christian Münch)
+- Uses Magento's DirectoryList to get config folder path (by Manuele Menozz)
 
 
 2.3.1
