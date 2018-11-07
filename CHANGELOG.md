@@ -1,6 +1,12 @@
 RECENT CHANGES
 ==============
 
+2.3.2
+-----
+
+- Fix for #407 phar mismatch after self-update
+
+
 2.3.1
 -----
 
