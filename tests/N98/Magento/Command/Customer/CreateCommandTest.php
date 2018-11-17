@@ -12,9 +12,6 @@ use Symfony\Component\Console\Tester\CommandTester;
  */
 class CreateCommandTest extends TestCase
 {
-    /**
-     * @outputBuffering
-     */
     public function testExecute()
     {
         $generatedEmail = uniqid() . '@example.com';
