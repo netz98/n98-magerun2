@@ -53,6 +53,9 @@ class ChangePasswordCommand extends AbstractAdminUserCommand
         }
 
         try {
+            // @see \Magento\Framework\Session\SessionManager::isSessionExists Hack to prevent session problems
+            @session_start();
+
             $result = $user->validate();
             if (is_array($result)) {
                 throw new Exception(implode(PHP_EOL, $result));
