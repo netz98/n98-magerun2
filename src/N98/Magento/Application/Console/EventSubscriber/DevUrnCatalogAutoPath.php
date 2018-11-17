@@ -42,6 +42,7 @@ class DevUrnCatalogAutoPath implements EventSubscriberInterface
      * @param ConsoleCommandEvent $event
      *
      * @return void
+     * @throws \ReflectionException
      */
     public function autosetIdeaMiscXmlPath(ConsoleCommandEvent $event)
     {
