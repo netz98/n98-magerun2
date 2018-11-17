@@ -1,12 +1,17 @@
 RECENT CHANGES
 ==============
 
+2.3.3
+-----
+
+- Upgrades Travis Setup (check new Magento Versions) (by Christian Münch)
+- Fix: #329: Area code not set failures (by Christian Münch)
+
 2.3.2
 -----
 
 - Fix for #407 phar mismatch after self-update (by Christian Münch)
 - Uses Magento's DirectoryList to get config folder path (by Manuele Menozz)
-
 
 2.3.1
 -----
