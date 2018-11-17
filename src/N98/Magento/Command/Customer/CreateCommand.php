@@ -3,10 +3,8 @@
 namespace N98\Magento\Command\Customer;
 
 use Magento\Customer\Api\AccountManagementInterface;
-use Magento\Framework\App\State;
-use Magento\Framework\App\State as AppState;
+use Magento\Framework\App\State\Proxy as AppState;
 use Magento\Framework\Exception\LocalizedException;
-use Magento\Theme\Model\View\Design;
 use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -98,41 +96,19 @@ class CreateCommand extends AbstractCustomerCommand
         $isError = false;
 
         if (!$customer->getId()) {
-            $storeId = $website->getDefaultGroup()->getId();
             $customer->setWebsiteId($website->getId());
             $customer->setEmail($email);
             $customer->setFirstname($firstname);
             $customer->setLastname($lastname);
-            $customer->setStoreId($storeId);
+            $customer->setStoreId($website->getDefaultGroup()->getId());
 
             try {
-                try {
-
-                    /** @var State $state */
-                    try {
-                        $state = $this->getApplication()->getObjectManager()->get(State::class);
-                        $state->setAreaCode('adminhtml');
-                    } catch (LocalizedException $e) {
-                        // ignore area code exception
-                    }
-
-                    $this->appState->emulateAreaCode('frontend', function () use ($customer, $password) {
-
-                        // Fix for proxy which does not respect "emulateAreaCode".
-                        /** @var \Magento\Theme\Model\View\Design $design */
-                        $design = $this->getObjectManager()->get(Design::class);
-                        $design->setArea('frontend');
-
-                        $this->accountManagement->createAccount(
-                            $customer->getDataModel(),
-                            $password
-                        );
-                    });
-                } catch (LocalizedException $e) {
-                    if ($e->getRawMessage() !== 'Design config must have area and store.') {
-                        throw $e;
-                    }
-                }
+                $this->appState->setAreaCode('frontend');
+                $this->appState->emulateAreaCode(
+                    'frontend',
+                    [$this, 'createCustomer'],
+                    [$customer, $password]
+                );
 
                 if ($outputPlain) {
                     $output->writeln(
@@ -166,5 +142,32 @@ class CreateCommand extends AbstractCustomerCommand
         }
 
         return $isError ? 1 : 0;
+    }
+
+    /**
+     * @param string $customer
+     * @param string $password
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
+    public function createCustomer($customer, $password)
+    {
+        try {
+            // Fix for proxy which does not respect "emulateAreaCode".
+
+            // @see \Magento\Framework\Session\SessionManager::isSessionExists Hack to prevent session problems
+            @session_start();
+
+            /** @var \Magento\Theme\Model\View\Design $design */
+            $design = $this->getObjectManager()->get(\Magento\Theme\Model\View\Design::class);
+            $design->setArea('frontend');
+            $this->accountManagement->createAccount(
+                $customer->getDataModel(),
+                $password
+            );
+        } catch (LocalizedException $e) {
+            if ($e->getRawMessage() !== 'Design config must have area and store.') {
+                throw $e;
+            }
+        }
     }
 }

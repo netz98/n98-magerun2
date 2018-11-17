@@ -92,6 +92,9 @@ HELP;
             $website = $this->getHelper('parameter')->askWebsite($input, $output);
 
             $changePassword = function () use ($email, $website, $password) {
+                // @see \Magento\Framework\Session\SessionManager::isSessionExists Hack to prevent session problems
+                @session_start();
+
                 // Fix for proxy which does not respect "emulateAreaCode".
                 /** @var \Magento\Theme\Model\View\Design $design */
                 $design = $this->getObjectManager()->get(\Magento\Theme\Model\View\Design::class);
