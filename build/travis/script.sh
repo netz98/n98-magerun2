@@ -35,7 +35,7 @@ case "${SCRIPT_JOB}" in
     )
     echo "run phpunit in magento 2 mode:"
     php -f "./${MAGENTO_VERSION}/bin/magento" deploy:mode:show
-    vendor/bin/phpunit --debug --process-isolation --exclude-group "${PHPUNIT_EXCLUDE_GROUPS}"
+    php -d sendmail_path=/dev/null vendor/bin/phpunit --debug --process-isolation --exclude-group "${PHPUNIT_EXCLUDE_GROUPS}"
 
     ;;
 
