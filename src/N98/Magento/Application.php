@@ -19,15 +19,20 @@ use N98\Util\OperatingSystem;
 use RuntimeException;
 use Symfony\Component\Console\Application as BaseApplication;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Event\ConsoleEvent;
+use Symfony\Component\Console\ConsoleEvents;
+use Symfony\Component\Console\Event\ConsoleExceptionEvent;
+use Symfony\Component\Console\Event\ConsoleTerminateEvent;
+use Symfony\Component\Console\Exception\ExceptionInterface;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Helper\FormatterHelper;
 use Symfony\Component\Console\Input\ArgvInput;
+use Symfony\Component\Console\Input\InputAwareInterface;
 use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Debug\Exception\FatalThrowableError;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use UnexpectedValueException;
 
@@ -329,25 +334,25 @@ class Application extends BaseApplication
      *
      * @param OutputInterface $output
      * @return null|false
+     * @throws \Magento\Framework\Exception\FileSystemException
      */
     public function checkVarDir(OutputInterface $output)
     {
         $tempVarDir = sys_get_temp_dir() . '/magento/var';
-        if (!OutputInterface::VERBOSITY_NORMAL <= $output->getVerbosity() && !is_dir($tempVarDir)) {
-            return;
-        }
-
-        $this->detectMagento(null, $output);
-        /** @var DirectoryList $directoryList */
-        $directoryList = $this->_objectManager->get(DirectoryList::class);
-        $configDir = rtrim($directoryList->getPath(DirectoryList::CONFIG), DIRECTORY_SEPARATOR);
-        /* If magento is not installed yet, don't check */
-        if ($this->detectionResult->getRootFolder() === null || !file_exists($configDir . '/env.php')) {
+        if ((!OutputInterface::VERBOSITY_NORMAL) <= $output->getVerbosity() && !is_dir($tempVarDir)) {
             return;
         }
 
         try {
             $this->initMagento();
+
+            /** @var DirectoryList $directoryList */
+            $directoryList = $this->getObjectManager()->get(DirectoryList::class);
+            $configDir = rtrim($directoryList->getPath(DirectoryList::CONFIG), DIRECTORY_SEPARATOR);
+            /* If magento is not installed yet, don't check */
+            if ($this->detectionResult->getRootFolder() === null || !file_exists($configDir . '/env.php')) {
+                return;
+            }
         } catch (Exception $e) {
             $message = 'Cannot initialize Magento. Please check your configuration. '
             . 'Some n98-magerun command will not work. Got message: '
@@ -393,6 +398,7 @@ class Application extends BaseApplication
      * @param bool $soft
      *
      * @return bool false if magento root folder is not set, true otherwise
+     * @throws \Exception
      */
     public function initMagento($soft = false)
     {
@@ -519,6 +525,7 @@ class Application extends BaseApplication
      * @param OutputInterface $output An Output instance
      *
      * @return int 0 if everything went fine, or an error code
+     * @throws \Magento\Framework\Exception\FileSystemException
      */
     public function doRun(InputInterface $input, OutputInterface $output)
     {
@@ -528,11 +535,12 @@ class Application extends BaseApplication
         /**
          * only for compatibility to old versions.
          */
-        $event = new ConsoleEvent(new Command('dummy'), $input, $output);
+        $event = new \N98\Magento\Application\Console\ConsoleEvent(new Command('dummy'), $input, $output);
         $this->dispatcher->dispatch('console.run.before', $event);
 
         $input = $this->config->checkConfigCommandAlias($input);
         if ($output instanceof ConsoleOutput) {
+            $this->initMagento();
             $this->checkVarDir($output->getErrorOutput());
         }
 
@@ -540,10 +548,84 @@ class Application extends BaseApplication
     }
 
     /**
+     * Runs the current command.
+     *
+     * If an event dispatcher has been attached to the application,
+     * events are also dispatched during the life-cycle of the command.
+     *
+     * @return int 0 if everything went fine, or an error code
+     * @throws \Exception
+     * @throws \Throwable
+     */
+    protected function doRunCommand(Command $command, InputInterface $input, OutputInterface $output)
+    {
+        foreach ($command->getHelperSet() as $helper) {
+            if ($helper instanceof InputAwareInterface) {
+                $helper->setInput($input);
+            }
+        }
+
+        if (null === $this->dispatcher) {
+            return $command->run($input, $output);
+        }
+
+        // bind before the console.command event, so the listeners have access to input options/arguments
+        try {
+            $command->mergeApplicationDefinition();
+            $input->bind($command->getDefinition());
+        } catch (ExceptionInterface $e) {
+            // ignore invalid options/arguments for now, to allow the event listeners to customize the InputDefinition
+        }
+
+        $event = new \N98\Magento\Application\Console\ConsoleCommandEvent($command, $input, $output);
+        $e = null;
+
+        try {
+            $this->dispatcher->dispatch(ConsoleEvents::COMMAND, $event);
+
+            if ($event->commandShouldRun()) {
+                $exitCode = $command->run($input, $output);
+            } else {
+                $exitCode = \N98\Magento\Application\Console\ConsoleCommandEvent::RETURN_CODE_DISABLED;
+            }
+        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
+        }
+
+        if (null !== $e) {
+            /*$x = $e instanceof \Exception ? $e : new FatalThrowableError($e);
+            $event = new ConsoleExceptionEvent($command, $input, $output, $x, $x->getCode());
+            if (defined('\Symfony\Component\Console\ConsoleEvents::EXCEPTION')) {
+                $this->dispatcher->dispatch(ConsoleEvents::EXCEPTION, $event);
+            }
+            if (defined('\Symfony\Component\Console\ConsoleEvents::ERROR')) {
+                $this->dispatcher->dispatch(ConsoleEvents::ERROR, $event);
+            }
+
+            if ($x !== $event->getException()) {
+                $e = $event->getException();
+            }
+            //$exitCode = $e->getCode();*/
+        }
+
+        // @TODO make compatible
+        //$event = new ConsoleTerminateEvent($command, $input, $output, $exitCode);
+        //$this->dispatcher->dispatch(ConsoleEvents::TERMINATE, $event);
+
+        if (null !== $e) {
+            throw $e;
+        }
+
+        //return $event->getExitCode();
+        return $exitCode;
+    }
+
+    /**
      * @param InputInterface $input [optional]
      * @param OutputInterface $output [optional]
      *
      * @return int
+     * @throws \Exception
      */
     public function run(InputInterface $input = null, OutputInterface $output = null)
     {
@@ -748,6 +830,7 @@ class Application extends BaseApplication
 
     /**
      * @return void
+     * @throws \Exception
      */
     protected function _initMagento2()
     {
