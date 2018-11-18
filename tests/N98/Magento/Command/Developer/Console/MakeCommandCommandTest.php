@@ -7,9 +7,6 @@ use N98\Magento\Command\Developer\Console\Util\Config\DiFileWriter;
 
 class MakeCommandCommandTest extends TestCase
 {
-    /**
-     * @test
-     */
     public function testOutput()
     {
         // fake path because Magento checks every path...
@@ -24,7 +21,10 @@ class MakeCommandCommandTest extends TestCase
             ->getMock();
         $diFileWriterMock->loadXml('<config />');
 
-        $command = $this->createMock(MakeCommandCommand::class, ['createDiFileWriter']);
+        $command = $this->getMockBuilder(MakeCommandCommand::class)
+            ->setMethods(['createDiFileWriter'])
+            ->getMock();
+
         $command
             ->expects($this->once())
             ->method('createDiFileWriter')
