@@ -15,55 +15,64 @@ branches:
     - /^release\/.*$/
     - /^(bugfix|feature)\/.*$/
 
-php:
-  - 5.5
-  - 5.6
-  - 7.0
-  - 7.1
-
 env:
   global:
     - secure: "IEmCQNLHz63zsgcaVVbbeJDZ/Ayx58iJebr5zKDUN/Cbb5MZyW8WgQ5VIn3hlnJsPZrYLx0h3PPSqOB2qLKa02VQaljC50edjSVqT3UsIyC7S+xFA0Vnz492Lf6QFjO6ZiCOqtDiY4fPjOF16nyQO46V2tx4+2W7qVuGy6QHGZw="
     - DB=mysql
-  matrix:
-    - SCRIPT_JOB="PHP-CS-FIXER"
-    - SCRIPT_JOB="BUILDSH"
-    - SCRIPT_JOB="BASH-AUTOCOMPLETION"
-    - MAGENTO_VERSION="magento-ce-2.2.6" INSTALL_SAMPLE_DATA=0 PHPUNIT_EXCLUDE_GROUPS=exclude-2.2
-    - MAGENTO_VERSION="magento-ce-2.1.15" INSTALL_SAMPLE_DATA=0 PHPUNIT_EXCLUDE_GROUPS=exclude-2.1
-    - MAGENTO_VERSION="magento-ce-2.0.16" INSTALL_SAMPLE_DATA=0 PHPUNIT_EXCLUDE_GROUPS=exclude-2.0
 
 matrix:
   fast_finish: true
-  exclude:
-    # Newer Magento versions uses newer PHP versions
-    - php: 5.6
-      env: MAGENTO_VERSION="magento-ce-2.2.6" INSTALL_SAMPLE_DATA=0 PHPUNIT_EXCLUDE_GROUPS=exclude-2.2
-    - php: 5.5
-      env: MAGENTO_VERSION="magento-ce-2.2.6" INSTALL_SAMPLE_DATA=0 PHPUNIT_EXCLUDE_GROUPS=exclude-2.2
-    - php: 5.5
-      env: MAGENTO_VERSION="magento-ce-2.1.15" INSTALL_SAMPLE_DATA=0 PHPUNIT_EXCLUDE_GROUPS=exclude-2.1
-    # Old Magento versions cannot run in PHP 7.1
-    - php: 7.1
-      env: MAGENTO_VERSION="magento-ce-2.1.15" INSTALL_SAMPLE_DATA=0 PHPUNIT_EXCLUDE_GROUPS=exclude-2.1
-    - php: 7.1
-      env: MAGENTO_VERSION="magento-ce-2.0.16" INSTALL_SAMPLE_DATA=0 PHPUNIT_EXCLUDE_GROUPS=exclude-2.0
   include:
+    # Magento Versions
+
+    - name: Magento 2.3.0 PHP 7.2
+      php: 7.2
+      env: MAGENTO_VERSION="magento-ce-2.3.0" INSTALL_SAMPLE_DATA=0 PHPUNIT_EXCLUDE_GROUPS=exclude-2.2
+
+    - name: Magento 2.2.6 PHP 7.1
+      php: 7.1
+      env: MAGENTO_VERSION="magento-ce-2.2.6" INSTALL_SAMPLE_DATA=0 PHPUNIT_EXCLUDE_GROUPS=exclude-2.2
+
+    - name: Magento 2.2.6 PHP 7.0
+      php: 7.0
+      env: MAGENTO_VERSION="magento-ce-2.2.6" INSTALL_SAMPLE_DATA=0 PHPUNIT_EXCLUDE_GROUPS=exclude-2.2
+
+    - name: Magento 2.1.15 PHP 7.0
+      php: 7.0
+      env: MAGENTO_VERSION="magento-ce-2.1.15" INSTALL_SAMPLE_DATA=0 PHPUNIT_EXCLUDE_GROUPS=exclude-2.1
+
+    - name: Magento 2.1.15 PHP 5.6
+      php: 5.6
+      env: MAGENTO_VERSION="magento-ce-2.1.15" INSTALL_SAMPLE_DATA=0 PHPUNIT_EXCLUDE_GROUPS=exclude-2.1
+
     # Lint PHP code with future PHP versions (forward compatibility)
-    - php: 7.0
+    - name: PHP 7.2 Lint
+      php: 7.2
       env: SCRIPT_JOB=LINTSH
       script: find {src,tests} -name "*.php" ! -path '*/String.php' -print0 | xargs
         -0 -n1 -P8 php -l | grep -v '^No syntax errors detected'; test $? -eq 1
-    - php: 7.1
+
+    - name: SH Lint
+      php: 7.2
       env: SCRIPT_JOB=LINTSH
       script: find {src,tests} -name "*.php" ! -path '*/String.php' -print0 | xargs
         -0 -n1 -P8 php -l | grep -v '^No syntax errors detected'; test $? -eq 1
+
     # Run the cs-fixer and build script with different PHP versions
-    - php: 7.1
+    - name: PHP-CS Fixer PHP 7.0
+      php: 7.0
       env: SCRIPT_JOB="PHP-CS-FIXER"
-    - php: 7.1
+
+    - name: PHP-CS Fixer PHP 7.1
+      php: 7.1
+      env: SCRIPT_JOB="PHP-CS-FIXER"
+
+    - name: Build SH
+      php: 7.1
       env: SCRIPT_JOB="BUILDSH"
-    - php: 7.1
+
+    - name: Bash Autocomplete
+      php: 7.1
       env: SCRIPT_JOB="BASH-AUTOCOMPLETION"
 
 before_install:
