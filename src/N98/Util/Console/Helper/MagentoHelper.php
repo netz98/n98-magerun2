@@ -406,6 +406,7 @@ class MagentoHelper extends AbstractHelper implements DetectionResultInterface
      * private getter for application that has magento detected
      *
      * @return Application
+     * @throws \Exception
      */
     private function getApplication()
     {
@@ -426,7 +427,7 @@ class MagentoHelper extends AbstractHelper implements DetectionResultInterface
     }
 
     /**
-     * @param $configFile
+     * @param string $configFile
      */
     private function addBaseConfig($configFile)
     {

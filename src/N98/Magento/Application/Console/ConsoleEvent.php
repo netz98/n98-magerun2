@@ -7,53 +7,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class ConsoleEvent extends \Symfony\Component\Console\Event\ConsoleEvent implements \Symfony\Component\EventDispatcher\EventDispatcherInterface
 {
-    /**
-     * @var string
-     */
-    protected $name;
-
-    /**
-     * @var \Symfony\Component\EventDispatcher\EventDispatcher
-     */
-    protected $dispatcher;
-
-    /**
-     * Gets the event's name.
-     *
-     * @return string
-     *
-     * @deprecated since version 2.4, to be removed in 3.0. The event name is passed to the listener call.
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
-    /**
-     * Sets the event's name property.
-     *
-     * @param string $name The event name
-     *
-     * @deprecated since version 2.4, to be removed in 3.0. The event name is passed to the listener call.
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
-    }
-
-    /**
-     * Dispatches an event to all registered listeners.
-     *
-     * @param string $eventName The name of the event to dispatch. The name of
-     *                          the event is the name of the method that is
-     *                          invoked on listeners.
-     * @param Event $event The event to pass to the event handlers/listeners
-     *                          If not supplied, an empty Event instance is created
-     *
-     * @return Event
-     */
-    public function dispatch($eventName, Event $event = null)
-    {
-    }
+    use SymfonyCompatibilityTrait;
 
     /**
      * Adds an event listener that listens on the specified events.
@@ -114,24 +68,17 @@ class ConsoleEvent extends \Symfony\Component\Console\Event\ConsoleEvent impleme
     }
 
     /**
-     * Stores the EventDispatcher that dispatches this Event.
+     * Dispatches an event to all registered listeners.
      *
-     * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $dispatcher
+     * @param string $eventName The name of the event to dispatch. The name of
+     *                          the event is the name of the method that is
+     *                          invoked on listeners.
+     * @param Event $event The event to pass to the event handlers/listeners
+     *                          If not supplied, an empty Event instance is created
      *
-     * @deprecated since version 2.4, to be removed in 3.0. The event dispatcher is passed to the listener call.
+     * @return Event
      */
-    public function setDispatcher(\Symfony\Component\EventDispatcher\EventDispatcherInterface $dispatcher)
-    {
-    }
-
-    /**
-     * Returns the EventDispatcher that dispatches this Event.
-     *
-     * @return \Symfony\Component\EventDispatcher\EventDispatcher
-     *
-     * @deprecated since version 2.4, to be removed in 3.0. The event dispatcher is passed to the listener call.
-     */
-    public function getDispatcher()
+    public function dispatch($eventName, Event $event = null)
     {
     }
 }
