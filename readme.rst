@@ -35,6 +35,18 @@ Compatibility
 The tools will automatically be tested for multiple PHP versions. It's currently running in various Linux distributions and Mac OS X.
 Microsoft Windows is not fully supported (some Commands like `db:dump` or `install` are excluded).
 
+We support the following Magento Versions:
+
+- 2.3.x Open Source/Commerce
+- 2.2.x Open Source/Commerce
+- 2.1.x Open Source/Commerce
+
+We support the following PHP Versions:
+
+- PHP 7.0
+- PHP 7.1
+- PHP 7.2
+
 Installation
 ------------
 
@@ -60,6 +72,14 @@ Verify the download by comparing the SHA256 checksum with the one on the website
 .. code-block:: sh
 
     shasum -a256 n98-magerun2.phar
+
+It is also possible to verify automatically:
+
+.. code-block:: sh
+
+   curl -sS -O https://files.magerun.net/n98-magerun2-latest.phar
+   curl -sS -o n98-magerun2-latest.phar.sha256 https://files.magerun.net/sha256.php?file=n98-magerun2-latest.phar
+   shasum -a 256 -c n98-magerun2-latest.phar.sha256
 
 If it shows the same checksum as on the website, you downloaded the file successfully.
 
