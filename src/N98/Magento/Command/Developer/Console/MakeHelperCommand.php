@@ -23,6 +23,7 @@ class MakeHelperCommand extends AbstractGeneratorCommand
      * @param OutputInterface $output
      *
      * @return int|void
+     * @throws \Magento\Framework\Exception\FileSystemException
      */
     protected function catchedExecute(InputInterface $input, OutputInterface $output)
     {

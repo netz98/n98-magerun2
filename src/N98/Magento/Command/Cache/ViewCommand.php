@@ -67,6 +67,7 @@ class ViewCommand extends AbstractMagentoCommand
      * @param OutputInterface $output
      * @return int|void
      * @throws RuntimeException
+     * @throws \Exception
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -103,9 +104,9 @@ class ViewCommand extends AbstractMagentoCommand
     private function decorateSerialized($serialized)
     {
         if (version_compare(phpversion(), '7.0', '>=')) {
-            $unserialized = unserialize($serialized, false);
+            $unserialized = \unserialize($serialized, false);
         } else {
-            $unserialized = unserialize($serialized);
+            $unserialized = \unserialize($serialized);
         }
 
         if ($unserialized === false) {

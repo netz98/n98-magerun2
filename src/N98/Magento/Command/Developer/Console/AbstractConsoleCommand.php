@@ -55,6 +55,7 @@ abstract class AbstractConsoleCommand extends ReflectingCommand
      * @param InputInterface $input
      * @param OutputInterface $output
      * @return int
+     * @throws \Exception
      */
     public function callMagerunCommand($commandName, InputInterface $input, OutputInterface $output)
     {
@@ -71,6 +72,7 @@ abstract class AbstractConsoleCommand extends ReflectingCommand
      * @param InputInterface $input
      * @param OutputInterface $output
      * @return int
+     * @throws \Exception
      */
     public function callCommand(InputInterface $input, OutputInterface $output)
     {

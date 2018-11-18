@@ -228,21 +228,19 @@ class ConfigurationLoader
             /**
              * Allow modules to be placed vendor folder if not in phar mode
              */
-            if (!$this->_isPharMode) {
-                if (is_dir($this->getVendorDir())) {
-                    $finder = Finder::create();
-                    $finder
-                        ->files()
-                        ->depth(2)
-                        ->followLinks()
-                        ->ignoreUnreadableDirs(true)
-                        ->name($customFilename)
-                        ->in($this->getVendorDir());
+            if (!$this->_isPharMode && is_dir($this->getVendorDir())) {
+                $finder = Finder::create();
+                $finder
+                    ->files()
+                    ->depth(2)
+                    ->followLinks()
+                    ->ignoreUnreadableDirs(true)
+                    ->name($customFilename)
+                    ->in($this->getVendorDir());
 
-                    foreach ($finder as $file) {
-                        /* @var $file SplFileInfo */
-                        $this->registerPluginConfigFile($magentoRootFolder, $file);
-                    }
+                foreach ($finder as $file) {
+                    /* @var $file SplFileInfo */
+                    $this->registerPluginConfigFile($magentoRootFolder, $file);
                 }
             }
 
@@ -352,7 +350,7 @@ class ConfigurationLoader
         } else {
             $path = $file->getRealPath();
 
-            if ($path === "") {
+            if ($path === '') {
                 throw new \UnexpectedValueException(sprintf("Realpath for '%s' did return an empty string.", $file));
             }
 

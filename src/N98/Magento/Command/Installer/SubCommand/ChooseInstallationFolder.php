@@ -39,7 +39,7 @@ class ChooseInstallationFolder extends AbstractSubCommand
 
         if (($installationFolder = $input->getOption('installationFolder')) == null) {
             $defaultFolder = './magento';
-            $question[] = "<question>Enter installation folder:</question> [<comment>" . $defaultFolder . "</comment>]";
+            $question[] = '<question>Enter installation folder:</question> [<comment>' . $defaultFolder . '</comment>]';
 
             $installationFolder = $this->getCommand()->getHelper('dialog')->askAndValidate(
                 $this->output,

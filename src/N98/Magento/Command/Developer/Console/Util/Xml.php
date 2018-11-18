@@ -17,7 +17,7 @@ class Xml
 
         $dom->loadXML($xmlString);
 
-        return preg_replace('%(^\s*)%m', '$1$1', $dom->saveXml());
+        return preg_replace('%(^\s*)%m', '$1$1', $dom->saveXML());
     }
 
     /**
@@ -64,7 +64,7 @@ class Xml
                 list($key, $value) = explode('=', $pair);
 
                 if (strpos($key, '@') !== 0) {
-                    throw new \Exception("Invalid Attribute Key");
+                    throw new \Exception('Invalid Attribute Key');
                 }
 
                 $key = trim($key, '@');

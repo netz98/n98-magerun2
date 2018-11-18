@@ -79,7 +79,7 @@ class ComposerHelper extends AbstractHelper implements InputAwareInterface
             $jsonCode = 'false';
         }
 
-        return json_decode($jsonCode);
+        return \json_decode($jsonCode);
     }
 
     /**
@@ -99,9 +99,7 @@ class ComposerHelper extends AbstractHelper implements InputAwareInterface
         $commandArgs[] = $key;
         $commandArgs = array_merge($commandArgs, $values);
 
-        $composerOutput = $this->run($commandArgs, false);
-
-        return $composerOutput;
+        return $this->run($commandArgs, false);
     }
 
     /**

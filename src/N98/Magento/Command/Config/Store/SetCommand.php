@@ -41,10 +41,10 @@ class SetCommand extends AbstractConfigCommand
                 'The config value should be encrypted using env.php\'s crypt key'
             )
             ->addOption(
-                "no-null",
+                'no-null',
                 null,
                 InputOption::VALUE_NONE,
-                "Do not treat value NULL as " . self::DISPLAY_NULL_UNKOWN_VALUE . " value"
+                'Do not treat value NULL as ' . self::DISPLAY_NULL_UNKOWN_VALUE . ' value'
             )
         ;
 
@@ -60,6 +60,7 @@ HELP;
      * @param \Symfony\Component\Console\Input\InputInterface $input
      * @param \Symfony\Component\Console\Output\OutputInterface $output
      * @return int|void
+     * @throws \Exception
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -74,9 +75,9 @@ HELP;
 
         $valueDisplay = $value = $input->getArgument('value');
 
-        if ($value === "NULL" && !$input->getOption('no-null')) {
+        if ($value === 'NULL' && !$input->getOption('no-null')) {
             if ($input->getOption('encrypt')) {
-                throw new \InvalidArgumentException("Encryption is not possbile for NULL values");
+                throw new \InvalidArgumentException('Encryption is not possbile for NULL values');
             }
             $value = null;
             $valueDisplay = self::DISPLAY_NULL_UNKOWN_VALUE;
@@ -93,7 +94,7 @@ HELP;
         );
 
         $output->writeln(
-            '<comment>' . $input->getArgument('path') . "</comment> => <comment>" . $valueDisplay .
+            '<comment>' . $input->getArgument('path') . '</comment> => <comment>' . $valueDisplay .
             '</comment>'
         );
     }

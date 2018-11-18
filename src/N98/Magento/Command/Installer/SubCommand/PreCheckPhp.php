@@ -1,5 +1,7 @@
 <?php
 
+/** @noinspection PhpComposerExtensionStubsInspection */
+
 namespace N98\Magento\Command\Installer\SubCommand;
 
 use N98\Magento\Command\SubCommand\AbstractSubCommand;
@@ -39,13 +41,17 @@ class PreCheckPhp extends AbstractSubCommand
 
     /**
      * @throws \RuntimeException
+     * @return void
      */
     protected function checkXDebug()
     {
-        if (extension_loaded('xdebug') && xdebug_is_enabled() && ini_get('xdebug.max_nesting_level') != -1 && ini_get('xdebug.max_nesting_level') < 200) {
+        if (\extension_loaded('xdebug') &&
+            \xdebug_is_enabled() && ini_get('xdebug.max_nesting_level') != -1
+            && \ini_get('xdebug.max_nesting_level') < 200
+        ) {
             $errorMessage = 'Please change PHP ini setting "xdebug.max_nesting_level". '
                             . 'Please change it to a value >= 200. '
-                            . 'Your current value is ' . ini_get('xdebug.max_nesting_level');
+                            . 'Your current value is ' . \ini_get('xdebug.max_nesting_level');
             throw new \RuntimeException($errorMessage);
         }
     }

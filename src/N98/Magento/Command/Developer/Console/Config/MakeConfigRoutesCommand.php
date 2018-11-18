@@ -38,10 +38,12 @@ class MakeConfigRoutesCommand extends AbstractSimpleConfigFileGeneratorCommand
     }
 
     /**
-     * @param InputInterface  $input
+     * @param InputInterface $input
      * @param OutputInterface $output
      *
      * @return int|void
+     * @throws \Magento\Framework\Exception\FileSystemException
+     * @throws \Exception
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -75,8 +77,8 @@ class MakeConfigRoutesCommand extends AbstractSimpleConfigFileGeneratorCommand
      * @param string $xml
      * @param string $type
      * @param string $frontname
-     *
      * @return string
+     * @throws \Exception
      */
     private function addRoute($xml, $type, $frontname)
     {
@@ -86,7 +88,7 @@ class MakeConfigRoutesCommand extends AbstractSimpleConfigFileGeneratorCommand
             </route>
         </router>*/
 
-        $xmlObj = simplexml_load_string($xml);
+        $xmlObj = \simplexml_load_string($xml);
 
         $routeId = $this->getCurrentModuleId();
         $moduleName = $this->getCurrentModuleName();

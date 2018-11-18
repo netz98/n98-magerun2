@@ -43,7 +43,7 @@ class DataUpdate extends AbstractSubCommand
                     $this->output->writeln("\n" . '<debug>' . $moduleName . '</debug>');
                 }
 
-                if (!$dbVersionInfo->isDataUpToDate($moduleName, $resourceName)) {
+                if (!$dbVersionInfo->isDataUpToDate($moduleName)) {
                     if (OutputInterface::VERBOSITY_VERBOSE <= $this->output->getVerbosity()) {
                         $this->output->writeln("\n" . '<debug>Run ' . $resourceName . '</debug>');
                     }

@@ -31,7 +31,7 @@ class MagentoHelper extends AbstractHelper implements DetectionResultInterface
     /**
      * @var int
      */
-    protected $_magentoMajorVersion = \N98\Magento\Application::MAGENTO_MAJOR_VERSION_1;
+    protected $_magentoMajorVersion = Application::MAGENTO_MAJOR_VERSION_1;
 
     /**
      * @var bool
@@ -371,6 +371,7 @@ class MagentoHelper extends AbstractHelper implements DetectionResultInterface
      *
      * @return array
      * @throws RuntimeException
+     * @throws \Magento\Framework\Exception\FileSystemException
      */
     public function getBaseConfig()
     {
@@ -381,6 +382,10 @@ class MagentoHelper extends AbstractHelper implements DetectionResultInterface
         return $this->baseConfig;
     }
 
+    /**
+     * @throws \Magento\Framework\Exception\FileSystemException
+     * @throws \Exception
+     */
     private function initBaseConfig()
     {
         $this->baseConfig = [];

@@ -22,6 +22,7 @@ class CreateDatabase extends AbstractSubCommand
 
     /**
      * @return void
+     * @throws \Exception
      */
     public function execute()
     {
@@ -54,7 +55,7 @@ class CreateDatabase extends AbstractSubCommand
             $db = $this->validateDatabaseSettings($this->input, $this->output);
 
             if ($db === false) {
-                throw new \InvalidArgumentException("Database configuration is invalid", null);
+                throw new \InvalidArgumentException('Database configuration is invalid', null);
             }
         } else {
             /** @var DialogHelper $dialog */
@@ -80,14 +81,14 @@ class CreateDatabase extends AbstractSubCommand
                     $this->input->getOption('dbPort') : $this->commandConfig['installation']['db']['port'];
                 $this->config->setInt(
                     'db_port',
-                    intval($dialog->askAndValidate(
+                    (int) $dialog->askAndValidate(
                         $this->output,
                         '<question>Please enter the database port </question> <comment>[' .
                         $dbPortDefault . ']</comment>: ',
                         $this->notEmptyCallback,
                         false,
                         $dbPortDefault
-                    ))
+                    )
                 );
 
                 // User
@@ -149,7 +150,7 @@ class CreateDatabase extends AbstractSubCommand
     {
         try {
             $dsn = sprintf(
-                "mysql:host=%s;port=%s",
+                'mysql:host=%s;port=%s',
                 $this->config->getString('db_host'),
                 $this->config->getString('db_port')
             );
@@ -158,7 +159,7 @@ class CreateDatabase extends AbstractSubCommand
 
             $dbName = $this->config->getString('db_name');
             if (!$db->query('USE `' . $dbName . '`')) {
-                $db->query("CREATE DATABASE `" . $dbName . "`");
+                $db->query('CREATE DATABASE `' . $dbName . '`');
                 $output->writeln('<info>Created database ' . $dbName . '</info>');
                 $db->query('USE `' . $dbName . '`');
 

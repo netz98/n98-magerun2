@@ -42,7 +42,8 @@ HELP;
     /**
      * @param InputInterface $input
      * @param OutputInterface $output
-     * @return int|null
+     * @return int
+     * @throws \Exception
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -64,6 +65,8 @@ HELP;
         $table = $this->getModuleTable($ignoreDataUpdate, $headers, $errors);
 
         $this->output($input, $output, $headers, $table, $junit, $errors);
+
+        return 0;
     }
 
     /**

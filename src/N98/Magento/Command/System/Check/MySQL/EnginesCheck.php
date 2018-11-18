@@ -43,9 +43,9 @@ class EnginesCheck implements SimpleCheck
         $result->setStatus($innodbFound ? Result::STATUS_OK : Result::STATUS_ERROR);
 
         if ($innodbFound) {
-            $result->setMessage("<info>Required MySQL Storage Engine <comment>InnoDB</comment> found.</info>");
+            $result->setMessage('<info>Required MySQL Storage Engine <comment>InnoDB</comment> found.</info>');
         } else {
-            $result->setMessage("<error>Required MySQL Storage Engine \"InnoDB\" not found!</error>");
+            $result->setMessage('<error>Required MySQL Storage Engine "InnoDB" not found!</error>');
         }
     }
 }

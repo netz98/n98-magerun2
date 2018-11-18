@@ -56,6 +56,9 @@ class MakeTableCommand extends AbstractGeneratorCommand
      * @param OutputInterface $output
      *
      * @return int|void
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -397,6 +400,9 @@ class MakeTableCommand extends AbstractGeneratorCommand
      * @param OutputInterface $output
      * @param DDLTable $table
      * @return void
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
      */
     private function generateCode(
         InputInterface $input,

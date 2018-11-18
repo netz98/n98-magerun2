@@ -4,7 +4,6 @@ namespace N98\Magento\Command\Customer;
 
 use Exception;
 use Magento\Framework\App\Area;
-use Magento\Framework\Exception\NoSuchEntityException;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -72,10 +71,10 @@ HELP;
     }
 
     /**
-     * @param InputInterface  $input
+     * @param InputInterface $input
      * @param OutputInterface $output
-     *
      * @return int|void
+     * @throws \Exception
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -129,8 +128,6 @@ HELP;
                 $this->state->emulateAreaCode(Area::AREA_FRONTEND, $changePassword);
 
                 $output->writeln('<info>Password successfully changed</info>');
-            } catch (NoSuchEntityException $e) {
-                $output->writeln('<error>Customer could not be found.</error>');
             } catch (Exception $e) {
                 $output->writeln('<error>' . $e->getMessage() . '</error>');
             }

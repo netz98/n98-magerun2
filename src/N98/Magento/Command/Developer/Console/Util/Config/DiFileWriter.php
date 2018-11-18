@@ -19,7 +19,7 @@ XML;
      * @param string $commandName
      * @param string $commandClass
      *
-     * @return DiFileWriter
+     * @return DiFileWriter|null
      */
     public function addConsoleCommand($commandName, $commandClass)
     {
@@ -35,7 +35,7 @@ XML;
 
         $commandAlreadyExistsQuery = $xpath->query("//item[text()='$commandClass']");
         if ($commandAlreadyExistsQuery->length > 0) {
-            return;
+            return null;
         }
 
         $argumentElementQuery = $xpath->query(

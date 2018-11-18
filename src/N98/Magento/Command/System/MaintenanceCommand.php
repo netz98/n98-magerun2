@@ -41,7 +41,9 @@ class MaintenanceCommand extends AbstractMagentoCommand
     /**
      * @param \Symfony\Component\Console\Input\InputInterface $input
      * @param \Symfony\Component\Console\Output\OutputInterface $output
-     * @return int|void
+     * @return int
+     * @throws \Magento\Framework\Exception\FileSystemException
+     * @throws \Exception
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -81,6 +83,7 @@ class MaintenanceCommand extends AbstractMagentoCommand
      * @param \Magento\Framework\Filesystem\Directory\Write $flagDir
      * @param OutputInterface $output
      * @param null $offOption
+     * @throws \Magento\Framework\Exception\FileSystemException
      */
     protected function handleDisable(
         \Magento\Framework\Filesystem\Directory\Write $flagDir,
@@ -101,6 +104,7 @@ class MaintenanceCommand extends AbstractMagentoCommand
      * @param \Magento\Framework\Filesystem\Directory\Write $flagDir
      * @param OutputInterface $output
      * @param null $onOption
+     * @throws \Magento\Framework\Exception\FileSystemException
      */
     protected function handleEnable(
         \Magento\Framework\Filesystem\Directory\Write $flagDir,

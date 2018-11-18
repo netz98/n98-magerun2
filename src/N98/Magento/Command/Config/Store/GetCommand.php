@@ -177,7 +177,7 @@ HELP;
                     break;
                 default:
                     throw new \UnexpectedValueException(
-                        sprintf("Unhandled format %s", var_export($value, true))
+                        sprintf('Unhandled format %s', var_export($value, true))
                     );
             }
         }
@@ -230,8 +230,8 @@ HELP;
                 $value = str_replace(array("\n", "\r"), array('\n', '\r'), $value);
             }
 
-            $disaplayValue = $value === null ? "NULL" : escapeshellarg($value);
-            $protectNullString = $value === "NULL" ? '--no-null ' : '';
+            $disaplayValue = $value === null ? 'NULL' : escapeshellarg($value);
+            $protectNullString = $value === 'NULL' ? '--no-null ' : '';
 
             $line = sprintf(
                 'config:store:set %s--scope-id=%s --scope=%s -- %s %s',

@@ -41,6 +41,7 @@ class CreateCommand extends AbstractMagentoCommand
      * @param \Symfony\Component\Console\Output\OutputInterface $output
      * @return int|void
      * @throws \InvalidArgumentException
+     * @throws \Exception
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {

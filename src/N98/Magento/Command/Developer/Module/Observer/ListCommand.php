@@ -58,6 +58,7 @@ class ListCommand extends AbstractMagentoCommand
 
     /**
      * {@inheritdoc}
+     * @throws \Exception
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {

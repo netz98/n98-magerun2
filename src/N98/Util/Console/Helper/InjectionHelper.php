@@ -57,6 +57,7 @@ class InjectionHelper extends AbstractHelper
      * @param string $class
      * @param string $methodName
      * @return array
+     * @throws \ReflectionException
      */
     protected function getMethod($class, $methodName)
     {
@@ -68,7 +69,7 @@ class InjectionHelper extends AbstractHelper
         $method = $refl->getMethod($methodName);
         if (!$method) {
             throw new \InvalidArgumentException(
-                sprintf("Unable to obtain method \"%s\" for class \"%s\"", $class, $methodName)
+                sprintf('Unable to obtain method "%s" for class "%s"', $class, $methodName)
             );
         }
 

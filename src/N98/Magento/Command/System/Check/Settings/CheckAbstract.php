@@ -50,9 +50,9 @@ abstract class CheckAbstract implements StoreCheck
     }
 
     /**
-     * @param ResultCollection       $results
+     * @param ResultCollection $results
      * @param StoreInterface $store
-     *
+     * @throws \ReflectionException
      */
     public function check(ResultCollection $results, StoreInterface $store)
     {

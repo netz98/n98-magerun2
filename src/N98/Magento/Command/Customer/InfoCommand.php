@@ -32,6 +32,7 @@ class InfoCommand extends AbstractCustomerCommand
      * @param \Symfony\Component\Console\Output\OutputInterface $output
      *
      * @return int|void
+     * @throws \Exception
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -110,7 +111,7 @@ class InfoCommand extends AbstractCustomerCommand
         if ($customerId <= 0) {
             $output->writeln('<error>Customer was not found</error>');
 
-            return;
+            return null;
         }
 
         $customer->load($customerId);

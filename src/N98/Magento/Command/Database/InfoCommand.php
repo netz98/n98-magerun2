@@ -36,10 +36,11 @@ HELP;
     }
 
     /**
-     * @param InputInterface  $input
+     * @param InputInterface $input
      * @param OutputInterface $output
      *
      * @throws InvalidArgumentException
+     * @throws \Magento\Framework\Exception\FileSystemException
      * @return void
      */
     protected function execute(InputInterface $input, OutputInterface $output)

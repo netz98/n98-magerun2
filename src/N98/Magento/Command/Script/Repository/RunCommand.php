@@ -45,6 +45,12 @@ HELP;
             ->setHelp($help);
     }
 
+    /**
+     * @param \Symfony\Component\Console\Input\InputInterface $input
+     * @param \Symfony\Component\Console\Output\OutputInterface $output
+     * @return int|null|void
+     * @throws \Exception
+     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $files = $this->getScripts();
@@ -90,7 +96,8 @@ HELP;
         if ($input->getOption('stop-on-error')) {
             $scriptArray['--stop-on-error'] = true;
         }
+
         $input = new ArrayInput($scriptArray);
-        $this->getApplication()->run($input, $output);
+        return $this->getApplication()->run($input, $output);
     }
 }

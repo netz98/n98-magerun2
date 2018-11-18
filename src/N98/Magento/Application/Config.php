@@ -152,7 +152,7 @@ class Config
 
     /**
      * @param string $className
-     * @param string|null $commandName
+     * @param mixed $commandName
      * @return Command
      * @throws InvalidArgumentException
      */
@@ -240,6 +240,9 @@ class Config
         return $this->loader;
     }
 
+    /**
+     * @throws \ErrorException
+     */
     public function load()
     {
         $this->config = $this->getLoader()->toArray();
@@ -312,6 +315,10 @@ class Config
         return $result;
     }
 
+    /**
+     * @param array $keys
+     * @return array|mixed|void
+     */
     private function traverse(array $keys)
     {
         $anchor = &$this->config;

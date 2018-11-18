@@ -36,6 +36,9 @@ class TwigHelper extends Helper
      * @param string $template
      * @param array $variables
      * @return mixed
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
      */
     public function render($template, $variables = array())
     {
@@ -45,10 +48,13 @@ class TwigHelper extends Helper
     /**
      * Renders a twig string
      *
-     * @param       $string
+     * @param string $string
      * @param array $variables
      *
      * @return string
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
      */
     public function renderString($string, $variables = array())
     {

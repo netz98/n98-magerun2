@@ -34,6 +34,7 @@ class ViewCommand extends AbstractAttributeCommand
      * @param  OutputInterface $output
      * @return void
      * @throws InvalidArgumentException If the attribute doesn't exist
+     * @throws \Exception
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {

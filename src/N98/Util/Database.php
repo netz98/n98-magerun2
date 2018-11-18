@@ -18,9 +18,9 @@ class Database
         set_time_limit(0);
 
         if (is_file($file) === true) {
-            $file = fopen($file, 'r');
+            $file = \fopen($file, 'r');
 
-            if (is_resource($file) === true) {
+            if (\is_resource($file) === true) {
                 $query = [];
 
                 while (feof($file) === false) {

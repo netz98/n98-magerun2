@@ -20,7 +20,7 @@ class XmlRenderer implements RendererInterface
         foreach ($rows as $row) {
             $rowXml = $dom->createElement('row');
             foreach ($row as $key => $value) {
-                $key = preg_replace("/[^A-Za-z0-9]/u", '_', $key);
+                $key = preg_replace('/[^A-Za-z0-9]/u', '_', $key);
                 $rowXml->appendChild($dom->createElement($key, @iconv('UTF-8', 'UTF-8//IGNORE', $value)));
             }
             $rootXml->appendChild($rowXml);

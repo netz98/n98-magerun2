@@ -30,6 +30,8 @@ class MakeModuleCommand extends AbstractGeneratorCommand
      * @param OutputInterface $output
      *
      * @return int|void
+     * @throws \Magento\Framework\Exception\FileSystemException
+     * @throws \Exception
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -58,6 +60,7 @@ class MakeModuleCommand extends AbstractGeneratorCommand
      * @param OutputInterface $output
      * @param ModuleNameStructure $moduleName
      * @return int
+     * @throws \Exception
      */
     private function changeToNewModule(OutputInterface $output, ModuleNameStructure $moduleName)
     {
@@ -73,6 +76,7 @@ class MakeModuleCommand extends AbstractGeneratorCommand
     /**
      * @param ModuleNameStructure $moduleName
      * @param WriteInterface $appDirectoryWriter
+     * @throws \Magento\Framework\Exception\FileSystemException
      */
     private function createRegistrationFile(ModuleNameStructure $moduleName, WriteInterface $appDirectoryWriter)
     {
@@ -95,6 +99,7 @@ FILE_BODY;
     /**
      * @param ModuleNameStructure $moduleName
      * @param WriteInterface $appDirectoryWriter
+     * @throws \Magento\Framework\Exception\FileSystemException
      */
     private function createComposerFile(ModuleNameStructure $moduleName, WriteInterface $appDirectoryWriter)
     {
@@ -139,6 +144,7 @@ FILE_BODY;
     /**
      * @param ModuleNameStructure $moduleName
      * @param WriteInterface $appDirectoryWriter
+     * @throws \Magento\Framework\Exception\FileSystemException
      */
     private function createTestDirectories(ModuleNameStructure $moduleName, WriteInterface $appDirectoryWriter)
     {
@@ -157,11 +163,11 @@ FILE_BODY;
             'code/' . $moduleName->getVendorName() . '/' . $moduleName->getShortModuleName() . '/registration.php'
         );
 
-        include($moduleRegistrationFile);
+        include $moduleRegistrationFile;
     }
 
     /**
-     * @return voic
+     * @return void
      */
     private function cleanClassCache()
     {
