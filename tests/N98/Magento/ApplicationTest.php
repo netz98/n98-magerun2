@@ -158,11 +158,11 @@ class ApplicationTest extends TestCase
             )
         );
 
-        $configurationLoader = $this->createMock(
-            '\N98\Magento\Application\ConfigurationLoader',
-            array('getConfigurationLoaderDir'),
-            array(array(), false, new NullOutput())
-        );
+        $configurationLoader = $this->getMockBuilder(\N98\Magento\Application\ConfigurationLoader::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['getConfigurationLoaderDir'])
+            ->getMock();
+
         $configurationLoader
             ->expects($this->any())
             ->method('getConfigurationLoaderDir')
