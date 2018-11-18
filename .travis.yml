@@ -60,10 +60,6 @@ matrix:
       php: 7.0
       env: MAGENTO_VERSION="magento-ce-2.1.15" INSTALL_SAMPLE_DATA=0 PHPUNIT_EXCLUDE_GROUPS=exclude-2.1
 
-    - name: Magento 2.1.15 PHP 5.6
-      php: 5.6
-      env: MAGENTO_VERSION="magento-ce-2.1.15" INSTALL_SAMPLE_DATA=0 PHPUNIT_EXCLUDE_GROUPS=exclude-2.1
-
     # Run the cs-fixer and build script with different PHP versions
     - name: PHP-CS Fixer PHP 7.0
       php: 7.0
