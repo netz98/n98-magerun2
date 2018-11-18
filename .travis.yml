@@ -23,6 +23,25 @@ env:
 matrix:
   fast_finish: true
   include:
+    # Lint PHP code with future PHP versions (forward compatibility)
+    - name: PHP 7.2 Lint
+      php: 7.2
+      env: SCRIPT_JOB=LINTSH
+      script: find {src,tests} -name "*.php" ! -path '*/String.php' -print0 | xargs
+        -0 -n1 -P8 php -l | grep -v '^No syntax errors detected'; test $? -eq 1
+
+    - name: PHP 7.1 Lint
+      php: 7.1
+      env: SCRIPT_JOB=LINTSH
+      script: find {src,tests} -name "*.php" ! -path '*/String.php' -print0 | xargs
+        -0 -n1 -P8 php -l | grep -v '^No syntax errors detected'; test $? -eq 1
+
+    - name: SH Lint
+      php: 7.2
+      env: SCRIPT_JOB=LINTSH
+      script: find {src,tests} -name "*.php" ! -path '*/String.php' -print0 | xargs
+        -0 -n1 -P8 php -l | grep -v '^No syntax errors detected'; test $? -eq 1
+
     # Magento Versions
 
     - name: Magento 2.3.0 PHP 7.2
@@ -44,19 +63,6 @@ matrix:
     - name: Magento 2.1.15 PHP 5.6
       php: 5.6
       env: MAGENTO_VERSION="magento-ce-2.1.15" INSTALL_SAMPLE_DATA=0 PHPUNIT_EXCLUDE_GROUPS=exclude-2.1
-
-    # Lint PHP code with future PHP versions (forward compatibility)
-    - name: PHP 7.2 Lint
-      php: 7.2
-      env: SCRIPT_JOB=LINTSH
-      script: find {src,tests} -name "*.php" ! -path '*/String.php' -print0 | xargs
-        -0 -n1 -P8 php -l | grep -v '^No syntax errors detected'; test $? -eq 1
-
-    - name: SH Lint
-      php: 7.2
-      env: SCRIPT_JOB=LINTSH
-      script: find {src,tests} -name "*.php" ! -path '*/String.php' -print0 | xargs
-        -0 -n1 -P8 php -l | grep -v '^No syntax errors detected'; test $? -eq 1
 
     # Run the cs-fixer and build script with different PHP versions
     - name: PHP-CS Fixer PHP 7.0
