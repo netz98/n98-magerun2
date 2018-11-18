@@ -21,14 +21,24 @@ class MagentoDetector
      * @param \Symfony\Component\Console\Output\OutputInterface|null $output
      * @param \N98\Magento\Application\Config $config
      * @param \Symfony\Component\Console\Helper\HelperSet $helperSet
+     * @param string $magentoRootDirectory
      * @return \N98\Magento\Application\DetectionResult
      */
-    public function detect(InputInterface $input, OutputInterface $output, Config $config, HelperSet $helperSet)
-    {
+    public function detect(
+        InputInterface $input,
+        OutputInterface $output,
+        Config $config,
+        HelperSet $helperSet,
+        $magentoRootDirectory = null
+    ) {
         $input = $input ?: new ArgvInput();
         $output = $output ?: new ConsoleOutput();
 
         $folder = OperatingSystem::getCwd();
+
+        if ($magentoRootDirectory) {
+            $folder = $magentoRootDirectory;
+        }
 
         if ($this->_checkRootDirOption($input)) {
             $subFolders = [$folder];
@@ -40,7 +50,7 @@ class MagentoDetector
         /* @var $magentoHelper MagentoHelper */
         $magentoHelper = $helperSet->get('magento');
 
-        return new DetectionResult($magentoHelper, $folder, $subFolders);
+        return new DetectionResult($magentoHelper, $folder, $subFolders); // @TODO must be refactored
     }
 
     /**

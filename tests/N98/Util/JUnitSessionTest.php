@@ -13,7 +13,7 @@ use N98\JUnitXml\Document;
  * @package N98\Util
  * @covers N98\Util\JUnitSession
  */
-class JUnitSessionTest extends \PHPUnit_Framework_TestCase
+class JUnitSessionTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @test

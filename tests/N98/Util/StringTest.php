@@ -2,7 +2,7 @@
 
 namespace N98\Util;
 
-class StringTest extends \PHPUnit_Framework_TestCase
+class StringTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @test

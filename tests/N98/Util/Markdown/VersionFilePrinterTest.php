@@ -2,7 +2,7 @@
 
 namespace N98\Util\Markdown;
 
-class VersionFilePrinterTest extends \PHPUnit_Framework_TestCase
+class VersionFilePrinterTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @test

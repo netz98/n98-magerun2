@@ -2,7 +2,9 @@
 
 namespace N98\Magento\Command\Developer\Console\Util;
 
-class XmlTest extends \PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+
+class XmlTest extends TestCase
 {
     /**
      * @test

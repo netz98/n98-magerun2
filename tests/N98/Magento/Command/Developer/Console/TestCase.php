@@ -69,7 +69,7 @@ abstract class TestCase extends BaseTestCase
     {
         $path = sprintf(__DIR__ . '/_files/reference/%s.php', ucfirst($reference));
 
-        $writerMock = $this->getMock(WriteInterface::class);
+        $writerMock = $this->createMock(WriteInterface::class);
         $writerMock
             ->expects($this->once())
             ->method('writeFile')

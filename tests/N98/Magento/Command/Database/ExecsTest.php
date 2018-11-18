@@ -7,6 +7,7 @@ namespace N98\Magento\Command\Database;
 
 use N98\Magento\Command\Database\Compressor\AbstractCompressor;
 use N98\Magento\Command\Database\Compressor\Uncompressed;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class ExecsTest
@@ -14,7 +15,7 @@ use N98\Magento\Command\Database\Compressor\Uncompressed;
  * @covers \N98\Magento\Command\Database\Execs
  * @package N98\Magento\Command\Database
  */
-class ExecsTest extends \PHPUnit_Framework_TestCase
+class ExecsTest extends TestCase
 {
     /**
      * @test

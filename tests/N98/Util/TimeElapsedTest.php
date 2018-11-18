@@ -5,7 +5,7 @@
 
 namespace N98\Util;
 
-class TimeElapsedTest extends \PHPUnit_Framework_TestCase
+class TimeElapsedTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @test
