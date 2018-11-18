@@ -9,7 +9,7 @@
          convertWarningsToExceptions="true"
          forceCoversAnnotation="false"
          mapTestClassNameToCoveredClassName="false"
-         processIsolation="false"
+         processIsolation="true"
          stopOnError="false"
          stopOnFailure="false"
          stopOnIncomplete="false"

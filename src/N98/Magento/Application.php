@@ -563,6 +563,11 @@ class Application extends BaseApplication
     protected function registerEventSubscribers()
     {
         $config = $this->config->getConfig();
+
+        if (!isset($config['event']['subscriber'])) {
+            return;
+        }
+
         $subscriberClasses = $config['event']['subscriber'];
         foreach ($subscriberClasses as $subscriberClass) {
             $subscriber = new $subscriberClass();
@@ -579,6 +584,10 @@ class Application extends BaseApplication
     {
         $helperSet = $this->getHelperSet();
         $config = $this->config->getConfig();
+
+        if (empty($config)) {
+            return;
+        }
 
         // Twig
         $twigBaseDirs = [
