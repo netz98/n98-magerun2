@@ -126,14 +126,12 @@ HELP;
             $output->writeln($exec);
 
             return;
-        } else {
-            if ($input->getOption('only-if-empty')
-                && count($dbHelper->getTables()) > 0
-            ) {
-                $output->writeln('<comment>Skip import. Database is not empty</comment>');
+        } elseif ($input->getOption('only-if-empty')
+            && count($dbHelper->getTables()) > 0
+        ) {
+            $output->writeln('<comment>Skip import. Database is not empty</comment>');
 
-                return;
-            }
+            return;
         }
 
         if ($input->getOption('optimize')) {

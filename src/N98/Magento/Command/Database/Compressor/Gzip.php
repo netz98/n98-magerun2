@@ -67,12 +67,10 @@ class Gzip extends AbstractCompressor
             } else {
                 $fileName .= '.sql.gz';
             }
+        } elseif (substr($fileName, -4, 4) === '.tgz') {
+            return $fileName;
         } else {
-            if (substr($fileName, -4, 4) === '.tgz') {
-                return $fileName;
-            } else {
-                $fileName .= '.tgz';
-            }
+            $fileName .= '.tgz';
         }
 
         return $fileName;

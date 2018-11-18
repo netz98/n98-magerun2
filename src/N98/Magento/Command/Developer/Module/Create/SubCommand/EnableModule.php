@@ -9,6 +9,7 @@ class EnableModule extends AbstractSubCommand
 {
     /**
      * @return void
+     * @throws \Exception
      */
     public function execute()
     {

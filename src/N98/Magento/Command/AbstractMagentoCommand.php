@@ -163,7 +163,7 @@ abstract class AbstractMagentoCommand extends Command
             );
         }
 
-        if (!empty($this->_magentoRootFolder)) {
+        if ($this->_magentoRootFolder !== null) {
             return;
         }
 
@@ -351,6 +351,7 @@ abstract class AbstractMagentoCommand extends Command
      * @param OutputInterface $output
      *
      * @return int
+     * @throws \Exception
      */
     public function run(InputInterface $input, OutputInterface $output)
     {
@@ -363,6 +364,8 @@ abstract class AbstractMagentoCommand extends Command
 
     /**
      * @param OutputInterface $output
+     * @throws \ReflectionException
+     * @throws \Exception
      */
     public function injectObjects(OutputInterface $output)
     {

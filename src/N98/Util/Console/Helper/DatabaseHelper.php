@@ -57,6 +57,7 @@ class DatabaseHelper extends AbstractHelper
      * @param OutputInterface|null $output
      *
      * @throws RuntimeException
+     * @throws \Magento\Framework\Exception\FileSystemException
      * @return void
      */
     public function detectDbSettings(OutputInterface $output)
@@ -109,6 +110,7 @@ class DatabaseHelper extends AbstractHelper
      *
      * @return PDO
      * @throws RuntimeException pdo mysql extension is not installed
+     * @throws \Magento\Framework\Exception\FileSystemException
      */
     public function getConnection(OutputInterface $output = null)
     {
@@ -152,7 +154,7 @@ class DatabaseHelper extends AbstractHelper
             }
         }
 
-        $this->_connection->query("SET NAMES utf8");
+        $this->_connection->query('SET NAMES utf8');
 
         $this->_connection->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
         $this->_connection->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true);
@@ -165,6 +167,7 @@ class DatabaseHelper extends AbstractHelper
      *
      * @see Zend_Db_Adapter_Pdo_Abstract
      * @return string
+     * @throws \Magento\Framework\Exception\FileSystemException
      */
     public function dsn()
     {
@@ -200,6 +203,7 @@ class DatabaseHelper extends AbstractHelper
      * @param string $privilege
      *
      * @return bool
+     * @throws \Magento\Framework\Exception\FileSystemException
      */
     public function mysqlUserHasPrivilege($privilege)
     {
@@ -219,6 +223,7 @@ class DatabaseHelper extends AbstractHelper
 
     /**
      * @return string
+     * @throws \Magento\Framework\Exception\FileSystemException
      */
     public function getMysqlClientToolConnectionString()
     {
@@ -248,6 +253,7 @@ class DatabaseHelper extends AbstractHelper
      * @param string $variable
      *
      * @return bool|array returns array on success, false on failure
+     * @throws \Magento\Framework\Exception\FileSystemException
      */
     public function getMysqlVariableValue($variable)
     {
@@ -270,23 +276,24 @@ class DatabaseHelper extends AbstractHelper
      * in difference to @see getMysqlVariableValue(), this method allows to specify the type of the variable as well
      * as to use any variable identifier even such that need quoting.
      *
-     * @param string      $name mysql variable name
+     * @param string $name mysql variable name
      * @param string|null $type [optional] variable type, can be a system variable ("@@", default) or a session variable
      *                     ("@").
      *
      * @return string variable value, null if variable was not defined
      * @throws RuntimeException in case a system variable is unknown (SQLSTATE[HY000]: 1193: Unknown system variable
-     *                          'nonexistent')
+     * 'nonexistent')
+     * @throws \Magento\Framework\Exception\FileSystemException
      */
     public function getMysqlVariable($name, $type = null)
     {
         if (null === $type) {
-            $type = "@@";
+            $type = '@@';
         } else {
             $type = (string) $type;
         }
 
-        if (!in_array($type, array("@@", "@"), true)) {
+        if (!in_array($type, array('@@', '@'), true)) {
             throw new InvalidArgumentException(
                 sprintf('Invalid mysql variable type "%s", must be "@@" (system) or "@" (session)', $type)
             );
@@ -366,6 +373,7 @@ class DatabaseHelper extends AbstractHelper
      *
      * @return array
      * @throws RuntimeException
+     * @throws \Magento\Framework\Exception\FileSystemException
      */
     public function resolveTables(array $list, array $definitions = array(), array $resolved = array())
     {
@@ -472,6 +480,7 @@ class DatabaseHelper extends AbstractHelper
      *
      * @return array
      * @throws RuntimeException
+     * @throws \Magento\Framework\Exception\FileSystemException
      */
     public function getTables($withoutPrefix = null)
     {
@@ -523,7 +532,7 @@ class DatabaseHelper extends AbstractHelper
      *
      * @throws RuntimeException
      */
-    private function throwRuntimeException(PDOStatement $statement, $message = "")
+    private function throwRuntimeException(PDOStatement $statement, $message = '')
     {
         $reason = $statement->errorInfo()
             ? vsprintf('SQLSTATE[%s]: %s: %s', $statement->errorInfo())
@@ -563,6 +572,7 @@ class DatabaseHelper extends AbstractHelper
      * @param bool $withoutPrefix
      *
      * @return array
+     * @throws \Magento\Framework\Exception\FileSystemException
      */
     public function getTablesStatus($withoutPrefix = false)
     {
@@ -623,6 +633,7 @@ class DatabaseHelper extends AbstractHelper
 
     /**
      * @param OutputInterface $output
+     * @throws \Magento\Framework\Exception\FileSystemException
      */
     public function dropDatabase(OutputInterface $output)
     {
@@ -634,6 +645,7 @@ class DatabaseHelper extends AbstractHelper
 
     /**
      * @param OutputInterface $output
+     * @throws \Magento\Framework\Exception\FileSystemException
      */
     public function dropTables(OutputInterface $output)
     {
@@ -651,6 +663,7 @@ class DatabaseHelper extends AbstractHelper
 
     /**
      * @param OutputInterface $output
+     * @throws \Magento\Framework\Exception\FileSystemException
      */
     public function createDatabase(OutputInterface $output)
     {
@@ -665,6 +678,7 @@ class DatabaseHelper extends AbstractHelper
      * @param string|null $variable [optional]
      *
      * @return array
+     * @throws \Magento\Framework\Exception\FileSystemException
      */
     private function runShowCommand($command, $variable = null)
     {
@@ -700,6 +714,7 @@ class DatabaseHelper extends AbstractHelper
      * @param string|null $variable [optional]
      *
      * @return array
+     * @throws \Magento\Framework\Exception\FileSystemException
      */
     public function getGlobalVariables($variable = null)
     {
@@ -710,6 +725,7 @@ class DatabaseHelper extends AbstractHelper
      * @param string|null $variable [optional]
      *
      * @return array
+     * @throws \Magento\Framework\Exception\FileSystemException
      */
     public function getGlobalStatus($variable = null)
     {

@@ -26,7 +26,7 @@ class SelectMagentoVersion extends AbstractSubCommand
                 $question[] = '<comment>' . str_pad('[' . ($key + 1) . ']', 4, ' ') . '</comment> ' .
                     $package['name'] . "\n";
             }
-            $question[] = "<question>Choose a magento version:</question> ";
+            $question[] = '<question>Choose a magento version:</question> ';
 
             $commandConfig = $this->commandConfig;
 

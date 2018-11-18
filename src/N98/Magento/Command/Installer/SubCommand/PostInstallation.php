@@ -9,6 +9,7 @@ class PostInstallation extends AbstractSubCommand
 {
     /**
      * @return void
+     * @throws \Exception
      */
     public function execute()
     {

@@ -51,7 +51,7 @@ class Enabler
      */
     public function operatingSystemIsNotWindows()
     {
-        $this->assert(!OperatingSystem::isWindows(), "operating system is windows");
+        $this->assert(!OperatingSystem::isWindows(), 'operating system is windows');
     }
 
     /**

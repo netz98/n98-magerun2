@@ -13,10 +13,17 @@
         "magerun2"
     ],
     "require": {
+        "php": "^7.0.0",
+        "ext-dom": "*",
+        "ext-iconv": "*",
+        "ext-json": "*",
+        "ext-PDO": "*",
+        "ext-posix": "*",
+        "ext-SimpleXML": "*",
+        "ext-zip": "*",
         "composer/composer": "^1.0",
         "fzaninotto/faker": "~1.4",
         "n98/junit-xml": "~1.0",
-        "php": "^7.0.0",
         "psy/psysh": "~0.7",
         "symfony/console": "~2.3",
         "symfony/event-dispatcher": "~2.3",
@@ -28,6 +35,7 @@
         "pbergman/tree-helper": "^1.0"
     },
     "require-dev": {
+        "ext-xdebug": "*",
         "bamarni/symfony-console-autocomplete": "^1.2.0",
         "friendsofphp/php-cs-fixer": "~1.12.0",
         "mikey179/vfsStream": "~1.4",

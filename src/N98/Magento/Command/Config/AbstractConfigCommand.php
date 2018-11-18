@@ -7,7 +7,7 @@ use N98\Magento\Command\AbstractMagentoCommand;
 
 abstract class AbstractConfigCommand extends AbstractMagentoCommand
 {
-    const DISPLAY_NULL_UNKOWN_VALUE = "NULL (NULL/\"unkown\" value)";
+    const DISPLAY_NULL_UNKOWN_VALUE = 'NULL (NULL/"unkown" value)';
 
     /**
      * \Magento\Framework\App\Config\Storage\WriterInterface
@@ -120,6 +120,8 @@ abstract class AbstractConfigCommand extends AbstractMagentoCommand
      * @param string $scopeId
      *
      * @return string
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     protected function _convertScopeIdParam($scope, $scopeId)
     {
@@ -127,7 +129,7 @@ abstract class AbstractConfigCommand extends AbstractMagentoCommand
             return $scopeId;
         }
 
-        if ($scope == 'websites' && !is_numeric($scopeId)) {
+        if ($scope === 'websites' && !is_numeric($scopeId)) {
             $website = $this->_getStoreManager()->getWebsite($scopeId);
 
             if (!$website) {
@@ -137,7 +139,7 @@ abstract class AbstractConfigCommand extends AbstractMagentoCommand
             return $website->getId();
         }
 
-        if ($scope == 'stores' && !is_numeric($scopeId)) {
+        if ($scope === 'stores' && !is_numeric($scopeId)) {
             $store = $this->_getStoreManager()->getStore($scopeId);
 
             if (!$store) {

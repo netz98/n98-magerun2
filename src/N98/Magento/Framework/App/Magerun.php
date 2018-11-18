@@ -40,6 +40,7 @@ class Magerun implements \Magento\Framework\AppInterface
          *
          * @see \N98\Magento\Application::_initMagento2()
          */
+        return null;
     }
 
     /**

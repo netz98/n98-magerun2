@@ -29,6 +29,7 @@ class OpenBrowserCommand extends AbstractMagentoCommand
      * @param InputInterface $input
      * @param OutputInterface $output
      * @throws RuntimeException
+     * @throws \Exception
      * @return int|void
      */
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -90,15 +91,12 @@ class OpenBrowserCommand extends AbstractMagentoCommand
             $opener = 'open';
         } elseif (OperatingSystem::isWindows()) {
             $opener = 'start';
-        } else {
-            // Linux
-            if (exec('which xdg-open')) {
-                $opener = 'xdg-open';
-            } elseif (exec('which gnome-open')) {
-                $opener = 'gnome-open';
-            } elseif (exec('which kde-open')) {
-                $opener = 'kde-open';
-            }
+        } elseif (exec('which xdg-open')) {
+            $opener = 'xdg-open';
+        } elseif (exec('which gnome-open')) {
+            $opener = 'gnome-open';
+        } elseif (exec('which kde-open')) {
+            $opener = 'kde-open';
         }
 
         if (empty($opener)) {

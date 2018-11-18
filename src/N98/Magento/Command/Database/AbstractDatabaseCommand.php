@@ -51,6 +51,7 @@ abstract class AbstractDatabaseCommand extends AbstractMagentoCommand
 
     /**
      * @param \Symfony\Component\Console\Output\OutputInterface $output
+     * @throws \Magento\Framework\Exception\FileSystemException
      */
     protected function detectDbSettings(OutputInterface $output)
     {
@@ -61,9 +62,10 @@ abstract class AbstractDatabaseCommand extends AbstractMagentoCommand
     }
 
     /**
-     * @param $name
+     * @param string $name
      *
      * @return mixed
+     * @throws \Magento\Framework\Exception\FileSystemException
      */
     public function __get($name)
     {
@@ -104,6 +106,7 @@ abstract class AbstractDatabaseCommand extends AbstractMagentoCommand
      * @return string
      *
      * @deprecated Please use database helper
+     * @throws \Magento\Framework\Exception\FileSystemException
      */
     protected function getMysqlClientToolConnectionString()
     {
@@ -117,6 +120,7 @@ abstract class AbstractDatabaseCommand extends AbstractMagentoCommand
      * @return string
      *
      * @deprecated Please use database helper
+     * @throws \Magento\Framework\Exception\FileSystemException
      */
     protected function _dsn()
     {

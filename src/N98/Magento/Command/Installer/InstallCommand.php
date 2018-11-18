@@ -128,7 +128,7 @@ HELP;
      * @param InputInterface $input
      * @param OutputInterface $output
      * @throws \RuntimeException
-     * @return int|null|void
+     * @return int
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -161,5 +161,7 @@ HELP;
         $subCommandFactory->create('InstallSampleData')->execute();
         $subCommandFactory->create('PostInstallation')->execute();
         $output->writeln('<info>Successfully installed magento</info>');
+
+        return 0;
     }
 }

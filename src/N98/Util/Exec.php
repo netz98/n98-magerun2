@@ -33,14 +33,14 @@ class Exec
             throw new RuntimeException($message);
         }
 
-        $command = $command . self::REDIRECT_STDERR_TO_STDOUT;
+        $command .= self::REDIRECT_STDERR_TO_STDOUT;
 
         exec($command, $outputArray, $returnCode);
         $output = self::parseCommandOutput((array) $outputArray);
 
         if ($returnCode !== self::CODE_CLEAN_EXIT) {
             throw new RuntimeException(
-                sprintf("Exit status %d for command %s. Output was: %s", $returnCode, $command, $output)
+                sprintf('Exit status %d for command %s. Output was: %s', $returnCode, $command, $output)
             );
         }
     }

@@ -115,6 +115,12 @@ HELP;
         return function_exists('exec');
     }
 
+    /**
+     * @param \Symfony\Component\Console\Input\InputInterface $input
+     * @param \Symfony\Component\Console\Output\OutputInterface $output
+     * @return int|null|void
+     * @throws \Exception
+     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->_scriptFilename = $input->getArgument('filename');
@@ -195,12 +201,13 @@ HELP;
      * @param OutputInterface $output
      * @param string $commandString
      * @throws RuntimeException
-     * @return void
+     * @throws \Exception
+     * @return mixed
      */
     protected function registerVariable(OutputInterface $output, $commandString)
     {
         if (preg_match('/^(\$\{[a-zA-Z0-9-_.]+\})=(.+)/', $commandString, $matches)) {
-            if (isset($matches[2]) && $matches[2][0] == '?') {
+            if (isset($matches[2]) && $matches[2][0] === '?') {
 
                 // Variable is already defined
                 if (isset($this->scriptVars[$matches[1]])) {
@@ -250,6 +257,7 @@ HELP;
      * @param OutputInterface $output
      * @param string $commandString
      * @throws RuntimeException
+     * @throws \Exception
      */
     protected function runMagerunCommand(InputInterface $input, OutputInterface $output, $commandString)
     {
@@ -266,6 +274,7 @@ HELP;
     /**
      * @param string $commandString
      * @return string
+     * @throws \Exception
      */
     protected function _prepareShellCommand($commandString)
     {
@@ -284,10 +293,13 @@ HELP;
         return $commandString;
     }
 
+    /**
+     * @throws \Exception
+     */
     protected function initScriptVars()
     {
         $rootFolder = $this->getApplication()->getMagentoRootFolder();
-        if (!empty($rootFolder)) {
+        if ($rootFolder !== null) {
             $this->scriptVars['${magento.root}'] = $rootFolder;
             $this->scriptVars['${magento.version}'] = $this->getMagentoVersion();
             $this->scriptVars['${magento.edition}'] = $this->getMagentoEdition();
@@ -303,6 +315,7 @@ HELP;
      * @param OutputInterface $output
      * @param string $commandString
      * @internal param $returnValue
+     * @throws \Exception
      */
     protected function runShellCommand(OutputInterface $output, $commandString)
     {
@@ -326,6 +339,7 @@ HELP;
 
     /**
      * @return string
+     * @throws \Exception
      */
     private function getMagentoVersion()
     {
@@ -333,8 +347,8 @@ HELP;
     }
 
     /**
-     *
-     * @return mixed
+     * @return string
+     * @throws \Exception
      */
     private function getMagentoEdition()
     {
@@ -343,6 +357,7 @@ HELP;
 
     /**
      * @return \Magento\Framework\App\ProductMetadata
+     * @throws \Exception
      */
     private function getProductMetadata()
     {

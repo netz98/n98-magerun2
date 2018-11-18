@@ -71,6 +71,7 @@ EOT;
     /**
      * @param string $code
      * @return WriteInterface|null
+     * @throws \Magento\Framework\Exception\FileSystemException
      */
     private function getDirectoryWrite($code)
     {
@@ -131,6 +132,7 @@ EOT;
     /**
      * @param string $code
      * @return void
+     * @throws \Magento\Framework\Exception\FileSystemException
      */
     private function emptyDirectory($code)
     {
@@ -149,6 +151,7 @@ EOT;
      * @param string $theme
      * @param string $code
      * @return void
+     * @throws \Magento\Framework\Exception\FileSystemException
      */
     private function deleteThemeDirectories($theme, $code)
     {
@@ -165,6 +168,7 @@ EOT;
     /**
      * @param array $themes
      * @return void
+     * @throws \Magento\Framework\Exception\FileSystemException
      */
     private function clearThemes($themes)
     {
@@ -176,6 +180,7 @@ EOT;
 
     /**
      * @return void
+     * @throws \Magento\Framework\Exception\FileSystemException
      */
     private function clearAllThemes()
     {
@@ -187,6 +192,7 @@ EOT;
      * @param InputInterface $input
      * @param OutputInterface $output
      * @return void
+     * @throws \Exception
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {

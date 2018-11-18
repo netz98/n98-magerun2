@@ -36,13 +36,13 @@ class CheckTablesCommand extends AbstractMagentoCommand
     /**
      * @var array
      */
-    protected $allowedTypes = array(
+    protected $allowedTypes = [
         'QUICK',
         'FAST',
         'CHANGED',
         'MEDIUM',
         'EXTENDED',
-    );
+    ];
 
     protected function configure()
     {
@@ -121,10 +121,10 @@ HELP;
     }
 
     /**
-     * @param \Symfony\Component\Console\Input\InputInterface   $input
+     * @param \Symfony\Component\Console\Input\InputInterface $input
      * @param \Symfony\Component\Console\Output\OutputInterface $output
-     *
      * @throws \InvalidArgumentException
+     * @throws \Exception
      * @return int|void
      */
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -196,6 +196,7 @@ HELP;
      * @param string $engine
      *
      * @return array
+     * @throws \Magento\Framework\Exception\FileSystemException
      */
     protected function _queryAlterTable($tableName, $engine)
     {
@@ -217,6 +218,7 @@ HELP;
      * @param string $tableName
      *
      * @return array
+     * @throws \Magento\Framework\Exception\FileSystemException
      */
     protected function _checkInnoDB($tableName)
     {
@@ -227,6 +229,7 @@ HELP;
      * @param string $tableName
      *
      * @return array
+     * @throws \Magento\Framework\Exception\FileSystemException
      */
     protected function _checkMEMORY($tableName)
     {
@@ -237,6 +240,7 @@ HELP;
      * @param string $tableName
      *
      * @return array
+     * @throws \Magento\Framework\Exception\FileSystemException
      */
     protected function _checkMyISAM($tableName)
     {
@@ -274,6 +278,7 @@ HELP;
      * @param string $sql
      *
      * @return array|bool
+     * @throws \Magento\Framework\Exception\FileSystemException
      */
     protected function _query($sql)
     {

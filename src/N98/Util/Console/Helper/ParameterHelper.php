@@ -39,14 +39,15 @@ class ParameterHelper extends AbstractHelper
     }
 
     /**
-     * @param InputInterface  $input
+     * @param InputInterface $input
      * @param OutputInterface $output
-     * @param string          $argumentName
-     * @param bool            $withDefaultStore [optional]
+     * @param string $argumentName
+     * @param bool $withDefaultStore [optional]
      *
      * @return mixed
      *
      * @throws InvalidArgumentException
+     * @throws \Exception
      */
     public function askStore(
         InputInterface $input,
@@ -113,6 +114,8 @@ class ParameterHelper extends AbstractHelper
      * @return mixed
      * @throws InvalidArgumentException
      * @throws RuntimeException
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Exception
      */
     public function askWebsite(InputInterface $input, OutputInterface $output, $argumentName = 'website')
     {
@@ -164,11 +167,12 @@ class ParameterHelper extends AbstractHelper
     }
 
     /**
-     * @param InputInterface  $input
+     * @param InputInterface $input
      * @param OutputInterface $output
-     * @param string          $argumentName
+     * @param string $argumentName
      *
      * @return string
+     * @throws \Exception
      */
     public function askEmail(InputInterface $input, OutputInterface $output, $argumentName = 'email')
     {
@@ -188,8 +192,8 @@ class ParameterHelper extends AbstractHelper
      * @param InputInterface $input
      * @param OutputInterface $output
      * @param string $argumentName
-     *
-*@return string
+     * @return string
+     * @throws \Exception
      */
     public function askPassword(
         InputInterface $input,
@@ -219,12 +223,13 @@ class ParameterHelper extends AbstractHelper
     }
 
     /**
-     * @param OutputInterface                                $output
-     * @param string                                         $name
-     * @param string                                         $value
+     * @param OutputInterface $output
+     * @param string $name
+     * @param string $value
      * @param Constraints\Collection|Constraint|Constraint[] $constraints The constraint(s) to validate against.
      *
      * @return mixed
+     * @throws \Exception
      */
     protected function _validateArgument(OutputInterface $output, $name, $value, $constraints)
     {

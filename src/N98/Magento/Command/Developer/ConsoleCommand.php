@@ -79,7 +79,7 @@ class ConsoleCommand extends AbstractMagentoCommand
         $shell = new Shell($config);
         $shell->setScopeVariables([
             'di'              => $this->getObjectManager(),
-            'magentoVersion'  => $this->getObjectManager()->get(\Magento\Framework\App\ProductMetadataInterface::class),
+            'magentoVersion'  => $this->getObjectManager()->get(ProductMetadataInterface::class),
             'magerun'         => $this->getApplication(),
             'magerunInternal' => (object) ['currentModule' => ''],
         ]);

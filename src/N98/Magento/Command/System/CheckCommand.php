@@ -69,10 +69,10 @@ HELP;
     }
 
     /**
-     * @param InputInterface  $input
+     * @param InputInterface $input
      * @param OutputInterface $output
-     *
      * @return int|void
+     * @throws \Exception
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -101,7 +101,8 @@ HELP;
 
     /**
      * @param ResultCollection $results
-     * @param string           $checkGroupClass name
+     * @param string $checkGroupClass name
+     * @throws \Exception
      */
     protected function _invokeCheckClass(ResultCollection $results, $checkGroupClass)
     {
@@ -194,6 +195,7 @@ HELP;
      * @param string $checkGroupClass
      *
      * @return object
+     * @throws \ReflectionException
      */
     private function _createCheck($checkGroupClass)
     {

@@ -160,7 +160,7 @@ final class ScriptLoader
         $finder = Finder::create()
             ->files()
             ->exclude('pub')
-            ->followLinks(true)
+            ->followLinks()
             ->ignoreUnreadableDirs(true)
             ->name('*' . AbstractRepositoryCommand::MAGERUN_EXTENSION)
             ->in($folders);

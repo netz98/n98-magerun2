@@ -87,7 +87,7 @@ abstract class AbstractCronCommand extends AbstractMagentoCommand
                     'Group' => $jobGroupCode,
                 ];
 
-                $row = $row + $this->getSchedule($job);
+                $row += $this->getSchedule($job);
 
                 $table[] = $row;
             }
@@ -181,6 +181,7 @@ abstract class AbstractCronCommand extends AbstractMagentoCommand
      * @param InputInterface $input
      * @param OutputInterface $output
      * @return array
+     * @throws \Exception
      */
     protected function getJobForExecuteMethod(InputInterface $input, OutputInterface $output)
     {
@@ -226,7 +227,7 @@ abstract class AbstractCronCommand extends AbstractMagentoCommand
         /* @var $version string e.g. "2.1.7" */
         $version = $this->productMetadata->getVersion();
 
-        if (version_compare($version, "2.2.0") >= 0) {
+        if (version_compare($version, '2.2.0') >= 0) {
             return $this->dateTime->gmtTimestamp();
         }
 

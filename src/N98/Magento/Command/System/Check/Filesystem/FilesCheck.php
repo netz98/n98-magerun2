@@ -35,11 +35,11 @@ class FilesCheck implements SimpleCheck, CommandAware, CommandConfigAware
 
             if (file_exists($magentoRoot . '/' . $file)) {
                 $result->setStatus(Result::STATUS_OK);
-                $result->setMessage("<info>File <comment>" . $file . "</comment> found.</info>");
+                $result->setMessage('<info>File <comment>' . $file . '</comment> found.</info>');
             } else {
                 $result->setStatus(Result::STATUS_ERROR);
                 $result->setMessage(
-                    "<error>File " . $file . " not found!</error><comment> Usage: " . $comment . "</comment>"
+                    '<error>File ' . $file . ' not found!</error><comment> Usage: ' . $comment . '</comment>'
                 );
             }
         }

@@ -226,6 +226,7 @@ HELP;
      * @param OutputInterface $output
      *
      * @return int|void
+     * @throws \Magento\Framework\Exception\FileSystemException
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -250,6 +251,7 @@ HELP;
      * @param InputInterface $input
      * @param OutputInterface $output
      * @return Execs
+     * @throws \Magento\Framework\Exception\FileSystemException
      */
     private function createExecs(InputInterface $input, OutputInterface $output)
     {
@@ -368,6 +370,7 @@ HELP;
      * @param InputInterface $input
      * @param OutputInterface $output
      * @return array
+     * @throws \Magento\Framework\Exception\FileSystemException
      */
     private function stripTables(InputInterface $input, OutputInterface $output)
     {
@@ -390,6 +393,7 @@ HELP;
      * @param InputInterface $input
      * @param OutputInterface $output
      * @return array
+     * @throws \Magento\Framework\Exception\FileSystemException
      */
     private function excludeTables(InputInterface $input, OutputInterface $output)
     {
@@ -411,6 +415,7 @@ HELP;
     /**
      * @param string $list space separated list of tables
      * @return array
+     * @throws \Magento\Framework\Exception\FileSystemException
      */
     private function resolveDatabaseTables($list)
     {
@@ -487,16 +492,14 @@ HELP;
             } else {
                 $fileName = $defaultName;
             }
-        } else {
-            if ($optionAddTime && $fileName !== null) {
-                $pathParts = pathinfo($fileName);
+        } elseif ($optionAddTime && $fileName !== null) {
+            $pathParts = pathinfo($fileName);
 
-                $fileName = ($pathParts['dirname'] === '.' ? '' : $pathParts['dirname'] . '/')
-                    . $namePrefix
-                    . (isset($pathParts['filename']) ? $pathParts['filename'] : '')
-                    . $nameSuffix
-                    . (isset($pathParts['extension']) ? ('.' . $pathParts['extension']) : '');
-            }
+            $fileName = ($pathParts['dirname'] === '.' ? '' : $pathParts['dirname'] . '/')
+                . $namePrefix
+                . (isset($pathParts['filename']) ? $pathParts['filename'] : '')
+                . $nameSuffix
+                . (isset($pathParts['extension']) ? ('.' . $pathParts['extension']) : '');
         }
 
         $fileName = $compressor->getFileName($fileName);

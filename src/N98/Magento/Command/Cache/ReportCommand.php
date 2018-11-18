@@ -86,6 +86,7 @@ class ReportCommand extends AbstractMagentoCommand
      * @param OutputInterface $output
      * @return int|void
      * @throws RuntimeException
+     * @throws \Exception
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {

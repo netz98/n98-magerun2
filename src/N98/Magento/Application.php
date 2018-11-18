@@ -8,6 +8,8 @@ use Exception;
 use Magento\Framework\ObjectManagerInterface;
 use N98\Magento\Application\Config;
 use N98\Magento\Application\ConfigurationLoader;
+use N98\Magento\Application\Console\ConsoleCommandEvent;
+use N98\Magento\Application\Console\ConsoleEvent;
 use N98\Magento\Application\Console\ConsoleExceptionEvent;
 use N98\Magento\Application\Console\Events;
 use N98\Magento\Application\DetectionResult;
@@ -228,7 +230,7 @@ class Application extends BaseApplication
         /**
          * only for compatibility to old versions.
          */
-        $event = new \N98\Magento\Application\Console\ConsoleEvent(new Command('dummy'), $input, $output);
+        $event = new ConsoleEvent(new Command('dummy'), $input, $output);
         $this->dispatcher->dispatch('console.run.before', $event);
 
         $input = $this->config->checkConfigCommandAlias($input);
@@ -478,8 +480,8 @@ class Application extends BaseApplication
         } catch (\Exception $ex) {
             $this->renderException($ex, $output);
             $output->writeln(
-                "<info>Use --skip-core-commands to not require the Magento app/bootstrap.php which caused " .
-                "the exception.</info>"
+                '<info>Use --skip-core-commands to not require the Magento app/bootstrap.php which caused ' .
+                'the exception.</info>'
             );
 
             return;
@@ -733,7 +735,7 @@ class Application extends BaseApplication
             // ignore invalid options/arguments for now, to allow the event listeners to customize the InputDefinition
         }
 
-        $event = new \N98\Magento\Application\Console\ConsoleCommandEvent($command, $input, $output);
+        $event = new ConsoleCommandEvent($command, $input, $output);
         $e = null;
 
         try {
@@ -742,7 +744,7 @@ class Application extends BaseApplication
             if ($event->commandShouldRun()) {
                 $exitCode = $command->run($input, $output);
             } else {
-                $exitCode = \N98\Magento\Application\Console\ConsoleCommandEvent::RETURN_CODE_DISABLED;
+                $exitCode = ConsoleCommandEvent::RETURN_CODE_DISABLED;
             }
         } catch (\Exception $e) {
         } catch (\Throwable $e) {

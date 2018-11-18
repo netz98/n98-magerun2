@@ -133,7 +133,7 @@ class Shell extends PsyShell
      */
     private function getConsoleOutput()
     {
-        if (empty($this->consoleOutput)) {
+        if ($this->consoleOutput === null) {
             $formatter = new OutputFormatter();
             $formatter->setStyle('warning', new OutputFormatterStyle('black', 'yellow'));
             $this->consoleOutput = new ConsoleOutput(ConsoleOutput::VERBOSITY_NORMAL, null, $formatter);

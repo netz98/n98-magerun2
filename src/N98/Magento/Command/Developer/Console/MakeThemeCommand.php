@@ -33,6 +33,7 @@ class MakeThemeCommand extends AbstractGeneratorCommand
      * @param OutputInterface $output
      *
      * @return int|void
+     * @throws \Magento\Framework\Exception\FileSystemException
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -84,6 +85,7 @@ class MakeThemeCommand extends AbstractGeneratorCommand
      * @param ThemeNameStructure $themeName
      * @param \Magento\Framework\Filesystem\Directory\WriteInterface $appDirWriter
      * @param string $relativePath
+     * @throws \Magento\Framework\Exception\FileSystemException
      */
     private function createRegistrationFile(ThemeNameStructure $themeName, $appDirWriter, $relativePath)
     {
@@ -104,6 +106,7 @@ FILE_BODY;
      * @param ThemeNameStructure $themeName
      * @param WriteInterface $appDirectoryWriter
      * @param string $relativePath
+     * @throws \Magento\Framework\Exception\FileSystemException
      */
     private function createComposerFile(ThemeNameStructure $themeName, WriteInterface $appDirectoryWriter, $relativePath)
     {
@@ -125,6 +128,7 @@ FILE_BODY;
      * @param \Magento\Framework\Filesystem\Directory\WriteInterface $appDirWriter
      * @param string $relativePath
      * @param string $name
+     * @throws \Magento\Framework\Exception\FileSystemException
      */
     private function createThemeXmlFile(OutputInterface $output, $appDirWriter, $relativePath, $name)
     {
@@ -147,6 +151,7 @@ XML_CONTENT;
      * @param OutputInterface $output
      * @param \Magento\Framework\Filesystem\Directory\WriteInterface $appDirWriter
      * @param string $relativePath
+     * @throws \Magento\Framework\Exception\FileSystemException
      */
     private function createViewXmlFile(OutputInterface $output, $appDirWriter, $relativePath)
     {

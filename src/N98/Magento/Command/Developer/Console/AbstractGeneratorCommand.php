@@ -219,6 +219,7 @@ abstract class AbstractGeneratorCommand extends AbstractConsoleCommand
      * @param OutputInterface $output
      * @param ClassGenerator $classGenerator
      * @param string $filePathToGenerate
+     * @throws \Magento\Framework\Exception\FileSystemException
      */
     protected function writeClassToFile(
         OutputInterface $output,

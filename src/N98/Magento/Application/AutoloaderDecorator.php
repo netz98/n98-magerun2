@@ -130,7 +130,7 @@ class AutoloaderDecorator implements AutoloaderInterface
 
     /**
      * @param \Composer\Autoload\ClassLoader $n98MagerunAutoloader
-     * @return mixed
+     * @return void
      */
     private function mirrorPsr4Pathes(ClassLoader $n98MagerunAutoloader)
     {

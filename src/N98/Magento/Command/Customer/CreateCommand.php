@@ -57,12 +57,13 @@ class CreateCommand extends AbstractCustomerCommand
      * @param InputInterface $input
      * @param OutputInterface $output
      * @return int
+     * @throws \Exception
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->detectMagento($output, true);
         if (!$this->initMagento()) {
-            return;
+            return 1;
         }
 
         $dialog = $this->getHelperSet()->get('dialog');
@@ -129,10 +130,8 @@ class CreateCommand extends AbstractCustomerCommand
                 $isError = true;
                 $output->writeln('<error>' . $e->getMessage() . '</error>');
             }
-        } else {
-            if ($outputPlain) {
-                $output->writeln('<warning>Customer ' . $email . ' already exists</warning>');
-            }
+        } elseif ($outputPlain) {
+            $output->writeln('<warning>Customer ' . $email . ' already exists</warning>');
         }
 
         if (!$outputPlain) {
