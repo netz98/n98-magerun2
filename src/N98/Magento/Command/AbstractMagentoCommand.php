@@ -128,6 +128,7 @@ abstract class AbstractMagentoCommand extends Command
      * Bootstrap magento shop
      *
      * @return bool
+     * @throws \Exception
      */
     protected function initMagento()
     {
@@ -145,6 +146,7 @@ abstract class AbstractMagentoCommand extends Command
      * @param OutputInterface $output
      * @param bool $silent print debug messages
      * @throws \RuntimeException
+     * @throws \Exception
      */
     public function detectMagento(OutputInterface $output, $silent = true)
     {

@@ -261,7 +261,8 @@ class Application extends BaseApplication
             $app = $magento2Initializer->init($this->getMagentoRootFolder());
             $this->_objectManager = $app->getObjectManager();
         } else {
-            $this->_initMagento1($soft);
+            $magento1Initializer = new Magento1Initializer($this->getHelperSet());
+            $magento1Initializer->init();
         }
 
         return true;
@@ -368,20 +369,20 @@ class Application extends BaseApplication
 
         $loadExternalConfig = !$this->_checkSkipConfigOption($input);
 
-        $this->config = $config = new Config($initConfig, $this->isPharMode(), $output);
+        $this->config = new Config($initConfig, $this->isPharMode(), $output);
         if ($this->configurationLoaderInjected) {
-            $config->setLoader($this->configurationLoaderInjected);
+            $this->config->setLoader($this->configurationLoaderInjected);
         }
-        $config->loadPartialConfig($loadExternalConfig);
+        $this->config->loadPartialConfig($loadExternalConfig);
         $this->detectMagento($input, $output);
 
-        $configLoader = $config->getLoader();
+        $configLoader = $this->config->getLoader();
         $configLoader->loadStageTwo(
             $this->getMagentoRootFolder(true),
             $loadExternalConfig,
             $this->detectionResult->getMagerunStopFileFolder()
         );
-        $config->load();
+        $this->config->load();
 
         if ($autoloader = $this->autoloader) {
             /**
@@ -390,9 +391,9 @@ class Application extends BaseApplication
             if (!$this->_checkSkipMagento2CoreCommandsOption($input)) {
                 $this->registerMagentoCoreCommands($output);
             }
-            $config->registerCustomAutoloaders($autoloader);
+            $this->config->registerCustomAutoloaders($autoloader);
             $this->registerEventSubscribers();
-            $config->registerCustomCommands($this);
+            $this->config->registerCustomCommands($this);
         }
 
         $this->registerHelpers();
@@ -431,12 +432,15 @@ class Application extends BaseApplication
             return;
         }
 
+        $magentoRootDirectory = $this->getMagentoRootFolder(true);
+
         $detector = new MagentoDetector();
         $this->detectionResult = $detector->detect(
             $input,
             $output,
             $this->config,
-            $this->getHelperSet()
+            $this->getHelperSet(),
+            $magentoRootDirectory
         );
 
         if ($this->detectionResult->isDetected()) {

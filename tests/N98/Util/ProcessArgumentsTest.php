@@ -5,16 +5,15 @@
 
 namespace N98\Util;
 
-use PHPUnit_Framework_TestCase;
 use Symfony\Component\Process\ProcessBuilder;
 
 /**
  * Class ProcessArgumentsTest
  *
- * @covers N98\Util\ProcessArguments
+ * @covers \N98\Util\ProcessArguments
  * @package N98\Util
  */
-class ProcessArgumentsTest extends PHPUnit_Framework_TestCase
+class ProcessArgumentsTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @test

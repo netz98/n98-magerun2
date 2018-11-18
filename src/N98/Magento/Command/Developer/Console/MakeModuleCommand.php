@@ -116,6 +116,7 @@ FILE_BODY;
     /**
      * @param ModuleNameStructure $moduleName
      * @param WriteInterface $appDirectoryWriter
+     * @throws \Magento\Framework\Exception\FileSystemException
      */
     private function createEtcModuleFile(ModuleNameStructure $moduleName, WriteInterface $appDirectoryWriter)
     {

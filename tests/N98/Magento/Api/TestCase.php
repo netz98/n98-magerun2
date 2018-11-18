@@ -8,7 +8,6 @@
 namespace N98\Magento\Api;
 
 use N98\Magento\TestApplication;
-use PHPUnit_Framework_TestCase;
 
 /**
  * Class TestCase
@@ -16,7 +15,7 @@ use PHPUnit_Framework_TestCase;
  * @codeCoverageIgnore
  * @package N98\Magento\Command\PHPUnit
  */
-abstract class TestCase extends PHPUnit_Framework_TestCase
+abstract class TestCase extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var TestApplication

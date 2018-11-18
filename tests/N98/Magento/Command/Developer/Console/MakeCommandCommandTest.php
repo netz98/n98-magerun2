@@ -24,7 +24,7 @@ class MakeCommandCommandTest extends TestCase
             ->getMock();
         $diFileWriterMock->loadXml('<config />');
 
-        $command = $this->getMock(MakeCommandCommand::class, ['createDiFileWriter']);
+        $command = $this->createMock(MakeCommandCommand::class, ['createDiFileWriter']);
         $command
             ->expects($this->once())
             ->method('createDiFileWriter')

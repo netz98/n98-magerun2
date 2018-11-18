@@ -2,12 +2,14 @@
 
 namespace N98\Util;
 
+use PHPUnit\Framework\TestCase;
+
 /**
  * Class ArrayFunctionsTest
  *
- * @covers N98\Util\ArrayFunctions
+ * @covers \N98\Util\ArrayFunctions
  */
-class ArrayFunctionsTest extends \PHPUnit_Framework_TestCase
+class ArrayFunctionsTest extends TestCase
 {
     /**
      * @test
