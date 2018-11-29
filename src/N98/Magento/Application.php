@@ -21,6 +21,7 @@ use N98\Util\Console\Helper\TwigHelper;
 use Symfony\Component\Console\Application as BaseApplication;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\ConsoleEvents;
+use Symfony\Component\Console\Event\ConsoleTerminateEvent;
 use Symfony\Component\Console\Exception\ExceptionInterface;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Input\ArgvInput;
@@ -756,6 +757,7 @@ class Application extends BaseApplication
             if (defined('\Symfony\Component\Console\ConsoleEvents::EXCEPTION')) {
                 $this->dispatcher->dispatch(ConsoleEvents::EXCEPTION, $event);
             }
+
             if (defined('\Symfony\Component\Console\ConsoleEvents::ERROR')) {
                 $this->dispatcher->dispatch(ConsoleEvents::ERROR, $event);
             }
@@ -764,18 +766,16 @@ class Application extends BaseApplication
                 $e = $event->getException();
             }
 
-            //$exitCode = $e->getCode();
+            $exitCode = $event->getExitCode();
         }
 
-        // @TODO make compatible
-        //$event = new ConsoleTerminateEvent($command, $input, $output, $exitCode);
-        //$this->dispatcher->dispatch(ConsoleEvents::TERMINATE, $event);
+        $event = new ConsoleTerminateEvent($command, $input, $output, $exitCode);
+        $this->dispatcher->dispatch(ConsoleEvents::TERMINATE, $event);
 
         if (null !== $e) {
             throw $e;
         }
 
-        //return $event->getExitCode();
-        return $exitCode;
+        return $event->getExitCode();
     }
 }
