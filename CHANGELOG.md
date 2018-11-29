@@ -1,6 +1,12 @@
 RECENT CHANGES
 ==============
 
+3.0.0
+-----
+
+- Compatibility to Magento 2.3.0
+- Refactoring of Application class
+
 2.3.3
 -----
 
