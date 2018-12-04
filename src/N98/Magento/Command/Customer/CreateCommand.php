@@ -101,7 +101,7 @@ class CreateCommand extends AbstractCustomerCommand
             $customer->setEmail($email);
             $customer->setFirstname($firstname);
             $customer->setLastname($lastname);
-            $customer->setStoreId($website->getDefaultGroup()->getId());
+            $customer->setStoreId($website->getDefaultGroup()->getDefaultStore()->getId());
 
             try {
                 $this->appState->setAreaCode('frontend');
