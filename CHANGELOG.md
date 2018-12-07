@@ -6,6 +6,9 @@ RECENT CHANGES
 
 - Compatibility to Magento 2.3.0
 - Refactoring of Application class
+- Fix: #411 create customer store id
+- Removed official support for Magento 2.0.x
+- Removed support for PHP 5.6
 
 2.3.3
 -----
