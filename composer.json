@@ -21,7 +21,7 @@
         "ext-posix": "*",
         "ext-SimpleXML": "*",
         "ext-zip": "*",
-        "composer/composer": "^1.0",
+        "composer/composer": "~1.4.1",
         "fzaninotto/faker": "~1.4",
         "n98/junit-xml": "~1.0",
         "psy/psysh": "~0.7",
