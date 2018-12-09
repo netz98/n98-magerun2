@@ -112,15 +112,8 @@ If you want to use the command system wide you can copy it to `/usr/local/bin`.
 
 Install with Composer
 """""""""""""""""""""
-Require Magerun within the Magento (or any other) project and you can then
-execute it from the vendor’s bin folder:
-
-.. code-block:: sh
-
-    composer require n98/magerun2
-    # ...
-    ./vendor/bin/n98-magerun2 --version
-    n98-magerun2 version 1.3.2 by netz98 GmbH
+The installation via Composer is not recommended. Please use the phar file instead of the Composer version.
+We are not able to provide compatibility to all Magento versions anymore.
 
 Update
 ------
