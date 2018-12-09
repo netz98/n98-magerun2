@@ -1,6 +1,11 @@
 RECENT CHANGES
 ==============
 
+3.0.1
+-----
+
+- Fix: #413: sample:deploy PRE_COMMAND_RUN issue on Magento 2.2.6 (by JDavidVR)
+
 3.0.0
 -----
 
