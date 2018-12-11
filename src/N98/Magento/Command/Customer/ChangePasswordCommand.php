@@ -85,7 +85,7 @@ HELP;
 
             // Password
             if (($password = $input->getArgument('password')) == null) {
-                $password = $dialog->ask($output, '<question>Password:</question>');
+                $password = $dialog->askHiddenResponse($output, '<question>Password:</question>');
             }
 
             $website = $this->getHelper('parameter')->askWebsite($input, $output);
