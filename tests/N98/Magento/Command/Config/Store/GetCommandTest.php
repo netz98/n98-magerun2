@@ -166,4 +166,35 @@ class GetCommandTest extends TestCase
             '/"Value":\s*"1234"/'
         );
     }
+
+    public function testItAddsScopeIdFilterOnZero()
+    {
+        $this->assertDisplayContains(
+            array(
+                'command' => 'config:store:set',
+                'path'    => 'n98_magerun/foo/bar',
+                'value'   => '1234',
+            ),
+            'n98_magerun/foo/bar => 1234'
+        );
+
+        $this->assertDisplayContains(
+            array(
+                'command'    => 'config:store:set',
+                'path'       => 'n98_magerun/foo/bar',
+                'value'      => '1234',
+                '--scope-id' => '1',
+            ),
+            'n98_magerun/foo/bar => 1234'
+        );
+
+        $this->assertDisplayNotContains(
+            array(
+                'command'    => 'config:store:get',
+                'path'       => 'n98_magerun/foo/bar',
+                '--scope-id' => '0',
+            ),
+            'n98_magerun/foo/bar | default | 1        | 1234'
+        );
+    }
 }
