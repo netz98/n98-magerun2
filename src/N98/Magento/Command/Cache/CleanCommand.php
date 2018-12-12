@@ -52,6 +52,22 @@ HELP;
 
         $typesToClean = $input->getArgument('type');
 
+        if (!empty($typesToClean)) {
+            $validTypesToClean = [];
+            foreach ($typesToClean as $index => $type) {
+                if (in_array($type, $availableTypes)) {
+                    $validTypesToClean[] = $type;
+                } else {
+                    unset($typesToClean[$index]);
+                    $output->writeln('<info><comment>"' . $type . '"</comment> skipped (unknown cache type)</info>');
+                }
+            }
+            if (empty($validTypesToClean)) {
+                $output->writeln('<error>Aborting clean</error>');
+                return;
+            }
+        }
+
         foreach ($availableTypes as $type) {
             if (count($typesToClean) == 0 || in_array($type, $typesToClean)) {
                 $cacheManager->clean(array($type));
