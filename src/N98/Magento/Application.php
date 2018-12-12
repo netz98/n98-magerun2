@@ -89,13 +89,6 @@ class Application extends BaseApplication
     protected $dispatcher;
 
     /**
-     * If root dir is set by root-dir option this flag is true
-     *
-     * @var bool
-     */
-    protected $_directRootDir = false;
-
-    /**
      * @var ObjectManagerInterface
      */
     protected $_objectManager = null;

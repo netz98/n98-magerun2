@@ -392,18 +392,19 @@ class MagentoHelper extends AbstractHelper implements DetectionResultInterface
 
         $application = $this->getApplication();
         $application->detectMagento(null, $this->output);
-        $application->initMagento();
-        /** @var DirectoryList $directoryList */
-        $directoryList = $application->getObjectManager()->get(DirectoryList::class);
-        $configDir = rtrim($directoryList->getPath(DirectoryList::CONFIG), DIRECTORY_SEPARATOR);
+        if ($application->initMagento()) {
+            /** @var DirectoryList $directoryList */
+            $directoryList = $application->getObjectManager()->get(DirectoryList::class);
+            $configDir = rtrim($directoryList->getPath(DirectoryList::CONFIG), DIRECTORY_SEPARATOR);
 
-        $configFiles = [
-            $configDir . '/config.php',
-            $configDir . '/env.php',
-        ];
+            $configFiles = [
+                $configDir . '/config.php',
+                $configDir . '/env.php',
+            ];
 
-        foreach ($configFiles as $configFile) {
-            $this->addBaseConfig($configFile);
+            foreach ($configFiles as $configFile) {
+                $this->addBaseConfig($configFile);
+            }
         }
     }
 

@@ -35,13 +35,15 @@ class MagentoDetector
         $output = $output ?: new ConsoleOutput();
 
         $folder = OperatingSystem::getCwd();
+        $subFolders = [];
 
-        if ($magentoRootDirectory) {
-            $folder = $magentoRootDirectory;
-        }
+        $directRootDirectory = $this->getDirectRootDirectory($input);
 
-        if ($this->_checkRootDirOption($input)) {
-            $subFolders = [$folder];
+        if (is_string($directRootDirectory)) {
+            $this->setRootDir($directRootDirectory);
+            $folder = $directRootDirectory;
+        } elseif ($magentoRootDirectory !== null) {
+            $subFolders = [$magentoRootDirectory];
         } else {
             $subFolders = $config->getDetectSubFolders();
         }
@@ -55,18 +57,11 @@ class MagentoDetector
 
     /**
      * @param InputInterface $input
-     * @return bool
+     * @return string
      */
-    protected function _checkRootDirOption(InputInterface $input)
+    protected function getDirectRootDirectory(InputInterface $input)
     {
-        $rootDir = $input->getParameterOption('--root-dir');
-        if (is_string($rootDir)) {
-            $this->setRootDir($rootDir);
-
-            return true;
-        }
-
-        return false;
+        return $input->getParameterOption('--root-dir');
     }
 
     /**
