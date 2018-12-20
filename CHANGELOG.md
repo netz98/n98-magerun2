@@ -1,10 +1,15 @@
 RECENT CHANGES
 ==============
 
+3.0.3
+-----
+
+- Fix: #422: Expansion of ~ in --root-dir option is no longer working (by Tjerk Ameel)
+
 3.0.2
 -----
 
-- Fix: #299 config:get, fix --scope-id=0 filtering (by Jürgen Thelen)
+- Fix: #299: config:get, fix --scope-id=0 filtering (by Jürgen Thelen)
 - Fix: #308: cache:clean, add handling of invalid cache types (by Jürgen Thelen)
 - Fix: #417: Prevent fatal error during Magento Init
 - Fix: #414: Hide typed password in password change dialog
