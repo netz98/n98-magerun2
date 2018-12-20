@@ -40,8 +40,7 @@ class MagentoDetector
         $directRootDirectory = $this->getDirectRootDirectory($input);
 
         if (is_string($directRootDirectory)) {
-            $this->setRootDir($directRootDirectory);
-            $folder = $directRootDirectory;
+            $folder = $this->resolveRootDirOption($directRootDirectory);
         } elseif ($magentoRootDirectory !== null) {
             $subFolders = [$magentoRootDirectory];
         } else {
@@ -68,16 +67,22 @@ class MagentoDetector
      * Set root dir (chdir()) of magento directory
      *
      * @param string $path to Magento directory
+     * @return string
      */
-    private function setRootDir($path)
+    private function resolveRootDirOption($path)
     {
-        if (isset($path[0]) && '~' === $path[0]) {
+        $path = trim($path);
+
+        if (strpos($path, '~') === 0) {
             $path = OperatingSystem::getHomeDir() . substr($path, 1);
         }
 
-        $folder = realpath($path);
-        if (is_dir($folder)) {
-            chdir($folder);
+        $path = realpath($path);
+
+        if (is_dir($path)) {
+            chdir($path);
         }
+
+        return $path;
     }
 }
