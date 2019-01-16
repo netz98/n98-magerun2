@@ -20,6 +20,7 @@
         "ext-PDO": "*",
         "ext-posix": "*",
         "ext-SimpleXML": "*",
+        "ext-xdebug": "*",
         "ext-zip": "*",
         "composer/composer": "~1.4.1",
         "fzaninotto/faker": "~1.4",
