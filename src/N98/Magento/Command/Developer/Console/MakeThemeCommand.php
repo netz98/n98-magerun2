@@ -10,7 +10,6 @@ use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Framework\Filesystem;
 use Magento\Framework\Filesystem\Directory\WriteInterface;
 use N98\Magento\Command\Developer\Console\Structure\ThemeNameStructure;
-use N98\Magento\Command\Developer\Console\Util\Xml;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
