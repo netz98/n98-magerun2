@@ -5,7 +5,6 @@
 
 namespace N98\Magento\Command\System\Setup;
 
-use N98\Magento\Api\Module;
 use N98\Magento\Api\ModuleInterface;
 use N98\Magento\Api\ModuleListVersionIterator;
 use N98\Magento\Api\ModuleVersion;
