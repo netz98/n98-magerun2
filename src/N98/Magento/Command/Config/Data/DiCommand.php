@@ -13,11 +13,6 @@ use Symfony\Component\VarDumper\Dumper\CliDumper;
 
 class DiCommand extends AbstractMagentoCommand
 {
-    /**
-     * @var \Magento\Framework\App\ProductMetadataInterface
-     */
-    private $productMetadata;
-
     protected function configure()
     {
         $this
