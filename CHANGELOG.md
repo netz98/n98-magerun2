@@ -1,6 +1,13 @@
 RECENT CHANGES
 ==============
 
+3.0.4
+-----
+
+- Fix #425: Fixed reindex command syntax (by Simon Sprankel)
+- Fix #428: Unused property (by Leandro F. L.)
+- Fix #432: Add method used by newer symfony version (by AreDubya)
+
 3.0.3
 -----
 
