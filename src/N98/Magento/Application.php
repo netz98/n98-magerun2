@@ -265,6 +265,14 @@ class Application extends BaseApplication
     }
 
     /**
+     * @return bool
+     */
+    public function isSingleCommand()
+    {
+        return false;
+    }
+
+    /**
      * @return ClassLoader
      */
     public function getAutoloader()
