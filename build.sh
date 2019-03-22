@@ -31,7 +31,7 @@ establish_build_dir() {
   fi
 }
 
-name="$(awk '/<project name="([^"]*)"/ && !done {print gensub(/<project name="([^"]*)".*/, "\\1", "g"); done=1}' build.xml)"
+name="$(perl -ne '/<project name="([^"]*)"/ and print $1 and last' build.xml)"
 nice_name="$(php -r "echo str_replace(' ', '', ucwords(strtr('${name}', '-', ' ')));")"
 phar="${name}.phar"
 echo "Building ${phar}..."
