@@ -79,7 +79,9 @@ echo "building in $(pwd -P)"
 echo "build version: $(git --no-pager log --oneline -1)"
 
 echo "provision: ulimits (soft) set from $(ulimit -Sn) to $(ulimit -Hn) (hard) for faster phar builds..."
-ulimit -Sn $(ulimit -Hn)
+if [ "$(uname -s)" != "Darwin" ]; then
+  ulimit -Sn $(ulimit -Hn)
+fi
 timestamp="$(git log --format=format:%ct HEAD -1)" # reproduceable build
 echo "build timestamp: ${timestamp}"
 
