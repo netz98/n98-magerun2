@@ -479,6 +479,7 @@ class Application extends BaseApplication
         // Magento was found -> register core cli commands
         try {
             $this->requireOnce($magentoRootFolder . '/app/bootstrap.php');
+            \stream_wrapper_restore('phar');
         } catch (\Exception $ex) {
             $this->renderException($ex, $output);
             $output->writeln(
