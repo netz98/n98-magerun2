@@ -4,7 +4,7 @@ RECENT CHANGES
 3.0.5
 -----
 
-- Fix #440: Add phar wrapper for Magento 2.3.1 compatibility
+- Fix #440: Add phar wrapper for Magento 2.3.1 compatibility (by Christian Münch)
 - Fix #441: make build.sh OSX compatible (by Keith Bentrup)
 
 3.0.4
