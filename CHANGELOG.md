@@ -1,12 +1,13 @@
 RECENT CHANGES
 ==============
 
+- Fix #442: Non standard conform strings in config.yaml (by Tom Klingenberg, thanks Paul Canning)
+
 3.0.5
 -----
 
 - Fix #440: Add phar wrapper for Magento 2.3.1 compatibility (by Christian Münch)
 - Fix #441: make build.sh OSX compatible (by Keith Bentrup)
-- Fix #442: Non standard conform strings in config.yaml (by Tom Klingenberg, thanks Paul Canning)
 
 3.0.4
 -----
