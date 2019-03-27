@@ -1,6 +1,9 @@
 RECENT CHANGES
 ==============
 
+3.0.6
+-----
+
 - Fix #442: Non standard conform strings in config.yaml (by Tom Klingenberg, thanks Paul Canning)
 
 3.0.5
