@@ -44,9 +44,9 @@ matrix:
 
     # Magento Versions
 
-    - name: Magento 2.3.0 PHP 7.2
+    - name: Magento 2.3.1 PHP 7.2
       php: 7.2
-      env: MAGENTO_VERSION="magento-ce-2.3.0" INSTALL_SAMPLE_DATA=0 PHPUNIT_EXCLUDE_GROUPS=exclude-2.2
+      env: MAGENTO_VERSION="magento-ce-2.3.1" INSTALL_SAMPLE_DATA=0 PHPUNIT_EXCLUDE_GROUPS=exclude-2.2
 
     - name: Magento 2.2.6 PHP 7.1
       php: 7.1
