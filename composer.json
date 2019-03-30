@@ -68,6 +68,7 @@
     "config": {
         "platform": {
             "php": "7.0.0"
-        }
+        },
+        "use-include-path": false
     }
 }
