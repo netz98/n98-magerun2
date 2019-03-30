@@ -481,7 +481,7 @@ class Application extends BaseApplication
             $this->requireOnce($magentoRootFolder . '/app/bootstrap.php');
 
             // Magento 2.3.1 removes phar stream wrapper.
-            if (!in_array('phar', \stream_get_wrappers())) {
+            if (!in_array('phar', \stream_get_wrappers(), true)) {
                 \stream_wrapper_restore('phar');
             }
         } catch (\Exception $ex) {
