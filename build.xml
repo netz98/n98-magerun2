@@ -78,6 +78,8 @@ Build phar with:
               checkreturn="true"/>
         <exec command="${composer_bin} config autoloader-suffix --unset" dir="${project.basedir}" passthru="true"
               checkreturn="true"/>
+        <exec command="patch -p1 &lt; build/phar/patches/composer_autoloader.patch" dir="${project.basedir}" passthru="true"
+              checkreturn="true"/>
     </target>
 
     <target name="dist">

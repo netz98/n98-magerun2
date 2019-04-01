@@ -1,0 +1,12 @@
+--- a/vendor/composer/ClassLoader.php
++++ b/vendor/composer/ClassLoader.php
+@@ -426,6 +426,9 @@ class ClassLoader
+         }
+ 
+         // PSR-0 include paths.
++        if (!in_array('phar', \stream_get_wrappers(), true)) {
++            \stream_wrapper_restore('phar');
++        }
+         if ($this->useIncludePath && $file = stream_resolve_include_path($logicalPathPsr0)) {
+             return $file;
+         }
