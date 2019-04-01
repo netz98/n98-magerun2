@@ -1,6 +1,11 @@
 RECENT CHANGES
 ==============
 
+3.0.7
+-----
+
+- Fix for Composer autoloader / Magento 2.2.8 (thanks mystix, Rick Schippers) 
+
 3.0.6
 -----
 
