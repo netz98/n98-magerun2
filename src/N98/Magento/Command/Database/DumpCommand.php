@@ -459,7 +459,7 @@ HELP;
         $nameExtension = '.sql';
 
         $optionAddTime = 'no';
-        if ($input->hasParameterOption('--add-time')) {
+        if ($input->hasOption('add-time')) {
             $optionAddTime = $input->getOption('add-time');
             if (empty($optionAddTime)) {
                 $optionAddTime = 'suffix';
