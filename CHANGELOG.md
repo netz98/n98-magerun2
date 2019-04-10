@@ -1,6 +1,11 @@
 RECENT CHANGES
 ==============
 
+3.0.8
+-----
+
+- Fix #450: command sys:setup:compare-versions returns errors on a lot of core modules (thanks Emanuele Gian)
+
 3.0.7
 -----
 
