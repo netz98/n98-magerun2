@@ -50,7 +50,7 @@ HELP;
         $this->detectMagento($output, true);
 
         if (!$this->initMagento()) {
-            return;
+            return 0;
         }
 
         $junit = $input->getOption('log-junit') ? new JUnitSession($input->getOption('log-junit')) : null;
@@ -62,9 +62,9 @@ HELP;
             $headers = array('Setup', 'Module', 'DB', 'Data', 'Status');
         }
 
-        $table = $this->getModuleTable($ignoreDataUpdate, $headers, $errors);
+        $table = $this->getModuleTable($ignoreDataUpdate, $headers, $errorCount);
 
-        $this->output($input, $output, $headers, $table, $junit, $errors);
+        $this->output($input, $output, $headers, $table, $junit, $errorCount);
 
         return 0;
     }
@@ -72,6 +72,7 @@ HELP;
     /**
      * @param array $data
      * @param JUnitSession $session
+     * @throws \Exception
      */
     protected function logJUnit(array $data, JUnitSession $session)
     {
@@ -83,9 +84,10 @@ HELP;
         $testCase = $suite->addTestCase();
         $testCase->setName('Magento Setup Version Test');
         $testCase->setClassname('CompareVersionsCommand');
+
         if (count($data) > 0) {
             foreach ($data as $moduleSetup) {
-                if (stristr($moduleSetup['Status'], 'error')) {
+                if (false !== stripos($moduleSetup['Status'], 'error')) {
                     $testCase->addFailure(
                         'Setup Script Error',
                         'MagentoSetupScriptVersionException'
@@ -107,8 +109,15 @@ HELP;
     {
         $errorCount = 0;
         $table = array();
-        foreach ($this->getMagentoModuleList() as $name => $module) {
+        $magentoModuleList = $this->getMagentoModuleList();
+
+        foreach ($magentoModuleList as $name => $module) {
             $row = $this->mapModuleToRow($name, $module, $ignoreDataUpdate, $errorCount);
+
+            if (empty($row)) {
+                continue;
+            }
+
             if ($ignoreDataUpdate) {
                 unset($row['Data']);
             }
@@ -124,6 +133,10 @@ HELP;
         $moduleVersion = $row['Module'];
         $dbVersion = $row['DB'];
         $dataVersion = $row['Data'];
+
+        if ($moduleVersion === null) {
+            return true;
+        }
 
         $result = $dbVersion === $moduleVersion;
         if (!$ignoreDataUpdate && $result && $dataVersion !== $moduleVersion) {
@@ -199,6 +212,13 @@ HELP;
             'Data'   => $resource->getDataVersion($name),
         );
 
+        if (empty($row['Module'])
+            && empty($row['DB'])
+            && empty($row['Data'])
+        ) {
+            return [];
+        }
+
         $test = $this->testVersionProblem($row, $ignoreDataUpdate);
 
         if (!$test) {
@@ -211,15 +231,22 @@ HELP;
     }
 
     /**
-     * @param InputInterface $input
-     * @param OutputInterface $output
-     * @param $headers
-     * @param $table
-     * @param $junit
-     * @param $errors
+     * @param \Symfony\Component\Console\Input\InputInterface $input
+     * @param \Symfony\Component\Console\Output\OutputInterface $output
+     * @param array $headers
+     * @param array $table
+     * @param JUnitSession $junit
+     * @param int $errorCount
+     * @throws \Exception
      */
-    private function output(InputInterface $input, OutputInterface $output, $headers, $table, $junit, $errors)
-    {
+    private function output(
+        InputInterface $input,
+        OutputInterface $output,
+        $headers,
+        $table,
+        $junit,
+        $errorCount
+    ) {
         if ($junit) {
             $this->logJUnit($table, $junit);
         } else {
@@ -236,7 +263,10 @@ HELP;
 
             // output summary line if no output format is specified
             if (!$input->getOption('format')) {
-                $this->writeSection($output, $this->buildSetupResultMessage($errors), $errors ? 'error' : 'info');
+                $this->writeSection(
+                    $output,
+                    $this->buildSetupResultMessage($errorCount), $errorCount > 0 ? 'error' : 'info'
+                );
             }
         }
     }
