@@ -281,7 +281,8 @@ HELP;
 
         $mysqlClientToolConnectionString = $database->getMysqlClientToolConnectionString();
 
-        $stripTables = $this->stripTables($input, $output);
+        $excludeTables = $this->excludeTables($input, $output);
+        $stripTables = array_diff($this->stripTables($input, $output), $excludeTables);
         if ($stripTables) {
             // dump structure for strip-tables
             $execs->add(
@@ -289,8 +290,6 @@ HELP;
                 ' ' . implode(' ', $stripTables) . $this->postDumpPipeCommands()
             );
         }
-
-        $excludeTables = $this->excludeTables($input, $output);
 
         // dump data for all other tables
         $ignore = '';
