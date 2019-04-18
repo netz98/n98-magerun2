@@ -204,7 +204,7 @@ commands:
 
       - id: development
         description: Removes logs and trade data so developers do not have to work with real customer data
-        tables: "@admin @trade @stripped @search"
+        tables: "@admin @trade @stripped @search @2fa"
 
       - id: ee_changelog
         description: Changelog tables of new indexer since EE 1.13
@@ -224,6 +224,12 @@ commands:
       - id: dotmailer
         description: Dotmailer tables
         tables: email_abandoned_cart email_automation email_campaign email_contact
+
+      - id: 2fa
+        description: Two Factor Auth tables
+        tables: >
+          msp_tfa_user_config
+          msp_tfa_trusted
 
   N98\Magento\Command\Installer\InstallCommand:
     magento-packages:
