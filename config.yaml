@@ -6,6 +6,7 @@ twig:
 
 plugin:
   folders:
+    - /usr/share/n98-magerun2/modules
     - /usr/local/share/n98-magerun2/modules
 
 helpers:
