@@ -36,7 +36,7 @@ class GetCommandTest extends TestCase
                 'path'    => 'n98_magerun/foo/bar',
                 'value'   => 'NULL',
             ),
-            'n98_magerun/foo/bar => NULL (NULL/"unkown" value)'
+            'n98_magerun/foo/bar => NULL (NULL/"unknown" value)'
         );
 
         $this->assertDisplayContains(
@@ -44,7 +44,7 @@ class GetCommandTest extends TestCase
                 'command' => 'config:store:get',
                 'path'    => 'n98_magerun/foo/bar',
             ),
-            '| n98_magerun/foo/bar | default | 0        | NULL (NULL/"unkown" value) |'
+            '| n98_magerun/foo/bar | default | 0        | NULL (NULL/"unknown" value) |'
         );
 
         $this->assertDisplayContains(
@@ -60,7 +60,7 @@ class GetCommandTest extends TestCase
     public function provideFormatsWithNull()
     {
         return array(
-            array(null, '| n98_magerun/foo/bar | default | 0        | NULL (NULL/"unkown" value) |'),
+            array(null, '| n98_magerun/foo/bar | default | 0        | NULL (NULL/"unknown" value) |'),
             array('csv', 'n98_magerun/foo/bar,default,0,NULL'),
             array('json', '"Value": null'),
             array('xml', '<Value>NULL</Value>'),
@@ -79,7 +79,7 @@ class GetCommandTest extends TestCase
                 'path'    => 'n98_magerun/foo/bar',
                 'value'   => 'NULL',
             ),
-            'n98_magerun/foo/bar => NULL (NULL/"unkown" value)'
+            'n98_magerun/foo/bar => NULL (NULL/"unknown" value)'
         );
 
         $this->assertDisplayContains(
