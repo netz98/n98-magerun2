@@ -72,7 +72,7 @@ class CreateCommand extends AbstractCustomerCommand
         $email = $this->getHelperSet()->get('parameter')->askEmail($input, $output);
 
         // Password
-        $password = $this->getHelperSet()->get('parameter')->askPassword($input, $output, 'password', false);
+        $password = $dialog->askHiddenResponse($output, '<question>Password:</question>');
 
         // Firstname
         if (($firstname = $input->getArgument('firstname')) == null) {
