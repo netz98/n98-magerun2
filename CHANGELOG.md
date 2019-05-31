@@ -1,6 +1,15 @@
 RECENT CHANGES
 ==============
 
+3.0.9
+-----
+
+- Fix: #439: Add 2fa tables (by Peter Jaap)
+- Fix: #453: Fix completely exclude tables with --exclude command (by Arnoud Beekman)
+- Fix: #459: Update readme - Script command documentation fix (by Hardy Johnson)
+- Fix: #460: Typo: unkown -> unknown (by Alexander Menk)
+- Fix: #461: update twig/twig to version later than 1.37.1 (by wb-lime)
+
 3.0.8
 -----
 
