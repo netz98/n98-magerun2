@@ -163,4 +163,15 @@ class OperatingSystem
 
         return self::getPhpBinary();
     }
+
+    /**
+     * @return bool
+     */
+    public static function isBashCompatibleShell()
+    {
+        return in_array(
+            basename(getenv('SHELL')),
+            ['bash', 'zsh']
+        );
+    }
 }

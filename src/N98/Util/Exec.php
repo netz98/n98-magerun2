@@ -38,7 +38,11 @@ class Exec
             throw new RuntimeException($message);
         }
 
-        $command = self::SET_O_PIPEFAIL . $command . self::REDIRECT_STDERR_TO_STDOUT;
+        if (OperatingSystem::isBashCompatibleShell()) {
+            $command = self::SET_O_PIPEFAIL . $command;
+        }
+
+        $command .= self::REDIRECT_STDERR_TO_STDOUT;
 
         exec($command, $outputArray, $returnCode);
         $output = self::parseCommandOutput((array) $outputArray);
@@ -70,4 +74,6 @@ class Exec
     {
         return implode(PHP_EOL, $commandOutput) . PHP_EOL;
     }
+
+
 }
