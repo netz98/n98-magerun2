@@ -38,7 +38,7 @@ class Exec
             throw new RuntimeException($message);
         }
 
-        if (OperatingSystem::isBashCompatibleShell()) {
+        if (OperatingSystem::isBashCompatibleShell() && self::isPipefailOptionAvailable()) {
             $command = self::SET_O_PIPEFAIL . $command;
         }
 
@@ -75,5 +75,13 @@ class Exec
         return implode(PHP_EOL, $commandOutput) . PHP_EOL;
     }
 
+    /**
+     * @return bool
+     */
+    private static function isPipefailOptionAvailable()
+    {
+        exec('set -o | grep pipefail 2>&1', $output, $returnCode);
 
+        return $returnCode == self::CODE_CLEAN_EXIT;
+    }
 }
