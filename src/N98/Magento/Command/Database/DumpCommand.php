@@ -350,14 +350,14 @@ HELP;
         $commandOutput = '';
 
         if ($input->getOption('stdout')) {
-            passthru($command, $returnValue);
+            passthru($command, $returnCode);
         } else {
-            Exec::run($command, $commandOutput, $returnValue);
+            Exec::run($command, $commandOutput, $returnCode);
         }
 
-        if ($returnValue > 0) {
+        if ($returnCode > 0) {
             $output->writeln('<error>' . $commandOutput . '</error>');
-            $output->writeln('<error>Return Code: ' . $returnValue . '. ABORTED.</error>');
+            $output->writeln('<error>Return Code: ' . $returnCode . '. ABORTED.</error>');
 
             return false;
         }
