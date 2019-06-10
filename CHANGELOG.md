@@ -1,6 +1,11 @@
 RECENT CHANGES
 ==============
 
+3.0.10
+------
+
+- Fix: db:dump returns exit code 0 on fail (by Christian Münch)
+
 3.0.9
 -----
 
