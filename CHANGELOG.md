@@ -5,6 +5,7 @@ RECENT CHANGES
 ------
 
 - Fix: db:dump returns exit code 0 on fail (by Christian Münch)
+- Fix #458 - Password dialog is hidden
 
 3.0.9
 -----
