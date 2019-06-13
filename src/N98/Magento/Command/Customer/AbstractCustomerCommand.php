@@ -5,6 +5,8 @@ namespace N98\Magento\Command\Customer;
 use Magento\Customer\Model\Customer;
 use Magento\Customer\Model\Resource\Customer\Collection as CustomerCollection;
 use N98\Magento\Command\AbstractMagentoCommand;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
 
 class AbstractCustomerCommand extends AbstractMagentoCommand
 {
@@ -59,5 +61,32 @@ class AbstractCustomerCommand extends AbstractMagentoCommand
     protected function getCustomerCollection()
     {
         return $this->getCustomer()->getCollection();
+    }
+
+    /**
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     *
+     * @return Customer|void
+     */
+    protected function detectCustomer(InputInterface $input, OutputInterface $output)
+    {
+        $helperParameter = $this->getHelper('parameter');
+        $email = $helperParameter->askEmail($input, $output);
+        $website = $helperParameter->askWebsite($input, $output);
+
+        $customer = $this->getCustomer();
+        $customer->setWebsiteId($website->getId());
+        $customer->loadByEmail($email);
+        $customerId = $customer->getId();
+        if ($customerId <= 0) {
+            $output->writeln('<error>Customer was not found</error>');
+
+            return null;
+        }
+
+        $customer->load($customerId);
+
+        return $customer;
     }
 }
