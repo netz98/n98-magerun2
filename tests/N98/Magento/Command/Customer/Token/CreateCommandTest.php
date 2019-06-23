@@ -37,7 +37,7 @@ class CreateCommandTest extends TestCase
 
         $commandTester = new CommandTester($command);
         $commandTester->execute([
-            'email' => $generatedEmail,
+            'email'        => $generatedEmail,
             '--no-newline' => true,
         ]);
 
