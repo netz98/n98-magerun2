@@ -233,6 +233,13 @@ Change customer password
 
 - Website parameter must only be given if more than one websites are available.
 
+Create Customer Token for Webapi
+""""""""""""""""""""""""""""""""
+
+.. code-block:: sh
+
+   $ n98-magerun2.phar customer:token:create <email>
+
 Magento Installer
 """""""""""""""""
 
@@ -437,6 +444,38 @@ Enable Magento cache
 
 If no code is specified, all cache types will be enabled.
 Run `cache:list` command to see all codes.
+
+List admin users
+""""""""""""""""
+
+.. code-block:: sh
+
+   $ n98-magerun2.phar admin:user:list [--format[="..."]]
+
+Change admin user password
+""""""""""""""""""""""""""
+
+.. code-block:: sh
+
+   $ n98-magerun2.phar admin:user:change-password [username] [password]
+
+Delete admin user
+"""""""""""""""""
+
+.. code-block:: sh
+
+   $ n98-magerun2.phar admin:user:delete [email|username] [-f]
+
+ID can be e-mail or username. The command will attempt to find the user by username first and if it cannot be found it
+will attempt to find the user by e-mail. If ID is omitted you will be prompted for it. If the force parameter "-f" is
+omitted you will be prompted for confirmation.
+
+Create Admin Token for Webapi
+"""""""""""""""""""""""""""""
+
+.. code-block:: sh
+
+   $ n98-magerun2.phar admin:token:create <username>
 
 Dump database
 """""""""""""
