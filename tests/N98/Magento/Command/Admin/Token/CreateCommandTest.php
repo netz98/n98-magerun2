@@ -17,7 +17,7 @@ class CreateCommandTest extends TestCase
 
         $commandTester = new CommandTester($command);
         $commandTester->execute([
-            'username' => 'admin',
+            'username'     => 'admin',
             '--no-newline' => true,
         ]);
 

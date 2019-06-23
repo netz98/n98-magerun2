@@ -11,7 +11,6 @@ use PHPUnit_Framework_MockObject_Generator;
 use PHPUnit_Framework_MockObject_Matcher_AnyInvokedCount;
 use PHPUnit_Framework_MockObject_MockObject;
 use PHPUnit_Framework_MockObject_Stub_Return;
-use PHPUnit_Framework_SkippedTestError;
 use RuntimeException;
 
 /**
