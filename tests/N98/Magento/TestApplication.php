@@ -201,11 +201,11 @@ class TestApplication
      * Mark the test as skipped.
      *
      * @param  string $message
-     * @throws PHPUnit_Framework_SkippedTestError
+     * @throws \PHPUnit\Framework\SkippedTestError
      * @since  Method available since Release 3.0.0
      */
     public static function markTestSkipped($message = '')
     {
-        throw new PHPUnit_Framework_SkippedTestError($message);
+        throw new \PHPUnit\Framework\SkippedTestError($message);
     }
 }
