@@ -9,6 +9,7 @@ use Magento\User\Model\User;
 use N98\Magento\Command\AbstractMagentoCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
@@ -32,6 +33,7 @@ class CreateCommand extends AbstractMagentoCommand
         $this
             ->setName('admin:token:create')
             ->addArgument('username', InputArgument::OPTIONAL, 'Username')
+            ->addOption('no-newline', null, InputOption::VALUE_NONE, 'do not output the trailing newline')
             ->setDescription('Create a new token for an admin user.');
     }
 
@@ -80,6 +82,6 @@ class CreateCommand extends AbstractMagentoCommand
         $tokenModel = $this->tokenModelFactory->create();
         $tokenModel->createAdminToken($adminUser->getId());
 
-        $output->write($tokenModel->getToken());
+        $output->write($tokenModel->getToken(), !$input->getOption('no-newline'));
     }
 }
