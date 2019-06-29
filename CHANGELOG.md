@@ -1,6 +1,16 @@
 RECENT CHANGES
 ==============
 
+3.1.0
+-----
+
+- Fix: #470: Sales stripped database dump does not exclude EE tables (by Rik Willems)
+- Add: #475: Update travis versions (by Christian Münch)
+- Add: #476: Update versions for installer (by Christian Münch)
+- New: #466: Phar dist package (by Thomas Negeli)
+- New: command admin:token:create (by Christian Münch) 
+- New: command customer:token:create (by Christian Münch) 
+
 3.0.10
 ------
 

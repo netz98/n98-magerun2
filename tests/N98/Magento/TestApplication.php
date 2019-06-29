@@ -11,7 +11,6 @@ use PHPUnit_Framework_MockObject_Generator;
 use PHPUnit_Framework_MockObject_Matcher_AnyInvokedCount;
 use PHPUnit_Framework_MockObject_MockObject;
 use PHPUnit_Framework_MockObject_Stub_Return;
-use PHPUnit_Framework_SkippedTestError;
 use RuntimeException;
 
 /**
@@ -201,11 +200,11 @@ class TestApplication
      * Mark the test as skipped.
      *
      * @param  string $message
-     * @throws PHPUnit_Framework_SkippedTestError
+     * @throws \PHPUnit\Framework\SkippedTestError
      * @since  Method available since Release 3.0.0
      */
     public static function markTestSkipped($message = '')
     {
-        throw new PHPUnit_Framework_SkippedTestError($message);
+        throw new \PHPUnit\Framework\SkippedTestError($message);
     }
 }

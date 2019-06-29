@@ -2,8 +2,10 @@
 
 namespace N98\Magento\Command\Customer;
 
+use Exception;
 use Magento\Customer\Model\Attribute as CustomerAttribute;
 use Magento\Customer\Model\Resource\Customer;
+use Magento\Eav\Model\Entity\Attribute\Frontend\DefaultFrontend;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -28,11 +30,11 @@ class InfoCommand extends AbstractCustomerCommand
     }
 
     /**
-     * @param \Symfony\Component\Console\Input\InputInterface $input
-     * @param \Symfony\Component\Console\Output\OutputInterface $output
+     * @param InputInterface $input
+     * @param OutputInterface $output
      *
      * @return int|void
-     * @throws \Exception
+     * @throws Exception
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -65,7 +67,7 @@ class InfoCommand extends AbstractCustomerCommand
                     continue;
                 }
 
-                /** @var \Magento\Eav\Model\Entity\Attribute\Frontend\DefaultFrontend $attributeFrontend */
+                /** @var DefaultFrontend $attributeFrontend */
                 $attributeFrontend = $attribute->getFrontend();
 
                 $tableLabel = $attributeFrontend->getLabel();
@@ -80,7 +82,7 @@ class InfoCommand extends AbstractCustomerCommand
                     }
                 }
                 $table[] = [$key, $tableLabel, $tableValue];
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 $table[] = [$key, $key, $value];
             }
         }
@@ -90,32 +92,5 @@ class InfoCommand extends AbstractCustomerCommand
         $helperTable->setHeaders(['Code', 'Name', 'Value']);
         $helperTable->setRows($table);
         $helperTable->render($output);
-    }
-
-    /**
-     * @param InputInterface $input
-     * @param OutputInterface $output
-     *
-     * @return \Magento\Customer\Model\Customer|void
-     */
-    protected function detectCustomer(InputInterface $input, OutputInterface $output)
-    {
-        $helperParameter = $this->getHelper('parameter');
-        $email = $helperParameter->askEmail($input, $output);
-        $website = $helperParameter->askWebsite($input, $output);
-
-        $customer = $this->getCustomer();
-        $customer->setWebsiteId($website->getId());
-        $customer->loadByEmail($email);
-        $customerId = $customer->getId();
-        if ($customerId <= 0) {
-            $output->writeln('<error>Customer was not found</error>');
-
-            return null;
-        }
-
-        $customer->load($customerId);
-
-        return $customer;
     }
 }

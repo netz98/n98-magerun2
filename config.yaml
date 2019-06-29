@@ -49,6 +49,7 @@ commands:
     - N98\Magento\Command\Admin\User\ListCommand
     - N98\Magento\Command\Admin\User\DeleteUserCommand
     - N98\Magento\Command\Admin\User\ChangePasswordCommand
+    - N98\Magento\Command\Admin\Token\CreateCommand
     - N98\Magento\Command\Cache\CleanCommand
     - N98\Magento\Command\Cache\DisableCommand
     - N98\Magento\Command\Cache\EnableCommand
@@ -65,6 +66,7 @@ commands:
     - N98\Magento\Command\Customer\ChangePasswordCommand
     - N98\Magento\Command\Customer\InfoCommand
     - N98\Magento\Command\Customer\ListCommand
+    - N98\Magento\Command\Customer\Token\CreateCommand
     - N98\Magento\Command\Database\ConsoleCommand
     - N98\Magento\Command\Database\CreateCommand
     - N98\Magento\Command\Database\DropCommand
@@ -166,7 +168,7 @@ commands:
           sales_creditmemo
             sales_creditmemo_*
           sales_recurring_* sales_refunded_* sales_payment_*
-          enterprise_sales_* enterprise_customer_sales_* sales_bestsellers_*
+          enterprise_sales_* enterprise_customer_sales_* sales_bestsellers_* magento_customercustomattributes_sales_flat_*
           paypal_billing_agreement*
           paypal_payment_transaction
           paypal_settlement_report*
@@ -234,6 +236,13 @@ commands:
 
   N98\Magento\Command\Installer\InstallCommand:
     magento-packages:
+      - name: magento-ce-2.3.2
+        package: magento/project-community-edition
+        version: 2.3.2
+        options:
+          prefer-dist: true
+          stability: alpha
+          repository-url: https://repo.magento.com
       - name: magento-ce-2.3.1
         package: magento/project-community-edition
         version: 2.3.1
@@ -244,6 +253,20 @@ commands:
       - name: magento-ce-2.3.0
         package: magento/project-community-edition
         version: 2.3.0
+        options:
+          prefer-dist: true
+          stability: alpha
+          repository-url: https://repo.magento.com
+      - name: magento-ce-2.2.8
+        package: magento/project-community-edition
+        version: 2.2.8
+        options:
+          prefer-dist: true
+          stability: alpha
+          repository-url: https://repo.magento.com
+      - name: magento-ce-2.2.7
+        package: magento/project-community-edition
+        version: 2.2.7
         options:
           prefer-dist: true
           stability: alpha
@@ -293,6 +316,13 @@ commands:
       - name: magento-ce-2.2.0
         package: magento/project-community-edition
         version: 2.2.0
+        options:
+          prefer-dist: true
+          stability: alpha
+          repository-url: https://repo.magento.com
+      - name: magento-ce-2.1.16
+        package: magento/project-community-edition
+        version: 2.1.16
         options:
           prefer-dist: true
           stability: alpha
