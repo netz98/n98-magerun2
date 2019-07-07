@@ -12,11 +12,19 @@ abstract class AbstractAdminUserCommand extends AbstractMagentoCommand
     protected $userModel;
 
     /**
-     * @param \Magento\User\Model\User $userModel
+     * @var \Magento\User\Model\ResourceModel\User
+     */
+    protected $userResource;
+
+    /**
+     * @param \Magento\User\Model\User               $userModel
+     * @param \Magento\User\Model\ResourceModel\User $userResource
      */
     public function inject(
-        \Magento\User\Model\User $userModel
+        \Magento\User\Model\User $userModel,
+        \Magento\User\Model\ResourceModel\User $userResource
     ) {
         $this->userModel = $userModel;
+        $this->userResource = $userResource;
     }
 }
