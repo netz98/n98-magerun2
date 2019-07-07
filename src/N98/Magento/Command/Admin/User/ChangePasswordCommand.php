@@ -62,7 +62,8 @@ class ChangePasswordCommand extends AbstractAdminUserCommand
             }
             $user->setPassword($password);
             $user->setForceNewPassword(true);
-            $user->save();
+            $this->userResource->save($user);
+            $this->userResource->trackPassword($user, $user->getPassword());
             $output->writeln('<info>Password successfully changed</info>');
         } catch (Exception $e) {
             $output->writeln('<error>' . $e->getMessage() . '</error>');
