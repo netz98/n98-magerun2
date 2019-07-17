@@ -249,6 +249,10 @@ commands:
           *_aggregated_yearly
           *_aggregated_order
       
+      - id: replica
+        description: Replica tables
+        tables: "*_replica"
+
   N98\Magento\Command\Installer\InstallCommand:
     magento-packages:
       - name: magento-ce-2.3.2
