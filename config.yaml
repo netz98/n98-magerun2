@@ -207,7 +207,7 @@ commands:
 
       - id: development
         description: Removes logs and trade data so developers do not have to work with real customer data
-        tables: "@admin @trade @stripped @search @2fa"
+        tables: "@admin @trade @stripped @search @2fa @aggregated"
 
       - id: ee_changelog
         description: Changelog tables of new indexer since EE 1.13
@@ -238,6 +238,17 @@ commands:
         description: New Relic reporting tables
         tables: "reporting_*"
 
+      - id: aggregated
+        description: Aggregated tables
+        tables: >
+          *_aggregated
+          *_aggregated_updated
+          *_aggregated_created
+          *_aggregated_daily
+          *_aggregated_monthly
+          *_aggregated_yearly
+          *_aggregated_order
+      
   N98\Magento\Command\Installer\InstallCommand:
     magento-packages:
       - name: magento-ce-2.3.2
