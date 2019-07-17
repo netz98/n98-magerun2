@@ -144,7 +144,7 @@ commands:
 
       - id: stripped
         description: Standard definition for a stripped dump (logs, sessions, dotmailer)
-        tables: "@log @sessions @dotmailer"
+        tables: "@log @sessions @dotmailer @newrelic_reporting"
 
       - id: sales
         description: Sales data (orders, invoices, creditmemos etc)
@@ -233,6 +233,10 @@ commands:
         tables: >
           msp_tfa_user_config
           msp_tfa_trusted
+
+      - id: newrelic_reporting
+        description: New Relic reporting tables
+        tables: "reporting_*"
 
   N98\Magento\Command\Installer\InstallCommand:
     magento-packages:
