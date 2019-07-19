@@ -1,6 +1,12 @@
 RECENT CHANGES
 ==============
 
+3.2.0
+-----
+
+- Fix: #293: Admin password expires despite recent change (by Robbert Stevens)
+- Imp: #481: Add table groups (by Timon de Groot)
+
 3.1.0
 -----
 
