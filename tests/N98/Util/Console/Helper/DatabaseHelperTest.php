@@ -147,12 +147,12 @@ class DatabaseHelperTest extends TestCase
      */
     public function resolveTables()
     {
-        $tables = $this->getHelper()->resolveTables(array('catalog\_*'));
+        $tables = $this->getHelper()->resolveTables(array('catalog_*'));
         $this->assertContains('catalog_product_entity', $tables);
         $this->assertNotContains('catalogrule', $tables);
 
         $definitions = array(
-            'catalog_glob' => array('tables' => array('catalog\_*')),
+            'catalog_glob' => array('tables' => array('catalog_*')),
             'directory'    => array('tables' => array('directory_country directory_country_format')),
         );
 
