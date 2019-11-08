@@ -153,14 +153,16 @@ class DatabaseHelperTest extends TestCase
 
         $definitions = array(
             'catalog_glob' => array('tables' => array('catalog_*')),
+            'config_glob'  => array('tables' => array('core_config_dat?')),
             'directory'    => array('tables' => array('directory_country directory_country_format')),
         );
 
         $tables = $this->getHelper()->resolveTables(
-            array('@catalog_glob', '@directory'),
+            array('@catalog_glob', '@config_glob', '@directory'),
             $definitions
         );
         $this->assertContains('catalog_product_entity', $tables);
+        $this->assertContains('core_config_data', $tables);
         $this->assertContains('directory_country', $tables);
         $this->assertNotContains('catalogrule', $tables);
     }
