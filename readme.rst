@@ -99,7 +99,7 @@ The command should execute successfully and show you the version number of N98-M
 
 .. code-block:: sh
 
-    n98-magerun2 version 1.3.2 by netz98 GmbH
+    n98-magerun2 version 3.2.0 by netz98 GmbH
 
 You now have successfully installed Magerun! You can tailor the installation further like installing it system-wide and
 enable autocomplete - read on for more information about these and other features.
