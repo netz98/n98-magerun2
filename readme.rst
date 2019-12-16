@@ -575,7 +575,7 @@ Available Table Groups:
 * @ee_changelog Changelog tables of new indexer since EE 1.13
 * @idx Tables with _idx suffix and index event tables
 * @log Log tables
-* @quotes Cart (quote) data
+* @quotes Cart (quote) data and B2B quotes
 * @sales Sales data (orders, invoices, creditmemos etc)
 * @search Search related tables (catalogsearch_)
 * @sessions Database session tables

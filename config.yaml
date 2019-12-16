@@ -177,7 +177,7 @@ commands:
 
       - id: quotes
         description: Cart (quote) data
-        tables: quote quote_*
+        tables: negotiable_quote negotiable_quote_* quote quote_*
 
       - id: customers
         description: Customer data - Should not be used without @sales
@@ -248,7 +248,7 @@ commands:
           *_aggregated_monthly
           *_aggregated_yearly
           *_aggregated_order
-      
+
       - id: replica
         description: Replica tables
         tables: "*_replica"
