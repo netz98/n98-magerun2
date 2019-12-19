@@ -41,7 +41,9 @@
         "phing/phing": "~2.10.0",
         "phpunit/phpunit": "~6.2.0",
         "seld/phar-utils": "~1.0.1",
-        "mikey179/vfsstream": "^1.6"
+        "mikey179/vfsstream": "^1.6",
+        "captainhook/captainhook": "^3.1",
+        "roave/security-advisories": "dev-master"
     },
     "suggest": {
          "n98/magerun2-dist": "Deploys only the phar file. Use this to prevent dependency conflicts."
