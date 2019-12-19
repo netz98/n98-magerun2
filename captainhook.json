@@ -1,0 +1,31 @@
+{
+    "commit-msg": {
+        "enabled": true,
+        "actions": []
+    },
+    "pre-push": {
+        "enabled": false,
+        "actions": []
+    },
+    "pre-commit": {
+        "enabled": true,
+        "actions": [
+            {
+                "action": "\\CaptainHook\\App\\Hook\\PHP\\Action\\Linting",
+                "options": []
+            },
+            {
+                "action": "\\CaptainHook\\App\\Hook\\Composer\\Action\\CheckLockFile",
+                "options": []
+            },
+            {
+                "action": "vendor/bin/php-cs-fixer fix -q --config-file=.php_cs",
+                "options": []
+            }
+        ]
+    },
+    "prepare-commit-msg": {
+        "enabled": false,
+        "actions": []
+    }
+}
