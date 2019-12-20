@@ -72,6 +72,14 @@ matrix:
       php: 7.1
       env: SCRIPT_JOB="PHP-CS-FIXER"
 
+    - name: PHP-CS Fixer PHP 7.2
+      php: 7.2
+      env: SCRIPT_JOB="PHP-CS-FIXER"
+
+    - name: PHP-CS Fixer PHP 7.3
+      php: 7.3
+      env: SCRIPT_JOB="PHP-CS-FIXER"
+
     - name: Build SH
       php: 7.1
       env: SCRIPT_JOB="BUILDSH"
