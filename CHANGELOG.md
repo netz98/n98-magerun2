@@ -1,6 +1,19 @@
 RECENT CHANGES
 ==============
 
+3.3.0
+-----
+
+- Imp: Match Magento Code Style (v2.2.10)
+- Add: Magento 2.3.3 in installer (by Christian Münch) 
+- Imp: #504: Enable PHP 7.3 for travis builds (by Christian Münch)
+- Add: #503: Captainhook suppport (by Christian Münch)
+- Imp: #492: Update readme
+- Add: #501: Strip B2B quotes as part of @quotes alias (by Dan Wallis) 
+- Fix: Composer package naming
+- Fix: #490: Wildcard matching of db:dump command (by Dan Wallis)
+
+
 3.2.0
 -----
 
