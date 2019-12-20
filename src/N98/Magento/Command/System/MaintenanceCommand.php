@@ -34,8 +34,7 @@ class MaintenanceCommand extends AbstractMagentoCommand
                 InputOption::VALUE_NONE,
                 'Set to [1] to disable maintenance mode. Set to [d] to also delete the list with excluded IP addresses.'
             )
-            ->setDescription('Toggles maintenance mode if --on or --off preferences are not set')
-        ;
+            ->setDescription('Toggles maintenance mode if --on or --off preferences are not set');
     }
 
     /**

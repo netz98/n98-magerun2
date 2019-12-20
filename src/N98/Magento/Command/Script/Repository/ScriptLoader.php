@@ -130,7 +130,7 @@ final class ScriptLoader
      */
     private function findScriptFiles()
     {
-        $scriptFiles = array();
+        $scriptFiles = [];
 
         $folders = $this->getFolderPaths();
 
@@ -172,11 +172,11 @@ final class ScriptLoader
     {
         $pathname = $file->getPathname();
 
-        $scriptFile = array(
+        $scriptFile = [
             'fileinfo'    => $file,
             'description' => $this->readDescriptionFromFile($pathname),
             'location'    => $this->getLocation($pathname),
-        );
+        ];
 
         return $scriptFile;
     }

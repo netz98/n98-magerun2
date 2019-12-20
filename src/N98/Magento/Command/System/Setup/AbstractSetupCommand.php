@@ -51,7 +51,7 @@ abstract class AbstractSetupCommand extends AbstractMagentoCommand
                 return $moduleName;
             }
         }
-        
+
         throw new InvalidArgumentException(sprintf('Module does not exist: "%s"', $requestedModuleName));
     }
 

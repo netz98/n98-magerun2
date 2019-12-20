@@ -14,24 +14,24 @@ class CheckTablesCommandTest extends TestCase
         $this->markTestSkipped('Currently we have no myisam tables in a magento2 installation');
 
         $this->assertDisplayContains(
-            array(
+            [
                 'command'  => 'db:maintain:check-tables',
                 '--format' => 'csv',
                 '--type'   => 'quick',
                 '--table'  => 'oauth_nonce',
-            ),
+            ],
             'oauth_nonce,check,quick,OK'
         );
     }
 
     public function testExecuteInnoDb()
     {
-        $input = array(
+        $input = [
             'command'  => 'db:maintain:check-tables',
             '--format' => 'csv',
             '--type'   => 'quick',
             '--table'  => 'catalog_product_entity_media_gallery*',
-        );
+        ];
         $timeRegex = '"\s+[0-9]+\srows","[0-9\.]+\ssecs"';
 
         $this->assertDisplayRegExp(

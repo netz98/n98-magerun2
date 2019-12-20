@@ -85,18 +85,18 @@ HELP;
             $searchPath .= '*';
         }
 
-        $collection->addFieldToFilter('path', array(
+        $collection->addFieldToFilter('path', [
             'like' => str_replace('*', '%', $searchPath),
-        ));
+        ]);
 
         if ($scope = $input->getOption('scope')) {
-            $collection->addFieldToFilter('scope', array('eq' => $scope));
+            $collection->addFieldToFilter('scope', ['eq' => $scope]);
         }
 
         if (strlen($scopeId = $input->getOption('scope-id'))) {
             $collection->addFieldToFilter(
                 'scope_id',
-                array('eq' => $scopeId)
+                ['eq' => $scopeId]
             );
         }
 
@@ -115,7 +115,7 @@ HELP;
         }
 
         foreach ($collection as $item) {
-            $table[] = array(
+            $table[] = [
                 'path'     => $item->getPath(),
                 'scope'    => $item->getScope(),
                 'scope_id' => $item->getScopeId(),
@@ -123,7 +123,7 @@ HELP;
                     $item->getValue(),
                     $input->getOption('decrypt') ? 'decrypt' : ''
                 ),
-            );
+            ];
         }
 
         ksort($table);
@@ -144,20 +144,20 @@ HELP;
      */
     protected function renderAsTable(OutputInterface $output, $table, $format)
     {
-        $formattedTable = array();
+        $formattedTable = [];
         foreach ($table as $row) {
-            $formattedTable[] = array(
+            $formattedTable[] = [
                 $row['path'],
                 $row['scope'],
                 $row['scope_id'],
                 $this->renderTableValue($row['value'], $format),
-            );
+            ];
         }
 
         /* @var $tableHelper \N98\Util\Console\Helper\TableHelper */
         $tableHelper = $this->getHelper('table');
         $tableHelper
-            ->setHeaders(array('Path', 'Scope', 'Scope-ID', 'Value'))
+            ->setHeaders(['Path', 'Scope', 'Scope-ID', 'Value'])
             ->setRows($formattedTable)
             ->renderByFormat($output, $formattedTable, $format);
     }
@@ -227,7 +227,7 @@ HELP;
         foreach ($table as $row) {
             $value = $row['value'];
             if ($value !== null) {
-                $value = str_replace(array("\n", "\r"), array('\n', '\r'), $value);
+                $value = str_replace(["\n", "\r"], ['\n', '\r'], $value);
             }
 
             $disaplayValue = $value === null ? 'NULL' : escapeshellarg($value);

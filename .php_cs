@@ -1,37 +1,30 @@
 <?php
 
-$finder = Symfony\CS\Finder\DefaultFinder::create()
+$finder = PhpCsFixer\Finder::create()
     ->in(__DIR__ . '/src')
     ->in(__DIR__ . '/tests')
 ;
 
-return Symfony\CS\Config::create()
-    ->level(Symfony\CS\FixerInterface::PSR2_LEVEL)
-    ->fixers(
-        array_merge(
-            explode(
-                ',',
-                'single_blank_line_before_namespace,no_blank_lines_after_class_opening,unused_use,ordered_use,' .
-                'concat_with_spaces,spaces_cast,trailing_spaces,unalign_equals'
-            ),
-            array(
-                'array_element_no_space_before_comma', 'array_element_white_space_after_comma',
-                'multiline_array_trailing_comma',
-                'align_double_arrow',
-                'trim_array_spaces',
-                'spaces_cast',
-                'function_typehint_space', 'join_function',
-                'blankline_after_open_tag', 'duplicate_semicolon',
-                'extra_empty_lines', 'no_blank_lines_after_class_opening',
-                'operators_spaces',
-                'remove_leading_slash_use',
-                'remove_lines_between_uses',
-                'newline_after_open_tag',
-                'ordered_use',
-                'standardize_not_equal',
-            )
-        )
-    )
-    ->finder($finder)
-    ->setUsingCache(true)
-;
+return PhpCsFixer\Config::create()
+    ->setFinder($finder)
+    ->setRules([
+        '@PSR2' => true,
+        'array_syntax' => ['syntax' => 'short'],
+        'concat_space' => ['spacing' => 'one'],
+        'include' => true,
+        'new_with_braces' => true,
+        'no_empty_statement' => true,
+        'no_extra_consecutive_blank_lines' => true,
+        'no_leading_import_slash' => true,
+        'no_leading_namespace_whitespace' => true,
+        'no_multiline_whitespace_around_double_arrow' => true,
+        'no_multiline_whitespace_before_semicolons' => true,
+        'no_singleline_whitespace_before_semicolons' => true,
+        'no_trailing_comma_in_singleline_array' => true,
+        'no_unused_imports' => true,
+        'no_whitespace_in_blank_line' => true,
+        'object_operator_without_whitespace' => true,
+        'ordered_imports' => true,
+        'standardize_not_equals' => true,
+        'ternary_operator_spaces' => true,
+    ]);

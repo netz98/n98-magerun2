@@ -24,8 +24,7 @@ class InfoCommand extends AbstractDatabaseCommand
                 null,
                 InputOption::VALUE_OPTIONAL,
                 'Output Format. One of [' . implode(',', RendererFactory::getFormats()) . ']'
-            )
-        ;
+            );
         $this->addDeprecatedAlias('database:info', 'Please use db:info');
 
         $help = <<<HELP
@@ -47,7 +46,7 @@ HELP;
     {
         $this->detectDbSettings($output);
 
-        $settings = array();
+        $settings = [];
         foreach ($this->dbSettings as $key => $value) {
             if (is_array($value)) {
                 if (OutputInterface::VERBOSITY_DEBUG <= $output->getVerbosity()) {
@@ -99,9 +98,9 @@ HELP;
         $mysqlCliString = 'mysql ' . $database->getMysqlClientToolConnectionString();
         $settings['MySQL-Cli-String'] = $mysqlCliString;
 
-        $rows = array();
+        $rows = [];
         foreach ($settings as $settingName => $settingValue) {
-            $rows[] = array($settingName, $settingValue);
+            $rows[] = [$settingName, $settingValue];
         }
 
         if (($settingArgument = $input->getArgument('setting')) !== null) {
@@ -111,7 +110,7 @@ HELP;
             $output->writeln((string) $settings[$settingArgument]);
         } else {
             $this->getHelper('table')
-                ->setHeaders(array('Name', 'Value'))
+                ->setHeaders(['Name', 'Value'])
                 ->renderByFormat($output, $rows, $input->getOption('format'));
         }
     }

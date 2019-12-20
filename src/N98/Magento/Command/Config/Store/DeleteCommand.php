@@ -20,11 +20,11 @@ class DeleteCommand extends AbstractConfigCommand
     /**
      * @var array
      */
-    protected $_scopes = array(
+    protected $_scopes = [
         'default',
         'websites',
         'stores',
-    );
+    ];
 
     protected function configure()
     {
@@ -40,8 +40,7 @@ class DeleteCommand extends AbstractConfigCommand
                 'default'
             )
             ->addOption('scope-id', null, InputOption::VALUE_OPTIONAL, 'The config value\'s scope ID')
-            ->addOption('all', null, InputOption::VALUE_NONE, 'Delete all entries by path')
-        ;
+            ->addOption('all', null, InputOption::VALUE_NONE, 'Delete all entries by path');
 
         $help = <<<HELP
 To delete all entries if a path you can set the option --all.
@@ -75,7 +74,7 @@ HELP;
         $this->_validateScopeParam($input->getOption('scope'));
         $scopeId = $this->_convertScopeIdParam($input->getOption('scope'), $input->getOption('scope-id'));
 
-        $deleted = array();
+        $deleted = [];
 
         $paths = $this->resolvePaths($input->getArgument('path'), $scopeId);
 
@@ -86,7 +85,7 @@ HELP;
 
         if (count($deleted) > 0) {
             $this->getHelper('table')
-                ->setHeaders(array('deleted path', 'scope', 'id'))
+                ->setHeaders(['deleted path', 'scope', 'id'])
                 ->setRows($deleted)
                 ->render($output);
         }
@@ -101,12 +100,12 @@ HELP;
             return (array) $path;
         }
 
-        $paths = array();
+        $paths = [];
 
         $collection = clone $this->collection;
 
         $searchPath = str_replace('*', '%', $path);
-        $collection->addFieldToFilter('path', array('like' => $searchPath));
+        $collection->addFieldToFilter('path', ['like' => $searchPath]);
 
         if ($scopeId) {
             $collection->addFieldToFilter('scope_id', $scopeId);
@@ -137,18 +136,18 @@ HELP;
         $path,
         $scopeId
     ) {
-        $deleted = array();
+        $deleted = [];
         if ($input->getOption('all')) {
             $storeManager = $this->getObjectManager()->get('Magento\Store\Model\StoreManager');
 
             // Delete default
             $this->delete($configWriter, $deleted, $path, 'default', 0);
 
-            $deleted[] = array(
+            $deleted[] = [
                 'path'    => $path,
                 'scope'   => 'default',
                 'scopeId' => 0,
-            );
+            ];
 
             // Delete websites
             foreach ($storeManager->getWebsites() as $website) {
@@ -172,11 +171,11 @@ HELP;
     {
         $configWriter->delete($path, $scope, $scopeId);
 
-        $deleted[] = array(
+        $deleted[] = [
             'path'    => $path,
             'scope'   => $scope,
             'scopeId' => $scopeId,
-        );
+        ];
     }
 
     /**
@@ -188,24 +187,24 @@ HELP;
      */
     private function resolveScopeIds($path, $scope, $scopeId)
     {
-        $result = array();
+        $result = [];
 
         if ($scopeId !== null) {
-            $result[] = array($path, $scope, $scopeId);
+            $result[] = [$path, $scope, $scopeId];
 
             return $result;
         }
 
         $collection = clone $this->collection;
 
-        $collection->addFieldToFilter('path', array('eq' => $path));
-        $collection->addFieldToFilter('scope', array('eq' => $scope));
+        $collection->addFieldToFilter('path', ['eq' => $path]);
+        $collection->addFieldToFilter('scope', ['eq' => $scope]);
         $collection->addOrder('scope_id', 'ASC');
 
         $collection->clear();
 
         foreach ($collection as $item) {
-            $result[] = array($item->getPath(), $item->getScope(), $item->getScopeId());
+            $result[] = [$item->getPath(), $item->getScope(), $item->getScopeId()];
         }
 
         return $result;

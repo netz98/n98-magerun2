@@ -10,10 +10,10 @@ class ScriptCommandTest extends TestCase
 {
     public function testExecute()
     {
-        $input = array(
+        $input = [
             'command'  => 'script',
             'filename' => __DIR__ . '/_files/test.mr',
-        );
+        ];
 
         // Check pre defined vars
         $this->assertDisplayRegExp($input, '~^\Qmagento.root: \E/.+\R$~m');

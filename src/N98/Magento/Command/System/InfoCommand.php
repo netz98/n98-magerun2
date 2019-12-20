@@ -72,8 +72,7 @@ class InfoCommand extends AbstractMagentoCommand
                 null,
                 InputOption::VALUE_OPTIONAL,
                 'Output Format. One of [' . implode(',', RendererFactory::getFormats()) . ']'
-            )
-        ;
+            );
     }
 
     /**
@@ -141,9 +140,9 @@ class InfoCommand extends AbstractMagentoCommand
         $this->addCategoryCount();
         $this->addProductCount();
 
-        $table = array();
+        $table = [];
         foreach ($this->infos as $key => $value) {
-            $table[] = array($key, $value);
+            $table[] = [$key, $value];
         }
 
         if (($settingArgument = $input->getArgument('key')) !== null) {
@@ -155,7 +154,7 @@ class InfoCommand extends AbstractMagentoCommand
             $output->writeln((string) $this->infos[$settingArgument]);
         } else {
             $this->getHelper('table')
-                ->setHeaders(array('name', 'value'))
+                ->setHeaders(['name', 'value'])
                 ->renderByFormat($output, $table, $input->getOption('format'));
         }
     }

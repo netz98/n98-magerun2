@@ -25,7 +25,7 @@ class PreCheckPhp extends AbstractSubCommand
     protected function checkExtensions()
     {
         $extensions = $this->commandConfig['installation']['pre-check']['php']['extensions'];
-        $missingExtensions = array();
+        $missingExtensions = [];
         foreach ($extensions as $extension) {
             if (!extension_loaded($extension)) {
                 $missingExtensions[] = $extension;

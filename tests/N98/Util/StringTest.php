@@ -21,23 +21,23 @@ class StringTest extends \PHPUnit\Framework\TestCase
      */
     public static function trimExplodeEmptyProvider()
     {
-        return array(
-            array(
+        return [
+            [
                 ',',
                 'Foo,Bar',
-                array('Foo', 'Bar'),
-            ),
-            array(
+                ['Foo', 'Bar'],
+            ],
+            [
                 '#',
                 ' Foo# Bar',
-                array('Foo', 'Bar'),
-            ),
-            array(
+                ['Foo', 'Bar'],
+            ],
+            [
                 ',',
                 ',,Foo, Bar,,',
-                array('Foo', 'Bar'),
-            ),
-        );
+                ['Foo', 'Bar'],
+            ],
+        ];
     }
 
     /**

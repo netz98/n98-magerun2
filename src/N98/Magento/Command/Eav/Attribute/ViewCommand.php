@@ -54,7 +54,7 @@ class ViewCommand extends AbstractAttributeCommand
 
         $this
             ->getHelper('table')
-            ->setHeaders(array('Type', 'Value'))
+            ->setHeaders(['Type', 'Value'])
             ->renderByFormat($output, $table, $input->getOption('format'));
     }
 
@@ -67,44 +67,44 @@ class ViewCommand extends AbstractAttributeCommand
      */
     public function getTableInput($isFrontend = false)
     {
-        $table = array(
-            'Id'             => array('ID'),
-            'Name'           => array('Code'),
-            'AttributeSetId' => array('Attribute-Set-ID'),
-            'VisibleOnFront' => array('Visible-On-Front', function ($value) {
+        $table = [
+            'Id'             => ['ID'],
+            'Name'           => ['Code'],
+            'AttributeSetId' => ['Attribute-Set-ID'],
+            'VisibleOnFront' => ['Visible-On-Front', function ($value) {
                 return $value ? 'yes' : 'no';
-            }),
-            'AttributeModel' => array('Attribute-Model'),
-            'BackendModel'   => array('Backend-Model'),
-            'BackendTable'   => array('Backend-Table'),
-            'BackendType'    => array('Backend-Type'),
-            'SourceModel'    => array('Source-Model'),
-            'CacheIdTags'    => array('Cache-ID-Tags', function ($values) {
+            }],
+            'AttributeModel' => ['Attribute-Model'],
+            'BackendModel'   => ['Backend-Model'],
+            'BackendTable'   => ['Backend-Table'],
+            'BackendType'    => ['Backend-Type'],
+            'SourceModel'    => ['Source-Model'],
+            'CacheIdTags'    => ['Cache-ID-Tags', function ($values) {
                 return implode(',', (array) $values);
-            }),
-            'CacheTags' => array('Cache-Tags', function ($values) {
+            }],
+            'CacheTags' => ['Cache-Tags', function ($values) {
                 return implode(',', (array) $values);
-            }),
-            'DefaultValue' => array('Default-Value'),
-            'FlatColumns'  => array(
+            }],
+            'DefaultValue' => ['Default-Value'],
+            'FlatColumns'  => [
                 'Flat-Columns',
                 function ($values) {
                     return implode(',', array_keys((array) $values));
                 },
-            ),
-            'FlatIndexes' => array(
+            ],
+            'FlatIndexes' => [
                 'Flat-Indexes',
                 function ($values) {
                     return implode(',', array_keys((array) $values));
                 },
-            ),
-        );
+            ],
+        ];
 
         if ($isFrontend) {
-            $table['Frontend/Label'] = array('Frontend-Label');
-            $table['Frontend/Class'] = array('Frontend-Class');
-            $table['Frontend/InputType'] = array('Frontend-Input-Type');
-            $table['Frontend/InputRendererClass'] = array('Frontend-Input-Renderer-Class');
+            $table['Frontend/Label'] = ['Frontend-Label'];
+            $table['Frontend/Class'] = ['Frontend-Class'];
+            $table['Frontend/InputType'] = ['Frontend-Input-Type'];
+            $table['Frontend/InputRendererClass'] = ['Frontend-Input-Renderer-Class'];
         }
 
         return $table;
@@ -118,7 +118,7 @@ class ViewCommand extends AbstractAttributeCommand
      */
     private function getTable($attribute)
     {
-        $table = array();
+        $table = [];
 
         foreach ($this->getTableInput($attribute->getFrontend()) as $code => $info) {
             $label = array_shift($info);
@@ -134,11 +134,11 @@ class ViewCommand extends AbstractAttributeCommand
             // Optional formatting callback
             $value = is_callable($callback) ? $callback($value) : $value;
 
-            if ($value === array()) {
+            if ($value === []) {
                 $value = '';
             }
 
-            $table[] = array($label, trim($value));
+            $table[] = [$label, trim($value)];
         }
 
         return $table;

@@ -8,10 +8,10 @@ class VariablesCommandTest extends TestCase
 {
     public function testExecute()
     {
-        $input = array(
+        $input = [
             'command'  => 'db:variables',
             '--format' => 'csv',
-        );
+        ];
 
         $this->assertDisplayContains($input, 'have_query_cache');
         $this->assertDisplayContains($input, 'innodb_log_buffer_size');
@@ -21,11 +21,11 @@ class VariablesCommandTest extends TestCase
 
     public function testSearch()
     {
-        $input = array(
+        $input = [
             'command'  => 'db:variables',
             '--format' => 'csv',
             'search'   => 'Innodb%',
-        );
+        ];
 
         $this->assertDisplayContains($input, 'innodb_concurrency_tickets');
         $this->assertDisplayContains($input, 'innodb_file_format_check');
@@ -36,12 +36,12 @@ class VariablesCommandTest extends TestCase
 
     public function testRounding()
     {
-        $input = array(
+        $input = [
             'command'    => 'db:variables',
             '--format'   => 'csv',
             '--rounding' => '2',
             'search'     => '%size%',
-        );
+        ];
 
         $this->assertDisplayRegExp($input, '~max_binlog_stmt_cache_size," [0-9\.]+[A-Z]"~');
         $this->assertDisplayRegExp($input, '~myisam_max_sort_file_size," +[0-9\.]+[A-Z]"~');

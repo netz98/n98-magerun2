@@ -36,7 +36,7 @@ class MakeModuleCommand extends AbstractGeneratorCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $moduleName = new ModuleNameStructure($input->getArgument('modulename'));
-        
+
         $filesystem = $this->get(Filesystem::class);
         /** @var $filesystem Filesystem */
         $appDirectoryWriter = $filesystem->getDirectoryWrite(DirectoryList::APP);

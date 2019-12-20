@@ -186,7 +186,7 @@ class DatabaseHelper extends AbstractHelper
         unset($dsn['dbname']);
 
         // use all remaining parts in the DSN
-        $buildDsn = array();
+        $buildDsn = [];
         foreach ($dsn as $key => $val) {
             if (is_array($val)) {
                 continue;
@@ -293,13 +293,13 @@ class DatabaseHelper extends AbstractHelper
             $type = (string) $type;
         }
 
-        if (!in_array($type, array('@@', '@'), true)) {
+        if (!in_array($type, ['@@', '@'], true)) {
             throw new InvalidArgumentException(
                 sprintf('Invalid mysql variable type "%s", must be "@@" (system) or "@" (session)', $type)
             );
         }
 
-        $quoted = '`' . strtr($name, array('`' => '``')) . '`';
+        $quoted = '`' . strtr($name, ['`' => '``']) . '`';
         $query = "SELECT {$type}{$quoted};";
 
         $connection = $this->getConnection();
@@ -327,7 +327,7 @@ class DatabaseHelper extends AbstractHelper
      */
     public function getTableDefinitions(array $commandConfig)
     {
-        $tableDefinitions = array();
+        $tableDefinitions = [];
         if (!isset($commandConfig['table-groups'])) {
             return $tableDefinitions;
         }
@@ -357,10 +357,10 @@ class DatabaseHelper extends AbstractHelper
 
             $description = isset($definition['description']) ? $definition['description'] : '';
 
-            $tableDefinitions[$id] = array(
+            $tableDefinitions[$id] = [
                 'tables'      => $tables,
                 'description' => $description,
-            );
+            ];
         }
 
         return $tableDefinitions;
@@ -375,13 +375,13 @@ class DatabaseHelper extends AbstractHelper
      * @throws RuntimeException
      * @throws \Magento\Framework\Exception\FileSystemException
      */
-    public function resolveTables(array $list, array $definitions = array(), array $resolved = array())
+    public function resolveTables(array $list, array $definitions = [], array $resolved = [])
     {
         if ($this->_tables === null) {
             $this->_tables = $this->getTables(true);
         }
 
-        $resolvedList = array();
+        $resolvedList = [];
         foreach ($list as $entry) {
             if (substr($entry, 0, 1) == '@') {
                 $code = substr($entry, 1);
@@ -405,13 +405,13 @@ class DatabaseHelper extends AbstractHelper
                 $connection = $this->getConnection();
                 $sth = $connection->prepare(
                     'SHOW TABLES LIKE :like',
-                    array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY)
+                    [PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY]
                 );
                 $entry = str_replace('_', '\\_', $entry);
                 $entry = str_replace('*', '%', $entry);
                 $entry = str_replace('?', '_', $entry);
                 $sth->execute(
-                    array(':like' => $this->dbSettings['prefix'] . $entry)
+                    [':like' => $this->dbSettings['prefix'] . $entry]
                 );
                 $rows = $sth->fetchAll();
                 foreach ($rows as $row) {
@@ -447,7 +447,7 @@ class DatabaseHelper extends AbstractHelper
             throw new RuntimeException("Invalid tables definition of table-groups code: @$code");
         }
 
-        $tables = array_reduce((array) $tables, array($this, 'resolveTablesArray'), null);
+        $tables = array_reduce((array) $tables, [$this, 'resolveTablesArray'], null);
 
         return $tables;
     }
@@ -466,7 +466,7 @@ class DatabaseHelper extends AbstractHelper
 
         if (is_array($item)) {
             if (count($item) > 1) {
-                $item = array_reduce($item, array($this, 'resolveTablesArray'), (array) $carry);
+                $item = array_reduce($item, [$this, 'resolveTablesArray'], (array) $carry);
             }
         } else {
             throw new InvalidArgumentException(sprintf('Unable to handle %s', var_export($item, true)));
@@ -495,7 +495,7 @@ class DatabaseHelper extends AbstractHelper
 
         $column = $columnName = 'table_name';
 
-        $input = array();
+        $input = [];
 
         if ($withoutPrefix && $prefixLength) {
             $column = sprintf('SUBSTRING(%1$s FROM 1 + CHAR_LENGTH(:name)) %1$s', $columnName);
@@ -511,7 +511,7 @@ class DatabaseHelper extends AbstractHelper
         }
 
         $query = sprintf('SELECT %s FROM information_schema.tables WHERE %s;', $column, $condition);
-        $statement = $db->prepare($query, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
+        $statement = $db->prepare($query, [PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY]);
         $result = $statement->execute($input);
 
         if (!$result) {
@@ -560,11 +560,11 @@ class DatabaseHelper extends AbstractHelper
      */
     private function quoteLike($string, $escape = '=')
     {
-        $translation = array(
+        $translation = [
             $escape => $escape . $escape,
             '%'     => $escape . '%',
             '_'     => $escape . '_',
-        );
+        ];
 
         return strtr($string, $translation);
     }
@@ -582,9 +582,9 @@ class DatabaseHelper extends AbstractHelper
         $db = $this->getConnection();
         $prefix = $this->dbSettings['prefix'];
         if (strlen($prefix) > 0) {
-            $statement = $db->prepare('SHOW TABLE STATUS LIKE :like', array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
+            $statement = $db->prepare('SHOW TABLE STATUS LIKE :like', [PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY]);
             $statement->execute(
-                array(':like' => $prefix . '%')
+                [':like' => $prefix . '%']
             );
         } else {
             $statement = $db->query('SHOW TABLE STATUS');
@@ -592,7 +592,7 @@ class DatabaseHelper extends AbstractHelper
 
         if ($statement) {
             $result = $statement->fetchAll(PDO::FETCH_ASSOC);
-            $return = array();
+            $return = [];
             foreach ($result as $table) {
                 if (true === $withoutPrefix) {
                     $table['Name'] = str_replace($prefix, '', $table['Name']);
@@ -603,7 +603,7 @@ class DatabaseHelper extends AbstractHelper
             return $return;
         }
 
-        return array();
+        return [];
     }
 
     /**
@@ -690,10 +690,10 @@ class DatabaseHelper extends AbstractHelper
         if (null !== $variable) {
             $statement = $db->prepare(
                 'SHOW /*!50000 GLOBAL */ ' . $command . ' LIKE :like',
-                array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY)
+                [PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY]
             );
             $statement->execute(
-                array(':like' => $variable)
+                [':like' => $variable]
             );
         } else {
             $statement = $db->query('SHOW /*!50000 GLOBAL */ ' . $command);
@@ -702,7 +702,7 @@ class DatabaseHelper extends AbstractHelper
         if ($statement) {
             /** @var array|string[] $result */
             $result = $statement->fetchAll(PDO::FETCH_ASSOC);
-            $return = array();
+            $return = [];
             foreach ($result as $row) {
                 $return[$row['Variable_name']] = $row['Value'];
             }
@@ -710,7 +710,7 @@ class DatabaseHelper extends AbstractHelper
             return $return;
         }
 
-        return array();
+        return [];
     }
 
     /**

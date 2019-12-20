@@ -19,7 +19,7 @@
                 "options": []
             },
             {
-                "action": "vendor/bin/php-cs-fixer fix -q --config-file=.php_cs",
+                "action": "vendor/bin/php-cs-fixer fix -q --config=.php_cs",
                 "options": []
             }
         ]

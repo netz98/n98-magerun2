@@ -34,7 +34,7 @@ class ListCommandTest extends TestCase
     {
         /* @var $command ListCommand */
         $command = $this->assertExecute(
-            array('command' => 'dev:module:list', '--vendor' => self::NONEXISTENT_VENDOR)
+            ['command' => 'dev:module:list', '--vendor' => self::NONEXISTENT_VENDOR]
         )->getCommand();
         $this->assertEmpty($command->getModuleList());
     }

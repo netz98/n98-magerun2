@@ -19,13 +19,13 @@ class AbstractSetupCommandTest extends TestCase
     {
         $this->command = $this->getMockBuilder('N98\Magento\Command\System\Setup\AbstractSetupCommand')
             ->disableOriginalConstructor()
-            ->setMethods(array('getMagentoModuleList'))
+            ->setMethods(['getMagentoModuleList'])
             ->getMockForAbstractClass();
 
         $this->command
             ->expects($this->once())
             ->method('getMagentoModuleList')
-            ->will($this->returnValue(array('Magento_Catalog' => 'info', 'Magento_Customer' => 'info')));
+            ->will($this->returnValue(['Magento_Catalog' => 'info', 'Magento_Customer' => 'info']));
     }
 
     /**
@@ -46,12 +46,12 @@ class AbstractSetupCommandTest extends TestCase
      */
     public function validModuleNameProvider()
     {
-        return array(
-            array('magento_catalog'),
-            array('magento_customer'),
-            array('Magento_Catalog'),
-            array('MaGeNtO_cUstOmeR'),
-        );
+        return [
+            ['magento_catalog'],
+            ['magento_customer'],
+            ['Magento_Catalog'],
+            ['MaGeNtO_cUstOmeR'],
+        ];
     }
 
     /**

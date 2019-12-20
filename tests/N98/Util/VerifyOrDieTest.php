@@ -88,10 +88,10 @@ class VerifyOrDieTest extends TestCase
      */
     public function provideNonPortableFilenames()
     {
-        return array(
-            array('no-slash-/-in.there'),
-            array('windoze-limits-<>:"/\\|?*'),
-            array('lets-keep-spaces   out'),
-        );
+        return [
+            ['no-slash-/-in.there'],
+            ['windoze-limits-<>:"/\\|?*'],
+            ['lets-keep-spaces   out'],
+        ];
     }
 }

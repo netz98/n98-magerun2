@@ -25,8 +25,7 @@ class BaseUrlListCommand extends AbstractMagentoCommand
                 null,
                 InputOption::VALUE_OPTIONAL,
                 'Output Format. One of [' . implode(',', RendererFactory::getFormats()) . ']'
-            )
-        ;
+            );
     }
 
     /**
@@ -53,17 +52,17 @@ class BaseUrlListCommand extends AbstractMagentoCommand
         $this->initMagento();
 
         foreach ($this->storeManager->getStores() as $store) {
-            $table[$store->getId()] = array(
+            $table[$store->getId()] = [
                 $store->getId(),
                 $store->getCode(),
                 $store->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_WEB),
                 $store->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_WEB, true),
-            );
+            ];
         }
 
         ksort($table);
         $this->getHelper('table')
-            ->setHeaders(array('id', 'code', 'unsecure_baseurl', 'secure_baseurl'))
+            ->setHeaders(['id', 'code', 'unsecure_baseurl', 'secure_baseurl'])
             ->renderByFormat($output, $table, $input->getOption('format'));
     }
 }

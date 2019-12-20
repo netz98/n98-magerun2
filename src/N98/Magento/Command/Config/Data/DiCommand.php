@@ -25,8 +25,7 @@ class DiCommand extends AbstractMagentoCommand
                 'Config scope (global, adminhtml, frontend, webapi_rest, webapi_soap, ...)',
                 'global'
             )
-            ->setDescription('Dump dependency injection config')
-        ;
+            ->setDescription('Dump dependency injection config');
     }
 
     /**

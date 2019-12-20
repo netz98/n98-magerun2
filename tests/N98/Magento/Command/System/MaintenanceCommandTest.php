@@ -19,8 +19,7 @@ class MaintenanceCommandTest extends TestCase
         $this->maintenanceFile =
             $this->getApplication()->getMagentoRootFolder() .
             '/' . MaintenanceMode::FLAG_DIR .
-            '/' . MaintenanceMode::FLAG_FILENAME
-            ;
+            '/' . MaintenanceMode::FLAG_FILENAME;
     }
 
     public function testSimpleFlag()

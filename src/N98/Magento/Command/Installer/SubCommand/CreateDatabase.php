@@ -33,7 +33,7 @@ class CreateDatabase extends AbstractSubCommand
             return $input;
         };
 
-        $dbOptions = array('--dbHost', '--dbUser', '--dbPass', '--dbName');
+        $dbOptions = ['--dbHost', '--dbUser', '--dbPass', '--dbName'];
         $dbOptionsFound = 0;
         foreach ($dbOptions as $dbOption) {
             foreach ($this->getCliArguments() as $definedCliOption) {

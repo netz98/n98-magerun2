@@ -33,15 +33,15 @@ class MagentoHelper extends TestCase
     {
         vfsStream::setup('root');
         vfsStream::create(
-            array(
-                'app' => array(
+            [
+                'app' => [
                     'Mage.php' => '',
-                ),
-            )
+                ],
+            ]
         );
 
         $helper = $this->getHelper();
-        $helper->detect(vfsStream::url('root'), array());
+        $helper->detect(vfsStream::url('root'), []);
 
         $this->assertEquals(vfsStream::url('root'), $helper->getRootFolder());
         $this->assertEquals(\N98\Magento\Application::MAGENTO_MAJOR_VERSION_1, $helper->getMajorVersion());
@@ -54,13 +54,13 @@ class MagentoHelper extends TestCase
     {
         vfsStream::setup('root');
         vfsStream::create(
-            array(
-                'htdocs' => array(
-                    'app' => array(
+            [
+                'htdocs' => [
+                    'app' => [
                         'Mage.php' => '',
-                    ),
-                ),
-            )
+                    ],
+                ],
+            ]
         );
 
         $helper = $this->getHelper();
@@ -68,11 +68,11 @@ class MagentoHelper extends TestCase
         // vfs cannot resolve relative path so we do 'root/htdocs' etc.
         $helper->detect(
             vfsStream::url('root'),
-            array(
+            [
                 vfsStream::url('root/www'),
                 vfsStream::url('root/public'),
                 vfsStream::url('root/htdocs'),
-            )
+            ]
         );
 
         $this->assertEquals(vfsStream::url('root/htdocs'), $helper->getRootFolder());
@@ -86,9 +86,9 @@ class MagentoHelper extends TestCase
     {
         vfsStream::setup('root');
         vfsStream::create(
-            array(
-                'htdocs' => array(),
-            )
+            [
+                'htdocs' => [],
+            ]
         );
 
         $helper = $this->getHelper();
@@ -108,16 +108,16 @@ class MagentoHelper extends TestCase
     {
         vfsStream::setup('root');
         vfsStream::create(
-            array(
+            [
                 '.basedir' => 'root/htdocs/magento_root',
-                'htdocs'   => array(
-                    'magento_root' => array(
-                        'app' => array(
+                'htdocs'   => [
+                    'magento_root' => [
+                        'app' => [
                             'Mage.php' => '',
-                        ),
-                    ),
-                ),
-            )
+                        ],
+                    ],
+                ],
+            ]
         );
 
         $helper = $this->getHelper();
@@ -140,14 +140,14 @@ class MagentoHelper extends TestCase
     {
         vfsStream::setup('root');
         vfsStream::create(
-            array(
-                'htdocs' => array(
-                    'app' => array(
+            [
+                'htdocs' => [
+                    'app' => [
                         'autoload.php'  => '',
                         'bootstrap.php' => '',
-                    ),
-                ),
-            )
+                    ],
+                ],
+            ]
         );
 
         $helper = $this->getHelper();
@@ -155,11 +155,11 @@ class MagentoHelper extends TestCase
         // vfs cannot resolve relative path so we do 'root/htdocs' etc.
         $helper->detect(
             vfsStream::url('root'),
-            array(
+            [
                 vfsStream::url('root/www'),
                 vfsStream::url('root/public'),
                 vfsStream::url('root/htdocs'),
-            )
+            ]
         );
 
         $this->assertEquals(vfsStream::url('root/htdocs'), $helper->getRootFolder());

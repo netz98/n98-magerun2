@@ -188,7 +188,7 @@ class ConfigurationLoader
                 $this->logDebug('Load system config <comment>' . $systemWideConfigFile . '</comment>');
                 $this->_systemConfig = Yaml::parse($systemWideConfigFile);
             } else {
-                $this->_systemConfig = array();
+                $this->_systemConfig = [];
             }
         }
 
@@ -208,8 +208,8 @@ class ConfigurationLoader
     public function loadPluginConfig(array $config, $magentoRootFolder)
     {
         if ($this->_pluginConfig == null) {
-            $this->_pluginConfig = array();
-            $moduleBaseFolders = array();
+            $this->_pluginConfig = [];
+            $moduleBaseFolders = [];
             $customFilename = $this->_customConfigFilename;
             $customName = pathinfo($customFilename, PATHINFO_FILENAME);
             if (OperatingSystem::isWindows()) {
@@ -276,10 +276,10 @@ class ConfigurationLoader
      */
     protected function applyVariables($rawConfig, $magentoRootFolder, SplFileInfo $file = null)
     {
-        $replace = array(
+        $replace = [
             '%module%' => $file ? $file->getPath() : '',
             '%root%'   => $magentoRootFolder,
-        );
+        ];
 
         return str_replace(array_keys($replace), $replace, $rawConfig);
     }
@@ -295,7 +295,7 @@ class ConfigurationLoader
     public function loadUserConfig(array $config, $magentoRootFolder = null)
     {
         if (null === $this->_userConfig) {
-            $this->_userConfig = array();
+            $this->_userConfig = [];
             $locator = new ConfigLocator($this->_customConfigFilename, $magentoRootFolder);
             if ($userConfigFile = $locator->getUserConfigFile()) {
                 $this->_userConfig = $userConfigFile->toArray();
@@ -322,7 +322,7 @@ class ConfigurationLoader
             return ArrayFunctions::mergeArrays($config, $this->_projectConfig);
         }
 
-        $this->_projectConfig = array();
+        $this->_projectConfig = [];
 
         $locator = new ConfigLocator($this->_customConfigFilename, $magentoRootFolder);
 

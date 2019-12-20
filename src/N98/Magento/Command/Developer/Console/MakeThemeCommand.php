@@ -23,8 +23,7 @@ class MakeThemeCommand extends AbstractGeneratorCommand
             ->addArgument('area', InputArgument::REQUIRED, 'Area like "frontend"')
             ->addArgument('package', InputArgument::REQUIRED, 'Package like "Vendor"')
             ->addArgument('name', InputArgument::REQUIRED, 'Name of the theme')
-            ->setDescription('Creates a new theme')
-        ;
+            ->setDescription('Creates a new theme');
     }
 
     /**

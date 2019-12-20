@@ -63,7 +63,7 @@ class ListCommand extends AbstractMagentoCommand
         }
 
         $this->getHelper('table')
-            ->setHeaders(array('id', 'path', 'title', 'area', 'code'))
+            ->setHeaders(['id', 'path', 'title', 'area', 'code'])
             ->renderByFormat($output, $rows, $input->getOption('format'));
     }
 }

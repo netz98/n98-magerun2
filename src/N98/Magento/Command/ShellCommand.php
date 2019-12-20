@@ -12,8 +12,7 @@ class ShellCommand extends AbstractMagentoCommand
     {
         $this
             ->setName('shell')
-            ->setDescription('Runs n98-magerun as shell')
-        ;
+            ->setDescription('Runs n98-magerun as shell');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)

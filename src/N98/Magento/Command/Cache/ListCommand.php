@@ -40,8 +40,7 @@ class ListCommand extends AbstractMagentoCommand
                 null,
                 InputOption::VALUE_OPTIONAL,
                 'Output Format. One of [' . implode(',', RendererFactory::getFormats()) . ']'
-            )
-        ;
+            );
     }
 
     public function inject(
@@ -82,7 +81,7 @@ class ListCommand extends AbstractMagentoCommand
         }
 
         $this->getHelper('table')
-                ->setHeaders(array('Name', 'Type', 'Enabled'))
+                ->setHeaders(['Name', 'Type', 'Enabled'])
                 ->renderByFormat($output, $tableData, $input->getOption('format'));
     }
 }

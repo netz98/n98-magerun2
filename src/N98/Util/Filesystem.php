@@ -23,7 +23,7 @@ class Filesystem
      *
      * @return void
      */
-    public function recursiveCopy($src, $dst, $blacklist = array())
+    public function recursiveCopy($src, $dst, $blacklist = [])
     {
         if (!is_dir($dst)) {
             @mkdir($dst, 0777, true);
@@ -39,8 +39,8 @@ class Filesystem
             throw new RuntimeException(sprintf('Source directory <%s> error', $src));
         }
 
-        $skip = array_merge(array('.', '..'), $blacklist);
-        $stack = array();
+        $skip = array_merge(['.', '..'], $blacklist);
+        $stack = [];
 
         while (false !== ($file = readdir($handle))) {
             if (in_array($file, $skip)) {
@@ -88,7 +88,7 @@ class Filesystem
             throw new RuntimeException(sprintf('Directory <%s> error', $directory));
         }
 
-        $skip = array('.', '..');
+        $skip = ['.', '..'];
 
         // and scan through the items inside
         while (false !== ($file = readdir($handle))) {
@@ -109,7 +109,7 @@ class Filesystem
                 // we call this function with the new path
                 $this->recursiveRemoveDirectory($path);
 
-                // if the new path is a file
+            // if the new path is a file
             } else {
                 // we remove the file
                 unlink($path);
@@ -136,7 +136,7 @@ class Filesystem
      */
     public static function humanFileSize($bytes, $decimals = 2)
     {
-        $units = array('B', 'K', 'M', 'G', 'T', 'P', 'E', 'Z', 'Y');
+        $units = ['B', 'K', 'M', 'G', 'T', 'P', 'E', 'Z', 'Y'];
         $factor = (int) floor((strlen($bytes) - 1) / 3);
 
         return sprintf("%.{$decimals}f%s", $bytes / pow(1024, $factor), $units[$factor]);

@@ -54,21 +54,21 @@ HELP;
             $output->writeln('<error>No gift card found for that code</error>');
             return;
         }
-        
-        $data = array(
-            array('Gift Card Account ID', $card->getId()),
-            array('Code', $card->getCode()),
-            array('Status', Giftcardaccount::STATUS_ENABLED == $card->getStatus() ? 'Enabled' : 'Disabled'),
-            array('Date Created', $card->getDateCreated()),
-            array('Expiration Date', $card->getDateExpires()),
-            array('Website ID', $card->getWebsiteId()),
-            array('Remaining Balance', $card->getBalance()),
-            array('State', $card->getStateText()),
-            array('Is Redeemable', $card->getIsRedeemable()),
-        );
-        
+
+        $data = [
+            ['Gift Card Account ID', $card->getId()],
+            ['Code', $card->getCode()],
+            ['Status', Giftcardaccount::STATUS_ENABLED == $card->getStatus() ? 'Enabled' : 'Disabled'],
+            ['Date Created', $card->getDateCreated()],
+            ['Expiration Date', $card->getDateExpires()],
+            ['Website ID', $card->getWebsiteId()],
+            ['Remaining Balance', $card->getBalance()],
+            ['State', $card->getStateText()],
+            ['Is Redeemable', $card->getIsRedeemable()],
+        ];
+
         $this->getHelper('table')
-            ->setHeaders(array('Name', 'Value'))
+            ->setHeaders(['Name', 'Value'])
             ->setRows($data)
             ->renderByFormat($output, $data, $input->getOption('format'));
     }

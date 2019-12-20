@@ -137,16 +137,16 @@ HELP;
         $this->showProgress = $input->getOption('format') == null;
 
         if ($input->getOption('table')) {
-            $resolvedTables = array(
+            $resolvedTables = [
                 $this->dbHelper->resolveTables(
-                    array('@check'),
-                    array(
-                        'check' => array(
-                            'tables' => array($input->getOption('table')),
-                        ),
-                    )
+                    ['@check'],
+                    [
+                        'check' => [
+                            'tables' => [$input->getOption('table')],
+                        ],
+                    ]
                 ),
-            );
+            ];
             $tables = $resolvedTables[0];
         } else {
             $tables = $this->dbHelper->getTables();
@@ -154,30 +154,30 @@ HELP;
 
         $allTableStatus = $this->dbHelper->getTablesStatus();
 
-        $tableOutput = array();
+        $tableOutput = [];
         /** @var \Symfony\Component\Console\Helper\ProgressHelper $progress */
         $progress = $this->getHelper('progress');
         if ($this->showProgress) {
             $progress->start($output, count($tables));
         }
 
-        $methods = array(
+        $methods = [
             'InnoDB' => 1,
             'MEMORY' => 1,
             'MyISAM' => 1,
-        );
+        ];
 
         foreach ($tables as $tableName) {
             if (isset($allTableStatus[$tableName]) && isset($methods[$allTableStatus[$tableName]['Engine']])) {
                 $m = '_check' . $allTableStatus[$tableName]['Engine'];
                 $tableOutput = array_merge($tableOutput, $this->$m($tableName));
             } else {
-                $tableOutput[] = array(
+                $tableOutput[] = [
                     'table'     => $tableName,
                     'operation' => 'not supported',
                     'type'      => '',
                     'status'    => '',
-                );
+                ];
             }
             $this->progressAdvance();
         }
@@ -187,7 +187,7 @@ HELP;
         }
 
         $this->getHelper('table')
-            ->setHeaders(array('Table', 'Operation', 'Type', 'Status'))
+            ->setHeaders(['Table', 'Operation', 'Type', 'Status'])
             ->renderByFormat($this->output, $tableOutput, $this->input->getOption('format'));
     }
 
@@ -205,13 +205,13 @@ HELP;
         $start = microtime(true);
         $affectedRows = $connection->exec(sprintf('ALTER TABLE %s ENGINE=%s', $tableName, $engine));
 
-        return array(array(
+        return [[
             'table'     => $tableName,
             'operation' => 'ENGINE ' . $engine,
             'type'      => sprintf('%15s rows', (string) $affectedRows),
             'status'    => sprintf('%.3f secs', microtime(true) - $start),
-        ),
-        );
+        ],
+        ];
     }
 
     /**
@@ -244,31 +244,31 @@ HELP;
      */
     protected function _checkMyISAM($tableName)
     {
-        $table = array();
+        $table = [];
         $type = $this->input->getOption('type');
         $result = $this->_query(sprintf('CHECK TABLE %s %s', $tableName, $type));
         if ($result['Msg_text'] == self::MESSAGE_CHECK_NOT_SUPPORTED) {
-            return array();
+            return [];
         }
 
-        $table[] = array(
+        $table[] = [
             'table'     => $tableName,
             'operation' => $result['Op'],
             'type'      => $type,
             'status'    => $result['Msg_text'],
-        );
+        ];
 
         if ($result['Msg_text'] != 'OK'
             && $this->input->getOption('repair')
         ) {
             $result = $this->_query(sprintf('REPAIR TABLE %s %s', $tableName, $type));
             if ($result['Msg_text'] != self::MESSAGE_REPAIR_NOT_SUPPORTED) {
-                $table[] = array(
+                $table[] = [
                     'table'     => $tableName,
                     'operation' => $result['Op'],
                     'type'      => $type,
                     'status'    => $result['Msg_text'],
-                );
+                ];
             }
         }
         return $table;

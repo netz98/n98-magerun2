@@ -12,20 +12,20 @@ class AbstractIndexerCommand extends AbstractMagentoCommand
      */
     protected function getIndexerList()
     {
-        $list = array();
+        $list = [];
         $indexCollection = $this->getIndexerCollection();
 
         foreach ($indexCollection as $indexer) {
             /* @var $indexer \Magento\Indexer\Model\Indexer */
             $lastReadbleRuntime = $this->getRuntime($indexer);
             $runtimeInSeconds = $this->getRuntimeInSeconds($indexer);
-            $list[] = array(
+            $list[] = [
                 'code'            => $indexer->getId(),
                 'title'           => $indexer->getTitle(),
                 'status'          => $indexer->getStatus(),
                 'last_runtime'    => $lastReadbleRuntime, // @TODO Check if this exists in Magento 2
                 'runtime_seconds' => $runtimeInSeconds, // @TODO Check if this exists in Magento 2
-            );
+            ];
         }
 
         return $list;

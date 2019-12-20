@@ -16,8 +16,7 @@ class ChangePasswordCommand extends AbstractAdminUserCommand
             ->setName('admin:user:change-password')
             ->addArgument('username', InputArgument::OPTIONAL, 'Username')
             ->addArgument('password', InputArgument::OPTIONAL, 'Password')
-            ->setDescription('Changes the password of a adminhtml user.')
-        ;
+            ->setDescription('Changes the password of a adminhtml user.');
     }
 
     /**

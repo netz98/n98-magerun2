@@ -30,12 +30,12 @@ class Config
     /**
      * @var array config data
      */
-    private $config = array();
+    private $config = [];
 
     /**
      * @var array
      */
-    private $partialConfig = array();
+    private $partialConfig = [];
 
     /**
      * @var ConfigurationLoader
@@ -64,7 +64,7 @@ class Config
      * @param bool $isPharMode
      * @param OutputInterface $output [optional]
      */
-    public function __construct(array $initConfig = array(), $isPharMode = false, OutputInterface $output = null)
+    public function __construct(array $initConfig = [], $isPharMode = false, OutputInterface $output = null)
     {
         $this->initConfig = $initConfig;
         $this->isPharMode = (bool) $isPharMode;
@@ -79,7 +79,7 @@ class Config
      */
     public function checkConfigCommandAlias(InputInterface $input)
     {
-        foreach ($this->getArray(array('commands', 'aliases')) as $alias) {
+        foreach ($this->getArray(['commands', 'aliases']) as $alias) {
             if (!is_array($alias)) {
                 continue;
             }
@@ -110,7 +110,7 @@ class Config
      */
     public function registerConfigCommandAlias(Command $command)
     {
-        foreach ($this->getArray(array('commands', 'aliases')) as $alias) {
+        foreach ($this->getArray(['commands', 'aliases']) as $alias) {
             if (!is_array($alias)) {
                 continue;
             }
@@ -122,7 +122,7 @@ class Config
                 continue;
             }
 
-            $command->setAliases(array_merge($command->getAliases(), array($aliasCommandName)));
+            $command->setAliases(array_merge($command->getAliases(), [$aliasCommandName]));
         }
     }
 
@@ -131,7 +131,7 @@ class Config
      */
     public function registerCustomCommands(Application $application)
     {
-        foreach ($this->getArray(array('commands', 'customCommands')) as $commandClass) {
+        foreach ($this->getArray(['commands', 'customCommands']) as $commandClass) {
             $commandName = null;
             if (is_array($commandClass)) {
                 // Support for key => value (name -> class)
@@ -268,7 +268,7 @@ class Config
             return $this->partialConfig['detect']['subFolders'];
         }
 
-        return array();
+        return [];
     }
 
     /**
@@ -305,7 +305,7 @@ class Config
      * @param array $default [optional]
      * @return array
      */
-    private function getArray($key, $default = array())
+    private function getArray($key, $default = [])
     {
         $result = $this->traverse((array) $key);
         if (null === $result) {

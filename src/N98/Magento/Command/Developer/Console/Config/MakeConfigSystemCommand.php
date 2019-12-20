@@ -29,8 +29,7 @@ class MakeConfigSystemCommand extends AbstractSimpleConfigFileGeneratorCommand
         $this
             ->setName('make:config:system')
             ->addArgument('area', InputArgument::OPTIONAL, 'Area of system.xml file', 'adminhtml')
-            ->setDescription('Creates a new system.xml file')
-        ;
+            ->setDescription('Creates a new system.xml file');
     }
 
     /**

@@ -33,7 +33,7 @@ class DetectionResult implements DetectionResultInterface
      * @param string $folder
      * @param array $subFolders
      */
-    public function __construct(MagentoHelper $helper, $folder, array $subFolders = array())
+    public function __construct(MagentoHelper $helper, $folder, array $subFolders = [])
     {
         $this->helper = $helper;
         $this->detected = $helper->detect($folder, $subFolders); // @TODO Constructor should not run "detect" method

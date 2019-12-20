@@ -13,10 +13,10 @@ class InfoCommandTest extends TestCase
 
     public function testExecuteWithSettingArgument()
     {
-        $input = array(
+        $input = [
             'command' => 'db:info',
             'setting' => 'MySQL-Cli-String',
-        );
+        ];
 
         $this->assertDisplayNotContains($input, 'MySQL-Cli-String');
         $this->assertDisplayContains($input, 'mysql -h');

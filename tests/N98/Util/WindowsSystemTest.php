@@ -31,16 +31,16 @@ class WindowsSystemTest extends \PHPUnit\Framework\TestCase
      */
     public function provideExecutableNames()
     {
-        return array(
-            array("notepad", false),
-            array("notepad.com", true),
-            array("notepad.exe", true),
-            array("notepad.exe.exe", true),
-            array("notepad.eXe", true),
-            array("notepad.EXE", true),
-            array("notepad.bat", true),
-            array("notepad.txt", false),
-        );
+        return [
+            ["notepad", false],
+            ["notepad.com", true],
+            ["notepad.exe", true],
+            ["notepad.exe.exe", true],
+            ["notepad.eXe", true],
+            ["notepad.EXE", true],
+            ["notepad.bat", true],
+            ["notepad.txt", false],
+        ];
     }
 
     /**

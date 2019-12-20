@@ -21,7 +21,7 @@ class SelectMagentoVersion extends AbstractSubCommand
             $this->input->getOption('magentoVersion') == null
             && $this->input->getOption('magentoVersionByName') == null
         ) {
-            $question = array();
+            $question = [];
             foreach ($this->commandConfig['magento-packages'] as $key => $package) {
                 $question[] = '<comment>' . str_pad('[' . ($key + 1) . ']', 4, ' ') . '</comment> ' .
                     $package['name'] . "\n";

@@ -182,7 +182,7 @@ HELP;
 HELP;
 
         $definitions = $this->getTableDefinitions();
-        $list = array();
+        $list = [];
         $maxNameLen = 0;
         foreach ($definitions as $id => $definition) {
             $name = '@' . $id;
@@ -191,7 +191,7 @@ HELP;
             if ($nameLen > $maxNameLen) {
                 $maxNameLen = $nameLen;
             }
-            $list[] = array($name, $description);
+            $list[] = [$name, $description];
         }
 
         $decrSize = 78 - $maxNameLen - 3;
@@ -201,7 +201,7 @@ HELP;
             $delta = max(0, $maxNameLen - strlen($name));
             $spacer = $delta ? str_repeat(' ', $delta) : '';
             $buffer = wordwrap($description, $decrSize);
-            $buffer = strtr($buffer, array("\n" => "\n" . str_repeat(' ', 3 + $maxNameLen)));
+            $buffer = strtr($buffer, ["\n" => "\n" . str_repeat(' ', 3 + $maxNameLen)]);
             $messages .= sprintf(" <info>%s</info>%s  %s\n", $name, $spacer, $buffer);
         }
 
@@ -321,7 +321,7 @@ HELP;
                 );
             }
 
-            $commands = $input->getOption('dry-run') ? array() : $execs->getCommands();
+            $commands = $input->getOption('dry-run') ? [] : $execs->getCommands();
 
             foreach ($commands as $command) {
                 if (!$this->runExec($command, $input, $output)) {
@@ -374,7 +374,7 @@ HELP;
     private function stripTables(InputInterface $input, OutputInterface $output)
     {
         if (!$input->getOption('strip')) {
-            return array();
+            return [];
         }
 
         $stripTables = $this->resolveDatabaseTables($input->getOption('strip'));
@@ -397,7 +397,7 @@ HELP;
     private function excludeTables(InputInterface $input, OutputInterface $output)
     {
         if (!$input->getOption('exclude')) {
-            return array();
+            return [];
         }
 
         $excludeTables = $this->resolveDatabaseTables($input->getOption('exclude'));
@@ -515,12 +515,12 @@ HELP;
         $namePrefix = '';
         $nameSuffix = '';
         if ($optionAddTime === null) {
-            return array($namePrefix, $nameSuffix);
+            return [$namePrefix, $nameSuffix];
         }
 
         $timeStamp = date('Y-m-d_His');
 
-        if (in_array($optionAddTime, array('suffix', true), true)) {
+        if (in_array($optionAddTime, ['suffix', true], true)) {
             $nameSuffix = '_' . $timeStamp;
         } elseif ($optionAddTime === 'prefix') {
             $namePrefix = $timeStamp . '_';
@@ -533,7 +533,7 @@ HELP;
             );
         }
 
-        return array($namePrefix, $nameSuffix);
+        return [$namePrefix, $nameSuffix];
     }
 
     /**

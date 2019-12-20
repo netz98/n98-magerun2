@@ -18,7 +18,7 @@ class EventSubscriber implements EventSubscriberInterface
      */
     public static function getSubscribedEvents()
     {
-        return array('console.command' => 'registerComposer');
+        return ['console.command' => 'registerComposer'];
     }
 
     /**

@@ -19,8 +19,7 @@ class AclCommand extends AbstractMagentoCommand
     {
         $this
             ->setName('config:data:acl')
-            ->setDescription('Prints acl.xml data as table')
-        ;
+            ->setDescription('Prints acl.xml data as table');
     }
 
     /**

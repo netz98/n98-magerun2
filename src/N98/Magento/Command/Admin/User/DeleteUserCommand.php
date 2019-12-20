@@ -22,8 +22,7 @@ class DeleteUserCommand extends AbstractAdminUserCommand
             ->setName('admin:user:delete')
             ->addArgument('id', InputArgument::OPTIONAL, 'Username or Email')
             ->addOption('force', 'f', InputOption::VALUE_NONE, 'Force')
-            ->setDescription('Delete the account of a adminhtml user.')
-        ;
+            ->setDescription('Delete the account of a adminhtml user.');
     }
 
     /**

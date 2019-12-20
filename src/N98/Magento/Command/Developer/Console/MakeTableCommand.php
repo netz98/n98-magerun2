@@ -47,8 +47,7 @@ class MakeTableCommand extends AbstractGeneratorCommand
     {
         $this
             ->setName('make:table')
-            ->setDescription('Creates a new database table')
-        ;
+            ->setDescription('Creates a new database table');
     }
 
     /**

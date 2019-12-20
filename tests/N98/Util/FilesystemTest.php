@@ -88,7 +88,7 @@ class FilesystemTest extends \PHPUnit\Framework\TestCase
         touch($file1);
         touch($file2);
 
-        $this->fileSystem->recursiveCopy($basePath, $dest, array('ignore.me'));
+        $this->fileSystem->recursiveCopy($basePath, $dest, ['ignore.me']);
         $this->assertFileExists($dest . "/folder1/file1.txt");
         $this->assertFileExists($dest . "/folder2/file2.txt");
         $this->assertFileNotExists($dest . "/folder1/ignore.me");
@@ -217,12 +217,12 @@ class FilesystemTest extends \PHPUnit\Framework\TestCase
      */
     public static function convertedBytesProvider()
     {
-        return array(
-            array(20000000, 2, '19.07M'),
-            array(20000000, 3, '19.073M'),
-            array(2000000000, 2, '1.86G'),
-            array(2, 2, '2.00B'),
-            array(2048, 2, '2.00K'),
-        );
+        return [
+            [20000000, 2, '19.07M'],
+            [20000000, 3, '19.073M'],
+            [2000000000, 2, '1.86G'],
+            [2, 2, '2.00B'],
+            [2048, 2, '2.00K'],
+        ];
     }
 }

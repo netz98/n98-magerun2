@@ -8,10 +8,10 @@ class QueryCommandTest extends TestCase
 {
     public function testExecute()
     {
-        $input = array(
+        $input = [
             'command' => 'db:query',
             'query'   => 'SHOW TABLES;',
-        );
+        ];
         $this->assertDisplayContains($input, 'admin_user');
         $this->assertDisplayContains($input, 'catalog_product_entity');
         $this->assertDisplayContains($input, 'wishlist');

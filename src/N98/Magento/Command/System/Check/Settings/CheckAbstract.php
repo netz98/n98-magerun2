@@ -21,7 +21,7 @@ abstract class CheckAbstract implements StoreCheck
     /**
      * @var array
      */
-    private $storeConfigPaths = array();
+    private $storeConfigPaths = [];
 
     /**
      * @var ScopeConfigInterface
@@ -58,10 +58,10 @@ abstract class CheckAbstract implements StoreCheck
     {
         $result = $results->createResult();
 
-        $typedParams = array(
+        $typedParams = [
             'result' => $result,
             'store'  => $store,
-        );
+        ];
 
         $paramValues = $this->getParamValues($store, $typedParams);
 
@@ -69,7 +69,7 @@ abstract class CheckAbstract implements StoreCheck
         $method = new \ReflectionMethod($this, $name);
         $parameters = $method->getParameters();
 
-        $arguments = array();
+        $arguments = [];
         foreach ($parameters as $parameter) {
             $paramName = $parameter->getName();
             $paramClass = $parameter->getClass();
@@ -85,11 +85,11 @@ abstract class CheckAbstract implements StoreCheck
             }
 
             // use named parameter, otherwise null
-            $paramValues += array($paramName => null);
+            $paramValues += [$paramName => null];
             $arguments[] = $paramValues[$paramName];
         }
 
-        call_user_func_array(array($this, $name), $arguments);
+        call_user_func_array([$this, $name], $arguments);
     }
 
     /**

@@ -22,7 +22,7 @@ abstract class AbstractConfigCommand extends AbstractMagentoCommand
     /**
      * @var array
      */
-    protected $_scopes = array();
+    protected $_scopes = [];
 
     /**
      * @return \Magento\Framework\Encryption\EncryptorInterface
@@ -125,7 +125,7 @@ abstract class AbstractConfigCommand extends AbstractMagentoCommand
      */
     protected function _convertScopeIdParam($scope, $scopeId)
     {
-        if (null === $scopeId && in_array($scope, array('websites', 'stores'), true)) {
+        if (null === $scopeId && in_array($scope, ['websites', 'stores'], true)) {
             return $scopeId;
         }
 

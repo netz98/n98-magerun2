@@ -46,7 +46,7 @@ class ConfigTest extends TestCase
             $this->assertEquals('Configuration not yet fully loaded', $e->getMessage());
         }
 
-        $this->assertEquals(array(), $config->getConfig());
+        $this->assertEquals([], $config->getConfig());
 
         $loader = $config->getLoader();
         $this->assertInstanceOf(__NAMESPACE__ . '\\ConfigurationLoader', $loader);
@@ -69,7 +69,7 @@ class ConfigTest extends TestCase
     public function setConfig()
     {
         $config = new Config();
-        $config->setConfig(array(0, 1, 2));
+        $config->setConfig([0, 1, 2]);
         $actual = $config->getConfig();
         $this->assertSame($actual[1], 1);
     }
@@ -86,11 +86,11 @@ class ConfigTest extends TestCase
 
         $saved = $_SERVER['argv'];
         {
-            $config->setConfig(array('commands' => array('aliases' => array(array('list-help' => 'list --help')))));
+            $config->setConfig(['commands' => ['aliases' => [['list-help' => 'list --help']]]]);
             $definition = new InputDefinition();
             $definition->addArgument(new InputArgument('command'));
 
-            $argv = array('/path/to/command', 'list-help');
+            $argv = ['/path/to/command', 'list-help'];
             $_SERVER['argv'] = $argv;
             $input = new ArgvInput($argv, $definition);
             $this->assertSame('list-help', (string) $input);
@@ -104,7 +104,7 @@ class ConfigTest extends TestCase
 
         $config->registerConfigCommandAlias($command);
 
-        $this->assertSame(array('list-help'), $command->getAliases());
+        $this->assertSame(['list-help'], $command->getAliases());
     }
 
     /**
@@ -112,19 +112,19 @@ class ConfigTest extends TestCase
      */
     public function customCommands()
     {
-        $array = array(
-            'commands' => array(
-                'customCommands' => array(
+        $array = [
+            'commands' => [
+                'customCommands' => [
                     'N98\Magento\Command\Config\Store\GetCommand',
-                    array('name' => 'N98\Magento\Command\Config\Store\GetCommand'),
-                ),
-            ),
-        );
+                    ['name' => 'N98\Magento\Command\Config\Store\GetCommand'],
+                ],
+            ],
+        ];
 
         $output = new BufferedOutput();
         $output->setVerbosity($output::VERBOSITY_DEBUG);
 
-        $config = new Config(array(), false, $output);
+        $config = new Config([], false, $output);
         $config->setConfig($array);
 
         /** @var Application $application */
@@ -137,14 +137,14 @@ class ConfigTest extends TestCase
      */
     public function registerCustomAutoloaders()
     {
-        $array = array(
-            'autoloaders'      => array('$prefix' => '$path'),
-            'autoloaders_psr4' => array('$prefix\\' => '$path'),
-        );
+        $array = [
+            'autoloaders'      => ['$prefix' => '$path'],
+            'autoloaders_psr4' => ['$prefix\\' => '$path'],
+        ];
 
         $output = new BufferedOutput();
 
-        $config = new Config(array(), false, $output);
+        $config = new Config([], false, $output);
         $config->setConfig($array);
 
         $autloader = new ClassLoader();
@@ -160,10 +160,10 @@ class ConfigTest extends TestCase
     public function loadPartialConfig()
     {
         $config = new Config();
-        $this->assertEquals(array(), $config->getDetectSubFolders());
+        $this->assertEquals([], $config->getDetectSubFolders());
         $config->loadPartialConfig(false);
         $actual = $config->getDetectSubFolders();
         $this->assertInternalType('array', $actual);
-        $this->assertNotEquals(array(), $actual);
+        $this->assertNotEquals([], $actual);
     }
 }

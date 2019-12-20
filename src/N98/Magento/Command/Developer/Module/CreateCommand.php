@@ -130,7 +130,7 @@ class CreateCommand extends AbstractMagentoCommand
 
     private function initView(InputInterface $input, ConfigBag $configBag)
     {
-        $configBag->setArray('twigVars', array(
+        $configBag->setArray('twigVars', [
             'vendorNamespace' => $configBag->getString('vendorNamespace'),
             'moduleName'      => $configBag->getString('moduleName'),
             'createBlocks'    => $configBag->getBool('shouldAddBlocks'),
@@ -140,7 +140,7 @@ class CreateCommand extends AbstractMagentoCommand
             'authorName'      => $input->getOption('author-name'),
             'authorEmail'     => $input->getOption('author-email'),
             'description'     => $input->getOption('description'),
-        ));
+        ]);
     }
 
     /**

@@ -82,8 +82,7 @@ abstract class AbstractMagentoStoreConfigCommand extends AbstractMagentoCommand
             ->setName($this->commandName)
             ->addOption('on', null, InputOption::VALUE_NONE, 'Switch on')
             ->addOption('off', null, InputOption::VALUE_NONE, 'Switch off')
-            ->setDescription($this->commandDescription)
-        ;
+            ->setDescription($this->commandDescription);
 
         if ($this->scope == self::SCOPE_STORE_VIEW_GLOBAL) {
             $this->addOption('global', null, InputOption::VALUE_NONE, 'Set value on default scope');

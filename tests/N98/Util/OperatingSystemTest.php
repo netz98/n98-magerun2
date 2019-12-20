@@ -20,12 +20,12 @@ class OperatingSystemTest extends \PHPUnit\Framework\TestCase
      */
     public function osDetection()
     {
-        $matrix = array(
+        $matrix = [
             OperatingSystem::isLinux(),
             OperatingSystem::isWindows(),
             OperatingSystem::isMacOs(),
             OperatingSystem::isNetware(),
-        );
+        ];
 
         $this->assertCount(4, $matrix, 'Number of OSes to check for');
         $this->assertCount(1, array_filter($matrix), 'One OS must be detected');

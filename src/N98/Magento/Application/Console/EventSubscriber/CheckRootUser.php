@@ -25,9 +25,9 @@ class CheckRootUser implements EventSubscriberInterface
      */
     public static function getSubscribedEvents()
     {
-        return array(
+        return [
             Events::RUN_BEFORE => 'checkRunningAsRootUser',
-        );
+        ];
     }
 
     /**
@@ -51,11 +51,11 @@ class CheckRootUser implements EventSubscriberInterface
 
         if (OperatingSystem::isRoot()) {
             $output = $event->getOutput();
-            $output->writeln(array(
+            $output->writeln([
                 '',
                 self::WARNING_ROOT_USER,
                 '',
-            ));
+            ]);
         }
     }
 

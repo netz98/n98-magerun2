@@ -49,8 +49,7 @@ class ListCommand extends AbstractMagentoCommand
                 null,
                 InputOption::VALUE_OPTIONAL,
                 'Output Format. One of [' . implode(',', RendererFactory::getFormats()) . ']'
-            )
-        ;
+            );
     }
 
     /**
@@ -71,7 +70,7 @@ class ListCommand extends AbstractMagentoCommand
         $this->prepareModuleList($input->getOption('vendor'));
 
         $this->getHelper('table')
-            ->setHeaders(array('Name', '(Schema) Version'))
+            ->setHeaders(['Name', '(Schema) Version'])
             ->renderByFormat($output, $this->moduleList, $input->getOption('format'));
     }
 

@@ -9,9 +9,9 @@ class ReportCommandTest extends TestCase
     public function testExecute()
     {
         $this->assertDisplayRegExp(
-            array(
+            [
                 'command' => 'cache:report',
-            ),
+            ],
             '~\\| ID.*\\| EXPIRE.*\\|$~m'
         );
     }

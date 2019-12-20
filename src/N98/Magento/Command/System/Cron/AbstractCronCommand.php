@@ -76,7 +76,7 @@ abstract class AbstractCronCommand extends AbstractMagentoCommand
      */
     protected function getJobs()
     {
-        $table = array();
+        $table = [];
 
         $jobs = $this->cronConfig->getJobs();
 
@@ -155,7 +155,7 @@ abstract class AbstractCronCommand extends AbstractMagentoCommand
      */
     protected function askJobCode(InputInterface $input, OutputInterface $output, $jobs)
     {
-        $question = array();
+        $question = [];
         foreach ($jobs as $key => $job) {
             $question[] = '<comment>[' . ($key + 1) . ']</comment> ' . $job['Job'] . PHP_EOL;
         }
@@ -201,7 +201,7 @@ abstract class AbstractCronCommand extends AbstractMagentoCommand
 
         $model = $this->getObjectManager()->get($jobConfig['instance']);
 
-        if (!$model || !is_callable(array($model, $jobConfig['method']))) {
+        if (!$model || !is_callable([$model, $jobConfig['method']])) {
             throw new \RuntimeException(
                 sprintf(
                     'Invalid callback: %s::%s does not exist',
@@ -211,7 +211,7 @@ abstract class AbstractCronCommand extends AbstractMagentoCommand
             );
         }
 
-        return array($jobCode, $jobConfig, $model);
+        return [$jobCode, $jobConfig, $model];
     }
 
     /**

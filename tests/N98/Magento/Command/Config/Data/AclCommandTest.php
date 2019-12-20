@@ -17,9 +17,9 @@ class AclCommandTest extends TestCase
 
         $commandTester = new CommandTester($command);
         $commandTester->execute(
-            array(
+            [
                 'command' => 'config:data:acl',
-            )
+            ]
         );
 
         $this->assertContains('All Stores', $commandTester->getDisplay());
