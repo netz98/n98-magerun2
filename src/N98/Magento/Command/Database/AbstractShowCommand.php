@@ -26,21 +26,21 @@ abstract class AbstractShowCommand extends AbstractDatabaseCommand
     /**
      * @var array
      */
-    protected $_importantVars = array();
+    protected $_importantVars = [];
 
     /**
      * Key = variable name => value method name in this class
      *
      * @var array
      */
-    protected $_specialFormat = array();
+    protected $_specialFormat = [];
 
     /**
      * Contains all variables
      *
      * @var array
      */
-    protected $_allVariables = array();
+    protected $_allVariables = [];
 
     protected function configure()
     {
@@ -93,7 +93,7 @@ abstract class AbstractShowCommand extends AbstractDatabaseCommand
         reset($this->_importantVars);
         $hasDescription = isset($this->_importantVars[key($this->_importantVars)]['desc']) &&
             false === $this->_input->getOption('no-description');
-        $header = array('Variable Name', 'Value');
+        $header = ['Variable Name', 'Value'];
         if (true === $hasDescription) {
             $header[] = 'Description';
         }
@@ -109,10 +109,10 @@ abstract class AbstractShowCommand extends AbstractDatabaseCommand
      */
     protected function generateRows(array $outputVars, $hasDescription)
     {
-        $rows = array();
+        $rows = [];
         $i = 0;
         foreach ($outputVars as $name => $value) {
-            $rows[$i] = array($name, $value);
+            $rows[$i] = [$name, $value];
             if (
                 true === $hasDescription &&
                 isset($this->_importantVars[$name]['desc'])
@@ -198,7 +198,7 @@ abstract class AbstractShowCommand extends AbstractDatabaseCommand
                 if (isset($this->_specialFormat[$k])) {
                     $formatter = $this->_specialFormat[$k];
                     if (is_string($formatter) && method_exists($this, $formatter)) {
-                        $formatter = array($this, $formatter);
+                        $formatter = [$this, $formatter];
                     }
                     $v = call_user_func($formatter, $v);
                 }

@@ -25,8 +25,7 @@ class ListCommand extends AbstractMagentoCommand
                 null,
                 InputOption::VALUE_OPTIONAL,
                 'Output Format. One of [' . implode(',', RendererFactory::getFormats()) . ']'
-            )
-        ;
+            );
     }
 
     /**
@@ -52,7 +51,7 @@ class ListCommand extends AbstractMagentoCommand
 
         $searchEngines = $this->searchEngineConfig->toOptionArray();
 
-        $table = array();
+        $table = [];
         foreach ($searchEngines as $searchEngine) {
             $table[] = [
                 $searchEngine['value'],
@@ -60,7 +59,7 @@ class ListCommand extends AbstractMagentoCommand
             ];
         }
         $this->getHelper('table')
-            ->setHeaders(array('code', 'label'))
+            ->setHeaders(['code', 'label'])
             ->renderByFormat($output, $table, $input->getOption('format'));
     }
 }

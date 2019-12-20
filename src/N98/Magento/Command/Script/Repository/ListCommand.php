@@ -19,8 +19,7 @@ class ListCommand extends AbstractRepositoryCommand
                 null,
                 InputOption::VALUE_OPTIONAL,
                 'Output Format. One of [' . implode(',', RendererFactory::getFormats()) . ']'
-            )
-        ;
+            );
 
         $help = <<<HELP
 You can organize your scripts in a repository.
@@ -47,16 +46,16 @@ HELP;
     {
         $files = $this->getScripts();
         if (count($files) > 0) {
-            $table = array();
+            $table = [];
             foreach ($files as $file) {
-                $table[] = array(
+                $table[] = [
                     substr($file['fileinfo']->getFilename(), 0, -strlen(self::MAGERUN_EXTENSION)),
                     $file['location'],
                     $file['description'],
-                );
+                ];
             }
         } else {
-            $table = array();
+            $table = [];
         }
 
         if ($input->getOption('format') === null && count($table) === 0) {
@@ -64,7 +63,7 @@ HELP;
         }
 
         $this->getHelper('table')
-            ->setHeaders(array('Script', 'Location', 'Description'))
+            ->setHeaders(['Script', 'Location', 'Description'])
             ->renderByFormat($output, $table, $input->getOption('format'));
     }
 }

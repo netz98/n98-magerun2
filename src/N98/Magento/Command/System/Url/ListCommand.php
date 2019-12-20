@@ -106,7 +106,7 @@ HELP;
 
         $stores = explode(',', $input->getArgument('stores'));
 
-        $urls = array();
+        $urls = [];
 
         foreach ($stores as $storeId) {
             try {

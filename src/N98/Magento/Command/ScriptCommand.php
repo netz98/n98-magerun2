@@ -16,7 +16,7 @@ class ScriptCommand extends AbstractMagentoCommand
     /**
      * @var array
      */
-    protected $scriptVars = array();
+    protected $scriptVars = [];
 
     /**
      * @var string

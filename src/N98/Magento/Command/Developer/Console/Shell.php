@@ -81,13 +81,13 @@ class Shell extends PsyShell
         } elseif ($e instanceof ErrorException) {
             if (BinaryString::startsWith($e->getMessage(), 'PHP error:  Use of undefined constant')) {
                 $this->getConsoleOutput()->writeln('<warning>Unknown command</warning>');
-                
+
                 return;
             }
         } elseif ($e instanceof FatalErrorException) {
             if (BinaryString::startsWith($e->getMessage(), 'PHP Fatal error:  Call to undefined function')) {
                 $this->getConsoleOutput()->writeln('<warning>Unknown function</warning>');
-                
+
                 return;
             }
         } elseif ($e instanceof ParseErrorException) {

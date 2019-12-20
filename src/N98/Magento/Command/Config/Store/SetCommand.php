@@ -13,11 +13,11 @@ class SetCommand extends AbstractConfigCommand
     /**
      * @var array
      */
-    protected $_scopes = array(
+    protected $_scopes = [
         'default',
         'websites',
         'stores',
-    );
+    ];
 
     protected function configure()
     {
@@ -45,8 +45,7 @@ class SetCommand extends AbstractConfigCommand
                 null,
                 InputOption::VALUE_NONE,
                 'Do not treat value NULL as ' . self::DISPLAY_NULL_UNKNOWN_VALUE . ' value'
-            )
-        ;
+            );
 
         $help = <<<HELP
 Set a store config value by path.
@@ -82,7 +81,7 @@ HELP;
             $value = null;
             $valueDisplay = self::DISPLAY_NULL_UNKNOWN_VALUE;
         } else {
-            $value = str_replace(array('\n', '\r'), array("\n", "\r"), $value);
+            $value = str_replace(['\n', '\r'], ["\n", "\r"], $value);
             $value = $this->_formatValue($value, ($input->getOption('encrypt') ? 'encrypt' : ''));
         }
 

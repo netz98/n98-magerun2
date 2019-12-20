@@ -95,7 +95,7 @@ class CreateCommand extends AbstractCustomerCommand
 
         $outputPlain = $input->getOption('format') === null;
 
-        $table = array();
+        $table = [];
         $isError = false;
 
         if (!$customer->getId()) {
@@ -121,12 +121,12 @@ class CreateCommand extends AbstractCustomerCommand
                         )
                     );
                 } else {
-                    $table[] = array(
+                    $table[] = [
                         $email,
                         $password,
                         $firstname,
                         $lastname,
-                    );
+                    ];
                 }
             } catch (\Exception $e) {
                 $isError = true;
@@ -138,7 +138,7 @@ class CreateCommand extends AbstractCustomerCommand
 
         if (!$outputPlain) {
             $this->getHelper('table')
-                ->setHeaders(array('email', 'password', 'firstname', 'lastname'))
+                ->setHeaders(['email', 'password', 'firstname', 'lastname'])
                 ->renderByFormat($output, $table, $input->getOption('format'));
         }
 

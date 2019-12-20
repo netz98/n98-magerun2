@@ -8,10 +8,10 @@ class StatusCommandTest extends TestCase
 {
     public function testExecute()
     {
-        $input = array(
+        $input = [
             'command'  => 'db:status',
             '--format' => 'csv',
-        );
+        ];
         $this->assertDisplayContains($input, 'Threads_connected');
         $this->assertDisplayContains($input, 'Innodb_buffer_pool_wait_free');
         $this->assertDisplayContains($input, 'InnoDB Buffer Pool hit');
@@ -20,11 +20,11 @@ class StatusCommandTest extends TestCase
 
     public function testSearch()
     {
-        $input = array(
+        $input = [
             'command'  => 'db:status',
             '--format' => 'csv',
             'search'   => 'Innodb%',
-        );
+        ];
         $this->assertDisplayContains($input, 'Innodb_buffer_pool_read_ahead_rnd');
         $this->assertDisplayContains($input, 'Innodb_buffer_pool_wait_free');
         $this->assertDisplayContains($input, 'InnoDB Buffer Pool hit');
@@ -35,12 +35,12 @@ class StatusCommandTest extends TestCase
     public function testRounding()
     {
         $this->assertDisplayRegExp(
-            array(
+            [
             'command'    => 'db:status',
             '--format'   => 'csv',
             '--rounding' => '2',
             'search'     => '%size%',
-            ),
+            ],
             '~Innodb_page_size,[0-9\.]+K,~'
         );
     }

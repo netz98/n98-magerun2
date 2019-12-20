@@ -139,10 +139,10 @@ class TestApplication
         if ($this->application === null) {
             $root = $this->getTestMagentoRoot();
 
-            $mockObjectGenerator = new PHPUnit_Framework_MockObject_Generator;
+            $mockObjectGenerator = new PHPUnit_Framework_MockObject_Generator();
 
             /** @var Application|PHPUnit_Framework_MockObject_MockObject $application */
-            $application = $mockObjectGenerator->getMock('N98\Magento\Application', array('getMagentoRootFolder'));
+            $application = $mockObjectGenerator->getMock('N98\Magento\Application', ['getMagentoRootFolder']);
 
             // Get the composer bootstraph
             if (defined('PHPUNIT_COMPOSER_INSTALL')) {
@@ -181,7 +181,7 @@ class TestApplication
      */
     public static function any()
     {
-        return new PHPUnit_Framework_MockObject_Matcher_AnyInvokedCount;
+        return new PHPUnit_Framework_MockObject_Matcher_AnyInvokedCount();
     }
 
     /**

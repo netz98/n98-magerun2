@@ -13,8 +13,7 @@ class FlushCommand extends AbstractModifierCommand
         $this
             ->setName('cache:flush')
             ->addArgument('type', InputArgument::IS_ARRAY | InputArgument::OPTIONAL, 'Cache type code like "config"')
-            ->setDescription('Flush magento cache storage')
-        ;
+            ->setDescription('Flush magento cache storage');
     }
 
     /**
@@ -37,11 +36,11 @@ class FlushCommand extends AbstractModifierCommand
         $eventManager->dispatch('adminhtml_cache_flush_all');
 
         $typesToClean = $input->getArgument('type');
-        
+
         $availableTypes = $cacheManager->getAvailableTypes();
         foreach ($availableTypes as $cacheType) {
             if (count($typesToClean) == 0 || in_array($cacheType, $typesToClean)) {
-                $cacheManager->flush(array($cacheType));
+                $cacheManager->flush([$cacheType]);
                 $output->writeln('<info><comment>' . $cacheType . '</comment> cache flushed</info>');
             }
         }

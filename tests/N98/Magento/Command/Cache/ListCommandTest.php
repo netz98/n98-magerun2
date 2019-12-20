@@ -14,7 +14,7 @@ class ListCommandTest extends TestCase
     public function setUp()
     {
         $application = $this->getApplication();
-        $application->add(new ListCommand);
+        $application->add(new ListCommand());
 
         $this->command = $this->getApplication()->find('cache:list');
     }
@@ -26,8 +26,7 @@ class ListCommandTest extends TestCase
     {
         /* @var $command ListCommand */
         $command = $this->assertExecute('cache:list')->getCommand();
-        $this->assertNotEmpty($command->getTypes())
-        ;
+        $this->assertNotEmpty($command->getTypes());
     }
 
     /**
@@ -36,7 +35,7 @@ class ListCommandTest extends TestCase
     public function testEnabledFilter()
     {
         /* @var $command ListCommand */
-        $command = $this->assertExecute(array('command' => 'cache:list', '--enabled' => 1))->getCommand();
+        $command = $this->assertExecute(['command' => 'cache:list', '--enabled' => 1])->getCommand();
 
         $cacheTypes = $command->getTypes();
         $disabledCacheTypes = 0;

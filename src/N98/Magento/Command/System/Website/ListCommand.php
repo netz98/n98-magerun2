@@ -25,8 +25,7 @@ class ListCommand extends AbstractMagentoCommand
                 null,
                 InputOption::VALUE_OPTIONAL,
                 'Output Format. One of [' . implode(',', RendererFactory::getFormats()) . ']'
-            )
-        ;
+            );
     }
 
     /**
@@ -49,15 +48,15 @@ class ListCommand extends AbstractMagentoCommand
         }
 
         foreach ($this->storeManager->getWebsites() as $website) {
-            $table[$website->getId()] = array(
+            $table[$website->getId()] = [
                 $website->getId(),
                 $website->getCode(),
-            );
+            ];
         }
 
         ksort($table);
         $this->getHelper('table')
-            ->setHeaders(array('id', 'code'))
+            ->setHeaders(['id', 'code'])
             ->renderByFormat($output, $table, $input->getOption('format'));
     }
 }

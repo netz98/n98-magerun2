@@ -28,7 +28,7 @@ class SelfUpdateCommand extends AbstractMagentoCommand
     {
         $this
             ->setName('self-update')
-            ->setAliases(array('selfupdate'))
+            ->setAliases(['selfupdate'])
             ->addOption('unstable', null, InputOption::VALUE_NONE, 'Load unstable version from develop branch')
             ->addOption('dry-run', null, InputOption::VALUE_NONE, 'Tests if there is a new version without any update.')
             ->setDescription('Updates n98-magerun2.phar to the latest version.')
@@ -40,8 +40,7 @@ versions of n98-magerun2 and if found, installs the latest.
 <info>php n98-magerun2.phar self-update</info>
 
 EOT
-            )
-        ;
+            );
     }
 
     /**

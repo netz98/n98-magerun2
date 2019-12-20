@@ -36,14 +36,14 @@ class InstallComposer extends AbstractSubCommand
         }
 
         $this->output->writeln('<info>Found executable <comment>' . $composerBin . '</comment></info>');
-        $this->config['composer_bin'] = array($composerBin);
+        $this->config['composer_bin'] = [$composerBin];
 
         $composerUseSamePhpBinary = $this->hasFlagOrOptionalBoolOption('composer-use-same-php-binary', false);
         if ($composerUseSamePhpBinary) {
-            $this->config['composer_bin'] = array(
+            $this->config['composer_bin'] = [
                 OperatingSystem::getCurrentPhpBinary(),
                 $composerBin = OperatingSystem::locateProgram($composerBin),
-            );
+            ];
         }
     }
 

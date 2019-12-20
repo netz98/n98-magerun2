@@ -12,8 +12,7 @@ class FooCommand extends AbstractMagentoCommand
     {
         $this
             ->setName('testmodule:foo')
-            ->setDescription('Test command registered in a module')
-        ;
+            ->setDescription('Test command registered in a module');
     }
 
     /**

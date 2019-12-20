@@ -36,11 +36,11 @@ class ChangeVersionCommandTest extends TestCase
     public function testShouldExecuteCorrectlyAndDisplaySuccessMessage()
     {
         $this->commandTester->execute(
-            array(
+            [
                 'command' => $this->command->getName(),
                 'module'  => 'magento_customer',
                 'version' => '2.0.0',
-            )
+            ]
         );
 
         $this->assertContains(
@@ -56,11 +56,11 @@ class ChangeVersionCommandTest extends TestCase
     public function testExecuteShouldThrowExceptionWhenModuleDoesntExist()
     {
         $this->commandTester->execute(
-            array(
+            [
                 'command' => $this->command->getName(),
                 'module'  => 'non_existent_module',
                 'version' => '2.0.0',
-            )
+            ]
         );
     }
 }

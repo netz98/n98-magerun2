@@ -77,10 +77,10 @@ class ConfigFile
      */
     public function applyVariables($magentoRootFolder, SplFileInfo $file = null)
     {
-        $replace = array(
+        $replace = [
             '%module%' => $file ? $file->getPath() : '',
             '%root%'   => $magentoRootFolder,
-        );
+        ];
 
         $this->buffer = strtr($this->buffer, $replace);
     }

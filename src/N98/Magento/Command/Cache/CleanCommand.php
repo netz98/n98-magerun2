@@ -13,8 +13,7 @@ class CleanCommand extends AbstractModifierCommand
         $this
             ->setName('cache:clean')
             ->addArgument('type', InputArgument::IS_ARRAY | InputArgument::OPTIONAL, 'Cache type code like "config"')
-            ->setDescription('Clean magento cache')
-        ;
+            ->setDescription('Clean magento cache');
 
         $help = <<<HELP
 Cleans expired cache entries.
@@ -70,7 +69,7 @@ HELP;
 
         foreach ($availableTypes as $type) {
             if (count($typesToClean) == 0 || in_array($type, $typesToClean)) {
-                $cacheManager->clean(array($type));
+                $cacheManager->clean([$type]);
                 $eventManager->dispatch('adminhtml_cache_refresh_type', ['type' => $type]);
                 $output->writeln('<info><comment>' . $type . '</comment> cache cleaned</info>');
             }

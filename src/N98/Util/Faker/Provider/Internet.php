@@ -9,10 +9,10 @@ class Internet extends \Faker\Provider\Internet
      *
      * @var array
      */
-    protected static $userNameFormats = array(
+    protected static $userNameFormats = [
         '{{lastName}}.{{firstName}}.######',
         '{{firstName}}.{{lastName}}.######',
         '{{firstName}}.######',
         '?{{lastName}}.######',
-    );
+    ];
 }

@@ -22,14 +22,14 @@ class TableRendererTest extends TestCase
      * @var DDLTable
      */
     private $table;
-    
+
     protected function setUp()
     {
         $this->table = new DDLTable();
         $twigHelper = $this->getApplication()->getHelperSet()->get('twig');
         $this->renderer = new TableRenderer($this->table, $twigHelper);
     }
-    
+
     /**
      * @test
      */

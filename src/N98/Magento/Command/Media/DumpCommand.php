@@ -30,8 +30,7 @@ class DumpCommand extends AbstractMagentoCommand
             ->setName('media:dump')
             ->addOption('strip', '', InputOption::VALUE_NONE, 'Excludes image cache')
             ->addArgument('filename', InputArgument::OPTIONAL, 'Dump filename')
-            ->setDescription('Creates an archive with content of media folder.')
-        ;
+            ->setDescription('Creates an archive with content of media folder.');
     }
 
     /**

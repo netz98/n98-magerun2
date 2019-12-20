@@ -17,10 +17,10 @@ class DisableCommandTest extends TestCase
     {
         $expectedOutput = $this->getExpectedOutput();
 
-        $input = array(
+        $input = [
             'command' => 'cache:disable',
             'type'    => self::NONEXISTENT_CACHE_TYPE,
-        );
+        ];
 
         $this->assertDisplayContains($input, $expectedOutput);
     }

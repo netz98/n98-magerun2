@@ -57,9 +57,9 @@ HELP;
 
         $ignoreDataUpdate = $input->getOption('ignore-data');
         if ($ignoreDataUpdate) {
-            $headers = array('Setup', 'Module', 'DB', 'Status');
+            $headers = ['Setup', 'Module', 'DB', 'Status'];
         } else {
-            $headers = array('Setup', 'Module', 'DB', 'Data', 'Status');
+            $headers = ['Setup', 'Module', 'DB', 'Data', 'Status'];
         }
 
         $table = $this->getModuleTable($ignoreDataUpdate, $headers, $errorCount);
@@ -108,7 +108,7 @@ HELP;
     private function getModuleTable($ignoreDataUpdate, array $headers, &$errorCount)
     {
         $errorCount = 0;
-        $table = array();
+        $table = [];
         $magentoModuleList = $this->getMagentoModuleList();
 
         foreach ($magentoModuleList as $name => $module) {
@@ -183,7 +183,7 @@ HELP;
 
         array_walk($table, function (&$row) {
             $status = $row['Status'];
-            $availableStatus = array('OK' => 'info', 'Error' => 'error');
+            $availableStatus = ['OK' => 'info', 'Error' => 'error'];
             $statusString = sprintf(
                 '<%s>%s</%s>',
                 $availableStatus[$status],
@@ -205,12 +205,12 @@ HELP;
     {
         $resource = $this->getMagentoModuleResource();
 
-        $row = array(
+        $row = [
             'Setup'  => $name,
             'Module' => $module['setup_version'],
             'DB'     => $resource->getDbVersion($name),
             'Data'   => $resource->getDataVersion($name),
-        );
+        ];
 
         if (empty($row['Module'])
             && empty($row['DB'])

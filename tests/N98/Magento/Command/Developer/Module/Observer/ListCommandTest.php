@@ -12,7 +12,7 @@ class ListCommandTest extends TestCase
     public function testGlobalList()
     {
         $this->assertDisplayContains(
-            array('command' => 'dev:module:observer:list', 'area' => 'global'),
+            ['command' => 'dev:module:observer:list', 'area' => 'global'],
             self::GLOBAL_EVENT_NAME
         );
     }
@@ -20,7 +20,7 @@ class ListCommandTest extends TestCase
     public function testCrontabList()
     {
         $this->assertDisplayContains(
-            array('command' => 'dev:module:observer:list', 'area' => 'crontab'),
+            ['command' => 'dev:module:observer:list', 'area' => 'crontab'],
             self::CRONTAB_OBSERVER_NAME
         );
     }

@@ -17,8 +17,7 @@ class QueryCommand extends AbstractDatabaseCommand
             ->setName('db:query')
             ->addArgument('query', InputArgument::OPTIONAL, 'SQL query')
             ->addOption('only-command', null, InputOption::VALUE_NONE, 'Print only mysql command. Do not execute')
-            ->setDescription('Executes an SQL query on the database defined in env.php')
-        ;
+            ->setDescription('Executes an SQL query on the database defined in env.php');
 
         $help = <<<HELP
 Executes an SQL query on the current configured database. Wrap your SQL in

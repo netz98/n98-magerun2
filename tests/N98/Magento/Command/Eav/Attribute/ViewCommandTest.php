@@ -38,11 +38,11 @@ class ViewCommandTest extends TestCase
     public function execute()
     {
         $this->commandTester->execute(
-            array(
+            [
                 'command'       => $this->command->getName(),
                 'entityType'    => 'catalog_product',
                 'attributeCode' => 'sku',
-            )
+            ]
         );
 
         $result = $this->commandTester->getDisplay();
@@ -61,12 +61,12 @@ class ViewCommandTest extends TestCase
     public function executeWithException()
     {
         $this->commandTester->execute(
-            array(
+            [
                 'command'       => $this->command->getName(),
                 'entityType'    => 'catalog_product',
                 'attributeCode' => 'foo_bar_attribute_that_should_never_ever_ever_exist',
 
-            )
+            ]
         );
     }
 

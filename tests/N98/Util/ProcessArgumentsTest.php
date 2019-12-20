@@ -42,11 +42,10 @@ class ProcessArgumentsTest extends \PHPUnit\Framework\TestCase
     {
         $actual = ProcessArguments::create()
             ->addArg('command')
-            ->addArgs(array('-vvv', '--version-tricks-off', '--', '--' => true))
+            ->addArgs(['-vvv', '--version-tricks-off', '--', '--' => true])
             ->addArg('--')
-            ->addArgs(array('-vvv', '--file' => 'music', '--empty' => true, 'flag' => true))
-            ->createBuilder()
-            ;
+            ->addArgs(['-vvv', '--file' => 'music', '--empty' => true, 'flag' => true])
+            ->createBuilder();
         $this->assertInstanceOf(ProcessBuilder::class, $actual);
         $commandLine = $actual->getProcess()->getCommandLine();
         $this->assertSame(

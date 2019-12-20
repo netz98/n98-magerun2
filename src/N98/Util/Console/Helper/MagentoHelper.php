@@ -61,7 +61,7 @@ class MagentoHelper extends AbstractHelper implements DetectionResultInterface
     /**
      * @var array
      */
-    protected $baseConfig = array();
+    protected $baseConfig = [];
 
     /**
      * @var string
@@ -105,7 +105,7 @@ class MagentoHelper extends AbstractHelper implements DetectionResultInterface
      * @param array $subFolders [optional] sub-folders to check
      * @return bool
      */
-    public function detect($folder, array $subFolders = array())
+    public function detect($folder, array $subFolders = [])
     {
         $folders = $this->splitPathFolders($folder);
         $folders = $this->checkMagerunFile($folders);
@@ -133,7 +133,7 @@ class MagentoHelper extends AbstractHelper implements DetectionResultInterface
      */
     protected function splitPathFolders($folder)
     {
-        $folders = array();
+        $folders = [];
 
         $folderParts = explode('/', $folder);
         foreach ($folderParts as $key => $part) {

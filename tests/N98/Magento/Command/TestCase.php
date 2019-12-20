@@ -67,7 +67,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
     /**
      * @var array
      */
-    private $testers = array();
+    private $testers = [];
 
     /**
      * @param string|array $command name or input
@@ -76,9 +76,9 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
     private function getMagerunTester($command)
     {
         if (is_string($command)) {
-            $input = array(
+            $input = [
                 'command' => $command,
-            );
+            ];
         } else {
             $input = $command;
         }

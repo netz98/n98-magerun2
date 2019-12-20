@@ -19,8 +19,7 @@ class ListCommand extends AbstractAdminUserCommand
                 null,
                 InputOption::VALUE_OPTIONAL,
                 'Output Format. One of [' . implode(',', RendererFactory::getFormats()) . ']'
-            )
-        ;
+            );
     }
 
     /**
@@ -37,17 +36,17 @@ class ListCommand extends AbstractAdminUserCommand
         }
 
         $userList = $this->userModel->getCollection();
-        $table = array();
+        $table = [];
         foreach ($userList as $user) {
-            $table[] = array(
+            $table[] = [
                 $user->getId(),
                 $user->getUsername(),
                 $user->getEmail(),
                 $user->getIsActive() ? 'active' : 'inactive',
-            );
+            ];
         }
         $this->getHelper('table')
-            ->setHeaders(array('id', 'username', 'email', 'status'))
+            ->setHeaders(['id', 'username', 'email', 'status'])
             ->renderByFormat($output, $table, $input->getOption('format'));
     }
 }

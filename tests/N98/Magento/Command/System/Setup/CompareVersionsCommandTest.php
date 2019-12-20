@@ -22,10 +22,10 @@ class CompareVersionsCommandTest extends TestCase
         $url = vfsStream::url('root/junit.xml');
 
         $this->assertExecute(
-            array(
+            [
                 'command'     => 'sys:setup:compare-versions',
                 '--log-junit' => $url,
-            )
+            ]
         );
         $this->assertFileExists($url);
     }

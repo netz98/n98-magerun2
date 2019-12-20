@@ -56,12 +56,12 @@ abstract class AbstractMagentoCommand extends Command
     /**
      * @var array
      */
-    protected $_deprecatedAlias = array();
+    protected $_deprecatedAlias = [];
 
     /**
      * @var array
      */
-    protected $_websiteCodeMap = array();
+    protected $_websiteCodeMap = [];
 
     /**
      * @var ObjectManager
@@ -117,11 +117,11 @@ abstract class AbstractMagentoCommand extends Command
         /** @var $formatter FormatterHelper */
         $formatter = $this->getHelper('formatter');
 
-        $output->writeln(array(
+        $output->writeln([
             '',
             $formatter->formatBlock($text, $style, true),
             '',
-        ));
+        ]);
     }
 
     /**
@@ -266,7 +266,7 @@ abstract class AbstractMagentoCommand extends Command
      */
     public function isSourceTypeRepository($type)
     {
-        return in_array($type, array('git', 'hg'));
+        return in_array($type, ['git', 'hg']);
     }
 
     /**
@@ -280,11 +280,11 @@ abstract class AbstractMagentoCommand extends Command
     public function getComposer(InputInterface $input, OutputInterface $output)
     {
         $io = new ConsoleIO($input, $output, $this->getHelperSet());
-        $config = array(
-            'config' => array(
+        $config = [
+            'config' => [
                 'secure-http' => false,
-            ),
-        );
+            ],
+        ];
 
         return ComposerFactory::create($io, $config);
     }
@@ -321,7 +321,7 @@ abstract class AbstractMagentoCommand extends Command
      */
     protected function _parseBoolOption($value)
     {
-        return in_array(strtolower($value), array('y', 'yes', 1, 'true'));
+        return in_array(strtolower($value), ['y', 'yes', 1, 'true']);
     }
 
     /**
@@ -339,7 +339,7 @@ abstract class AbstractMagentoCommand extends Command
      */
     public function formatActive($value)
     {
-        if (in_array($value, array(1, 'true'))) {
+        if (in_array($value, [1, 'true'])) {
             return 'active';
         }
 
@@ -400,7 +400,7 @@ abstract class AbstractMagentoCommand extends Command
 
         $commandConfig = $this->getCommandConfig();
         if (empty($commandConfig)) {
-            $commandConfig = array();
+            $commandConfig = [];
         }
 
         return new SubCommandFactory(

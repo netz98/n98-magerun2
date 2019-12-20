@@ -15,10 +15,10 @@ class InfoCommand extends AbstractCustomerCommand
     /**
      * @var array
      */
-    protected $blacklist = array(
+    protected $blacklist = [
         'password_hash',
         'increment_id',
-    );
+    ];
 
     protected function configure()
     {

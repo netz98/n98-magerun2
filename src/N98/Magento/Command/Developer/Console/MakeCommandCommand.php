@@ -97,24 +97,24 @@ BODY;
      */
     private function addExecuteMethod(ClassGenerator $classGenerator)
     {
-        $docblock = DocBlockGenerator::fromArray(array(
+        $docblock = DocBlockGenerator::fromArray([
             'shortDescription' => '',
             'longDescription'  => '',
-            'tags'             => array(
-                array(
+            'tags'             => [
+                [
                     'name'        => 'param',
                     'description' => 'InputInterface $input An InputInterface instance',
-                ),
-                array(
+                ],
+                [
                     'name'        => 'param',
                     'description' => 'OutputInterface $output An OutputInterface instance',
-                ),
-                array(
+                ],
+                [
                     'name'        => 'return',
                     'description' => 'null|int null or 0 if everything went fine, or an error code',
-                ),
-            ),
-        ));
+                ],
+            ],
+        ]);
 
         $inputParamType = '\Symfony\Component\Console\Input\InputInterface';
         $outputParamType = '\Symfony\Component\Console\Output\OutputInterface';

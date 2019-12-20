@@ -15,10 +15,10 @@ class EnableCommandTest extends TestCase
 
     public function testEnableNonexistentCache()
     {
-        $input = array(
+        $input = [
             'command' => 'cache:enable',
             'type'    => self::NONEXISTENT_CACHE_TYPE,
-        );
+        ];
         $expectedOutput = $this->getExpectedOutput();
 
         $this->assertDisplayContains($input, $expectedOutput);

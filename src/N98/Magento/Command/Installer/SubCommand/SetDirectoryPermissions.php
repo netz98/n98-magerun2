@@ -14,7 +14,7 @@ class SetDirectoryPermissions extends AbstractSubCommand
     {
         try {
             $installationFolder = $this->config->getString('installationFolder');
-            
+
             $varFolder = $installationFolder . '/var';
             if (!is_dir($varFolder)) {
                 @mkdir($varFolder);
@@ -36,7 +36,7 @@ class SetDirectoryPermissions extends AbstractSubCommand
             $finder = Finder::create();
             $finder->directories()
                 ->ignoreUnreadableDirs(true)
-                ->in(array($varFolder, $mediaFolder));
+                ->in([$varFolder, $mediaFolder]);
             foreach ($finder as $dir) {
                 @chmod($dir->getRealpath(), 0777);
             }

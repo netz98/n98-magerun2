@@ -55,7 +55,7 @@ HELP;
     {
         $files = $this->getScripts();
         if ($input->getArgument('script') == null) {
-            $question = array();
+            $question = [];
             $i = 0;
             foreach ($files as $file) {
                 $files[$i] = $file;
@@ -86,10 +86,10 @@ HELP;
             $selectedFile = $files[$script]['fileinfo']->getPathname();
         }
 
-        $scriptArray = array(
+        $scriptArray = [
             'command'  => 'script',
             'filename' => $selectedFile,
-        );
+        ];
         foreach ($input->getOption('define') as $define) {
             $scriptArray['--define'][] = $define;
         }

@@ -68,8 +68,8 @@ class ParameterHelper extends AbstractHelper
             }
             $store = $storeManager->getStore($input->getArgument($argumentName));
         } catch (Exception $e) {
-            $stores = array();
-            $question = array();
+            $stores = [];
+            $question = [];
             $i = 0;
             foreach ($storeManager->getStores($withDefaultStore) as $store) {
                 $stores[$i] = $store->getId();
@@ -133,7 +133,7 @@ class ParameterHelper extends AbstractHelper
             $website = $storeManager->getWebsite($input->getArgument($argumentName));
         } catch (Exception $e) {
             $i = 0;
-            $websites = array();
+            $websites = [];
             foreach ($storeManager->getWebsites() as $website) {
                 $websites[$i] = $website->getId();
                 $question[] = sprintf(
@@ -177,12 +177,12 @@ class ParameterHelper extends AbstractHelper
     public function askEmail(InputInterface $input, OutputInterface $output, $argumentName = 'email')
     {
         $constraints = new Constraints\Collection(
-            array(
-                'email' => array(
+            [
+                'email' => [
                     new Constraints\NotBlank(),
                     new Constraints\Email(),
-                ),
-            )
+                ],
+            ]
         );
 
         return $this->_validateArgument($output, $argumentName, $input->getArgument($argumentName), $constraints);
@@ -201,22 +201,22 @@ class ParameterHelper extends AbstractHelper
         $argumentName = 'password',
         $needDigits = true
     ) {
-        $validators = array();
+        $validators = [];
 
         if ($needDigits) {
-            $regex = array(
+            $regex = [
                 'pattern' => '/^(?=.*\d)(?=.*[a-zA-Z])/',
                 'message' => 'Password must contain letters and at least one digit',
-            );
+            ];
             $validators[] = new Constraints\Regex($regex);
         }
 
-        $validators[] = new Constraints\Length(array('min' => 6));
+        $validators[] = new Constraints\Length(['min' => 6]);
 
         $constraints = new Constraints\Collection(
-            array(
+            [
                 'password' => $validators,
-            )
+            ]
         );
 
         return $this->_validateArgument($output, $argumentName, $input->getArgument($argumentName), $constraints);
@@ -234,10 +234,10 @@ class ParameterHelper extends AbstractHelper
     protected function _validateArgument(OutputInterface $output, $name, $value, $constraints)
     {
         $validator = $this->initValidator();
-        $errors = array();
+        $errors = [];
 
         if (!empty($value)) {
-            $errors = $validator->validateValue(array($name => $value), $constraints);
+            $errors = $validator->validateValue([$name => $value], $constraints);
             if (count($errors) > 0) {
                 $output->writeln('<error>' . $errors[0]->getMessage() . '</error>');
             }
@@ -252,7 +252,7 @@ class ParameterHelper extends AbstractHelper
                 $output,
                 $question,
                 function ($typeInput) use ($validator, $constraints, $name) {
-                    $errors = $validator->validateValue(array($name => $typeInput), $constraints);
+                    $errors = $validator->validateValue([$name => $typeInput], $constraints);
                     if (count($errors) > 0) {
                         throw new InvalidArgumentException($errors[0]->getMessage());
                     }

@@ -33,8 +33,7 @@ class MakeConfigRoutesCommand extends AbstractSimpleConfigFileGeneratorCommand
             ->addArgument('area', InputArgument::OPTIONAL, 'Area of routes.xml file', 'frontend')
             ->addOption('type', 't', InputOption::VALUE_OPTIONAL, 'Type', 'standard')
             ->addOption('frontname', 'f', InputOption::VALUE_OPTIONAL, 'Frontname')
-            ->setDescription('Creates a new routes.xml file')
-        ;
+            ->setDescription('Creates a new routes.xml file');
     }
 
     /**

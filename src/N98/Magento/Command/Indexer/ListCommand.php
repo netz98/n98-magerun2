@@ -19,8 +19,7 @@ class ListCommand extends AbstractIndexerCommand
                 null,
                 InputOption::VALUE_OPTIONAL,
                 'Output Format. One of [' . implode(',', RendererFactory::getFormats()) . ']'
-            )
-        ;
+            );
 
         $help = <<<HELP
 Lists all Magento indexers of current installation.
@@ -41,18 +40,18 @@ HELP;
             return;
         }
 
-        $table = array();
+        $table = [];
         foreach ($this->getIndexerList() as $index) {
-            $table[] = array(
+            $table[] = [
                 $index['code'],
                 $index['title'],
                 $index['status'],
                 $index['last_runtime'],
-            );
+            ];
         }
 
         $this->getHelper('table')
-            ->setHeaders(array('code', 'title', 'status', 'time'))
+            ->setHeaders(['code', 'title', 'status', 'time'])
             ->renderByFormat($output, $table, $input->getOption('format'));
     }
 }

@@ -46,16 +46,16 @@ HELP;
 
         $giftcard = $this->getGiftcard();
         $giftcard->setData(
-            array(
+            [
                 'status'        => 1,
                 'is_redeemable' => 1,
                 'website_id'    => $input->getOption('website')
                     ?: $this->getObjectManager()->get('Magento\Store\Model\StoreManager')->getWebsite(true)->getId(),
                 'balance'      => $input->getArgument('amount'),
                 'date_expires' => $input->getOption('expires'),
-            )
+            ]
         );
-        
+
         $giftcard->save();
         if (!$giftcard->getId()) {
             $output->writeln('<error>Failed to create gift card</error>');

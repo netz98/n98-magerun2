@@ -24,7 +24,7 @@ class TableHelper extends BaseTableHelper
     /**
      * @var array
      */
-    protected $headers = array();
+    protected $headers = [];
 
     /**
      * @param string $format

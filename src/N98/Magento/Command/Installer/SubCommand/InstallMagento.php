@@ -167,7 +167,7 @@ class InstallMagento extends AbstractSubCommand
         }
         $this->_getDefaultSessionFolder($sessionSave);
 
-        $argv = array(
+        $argv = [
             'language'          => $locale,
             'timezone'          => $timezone,
             'db-host'           => $this->_prepareDbHost(),
@@ -185,7 +185,7 @@ class InstallMagento extends AbstractSubCommand
             'session-save'      => $sessionSave,
             'backend-frontname' => $adminFrontname,
             'currency'          => $currency,
-        );
+        ];
 
         $dbPass = $this->config->getString('db_pass');
         if (!empty($dbPass)) {

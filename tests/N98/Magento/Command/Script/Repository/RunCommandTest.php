@@ -17,10 +17,10 @@ class RunCommandTest extends TestCase
         $config['script']['folders'][] = __DIR__ . '/_scripts';
         $application->setConfig($config);
 
-        $input = array(
+        $input = [
             'command' => 'script:repo:run',
             'script'  => 'hello-world',
-        );
+        ];
 
         // Runs sys:info -> Check for any output
         $this->assertDisplayContains($input, 'Vendors');

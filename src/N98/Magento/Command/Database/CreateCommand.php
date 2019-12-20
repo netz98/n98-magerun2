@@ -12,8 +12,7 @@ class CreateCommand extends AbstractDatabaseCommand
         parent::configure();
         $this
             ->setName('db:create')
-            ->setDescription('Create currently configured database')
-        ;
+            ->setDescription('Create currently configured database');
 
         $help = <<<HELP
 The command tries to create the configured database according to your

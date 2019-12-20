@@ -26,8 +26,7 @@ class HistoryCommand extends AbstractCronCommand
                 null,
                 InputOption::VALUE_OPTIONAL,
                 'Output Format. One of [' . implode(',', RendererFactory::getFormats()) . ']'
-            )
-        ;
+            );
     }
 
     /**
@@ -51,19 +50,19 @@ class HistoryCommand extends AbstractCronCommand
         $date = $this->getObjectManager()->create('Magento\Framework\Stdlib\DateTime\DateTime');
         $offset = $date->calculateOffset($timezone);
         $this->cronScheduleCollection
-            ->addFieldToFilter('status', array('neq' => Schedule::STATUS_PENDING))
+            ->addFieldToFilter('status', ['neq' => Schedule::STATUS_PENDING])
             ->addOrder('finished_at', \Magento\Framework\Data\Collection::SORT_ORDER_DESC);
 
-        $table = array();
+        $table = [];
         foreach ($this->cronScheduleCollection as $job) {
-            $table[] = array(
+            $table[] = [
                 $job->getJobCode(),
                 $job->getStatus(),
                 $job->getFinishedAt() ? $date->gmtDate(null, $date->timestamp($job->getFinishedAt()) + $offset) : '',
-            );
+            ];
         }
         $this->getHelper('table')
-            ->setHeaders(array('Job', 'Status', 'Finished'))
+            ->setHeaders(['Job', 'Status', 'Finished'])
             ->renderByFormat($output, $table, $input->getOption('format'));
     }
 }

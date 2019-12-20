@@ -16,14 +16,14 @@ class CreateCommandTest extends TestCase
     {
         $generatedEmail = uniqid() . '@example.com';
 
-        $input = array(
+        $input = [
             'command'   => 'customer:create',
             'email'     => $generatedEmail,
             'password'  => 'Password123',
             'firstname' => 'John',
             'lastname'  => 'Doe',
             'website'   => $this->getWebsiteCode(),
-        );
+        ];
         $this->assertDisplayContains($input, 'successfully created');
 
         // Format option
@@ -60,7 +60,7 @@ class CreateCommandTest extends TestCase
 
         // mock dialog
         // We mock the DialogHelper
-        $dialog = $this->createMock('N98\Util\Console\Helper\ParameterHelper', array('askPassword'));
+        $dialog = $this->createMock('N98\Util\Console\Helper\ParameterHelper', ['askPassword']);
         $dialog->expects($this->at(0))
             ->method('askPassword')
             ->will($this->returnValue(true)); // The user confirms
@@ -68,13 +68,13 @@ class CreateCommandTest extends TestCase
         // We override the standard helper with our mock
         $command->getHelperSet()->set($dialog, 'parameter');
 
-        $options = array(
+        $options = [
             'command'   => $command->getName(),
             'email'     => $generatedEmail,
             'password'  => 'pass',
             'firstname' => 'John',
             'lastname'  => 'Doe',
-        );
+        ];
         $commandTester = new CommandTester($command);
         $commandTester->execute($options);
         $this->assertRegExp(

@@ -110,7 +110,7 @@ class TimeElapsed
      */
     private static function pieces(DateInterval $diff)
     {
-        $keys = array(
+        $keys = [
             'y' => 'year',
             'm' => 'month',
             'w' => 'week',
@@ -118,10 +118,10 @@ class TimeElapsed
             'h' => 'hour',
             'i' => 'minute',
             's' => 'second',
-        );
+        ];
 
         // map diff
-        $diffArray = array();
+        $diffArray = [];
         $diffVars = get_object_vars($diff);
         foreach ($keys as $unit => $name) {
             $diffArray[$unit] = isset($diffVars[$unit]) ? $diffVars[$unit] : null;
@@ -133,7 +133,7 @@ class TimeElapsed
         $diffArray['d'] -= $weeks * 7;
 
         // fill string buffer array
-        $pieces = array();
+        $pieces = [];
         foreach ($keys as $unit => $name) {
             if ($value = $diffArray[$unit]) {
                 $pieces[] = sprintf('%s %s%s', $value, $name, $value > 1 ? 's' : '');

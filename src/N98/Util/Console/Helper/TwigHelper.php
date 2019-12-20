@@ -40,7 +40,7 @@ class TwigHelper extends Helper
      * @throws \Twig_Error_Runtime
      * @throws \Twig_Error_Syntax
      */
-    public function render($template, $variables = array())
+    public function render($template, $variables = [])
     {
         return $this->twig->render($template, $variables);
     }
@@ -56,7 +56,7 @@ class TwigHelper extends Helper
      * @throws \Twig_Error_Runtime
      * @throws \Twig_Error_Syntax
      */
-    public function renderString($string, $variables = array())
+    public function renderString($string, $variables = [])
     {
         return $this->twig->renderString($string, $variables);
     }

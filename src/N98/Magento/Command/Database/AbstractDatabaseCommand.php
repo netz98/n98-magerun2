@@ -82,7 +82,7 @@ abstract class AbstractDatabaseCommand extends AbstractMagentoCommand
      */
     protected function getCompressionHelp()
     {
-        $messages = array();
+        $messages = [];
         $messages[] = '';
         $messages[] = '<comment>Compression option</comment>';
         $messages[] = ' Supported compression: gzip';

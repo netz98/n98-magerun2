@@ -51,26 +51,26 @@ class ApplicationTest extends TestCase
 
         $distConfigArray = Yaml::parse(file_get_contents(__DIR__ . '/../../../config.yaml'));
 
-        $configArray = array(
-            'autoloaders' => array(
+        $configArray = [
+            'autoloaders' => [
                 'N98MagerunTest' => __DIR__ . '/_ApplicationTest/Src',
-            ),
-            'commands' => array(
-                'customCommands' => array(
+            ],
+            'commands' => [
+                'customCommands' => [
                     0 => 'N98MagerunTest\TestDummyCommand',
-                ),
-                'aliases' => array(
-                    array(
+                ],
+                'aliases' => [
+                    [
                         'ssl' => 'sys:store:list',
-                    ),
-                ),
-            ),
-            'init' => array(
-                'options' => array(
+                    ],
+                ],
+            ],
+            'init' => [
+                'options' => [
                     'config_model' => 'N98MagerunTest\AlternativeConfigModel',
-                ),
-            ),
-        );
+                ],
+            ],
+        ];
 
         $application->setAutoExit(false);
         $application->init(ArrayFunctions::mergeArrays($distConfigArray, $configArray));
@@ -85,9 +85,9 @@ class ApplicationTest extends TestCase
 
         $commandTester = new CommandTester($testDummyCommand);
         $commandTester->execute(
-            array(
+            [
                 'command' => $testDummyCommand->getName(),
-            )
+            ]
         );
         $this->assertContains('dummy', $commandTester->getDisplay());
         $this->assertTrue($application->getDefinition()->hasOption('root-dir'));
@@ -107,13 +107,13 @@ class ApplicationTest extends TestCase
         $application->setMagentoRootFolder($this->getTestMagentoRoot());
 
         // Load plugin config
-        $injectConfig = array(
-            'plugin' => array(
-                'folders' => array(
+        $injectConfig = [
+            'plugin' => [
+                'folders' => [
                     __DIR__ . '/_ApplicationTest/Modules',
-                ),
-            ),
-        );
+                ],
+            ],
+        ];
         $application->init($injectConfig);
 
         // Check for module command
@@ -124,38 +124,38 @@ class ApplicationTest extends TestCase
     {
         vfsStream::setup('root');
         vfsStream::create(
-            array(
-                'htdocs' => array(
-                    'app' => array(
+            [
+                'htdocs' => [
+                    'app' => [
                         'bootstrag.php' => '',
-                    ),
-                ),
-                'vendor' => array(
-                    'acme' => array(
-                        'magerun-test-module' => array(
+                    ],
+                ],
+                'vendor' => [
+                    'acme' => [
+                        'magerun-test-module' => [
                             'n98-magerun2.yaml' => file_get_contents(__DIR__ . '/_ApplicationTest/Composer/n98-magerun2.yaml'),
-                            'src'               => array(
-                                'Acme' => array(
+                            'src'               => [
+                                'Acme' => [
                                     'FooCommand.php' => file_get_contents(__DIR__ . '/_ApplicationTest/Composer/FooCommand.php'),
-                                ),
-                            ),
-                        ),
-                    ),
-                    'n98' => array(
-                        'magerun' => array(
-                            'src' => array(
-                                'N98' => array(
-                                    'Magento' => array(
-                                        'Command' => array(
+                                ],
+                            ],
+                        ],
+                    ],
+                    'n98' => [
+                        'magerun' => [
+                            'src' => [
+                                'N98' => [
+                                    'Magento' => [
+                                        'Command' => [
                                             'ConfigurationLoader.php' => '',
-                                        ),
-                                    ),
-                                ),
-                            ),
-                        ),
-                    ),
-                ),
-            )
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ]
         );
 
         $configurationLoader = $this->getMockBuilder(\N98\Magento\Application\ConfigurationLoader::class)

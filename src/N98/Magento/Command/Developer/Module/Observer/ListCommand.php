@@ -69,7 +69,7 @@ class ListCommand extends AbstractMagentoCommand
         $eventFilter = $input->getArgument('event');
 
         if (is_null($area) || !in_array($area, $this->areas)) {
-            $question = array();
+            $question = [];
             foreach ($this->areas as $key => $area) {
                 $question[] = '<comment>[' . ($key + 1) . ']</comment> ' . $area . PHP_EOL;
             }

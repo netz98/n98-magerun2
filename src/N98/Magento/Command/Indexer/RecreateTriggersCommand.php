@@ -21,8 +21,7 @@ class RecreateTriggersCommand extends AbstractIndexerCommand
     {
         $this
             ->setName('index:trigger:recreate')
-            ->setDescription('ReCreate all triggers')
-        ;
+            ->setDescription('ReCreate all triggers');
     }
 
     /**

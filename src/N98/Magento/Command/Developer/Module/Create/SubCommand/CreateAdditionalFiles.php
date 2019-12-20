@@ -42,10 +42,10 @@ class CreateAdditionalFiles extends AbstractSubCommand implements CommandConfigA
      */
     private function _getOutfile($filename)
     {
-        $pathes = array(
+        $pathes = [
             'rootDir'   => $this->config->getString('magentoRootFolder'),
             'moduleDir' => $this->config->getString('moduleDirectory'),
-        );
+        ];
 
         return $this->getCommand()->getHelper('twig')->renderString(
             $filename,
