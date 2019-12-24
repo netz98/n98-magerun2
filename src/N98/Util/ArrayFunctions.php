@@ -125,7 +125,7 @@ class ArrayFunctions
         $arrayLeftover = array_diff_key($array, $keyed);
         $keysLeftover = array_diff_key($keys, $keyed);
 
-        $target = array();
+        $target = [];
         if ($keysLeftover) {
             foreach ($arrayLeftover as $key => $value) {
                 if (is_string($key)) {

@@ -1,12 +1,12 @@
 <?php
 
 if (!class_exists('N98\MagerunBootstrap')) {
-    require_once __DIR__ . '/../shared/src/N98/MagerunBootstrap.php';
+    require_once __DIR__ . '/N98/MagerunBootstrap.php';
 }
 
 try {
-    if (version_compare(PHP_VERSION, '5.4.11', '<')) {
-        throw new \ErrorException('PHP Version is lower than 5.4.11. Please upgrade your runtime.');
+    if (version_compare(PHP_VERSION, '7.2.0', '<')) {
+        throw new \ErrorException('PHP Version is lower than 7.2.0. Please upgrade your runtime.');
     }
     return N98\MagerunBootstrap::createApplication();
 } catch (Exception $e) {
