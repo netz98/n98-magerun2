@@ -12,38 +12,45 @@
         "cli",
         "magerun2"
     ],
+    "config": {
+        "platform": {
+            "php": "7.2.0"
+        },
+        "use-include-path": false,
+        "preferred-install": "dist",
+        "sort-packages": true
+    },
     "require": {
         "php": "^7.0.0",
+        "ext-PDO": "*",
+        "ext-SimpleXML": "*",
         "ext-dom": "*",
         "ext-iconv": "*",
         "ext-json": "*",
-        "ext-PDO": "*",
         "ext-posix": "*",
-        "ext-SimpleXML": "*",
         "ext-zip": "*",
-        "composer/composer": "~1.4.1",
+        "composer/composer": "~1.9.1",
         "fzaninotto/faker": "~1.4",
         "n98/junit-xml": "~1.0",
+        "pbergman/tree-helper": "^1.0",
         "psy/psysh": "~0.7",
-        "symfony/console": "~3.0",
-        "symfony/event-dispatcher": "~2.3",
-        "symfony/finder": "~2.3||~3.0",
-        "symfony/process": "~2.3",
-        "symfony/validator": "~2.3",
-        "symfony/yaml": "~2.3",
-        "twig/twig": "~1.0",
-        "pbergman/tree-helper": "^1.0"
+        "symfony/console": "~4.4",
+        "symfony/event-dispatcher": "~4.4",
+        "symfony/finder": "~4.4",
+        "symfony/process": "~4.4",
+        "symfony/validator": "~4.4",
+        "symfony/yaml": "~4.4",
+        "twig/twig": "~1.0"
     },
     "require-dev": {
-        "ext-xdebug": "*",
         "bamarni/symfony-console-autocomplete": "^1.2.0",
-        "friendsofphp/php-cs-fixer": "~2.2.1",
-        "phing/phing": "~2.10.0",
-        "phpunit/phpunit": "~6.2.0",
-        "seld/phar-utils": "~1.0.1",
-        "mikey179/vfsstream": "^1.6",
         "captainhook/captainhook": "^3.1",
-        "roave/security-advisories": "dev-master"
+        "friendsofphp/php-cs-fixer": "~2.16.1",
+        "mikey179/vfsstream": "^1.6",
+        "phing/phing": "~2.16.1",
+        "phpunit/phpunit": "~6.5.0",
+        "roave/security-advisories": "dev-master",
+        "seld/phar-utils": "~1.0.1"
     },
     "suggest": {
          "n98/magerun2-dist": "Deploys only the phar file. Use this to prevent dependency conflicts."
@@ -70,10 +77,5 @@
     "bin": [
         "bin/n98-magerun2"
     ],
-    "config": {
-        "platform": {
-            "php": "7.0.0"
-        },
-        "use-include-path": false
-    }
+    "prefer-stable": true
 }
