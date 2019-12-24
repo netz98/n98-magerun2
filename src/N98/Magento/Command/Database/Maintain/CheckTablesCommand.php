@@ -4,6 +4,7 @@ namespace N98\Magento\Command\Database\Maintain;
 
 use N98\Magento\Command\AbstractMagentoCommand;
 use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
+use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -113,10 +114,13 @@ HELP;
         }
     }
 
-    protected function progressAdvance()
+    /**
+     * @param ProgressBar $progress
+     */
+    protected function progressAdvance(ProgressBar $progress)
     {
         if ($this->showProgress) {
-            $this->getHelper('progress')->advance();
+            $progress->advance();
         }
     }
 
@@ -155,10 +159,11 @@ HELP;
         $allTableStatus = $this->dbHelper->getTablesStatus();
 
         $tableOutput = [];
-        /** @var \Symfony\Component\Console\Helper\ProgressHelper $progress */
-        $progress = $this->getHelper('progress');
+
+        $progress = new ProgressBar($output, 50);
+
         if ($this->showProgress) {
-            $progress->start($output, count($tables));
+            $progress->start(count($tables));
         }
 
         $methods = [
@@ -179,7 +184,7 @@ HELP;
                     'status'    => '',
                 ];
             }
-            $this->progressAdvance();
+            $this->progressAdvance($progress);
         }
 
         if ($this->showProgress) {
