@@ -2,6 +2,7 @@
 
 namespace N98\Magento;
 
+use N98\Magento\Application\ConfigurationLoader;
 use N98\Magento\Command\TestCase;
 use N98\Util\ArrayFunctions;
 use org\bovigo\vfs\vfsStream;
@@ -41,9 +42,9 @@ class ApplicationTest extends TestCase
         $application = require __DIR__ . '/../../../src/bootstrap.php';
         $application->setMagentoRootFolder($this->getTestMagentoRoot());
 
-        $this->assertInstanceOf('\N98\Magento\Application', $application);
+        $this->assertInstanceOf(\N98\Magento\Application::class, $application);
         $loader = $application->getAutoloader();
-        $this->assertInstanceOf('\Composer\Autoload\ClassLoader', $loader);
+        $this->assertInstanceOf(\Composer\Autoload\ClassLoader::class, $loader);
 
         /* @var $loader \Composer\Autoload\ClassLoader */
         $prefixes = $loader->getPrefixes();
@@ -81,7 +82,7 @@ class ApplicationTest extends TestCase
         $this->assertArrayHasKey('N98MagerunTest', $prefixes);
 
         $testDummyCommand = $application->find('n98mageruntest:test:dummy');
-        $this->assertInstanceOf('\N98MagerunTest\TestDummyCommand', $testDummyCommand);
+        $this->assertInstanceOf(\N98MagerunTest\TestDummyCommand::class, $testDummyCommand);
 
         $commandTester = new CommandTester($testDummyCommand);
         $commandTester->execute(
@@ -93,7 +94,7 @@ class ApplicationTest extends TestCase
         $this->assertTrue($application->getDefinition()->hasOption('root-dir'));
 
         // check alias
-        $this->assertInstanceOf('\N98\Magento\Command\System\Store\ListCommand', $application->find('ssl'));
+        $this->assertInstanceOf(\N98\Magento\Command\System\Store\ListCommand::class, $application->find('ssl'));
     }
 
     public function testPlugins()
@@ -127,7 +128,7 @@ class ApplicationTest extends TestCase
             [
                 'htdocs' => [
                     'app' => [
-                        'bootstrag.php' => '',
+                        'bootstrap.php' => '',
                     ],
                 ],
                 'vendor' => [
@@ -158,15 +159,21 @@ class ApplicationTest extends TestCase
             ]
         );
 
-        $configurationLoader = $this->getMockBuilder(\N98\Magento\Application\ConfigurationLoader::class)
+        $configurationLoader = $this->getMockBuilder(ConfigurationLoader::class)
             ->disableOriginalConstructor()
             ->setMethods(['getConfigurationLoaderDir'])
             ->getMock();
 
+        // simulate non phar mode
+        $reflection = new \ReflectionClass($configurationLoader);
+        $isPharModeReflectionProperty = $reflection->getProperty('isPharMode');
+        $isPharModeReflectionProperty->setAccessible(true);
+        $isPharModeReflectionProperty->setValue($configurationLoader, false);
+
         $configurationLoader
             ->expects($this->any())
             ->method('getConfigurationLoaderDir')
-            ->will($this->returnValue(vfsStream::url('root/vendor/n98/magerun/src/N98/Magento/Command')));
+            ->willReturn(vfsStream::url('root/vendor/n98/magerun/src/N98/Magento/Command'));
 
         /* @var $application Application */
         $application = require __DIR__ . '/../../../src/bootstrap.php';

@@ -6,12 +6,9 @@ use BadMethodCallException;
 use Composer\Autoload\ClassLoader;
 use Exception;
 use Magento\Framework\ObjectManagerInterface;
+use N98\Magento\Application\ApplicationAwareInterface;
 use N98\Magento\Application\Config;
 use N98\Magento\Application\ConfigurationLoader;
-use N98\Magento\Application\Console\ConsoleCommandEvent;
-use N98\Magento\Application\Console\ConsoleEvent;
-use N98\Magento\Application\Console\ConsoleExceptionEvent;
-use N98\Magento\Application\Console\ConsoleTerminateEvent;
 use N98\Magento\Application\Console\Events;
 use N98\Magento\Application\DetectionResult;
 use N98\Magento\Application\Magento1Initializer;
@@ -21,20 +18,21 @@ use N98\Magento\Application\VarDirectoryChecker;
 use N98\Util\Console\Helper\TwigHelper;
 use Symfony\Component\Console\Application as BaseApplication;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\ConsoleEvents;
-use Symfony\Component\Console\Exception\ExceptionInterface;
+use Symfony\Component\Console\Event\ConsoleEvent;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Input\ArgvInput;
-use Symfony\Component\Console\Input\InputAwareInterface;
 use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Debug\Exception\FatalThrowableError;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use UnexpectedValueException;
 
+/**
+ * Class Application
+ * @package N98\Magento
+ */
 class Application extends BaseApplication
 {
     /**
@@ -45,7 +43,7 @@ class Application extends BaseApplication
     /**
      * @var string
      */
-    const APP_VERSION = '3.3.0';
+    const APP_VERSION = '4.0.0';
 
     /**
      * @var int
@@ -83,7 +81,7 @@ class Application extends BaseApplication
      */
     protected $_isInitialized = false;
 
-    /**
+    /**612
      * @var EventDispatcher
      */
     protected $dispatcher;
@@ -91,7 +89,7 @@ class Application extends BaseApplication
     /**
      * @var ObjectManagerInterface
      */
-    protected $_objectManager = null;
+    protected $_objectManager;
 
     /**
      * @see \N98\Magento\Application::setConfigurationLoader()
@@ -215,24 +213,20 @@ class Application extends BaseApplication
      * @return int 0 if everything went fine, or an error code
      * @throws \Magento\Framework\Exception\FileSystemException
      * @throws \Exception
+     * @throws \Throwable
      */
     public function doRun(InputInterface $input, OutputInterface $output)
     {
-        $event = new Application\Console\Event($this, $input, $output);
-        $this->dispatcher->dispatch(Events::RUN_BEFORE, $event);
-
-        /**
-         * only for compatibility to old versions.
-         */
-        $event = new ConsoleEvent(new Command('dummy'), $input, $output);
-        $this->dispatcher->dispatch('console.run.before', $event);
-
         $input = $this->config->checkConfigCommandAlias($input);
+
         if ($output instanceof ConsoleOutput) {
             $this->initMagento();
             $varDirectoryChecker = new VarDirectoryChecker();
             $varDirectoryChecker->check($output->getErrorOutput());
         }
+
+        $event = new ConsoleEvent(null, $input, $output);
+        $this->dispatcher->dispatch(Events::RUN_BEFORE, $event);
 
         return parent::doRun($input, $output);
     }
@@ -265,11 +259,24 @@ class Application extends BaseApplication
     }
 
     /**
-     * @return bool
+     * @param bool $preventException [optional] on uninitialized magento root folder (returns null then, caution!)
+     * @return string|null
      */
-    public function isSingleCommand()
+    public function getMagentoRootFolder($preventException = false)
     {
-        return false;
+        if (null !== $this->magentoRootFolderInjected) {
+            return $this->magentoRootFolderInjected;
+        }
+
+        if ($preventException) {
+            return $this->detectionResult ? $this->detectionResult->getRootFolder() : null;
+        }
+
+        if (!$this->detectionResult) {
+            throw new BadMethodCallException('Magento-root-folder is not yet detected (nor set)');
+        }
+
+        return $this->detectionResult->getRootFolder();
     }
 
     /**
@@ -315,7 +322,7 @@ class Application extends BaseApplication
             $this->init([], $input, $output);
         } catch (Exception $e) {
             $output = new ConsoleOutput();
-            $this->renderException($e, $output->getErrorOutput());
+            $this->renderThrowable($e, $output->getErrorOutput());
             $exitCode = max(1, min(255, (int) $e->getCode()));
             if ($this->autoExit) {
                 die($exitCode);
@@ -396,7 +403,7 @@ class Application extends BaseApplication
                 $this->registerMagentoCoreCommands($output);
             }
             $this->config->registerCustomAutoloaders($autoloader);
-            $this->registerEventSubscribers();
+            $this->registerEventSubscribers($input, $output);
             $this->config->registerCustomCommands($this);
         }
 
@@ -485,7 +492,7 @@ class Application extends BaseApplication
                 \stream_wrapper_restore('phar');
             }
         } catch (\Exception $ex) {
-            $this->renderException($ex, $output);
+            $this->renderThrowable($ex, $output);
             $output->writeln(
                 '<info>Use --skip-core-commands to not require the Magento app/bootstrap.php which caused ' .
                 'the exception.</info>'
@@ -509,27 +516,6 @@ class Application extends BaseApplication
             }
             $this->add($coreCliApplicationCommand);
         }
-    }
-
-    /**
-     * @param bool $preventException [optional] on uninitialized magento root folder (returns null then, caution!)
-     * @return string|null
-     */
-    public function getMagentoRootFolder($preventException = false)
-    {
-        if (null !== $this->magentoRootFolderInjected) {
-            return $this->magentoRootFolderInjected;
-        }
-
-        if ($preventException) {
-            return $this->detectionResult ? $this->detectionResult->getRootFolder() : null;
-        }
-
-        if (!$this->detectionResult) {
-            throw new BadMethodCallException('Magento-root-folder is not yet detected (nor set)');
-        }
-
-        return $this->detectionResult->getRootFolder();
     }
 
     /**
@@ -569,7 +555,7 @@ class Application extends BaseApplication
     /**
      * @return void
      */
-    protected function registerEventSubscribers()
+    protected function registerEventSubscribers(InputInterface $input, OutputInterface $output)
     {
         $config = $this->config->getConfig();
 
@@ -579,7 +565,12 @@ class Application extends BaseApplication
 
         $subscriberClasses = $config['event']['subscriber'];
         foreach ($subscriberClasses as $subscriberClass) {
-            $subscriber = new $subscriberClass();
+            $subscriber = new $subscriberClass($this, $input, $output);
+
+            if ($subscriber instanceof ApplicationAwareInterface) {
+                $subscriber->setApplication($this);
+            }
+
             $this->dispatcher->addSubscriber($subscriber);
         }
     }
@@ -626,14 +617,6 @@ class Application extends BaseApplication
         $this->detectionResult = null;
         $this->config = null;
         $this->init($initConfig, $input, $output);
-    }
-
-    /**
-     * @return EventDispatcher
-     */
-    public function getDispatcher()
-    {
-        return $this->dispatcher;
     }
 
     /**
@@ -710,78 +693,5 @@ class Application extends BaseApplication
         $inputDefinition->addOption($skipMagento2CoreCommands);
 
         return $inputDefinition;
-    }
-
-    /**
-     * Runs the current command.
-     *
-     * If an event dispatcher has been attached to the application,
-     * events are also dispatched during the life-cycle of the command.
-     *
-     * @return int 0 if everything went fine, or an error code
-     * @throws \Exception
-     * @throws \Throwable
-     */
-    protected function doRunCommand(Command $command, InputInterface $input, OutputInterface $output)
-    {
-        foreach ($command->getHelperSet() as $helper) {
-            if ($helper instanceof InputAwareInterface) {
-                $helper->setInput($input);
-            }
-        }
-
-        if (null === $this->dispatcher) {
-            return $command->run($input, $output);
-        }
-
-        // bind before the console.command event, so the listeners have access to input options/arguments
-        try {
-            $command->mergeApplicationDefinition();
-            $input->bind($command->getDefinition());
-        } catch (ExceptionInterface $e) {
-            // ignore invalid options/arguments for now, to allow the event listeners to customize the InputDefinition
-        }
-
-        $event = new ConsoleCommandEvent($command, $input, $output);
-        $e = null;
-
-        try {
-            $this->dispatcher->dispatch(ConsoleEvents::COMMAND, $event);
-
-            if ($event->commandShouldRun()) {
-                $exitCode = $command->run($input, $output);
-            } else {
-                $exitCode = ConsoleCommandEvent::RETURN_CODE_DISABLED;
-            }
-        } catch (\Exception $e) {
-        } catch (\Throwable $e) {
-        }
-
-        if (null !== $e) {
-            $x = $e instanceof \Exception ? $e : new FatalThrowableError($e);
-            $event = new ConsoleExceptionEvent($command, $input, $output, $x, $x->getCode());
-            if (defined('\Symfony\Component\Console\ConsoleEvents::EXCEPTION')) {
-                $this->dispatcher->dispatch(ConsoleEvents::EXCEPTION, $event);
-            }
-
-            if (defined('\Symfony\Component\Console\ConsoleEvents::ERROR')) {
-                $this->dispatcher->dispatch(ConsoleEvents::ERROR, $event);
-            }
-
-            if ($x !== $event->getException()) {
-                $e = $event->getException();
-            }
-
-            $exitCode = $event->getExitCode();
-        }
-
-        $event = new ConsoleTerminateEvent($command, $input, $output, $exitCode);
-        $this->dispatcher->dispatch(ConsoleEvents::TERMINATE, $event);
-
-        if (null !== $e) {
-            throw $e;
-        }
-
-        return $event->getExitCode();
     }
 }
