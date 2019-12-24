@@ -41,7 +41,7 @@ class StatusCommandTest extends TestCase
             '--rounding' => '2',
             'search'     => '%size%',
             ],
-            '~Innodb_page_size,[0-9\.]+K,~'
+            '~Innodb_page_size,"\s*[0-9\.]+K",~'
         );
     }
 }
