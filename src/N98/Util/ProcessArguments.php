@@ -5,6 +5,7 @@
 
 namespace N98\Util;
 
+use Symfony\Component\Process\Process;
 use Symfony\Component\Process\ProcessBuilder;
 
 /**
@@ -113,10 +114,10 @@ class ProcessArguments
     }
 
     /**
-     * @return ProcessBuilder
+     * @return Process
      */
-    public function createBuilder()
+    public function createProcess()
     {
-        return new ProcessBuilder($this->arguments);
+        return new Process($this->arguments);
     }
 }
