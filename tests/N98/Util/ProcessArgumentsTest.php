@@ -5,7 +5,7 @@
 
 namespace N98\Util;
 
-use Symfony\Component\Process\ProcessBuilder;
+use Symfony\Component\Process\Process;
 
 /**
  * Class ProcessArgumentsTest
@@ -29,10 +29,10 @@ class ProcessArgumentsTest extends \PHPUnit\Framework\TestCase
     /**
      * @test
      */
-    public function builderCreation()
+    public function processCreation()
     {
-        $actual = ProcessArguments::create()->createBuilder();
-        $this->assertInstanceOf(ProcessBuilder::class, $actual);
+        $actual = ProcessArguments::create()->createProcess();
+        $this->assertInstanceOf(Process::class, $actual);
     }
 
     /**
@@ -45,9 +45,9 @@ class ProcessArgumentsTest extends \PHPUnit\Framework\TestCase
             ->addArgs(['-vvv', '--version-tricks-off', '--', '--' => true])
             ->addArg('--')
             ->addArgs(['-vvv', '--file' => 'music', '--empty' => true, 'flag' => true])
-            ->createBuilder();
-        $this->assertInstanceOf(ProcessBuilder::class, $actual);
-        $commandLine = $actual->getProcess()->getCommandLine();
+            ->createProcess();
+        $this->assertInstanceOf(Process::class, $actual);
+        $commandLine = $actual->getCommandLine();
         $this->assertSame(
             "'command' '-vvv' '--version-tricks-off' '--' '--' '--' '-vvv' '--file=music' '--empty' '--flag'",
             $commandLine
