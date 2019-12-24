@@ -137,7 +137,8 @@ FILE_BODY;
 FILE_BODY;
 
         $appDirectoryWriter->writeFile(
-            'code/' . $moduleName->getVendorName() . '/' . $moduleName->getShortModuleName() . '/etc/module.xml', $moduleFileBody
+            'code/' . $moduleName->getVendorName() . '/' . $moduleName->getShortModuleName() . '/etc/module.xml',
+            $moduleFileBody
         );
     }
 

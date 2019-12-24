@@ -265,7 +265,8 @@ HELP;
             if (!$input->getOption('format')) {
                 $this->writeSection(
                     $output,
-                    $this->buildSetupResultMessage($errorCount), $errorCount > 0 ? 'error' : 'info'
+                    $this->buildSetupResultMessage($errorCount),
+                    $errorCount > 0 ? 'error' : 'info'
                 );
             }
         }
