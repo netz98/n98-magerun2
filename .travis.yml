@@ -35,42 +35,16 @@ matrix:
       script: find {src,tests} -name "*.php" ! -path '*/String.php' -print0 | xargs
         -0 -n1 -P8 php -l | grep -v '^No syntax errors detected'; test $? -eq 1
 
-    - name: PHP 7.1 Lint
-      php: 7.1
-      env: SCRIPT_JOB=LINTSH
-      script: find {src,tests} -name "*.php" ! -path '*/String.php' -print0 | xargs
-        -0 -n1 -P8 php -l | grep -v '^No syntax errors detected'; test $? -eq 1
-
     # Magento Versions
     - name: Magento 2.3.3 PHP 7.3
       php: 7.3
-      env: MAGENTO_VERSION="magento-ce-2.3.3" INSTALL_SAMPLE_DATA=0 PHPUNIT_EXCLUDE_GROUPS=exclude-2.2
+      env: MAGENTO_VERSION="magento-ce-2.3.3" INSTALL_SAMPLE_DATA=0
 
     - name: Magento 2.3.3 PHP 7.2
       php: 7.2
-      env: MAGENTO_VERSION="magento-ce-2.3.3" INSTALL_SAMPLE_DATA=0 PHPUNIT_EXCLUDE_GROUPS=exclude-2.2
-
-    - name: Magento 2.2.8 PHP 7.1
-      php: 7.1
-      env: MAGENTO_VERSION="magento-ce-2.2.8" INSTALL_SAMPLE_DATA=0 PHPUNIT_EXCLUDE_GROUPS=exclude-2.2
-
-    - name: Magento 2.2.8 PHP 7.0
-      php: 7.0
-      env: MAGENTO_VERSION="magento-ce-2.2.8" INSTALL_SAMPLE_DATA=0 PHPUNIT_EXCLUDE_GROUPS=exclude-2.2
-
-    - name: Magento 2.1.16 PHP 7.0
-      php: 7.0
-      env: MAGENTO_VERSION="magento-ce-2.1.16" INSTALL_SAMPLE_DATA=0 PHPUNIT_EXCLUDE_GROUPS=exclude-2.1
+      env: MAGENTO_VERSION="magento-ce-2.3.3" INSTALL_SAMPLE_DATA=0
 
     # Run the cs-fixer and build script with different PHP versions
-    - name: PHP-CS Fixer PHP 7.0
-      php: 7.0
-      env: SCRIPT_JOB="PHP-CS-FIXER"
-
-    - name: PHP-CS Fixer PHP 7.1
-      php: 7.1
-      env: SCRIPT_JOB="PHP-CS-FIXER"
-
     - name: PHP-CS Fixer PHP 7.2
       php: 7.2
       env: SCRIPT_JOB="PHP-CS-FIXER"
@@ -80,11 +54,11 @@ matrix:
       env: SCRIPT_JOB="PHP-CS-FIXER"
 
     - name: Build SH
-      php: 7.1
+      php: 7.3
       env: SCRIPT_JOB="BUILDSH"
 
     - name: Bash Autocomplete
-      php: 7.1
+      php: 7.3
       env: SCRIPT_JOB="BASH-AUTOCOMPLETION"
 
 before_install:
