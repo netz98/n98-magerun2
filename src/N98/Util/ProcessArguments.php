@@ -6,12 +6,11 @@
 namespace N98\Util;
 
 use Symfony\Component\Process\Process;
-use Symfony\Component\Process\ProcessBuilder;
 
 /**
- * Utility class handling arguments building in use with ProcessBuilder
+ * Utility class handling arguments building in use with Symfony\Process
  *
- * @see ProcessBuilder
+ * @see Process
  * @package N98\Util
  */
 class ProcessArguments
