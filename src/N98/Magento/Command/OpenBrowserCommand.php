@@ -42,7 +42,7 @@ class OpenBrowserCommand extends AbstractMagentoCommand
         $parameter = $this->getHelper('parameter');
         $store = $parameter->askStore($input, $output, 'store', true);
 
-        if ($store->getId() == Store::DEFAULT_STORE_ID) {
+        if ($store->getId() === Store::DEFAULT_STORE_ID) {
             $url = $this->getBackendStoreUrl($store);
         } else {
             $url = $this->getFrontendStoreUrl($store);
