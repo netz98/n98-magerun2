@@ -8,6 +8,10 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Zend\Code\Generator\FileGenerator;
 
+/**
+ * Class MakeInterfaceCommand
+ * @package N98\Magento\Command\Developer\Console
+ */
 class MakeInterfaceCommand extends AbstractGeneratorCommand
 {
     const CLASSPATH = 'classpath';

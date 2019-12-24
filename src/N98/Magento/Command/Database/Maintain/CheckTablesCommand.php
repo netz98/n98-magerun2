@@ -9,6 +9,10 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
+/**
+ * Class CheckTablesCommand
+ * @package N98\Magento\Command\Database\Maintain
+ */
 class CheckTablesCommand extends AbstractMagentoCommand
 {
     const MESSAGE_CHECK_NOT_SUPPORTED = 'The storage engine for the table doesn\'t support check';

@@ -8,6 +8,10 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
 
+/**
+ * Class AbstractCronCommand
+ * @package N98\Magento\Command\System\Cron
+ */
 abstract class AbstractCronCommand extends AbstractMagentoCommand
 {
     /**

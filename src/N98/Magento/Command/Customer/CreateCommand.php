@@ -13,6 +13,10 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
 
+/**
+ * Class CreateCommand
+ * @package N98\Magento\Command\Customer
+ */
 class CreateCommand extends AbstractCustomerCommand
 {
     /**

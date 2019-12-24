@@ -5,6 +5,10 @@ namespace N98\Magento\Command\Installer\SubCommand;
 use N98\Magento\Command\SubCommand\AbstractSubCommand;
 use Symfony\Component\Finder\Finder;
 
+/**
+ * Class SetDirectoryPermissions
+ * @package N98\Magento\Command\Installer\SubCommand
+ */
 class SetDirectoryPermissions extends AbstractSubCommand
 {
     /**

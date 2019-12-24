@@ -6,6 +6,10 @@ use Magento\Eav\Model\Config;
 use Magento\Eav\Model\Entity\Attribute\AbstractAttribute;
 use N98\Magento\Command\AbstractMagentoCommand;
 
+/**
+ * Class AbstractAttributeCommand
+ * @package N98\Magento\Command\Eav\Attribute
+ */
 abstract class AbstractAttributeCommand extends AbstractMagentoCommand
 {
     /**

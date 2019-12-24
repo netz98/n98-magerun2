@@ -2,6 +2,10 @@
 
 namespace N98\Magento\Command\Developer\Console\Util;
 
+/**
+ * Class Xml
+ * @package N98\Magento\Command\Developer\Console\Util
+ */
 class Xml
 {
     /**

@@ -6,6 +6,10 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Shell;
 
+/**
+ * Class ShellCommand
+ * @package N98\Magento\Command
+ */
 class ShellCommand extends AbstractMagentoCommand
 {
     protected function configure()

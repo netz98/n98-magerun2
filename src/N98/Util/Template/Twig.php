@@ -8,6 +8,10 @@ use Twig_Loader_Filesystem;
 use Twig_Loader_String;
 use Twig_SimpleFilter;
 
+/**
+ * Class Twig
+ * @package N98\Util\Template
+ */
 class Twig
 {
     /**
@@ -31,9 +35,9 @@ class Twig
      * @param array $variables
      *
      * @return string
-     * @throws \Twig_Error_Loader
-     * @throws \Twig_Error_Runtime
-     * @throws \Twig_Error_Syntax
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
      */
     public function render($filename, $variables)
     {
@@ -45,9 +49,9 @@ class Twig
      * @param array $variables
      *
      * @return string
-     * @throws \Twig_Error_Loader
-     * @throws \Twig_Error_Runtime
-     * @throws \Twig_Error_Syntax
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
      */
     public function renderString($string, $variables)
     {

@@ -7,6 +7,10 @@ use Psy\Command\ReflectingCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+/**
+ * Class AbstractConsoleCommand
+ * @package N98\Magento\Command\Developer\Console
+ */
 abstract class AbstractConsoleCommand extends ReflectingCommand
 {
     /**

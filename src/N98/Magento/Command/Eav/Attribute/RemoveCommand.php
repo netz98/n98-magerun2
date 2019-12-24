@@ -10,6 +10,10 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+/**
+ * Class RemoveCommand
+ * @package N98\Magento\Command\Eav\Attribute
+ */
 class RemoveCommand extends AbstractMagentoCommand
 {
     /**

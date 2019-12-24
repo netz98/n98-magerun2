@@ -6,6 +6,10 @@
 
 namespace N98\Magento\Command\Developer\Console\Structure;
 
+/**
+ * Class ModuleNameStructure
+ * @package N98\Magento\Command\Developer\Console\Structure
+ */
 class ModuleNameStructure
 {
     /**

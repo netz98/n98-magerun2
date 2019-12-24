@@ -4,6 +4,10 @@ namespace N98\Magento\Command\Design;
 
 use N98\Magento\Command\AbstractMagentoStoreConfigCommand;
 
+/**
+ * Class DemoNoticeCommand
+ * @package N98\Magento\Command\Design
+ */
 class DemoNoticeCommand extends AbstractMagentoStoreConfigCommand
 {
     /**

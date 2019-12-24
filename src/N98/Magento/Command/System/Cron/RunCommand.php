@@ -11,6 +11,10 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+/**
+ * Class RunCommand
+ * @package N98\Magento\Command\System\Cron
+ */
 class RunCommand extends AbstractCronCommand
 {
     protected function configure()

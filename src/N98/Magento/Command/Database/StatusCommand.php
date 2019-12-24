@@ -4,6 +4,10 @@ namespace N98\Magento\Command\Database;
 
 use N98\Util\TimeElapsed;
 
+/**
+ * Class StatusCommand
+ * @package N98\Magento\Command\Database
+ */
 class StatusCommand extends AbstractShowCommand
 {
     protected $showMethod = 'getGlobalStatus';

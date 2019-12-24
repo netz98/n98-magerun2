@@ -12,6 +12,10 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
 
+/**
+ * Class DownloadMagento
+ * @package N98\Magento\Command\Installer\SubCommand
+ */
 class DownloadMagento extends AbstractSubCommand
 {
     /**

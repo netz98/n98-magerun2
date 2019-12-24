@@ -22,6 +22,10 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
+/**
+ * Class MakeConfigRoutesCommand
+ * @package N98\Magento\Command\Developer\Console\Config
+ */
 class MakeConfigRoutesCommand extends AbstractSimpleConfigFileGeneratorCommand
 {
     const CONFIG_FILENAME = 'routes.xml';

@@ -59,7 +59,7 @@ class ListCommand extends AbstractMagentoCommand
     {
         $this->detectMagento($output, true);
 
-        if ($input->getOption('format') == null) {
+        if ($input->getOption('format') === null) {
             $this->writeSection($output, 'Magento Cache Types');
         }
 
@@ -72,7 +72,7 @@ class ListCommand extends AbstractMagentoCommand
         foreach ($cacheTypes as $cacheType) {
 
             // If 'enabled' option is set, filter those who match
-            if (!is_null($input->getOption('enabled')) && $input->getOption('enabled') != $cacheType->getStatus()) {
+            if ($input->getOption('enabled') !== null && $input->getOption('enabled') != $cacheType->getStatus()) {
                 unset($cacheTypes[$cacheType->getId()]);
                 continue;
             }

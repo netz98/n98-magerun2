@@ -10,6 +10,10 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
+/**
+ * Class InfoCommand
+ * @package N98\Magento\Command\Database
+ */
 class InfoCommand extends AbstractDatabaseCommand
 {
     protected function configure()

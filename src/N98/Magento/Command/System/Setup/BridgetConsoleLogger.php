@@ -5,6 +5,10 @@ namespace N98\Magento\Command\System\Setup;
 use Magento\Framework\Setup\LoggerInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+/**
+ * Class BridgetConsoleLogger
+ * @package N98\Magento\Command\System\Setup
+ */
 class BridgetConsoleLogger implements LoggerInterface
 {
     /**

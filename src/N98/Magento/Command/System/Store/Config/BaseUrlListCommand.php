@@ -8,6 +8,10 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
+/**
+ * Class BaseUrlListCommand
+ * @package N98\Magento\Command\System\Store\Config
+ */
 class BaseUrlListCommand extends AbstractMagentoCommand
 {
     /**

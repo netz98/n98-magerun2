@@ -5,6 +5,10 @@ namespace N98\Util\Console\Helper;
 use Magento\Framework\ObjectManagerInterface;
 use Symfony\Component\Console\Helper\Helper as AbstractHelper;
 
+/**
+ * Class InjectionHelper
+ * @package N98\Util\Console\Helper
+ */
 class InjectionHelper extends AbstractHelper
 {
     /**

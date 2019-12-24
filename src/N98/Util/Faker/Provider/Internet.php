@@ -2,6 +2,10 @@
 
 namespace N98\Util\Faker\Provider;
 
+/**
+ * Class Internet
+ * @package N98\Util\Faker\Provider
+ */
 class Internet extends \Faker\Provider\Internet
 {
     /**

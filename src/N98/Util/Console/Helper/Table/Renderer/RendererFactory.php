@@ -2,6 +2,10 @@
 
 namespace N98\Util\Console\Helper\Table\Renderer;
 
+/**
+ * Class RendererFactory
+ * @package N98\Util\Console\Helper\Table\Renderer
+ */
 class RendererFactory
 {
     protected static $formats = [

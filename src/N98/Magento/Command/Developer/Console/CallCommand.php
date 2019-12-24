@@ -9,6 +9,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Bridge command to a outer n98-magerun commands
+ *
+ * @package N98\Magento\Command\Developer\Console
  */
 class CallCommand extends AbstractGeneratorCommand
 {

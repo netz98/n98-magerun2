@@ -4,6 +4,10 @@ namespace N98\Magento\Command\Developer\Module\Create\SubCommand;
 
 use N98\Magento\Command\SubCommand\AbstractSubCommand;
 
+/**
+ * Class CreateReadmeFile
+ * @package N98\Magento\Command\Developer\Module\Create\SubCommand
+ */
 class CreateReadmeFile extends AbstractSubCommand
 {
     /**

@@ -4,6 +4,10 @@ namespace N98\Magento\Command\Developer;
 
 use N98\Magento\Command\AbstractMagentoStoreConfigCommand;
 
+/**
+ * Class SymlinksCommand
+ * @package N98\Magento\Command\Developer
+ */
 class SymlinksCommand extends AbstractMagentoStoreConfigCommand
 {
     /**

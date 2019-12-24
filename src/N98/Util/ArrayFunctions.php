@@ -5,6 +5,10 @@
 
 namespace N98\Util;
 
+/**
+ * Class ArrayFunctions
+ * @package N98\Util
+ */
 class ArrayFunctions
 {
     /**

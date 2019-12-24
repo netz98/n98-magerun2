@@ -4,6 +4,10 @@ namespace N98\Magento\Command\Developer;
 
 use N98\Magento\Command\AbstractMagentoStoreConfigCommand;
 
+/**
+ * Class TemplateHintsCommand
+ * @package N98\Magento\Command\Developer
+ */
 class TemplateHintsCommand extends AbstractMagentoStoreConfigCommand
 {
     /**

@@ -5,6 +5,10 @@ namespace N98\Magento\Command\GiftCard;
 use Magento\GiftCardAccount\Model\Giftcardaccount;
 use N98\Magento\Command\AbstractMagentoCommand;
 
+/**
+ * Class AbstractGiftCardCommand
+ * @package N98\Magento\Command\GiftCard
+ */
 abstract class AbstractGiftCardCommand extends AbstractMagentoCommand
 {
     /**

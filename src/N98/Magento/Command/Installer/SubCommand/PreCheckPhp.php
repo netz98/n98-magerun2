@@ -6,6 +6,10 @@ namespace N98\Magento\Command\Installer\SubCommand;
 
 use N98\Magento\Command\SubCommand\AbstractSubCommand;
 
+/**
+ * Class PreCheckPhp
+ * @package N98\Magento\Command\Installer\SubCommand
+ */
 class PreCheckPhp extends AbstractSubCommand
 {
     /**

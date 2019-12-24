@@ -5,6 +5,10 @@ namespace N98\Magento\Command\Database;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+/**
+ * Class CreateCommand
+ * @package N98\Magento\Command\Database
+ */
 class CreateCommand extends AbstractDatabaseCommand
 {
     protected function configure()

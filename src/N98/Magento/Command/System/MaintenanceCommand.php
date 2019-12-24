@@ -8,6 +8,10 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
+/**
+ * Class MaintenanceCommand
+ * @package N98\Magento\Command\System
+ */
 class MaintenanceCommand extends AbstractMagentoCommand
 {
     const ALREADY_DISABLED_MESSAGE = 'Nothing to disable, maintenance mode is not enabled!';

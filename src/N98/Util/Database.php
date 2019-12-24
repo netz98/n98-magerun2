@@ -4,6 +4,10 @@ namespace N98\Util;
 
 use PDO;
 
+/**
+ * Class Database
+ * @package N98\Util
+ */
 class Database
 {
     /**
