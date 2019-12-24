@@ -7,10 +7,10 @@
 
 namespace N98\Magento;
 
-use PHPUnit_Framework_MockObject_Generator;
-use PHPUnit_Framework_MockObject_Matcher_AnyInvokedCount;
+use PHPUnit\Framework\MockObject\Generator;
+use PHPUnit\Framework\MockObject\Matcher\AnyInvokedCount;
+use PHPUnit\Framework\MockObject\Stub\ReturnStub as ReturnStubAlias;
 use PHPUnit_Framework_MockObject_MockObject;
-use PHPUnit_Framework_MockObject_Stub_Return;
 use RuntimeException;
 
 /**
@@ -79,6 +79,7 @@ class TestApplication
 
     /**
      * @return array
+     * @throws \Exception
      */
     public static function getConfig()
     {
@@ -133,16 +134,17 @@ class TestApplication
 
     /**
      * @return Application|PHPUnit_Framework_MockObject_MockObject
+     * @throws \Exception
      */
     public function getApplication()
     {
         if ($this->application === null) {
             $root = $this->getTestMagentoRoot();
 
-            $mockObjectGenerator = new PHPUnit_Framework_MockObject_Generator();
+            $mockObjectGenerator = new Generator();
 
             /** @var Application|PHPUnit_Framework_MockObject_MockObject $application */
-            $application = $mockObjectGenerator->getMock('N98\Magento\Application', ['getMagentoRootFolder']);
+            $application = $mockObjectGenerator->getMock(\N98\Magento\Application::class, ['getMagentoRootFolder']);
 
             // Get the composer bootstraph
             if (defined('PHPUNIT_COMPOSER_INSTALL')) {
@@ -158,7 +160,7 @@ class TestApplication
             /** @var $loader \Composer\Autoload\ClassLoader */
 
             $application->setAutoloader($loader);
-            $application->expects($this->any())->method('getMagentoRootFolder')->will($this->returnValue($root));
+            $application->method('getMagentoRootFolder')->willReturn($root);
             $application->init();
             $application->initMagento();
 
@@ -176,24 +178,24 @@ class TestApplication
      * Returns a matcher that matches when the method it is evaluated for
      * is executed zero or more times.
      *
-     * @return PHPUnit_Framework_MockObject_Matcher_AnyInvokedCount
+     * @return \PHPUnit\Framework\MockObject\Matcher\AnyInvokedCount
      * @since  Method available since Release 3.0.0
      */
     public static function any()
     {
-        return new PHPUnit_Framework_MockObject_Matcher_AnyInvokedCount();
+        return new AnyInvokedCount();
     }
 
     /**
      *
      *
      * @param  mixed $value
-     * @return PHPUnit_Framework_MockObject_Stub_Return
+     * @return \PHPUnit\Framework\MockObject\Stub\ReturnStub
      * @since  Method available since Release 3.0.0
      */
     public static function returnValue($value)
     {
-        return new PHPUnit_Framework_MockObject_Stub_Return($value);
+        return new ReturnStubAlias($value);
     }
 
     /**
