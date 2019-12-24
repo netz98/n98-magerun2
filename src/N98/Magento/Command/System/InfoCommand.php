@@ -94,7 +94,6 @@ class InfoCommand extends AbstractMagentoCommand
         \Magento\Framework\App\Cache\Type\FrontendPool $frontendPool,
         \Magento\Framework\App\DeploymentConfig $deploymentConfig,
         \Magento\Framework\Module\ModuleListInterface $moduleList
-
     ) {
         $this->productMetadata = $productMetadata;
         $this->customerFactory = $customerFactory;

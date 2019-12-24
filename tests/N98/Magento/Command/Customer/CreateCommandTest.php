@@ -14,7 +14,7 @@ class CreateCommandTest extends TestCase
 {
     public function testExecute()
     {
-        $generatedEmail = uniqid() . '@example.com';
+        $generatedEmail = uniqid('', true) . '@example.com';
 
         $input = [
             'command'   => 'customer:create',
@@ -27,7 +27,7 @@ class CreateCommandTest extends TestCase
         $this->assertDisplayContains($input, 'successfully created');
 
         // Format option
-        $generatedEmail = uniqid() . '@example.com';
+        $generatedEmail = uniqid('', true) . '@example.com';
         $input['email'] = $generatedEmail;
         $input['--format'] = 'csv';
 
@@ -56,14 +56,14 @@ class CreateCommandTest extends TestCase
         // try to create a customer with a password < 6 chars
         $command = $this->getApplication()->find('customer:create');
 
-        $generatedEmail = uniqid() . '@example.com';
+        $generatedEmail = uniqid('', true) . '@example.com';
 
         // mock dialog
         // We mock the DialogHelper
         $dialog = $this->createMock('N98\Util\Console\Helper\ParameterHelper', ['askPassword']);
         $dialog->expects($this->at(0))
-            ->method('askPassword')
-            ->will($this->returnValue(true)); // The user confirms
+               ->method('askPassword')
+               ->willReturn(true); // The user confirms
 
         // We override the standard helper with our mock
         $command->getHelperSet()->set($dialog, 'parameter');
@@ -74,7 +74,9 @@ class CreateCommandTest extends TestCase
             'password'  => 'pass',
             'firstname' => 'John',
             'lastname'  => 'Doe',
+            'website'   => 1
         ];
+
         $commandTester = new CommandTester($command);
         $commandTester->execute($options);
         $this->assertRegExp(

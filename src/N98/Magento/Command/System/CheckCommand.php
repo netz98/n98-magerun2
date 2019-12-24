@@ -114,8 +114,10 @@ HELP;
             $areaCode = $check->getAreaCode();
         }
 
-        $this->appState->emulateAreaCode($areaCode, function () use ($check, $results, $checkGroupClass) {
-            switch (true) {
+        $this->appState->emulateAreaCode(
+            $areaCode,
+            function () use ($check, $results, $checkGroupClass) {
+                switch (true) {
                 case $check instanceof Check\SimpleCheck:
                     $check->check($results);
                     break;
@@ -133,7 +135,7 @@ HELP;
                         sprintf('Unhandled check-class "%s"', $checkGroupClass)
                     );
             }
-        }
+            }
         );
     }
 

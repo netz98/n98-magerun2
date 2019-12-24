@@ -33,7 +33,7 @@ class SelfUpdateCommand extends AbstractMagentoCommand
             ->addOption('dry-run', null, InputOption::VALUE_NONE, 'Tests if there is a new version without any update.')
             ->setDescription('Updates n98-magerun2.phar to the latest version.')
             ->setHelp(
-<<<EOT
+                <<<EOT
 The <info>self-update</info> command checks github for newer
 versions of n98-magerun2 and if found, installs the latest.
 
