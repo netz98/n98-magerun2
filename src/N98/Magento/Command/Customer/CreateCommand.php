@@ -6,10 +6,12 @@ use Magento\Customer\Api\AccountManagementInterface;
 use Magento\Framework\App\State\Proxy as AppState;
 use Magento\Framework\Exception\LocalizedException;
 use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
+use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\Question;
 
 class CreateCommand extends AbstractCustomerCommand
 {
@@ -66,24 +68,32 @@ class CreateCommand extends AbstractCustomerCommand
             return 1;
         }
 
-        $dialog = $this->getHelperSet()->get('dialog');
+        /** @var QuestionHelper $questionHelper */
+        $questionHelper = $this->getHelperSet()->get('question');
 
         // Email
         $email = $this->getHelperSet()->get('parameter')->askEmail($input, $output);
 
         // Password
-        if (($password = $input->getArgument('password')) == null) {
-            $password = $dialog->askHiddenResponse($output, '<question>Password:</question>');
+        $password = $input->getArgument('password');
+        if ($password === null) {
+            $question = new Question('<question>Password:</question> ');
+            $question->setHidden(true);
+            $password = $questionHelper->ask($input, $output, $question);
         }
 
         // Firstname
-        if (($firstname = $input->getArgument('firstname')) == null) {
-            $firstname = $dialog->ask($output, '<question>Firstname:</question>');
+        $firstname = $input->getArgument('firstname');
+        if ($firstname === null) {
+            $question = new Question('<question>Firstname:</question> ');
+            $firstname = $questionHelper->ask($input, $output, $question);
         }
 
         // Lastname
-        if (($lastname = $input->getArgument('lastname')) == null) {
-            $lastname = $dialog->ask($output, '<question>Lastname:</question>');
+        $lastname = $input->getArgument('lastname');
+        if ($lastname === null) {
+            $question = new Question('<question>Lastname:</question> ');
+            $lastname = $questionHelper->ask($input, $output, $question);
         }
 
         $website = $this->getHelperSet()->get('parameter')->askWebsite($input, $output);

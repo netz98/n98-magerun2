@@ -8,11 +8,12 @@ use N98\Util\Console\Enabler;
 use N98\Util\Console\Helper\DatabaseHelper;
 use N98\Util\Exec;
 use N98\Util\VerifyOrDie;
-use Symfony\Component\Console\Helper\DialogHelper;
+use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\Question;
 
 class DumpCommand extends AbstractDatabaseCommand
 {
@@ -89,7 +90,8 @@ class DumpCommand extends AbstractDatabaseCommand
                 InputOption::VALUE_NONE,
                 'Include stored routines in dump (procedures & functions)'
             )
-            ->addOption('stdout',
+            ->addOption(
+                'stdout',
                 null,
                 InputOption::VALUE_NONE,
                 'Dump to stdout'
@@ -481,12 +483,17 @@ HELP;
                 $defaultName = rtrim($fileName, '/') . '/' . $defaultName;
             }
             if (!$input->getOption('force')) {
-                /** @var DialogHelper $dialog */
-                $dialog = $this->getHelper('dialog');
-                $fileName = $dialog->ask(
-                    $output,
+                $question = new Question(
                     '<question>Filename for SQL dump:</question> [<comment>' . $defaultName . '</comment>]',
                     $defaultName
+                );
+
+                /** @var QuestionHelper $questionHelper */
+                $questionHelper = $this->getHelper('question');
+                $fileName = $questionHelper->ask(
+                    $input,
+                    $output,
+                    $question
                 );
             } else {
                 $fileName = $defaultName;

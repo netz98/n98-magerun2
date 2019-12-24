@@ -7,6 +7,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\Question;
 
 class RunCommand extends AbstractRepositoryCommand
 {
@@ -54,7 +55,7 @@ HELP;
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $files = $this->getScripts();
-        if ($input->getArgument('script') == null) {
+        if ($input->getArgument('script') === null) {
             $question = [];
             $i = 0;
             foreach ($files as $file) {
@@ -62,17 +63,19 @@ HELP;
                 $question[] = '<comment>[' . ($i + 1) . ']</comment> ' . $file['fileinfo']->getFilename() . PHP_EOL;
                 $i++;
             }
-            $question[] = '<question>Please select a script file: </question>';
-            $selectedFile = $this->getHelper('dialog')->askAndValidate(
-                $output,
-                $question,
-                function ($typeInput) use ($files) {
-                    if (!isset($files[$typeInput - 1])) {
-                        throw new \InvalidArgumentException('Invalid file');
-                    }
 
-                    return $files[$typeInput - 1]['fileinfo']->getPathname();
+            $question = new Question('<question>Please select a script file: </question>');
+            $question->setValidator(function ($typeInput) use ($files) {
+                if (!isset($files[$typeInput - 1])) {
+                    throw new \InvalidArgumentException('Invalid file');
                 }
+
+                return $files[$typeInput - 1]['fileinfo']->getPathname();
+            });
+            $selectedFile = $this->getHelper('question')->ask(
+                $input,
+                $output,
+                $question
             );
         } else {
             $script = $input->getArgument('script');

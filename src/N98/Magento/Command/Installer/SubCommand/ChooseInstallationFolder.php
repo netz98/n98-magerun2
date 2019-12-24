@@ -3,6 +3,7 @@
 namespace N98\Magento\Command\Installer\SubCommand;
 
 use N98\Magento\Command\SubCommand\AbstractSubCommand;
+use Symfony\Component\Console\Question\Question;
 
 class ChooseInstallationFolder extends AbstractSubCommand
 {
@@ -27,7 +28,7 @@ class ChooseInstallationFolder extends AbstractSubCommand
             }
 
             if (!is_dir($folderName)) {
-                if (!@mkdir($folderName, 0777, true)) {
+                if (!mkdir($folderName, 0777, true) && !is_dir($folderName)) {
                     throw new \InvalidArgumentException('Cannot create folder.');
                 }
 
@@ -37,16 +38,22 @@ class ChooseInstallationFolder extends AbstractSubCommand
             return $folderName;
         };
 
-        if (($installationFolder = $input->getOption('installationFolder')) == null) {
+        $installationFolder = $input->getOption('installationFolder');
+        if ($installationFolder === null) {
             $defaultFolder = './magento';
-            $question[] = '<question>Enter installation folder:</question> [<comment>' . $defaultFolder . '</comment>]';
-
-            $installationFolder = $this->getCommand()->getHelper('dialog')->askAndValidate(
-                $this->output,
-                $question,
-                $validateInstallationFolder,
-                false,
+            $question = new Question(
+                sprintf(
+                    '<question>Enter installation folder:</question> [<comment>%s</comment>]',
+                    $defaultFolder
+                ),
                 $defaultFolder
+            );
+            $question->setValidator($validateInstallationFolder);
+
+            $installationFolder = $this->getCommand()->getHelper('question')->ask(
+                $this->input,
+                $this->output,
+                $question
             );
         } else {
             // @Todo improve validation and bring it to 1 single function

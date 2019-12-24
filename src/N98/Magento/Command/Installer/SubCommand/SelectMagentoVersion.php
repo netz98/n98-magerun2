@@ -3,6 +3,7 @@
 namespace N98\Magento\Command\Installer\SubCommand;
 
 use N98\Magento\Command\SubCommand\AbstractSubCommand;
+use Symfony\Component\Console\Question\ChoiceQuestion;
 
 class SelectMagentoVersion extends AbstractSubCommand
 {
@@ -18,28 +19,31 @@ class SelectMagentoVersion extends AbstractSubCommand
         }
 
         if (
-            $this->input->getOption('magentoVersion') == null
-            && $this->input->getOption('magentoVersionByName') == null
+            $this->input->getOption('magentoVersion') === null
+            && $this->input->getOption('magentoVersionByName') === null
         ) {
-            $question = [];
+            $choices = [];
             foreach ($this->commandConfig['magento-packages'] as $key => $package) {
-                $question[] = '<comment>' . str_pad('[' . ($key + 1) . ']', 4, ' ') . '</comment> ' .
-                    $package['name'] . "\n";
+                $choices[$key + 1] = '<comment>' . $package['name'] . '</comment> ';
             }
-            $question[] = '<question>Choose a magento version:</question> ';
 
-            $commandConfig = $this->commandConfig;
-
-            $type = $this->getCommand()->getHelper('dialog')->askAndValidate(
-                $this->output,
-                $question,
-                function ($typeInput) use ($commandConfig) {
-                    if (!in_array($typeInput, range(1, count($this->commandConfig['magento-packages'])))) {
-                        throw new \InvalidArgumentException('Invalid type');
-                    }
-
-                    return $typeInput;
+            $question = new ChoiceQuestion('<question>Choose a magento version:</question>', $choices);
+            $question->setValidator(function ($typeInput) {
+                if (!in_array(
+                    $typeInput - 1,
+                    range(0, count($this->commandConfig['magento-packages']) - 1),
+                    true
+                )) {
+                    throw new \InvalidArgumentException('Invalid type');
                 }
+
+                return $typeInput;
+            });
+
+            $type = $this->getCommand()->getHelper('question')->ask(
+                $this->input,
+                $this->output,
+                $question
             );
         } else {
             $type = null;
@@ -48,7 +52,7 @@ class SelectMagentoVersion extends AbstractSubCommand
                 $type = $this->input->getOption('magentoVersion');
             } elseif ($this->input->getOption('magentoVersionByName')) {
                 foreach ($this->commandConfig['magento-packages'] as $key => $package) {
-                    if ($package['name'] == $this->input->getOption('magentoVersionByName')) {
+                    if ($package['name'] === $this->input->getOption('magentoVersionByName')) {
                         $type = $key + 1;
                         break;
                     }

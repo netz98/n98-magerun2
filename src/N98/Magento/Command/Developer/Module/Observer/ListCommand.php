@@ -8,6 +8,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\ChoiceQuestion;
 
 class ListCommand extends AbstractMagentoCommand
 {
@@ -68,27 +69,27 @@ class ListCommand extends AbstractMagentoCommand
         $area = $input->getArgument('area');
         $eventFilter = $input->getArgument('event');
 
-        if (is_null($area) || !in_array($area, $this->areas)) {
-            $question = [];
+        if ($area === null || !in_array($area, $this->areas)) {
+            $choices = [];
             foreach ($this->areas as $key => $area) {
-                $question[] = '<comment>[' . ($key + 1) . ']</comment> ' . $area . PHP_EOL;
+                $choices[$key + 1] = '<comment>[' . $area . ']</comment> ';
             }
 
-            $question[] = '<question>Please select an area:</question>';
-
-            $area = $this->getHelper('dialog')->askAndValidate($output, $question, function ($areaIndex) {
-                if (!in_array($areaIndex, range(1, count($this->areas)))) {
-                    throw new \InvalidArgumentException('Invalid selection.');
+            $question = new ChoiceQuestion('<question>Please select an area:</question>', $choices);
+            $question->setValidator(function ($areaIndex) {
+                if (!in_array($areaIndex - 1, range(0, count($this->areas) - 1), true)) {
+                    throw new \InvalidArgumentException('Invalid selection.' . $areaIndex);
                 }
 
                 return $this->areas[$areaIndex - 1];
             });
+            $area = $this->getHelper('question')->ask($input, $output, $question);
         }
 
         if ($input->getOption('format') === null) {
             $sectionHeader = 'Observers in [' . $area . '] area';
 
-            if (!is_null($eventFilter)) {
+            if ($eventFilter !== null) {
                 $sectionHeader .= ' registered for [' . $eventFilter . '] event';
             }
 
@@ -116,7 +117,7 @@ class ListCommand extends AbstractMagentoCommand
         foreach ($observerConfig as $eventName => $observers) {
             $firstObserver = true;
 
-            if (!is_null($eventFilter) && $eventName != $eventFilter) {
+            if ($eventFilter !== null && $eventName !== $eventFilter) {
                 continue;
             }
 

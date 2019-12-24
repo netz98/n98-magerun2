@@ -7,8 +7,9 @@ use N98\Magento\Command\SubCommand\AbstractSubCommand;
 use N98\Util\Exec;
 use N98\Util\OperatingSystem;
 use RuntimeException;
-use Symfony\Component\Console\Helper\DialogHelper;
+use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\Question;
 
 class InstallMagento extends AbstractSubCommand
 {
@@ -40,104 +41,159 @@ class InstallMagento extends AbstractSubCommand
 
         $this->getCommand()->getApplication()->setAutoExit(false);
 
-        /** @var DialogHelper $dialog */
-        $dialog = $this->getCommand()->getHelper('dialog');
+        /** @var $questionHelper QuestionHelper */
+        $questionHelper = $this->getCommand()->getHelper('question');
 
         $defaults = $this->commandConfig['installation']['defaults'];
 
         $useDefaultConfigParams = $this->hasFlagOrOptionalBoolOption('useDefaultConfigParams');
 
-        $sessionSave = $useDefaultConfigParams ? $defaults['session-save'] : $dialog->ask(
-            $this->output,
-            '<question>Please enter the session save:</question> <comment>[' .
-            $defaults['session-save'] . ']</comment>: ',
+        $question = new Question(
+            sprintf(
+                '<question>Please enter the session save:</question> <comment>[%s]</comment>: ',
+                $defaults['session-save']
+            ),
             $defaults['session-save']
         );
 
-        $adminFrontname = $useDefaultConfigParams ? $defaults['backend-frontname'] : $dialog->askAndValidate(
+        $sessionSave = $useDefaultConfigParams ? $defaults['session-save'] : $questionHelper->ask(
+            $this->input,
             $this->output,
-            '<question>Please enter the admin/backend frontname:</question> <comment>[' .
-            $defaults['backend-frontname'] . ']</comment> ',
-            $this->notEmptyCallback,
-            false,
+            $question
+        );
+
+        $question = new Question(
+            sprintf(
+                '<question>Please enter the admin/backend frontname:</question> <comment>[%s]</comment> ',
+                $defaults['backend-frontname']
+            ),
             $defaults['backend-frontname']
         );
-
-        $currency = $useDefaultConfigParams ? $defaults['currency'] : $dialog->askAndValidate(
+        $question->setValidator($this->notEmptyCallback);
+        $adminFrontname = $useDefaultConfigParams ? $defaults['backend-frontname'] : $questionHelper->ask(
+            $this->input,
             $this->output,
-            '<question>Please enter the default currency code:</question> <comment>[' .
-            $defaults['currency'] . ']</comment>: ',
-            $this->notEmptyCallback,
-            false,
+            $question
+        );
+
+        $question = new Question(
+            sprintf(
+                '<question>Please enter the default currency code:</question> <comment>[%s]</comment>: ',
+                $defaults['currency']
+            ),
             $defaults['currency']
         );
-
-        $locale = $useDefaultConfigParams ? $defaults['locale'] : $dialog->askAndValidate(
+        $question->setValidator($this->notEmptyCallback);
+        $currency = $useDefaultConfigParams ? $defaults['currency'] : $questionHelper->ask(
+            $this->input,
             $this->output,
-            '<question>Please enter the locale code:</question> <comment>[' . $defaults['locale'] . ']</comment>: ',
-            $this->notEmptyCallback,
-            false,
+            $question
+        );
+
+        $question = new Question(
+            sprintf(
+                '<question>Please enter the locale code:</question> <comment>[%s]</comment>: ',
+                $defaults['locale']
+            ),
             $defaults['locale']
         );
-
-        $timezone = $useDefaultConfigParams ? $defaults['timezone'] : $dialog->askAndValidate(
+        $question->setValidator($this->notEmptyCallback);
+        $locale = $useDefaultConfigParams ? $defaults['locale'] : $questionHelper->ask(
+            $this->input,
             $this->output,
-            '<question>Please enter the timezone:</question> <comment>[' . $defaults['timezone'] . ']</comment>: ',
-            $this->notEmptyCallback,
-            false,
+            $question
+        );
+
+        $question = new Question(
+            sprintf(
+                '<question>Please enter the timezone:</question> <comment>[%s]</comment>: ',
+                $defaults['timezone']
+            ),
             $defaults['timezone']
         );
-
-        $adminUsername = $useDefaultConfigParams ? $defaults['admin-user'] : $dialog->askAndValidate(
+        $question->setValidator($this->notEmptyCallback);
+        $timezone = $useDefaultConfigParams ? $defaults['timezone'] : $questionHelper->ask(
+            $this->input,
             $this->output,
-            '<question>Please enter the admin username:</question> <comment>[' .
-            $defaults['admin-user'] . ']</comment>: ',
-            $this->notEmptyCallback,
-            false,
+            $question
+        );
+
+        $question = new Question(
+            sprintf(
+                '<question>Please enter the admin username:</question> <comment>[%s]</comment>: ',
+                $defaults['admin-user']
+            ),
             $defaults['admin-user']
         );
-
-        $adminPassword = $useDefaultConfigParams ? $defaults['admin-password'] : $dialog->askAndValidate(
+        $question->setValidator($this->notEmptyCallback);
+        $adminUsername = $useDefaultConfigParams ? $defaults['admin-user'] : $questionHelper->ask(
+            $this->input,
             $this->output,
-            '<question>Please enter the admin password:</question> <comment>[' .
-            $defaults['admin-password'] . ']</comment>: ',
-            $this->notEmptyCallback,
-            false,
+            $question
+        );
+
+        $question = new Question(
+            sprintf(
+                '<question>Please enter the admin password:</question> <comment>[%s]</comment>: ',
+                $defaults['admin-password']
+            ),
             $defaults['admin-password']
         );
-
-        $adminFirstname = $useDefaultConfigParams ? $defaults['admin-firstname'] : $dialog->askAndValidate(
+        $question->setValidator($this->notEmptyCallback);
+        $adminPassword = $useDefaultConfigParams ? $defaults['admin-password'] : $questionHelper->ask(
+            $this->input,
             $this->output,
-            '<question>Please enter the admin\'s firstname:</question> <comment>[' .
-            $defaults['admin-firstname'] . ']</comment>: ',
-            $this->notEmptyCallback,
-            false,
+            $question
+        );
+
+        $question = new Question(
+            sprintf(
+                "<question>Please enter the admin's firstname:</question> <comment>[%s]</comment>: ",
+                $defaults['admin-firstname']
+            ),
             $defaults['admin-firstname']
         );
-
-        $adminLastname = $useDefaultConfigParams ? $defaults['admin-lastname'] : $dialog->askAndValidate(
+        $question->setValidator($this->notEmptyCallback);
+        $adminFirstname = $useDefaultConfigParams ? $defaults['admin-firstname'] : $questionHelper->ask(
+            $this->input,
             $this->output,
-            '<question>Please enter the admin\'s lastname:</question> <comment>[' .
-            $defaults['admin-lastname'] . ']</comment>: ',
-            $this->notEmptyCallback,
-            false,
-            $defaults['admin-lastname']
+            $question
         );
 
-        $adminEmail = $useDefaultConfigParams ? $defaults['admin-email'] : $dialog->askAndValidate(
+        $question = new Question(
+            sprintf(
+                "<question>Please enter the admin's lastname:</question> <comment>[%s]</comment>: ",
+                $defaults['admin-lastname']
+            ),
+            $defaults['admin-lastname']
+        );
+        $question->setValidator($this->notEmptyCallback);
+        $adminLastname = $useDefaultConfigParams ? $defaults['admin-lastname'] : $questionHelper->ask(
+            $this->input,
             $this->output,
-            '<question>Please enter the admin\'s email:</question> <comment>[' .
-            $defaults['admin-email'] . ']</comment>: ',
-            $this->notEmptyCallback,
-            false,
+            $question
+        );
+
+        $question = new Question(
+            sprintf(
+                "<question>Please enter the admin's email:</question> <comment>[%s]</comment>: ",
+                $defaults['admin-email']
+            ),
             $defaults['admin-email']
+        );
+        $question->setValidator($this->notEmptyCallback);
+        $adminEmail = $useDefaultConfigParams ? $defaults['admin-email'] : $questionHelper->ask(
+            $this->input,
+            $this->output,
+            $question
         );
 
         $validateBaseUrl = function ($url) {
             if (!preg_match('|^http(s)?://[a-z0-9-]+(.[a-z0-9-]+)*(:[0-9]+)?(/.*)?$|i', $url)) {
                 throw new \InvalidArgumentException('Please enter a valid URL');
             }
-            if (parse_url($url, \PHP_URL_HOST) == 'localhost') {
+
+            if (parse_url($url, \PHP_URL_HOST) === 'localhost') {
                 throw new \InvalidArgumentException(
                     'localhost cause problems! Please use 127.0.0.1 or another hostname'
                 );
@@ -147,22 +203,25 @@ class InstallMagento extends AbstractSubCommand
         };
 
         $defaultBaseUrl = $this->commandConfig['installation']['base-url'];
-        $baseUrl = ($this->input->getOption('baseUrl') !== null)
-            ? $this->input->getOption('baseUrl')
-            : $dialog->askAndValidate(
-                $this->output,
-                '<question>Please enter the base url:</question> <comment>[' .
-                $defaultBaseUrl . ']</comment>:',
-                $validateBaseUrl,
-                false,
+        $question = new Question(
+            sprintf(
+                '<question>Please enter the base url:</question> <comment>[%s]</comment>:',
                 $defaultBaseUrl
-            );
+            ),
+            $defaultBaseUrl
+        );
+        $question->setValidator($validateBaseUrl);
+        $baseUrl = $this->input->getOption('baseUrl') ?? $questionHelper->ask(
+            $this->input,
+            $this->output,
+            $question
+        );
         $baseUrl = rtrim($baseUrl, '/') . '/'; // normalize baseUrl
 
         /**
          * Correct session save (common mistake)
          */
-        if ($sessionSave == 'file') {
+        if ($sessionSave === 'file') {
             $sessionSave = 'files';
         }
         $this->_getDefaultSessionFolder($sessionSave);
@@ -211,21 +270,6 @@ class InstallMagento extends AbstractSubCommand
     }
 
     /**
-     * @deprecated since 1.3.1 (obsolete)
-     * @return string
-     * @throws Exception
-     */
-    protected function getInstallScriptPath()
-    {
-        $installerScript = $this->config->getString('installationFolder') . '/' . self::MAGENTO_INSTALL_SCRIPT_PATH;
-        if (!file_exists($installerScript)) {
-            throw new RuntimeException('Installation script was not found.', 1);
-        }
-
-        return $installerScript;
-    }
-
-    /**
      * @param $sessionSave
      */
     protected function _getDefaultSessionFolder($sessionSave)
@@ -235,7 +279,9 @@ class InstallMagento extends AbstractSubCommand
          */
         $defaultSessionFolder = $this->config->getString('installationFolder') . '/var/session';
         if ($sessionSave == 'files' && !is_dir($defaultSessionFolder)) {
-            @mkdir($defaultSessionFolder);
+            if (!mkdir($defaultSessionFolder) && !is_dir($defaultSessionFolder)) {
+                throw new \RuntimeException(sprintf('Directory "%s" was not created', $defaultSessionFolder));
+            }
         }
     }
 
@@ -247,7 +293,7 @@ class InstallMagento extends AbstractSubCommand
         $dbHost = $this->config->getString('db_host');
 
         if ($this->config->getInt('db_port') != 3306) {
-            $dbHost .= ':' . strval($this->config->getInt('db_port'));
+            $dbHost .= ':' . (string)$this->config->getInt('db_port');
 
             return $dbHost;
         }
@@ -267,7 +313,7 @@ class InstallMagento extends AbstractSubCommand
     {
         $installArgs = '';
         foreach ($argv as $argName => $argValue) {
-            if (is_null($argValue)) {
+            if ($argValue === null) {
                 $installArgs .= '--' . $argName . ' ';
             } elseif (is_bool($argValue)) {
                 $installArgs .= '--' . $argName . '=' . (int) $argValue . ' ';

@@ -4,10 +4,15 @@ namespace N98\Magento\Command\Installer\SubCommand;
 
 use N98\Magento\Command\SubCommand\AbstractSubCommand;
 use N98\Util\BinaryString;
-use Symfony\Component\Console\Helper\DialogHelper;
+use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\Question;
 
+/**
+ * Class CreateDatabase
+ * @package N98\Magento\Command\Installer\SubCommand
+ */
 class CreateDatabase extends AbstractSubCommand
 {
     /**
@@ -43,7 +48,7 @@ class CreateDatabase extends AbstractSubCommand
             }
         }
 
-        $hasAllOptions = $dbOptionsFound == 4;
+        $hasAllOptions = $dbOptionsFound === 4;
 
         // if all database options were passed in at cmd line
         if ($hasAllOptions) {
@@ -51,86 +56,119 @@ class CreateDatabase extends AbstractSubCommand
             $this->config->setString('db_user', $this->input->getOption('dbUser'));
             $this->config->setString('db_pass', $this->input->getOption('dbPass'));
             $this->config->setString('db_name', $this->input->getOption('dbName'));
-            $this->config->setInt('db_port', intval($this->input->getOption('dbPort')));
+            $this->config->setInt('db_port', (int) $this->input->getOption('dbPort'));
             $db = $this->validateDatabaseSettings($this->input, $this->output);
 
             if ($db === false) {
                 throw new \InvalidArgumentException('Database configuration is invalid', null);
             }
         } else {
-            /** @var DialogHelper $dialog */
-            $dialog = $this->getCommand()->getHelperSet()->get('dialog');
+            /** @var $questionHelper QuestionHelper */
+            $questionHelper = $this->getCommand()->getHelperSet()->get('question');
             do {
                 // Host
                 $dbHostDefault = $this->input->getOption('dbHost') ?
                     $this->input->getOption('dbHost') : $this->commandConfig['installation']['db']['host'];
+
+                $question = new Question(
+                    '<question>Please enter the database host</question> <comment>[' . $dbHostDefault . ']</comment>: ',
+                    $dbHostDefault
+                );
+                $question->setValidator($this->notEmptyCallback);
+
                 $this->config->setString(
                     'db_host',
-                    $dialog->askAndValidate(
+                    $questionHelper->ask(
+                        $this->input,
                         $this->output,
-                        '<question>Please enter the database host</question> <comment>[' .
-                        $dbHostDefault . ']</comment>: ',
-                        $this->notEmptyCallback,
-                        false,
-                        $dbHostDefault
+                        $question
                     )
                 );
 
                 // Port
                 $dbPortDefault = $this->input->getOption('dbPort') ?
                     $this->input->getOption('dbPort') : $this->commandConfig['installation']['db']['port'];
+
+                $question = new Question(
+                    sprintf(
+                        '<question>Please enter the database port </question> <comment>[%s]</comment>: ',
+                        $dbPortDefault
+                    ),
+                    $dbPortDefault
+                );
+                $question->setValidator($this->notEmptyCallback);
+
                 $this->config->setInt(
                     'db_port',
-                    (int) $dialog->askAndValidate(
+                    (int) $questionHelper->ask(
+                        $this->input,
                         $this->output,
-                        '<question>Please enter the database port </question> <comment>[' .
-                        $dbPortDefault . ']</comment>: ',
-                        $this->notEmptyCallback,
-                        false,
-                        $dbPortDefault
+                        $question
                     )
                 );
 
                 // User
                 $dbUserDefault = $this->input->getOption('dbUser') ?
                     $this->input->getOption('dbUser') : $this->commandConfig['installation']['db']['user'];
+
+                $question = new Question(
+                    sprintf(
+                        '<question>Please enter the database username</question> <comment>[%s]</comment>: ',
+                        $dbUserDefault
+                    ),
+                    $dbUserDefault
+                );
+                $question->setValidator($this->notEmptyCallback);
+
                 $this->config->setString(
                     'db_user',
-                    $dialog->askAndValidate(
+                    $questionHelper->ask(
+                        $this->input,
                         $this->output,
-                        '<question>Please enter the database username</question> <comment>[' .
-                        $dbUserDefault . ']</comment>: ',
-                        $this->notEmptyCallback,
-                        false,
-                        $dbUserDefault
+                        $question
                     )
                 );
 
                 // Password
                 $dbPassDefault = $this->input->getOption('dbPass') ?
                     $this->input->getOption('dbPass') : $this->commandConfig['installation']['db']['pass'];
+
+                $question = new Question(
+                    sprintf(
+                        '<question>Please enter the database password</question> <comment>[%s]</comment>: ',
+                        $dbPassDefault
+                    ),
+                    $dbPassDefault
+                );
+
                 $this->config->setString(
                     'db_pass',
-                    $dialog->ask(
+                    $questionHelper->ask(
+                        $this->input,
                         $this->output,
-                        '<question>Please enter the database password</question> <comment>[' .
-                        $dbPassDefault . ']</comment>: ',
-                        $dbPassDefault
+                        $question
                     )
                 );
 
                 // DB-Name
                 $dbNameDefault = $this->input->getOption('dbName') ?
                     $this->input->getOption('dbName') : $this->commandConfig['installation']['db']['name'];
+
+                $question = new Question(
+                    sprintf(
+                        '<question>Please enter the database name</question> <comment>[%s]</comment>: ',
+                        $dbNameDefault
+                    ),
+                    $dbNameDefault
+                );
+                $question->setValidator($this->notEmptyCallback);
+
                 $this->config->setString(
                     'db_name',
-                    $dialog->askAndValidate(
+                    $questionHelper->ask(
+                        $this->input,
                         $this->output,
-                        '<question>Please enter the database name</question> <comment>[' .
-                        $dbNameDefault . ']</comment>: ',
-                        $this->notEmptyCallback,
-                        false,
-                        $dbNameDefault
+                        $question
                     )
                 );
 
