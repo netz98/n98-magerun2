@@ -10,6 +10,10 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 
+/**
+ * Class ComposerHelper
+ * @package N98\Util\Console\Helper
+ */
 class ComposerHelper extends AbstractHelper implements InputAwareInterface
 {
     /**
@@ -27,7 +31,6 @@ class ComposerHelper extends AbstractHelper implements InputAwareInterface
         $commandArgs = array_merge([$this->getBinPath()], $composerArgs);
 
         $process = new Process($commandArgs);
-        $process->setInput($this->input);
         $process->setTimeout(3600);
         $process->run(function ($type, $buffer) use ($silent) {
             if ($silent) {
@@ -54,7 +57,7 @@ class ComposerHelper extends AbstractHelper implements InputAwareInterface
     public function getConfigValue($key, $useGlobalConfig = true)
     {
         $jsonCode = '';
-        $commandArgs = [];
+        $commandArgs = ['-q'];
 
         if ($useGlobalConfig) {
             $commandArgs[] = 'global';

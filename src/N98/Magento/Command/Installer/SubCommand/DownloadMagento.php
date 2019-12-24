@@ -60,7 +60,6 @@ class DownloadMagento extends AbstractSubCommand
          * @TODO use composer helper
          */
         $process = $args->createProcess();
-        $process->setInput($this->input);
         if (OutputInterface::VERBOSITY_VERBOSE <= $this->output->getVerbosity()) {
             $this->output->writeln($process->getCommandLine());
         }
@@ -119,6 +118,7 @@ class DownloadMagento extends AbstractSubCommand
         $configKey = 'http-basic.repo.magento.com';
 
         $composerHelper = $this->getCommand()->getHelper('composer');
+
         /** @var $composerHelper ComposerHelper */
         $authConfig = $composerHelper->getConfigValue($configKey);
 

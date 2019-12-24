@@ -7,6 +7,10 @@ use Composer\Util\RemoteFilesystem;
 use N98\Magento\Command\SubCommand\AbstractSubCommand;
 use N98\Util\OperatingSystem;
 
+/**
+ * Class InstallComposer
+ * @package N98\Magento\Command\Installer\SubCommand
+ */
 class InstallComposer extends AbstractSubCommand
 {
     /**
