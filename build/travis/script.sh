@@ -41,10 +41,6 @@ case "${SCRIPT_JOB}" in
 
     "PHP-CS-FIXER" )
     vendor/bin/php-cs-fixer --diff --dry-run -v fix
-    (
-        cd shared
-        ../vendor/bin/php-cs-fixer --diff --dry-run -v fix
-    )
     ;;
 
     "BUILDSH" )
