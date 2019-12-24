@@ -2,19 +2,27 @@
 
 namespace N98\Magento\Application\Console\EventSubscriber;
 
+use N98\Magento\Application;
+use N98\Magento\Application\ApplicationAwareInterface;
 use N98\Magento\Application\Console\Event;
 use N98\Magento\Application\Console\Events;
 use N98\Util\OperatingSystem;
+use Symfony\Component\Console\Event\ConsoleEvent;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class CheckRootUser implements EventSubscriberInterface
+class CheckRootUser implements EventSubscriberInterface, ApplicationAwareInterface
 {
     /**
      * @var string
      */
     const WARNING_ROOT_USER = '<error>It\'s not recommended to run n98-magerun as root user</error>';
+
+    /**
+     * @var Application
+     */
+    private $application;
 
     /**
      * Returns an array of event names this subscriber wants to listen to.
@@ -33,10 +41,10 @@ class CheckRootUser implements EventSubscriberInterface
     /**
      * Display a warning if a running n98-magerun as root user
      *
-     * @param Event $event
+     * @param ConsoleEvent $event
      * @return void
      */
-    public function checkRunningAsRootUser(Event $event)
+    public function checkRunningAsRootUser(ConsoleEvent $event)
     {
         $skipRootCheck = $this->_isSkipRootCheck($event->getInput());
         if ($skipRootCheck) {
@@ -44,7 +52,7 @@ class CheckRootUser implements EventSubscriberInterface
             return;
         }
 
-        $config = $event->getApplication()->getConfig();
+        $config = $this->application->getConfig();
         if (!$config['application']['check-root-user']) {
             return;
         }
@@ -77,5 +85,10 @@ class CheckRootUser implements EventSubscriberInterface
         if (OutputInterface::VERBOSITY_DEBUG <= $output->getVerbosity()) {
             $output->writeln($message);
         }
+    }
+
+    public function setApplication($application)
+    {
+        $this->application = $application;
     }
 }
