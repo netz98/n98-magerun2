@@ -12,7 +12,7 @@ plugin:
 helpers:
   composer: N98\Util\Console\Helper\ComposerHelper
   database: N98\Util\Console\Helper\DatabaseHelper
-  dialog: Composer\Command\Helper\DialogHelper
+  dialog: N98\Util\Console\Helper\DialogHelper
   parameter: N98\Util\Console\Helper\ParameterHelper
   table: N98\Util\Console\Helper\TableHelper
   injection: N98\Util\Console\Helper\InjectionHelper
@@ -39,6 +39,7 @@ detect:
 
 event:
   subscriber:
+    - N98\Magento\Application\Console\EventSubscriber\CheckCompatibility
     - N98\Magento\Application\Console\EventSubscriber\CheckRootUser
     - N98\Magento\Application\Console\EventSubscriber\DevUrnCatalogAutoPath
     - N98\Magento\Command\ComposerWrapper\EventSubscriber

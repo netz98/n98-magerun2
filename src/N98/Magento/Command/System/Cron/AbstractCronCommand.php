@@ -3,9 +3,10 @@
 namespace N98\Magento\Command\System\Cron;
 
 use N98\Magento\Command\AbstractMagentoCommand;
-use Symfony\Component\Console\Helper\DialogHelper;
+use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\ChoiceQuestion;
 
 abstract class AbstractCronCommand extends AbstractMagentoCommand
 {
@@ -155,26 +156,22 @@ abstract class AbstractCronCommand extends AbstractMagentoCommand
      */
     protected function askJobCode(InputInterface $input, OutputInterface $output, $jobs)
     {
-        $question = [];
+        $choices = [];
         foreach ($jobs as $key => $job) {
-            $question[] = '<comment>[' . ($key + 1) . ']</comment> ' . $job['Job'] . PHP_EOL;
+            $choices[$key + 1] = $job['Job'];
         }
-        $question[] = '<question>Please select job: </question>' . PHP_EOL;
 
-        /** @var $dialog DialogHelper */
-        $dialog = $this->getHelper('dialog');
-        $jobCode = $dialog->askAndValidate(
-            $output,
-            $question,
-            function ($typeInput) use ($jobs) {
-                if (!isset($jobs[$typeInput - 1])) {
-                    throw new \InvalidArgumentException('Invalid job');
-                }
-                return $jobs[$typeInput - 1]['Job'];
+        $question = new ChoiceQuestion('<question>Please select a job:</question>', $choices);
+        $question->setValidator(function ($typeInput) use ($jobs) {
+            if (!isset($jobs[$typeInput - 1])) {
+                throw new \InvalidArgumentException('Invalid job');
             }
-        );
+            return $jobs[$typeInput - 1]['Job'];
+        });
 
-        return $jobCode;
+        /** @var $questionHelper QuestionHelper */
+        $questionHelper = $this->getHelper('question');
+        return $questionHelper->ask($input, $output, $question);
     }
 
     /**

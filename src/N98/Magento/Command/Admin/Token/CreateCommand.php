@@ -7,10 +7,12 @@ use Magento\Integration\Model\Oauth\Token;
 use Magento\Integration\Model\Oauth\TokenFactory;
 use Magento\User\Model\User;
 use N98\Magento\Command\AbstractMagentoCommand;
+use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\Question;
 
 /**
  * Class CreateCommand
@@ -64,12 +66,20 @@ class CreateCommand extends AbstractMagentoCommand
             return;
         }
 
-        /** @var $dialog DialogHelper */
-        $dialog = $this->getHelper('dialog');
-
         // Username
-        if (($username = $input->getArgument('username')) == null) {
-            $username = $dialog->ask($output, '<question>Username:</question>');
+        $username = $input->getArgument('username');
+        if ($username === null) {
+            /** @var $questionHelper QuestionHelper */
+            $questionHelper = $this->getHelper('question');
+            $question = new Question('<question>Username:</question>');
+            $question->setValidator(function ($value) {
+                if ($value === '') {
+                    throw new \Exception('Please enter a valid username');
+                }
+
+                return $value;
+            });
+            $username = $questionHelper->ask($input, $output, $question);
         }
 
         $adminUser = $this->userModel->loadByUsername($username);

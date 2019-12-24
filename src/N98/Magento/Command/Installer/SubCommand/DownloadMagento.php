@@ -8,7 +8,9 @@ use N98\Util\Console\Helper\ComposerHelper;
 use N98\Util\Exec;
 use N98\Util\ProcessArguments;
 use RuntimeException;
+use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\Question;
 
 class DownloadMagento extends AbstractSubCommand
 {
@@ -31,7 +33,7 @@ class DownloadMagento extends AbstractSubCommand
 
     private function implementation()
     {
-        $this->checkMagentoConnectCredentials($this->output);
+        $this->checkMagentoConnectCredentials($this->input, $this->output);
 
         $package = $this->config['magentoVersionData'];
         $this->config->setArray('magentoPackage', $package);
@@ -57,7 +59,7 @@ class DownloadMagento extends AbstractSubCommand
         /**
          * @TODO use composer helper
          */
-        $process = $args->createBuilder()->getProcess();
+        $process = $args->createProcess();
         $process->setInput($this->input);
         if (OutputInterface::VERBOSITY_VERBOSE <= $this->output->getVerbosity()) {
             $this->output->writeln($process->getCommandLine());
@@ -109,9 +111,10 @@ class DownloadMagento extends AbstractSubCommand
     }
 
     /**
+     * @param InputInterface $input
      * @param OutputInterface $output
      */
-    protected function checkMagentoConnectCredentials(OutputInterface $output)
+    protected function checkMagentoConnectCredentials(InputInterface $input, OutputInterface $output)
     {
         $configKey = 'http-basic.repo.magento.com';
 
@@ -119,9 +122,7 @@ class DownloadMagento extends AbstractSubCommand
         /** @var $composerHelper ComposerHelper */
         $authConfig = $composerHelper->getConfigValue($configKey);
 
-        if (!isset($authConfig->username)
-            || !isset($authConfig->password)
-        ) {
+        if (!isset($authConfig->username) || !isset($authConfig->password)) {
             $this->output->writeln([
                 '',
                 $this->getCommand()
@@ -136,34 +137,36 @@ class DownloadMagento extends AbstractSubCommand
                 'My Profile -> Access Keys. <info>Use public key as username and private key as password</info>',
                 '',
             ]);
-            $dialog = $this->getCommand()->getHelper('dialog');
+            $questionHelper = $this->getCommand()->getHelper('question');
 
-            $username = $dialog->askAndValidate(
+            $question = new Question('<question>Please enter your public key: </question>');
+            $question->setValidator(function ($value) {
+                if ('' === $value) {
+                    throw new Exception('The public key (auth token) can not be empty');
+                }
+
+                return $value;
+            });
+            $question->setMaxAttempts(20);
+            $question->setHidden(false);
+
+            $username = $questionHelper->ask($input, $output, $question);
+
+            $question = new Question('<question>Please enter your private key: </question>');
+            $question->setMaxAttempts(20);
+            $question->setHidden(true);
+            $question->setValidator(function ($value) {
+                if ('' === $value) {
+                    throw new Exception('The private key (auth token) can not be empty');
+                }
+
+                return $value;
+            });
+
+            $password = $questionHelper->ask(
+                $input,
                 $output,
-                '<comment>Please enter your public key: </comment>',
-                function ($value) {
-                    if ('' === trim($value)) {
-                        throw new Exception('The private key (auth token) can not be empty');
-                    }
-
-                    return $value;
-                },
-                20,
-                false
-            );
-
-            $password = $dialog->askHiddenResponseAndValidate(
-                $output,
-                '<comment>Please enter your private key: </comment>',
-                function ($value) {
-                    if ('' === trim($value)) {
-                        throw new Exception('The private key (auth token) can not be empty');
-                    }
-
-                    return $value;
-                },
-                20,
-                false
+                $question
             );
 
             $composerHelper->setConfigValue($configKey, [$username, $password]);

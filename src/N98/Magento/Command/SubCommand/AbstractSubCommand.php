@@ -3,10 +3,15 @@
 namespace N98\Magento\Command\SubCommand;
 
 use N98\Magento\Command\AbstractMagentoCommand;
-use Symfony\Component\Console\Helper\DialogHelper;
+use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\Question;
 
+/**
+ * Class AbstractSubCommand
+ * @package N98\Magento\Command\SubCommand
+ */
 abstract class AbstractSubCommand implements SubCommandInterface
 {
     /**
@@ -100,13 +105,22 @@ abstract class AbstractSubCommand implements SubCommandInterface
 
             return $flag;
         } else {
-            /** @var $dialog DialogHelper */
-            $dialog = $this->getCommand()->getHelper('dialog');
+            /** @var $questionHelper QuestionHelper */
+            $questionHelper = $this->getCommand()->getHelper('question');
 
-            $flag = $dialog->askConfirmation(
-                $this->output,
-                sprintf('<question>%s</question> <comment>[%s]</comment>: ', $question, $default ? 'y' : 'n'),
+            $question = new Question(
+                sprintf(
+                    '<question>%s</question> <comment>[%s]',
+                    $question,
+                    $default
+                ),
                 $default
+            );
+
+            $flag = $questionHelper->ask(
+                $this->input,
+                $this->output,
+                $question
             );
 
             return $flag;

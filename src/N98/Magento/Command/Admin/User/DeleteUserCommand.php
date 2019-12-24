@@ -2,11 +2,13 @@
 
 namespace N98\Magento\Command\Admin\User;
 
-use Symfony\Component\Console\Helper\DialogHelper;
+use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\ConfirmationQuestion;
+use Symfony\Component\Console\Question\Question;
 
 /**
  * Class DeleteUserCommand
@@ -38,12 +40,21 @@ class DeleteUserCommand extends AbstractAdminUserCommand
             return;
         }
 
-        /** @var $dialog DialogHelper */
-        $dialog = $this->getHelper('dialog');
+        /** @var $questionHelper QuestionHelper */
+        $questionHelper = $this->getHelper('question');
 
         // Username
-        if (($id = $input->getArgument('id')) == null) {
-            $id = $dialog->ask($output, '<question>Username or Email:</question>');
+        $id = $input->getArgument('id');
+        if ($id === null) {
+            $question = new Question('<question>Username or Email:</question>');
+            $question->setValidator(function ($value) {
+                if ($value === '') {
+                    throw new \Exception('Please enter a username or email');
+                }
+
+                return $value;
+            });
+            $id = $questionHelper->ask($input, $output, $question);
         }
 
         $user = $this->userModel->loadByUsername($id);
@@ -58,10 +69,14 @@ class DeleteUserCommand extends AbstractAdminUserCommand
 
         $shouldRemove = $input->getOption('force');
         if (!$shouldRemove) {
-            $shouldRemove = $dialog->askConfirmation(
-                $output,
+            $question = new ConfirmationQuestion(
                 '<question>Are you sure?</question> <comment>[n]</comment>: ',
                 false
+            );
+            $shouldRemove = $questionHelper->ask(
+                $input,
+                $output,
+                $question
             );
         }
 

@@ -7,7 +7,12 @@ use Magento\Framework\App\Area;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\Question;
 
+/**
+ * Class ChangePasswordCommand
+ * @package N98\Magento\Command\Customer
+ */
 class ChangePasswordCommand extends AbstractCustomerCommand
 {
     /**
@@ -79,12 +84,15 @@ HELP;
     {
         $this->detectMagento($output);
         if ($this->initMagento()) {
-            $dialog = $this->getHelperSet()->get('dialog');
+            $questionHelper = $this->getHelperSet()->get('question');
             $email = $this->getHelper('parameter')->askEmail($input, $output);
 
             // Password
-            if (($password = $input->getArgument('password')) == null) {
-                $password = $dialog->askHiddenResponse($output, '<question>Password:</question>');
+            $password = $input->getArgument('password');
+            if ($password === null) {
+                $question = new Question('<question>Password:</question>');
+                $question->setHidden(true);
+                $password = $questionHelper->ask($input, $output, $question);
             }
 
             $website = $this->getHelper('parameter')->askWebsite($input, $output);

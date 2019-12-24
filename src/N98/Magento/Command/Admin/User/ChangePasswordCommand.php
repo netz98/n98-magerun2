@@ -3,11 +3,16 @@
 namespace N98\Magento\Command\Admin\User;
 
 use Exception;
-use Symfony\Component\Console\Helper\DialogHelper;
+use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\Question;
 
+/**
+ * Class ChangePasswordCommand
+ * @package N98\Magento\Command\Admin\User
+ */
 class ChangePasswordCommand extends AbstractAdminUserCommand
 {
     protected function configure()
@@ -32,12 +37,23 @@ class ChangePasswordCommand extends AbstractAdminUserCommand
             return;
         }
 
-        /** @var $dialog DialogHelper */
-        $dialog = $this->getHelper('dialog');
+        /** @var $questionHelper QuestionHelper */
+        $questionHelper = $this->getHelper('question');
 
         // Username
-        if (($username = $input->getArgument('username')) == null) {
-            $username = $dialog->ask($output, '<question>Username:</question>');
+        $username = $username = $input->getArgument('username');
+        if ($username === null) {
+            $question = new Question('<question>Username:</question>');
+            $question->setMaxAttempts(20);
+            $question->setValidator(function ($value) {
+                if (trim($value) === '') {
+                    throw new \Exception('Please enter a valid username');
+                }
+
+                return $value;
+            });
+
+            $username = $questionHelper->ask($input, $output, $question);
         }
 
         $user = $this->userModel->loadByUsername($username);
@@ -47,8 +63,11 @@ class ChangePasswordCommand extends AbstractAdminUserCommand
         }
 
         // Password
-        if (($password = $input->getArgument('password')) == null) {
-            $password = $dialog->askHiddenResponse($output, '<question>Password:</question>');
+        $password = $input->getArgument('password');
+        if ($password === null) {
+            $question = new Question('<question>Password:</question>');
+            $question->setHidden(true);
+            $password = $questionHelper->ask($input, $output, $question);
         }
 
         try {

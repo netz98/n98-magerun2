@@ -2,12 +2,17 @@
 
 namespace N98\Magento\Command\Database;
 
-use Symfony\Component\Console\Helper\DialogHelper;
+use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\Question;
 
+/**
+ * Class QueryCommand
+ * @package N98\Magento\Command\Database
+ */
 class QueryCommand extends AbstractDatabaseCommand
 {
     protected function configure()
@@ -67,14 +72,15 @@ HELP;
         $this->detectDbSettings($output);
 
         if (($query = $input->getArgument('query')) === null) {
-            /** @var $dialog DialogHelper */
-            $dialog = $this->getHelper('dialog');
-            $query = $dialog->ask($output, '<question>SQL Query:</question>');
+            /** @var $questionHelper QuestionHelper */
+            $questionHelper = $this->getHelper('question');
+            $question = new Question('<question>SQL Query:</question>');
+            $query = $questionHelper->ask($input, $output, $question);
         }
 
         $query = $this->getEscapedSql($query);
 
-        $exec = 'mysql ' . $this->getMysqlClientToolConnectionString() . " -e '" . $query . "'";
+        $exec = 'mysql ' . $this->getDatabaseHelper()->getMysqlClientToolConnectionString() . " -e '" . $query . "'";
 
         if ($input->getOption('only-command')) {
             $output->writeln($exec);

@@ -4,13 +4,19 @@ namespace N98\Magento\Command;
 
 use N98\Util\BinaryString;
 use RuntimeException;
-use Symfony\Component\Console\Helper\DialogHelper;
+use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\StringInput;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\ChoiceQuestion;
+use Symfony\Component\Console\Question\Question;
 
+/**
+ * Class ScriptCommand
+ * @package N98\Magento\Command
+ */
 class ScriptCommand extends AbstractMagentoCommand
 {
     /**
@@ -145,7 +151,7 @@ HELP;
 
                 // set var
                 case '$':
-                    $this->registerVariable($output, $commandString);
+                    $this->registerVariable($input, $output, $commandString);
                     break;
 
                 // run shell script
@@ -198,13 +204,12 @@ HELP;
     }
 
     /**
+     * @param InputInterface $input
      * @param OutputInterface $output
-     * @param string $commandString
-     * @throws RuntimeException
-     * @throws \Exception
+     * @param $commandString
      * @return mixed
      */
-    protected function registerVariable(OutputInterface $output, $commandString)
+    protected function registerVariable(InputInterface $input, OutputInterface $output, $commandString)
     {
         if (preg_match('/^(\$\{[a-zA-Z0-9-_.]+\})=(.+)/', $commandString, $matches)) {
             if (isset($matches[2]) && $matches[2][0] === '?') {
@@ -214,8 +219,8 @@ HELP;
                     return $this->scriptVars[$matches[1]];
                 }
 
-                /* @var $dialog DialogHelper */
-                $dialog = $this->getHelper('dialog');
+                /* @var $questionHelper QuestionHelper */
+                $questionHelper = $this->getHelper('question');
 
                 /**
                  * Check for select "?["
@@ -223,27 +228,39 @@ HELP;
                 if (isset($matches[2][1]) && $matches[2][1] == '[') {
                     if (preg_match('/\[(.+)\]/', $matches[2], $choiceMatches)) {
                         $choices = BinaryString::trimExplodeEmpty(',', $choiceMatches[1]);
-                        $selectedIndex = $dialog->select(
-                            $output,
-                            '<info>Please enter a value for <comment>' . $matches[1] . '</comment>:</info> ',
+                        $question = new ChoiceQuestion(
+                            sprintf(
+                                '<question>Pleaase enter a value for </question> <comment>%s</comment>',
+                                $matches[1]
+                            ),
                             $choices
                         );
-                        $this->scriptVars[$matches[1]] = $choices[$selectedIndex];
+                        $this->scriptVars[$matches[1]] = $questionHelper->ask(
+                            $input,
+                            $output,
+                            $question
+                        );
                     } else {
                         throw new RuntimeException('Invalid choices');
                     }
                 } else {
                     // normal input
-                    $this->scriptVars[$matches[1]] = $dialog->askAndValidate(
-                        $output,
-                        '<info>Please enter a value for <comment>' . $matches[1] . '</comment>:</info> ',
-                        function ($value) {
-                            if ($value == '') {
-                                throw new \Exception('Please enter a value');
-                            }
-
-                            return $value;
+                    $question = new Question(
+                        '<question>Please enter a value for <comment>' . $matches[1] . '</comment>:</question>'
+                    );
+                    $question->setMaxAttempts(20);
+                    $question->setValidator(function ($value) {
+                        if (empty($value)) {
+                            throw new \Exception('Please enter a value');
                         }
+
+                        return $value;
+                    });
+
+                    $this->scriptVars[$matches[1]] = $questionHelper->ask(
+                        $input,
+                        $output,
+                        $question
                     );
                 }
             } else {
