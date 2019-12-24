@@ -4,7 +4,7 @@ namespace N98\Magento\Command\Installer\SubCommand;
 
 use N98\Magento\Command\SubCommand\AbstractSubCommand;
 use N98\Util\OperatingSystem;
-use Symfony\Component\Process\ProcessBuilder;
+use Symfony\Component\Process\Process;
 
 class InstallSampleData extends AbstractSubCommand
 {
@@ -42,17 +42,18 @@ class InstallSampleData extends AbstractSubCommand
      */
     private function runMagentoCommand($command)
     {
-        $processBuilder = new ProcessBuilder([
-            'php',
-            'bin/magento',
-            $command,
-        ]);
+        $arguments = [];
 
         if (!OperatingSystem::isWindows()) {
-            $processBuilder->setPrefix('/usr/bin/env');
+            $arguments[] = '/usr/bin/env';
         }
 
-        $process = $processBuilder->getProcess();
+        $arguments[] = 'php';
+        $arguments[] = 'bin/magento';
+        $arguments[] = $command;
+
+        $process = new Process($arguments);
+
         $process->setTimeout(86400);
         $process->start();
         $process->wait(function ($type, $buffer) {

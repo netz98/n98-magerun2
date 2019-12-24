@@ -8,7 +8,7 @@ use Symfony\Component\Console\Helper\Helper as AbstractHelper;
 use Symfony\Component\Console\Input\InputAwareInterface;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Process\Exception\ProcessFailedException;
-use Symfony\Component\Process\ProcessBuilder;
+use Symfony\Component\Process\Process;
 
 class ComposerHelper extends AbstractHelper implements InputAwareInterface
 {
@@ -26,7 +26,7 @@ class ComposerHelper extends AbstractHelper implements InputAwareInterface
     {
         $commandArgs = array_merge([$this->getBinPath()], $composerArgs);
 
-        $process = ProcessBuilder::create($commandArgs)->getProcess();
+        $process = new Process($commandArgs);
         $process->setInput($this->input);
         $process->setTimeout(3600);
         $process->run(function ($type, $buffer) use ($silent) {

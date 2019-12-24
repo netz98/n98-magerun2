@@ -3,7 +3,7 @@
 namespace N98\Magento\Command\Installer\SubCommand;
 
 use N98\Magento\Command\SubCommand\AbstractSubCommand;
-use Symfony\Component\Process\ProcessBuilder;
+use Symfony\Component\Process\Process;
 
 class InstallComposerPackages extends AbstractSubCommand
 {
@@ -17,8 +17,7 @@ class InstallComposerPackages extends AbstractSubCommand
     public function execute()
     {
         $this->output->writeln('<comment>Install composer packages</comment>');
-        $processBuilder = new ProcessBuilder(array_merge($this->config['composer_bin'], ['install']));
-        $process = $processBuilder->getProcess();
+        $process = new Process(array_merge($this->config['composer_bin'], ['install']));
         $process->setTimeout(86400);
 
         $process->start();
