@@ -16,6 +16,10 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+/**
+ * Class ConsoleCommand
+ * @package N98\Magento\Command\Developer
+ */
 class ConsoleCommand extends AbstractMagentoCommand
 {
     /**

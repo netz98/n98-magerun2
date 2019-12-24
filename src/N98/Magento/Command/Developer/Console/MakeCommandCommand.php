@@ -11,6 +11,10 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Zend\Code\Generator\DocBlockGenerator;
 use Zend\Code\Generator\MethodGenerator;
 
+/**
+ * Class MakeCommandCommand
+ * @package N98\Magento\Command\Developer\Console
+ */
 class MakeCommandCommand extends AbstractGeneratorCommand
 {
     protected function configure()

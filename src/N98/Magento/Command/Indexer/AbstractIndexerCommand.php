@@ -5,6 +5,10 @@ namespace N98\Magento\Command\Indexer;
 use N98\Magento\Command\AbstractMagentoCommand;
 use N98\Util\DateTime as DateTimeUtils;
 
+/**
+ * Class AbstractIndexerCommand
+ * @package N98\Magento\Command\Indexer
+ */
 class AbstractIndexerCommand extends AbstractMagentoCommand
 {
     /**

@@ -9,6 +9,10 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
+/**
+ * Class MakeControllerCommand
+ * @package N98\Magento\Command\Developer\Console
+ */
 class MakeControllerCommand extends AbstractGeneratorCommand
 {
     protected function configure()

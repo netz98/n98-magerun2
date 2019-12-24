@@ -2,6 +2,10 @@
 
 namespace N98\Magento\Command\Database;
 
+/**
+ * Class VariablesCommand
+ * @package N98\Magento\Command\Database
+ */
 class VariablesCommand extends AbstractShowCommand
 {
     /**

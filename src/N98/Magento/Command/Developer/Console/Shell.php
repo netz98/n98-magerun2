@@ -17,6 +17,10 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 
+/**
+ * Class Shell
+ * @package N98\Magento\Command\Developer\Console
+ */
 class Shell extends PsyShell
 {
     /**

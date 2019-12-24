@@ -2,6 +2,10 @@
 
 namespace N98\Magento\Command;
 
+/**
+ * Interface CommandConfigAware
+ * @package N98\Magento\Command
+ */
 interface CommandConfigAware
 {
     /**

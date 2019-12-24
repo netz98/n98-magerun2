@@ -14,6 +14,10 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+/**
+ * Class OpenBrowserCommand
+ * @package N98\Magento\Command
+ */
 class OpenBrowserCommand extends AbstractMagentoCommand
 {
     protected function configure()

@@ -9,6 +9,10 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Finder\Finder;
 
+/**
+ * Class FlushCommand
+ * @package N98\Magento\Command\Generation
+ */
 class FlushCommand extends AbstractMagentoCommand
 {
     protected function configure()

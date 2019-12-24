@@ -6,6 +6,10 @@ use N98\Magento\Command\AbstractMagentoCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+/**
+ * Interface SubCommandInterface
+ * @package N98\Magento\Command\SubCommand
+ */
 interface SubCommandInterface
 {
     /**

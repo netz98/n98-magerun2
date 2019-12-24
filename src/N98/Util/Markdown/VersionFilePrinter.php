@@ -2,6 +2,10 @@
 
 namespace N98\Util\Markdown;
 
+/**
+ * Class VersionFilePrinter
+ * @package N98\Util\Markdown
+ */
 class VersionFilePrinter
 {
     /**

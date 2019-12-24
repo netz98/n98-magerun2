@@ -9,6 +9,10 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 
+/**
+ * Class DropCommand
+ * @package N98\Magento\Command\Database
+ */
 class DropCommand extends AbstractDatabaseCommand
 {
     protected function configure()

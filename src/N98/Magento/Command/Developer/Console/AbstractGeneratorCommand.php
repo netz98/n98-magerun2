@@ -14,6 +14,10 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Zend\Code\Generator\FileGenerator;
 use Zend\Filter\Word\SeparatorToSeparator;
 
+/**
+ * Class AbstractGeneratorCommand
+ * @package N98\Magento\Command\Developer\Console
+ */
 abstract class AbstractGeneratorCommand extends AbstractConsoleCommand
 {
     /**

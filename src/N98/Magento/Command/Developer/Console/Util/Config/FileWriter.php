@@ -2,6 +2,10 @@
 
 namespace N98\Magento\Command\Developer\Console\Util\Config;
 
+/**
+ * Class FileWriter
+ * @package N98\Magento\Command\Developer\Console\Util\Config
+ */
 class FileWriter extends \DOMDocument
 {
     /**

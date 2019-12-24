@@ -17,6 +17,8 @@ use Symfony\Component\Validator\ConstraintValidatorFactory;
 
 /**
  * Helper to init some parameters
+ *
+ * @package N98\Util\Console\Helper
  */
 class ParameterHelper extends AbstractHelper
 {

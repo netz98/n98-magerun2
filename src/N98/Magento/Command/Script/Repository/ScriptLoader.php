@@ -6,6 +6,10 @@ use N98\Util\OperatingSystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 
+/**
+ * Class ScriptLoader
+ * @package N98\Magento\Command\Script\Repository
+ */
 final class ScriptLoader
 {
     const LOCATION_PROJECT = 'project';

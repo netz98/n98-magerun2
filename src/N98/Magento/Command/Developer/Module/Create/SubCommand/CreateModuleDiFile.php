@@ -4,6 +4,10 @@ namespace N98\Magento\Command\Developer\Module\Create\SubCommand;
 
 use N98\Magento\Command\SubCommand\AbstractSubCommand;
 
+/**
+ * Class CreateModuleDiFile
+ * @package N98\Magento\Command\Developer\Module\Create\SubCommand
+ */
 class CreateModuleDiFile extends AbstractSubCommand
 {
     /**

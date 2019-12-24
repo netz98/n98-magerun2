@@ -10,6 +10,10 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
 
+/**
+ * Class ListCommand
+ * @package N98\Magento\Command\Developer\Module\Observer
+ */
 class ListCommand extends AbstractMagentoCommand
 {
     const SORT_WARNING_MESSAGE = '<warning>Sorting observers is a bad idea, call-order is important.</warning>';

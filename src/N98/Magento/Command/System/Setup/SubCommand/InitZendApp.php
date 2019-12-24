@@ -5,6 +5,10 @@ namespace N98\Magento\Command\System\Setup\SubCommand;
 use N98\Magento\Command\SubCommand\AbstractSubCommand;
 use N98\Magento\Command\System\Setup\BridgetConsoleLogger;
 
+/**
+ * Class InitZendApp
+ * @package N98\Magento\Command\System\Setup\SubCommand
+ */
 class InitZendApp extends AbstractSubCommand
 {
     /**

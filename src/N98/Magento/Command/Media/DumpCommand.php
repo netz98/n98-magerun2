@@ -17,6 +17,10 @@ use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 use ZipArchive;
 
+/**
+ * Class DumpCommand
+ * @package N98\Magento\Command\Media
+ */
 class DumpCommand extends AbstractMagentoCommand
 {
     /**

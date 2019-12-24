@@ -4,6 +4,10 @@ namespace N98\Magento\Command\System\Check;
 
 use LogicException;
 
+/**
+ * Class Result
+ * @package N98\Magento\Command\System\Check
+ */
 class Result
 {
     /**

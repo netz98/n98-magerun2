@@ -4,6 +4,10 @@ namespace N98\Magento\Command\Developer\Module\Create\SubCommand;
 
 use N98\Magento\Command\SubCommand\AbstractSubCommand;
 
+/**
+ * Class CreateModmanFile
+ * @package N98\Magento\Command\Developer\Module\Create\SubCommand
+ */
 class CreateModmanFile extends AbstractSubCommand
 {
     /**

@@ -6,6 +6,10 @@ use N98\Magento\Command\SubCommand\AbstractSubCommand;
 use N98\Util\Filesystem;
 use Symfony\Component\Finder\Finder;
 
+/**
+ * Class RemoveEmptyFolders
+ * @package N98\Magento\Command\Installer\SubCommand
+ */
 class RemoveEmptyFolders extends AbstractSubCommand
 {
     /**

@@ -20,6 +20,10 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+/**
+ * Class MakeConfigWidgetCommand
+ * @package N98\Magento\Command\Developer\Console\Config
+ */
 class MakeConfigWidgetCommand extends AbstractSimpleConfigFileGeneratorCommand
 {
     const CONFIG_FILENAME = 'widget.xml';

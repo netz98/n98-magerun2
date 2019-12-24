@@ -20,6 +20,10 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+/**
+ * Class MakeConfigEventsCommand
+ * @package N98\Magento\Command\Developer\Console\Config
+ */
 class MakeConfigEventsCommand extends AbstractSimpleConfigFileGeneratorCommand
 {
     const CONFIG_FILENAME = 'events.xml';

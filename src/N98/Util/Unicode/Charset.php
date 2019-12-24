@@ -2,6 +2,10 @@
 
 namespace N98\Util\Unicode;
 
+/**
+ * Class Charset
+ * @package N98\Util\Unicode
+ */
 class Charset
 {
     /**

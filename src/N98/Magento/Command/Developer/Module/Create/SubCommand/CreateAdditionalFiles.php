@@ -5,6 +5,10 @@ namespace N98\Magento\Command\Developer\Module\Create\SubCommand;
 use N98\Magento\Command\CommandConfigAware;
 use N98\Magento\Command\SubCommand\AbstractSubCommand;
 
+/**
+ * Class CreateAdditionalFiles
+ * @package N98\Magento\Command\Developer\Module\Create\SubCommand
+ */
 class CreateAdditionalFiles extends AbstractSubCommand implements CommandConfigAware
 {
     /**

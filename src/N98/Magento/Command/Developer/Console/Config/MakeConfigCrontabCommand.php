@@ -20,6 +20,10 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+/**
+ * Class MakeConfigCrontabCommand
+ * @package N98\Magento\Command\Developer\Console\Config
+ */
 class MakeConfigCrontabCommand extends AbstractSimpleConfigFileGeneratorCommand
 {
     const CONFIG_FILENAME = 'crontab.xml';

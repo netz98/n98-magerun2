@@ -8,6 +8,10 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+/**
+ * Class ScheduleCommand
+ * @package N98\Magento\Command\System\Cron
+ */
 class ScheduleCommand extends AbstractCronCommand
 {
     protected function configure()

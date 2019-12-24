@@ -11,6 +11,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Create a magento module skeleton
+ *
+ * @package N98\Magento\Command\Developer\Module
  */
 class CreateCommand extends AbstractMagentoCommand
 {

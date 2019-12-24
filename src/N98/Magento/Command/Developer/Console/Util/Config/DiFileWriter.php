@@ -4,6 +4,10 @@ namespace N98\Magento\Command\Developer\Console\Util\Config;
 
 use N98\Magento\Command\Developer\Console\Util\Xml;
 
+/**
+ * Class DiFileWriter
+ * @package N98\Magento\Command\Developer\Console\Util\Config
+ */
 class DiFileWriter extends FileWriter
 {
     /**

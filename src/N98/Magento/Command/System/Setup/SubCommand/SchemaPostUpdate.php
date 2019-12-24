@@ -5,6 +5,10 @@ namespace N98\Magento\Command\System\Setup\SubCommand;
 use N98\Magento\Command\SubCommand\AbstractSubCommand;
 use Symfony\Component\Console\Output\OutputInterface;
 
+/**
+ * Class SchemaPostUpdate
+ * @package N98\Magento\Command\System\Setup\SubCommand
+ */
 class SchemaPostUpdate extends AbstractSubCommand
 {
     /**

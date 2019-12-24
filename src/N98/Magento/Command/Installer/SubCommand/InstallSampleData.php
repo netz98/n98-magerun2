@@ -6,6 +6,10 @@ use N98\Magento\Command\SubCommand\AbstractSubCommand;
 use N98\Util\OperatingSystem;
 use Symfony\Component\Process\Process;
 
+/**
+ * Class InstallSampleData
+ * @package N98\Magento\Command\Installer\SubCommand
+ */
 class InstallSampleData extends AbstractSubCommand
 {
     /**

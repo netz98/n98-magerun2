@@ -11,6 +11,10 @@ use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
 
+/**
+ * Class InstallMagento
+ * @package N98\Magento\Command\Installer\SubCommand
+ */
 class InstallMagento extends AbstractSubCommand
 {
     /**

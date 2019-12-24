@@ -2,6 +2,10 @@
 
 namespace N98\View;
 
+/**
+ * Interface View
+ * @package N98\View
+ */
 interface View
 {
     /**

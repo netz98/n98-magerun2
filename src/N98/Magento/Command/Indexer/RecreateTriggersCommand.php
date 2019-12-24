@@ -10,6 +10,10 @@ namespace N98\Magento\Command\Indexer;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+/**
+ * Class RecreateTriggersCommand
+ * @package N98\Magento\Command\Indexer
+ */
 class RecreateTriggersCommand extends AbstractIndexerCommand
 {
     /**

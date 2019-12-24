@@ -7,6 +7,10 @@ use N98\Magento\Command\System\Check\Result;
 use N98\Magento\Command\System\Check\ResultCollection;
 use N98\Magento\Command\System\Check\SimpleCheck;
 
+/**
+ * Class EnginesCheck
+ * @package N98\Magento\Command\System\Check\MySQL
+ */
 class EnginesCheck implements SimpleCheck
 {
     /**

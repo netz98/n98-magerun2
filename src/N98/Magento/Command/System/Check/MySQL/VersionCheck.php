@@ -8,6 +8,10 @@ use N98\Magento\Command\System\Check\Result;
 use N98\Magento\Command\System\Check\ResultCollection;
 use N98\Magento\Command\System\Check\SimpleCheck;
 
+/**
+ * Class VersionCheck
+ * @package N98\Magento\Command\System\Check\MySQL
+ */
 class VersionCheck implements SimpleCheck
 {
     /**

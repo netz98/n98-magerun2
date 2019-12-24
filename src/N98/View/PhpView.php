@@ -2,6 +2,10 @@
 
 namespace N98\View;
 
+/**
+ * Class PhpView
+ * @package N98\View
+ */
 class PhpView implements View
 {
     /**

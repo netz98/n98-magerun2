@@ -9,6 +9,10 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
+/**
+ * Class ListCommand
+ * @package N98\Magento\Command\Developer\Theme
+ */
 class ListCommand extends AbstractMagentoCommand
 {
     /**

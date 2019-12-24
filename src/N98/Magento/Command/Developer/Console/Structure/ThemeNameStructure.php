@@ -6,6 +6,10 @@
 
 namespace N98\Magento\Command\Developer\Console\Structure;
 
+/**
+ * Class ThemeNameStructure
+ * @package N98\Magento\Command\Developer\Console\Structure
+ */
 class ThemeNameStructure
 {
     /**
