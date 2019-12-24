@@ -38,13 +38,10 @@ Microsoft Windows is not fully supported (some Commands like `db:dump` or `insta
 We support the following Magento Versions:
 
 - 2.3.x Open Source/Commerce
-- 2.2.x Open Source/Commerce
-- 2.1.x Open Source/Commerce
 
 We support the following PHP Versions:
 
-- PHP 7.0
-- PHP 7.1
+- PHP 7.3
 - PHP 7.2
 
 Installation
