@@ -8,7 +8,7 @@ class ListCommandTest extends TestCase
     {
         $this->assertDisplayContains(
             'list',
-            sprintf('n98-magerun2 version %s by netz98 GmbH', $this->getApplication()->getVersion())
+            sprintf('n98-magerun2 %s by netz98 GmbH', $this->getApplication()->getVersion())
         );
     }
 }
