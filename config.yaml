@@ -638,9 +638,7 @@ commands:
       - N98\Magento\Command\Developer\Console\Config\MakeConfigWebapiCommand
       - N98\Magento\Command\Developer\Console\ModuleCommand
       - N98\Magento\Command\Developer\Console\MakeBlockCommand
-      #- N98\Magento\Command\Developer\Console\MakeEntityCommand
       - N98\Magento\Command\Developer\Console\MakeHelperCommand
-      #- N98\Magento\Command\Developer\Console\MakeGridCommand
       - N98\Magento\Command\Developer\Console\MakeModuleCommand
       - N98\Magento\Command\Developer\Console\ModulesCommand
       - N98\Magento\Command\Developer\Console\MakeClassCommand
@@ -650,7 +648,6 @@ commands:
       - N98\Magento\Command\Developer\Console\MakeTableCommand
       - N98\Magento\Command\Developer\Console\MakeInterfaceCommand
       - N98\Magento\Command\Developer\Console\MakeThemeCommand
-      #- N98\Magento\Command\Developer\Console\TreeCommand
 
   N98\Magento\Command\Media\DumpCommand:
     strip:
