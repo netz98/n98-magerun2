@@ -130,7 +130,7 @@ class InfoCommand extends AbstractMagentoCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        if ($input->getOption('format') == null && $input->getArgument('key') == null) {
+        if ($input->getOption('format') === null && $input->getArgument('key') === null) {
             $this->writeSection($output, 'Magento System Information');
         }
 
