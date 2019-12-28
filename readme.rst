@@ -691,7 +691,18 @@ Opens PHP interactive shell with initialized Magento Admin-Store.
 
 .. code-block:: sh
 
-   $ n98-magerun2.phar dev:console <arg>
+   $ n98-magerun2.phar dev:console [--area=AREA] <arg>
+
+Optional an area code can be defined. If provided, the configuration (di.xml, translations) of the area are loaded.
+
+Possible area codes are:
+
+- adminhtml
+- crontab
+- frontend
+- graphql
+- webapi_xml
+- webapi_rest
 
 Variable ``$di`` is made available with a ``Magento\Framework\ObjectManagerInterface`` instance to allow creation of object instances.
 
