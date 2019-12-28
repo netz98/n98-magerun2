@@ -118,6 +118,10 @@ commands:
     - N98\Magento\Command\System\Website\ListCommand
     - N98\Magento\Command\Indexer\ListCommand
     - N98\Magento\Command\Indexer\RecreateTriggersCommand
+    - N98\Magento\Command\Integration\CreateCommand
+    - N98\Magento\Command\Integration\DeleteCommand
+    - N98\Magento\Command\Integration\ListCommand
+    - N98\Magento\Command\Integration\ShowCommand
     - N98\Magento\Command\Installer\InstallCommand
     - N98\Magento\Command\Developer\Module\ListCommand
     - N98\Magento\Command\Developer\Module\Observer\ListCommand
