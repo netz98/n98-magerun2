@@ -87,6 +87,7 @@ class MaintenanceCommand extends AbstractMagentoCommand
      * @param OutputInterface $output
      * @param null $offOption
      * @throws \Magento\Framework\Exception\FileSystemException
+     * @throws \Magento\Framework\Exception\ValidatorException
      */
     protected function handleDisable(
         \Magento\Framework\Filesystem\Directory\Write $flagDir,
