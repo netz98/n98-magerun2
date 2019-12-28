@@ -650,7 +650,6 @@ commands:
       - N98\Magento\Command\Developer\Console\MakeCommandCommand
       - N98\Magento\Command\Developer\Console\MakeControllerCommand
       - N98\Magento\Command\Developer\Console\MakeModelCommand
-      - N98\Magento\Command\Developer\Console\MakeTableCommand
       - N98\Magento\Command\Developer\Console\MakeInterfaceCommand
       - N98\Magento\Command\Developer\Console\MakeThemeCommand
 

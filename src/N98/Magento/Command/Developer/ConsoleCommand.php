@@ -3,7 +3,11 @@
 namespace N98\Magento\Command\Developer;
 
 use Exception;
+use Magento\Framework\App\Area;
+use Magento\Framework\App\AreaList;
 use Magento\Framework\App\ProductMetadataInterface;
+use Magento\Framework\App\State as AppState;
+use Magento\Framework\ObjectManager\ConfigLoaderInterface;
 use N98\Magento\Command\AbstractMagentoCommand;
 use N98\Magento\Command\Developer\Console\Shell;
 use N98\Util\Unicode\Charset;
@@ -14,6 +18,7 @@ use Psy\Configuration;
 use Psy\Output\ShellOutput;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
@@ -27,11 +32,27 @@ class ConsoleCommand extends AbstractMagentoCommand
      */
     private $productMeta;
 
+    /**
+     * @var AppState
+     */
+    private $appState;
+
+    /**
+     * @var ConfigLoaderInterface
+     */
+    private $configLoader;
+
+    /**
+     * @var AreaList
+     */
+    private $areaList;
+
     protected function configure()
     {
         $this
             ->setName('dev:console')
             ->addArgument('cmd', InputArgument::OPTIONAL, 'Direct code to run')
+            ->addOption('area', 'a', InputOption::VALUE_REQUIRED, 'Area to initialize')
             ->setDescription(
                 'Opens PHP interactive shell with initialized Mage::app() <comment>(Experimental)</comment>'
             );
@@ -39,10 +60,20 @@ class ConsoleCommand extends AbstractMagentoCommand
 
     /**
      * @param ProductMetadataInterface $productMetadata
+     * @param AppState $appState
+     * @param ConfigLoaderInterface $configLoader
+     * @param AreaList $areaList
      */
-    public function inject(ProductMetadataInterface $productMetadata)
-    {
+    public function inject(
+        ProductMetadataInterface $productMetadata,
+        AppState $appState,
+        ConfigLoaderInterface $configLoader,
+        AreaList $areaList
+    ) {
         $this->productMeta = $productMetadata;
+        $this->appState = $appState;
+        $this->configLoader = $configLoader;
+        $this->areaList = $areaList;
     }
 
     /**
@@ -50,6 +81,7 @@ class ConsoleCommand extends AbstractMagentoCommand
      * @param OutputInterface $output
      *
      * @return int|void
+     * @throws \Magento\Framework\Exception\LocalizedException
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -91,12 +123,19 @@ class ConsoleCommand extends AbstractMagentoCommand
         if ($initialized) {
             $ok = Charset::convertInteger(Charset::UNICODE_CHECKMARK_CHAR);
 
+            $areaToLoad = $input->getOption('area');
+
+            if ($areaToLoad) {
+                $this->loadArea($areaToLoad);
+            }
+
             $edition = $this->productMeta->getEdition();
             $magentoVersion = $this->productMeta->getVersion();
 
             $consoleOutput->writeln(
-                '<fg=black;bg=green>Magento ' . $magentoVersion . ' ' . $edition .
-                ' initialized.</fg=black;bg=green> ' . $ok
+                '<fg=black;bg=green>Magento ' . $magentoVersion . ' ' . $edition . ' initialized. ' . $ok
+                . '</fg=black;bg=green>' . "\n" . '<fg=black;bg=green>Area: '
+                . $this->appState->getAreaCode() . '</fg=black;bg=green>'
             );
         } else {
             $consoleOutput->writeln('<fg=black;bg=yellow>Magento is not initialized.</fg=black;bg=yellow>');
@@ -123,5 +162,24 @@ help;
         }
 
         $shell->run($input, $consoleOutput);
+    }
+
+    /**
+     * @param string $areaToLoad
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
+    private function loadArea($areaToLoad): void
+    {
+        $this->appState->setAreaCode($areaToLoad);
+
+        // load di.xml config of the defined area
+        $this->getObjectManager()->configure(
+            $this->configLoader->load($areaToLoad)
+        );
+
+        // load all configs of the defined are
+        $this->areaList->getArea($areaToLoad)
+            ->load(Area::PART_CONFIG)
+            ->load(Area::PART_TRANSLATE);
     }
 }
