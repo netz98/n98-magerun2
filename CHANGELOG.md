@@ -18,6 +18,7 @@ RECENT CHANGES
 - Imp: #504: Enable PHP 7.3 for travis builds (by Christian Münch)
 - Imp: #492: Update readme (by operator888) 
 - Fix: Composer package naming
+- Fix: #488: mcrypt is optional module in Magento 2.3
 - Fix: #490: Wildcard matching of db:dump command (by Dan Wallis)
 
 
