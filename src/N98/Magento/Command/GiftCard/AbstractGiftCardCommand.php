@@ -27,7 +27,7 @@ abstract class AbstractGiftCardCommand extends AbstractMagentoCommand
     public function getGiftcard($code = null)
     {
         $giftcard = $this->getObjectManager()->get(Giftcardaccount::class);
-        if (!is_null($code)) {
+        if ($code !== null) {
             $giftcard->loadByCode($code);
         }
         return $giftcard;
@@ -38,7 +38,7 @@ abstract class AbstractGiftCardCommand extends AbstractMagentoCommand
      */
     public function setAdminArea()
     {
-        $appState = $this->getObjectManager()->get('Magento\Framework\App\State');
+        $appState = $this->getObjectManager()->get(\Magento\Framework\App\State::class);
         $appState->setAreaCode('adminhtml');
     }
 }

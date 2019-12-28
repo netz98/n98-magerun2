@@ -16,7 +16,7 @@ class ConfigBag extends \ArrayObject
      */
     public function setBool($key, $value)
     {
-        if (!is_null($value) && !is_bool($value)) {
+        if ($value !== null && !is_bool($value)) {
             throw new \InvalidArgumentException('Type must be of type bool');
         }
         $this->offsetSet($key, (bool) $value);
@@ -32,7 +32,7 @@ class ConfigBag extends \ArrayObject
      */
     public function setInt($key, $value)
     {
-        if (!is_null($value) && !is_int($value)) {
+        if ($value !== null && !is_int($value)) {
             throw new \InvalidArgumentException('Type must be of type int');
         }
         $this->offsetSet($key, (int) $value);
@@ -48,7 +48,7 @@ class ConfigBag extends \ArrayObject
      */
     public function setString($key, $value)
     {
-        if (!is_null($value) && !is_string($value)) {
+        if ($value !== null && !is_string($value)) {
             throw new \InvalidArgumentException('Type must be of type string');
         }
         $this->offsetSet($key, (string) $value);
@@ -64,7 +64,7 @@ class ConfigBag extends \ArrayObject
      */
     public function setFloat($key, $value)
     {
-        if (!is_null($value) && !is_float($value)) {
+        if ($value !== null && !is_float($value)) {
             throw new \InvalidArgumentException('Type must be of type float');
         }
         $this->offsetSet($key, (float) $value);
@@ -95,7 +95,7 @@ class ConfigBag extends \ArrayObject
      */
     public function setObject($key, $value)
     {
-        if (!is_null($value) && !is_object($value)) {
+        if ($value !== null && !is_object($value)) {
             throw new \InvalidArgumentException('Type must be of type object');
         }
 
