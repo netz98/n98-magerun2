@@ -4,17 +4,18 @@ RECENT CHANGES
 4.0.0
 -----
 
+- New: New commands to handle webapi integrations (by Christian Münch) 
+- New: Removed official support for Magento 2.2 and Magento 2.1 
+- Add: roave/security-advisories component for a better security
+- Add: Magento 2.3.3 in installer (by Christian Münch) 
+- Add: #503: Captainhook suppport (by Christian Münch)
+- Add: #501: Strip B2B quotes as part of @quotes alias (by Dan Wallis)
+- Imp: Match Magento Code Style (v2.2.10)
 - Imp: Update Symfony Components to 4.4
 - Imp: Update PHPUnit to 6.5
 - Imp: Update php-cs-fixer to 2.16
-- New: Removed official support for Magento 2.2 and Magento 2.1 
-- Add: roave/security-advisories component for a better security
-- Imp: Match Magento Code Style (v2.2.10)
-- Add: Magento 2.3.3 in installer (by Christian Münch) 
 - Imp: #504: Enable PHP 7.3 for travis builds (by Christian Münch)
-- Add: #503: Captainhook suppport (by Christian Münch)
-- Imp: #492: Update readme (by operator888)
-- Add: #501: Strip B2B quotes as part of @quotes alias (by Dan Wallis) 
+- Imp: #492: Update readme (by operator888) 
 - Fix: Composer package naming
 - Fix: #490: Wildcard matching of db:dump command (by Dan Wallis)
 
