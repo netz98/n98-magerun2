@@ -3,6 +3,7 @@
 namespace N98\Magento\Command\System\Cron;
 
 use N98\Magento\Command\AbstractMagentoCommand;
+use Symfony\Component\Console\Exception\RuntimeException;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -203,7 +204,7 @@ abstract class AbstractCronCommand extends AbstractMagentoCommand
         $model = $this->getObjectManager()->get($jobConfig['instance']);
 
         if (!$model || !is_callable([$model, $jobConfig['method']])) {
-            throw new \RuntimeException(
+            throw new RuntimeException(
                 sprintf(
                     'Invalid callback: %s::%s does not exist',
                     $jobConfig['instance'],

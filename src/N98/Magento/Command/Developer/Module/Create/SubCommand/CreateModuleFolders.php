@@ -3,6 +3,7 @@
 namespace N98\Magento\Command\Developer\Module\Create\SubCommand;
 
 use N98\Magento\Command\SubCommand\AbstractSubCommand;
+use Symfony\Component\Console\Exception\RuntimeException;
 
 /**
  * Class CreateModuleFolders
@@ -20,7 +21,7 @@ class CreateModuleFolders extends AbstractSubCommand
         if ($config->getBool('isModmanMode')) {
             $modManDir = sprintf('%s_%s/src', $config->getString('vendorNamespace'), $config->getString('moduleName'));
             if (file_exists($modManDir)) {
-                throw new \RuntimeException('Module already exists. Stop.');
+                throw new RuntimeException('Module already exists. Stop.');
             }
             mkdir($modManDir, 0777, true);
             $config->setString('magentoRootFolder', './' . $modManDir);

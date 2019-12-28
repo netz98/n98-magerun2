@@ -9,7 +9,7 @@ use Magento\Store\Model\Store;
 use N98\Util\Console\Helper\ParameterHelper;
 use N98\Util\Exec;
 use N98\Util\OperatingSystem;
-use RuntimeException;
+use Symfony\Component\Console\Exception\RuntimeException;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;

@@ -15,6 +15,7 @@ use N98\Magento\Command\SubCommand\SubCommandFactory;
 use N98\Util\Console\Helper\InjectionHelper;
 use N98\Util\Console\Helper\MagentoHelper;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Exception\RuntimeException;
 use Symfony\Component\Console\Helper\FormatterHelper;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -167,7 +168,7 @@ abstract class AbstractMagentoCommand extends Command
             return;
         }
 
-        throw new \RuntimeException('Magento folder could not be detected');
+        throw new RuntimeException('Magento folder could not be detected');
     }
 
     /**

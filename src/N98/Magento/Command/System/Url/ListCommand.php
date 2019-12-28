@@ -8,6 +8,7 @@ use Magento\Sitemap\Model\ResourceModel\Cms\Page;
 use Magento\Store\Model\StoreManager;
 use Magento\Store\Model\StoreManagerInterface;
 use N98\Magento\Command\AbstractMagentoCommand;
+use Symfony\Component\Console\Exception\RuntimeException;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -116,7 +117,7 @@ HELP;
             try {
                 $currentStore = $this->storeManager->getStore($storeId);
             } catch (\Exception $e) {
-                throw new \RuntimeException("Store with id {$storeId} doesn´t exist");
+                throw new RuntimeException("Store with id {$storeId} doesn´t exist");
             }
 
             // base url
