@@ -181,6 +181,8 @@ Global config parameters:
 $ n98-magerun2.phar open-browser [store]
 ```
 
+---
+
 ### Customer Info
 
 Loads basic customer info by email address.
@@ -228,6 +230,8 @@ $ n98-magerun2.phar customer:change-password [email] [password] [website]
 $ n98-magerun2.phar customer:token:create <email>
 ```
 
+---
+
 ### Magento Installer
 
 -   Downloads Composer (if not already installed)
@@ -258,6 +262,8 @@ $ n98-magerun2.phar install --dbHost="localhost" --dbUser="mydbuser" --dbPass="m
 Additionally, with \--noDownload option you can install Magento working
 copy already stored in \--installationFolder on the given database.
 
+---
+
 ### Magento system info
 
 Provides info like the edition and version or the configured cache
@@ -266,6 +272,8 @@ backends.
 ``` {.sh}
 $ n98-magerun2.phar sys:info
 ```
+
+---
 
 ### Magento Stores
 
@@ -283,6 +291,8 @@ Lists all websites.
 $ n98-magerun2.phar sys:website:list [--format[="..."]]
 ```
 
+---
+
 ### Set Config
 
 ``` {.sh}
@@ -291,14 +301,15 @@ $ n98-magerun2.phar config:store:set [--scope[="..."]] [--scope-id[="..."]] [--e
 
 Arguments:
 
-:   path The config path value The config value
+path - The config path value The config value
 
 Options:
 
-:   \--scope The config value\'s scope (default: \"default\" \| Can be
-    \"default\", \"websites\", \"stores\") \--scope-id The config
-    value\'s scope ID (default: \"0\") \--encrypt Encrypt the config
-    value using crypt key
+| Option      | Description                                                                            |
+| ----------- | -------------------------------------------------------------------------------------- |
+| --scope     | The config value's scope (default: "default"). Can be "default", "websites", "stores") |
+| --scope-id  | The config value\'s scope ID (default: "0")                                            |
+| --encrypt   | Encrypt the config value using crypt key                                               |
 
 ### Get Config
 
@@ -308,20 +319,23 @@ $ n98-magerun2.phar config:store:get [--scope="..."] [--scope-id="..."] [--decry
 
 Arguments:
 
-:   path The config path
+path - The config path
 
 Options:
 
-:   \--scope The config value\'s scope (default, websites, stores)
-    \--scope-id The config value\'s scope ID \--decrypt Decrypt the
-    config value using crypt key defined in env.php \--update-script
-    Output as update script lines \--magerun-script Output for usage
-    with config:store:set \--format Output as json, xml or csv
+| Option      | Description                                                                            |
+| ----------- | -------------------------------------------------------------------------------------- |
+| --scope     | The config value's scope (default, websites, stores)                                   |
+| --scope-id  | The config value's scope ID                                                            |
+| --decrypt   | Decrypt the config value using crypt key defined in env.php                            |
+| --decrypt   |                                                                                        |
+| --update-script | Output as update script lines |
+| --magerun-script | Output for usage with config:store:set |
+| --format    | Output as json, xml or csv | 
 
 Help:
 
-:   If path is not set, all available config items will be listed. path
-    may contain wildcards (\*)
+If path is not set, all available config items will be listed. path may contain wildcards (\*)
 
 Example:
 
@@ -337,13 +351,15 @@ $ n98-magerun2.phar config:store:delete [--scope[="..."]] [--scope-id[="..."]] [
 
 Arguments:
 
-:   path The config path
+- path - The config path
 
 Options:
 
-:   \--scope The config scope (default, websites, stores) \--scope-id
-    The config value\'s scope ID \--all Deletes all entries of a path
-    (ignores \--scope and \--scope-id)
+| Option      | Description                                                                            |
+| ----------- | -------------------------------------------------------------------------------------- |
+| --scope     | The config value's scope (default, websites, stores)                                   |
+| --scope-id  | The config value's scope ID                                                            |
+| --all       | Delete all entries by path                                                             | 
 
 ### Display ACL Tree
 
@@ -353,7 +369,7 @@ $ n98-magerun2.phar config:data:acl
 
 Help:
 
-:   Prints acl.xml data as table
+Prints acl.xml data as table
 
 ### Print Dependency Injection Config Data
 
@@ -363,12 +379,15 @@ $ n98-magerun2.phar config:data:di <type>
 
 Arguments:
 
-:   type Type (class)
+- type - Type (class)
 
 Options:
 
-:   \--scope (-s) Config scope (global, adminhtml, frontend,
-    webapi\_rest, webapi\_soap, \...) (default: \"global\")
+| Option      | Description                                                                                   |
+| ----------- | --------------------------------------------------------------------------------------------- |
+| --scope -s  | Config scope (global, adminhtml, frontend, webapi_rest, webapi_soap, ...) (default: "global") |
+
+---
 
 ### List Magento cache status
 
@@ -427,6 +446,8 @@ If no code is specified, all cache types will be disabled. Run
 $ n98-magerun2.phar cache:enable [code]
 ```
 
+---
+
 If no code is specified, all cache types will be enabled. Run
 [cache:list]{.title-ref} command to see all codes.
 
@@ -459,6 +480,8 @@ force parameter \"-f\" is omitted you will be prompted for confirmation.
 $ n98-magerun2.phar admin:token:create <username>
 ```
 
+---
+
 ### Dump database
 
 Dumps configured Magento database with [mysqldump]{.title-ref}.
@@ -471,58 +494,21 @@ Dumps configured Magento database with [mysqldump]{.title-ref}.
 
 **Options**
 
-> \--add-time
->
-> :   Adds time to filename (only if filename was not provided)
->
-> \--compression (-c)
->
-> :   Compress the dump file using one of the supported algorithms
->
-> \--only-command
->
-> :   Print only mysqldump command. Do not execute
->
-> \--print-only-filename
->
-> :   Execute and prints not output except the dump filename
->
-> \--dry-run
->
-> :   Do everything but the actual dump
->
-> \--no-single-transaction
->
-> :   Do not use single-transaction (not recommended, this is blocking)
->
-> \--human-readable
->
-> :   Use a single insert with column names per row.
->
-> \--git-friendly
->
-> :   Use one insert statement, but with line breaks instead of separate
->     insert statements.
->
-> \--add-routines
->
-> :   Include stored routines in dump (procedures & functions).
->
-> \--stdout
->
-> :   Dump to stdout
->
-> \--strip
->
-> :   Tables to strip (dump only structure of those tables)
->
-> \--exclude
->
-> :   Tables to exclude entirely from the dump (including structure)
->
-> \--force (-f)
->
-> :   Do not prompt if all options are defined
+| Option                  | Description                                                                           |
+| ------------------------| --------------------------------------------------------------------------------------|
+| --add-time              | Adds time to filename (only if filename was not provided)                             |
+| --compression (-c)      | Compress the dump file using one of the supported algorithms                          |
+| --only-command          | Print only mysqldump command. Does not execute.                                       |
+| --print-only-filename   | Execute and prints not output except the dump filename                                |
+| --dry-run               | Do everything but the actual dump. Useful to test.                                    |
+| --no-single-transaction | Do not use single-transaction (not recommended, this is blocking)                     |
+| --human-readable        | Use a single insert with column names per row.                                        |
+| --git-friendly          | Use one insert statement, but with line breaks instead of separate insert statements. |
+| --add-routines          | Include stored routines in dump (procedures & functions).                             |
+| --stdout                | Dump to stdout                                                                        |
+| --strip                 | Tables to strip (dump only structure of those tables)                                 |
+| --exclude               | Tables to exclude entirely from the dump (including structure)                        |
+| --force (-f)            | Do not prompt if all options are defined                                              |
 
 ``` {.sh}
 $ n98-magerun2.phar db:dump
@@ -581,6 +567,8 @@ Available Table Groups:
 -   \@trade Current trade data (customers, orders and quotes). You
     usually do not want those in developer systems.
 
+---
+
 ### Clear static view files
 
 ``` {.sh}
@@ -603,6 +591,8 @@ To clear assets for specific theme(s) only:
 $ n98-magerun2.phar dev:asset:clear --theme=Magento/luma
 ```
 
+---
+
 ### EAV Attributes
 
 View the data for a particular attribute:
@@ -610,6 +600,8 @@ View the data for a particular attribute:
 ``` {.sh}
 $ n98-magerun2.phar eav:attribute:view [--format[="..."]] entityType attributeCode
 ```
+
+---
 
 ### Generate Gift Card Pool
 
@@ -642,6 +634,8 @@ $ n98-magerun2.phar giftcard:info [--format[="..."]] [code]
 $ n98-magerun2.phar giftcard:remove [code]
 ```
 
+---
+
 ### Compare Setup Versions
 
 Compares module version with saved setup version in
@@ -665,6 +659,8 @@ would have to alter the row in the database manually.
 $ n98-magerun2.phar sys:setup:change-version module version
 ```
 
+---
+
 ### Downgrade Setup Versions
 
 Downgrade the versions in the database to the module version from its
@@ -675,6 +671,8 @@ between module version changes.
 $ n98-magerun2.phar sys:setup:downgrade-versions
 ```
 
+---
+
 ### Dump Media folder
 
 Creates a ZIP archive with media folder content.
@@ -682,6 +680,60 @@ Creates a ZIP archive with media folder content.
 ``` {.sh}
 $ n98-magerun2.phar media:dump [--strip] [filename]
 ```
+---
+
+### Integrations (Webapi Access Tokens)
+
+There are four commands to create, show, list, delete integrations (access tokens).
+This commands are very useful for developers.
+
+#### List all existing integrations
+
+``` {.sh}
+$ n98-magerun2.phar integration:list
+```
+
+#### Create a new integration
+
+``` {.sh}
+$ n98-magerun2.phar integration:create [options] [--] <name> <email> <endpoint>
+```
+
+Options:
+
+| Option                                     | Description                           |
+| -------------------------------------------| --------------------------------------|
+| --consumer-key=CONSUMER-KEY                | Consumer Key (length 32 chars)        |
+| --consumer-secret=CONSUMER-SECRET          | Consumer Secret (length 32 chars)     |
+| --access-token=ACCESS-TOKEN                | Access-Token (length 32 chars)        |
+| --access-token-secret=ACCESS-TOKEN-SECRET  | Access-Token Secret (length 32 chars) |
+| --resource=RESOURCE -r                     | Defines a granted ACL resource (multiple values allowed) |
+
+If no ACL resource is defined the new integration token will be created with FULL ACCESS.
+
+If you do not want that, please provide a list of ACL resources by using the `--resource` option.
+
+Example:
+
+``` {.sh}
+$ n98-magerun2.phar integration:create "My new integration 10" foo@example.com https://example.com -r Magento_Catalog::catalog_inventory -r Magento_Backend::system_other_settings
+```
+
+To see all available ACL resources, please run the command `config:data:acl`.
+
+#### Show infos about existing integration
+
+``` {.sh}
+$ n98-magerun2.phar integration:show <name_or_id>
+```
+
+#### Delete integration
+
+``` {.sh}
+$ n98-magerun2.phar integration:delete <name_or_id>
+```
+
+---
 
 ### Interactive Development Console
 
