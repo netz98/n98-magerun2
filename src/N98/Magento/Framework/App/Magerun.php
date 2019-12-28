@@ -42,7 +42,7 @@ class Magerun implements \Magento\Framework\AppInterface
          * this might even extend to bootstrapping the application as it configures
          * the ObjectManager:
          *
-         * @see \N98\Magento\Application::_initMagento2()
+         * @see \N98\Magento\Application::initMagento()
          */
         return null;
     }
