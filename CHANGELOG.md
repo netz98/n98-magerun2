@@ -5,7 +5,7 @@ RECENT CHANGES
 -----
 
 - New: New commands to handle webapi integrations (by Christian Münch)
-- New: #497: Add "area" option to dev:console 
+- New: #374: Add "area" option to dev:console 
 - New: Removed official support for Magento 2.2 and Magento 2.1 
 - Add: roave/security-advisories component for a better security
 - Add: Magento 2.3.3 in installer (by Christian Münch) 
