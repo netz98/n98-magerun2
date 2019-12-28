@@ -108,6 +108,7 @@ class MaintenanceCommand extends AbstractMagentoCommand
      * @param OutputInterface $output
      * @param null $onOption
      * @throws \Magento\Framework\Exception\FileSystemException
+     * @throws \Magento\Framework\Exception\ValidatorException
      */
     protected function handleEnable(
         \Magento\Framework\Filesystem\Directory\Write $flagDir,
@@ -117,7 +118,7 @@ class MaintenanceCommand extends AbstractMagentoCommand
         $flagDir->touch(MaintenanceMode::FLAG_FILENAME);
         $output->writeln(self::ENABLED_MESSAGE);
 
-        if (!is_null($onOption)) {
+        if ($onOption !== null) {
             // Write IPs to exclusion file
             $flagDir->writeFile(MaintenanceMode::IP_FILENAME, $onOption);
             $output->writeln(self::WROTE_IP_MESSAGE);

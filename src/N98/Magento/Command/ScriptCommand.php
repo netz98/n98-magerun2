@@ -378,7 +378,7 @@ HELP;
      */
     private function getProductMetadata()
     {
-        if (is_null($this->productMetadata)) {
+        if ($this->productMetadata === null) {
             $this->initMagento(); // obtaining the object-manager requires init Magento
             $objectManager = $this->getApplication()->getObjectManager();
             $this->productMetadata = $objectManager->get('\Magento\Framework\App\ProductMetadata');

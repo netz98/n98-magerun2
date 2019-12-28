@@ -149,7 +149,7 @@ HELP;
     {
         $this->commandConfig = $this->getCommandConfig();
 
-        if (is_null($this->tableDefinitions)) {
+        if ($this->tableDefinitions === null) {
             /* @var $dbHelper DatabaseHelper */
             $dbHelper = $this->getHelper('database');
 

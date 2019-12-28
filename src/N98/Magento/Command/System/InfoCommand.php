@@ -116,7 +116,7 @@ class InfoCommand extends AbstractMagentoCommand
 
     public function getInfo($key = null)
     {
-        if (is_null($key)) {
+        if ($key === null) {
             return $this->infos;
         }
 
