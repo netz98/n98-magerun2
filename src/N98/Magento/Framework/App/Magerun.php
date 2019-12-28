@@ -4,8 +4,12 @@ namespace N98\Magento\Framework\App;
 
 use Magento\Framework\App\Bootstrap;
 use Magento\Framework\ObjectManagerInterface;
-use RuntimeException;
+use Symfony\Component\Console\Exception\RuntimeException;
 
+/**
+ * Class Magerun
+ * @package N98\Magento\Framework\App
+ */
 class Magerun implements \Magento\Framework\AppInterface
 {
     /**

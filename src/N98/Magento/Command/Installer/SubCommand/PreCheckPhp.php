@@ -5,6 +5,7 @@
 namespace N98\Magento\Command\Installer\SubCommand;
 
 use N98\Magento\Command\SubCommand\AbstractSubCommand;
+use Symfony\Component\Console\Exception\RuntimeException;
 
 /**
  * Class PreCheckPhp
@@ -37,7 +38,7 @@ class PreCheckPhp extends AbstractSubCommand
         }
 
         if (count($missingExtensions) > 0) {
-            throw new \RuntimeException(
+            throw new RuntimeException(
                 'The following PHP extensions are required to start installation: ' . implode(',', $missingExtensions)
             );
         }
@@ -56,7 +57,7 @@ class PreCheckPhp extends AbstractSubCommand
             $errorMessage = 'Please change PHP ini setting "xdebug.max_nesting_level". '
                             . 'Please change it to a value >= 200. '
                             . 'Your current value is ' . \ini_get('xdebug.max_nesting_level');
-            throw new \RuntimeException($errorMessage);
+            throw new RuntimeException($errorMessage);
         }
     }
 }

@@ -6,7 +6,7 @@ use Exception;
 use N98\Magento\Command\SubCommand\AbstractSubCommand;
 use N98\Util\Exec;
 use N98\Util\OperatingSystem;
-use RuntimeException;
+use Symfony\Component\Console\Exception\RuntimeException;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
@@ -284,7 +284,7 @@ class InstallMagento extends AbstractSubCommand
         $defaultSessionFolder = $this->config->getString('installationFolder') . '/var/session';
         if ($sessionSave == 'files' && !is_dir($defaultSessionFolder)) {
             if (!mkdir($defaultSessionFolder) && !is_dir($defaultSessionFolder)) {
-                throw new \RuntimeException(sprintf('Directory "%s" was not created', $defaultSessionFolder));
+                throw new RuntimeException(sprintf('Directory "%s" was not created', $defaultSessionFolder));
             }
         }
     }
@@ -296,7 +296,7 @@ class InstallMagento extends AbstractSubCommand
     {
         $dbHost = $this->config->getString('db_host');
 
-        if ($this->config->getInt('db_port') != 3306) {
+        if ($this->config->getInt('db_port') !== 3306) {
             $dbHost .= ':' . (string)$this->config->getInt('db_port');
 
             return $dbHost;

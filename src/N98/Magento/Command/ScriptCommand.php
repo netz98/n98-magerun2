@@ -3,7 +3,7 @@
 namespace N98\Magento\Command;
 
 use N98\Util\BinaryString;
-use RuntimeException;
+use Symfony\Component\Console\Exception\RuntimeException;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
