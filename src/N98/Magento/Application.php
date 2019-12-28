@@ -14,7 +14,6 @@ use N98\Magento\Application\DetectionResult;
 use N98\Magento\Application\Magento1Initializer;
 use N98\Magento\Application\Magento2Initializer;
 use N98\Magento\Application\MagentoDetector;
-use N98\Magento\Application\VarDirectoryChecker;
 use N98\Util\Console\Helper\TwigHelper;
 use Symfony\Component\Console\Application as BaseApplication;
 use Symfony\Component\Console\Command\Command;
@@ -218,12 +217,6 @@ class Application extends BaseApplication
     public function doRun(InputInterface $input, OutputInterface $output)
     {
         $input = $this->config->checkConfigCommandAlias($input);
-
-        if ($output instanceof ConsoleOutput) {
-            $this->initMagento();
-            $varDirectoryChecker = new VarDirectoryChecker();
-            $varDirectoryChecker->check($output->getErrorOutput());
-        }
 
         $event = new ConsoleEvent(null, $input, $output);
         $this->dispatcher->dispatch(Events::RUN_BEFORE, $event);
