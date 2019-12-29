@@ -218,9 +218,7 @@ class Application extends BaseApplication
     {
         $input = $this->config->checkConfigCommandAlias($input);
 
-        $this->autoloader->loadClass(ConsoleEvent::class);
-
-        $event = new ConsoleEvent(null, $input, $output);
+        $event = new ConsoleEvent(new \N98\Magento\Command\DummyCommand(), $input, $output);
         $this->dispatcher->dispatch($event, Events::RUN_BEFORE);
 
         return parent::doRun($input, $output);
