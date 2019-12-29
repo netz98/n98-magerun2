@@ -132,11 +132,22 @@ class ConsoleCommand extends AbstractMagentoCommand
             $edition = $this->productMeta->getEdition();
             $magentoVersion = $this->productMeta->getVersion();
 
-            $consoleOutput->writeln(
-                '<fg=black;bg=green>Magento ' . $magentoVersion . ' ' . $edition . ' initialized. ' . $ok
-                . '</fg=black;bg=green>' . "\n" . '<fg=black;bg=green>Area: '
-                . $this->appState->getAreaCode() . '</fg=black;bg=green>'
+            $statusMessage = sprintf(
+                '<fg=black;bg=green>Magento %s %s initialized %s</fg=black;bg=green>',
+                $magentoVersion,
+                $edition,
+                $ok
             );
+
+            $consoleOutput->writeln($statusMessage);
+
+            if ($areaToLoad) {
+                $areaMessage = sprintf(
+                    '<fg=black;bg=white>Area: %s</fg=black;bg=white>',
+                    $this->appState->getAreaCode()
+                );
+                $consoleOutput->writeln($areaMessage);
+            }
         } else {
             $consoleOutput->writeln('<fg=black;bg=yellow>Magento is not initialized.</fg=black;bg=yellow>');
         }
