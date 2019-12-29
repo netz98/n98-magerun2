@@ -5,8 +5,8 @@ RECENT CHANGES
 -----
 
 - New: New commands to handle webapi integrations (by Christian Münch)
-- New: #374: Add "area" option to dev:console
-- New: #494: Add mycli support
+- New: #374: Add "area" option to dev:console (by Christian Münch)
+- New: #494: Add mycli support (by Christian Münch)
 - Add: roave/security-advisories component for a better security
 - Add: Magento 2.3.3 in installer (by Christian Münch) 
 - Add: #503: Captainhook suppport (by Christian Münch)
@@ -18,7 +18,8 @@ RECENT CHANGES
 - Imp: #504: Enable PHP 7.3 for travis builds (by Christian Münch)
 - Imp: #492: Update readme (by operator888) 
 - Fix: Composer package naming (vfsStream)
-- Fix: #488: mcrypt is optional module in Magento 2.3
+- Fix: #488: mcrypt is optional module in Magento 2.3 (by Christian Münch)
+- Fix: #487: Downgrade versions command broken (by Christian Münch)
 - Fix: #490: Wildcard matching of db:dump command (by Dan Wallis)
 - Fix: #244: Cron Job List command sys:cron:list does not merges system config path values
 - Del: Removed official support for Magento 2.2 and Magento 2.1
