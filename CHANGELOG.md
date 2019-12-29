@@ -20,6 +20,7 @@ RECENT CHANGES
 - Fix: Composer package naming
 - Fix: #488: mcrypt is optional module in Magento 2.3
 - Fix: #490: Wildcard matching of db:dump command (by Dan Wallis)
+- Fix: #244: Cron Job List command sys:cron:list does not merges system config path values
 
 
 3.2.0

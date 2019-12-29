@@ -2,6 +2,7 @@
 
 namespace N98\Magento\Command\System\Cron;
 
+use Magento\Store\Model\ScopeInterface as ScopeInterfaceAlias;
 use N98\Magento\Command\AbstractMagentoCommand;
 use Symfony\Component\Console\Exception\RuntimeException;
 use Symfony\Component\Console\Helper\QuestionHelper;
@@ -51,6 +52,11 @@ abstract class AbstractCronCommand extends AbstractMagentoCommand
     private $dateTime;
 
     /**
+     * @var \Magento\Cron\Model\ScheduleFactory
+     */
+    private $cronScheduleFactory;
+
+    /**
      * @param \Magento\Framework\App\State $state
      * @param \Magento\Cron\Model\ConfigInterface $cronConfig
      * @param \Magento\Framework\App\ProductMetadataInterface $productMetadata
@@ -58,6 +64,7 @@ abstract class AbstractCronCommand extends AbstractMagentoCommand
      * @param \Magento\Framework\Stdlib\DateTime\DateTime $dateTime
      * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
      * @param \Magento\Cron\Model\ResourceModel\Schedule\Collection $cronScheduleCollection
+     * @param \Magento\Cron\Model\ScheduleFactory $cronSchedulFactory
      */
     public function inject(
         \Magento\Framework\App\State $state,
@@ -66,7 +73,8 @@ abstract class AbstractCronCommand extends AbstractMagentoCommand
         \Magento\Framework\Stdlib\DateTime\TimezoneInterface $timezone,
         \Magento\Framework\Stdlib\DateTime\DateTime $dateTime,
         \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
-        \Magento\Cron\Model\ResourceModel\Schedule\Collection $cronScheduleCollection
+        \Magento\Cron\Model\ResourceModel\Schedule\Collection $cronScheduleCollection,
+        \Magento\Cron\Model\ScheduleFactory $cronSchedulFactory
     ) {
         $this->state = $state;
         $this->cronConfig = $cronConfig;
@@ -75,10 +83,12 @@ abstract class AbstractCronCommand extends AbstractMagentoCommand
         $this->productMetadata = $productMetadata;
         $this->timezone = $timezone;
         $this->dateTime = $dateTime;
+        $this->cronScheduleFactory = $cronSchedulFactory;
     }
 
     /**
      * @return array
+     * @throws \Magento\Framework\Exception\CronException
      */
     protected function getJobs()
     {
@@ -89,7 +99,7 @@ abstract class AbstractCronCommand extends AbstractMagentoCommand
         foreach ($jobs as $jobGroupCode => $jobGroup) {
             foreach ($jobGroup as $jobKey => $job) {
                 $row = [
-                    'Job'   => isset($job['name']) ? $job['name'] : $jobKey,
+                    'Job'   => $job['name'] ?? $jobKey,
                     'Group' => $jobGroupCode,
                 ];
 
@@ -99,7 +109,7 @@ abstract class AbstractCronCommand extends AbstractMagentoCommand
             }
         }
 
-        usort($table, function ($a, $b) {
+        usort($table, static function ($a, $b) {
             return strcmp($a['Job'], $b['Job']);
         });
 
@@ -124,18 +134,21 @@ abstract class AbstractCronCommand extends AbstractMagentoCommand
     }
 
     /**
-     * @param array $job
+     * @param array $jobConfig
      * @return array
+     * @throws \Magento\Framework\Exception\CronException
      */
-    protected function getSchedule(array $job)
+    protected function getSchedule(array $jobConfig)
     {
-        if (isset($job['schedule'])) {
-            $expr = $job['schedule'];
+        if (isset($jobConfig['schedule'])) {
+            $expr = $this->getCronExpression($jobConfig);
+
             if ($expr == 'always') {
                 return ['m' => '*', 'h' => '*', 'D' => '*', 'M' => '*', 'WD' => '*'];
             }
 
-            $schedule = $this->getObjectManager()->create('Magento\Cron\Model\Schedule');
+            /** @var \Magento\Cron\Model\Schedule $schedule */
+            $schedule = $this->cronScheduleFactory->create();
             $schedule->setCronExpr($expr);
             $array = $schedule->getCronExprArr();
 
@@ -149,6 +162,41 @@ abstract class AbstractCronCommand extends AbstractMagentoCommand
         }
 
         return ['m' => '-', 'h' => '-', 'D' => '-', 'M' => '-', 'WD' => '-'];
+    }
+
+    /**
+     * Get cron expression of cron job.
+     *
+     * @param array $jobConfig
+     * @return null|string
+     */
+    private function getCronExpression($jobConfig)
+    {
+        $cronExpression = null;
+
+        if (isset($jobConfig['config_path'])) {
+            $cronExpression = $this->getConfigSchedule($jobConfig) ?: null;
+        }
+
+        if (!$cronExpression && isset($jobConfig['schedule'])) {
+            $cronExpression = $jobConfig['schedule'];
+        }
+
+        return $cronExpression;
+    }
+
+    /**
+     * Get config of schedule.
+     *
+     * @param array $jobConfig
+     * @return mixed
+     */
+    private function getConfigSchedule($jobConfig)
+    {
+        return $this->scopeConfig->getValue(
+            $jobConfig['config_path'],
+            ScopeInterfaceAlias::SCOPE_STORE
+        );
     }
 
     /**
