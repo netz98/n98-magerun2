@@ -62,25 +62,38 @@ HELP;
         $this->dryRun = $input->getOption('dry-run');
 
         foreach ($this->getModuleVersions() as $moduleVersion) {
-            $this->processModule($moduleVersion);
+            $this->processModule($output, $moduleVersion);
         }
     }
 
     /**
-     * @param $module
+     * @param OutputInterface $output
+     * @param ModuleVersion $module
      */
-    private function processModule(ModuleVersion $module)
+    private function processModule(OutputInterface $output, ModuleVersion $module)
     {
-        $dryRun = $this->dryRun;
+        try {
+            // db version
+            try {
+                $dbVersion = $module->getDbVersion();
+                if ($this->needsDowngrade($module, 'db', $dbVersion)) {
+                    $this->dryRun || $module->setDbVersion($module->getVersion());
+                }
+            } catch (\BadMethodCallException $e) {
+                // do not print anything
+            }
 
-        // data version
-        if ($this->needsDowngrade($module, 'data', $module->getDataVersion())) {
-            $dryRun || $module->setDataVersion($module->getVersion());
-        }
+            try {
+                $dataVersion = $module->getDataVersion();
 
-        // db version
-        if ($this->needsDowngrade($module, 'db', $module->getDbVersion())) {
-            $dryRun || $module->setDbVersion($module->getVersion());
+                if ($this->needsDowngrade($module, 'data', $dataVersion)) {
+                    $this->dryRun || $module->setDataVersion($module->getVersion());
+                }
+            } catch (\BadMethodCallException $e) {
+                // do not print anything
+            }
+        } catch (\Exception $e) {
+            $output->writeln('<error>' . $e->getMessage() . '</error>');
         }
     }
 
@@ -91,10 +104,10 @@ HELP;
      *
      * @return bool
      */
-    private function needsDowngrade(ModuleInterface $module, $what, $currentVersion)
+    private function needsDowngrade(ModuleInterface $module, $what, $currentVersion): bool
     {
         $targetVersion = $module->getVersion();
-        $needsDowngrade = 1 === version_compare($currentVersion, $targetVersion);
+        $needsDowngrade = 1 === \version_compare($currentVersion, $targetVersion);
 
         if (!$needsDowngrade) {
             return false;
