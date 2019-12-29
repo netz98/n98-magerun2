@@ -5,7 +5,8 @@ RECENT CHANGES
 -----
 
 - New: New commands to handle webapi integrations (by Christian Münch)
-- New: #374: Add "area" option to dev:console 
+- New: #374: Add "area" option to dev:console
+- New: #494: Add mycli support
 - Add: roave/security-advisories component for a better security
 - Add: Magento 2.3.3 in installer (by Christian Münch) 
 - Add: #503: Captainhook suppport (by Christian Münch)

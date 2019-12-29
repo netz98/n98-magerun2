@@ -482,6 +482,32 @@ $ n98-magerun2.phar admin:token:create <username>
 
 ---
 
+### Run a raw DB query
+
+``` {.sh}
+$ n98-magerun2.phar db:query <sql-query>
+```
+
+Example:
+
+``` {.sh}
+$ n98-magerun2.phar db:query "select * from store"
+```
+
+### Open MySQL Console
+
+``` {.sh}
+$ n98-magerun2.phar db:console [options]
+```
+
+Options:
+
+| Option                      | Description                                                                                          |
+| --------------------------- | -----------------------------------------------------------------------------------------------------|
+|--use-mycli-instead-of-mysql | Use `mycli` as the MySQL client instead of `mysql`                                                   |
+|--no-auto-rehash             | Same as `-A` option to MySQL client to turn off auto-complete (avoids long initial connection time). |
+|--connection=CONNECTION      | Select DB connection type for Magento configurations with several databases [default: "default"]     |
+
 ### Dump database
 
 Dumps configured Magento database with [mysqldump]{.title-ref}.
