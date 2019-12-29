@@ -6,6 +6,10 @@ use Composer\Autoload\ClassLoader;
 use Magento\Framework\Autoload\AutoloaderRegistry;
 use N98\Magento\Framework\App\Magerun;
 
+/**
+ * Class Magento2Initializer
+ * @package N98\Magento\Application
+ */
 class Magento2Initializer
 {
     /**

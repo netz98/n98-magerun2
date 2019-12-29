@@ -177,13 +177,15 @@ class DatabaseHelper extends AbstractHelper
         $dsn = $this->dbSettings;
 
         // don't pass the username, password, charset, database, persistent and driver_options in the DSN
-        unset($dsn['username']);
-        unset($dsn['password']);
-        unset($dsn['options']);
-        unset($dsn['charset']);
-        unset($dsn['persistent']);
-        unset($dsn['driver_options']);
-        unset($dsn['dbname']);
+        unset(
+            $dsn['username'],
+            $dsn['password'],
+            $dsn['options'],
+            $dsn['charset'],
+            $dsn['persistent'],
+            $dsn['driver_options'],
+            $dsn['dbname']
+        );
 
         // use all remaining parts in the DSN
         $buildDsn = [];
@@ -191,6 +193,7 @@ class DatabaseHelper extends AbstractHelper
             if (is_array($val)) {
                 continue;
             }
+
             $buildDsn[$key] = "$key=$val";
         }
 
@@ -337,6 +340,7 @@ class DatabaseHelper extends AbstractHelper
             if (!isset($definition['id'])) {
                 throw new RuntimeException("Invalid definition of table-groups (id missing) at index: $index");
             }
+
             $id = $definition['id'];
             if (isset($tableDefinitions[$id])) {
                 throw new RuntimeException("Invalid definition of table-groups (duplicate id) id: $id");
@@ -345,6 +349,7 @@ class DatabaseHelper extends AbstractHelper
             if (!isset($definition['tables'])) {
                 throw new RuntimeException("Invalid definition of table-groups (tables missing) id: $id");
             }
+
             $tables = $definition['tables'];
 
             if (is_string($tables)) {
@@ -355,7 +360,7 @@ class DatabaseHelper extends AbstractHelper
             }
             $tables = array_map('trim', $tables);
 
-            $description = isset($definition['description']) ? $definition['description'] : '';
+            $description = $definition['description'] ?? '';
 
             $tableDefinitions[$id] = [
                 'tables'      => $tables,
@@ -383,7 +388,7 @@ class DatabaseHelper extends AbstractHelper
 
         $resolvedList = [];
         foreach ($list as $entry) {
-            if (substr($entry, 0, 1) == '@') {
+            if (strpos($entry, '@') === 0) {
                 $code = substr($entry, 1);
                 if (!isset($definitions[$code])) {
                     throw new RuntimeException('Table-groups could not be resolved: ' . $entry);
@@ -395,6 +400,7 @@ class DatabaseHelper extends AbstractHelper
                         $definitions,
                         $resolved
                     );
+
                     $resolvedList = array_merge($resolvedList, $tables);
                 }
                 continue;
@@ -420,7 +426,7 @@ class DatabaseHelper extends AbstractHelper
                 continue;
             }
 
-            if (in_array($entry, $this->_tables)) {
+            if (in_array($entry, $this->_tables, true)) {
                 $resolvedList[] = $this->dbSettings['prefix'] . $entry;
             }
         }
