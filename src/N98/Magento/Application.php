@@ -80,7 +80,7 @@ class Application extends BaseApplication
      */
     protected $_isInitialized = false;
 
-    /**612
+    /**
      * @var EventDispatcher
      */
     protected $dispatcher;
@@ -218,8 +218,10 @@ class Application extends BaseApplication
     {
         $input = $this->config->checkConfigCommandAlias($input);
 
+        $this->autoloader->loadClass(ConsoleEvent::class);
+
         $event = new ConsoleEvent(null, $input, $output);
-        $this->dispatcher->dispatch(Events::RUN_BEFORE, $event);
+        $this->dispatcher->dispatch($event, Events::RUN_BEFORE);
 
         return parent::doRun($input, $output);
     }
