@@ -12,5 +12,4 @@ class DummyCommand extends AbstractMagentoCommand
     {
         $this->setName('dummy');
     }
-
 }
