@@ -40,11 +40,13 @@ HELP;
     {
         $this->state->setAreaCode(Area::AREA_CRONTAB);
         $objectManager = $this->getObjectManager();
-        $configLoader = $objectManager->get('Magento\Framework\ObjectManager\ConfigLoaderInterface');
+        $configLoader = $objectManager->get(\Magento\Framework\ObjectManager\ConfigLoaderInterface::class);
         $objectManager->configure($configLoader->load(Area::AREA_CRONTAB));
 
         $areaList = $objectManager->get(AreaList::class);
-        $areaList->getArea(Area::AREA_CRONTAB)->load(Area::PART_TRANSLATE);
+        $areaList->getArea(Area::AREA_CRONTAB)
+            ->load(Area::PART_CONFIG)
+            ->load(Area::PART_TRANSLATE);
 
         list($jobCode, $jobConfig, $model) = $this->getJobForExecuteMethod($input, $output);
 
@@ -61,7 +63,7 @@ HELP;
             ->save();
 
         try {
-            call_user_func([$model, $jobConfig['method']], $schedule);
+            $model->{$jobConfig['method']}($schedule);
 
             $schedule
                 ->setStatus(Schedule::STATUS_SUCCESS)
