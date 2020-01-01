@@ -1,6 +1,11 @@
 RECENT CHANGES
 ==============
 
+4.0.1
+-----
+
+- Fix: Wrong integration:command description
+
 4.0.0
 -----
 
