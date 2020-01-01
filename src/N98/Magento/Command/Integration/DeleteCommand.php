@@ -35,7 +35,7 @@ class DeleteCommand extends AbstractMagentoCommand
         $this
             ->setName('integration:delete')
             ->addArgument('name', InputArgument::REQUIRED, 'Name or ID of the integration')
-            ->setDescription('Delete details of an existing integration.');
+            ->setDescription('Delete an existing integration.');
     }
 
     public function inject(
