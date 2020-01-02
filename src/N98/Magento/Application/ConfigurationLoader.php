@@ -184,7 +184,7 @@ class ConfigurationLoader
 
             if ($systemWideConfigFile && file_exists($systemWideConfigFile)) {
                 $this->logDebug('Load system config <comment>' . $systemWideConfigFile . '</comment>');
-                $this->systemConfig = Yaml::parse($systemWideConfigFile);
+                $this->systemConfig = (array) Yaml::parse(\file_get_contents($systemWideConfigFile));
             } else {
                 $this->systemConfig = [];
             }
