@@ -5,6 +5,7 @@ RECENT CHANGES
 -----
 
 - Fix: Wrong integration:command description
+- Fix: #517: Fatal error when /etc/n98-magerun2.yaml exists
 
 4.0.0
 -----
