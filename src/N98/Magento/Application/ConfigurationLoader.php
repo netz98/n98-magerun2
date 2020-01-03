@@ -316,7 +316,7 @@ class ConfigurationLoader
      */
     public function loadProjectConfig($magentoRootFolder, $magerunStopFileFolder, array $config)
     {
-        if (empty($this->projectConfig)) {
+        if (!empty($this->projectConfig)) {
             return ArrayFunctions::mergeArrays($config, $this->projectConfig);
         }
 
