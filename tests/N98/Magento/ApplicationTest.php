@@ -123,12 +123,21 @@ class ApplicationTest extends TestCase
 
     public function testComposer()
     {
+        $magerunProjectConfig = <<<CONFIG
+foo:
+  bar:
+    magerun: "rockz!"
+CONFIG;
+
         vfsStream::setup('root');
         vfsStream::create(
             [
                 'htdocs' => [
                     'app' => [
                         'bootstrap.php' => '',
+                        'etc' => [
+                            'n98-magerun2.yaml' => $magerunProjectConfig
+                        ]
                     ],
                 ],
                 'vendor' => [
@@ -183,5 +192,19 @@ class ApplicationTest extends TestCase
 
         // Check for module command
         $this->assertInstanceOf('Acme\FooCommand', $application->find('acme:foo'));
+
+        $config = $application->getConfig();
+
+        // Check for loaded project data
+        $this->assertArraySubset(
+            [
+                'foo' => [
+                    'bar' => [
+                        'magerun' => 'rockz!'
+                    ]
+                ]
+            ],
+            $config
+        );
     }
 }

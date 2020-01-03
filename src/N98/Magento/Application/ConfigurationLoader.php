@@ -106,7 +106,7 @@ class ConfigurationLoader
      * @param bool $loadExternalConfig
      * @return array
      */
-    public function getPartialConfig($loadExternalConfig = true)
+    public function getPartialConfig($loadExternalConfig = true): array
     {
         $config = $this->initialConfig;
         $config = $this->loadDistConfig($config);

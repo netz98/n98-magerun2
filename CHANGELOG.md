@@ -4,6 +4,7 @@ RECENT CHANGES
 4.0.3
 -----
 
+- Imp: Add tests for ConfigurationLoader (by Christian Münch)
 
 4.0.2
 -----
