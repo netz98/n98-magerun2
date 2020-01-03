@@ -1,6 +1,12 @@
 RECENT CHANGES
 ==============
 
+4.0.2
+-----
+
+- Fix: #519: Fix loading `app/etc/n98-magerun.yaml` (by cmacdonald-au)
+- Imp: #518: Improved README markdown syntax (by Jeroen Vermeulen)
+
 4.0.1
 -----
 
