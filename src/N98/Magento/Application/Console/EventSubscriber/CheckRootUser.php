@@ -47,6 +47,7 @@ class CheckRootUser implements EventSubscriberInterface, ApplicationAwareInterfa
     public function checkRunningAsRootUser(ConsoleEvent $event)
     {
         $skipRootCheck = $this->_isSkipRootCheck($event->getInput());
+
         if ($skipRootCheck) {
             $this->debugWriteln($event, "Skipping root-check by '--skip-root-check' option ");
             return;
@@ -79,7 +80,7 @@ class CheckRootUser implements EventSubscriberInterface, ApplicationAwareInterfa
      * @param Event $event
      * @param string $message
      */
-    private function debugWriteln(Event $event, $message)
+    private function debugWriteln(ConsoleEvent $event, $message)
     {
         $output = $event->getOutput();
         if (OutputInterface::VERBOSITY_DEBUG <= $output->getVerbosity()) {
