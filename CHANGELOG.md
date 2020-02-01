@@ -5,6 +5,8 @@ RECENT CHANGES
 -----
 
 - Imp: Add tests for ConfigurationLoader (by Christian Münch)
+- Fix: #525: n98-magerun for magento repository (reporter YevgenK)
+- Fix: #523: --skip-root-check throws an error (reporter Tadeu Rodrigues)
 
 4.0.2
 -----
