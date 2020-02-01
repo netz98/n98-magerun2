@@ -52,7 +52,8 @@ class CheckCompatibility implements EventSubscriberInterface, ApplicationAwareIn
             $productMetadata = $objectManager->get(\Magento\Framework\App\ProductMetadataInterface::class);
 
             $currentMagentoVersion = $productMetadata->getVersion();
-            if (version_compare($currentMagentoVersion, '2.3.0', '<')) {
+
+            if ($this->isStableVersion($currentMagentoVersion) && version_compare($currentMagentoVersion, '2.3.0', '<')) {
                 $output = $event->getOutput();
                 $output->writeln([
                     '',
@@ -85,5 +86,14 @@ class CheckCompatibility implements EventSubscriberInterface, ApplicationAwareIn
     public function setApplication($application)
     {
         $this->application = $application;
+    }
+
+    /**
+     * @param string $currentMagentoVersion
+     * @return bool
+     */
+    private function isStableVersion(string $currentMagentoVersion): bool
+    {
+        return preg_match('/^\d+\.\d+\.\d+$/', $currentMagentoVersion);
     }
 }
