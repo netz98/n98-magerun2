@@ -131,7 +131,7 @@ class ConfigLocator
         }
 
         if (!is_dir($homeDirectory)) {
-            throw new RuntimeException(sprintf("Home-directory '%s' is not a directory.", $homeDirectory));
+            return $paths;
         }
 
         $basename = $this->customConfigFilename;
