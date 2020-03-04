@@ -9,7 +9,6 @@ namespace N98\Magento\Application;
 
 use InvalidArgumentException;
 use N98\Util\OperatingSystem;
-use RuntimeException;
 
 /**
  * Class ConfigLocator
