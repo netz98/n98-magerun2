@@ -694,7 +694,7 @@ class Application extends BaseApplication
      * Force to load some classes before the Magento core loads the classes
      * in a different version
      */
-    private function preloadClassesBeforeMagentoCore(): void
+    private function preloadClassesBeforeMagentoCore()
     {
         $this->autoloader->loadClass('Symfony\Component\Console\Question\Question');
     }
