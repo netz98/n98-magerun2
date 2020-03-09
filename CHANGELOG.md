@@ -1,6 +1,12 @@
 RECENT CHANGES
 ==============
 
+4.0.4
+-----
+
+- Fix: #521: admin:user:create throws Exception (by Christian Münch)
+
+
 4.0.3
 -----
 

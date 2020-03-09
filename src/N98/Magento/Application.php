@@ -42,7 +42,7 @@ class Application extends BaseApplication
     /**
      * @var string
      */
-    const APP_VERSION = '4.0.3';
+    const APP_VERSION = '4.0.4';
 
     /**
      * @var int
@@ -124,6 +124,8 @@ class Application extends BaseApplication
     {
         $this->autoloader = $autoloader;
         parent::__construct(self::APP_NAME, self::APP_VERSION);
+
+        $this->preloadClassesBeforeMagentoCore();
     }
 
     /**
@@ -686,5 +688,14 @@ class Application extends BaseApplication
         $inputDefinition->addOption($skipMagento2CoreCommands);
 
         return $inputDefinition;
+    }
+
+    /**
+     * Force to load some classes before the Magento core loads the classes
+     * in a different version
+     */
+    private function preloadClassesBeforeMagentoCore(): void
+    {
+        $this->autoloader->loadClass('Symfony\Component\Console\Question\Question');
     }
 }
