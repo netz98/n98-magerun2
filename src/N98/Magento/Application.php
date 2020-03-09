@@ -696,6 +696,8 @@ class Application extends BaseApplication
      */
     private function preloadClassesBeforeMagentoCore()
     {
-        $this->autoloader->loadClass('Symfony\Component\Console\Question\Question');
+        if ($this->autoloader instanceof ClassLoader) {
+            $this->autoloader->loadClass('Symfony\Component\Console\Question\Question');
+        }
     }
 }
