@@ -19,6 +19,7 @@ helpers:
 
 script:
   folders:
+    - /usr/share/n98-magerun2/scripts
     - /usr/local/share/n98-magerun2/scripts
 
 init:
