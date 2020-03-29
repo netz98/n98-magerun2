@@ -2,12 +2,6 @@
 
 namespace N98\Util\Template;
 
-use Twig_Environment;
-use Twig_Extension_Debug;
-use Twig_Loader_Filesystem;
-use Twig_Loader_String;
-use Twig_SimpleFilter;
-
 /**
  * Class Twig
  * @package N98\Util\Template
@@ -24,8 +18,8 @@ class Twig
      */
     public function __construct(array $baseDirs)
     {
-        $loader = new Twig_Loader_Filesystem($baseDirs);
-        $this->twigEnv = new Twig_Environment($loader, ['debug' => true]);
+        $loader = new \Twig\Loader\FilesystemLoader($baseDirs);
+        $this->twigEnv = new \Twig\Environment($loader, ['debug' => true]);
         $this->addExtensions($this->twigEnv);
         $this->addFilters($this->twigEnv);
     }
@@ -55,33 +49,34 @@ class Twig
      */
     public function renderString($string, $variables)
     {
-        $loader = new Twig_Loader_String();
-        $twig = new Twig_Environment($loader, ['debug' => true]);
+        $templates = ['runtime_template' => $string];
+        $loader = new \Twig\Loader\ArrayLoader($templates);
+        $twig = new \Twig\Environment($loader, ['debug' => true]);
         $this->addExtensions($twig);
         $this->addFilters($twig);
 
-        return $twig->render($string, $variables);
+        return $twig->render('runtime_template', $variables);
     }
 
     /**
-     * @param Twig_Environment $twig
+     * @param \Twig\Environment $twig
      */
-    protected function addFilters(Twig_Environment $twig)
+    protected function addFilters(\Twig\Environment $twig)
     {
         /**
          * cast_to_array
          */
         $twig->addFilter(
-            new Twig_SimpleFilter('cast_to_array', [$this, 'filterCastToArray'])
+            new \Twig\TwigFilter('cast_to_array', [$this, 'filterCastToArray'])
         );
     }
 
     /**
-     * @param Twig_Environment $twig
+     * @param \Twig\Environment $twig
      */
-    protected function addExtensions(Twig_Environment $twig)
+    protected function addExtensions(\Twig\Environment $twig)
     {
-        $twig->addExtension(new Twig_Extension_Debug());
+        $twig->addExtension(new \Twig\Extension\DebugExtension());
     }
 
     /**

@@ -1,7 +1,10 @@
 RECENT CHANGES
 ==============
 
-DEV
+4.0.5
+-----
+
+- Fix: #535: Twig 2.0 compatibility
 
 4.0.4
 -----
