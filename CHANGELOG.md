@@ -1,9 +1,10 @@
 RECENT CHANGES
 ==============
 
-4.0.5
+4.1.0
 -----
 
+- Imp: #538: Support Magento 2.3.4 (by Alexander Menk)
 - Fix: #535: Twig 2.0 compatibility
 
 4.0.4
