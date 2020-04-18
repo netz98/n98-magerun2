@@ -47,8 +47,6 @@ class CreateCommand extends AbstractMagentoCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->input = $input;
-        $this->output = $output;
         $questionHelper = $this->getHelperSet()->get('question');
 
         $this->detectMagento($output);

@@ -18,16 +18,6 @@ use Symfony\Component\VarDumper\Dumper\CliDumper;
  */
 class ShowCommand extends AbstractMagentoCommand
 {
-    /**
-     * @var InputInterface
-     */
-    protected $input;
-
-    /**
-     * @var OutputInterface
-     */
-    protected $output;
-
     protected function configure()
     {
         $this
@@ -50,8 +40,6 @@ class ShowCommand extends AbstractMagentoCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->input = $input;
-        $this->output = $output;
         $this->detectMagento($output);
 
         $envFilePath = $this->getApplication()->getMagentoRootFolder() . '/app/etc/env.php';

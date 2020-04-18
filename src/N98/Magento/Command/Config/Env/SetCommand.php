@@ -14,16 +14,6 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class SetCommand extends AbstractMagentoCommand
 {
-    /**
-     * @var InputInterface
-     */
-    protected $input;
-
-    /**
-     * @var OutputInterface
-     */
-    protected $output;
-
     protected function configure()
     {
         $this
@@ -42,9 +32,6 @@ class SetCommand extends AbstractMagentoCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->input = $input;
-        $this->output = $output;
-
         $this->detectMagento($output);
 
         $envFilePath = $this->getApplication()->getMagentoRootFolder() . '/app/etc/env.php';
@@ -66,9 +53,9 @@ class SetCommand extends AbstractMagentoCommand
             "<?php\n\nreturn " . EnvHelper::exportVariable($env->all()) . ";\n"
         )
         ) {
-            $this->output->writeln(sprintf('<info>Config <comment>%s</comment> successfully set to <comment>%s</comment></info>', $key, $value));
+            $output->writeln(sprintf('<info>Config <comment>%s</comment> successfully set to <comment>%s</comment></info>', $key, $value));
         } else {
-            $this->output->writeln('<error>Config value could not be set</error>');
+            $output->writeln('<error>Config value could not be set</error>');
         }
     }
 }
