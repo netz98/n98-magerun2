@@ -317,8 +317,7 @@ Examples:
 
 ```sh
 $ n98-magerun2.phar config:env:set backend.frontName mybackend
-$ n98-magerun2.phar config:env:set crypt.key DSFFDS3442343234343243d
-$ n98-magerun2.phar config:env:set crypt.key DSFFDS3442343234343243d
+$ n98-magerun2.phar config:env:set crypt.key bb5b0075303a9bb8e3d210a971674367
 $ n98-magerun2.phar config:env:set session.redis.host 192.168.1.1
 $ n98-magerun2.phar config:env:set 'x-frame-options' '*'
 ```

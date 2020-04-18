@@ -61,9 +61,9 @@ class CreateCommand extends AbstractMagentoCommand
         $envFilePath = $this->getApplication()->getMagentoRootFolder() . '/app/etc/env.php';
 
         if (file_exists($envFilePath) && $questionHelper->ask($input, $output, $updateEnvQuestion)) {
-            $envConfig = include 'app/etc/env.php';
+            $envConfig = include $envFilePath;
         } else {
-            $envConfig = include __DIR__ . '/../stubs/env.php';
+            $envConfig = include __DIR__ . '/stubs/env.php';
         }
 
         $env = new Dot($envConfig);
