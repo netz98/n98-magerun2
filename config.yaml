@@ -60,6 +60,9 @@ commands:
     - N98\Magento\Command\Cache\ListCommand
     - N98\Magento\Command\Cache\ReportCommand
     - N98\Magento\Command\Cache\ViewCommand
+    - N98\Magento\Command\Config\Env\CreateCommand
+    - N98\Magento\Command\Config\Env\ShowCommand
+    - N98\Magento\Command\Config\Env\SetCommand
     - N98\Magento\Command\Config\Store\DeleteCommand
     - N98\Magento\Command\Config\Store\GetCommand
     - N98\Magento\Command\Config\Store\SetCommand

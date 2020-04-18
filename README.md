@@ -292,7 +292,58 @@ $ n98-magerun2.phar sys:website:list [--format[="..."]]
 
 ---
 
-### Set Config
+### Create app/etc/env.php
+
+Create env file interactively.
+If can also update existing files.
+To update a single value you can use the command `config:env:set`.
+
+```sh
+$ n98-magerun2.phar config:env:create
+```
+
+### Set single value in env.php file
+
+Set a single value in env.php by providing a key and an optional value.
+The command will save an empty string as default value if no value is set.
+
+Sub-arrays in config.php can be specified by adding a "." character to every array. 
+
+```sh
+$ n98-magerun2.phar config:env:set <key> [<value>]
+```
+
+Examples:
+
+```sh
+$ n98-magerun2.phar config:env:set backend.frontName mybackend
+$ n98-magerun2.phar config:env:set crypt.key DSFFDS3442343234343243d
+$ n98-magerun2.phar config:env:set crypt.key DSFFDS3442343234343243d
+$ n98-magerun2.phar config:env:set session.redis.host 192.168.1.1
+$ n98-magerun2.phar config:env:set 'x-frame-options' '*'
+```
+
+### Show env.php settings
+
+```sh
+$ n98-magerun2.phar config:env:show config:env:show [options] [<key>]
+```
+
+If no key is passed, the whole content of the file is displayed as table.
+
+Examples:
+
+```sh
+$ n98-magerun2.phar config:env:show  # whole content
+$ n98-magerun2.phar config:env:show backend.frontName
+$ n98-magerun2.phar config:env:show --format=json
+$ n98-magerun2.phar config:env:show --format=csv
+$ n98-magerun2.phar config:env:show --format=xml
+```
+
+---
+
+### Set Store Config
 
 ```sh
 $ n98-magerun2.phar config:store:set [--scope[="..."]] [--scope-id[="..."]] [--encrypt] path value
@@ -310,7 +361,7 @@ $ n98-magerun2.phar config:store:set [--scope[="..."]] [--scope-id[="..."]] [--e
 | `--scope-id`  | The config value's scope ID (default: `0`)                                             |
 | `--encrypt`   | Encrypt the config value using crypt key                                               |
 
-### Get Config
+### Get Store Config
 
 ```sh
 $ n98-magerun2.phar config:store:get [--scope="..."] [--scope-id="..."] [--decrypt] [--format[="..."]] [path]
@@ -341,7 +392,7 @@ If path is not set, all available config items will be listed. path may contain 
 $ n98-magerun2.phar config:store:get web/* --magerun-script
 ```
 
-### Delete Config
+### Delete Store Config
 
 ```sh
 $ n98-magerun2.phar config:store:delete [--scope[="..."]] [--scope-id[="..."]] [--all] path
