@@ -29,6 +29,7 @@
         "ext-json": "*",
         "ext-posix": "*",
         "ext-zip": "*",
+        "adbario/php-dot-notation": "^2.2",
         "composer/composer": "~1.9.1",
         "fzaninotto/faker": "~1.4",
         "n98/junit-xml": "~1.0",

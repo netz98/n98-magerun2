@@ -4,6 +4,7 @@ RECENT CHANGES
 4.1.0
 -----
 
+- New: Three new commands (config:env:create, config:env:show, config:env:set) (by Peter Jaap Blaakmeer)  
 - Imp: #538: Support Magento 2.3.4 (by Alexander Menk)
 - Fix: #535: Twig 2.0 compatibility
 
