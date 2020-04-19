@@ -6,6 +6,7 @@ RECENT CHANGES
 
 - New: Three new commands (config:env:create, config:env:show, config:env:set) (by Peter Jaap Blaakmeer)  
 - Imp: #538: Support Magento 2.3.4 (by Alexander Menk)
+- Imp: Update Composer to 1.10.5
 - Fix: #535: Twig 2.0 compatibility
 
 4.0.4
