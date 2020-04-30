@@ -42,6 +42,10 @@ class CheckCompatibility implements EventSubscriberInterface, ApplicationAwareIn
      */
     public function checkCompatibility(ConsoleEvent $event)
     {
+        if ($event->getInput()->hasParameterOption('--skip-magento-compatibility-check')) {
+            return;
+        }
+
         try {
             $this->application->initMagento(true);
             $objectManager = $this->application->getObjectManager();
