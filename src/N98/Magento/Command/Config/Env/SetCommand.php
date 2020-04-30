@@ -46,16 +46,22 @@ class SetCommand extends AbstractMagentoCommand
         $key = $input->getArgument('key');
         $value = $input->getArgument('value');
 
+        $checksumBefore = sha1($env->toJson());
         $env->set($key, $value);
+        $checksumAfter = sha1($env->toJson());
 
-        if (@file_put_contents(
-            $envFilePath,
-            "<?php\n\nreturn " . EnvHelper::exportVariable($env->all()) . ";\n"
-        )
-        ) {
-            $output->writeln(sprintf('<info>Config <comment>%s</comment> successfully set to <comment>%s</comment></info>', $key, $value));
+        if ($checksumBefore !== $checksumAfter) {
+            if (@file_put_contents(
+                $envFilePath,
+                "<?php\n\nreturn " . EnvHelper::exportVariable($env->all()) . ";\n"
+            )
+            ) {
+                $output->writeln(sprintf('<info>Config <comment>%s</comment> successfully set to <comment>%s</comment></info>', $key, $value));
+            } else {
+                $output->writeln('<error>Config value could not be set</error>');
+            }
         } else {
-            $output->writeln('<error>Config value could not be set</error>');
+            $output->writeln('<info>Config was already set</info>');
         }
     }
 }
