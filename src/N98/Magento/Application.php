@@ -687,6 +687,17 @@ class Application extends BaseApplication
         );
         $inputDefinition->addOption($skipMagento2CoreCommands);
 
+        /**
+         * Skip Magento compatibility check
+         */
+        $skipMagentoCompatibilityCheck = new InputOption(
+            '--skip-magento-compatibility-check',
+            '',
+            InputOption::VALUE_NONE,
+            'Do not check for Magento version compatibility'
+        );
+        $inputDefinition->addOption($skipMagentoCompatibilityCheck);
+
         return $inputDefinition;
     }
 
