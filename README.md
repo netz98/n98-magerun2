@@ -168,13 +168,13 @@ $ php n98-magerun2.phar list
 
 Global config parameters:
 
-| Parameter                      | Description                                 |
-| -------------------------------| --------------------------------------------|
-| `--root-dir`                   | Force Magento root dir. No auto detection.  |
-| `--skip-config`                | Do not load any custom config.              |
-| `--skip-root-check`            | Do not check if n98-magerun2 runs as root.  |
-| `--skip-core-commands`         | Do not include Magento commands.            |
-| `--skip-magento-compatibility` | Do not check Magento version compatibility. |
+| Parameter                            | Description                                 |
+| -------------------------------------| --------------------------------------------|
+| `--root-dir`                         | Force Magento root dir. No auto detection.  |
+| `--skip-config`                      | Do not load any custom config.              |
+| `--skip-root-check`                  | Do not check if n98-magerun2 runs as root.  |
+| `--skip-core-commands`               | Do not include Magento commands.            |
+| `--skip-magento-compatibility-check` | Do not check Magento version compatibility. |
 
 ### Open Shop in Browser
 
