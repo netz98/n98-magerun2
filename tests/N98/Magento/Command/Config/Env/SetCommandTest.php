@@ -37,7 +37,7 @@ class SetCommandTest extends TestCase
         );
     }
 
-    public function dataProvider()
+    public function dataProvider(): array
     {
         return [
             ['0'],
