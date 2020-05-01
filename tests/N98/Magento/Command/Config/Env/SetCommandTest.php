@@ -10,18 +10,41 @@ use N98\Magento\Command\TestCase;
  */
 class SetCommandTest extends TestCase
 {
-    public function testExecute()
+    /**
+     * @dataProvider dataProvider
+     */
+    public function testExecute($value)
     {
-        /**
-         * Install date should be found
-         */
+        // Check if config gets set
         $this->assertDisplayContains(
             [
                 'command' => 'config:env:set',
                 'key' => 'magerun.test',
-                'value' => '1'
+                'value' => $value
             ],
-            'Config magerun.test successfully set to 1'
+            'Config magerun.test successfully set to ' . $value
         );
+
+        // Check for idempotency
+        $this->assertDisplayContains(
+            [
+                'command' => 'config:env:set',
+                'key' => 'magerun.test',
+                'value' => $value,
+                '--verbose' => true // Add dummy option to force different input hash
+            ],
+            'Config was already set'
+        );
+    }
+
+    public function dataProvider()
+    {
+        return [
+            ['0'],
+            ['1'],
+            ['A'],
+            ['B'],
+            ['0A1B'],
+        ];
     }
 }
