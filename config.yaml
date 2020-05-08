@@ -144,6 +144,10 @@ commands:
         description: Admin tables
         tables: admin* magento_logging_event magento_logging_event_changes
 
+      - id: oauth
+        description: OAuth tables
+        tables: oauth_*
+
       - id: log
         description: Log tables
         tables: log_url log_url_info log_visitor log_visitor_info log_visitor_online report_event report_compared_product_index report_viewed_*
@@ -213,11 +217,11 @@ commands:
 
       - id: trade
         description: Current trade data (customers and orders). You usally do not want those in developer systems.
-        tables: "@customers @sales @quotes"
+        tables: "@customers @sales @quotes @klarna"
 
       - id: development
         description: Removes logs and trade data so developers do not have to work with real customer data
-        tables: "@admin @trade @stripped @search @2fa @aggregated"
+        tables: "@admin @oauth @trade @stripped @search @2fa @aggregated"
 
       - id: ee_changelog
         description: Changelog tables of new indexer since EE 1.13
@@ -262,6 +266,10 @@ commands:
       - id: replica
         description: Replica tables
         tables: "*_replica"
+
+      - id: klarna
+        description: Klarna tables
+        tables: "klarna_*"
 
   N98\Magento\Command\Installer\InstallCommand:
     magento-packages:
