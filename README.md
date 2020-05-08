@@ -624,19 +624,27 @@ $ n98-magerun2.phar db:dump --strip="@stripped"
 
 Available Table Groups:
 
-| Table Group             | Description                                                                           |
-| ------------------------| --------------------------------------------------------------------------------------|
-| `@dotmailer`              | Dotmailer data(`email_abandoned_cart` `email_automation` `email_campaign` `email_contact`)    |
-| `@customers`              | Customer data (and company data from the B2B extension)                               |
-| `@development`            | Removes logs, sessions, trade data and admin users so developers do not have to work with real customer data or admin user accounts |
-| `@ee_changelog`           | Changelog tables of new indexer since EE 1.13                                         |
-| `@idx`                    | Tables with `_idx` suffix and index event tables                                      |
-| `@log`                    | Log tables                                                                            |
-| `@quotes`                 | Cart (quote) data and B2B quotes                                                      |
-| `@sales`                  | Sales data (orders, invoices, creditmemos etc)                                        |
-| `@search`                 | Search related tables (catalogsearch\_)                                                |
-| `@sessions`               | Database session tables                                                               |
-| `@stripped`               | Standard definition for a stripped dump (logs and sessions)                           |
+| Table Group               | Description                                                                                |
+| --------------------------| -------------------------------------------------------------------------------------------|
+| `@2fa`                    | 2FA tables. These tables are used for storing 2FA information for admin users.             |
+| `@admin`                  | Admin users, roles, sessions, etc.                                                         |
+| `@aggregated`             | Aggregated tables used for generating reports, etc.                                        |
+| `@dotmailer`              | Dotmailer data(`email_abandoned_cart` `email_automation` `email_campaign` `email_contact`).|
+| `@customers`              | Customer data (and company data from the B2B extension).                                   |
+| `@development`            | Removes logs, sessions, trade data and admin users so developers do not have to work with real customer data or admin user accounts. |
+| `@dotmailer`              | Dotmailer module tables                                                                    |
+| `@ee_changelog`           | Changelog tables of new indexer since EE 1.13                                              |
+| `@idx`                    | Tables with `_idx` suffix and index event tables                                           |
+| `@klarna`                 | Klarna tables containing information about klarna payments and their quotes/orders.        |
+| `@log`                    | Log tables                                                                                 |
+| `@newrelic_reporting`     | New Relic reporting tables. These tables provide production metric data for New Relic.     |
+| `@oauth`                  | OAuth sessions, tokens, etc.                                                               |
+| `@quotes`                 | Cart (quote) data and B2B quotes.                                                          |
+| `@replica`                | Replica tables, these are generated from Magento Staging functionality.                    |
+| `@sales`                  | Sales data (orders, invoices, creditmemos etc).                                            |
+| `@search`                 | Search related tables (catalogsearch\_).                                                   |
+| `@sessions`               | Database session tables.                                                                   |
+| `@stripped`               | Standard definition for a stripped dump (logs and sessions).                               |
 | `@trade`                  | Current trade data (customers, orders and quotes). You usually do not want those in developer systems. |
 
 ---
