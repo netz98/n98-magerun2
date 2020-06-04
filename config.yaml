@@ -158,7 +158,7 @@ commands:
 
       - id: stripped
         description: Standard definition for a stripped dump (logs, sessions, dotmailer)
-        tables: "@log @sessions @dotmailer @newrelic_reporting"
+        tables: "@log @sessions @dotmailer @newrelic_reporting @temp"
 
       - id: sales
         description: Sales data (orders, invoices, creditmemos etc)
@@ -270,6 +270,10 @@ commands:
       - id: klarna
         description: Klarna tables
         tables: "klarna_*"
+
+      - id: temp
+        description: Temporary indexer tables
+        tables: "*__temp*"
 
   N98\Magento\Command\Installer\InstallCommand:
     magento-packages:
