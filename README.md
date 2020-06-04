@@ -646,6 +646,7 @@ Available Table Groups:
 | `@sessions`               | Database session tables.                                                                   |
 | `@stripped`               | Standard definition for a stripped dump (logs and sessions).                               |
 | `@trade`                  | Current trade data (customers, orders and quotes). You usually do not want those in developer systems. |
+| `@temp`                   | Indexer __temp tables                                                                      |
 
 ---
 
