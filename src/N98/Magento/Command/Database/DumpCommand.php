@@ -250,7 +250,9 @@ HELP;
 
         $execs = $this->createExecs($input, $output);
 
-        $this->runExecs($execs, $input, $output);
+        $success = $this->runExecs($execs, $input, $output);
+
+        return $success ? 0 : 1;
     }
 
     /**
@@ -312,6 +314,7 @@ HELP;
      * @param Execs $execs
      * @param InputInterface $input
      * @param OutputInterface $output
+     * @return bool
      */
     private function runExecs(Execs $execs, InputInterface $input, OutputInterface $output)
     {
@@ -331,7 +334,7 @@ HELP;
 
             foreach ($commands as $command) {
                 if (!$this->runExec($command, $input, $output)) {
-                    return;
+                    return false;
                 }
             }
 
@@ -343,6 +346,8 @@ HELP;
         if ($input->getOption('print-only-filename')) {
             $output->writeln($execs->getFileName());
         }
+
+        return true;
     }
 
     /**
