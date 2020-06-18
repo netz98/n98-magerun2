@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1b3d938b01cc930ab7224aabdab3d51e",
+    "content-hash": "19adb8bd569a2c5ee65d6dc0cfd80a8f",
     "packages": [
         {
             "name": "adbario/php-dot-notation",
@@ -2136,43 +2136,46 @@
         },
         {
             "name": "captainhook/captainhook",
-            "version": "3.1.0",
+            "version": "5.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/CaptainHookPhp/captainhook.git",
-                "reference": "86c70d4dfe9695ceeaa1332f1bb0e93a892ba780"
+                "reference": "ad835230338980d5efbed396fcee2706ee42467c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/CaptainHookPhp/captainhook/zipball/86c70d4dfe9695ceeaa1332f1bb0e93a892ba780",
-                "reference": "86c70d4dfe9695ceeaa1332f1bb0e93a892ba780",
+                "url": "https://api.github.com/repos/CaptainHookPhp/captainhook/zipball/ad835230338980d5efbed396fcee2706ee42467c",
+                "reference": "ad835230338980d5efbed396fcee2706ee42467c",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
                 "ext-spl": "*",
-                "php": ">=7.0.0",
-                "sebastianfeldmann/cli": "^2.1",
-                "sebastianfeldmann/git": "^1.0.7",
-                "symfony/console": ">=2.7"
+                "ext-xml": "*",
+                "php": "^7.2",
+                "sebastianfeldmann/camino": "^0.9.2",
+                "sebastianfeldmann/cli": "^3.0",
+                "sebastianfeldmann/git": "^3.1",
+                "symfony/console": "^2.7 || ^3.0 || ^4.0 || ^5.0",
+                "symfony/process": "^2.7 || ^3.0 || ^4.0 || ^5.0"
             },
             "replace": {
                 "sebastianfeldmann/captainhook": "*"
             },
             "require-dev": {
                 "composer/composer": "~1",
-                "phpunit/phpunit": "^6.5"
-            },
-            "suggest": {
-                "your git hooks": "run 'vendor/bin/captainhook configure' to set up your hook configuration"
+                "mikey179/vfsstream": "~1"
             },
             "bin": [
-                "captainhook"
+                "bin/captainhook"
             ],
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "0.9.x-dev"
+                    "dev-master": "6.0.x-dev"
+                },
+                "captainhook": {
+                    "config": "captainhook.json"
                 }
             },
             "autoload": {
@@ -2196,10 +2199,18 @@
                 "commit-msg",
                 "git",
                 "hooks",
+                "post-merge",
                 "pre-commit",
-                "pre-push"
+                "pre-push",
+                "prepare-commit-msg"
             ],
-            "time": "2018-12-21T14:36:05+00:00"
+            "funding": [
+                {
+                    "url": "https://github.com/sponsors/sebastianfeldmann",
+                    "type": "github"
+                }
+            ],
+            "time": "2020-05-03T17:46:23+00:00"
         },
         {
             "name": "doctrine/annotations",
@@ -4322,24 +4333,74 @@
             "time": "2016-10-03T07:35:21+00:00"
         },
         {
-            "name": "sebastianfeldmann/cli",
-            "version": "2.2.0",
+            "name": "sebastianfeldmann/camino",
+            "version": "0.9.2",
             "source": {
                 "type": "git",
-                "url": "https://github.com/sebastianfeldmann/cli.git",
-                "reference": "5bd378a5ca4e59634246568b348998f7b4771d5b"
+                "url": "https://github.com/sebastianfeldmann/camino.git",
+                "reference": "cedeb3d9e680e3aba8e43d153e1721f56f5b589c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianfeldmann/cli/zipball/5bd378a5ca4e59634246568b348998f7b4771d5b",
-                "reference": "5bd378a5ca4e59634246568b348998f7b4771d5b",
+                "url": "https://api.github.com/repos/sebastianfeldmann/camino/zipball/cedeb3d9e680e3aba8e43d153e1721f56f5b589c",
+                "reference": "cedeb3d9e680e3aba8e43d153e1721f56f5b589c",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.0"
+                "php": "^7.1"
             },
             "require-dev": {
-                "phpunit/phpunit": "^6.5 || ^7.0"
+                "phpunit/phpunit": "^7.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "SebastianFeldmann\\Camino\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Sebastian Feldmann",
+                    "email": "sf@sebastian-feldmann.info"
+                }
+            ],
+            "description": "Path management the OO way",
+            "homepage": "https://github.com/sebastianfeldmann/camino",
+            "keywords": [
+                "file system",
+                "path"
+            ],
+            "time": "2019-12-06T15:22:22+00:00"
+        },
+        {
+            "name": "sebastianfeldmann/cli",
+            "version": "3.2.7",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/sebastianfeldmann/cli.git",
+                "reference": "070dace40a16a9dcd5e04f5cc756e1006e91a6ed"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/sebastianfeldmann/cli/zipball/070dace40a16a9dcd5e04f5cc756e1006e91a6ed",
+                "reference": "070dace40a16a9dcd5e04f5cc756e1006e91a6ed",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.2"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^7.0",
+                "symfony/process": "^4.3"
             },
             "type": "library",
             "autoload": {
@@ -4362,33 +4423,38 @@
             "keywords": [
                 "cli"
             ],
-            "time": "2019-04-12T08:38:11+00:00"
+            "funding": [
+                {
+                    "url": "https://github.com/sebastianfeldmann",
+                    "type": "github"
+                }
+            ],
+            "time": "2020-06-03T16:04:40+00:00"
         },
         {
             "name": "sebastianfeldmann/git",
-            "version": "1.2.1",
+            "version": "3.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianfeldmann/git.git",
-                "reference": "65ce815bf542e6e4ca5aa1fc4d062b81e760a6e2"
+                "reference": "0a7486cff7adbfb462799240c4cd183c3937af4a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianfeldmann/git/zipball/65ce815bf542e6e4ca5aa1fc4d062b81e760a6e2",
-                "reference": "65ce815bf542e6e4ca5aa1fc4d062b81e760a6e2",
+                "url": "https://api.github.com/repos/sebastianfeldmann/git/zipball/0a7486cff7adbfb462799240c4cd183c3937af4a",
+                "reference": "0a7486cff7adbfb462799240c4cd183c3937af4a",
                 "shasum": ""
             },
             "require": {
-                "php": ">=7.0.0",
-                "sebastianfeldmann/cli": "^2.0.0"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "^6.5"
+                "ext-json": "*",
+                "ext-xml": "*",
+                "php": "^7.2",
+                "sebastianfeldmann/cli": "^3.0"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "0.9.x-dev"
+                    "dev-master": "4.0.x-dev"
                 }
             },
             "autoload": {
@@ -4411,7 +4477,13 @@
             "keywords": [
                 "git"
             ],
-            "time": "2018-12-19T11:58:45+00:00"
+            "funding": [
+                {
+                    "url": "https://github.com/sebastianfeldmann",
+                    "type": "github"
+                }
+            ],
+            "time": "2020-06-03T14:40:24+00:00"
         },
         {
             "name": "symfony/options-resolver",
