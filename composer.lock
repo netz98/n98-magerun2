@@ -2190,20 +2190,21 @@
     "packages-dev": [
         {
             "name": "bamarni/symfony-console-autocomplete",
-            "version": "v1.3.6",
+            "version": "v1.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bamarni/symfony-console-autocomplete.git",
-                "reference": "a121f7919c96f1fbefc6c5823b55ee5b3160a3ea"
+                "reference": "32995c7d60cc2bc47589eea3d2285b2648b558c8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bamarni/symfony-console-autocomplete/zipball/a121f7919c96f1fbefc6c5823b55ee5b3160a3ea",
-                "reference": "a121f7919c96f1fbefc6c5823b55ee5b3160a3ea",
+                "url": "https://api.github.com/repos/bamarni/symfony-console-autocomplete/zipball/32995c7d60cc2bc47589eea3d2285b2648b558c8",
+                "reference": "32995c7d60cc2bc47589eea3d2285b2648b558c8",
                 "shasum": ""
             },
             "require": {
                 "ext-simplexml": "*",
+                "php": "^7.0",
                 "symfony/console": "^2.5|^3|^4|^5",
                 "symfony/process": "^2.5|^3|^4|^5"
             },
@@ -2236,7 +2237,7 @@
                 }
             ],
             "description": "Shell completion for Symfony Console based scripts",
-            "time": "2020-03-04T17:14:27+00:00"
+            "time": "2020-06-24T20:55:54+00:00"
         },
         {
             "name": "captainhook/captainhook",
