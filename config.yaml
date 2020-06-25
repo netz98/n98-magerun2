@@ -241,15 +241,19 @@ commands:
       - id: dotmailer
         description: Dotmailer tables
         tables: >
-          email_abandoned_cart
+          email_abandoned_cart        
           email_automation
           email_campaign
           email_catalog
           email_contact
-          email_import
+          email_contact_consent
+          email_coupon_attribute
+          email_failed_auth
+          email_importer
           email_rules
           email_order
           email_review
+          email_template
           email_wishlist
 
       - id: 2fa
