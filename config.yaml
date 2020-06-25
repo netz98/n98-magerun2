@@ -240,7 +240,17 @@ commands:
 
       - id: dotmailer
         description: Dotmailer tables
-        tables: email_abandoned_cart email_automation email_campaign email_contact
+        tables: >
+          email_abandoned_cart
+          email_automation
+          email_campaign
+          email_catalog
+          email_contact
+          email_import
+          email_rules
+          email_order
+          email_review
+          email_wishlist
 
       - id: 2fa
         description: Two Factor Auth tables
