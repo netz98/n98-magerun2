@@ -49,7 +49,7 @@
         "friendsofphp/php-cs-fixer": "~2.16.1",
         "mikey179/vfsstream": "^1.6",
         "phing/phing": "~2.16.1",
-        "phpunit/phpunit": "~6.5.0",
+        "phpunit/phpunit": "~8.5.8",
         "roave/security-advisories": "dev-master",
         "seld/phar-utils": "~1.0.1"
     },
