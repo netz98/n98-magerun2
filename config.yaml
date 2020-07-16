@@ -241,7 +241,7 @@ commands:
       - id: dotmailer
         description: Dotmailer tables
         tables: >
-          email_abandoned_cart        
+          email_abandoned_cart
           email_automation
           email_campaign
           email_catalog
@@ -424,6 +424,10 @@ commands:
       mysql:
         - N98\Magento\Command\System\Check\MySQL\VersionCheck
         - N98\Magento\Command\System\Check\MySQL\EnginesCheck
+      env:
+        - N98\Magento\Command\System\Check\Env\ExistsCheck
+        - N98\Magento\Command\System\Check\Env\KeyExistsCheck
+        - N98\Magento\Command\System\Check\Env\CacheTypesCheck
 
     filesystem:
       folders:
@@ -454,3 +458,36 @@ commands:
         - xcache
         - Zend Optimizer
         - Zend OPcache
+
+    env:
+      required-keys:
+        - backend.frontName
+        - crypt.key
+        - db.table_prefix
+        - db.connection.default.host
+        - db.connection.default.dbname
+        - db.connection.default.username
+        - db.connection.default.password
+        - db.connection.default.model
+        - db.connection.default.engine
+        - db.connection.default.initStatements
+        - db.connection.default.active
+        - resource.default_setup.connection
+        - x-frame-options
+        - MAGE_MODE
+        - session.save
+        - cache_types.config
+        - cache_types.layout
+        - cache_types.block_html
+        - cache_types.collections
+        - cache_types.reflection
+        - cache_types.db_ddl
+        - cache_types.eav
+        - cache_types.customer_notification
+        - cache_types.config_integration
+        - cache_types.config_integration_api
+        - cache_types.full_page
+        - cache_types.translate
+        - cache_types.config_webservice
+        - cache_types.compiled_config
+        - install.date
