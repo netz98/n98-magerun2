@@ -118,6 +118,12 @@ class DumpCommand extends AbstractDatabaseCommand
                 InputOption::VALUE_NONE,
                 'Do not prompt if all options are defined'
             )
+            ->addOption(
+                'keep-column-statistics',
+                null,
+                InputOption::VALUE_NONE,
+                'Keeps the Column Statistics table in SQL dump'
+            )
             ->setDescription('Dumps database with mysqldump cli client');
 
         $help = <<<HELP
@@ -277,6 +283,14 @@ HELP;
 
         if ($input->getOption('add-routines')) {
             $execs->addOptions('--routines ');
+        }
+
+        if ($this->checkColumnStatistics()) {
+            if ($input->getOption('keep-column-statistics')) {
+                $execs->addOptions('--column-statistics=1 ');
+            } else {
+                $execs->addOptions('--column-statistics=0 ');
+            }
         }
 
         $postDumpGitFriendlyPipeCommands = '';
@@ -562,5 +576,21 @@ HELP;
             !$input->getOption('stdout')
             && !$input->getOption('only-command')
             && !$input->getOption('print-only-filename');
+    }
+
+    /**
+     * Checks if 'column statistics' are present in the current MySQL distribution
+     *
+     * @return bool
+     */
+    private function checkColumnStatistics()
+    {
+        Exec::run('mysqldump --help | grep -c column-statistics || true', $output, $returnCode);
+
+        if ($output > 0) {
+            return true;
+        }
+
+        return false;
     }
 }
