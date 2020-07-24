@@ -584,6 +584,7 @@ Dumps configured Magento database with `mysqldump`.
 | `--strip`                 | Tables to strip (dump only structure of those tables)                                 |
 | `--exclude`               | Tables to exclude entirely from the dump (including structure)                        |
 | `--force` `-f`            | Do not prompt if all options are defined                                              |
+| `--keep-column-statistics`| Retains `column statistics` table in `mysqldump`                                      |
 
 ```sh
 $ n98-magerun2.phar db:dump
