@@ -1,5 +1,5 @@
 ---
-name: "\u1F6E0 Support"
+name: "🦮 Support"
 about: If you need support
 labels: support
 
