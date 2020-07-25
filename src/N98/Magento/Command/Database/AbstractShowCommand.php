@@ -218,7 +218,7 @@ abstract class AbstractShowCommand extends AbstractDatabaseCommand
                 $v = str_pad($v, $maxWidth, ' ', STR_PAD_LEFT);
             }
         }
-        
+
         return $vars;
     }
 
