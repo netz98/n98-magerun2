@@ -197,6 +197,7 @@ abstract class AbstractShowCommand extends AbstractDatabaseCommand
         $rounding = (int) $this->_input->getOption('rounding');
         if ($rounding > -1) {
             foreach ($vars as $k => &$v) {
+                $v = trim($v);
                 if (true === $this->allowRounding($k)) {
                     $v = Filesystem::humanFileSize($v, $rounding);
                 }
