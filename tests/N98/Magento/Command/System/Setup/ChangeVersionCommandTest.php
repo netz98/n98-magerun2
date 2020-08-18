@@ -51,10 +51,10 @@ class ChangeVersionCommandTest extends TestCase
 
     /**
      * Ensure an exception is thrown when the module doesn't exist
-     * @expectedException InvalidArgumentException
      */
     public function testExecuteShouldThrowExceptionWhenModuleDoesntExist()
     {
+        $this->expectException(\InvalidArgumentException::class);
         $this->commandTester->execute(
             [
                 'command' => $this->command->getName(),

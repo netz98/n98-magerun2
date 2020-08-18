@@ -25,7 +25,7 @@ class AbstractSetupCommandTest extends TestCase
         $this->command
             ->expects($this->once())
             ->method('getMagentoModuleList')
-            ->will($this->returnValue(['Magento_Catalog' => 'info', 'Magento_Customer' => 'info']));
+            ->willReturn(['Magento_Catalog' => 'info', 'Magento_Customer' => 'info']);
     }
 
     /**
@@ -56,10 +56,10 @@ class AbstractSetupCommandTest extends TestCase
 
     /**
      * Ensure that an exception is thrown when a module doesn't exist
-     * @expectedException InvalidArgumentException
      */
     public function testShouldThrowExceptionWhenModuleDoesntExist()
     {
+        $this->expectException(\InvalidArgumentException::class);
         $this->command->getMagentoModuleName('Some_Module_That_Will_Never_Exist');
     }
 }

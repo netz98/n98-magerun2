@@ -7,6 +7,7 @@
 
 namespace N98\Util;
 
+use PHPUnit\Framework\TestCase;
 use RuntimeException;
 
 /**
@@ -15,23 +16,21 @@ use RuntimeException;
  * @author Aydin Hassan <aydin@hotmail.co.uk>
  * @covers N98\Util\Filesystem
  */
-class FilesystemTest extends \PHPUnit\Framework\TestCase
+class FilesystemTest extends TestCase
 {
     /**
      * @var Filesystem
      */
     protected $fileSystem;
 
-    public function setUp()
+    protected function setUp(): void
     {
         $this->fileSystem = new Filesystem();
     }
 
-    /**
-     * @expectedException RuntimeException
-     */
     public function testRecursiveCopy()
     {
+        $this->expectException(\InvalidArgumentException::class);
         $tmp = sys_get_temp_dir();
         $basePath = $tmp . "/n98_testdir";
         $folder1 = $basePath . "/folder1";
