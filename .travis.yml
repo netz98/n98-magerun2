@@ -42,7 +42,7 @@ matrix:
     # Magento Versions
     - name: Magento 2.4.0 PHP 7.4
       php: 7.4
-      env: MAGENTO_VERSION="magento-ce-2.3.5-p2" INSTALL_SAMPLE_DATA=0
+      env: MAGENTO_VERSION="magento-ce-2.4.0" INSTALL_SAMPLE_DATA=0
 
     - name: Magento 2.3.5 PHP 7.3
       php: 7.3
