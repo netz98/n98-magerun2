@@ -43,7 +43,7 @@ class ChangeVersionCommandTest extends TestCase
             ]
         );
 
-        $this->assertContains(
+        $this->assertStringContainsString(
             'Successfully updated: "Magento_Customer"',
             $this->commandTester->getDisplay()
         );
