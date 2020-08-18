@@ -1,21 +1,23 @@
-<phpunit backupGlobals="true"
-         bootstrap="tests/bootstrap.php"
-         backupStaticAttributes="false"
-         beStrictAboutTestsThatDoNotTestAnything="false"
-         cacheTokens="false"
-         colors="true"
-         convertErrorsToExceptions="true"
-         convertNoticesToExceptions="true"
-         convertWarningsToExceptions="true"
-         forceCoversAnnotation="false"
-         mapTestClassNameToCoveredClassName="false"
-         processIsolation="true"
-         stopOnError="false"
-         stopOnFailure="false"
-         stopOnIncomplete="false"
-         stopOnSkipped="false">
+<phpunit
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/6.5/phpunit.xsd"
+        backupGlobals="true"
+        bootstrap="tests/bootstrap.php"
+        backupStaticAttributes="false"
+        beStrictAboutTestsThatDoNotTestAnything="false"
+        cacheTokens="false"
+        colors="true"
+        convertErrorsToExceptions="true"
+        convertNoticesToExceptions="true"
+        convertWarningsToExceptions="false"
+        forceCoversAnnotation="false"
+        processIsolation="true"
+        stopOnError="false"
+        stopOnFailure="false"
+        stopOnIncomplete="false"
+        stopOnSkipped="false">
     <php>
-        <env name="MAGERUN_SKIP_CORE_COMMANDS" value="1" />
+        <env name="MAGERUN_SKIP_CORE_COMMANDS" value="1"/>
     </php>
     <testsuites>
         <testsuite name="n98-magerun2-tests">
