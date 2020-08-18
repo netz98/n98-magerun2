@@ -11,7 +11,7 @@ class ListCommandTest extends TestCase
      */
     protected $command = null;
 
-    public function setUp()
+    protected function setUp(): void
     {
         $application = $this->getApplication();
         $application->add(new ListCommand());

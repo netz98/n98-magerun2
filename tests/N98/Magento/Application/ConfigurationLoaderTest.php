@@ -16,7 +16,7 @@ class ConfigurationLoaderTest extends TestCase
      */
     private $configurationLoader;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

@@ -20,7 +20,7 @@ class ChangeVersionCommandTest extends TestCase
     /**
      * Set up the test dependencies
      */
-    public function setUp()
+    protected function setUp(): void
     {
         $application = $this->getApplication();
         $application->add(new ChangeVersionCommand());

@@ -22,9 +22,7 @@ class ModuleListIteratorTest extends TestCase
         /* @var $moduleList ModuleListInterface */
         $moduleList = $this->getObject(ModuleListInterface::class);
 
-        $iterator = new ModuleListIterator($moduleList);
-
-        return $iterator;
+        return new ModuleListIterator($moduleList);
     }
 
     /**
