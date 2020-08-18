@@ -20,6 +20,12 @@ matrix:
   fast_finish: true
   include:
     # Lint PHP code with future PHP versions (forward compatibility)
+    - name: PHP 7.4 Lint
+      php: 7.4
+      env: SCRIPT_JOB=LINTSH
+      script: find {src,tests} -name "*.php" ! -path '*/String.php' -print0 | xargs
+        -0 -n1 -P8 php -l | grep -v '^No syntax errors detected'; test $? -eq 1
+
     - name: PHP 7.3 Lint
       php: 7.3
       env: SCRIPT_JOB=LINTSH
@@ -33,6 +39,10 @@ matrix:
         -0 -n1 -P8 php -l | grep -v '^No syntax errors detected'; test $? -eq 1
 
     # Magento Versions
+    - name: Magento 2.4.0 PHP 7.4
+      php: 7.4
+      env: MAGENTO_VERSION="magento-ce-2.3.5-p2" INSTALL_SAMPLE_DATA=0
+
     - name: Magento 2.3.5 PHP 7.3
       php: 7.3
       env: MAGENTO_VERSION="magento-ce-2.3.5" INSTALL_SAMPLE_DATA=0
@@ -50,12 +60,16 @@ matrix:
       php: 7.3
       env: SCRIPT_JOB="PHP-CS-FIXER"
 
+    - name: PHP-CS Fixer PHP 7.4
+      php: 7.4
+      env: SCRIPT_JOB="PHP-CS-FIXER"
+
     - name: Build SH
-      php: 7.3
+      php: 7.4
       env: SCRIPT_JOB="BUILDSH"
 
     - name: Bash Autocomplete
-      php: 7.3
+      php: 7.4
       env: SCRIPT_JOB="BASH-AUTOCOMPLETION"
 
 before_install:
