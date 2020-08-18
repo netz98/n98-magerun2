@@ -22,7 +22,7 @@ class AclCommandTest extends TestCase
             ]
         );
 
-        $this->assertContains('All Stores', $commandTester->getDisplay());
-        $this->assertContains('Magento_Reports::salesroot_sales', $commandTester->getDisplay());
+        $this->assertStringContainsString('All Stores', $commandTester->getDisplay());
+        $this->assertStringContainsString('Magento_Reports::salesroot_sales', $commandTester->getDisplay());
     }
 }
