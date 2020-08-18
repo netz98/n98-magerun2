@@ -13,7 +13,7 @@ class StringTest extends \PHPUnit\Framework\TestCase
      */
     public function trimExplodeEmpty($delimiter, $string, $expected)
     {
-        $this->assertEquals($expected, BinaryString::trimExplodeEmpty($delimiter, $string), '', 0.0, 10, true);
+        $this->assertEqualsCanonicalizing($expected, BinaryString::trimExplodeEmpty($delimiter, $string));
     }
 
     /**

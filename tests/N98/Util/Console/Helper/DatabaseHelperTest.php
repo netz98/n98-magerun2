@@ -66,11 +66,11 @@ class DatabaseHelperTest extends TestCase
         // verify (complex) return value with existing global variable
         $actual = $helper->getMysqlVariableValue('version');
 
-        $this->assertInternalType('array', $actual);
+        $this->assertIsArray($actual);
         $this->assertCount(1, $actual);
         $key = '@@version';
         $this->assertArrayHasKey($key, $actual);
-        $this->assertInternalType('string', $actual[$key]);
+        $this->assertIsString($actual[$key]);
 
         // quoted
         $actual = $helper->getMysqlVariableValue('`version`');
@@ -94,7 +94,7 @@ class DatabaseHelperTest extends TestCase
 
         // behaviour with existing global variable
         $actual = $helper->getMysqlVariable('version');
-        $this->assertInternalType('string', $actual);
+        $this->assertIsString($actual);
 
         // behavior with existent session variable (INTEGER)
         $helper->getConnection()->query('SET @existent = 14;');
@@ -138,7 +138,7 @@ class DatabaseHelperTest extends TestCase
         $helper = $this->getHelper();
 
         $tables = $helper->getTables();
-        $this->assertInternalType('array', $tables);
+        $this->assertIsArray($tables);
         $this->assertContains('admin_user', $tables);
     }
 

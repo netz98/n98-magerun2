@@ -74,7 +74,7 @@ class ArrayFunctionsTest extends TestCase
         ];
 
         $actual = ArrayFunctions::columnOrderArrayTable($headers, $table);
-        $this->assertInternalType('array', $actual);
+        $this->assertIsArray($actual);
         $this->assertCount(count($table), $actual);
         $expected = [
             ['foo' => 'A1', 'bar' => 'B1', 'baz' => 'C1', 'D1'],
@@ -92,7 +92,7 @@ class ArrayFunctionsTest extends TestCase
     public function columnOrder($columns, $array, $expected)
     {
         $actual = ArrayFunctions::columnOrder($columns, $array);
-        $this->assertInternalType('array', $actual);
+        $this->assertIsArray($actual);
         $this->assertEquals($expected, $actual);
         $this->assertSame($expected, $actual);
     }

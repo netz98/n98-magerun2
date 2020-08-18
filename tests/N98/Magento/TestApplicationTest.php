@@ -25,7 +25,7 @@ class TestApplicationTest extends \PHPUnit\Framework\TestCase
     {
         $application = new TestApplication();
         $actual = $application->getTestMagentoRoot();
-        $this->assertInternalType('string', $actual);
+        $this->assertIsString($actual);
         $this->assertGreaterThan(10, strlen($actual));
         $this->assertTrue(is_dir($actual));
     }
