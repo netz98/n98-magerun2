@@ -22,7 +22,7 @@ class ViewCommandTest extends TestCase
     /**
      * Initialize the command and the tester
      */
-    public function setUp()
+    protected function setUp(): void
     {
         /** @var Application $application */
         $application = $this->getApplication();

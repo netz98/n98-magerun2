@@ -14,7 +14,7 @@ class MaintenanceCommandTest extends TestCase
 
     protected $maintenanceFile;
 
-    public function setUp()
+    protected function setUp(): void
     {
         $this->maintenanceFile =
             $this->getApplication()->getMagentoRootFolder() .

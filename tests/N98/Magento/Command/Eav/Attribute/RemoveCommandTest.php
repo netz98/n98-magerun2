@@ -27,7 +27,7 @@ class RemoveCommandTest extends TestCase
     /**
      * @return void
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         if ($this->runsInProductionMode()) {
             $this->markTestSkipped('This command is not available in production mode');

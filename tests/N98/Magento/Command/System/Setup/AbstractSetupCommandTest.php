@@ -15,7 +15,7 @@ class AbstractSetupCommandTest extends TestCase
     /**
      * Set up the mocked command for testing
      */
-    public function setUp()
+    protected function setUp(): void
     {
         $this->command = $this->getMockBuilder('N98\Magento\Command\System\Setup\AbstractSetupCommand')
             ->disableOriginalConstructor()

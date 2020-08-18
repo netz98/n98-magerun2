@@ -13,7 +13,7 @@ use Symfony\Component\Console\Tester\CommandTester;
 
 abstract class TestCase extends BaseTestCase
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         if ($this->runsInProductionMode()) {
             $this->markTestSkipped('Developer command is not available in production mode');

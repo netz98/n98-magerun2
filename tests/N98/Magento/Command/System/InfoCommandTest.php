@@ -14,7 +14,7 @@ class InfoCommandTest extends TestCase
      */
     private $command;
 
-    public function setUp()
+    protected function setUp(): void
     {
         /**
          * @var $command InfoCommand
