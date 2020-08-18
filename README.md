@@ -25,10 +25,12 @@ or `install` are excluded).
 
 We support the following Magento Versions:
 
+-   2.4.x Open Source/Commerce
 -   2.3.x Open Source/Commerce
 
 We support the following PHP Versions:
 
+-   PHP 7.4
 -   PHP 7.3
 -   PHP 7.2
 
