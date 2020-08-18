@@ -298,7 +298,7 @@ commands:
           prefer-dist: true
           stability: alpha
           repository-url: https://repo.magento.com
-      - name: magento-ce-2.3.5
+      - name: magento-ce-2.3.5-p2
         package: magento/project-community-edition
         version: 2.3.5-p2
         options:
