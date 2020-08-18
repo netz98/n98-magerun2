@@ -35,11 +35,10 @@ class ExecTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @test
-     *
-     * @expectedException RuntimeException
      */
     public function exception()
     {
+        $this->expectException(RuntimeException::class);
         Exec::run('foobar');
     }
 }

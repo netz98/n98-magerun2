@@ -55,11 +55,11 @@ class ViewCommandTest extends TestCase
 
     /**
      * When the attribute doesn't exist, an exception should be thrown
-     * @expectedException InvalidArgumentException
      * @test
      */
     public function executeWithException()
     {
+        $this->expectException(\InvalidArgumentException::class);
         $this->commandTester->execute(
             [
                 'command'       => $this->command->getName(),

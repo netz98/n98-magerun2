@@ -47,21 +47,21 @@ class TimeElapsedTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @test
-     * @expectedException \BadMethodCallException
      */
     public function negativeTimestampNotHandleable()
     {
+        $this->expectException(\BadMethodCallException::class);
         // one second in the past at the beginng of time
         TimeElapsed::full(1, 0);
     }
 
     /**
      * @test
-     * @expectedException \Exception
-     * @expectedExceptionMessage DateTime::__construct():
      */
     public function invalidDatetime()
     {
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage('DateTime::__construct():');
         TimeElapsed::full(' 0000----12T13:44:40Z', 0);
     }
 }

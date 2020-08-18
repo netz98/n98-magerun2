@@ -70,12 +70,12 @@ class RemoveCommandTest extends TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Invalid entity_type specified: non_existing_entity_type
      * @return void
      */
     public function testThrowsExceptionOnNonExistingEntityType()
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Invalid entity_type specified: non_existing_entity_type');
         $this->commandTester->execute([
             'command'       => $this->command->getName(),
             'entityType'    => 'non_existing_entity_type',
