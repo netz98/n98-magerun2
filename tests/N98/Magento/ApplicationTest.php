@@ -90,7 +90,7 @@ class ApplicationTest extends TestCase
                 'command' => $testDummyCommand->getName(),
             ]
         );
-        $this->assertContains('dummy', $commandTester->getDisplay());
+        $this->assertStringContainsString('dummy', $commandTester->getDisplay());
         $this->assertTrue($application->getDefinition()->hasOption('root-dir'));
 
         // check alias

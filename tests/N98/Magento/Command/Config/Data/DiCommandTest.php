@@ -55,7 +55,7 @@ class DiCommandTest extends TestCase
             ]
         );
 
-        $this->assertContains('LoggerInterface', $commandTester->getDisplay());
+        $this->assertStringContainsString('LoggerInterface', $commandTester->getDisplay());
     }
 
     /**
@@ -74,7 +74,7 @@ class DiCommandTest extends TestCase
             ]
         );
 
-        $this->assertContains('Magento\Catalog\Api\Data\ProductInterface', $commandTester->getDisplay());
+        $this->assertStringContainsString('Magento\Catalog\Api\Data\ProductInterface', $commandTester->getDisplay());
     }
 
     /**
@@ -94,6 +94,6 @@ class DiCommandTest extends TestCase
             ]
         );
 
-        $this->assertContains('Magento\Framework\App\FrontController', $commandTester->getDisplay());
+        $this->assertStringContainsString('Magento\Framework\App\FrontController', $commandTester->getDisplay());
     }
 }

@@ -139,7 +139,7 @@ class DatabaseHelperTest extends TestCase
 
         $tables = $helper->getTables();
         $this->assertIsArray($tables);
-        $this->assertContains('admin_user', $tables);
+        $this->assertStringContainsString('admin_user', $tables);
     }
 
     /**
@@ -148,7 +148,7 @@ class DatabaseHelperTest extends TestCase
     public function resolveTables()
     {
         $tables = $this->getHelper()->resolveTables(['catalog_*']);
-        $this->assertContains('catalog_product_entity', $tables);
+        $this->assertStringContainsString('catalog_product_entity', $tables);
         $this->assertNotContains('catalogrule', $tables);
 
         $definitions = [
@@ -161,9 +161,9 @@ class DatabaseHelperTest extends TestCase
             ['@catalog_glob', '@config_glob', '@directory'],
             $definitions
         );
-        $this->assertContains('catalog_product_entity', $tables);
-        $this->assertContains('core_config_data', $tables);
-        $this->assertContains('directory_country', $tables);
+        $this->assertStringContainsString('catalog_product_entity', $tables);
+        $this->assertStringContainsString('core_config_data', $tables);
+        $this->assertStringContainsString('directory_country', $tables);
         $this->assertNotContains('catalogrule', $tables);
     }
 }

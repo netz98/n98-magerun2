@@ -47,10 +47,10 @@ class ViewCommandTest extends TestCase
 
         $result = $this->commandTester->getDisplay();
 
-        $this->assertContains('sku', $result);
-        $this->assertContains('catalog_product_entity', $result);
-        $this->assertContains('Backend-Type', $result);
-        $this->assertContains('static', $result);
+        $this->assertStringContainsString('sku', $result);
+        $this->assertStringContainsString('catalog_product_entity', $result);
+        $this->assertStringContainsString('Backend-Type', $result);
+        $this->assertStringContainsString('static', $result);
     }
 
     /**
