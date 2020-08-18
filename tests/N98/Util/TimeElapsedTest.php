@@ -13,7 +13,7 @@ class TimeElapsedTest extends \PHPUnit\Framework\TestCase
     public function invocation()
     {
         $string = TimeElapsed::full(0);
-        $this->assertInternalType('string', $string);
+        $this->assertIsString($string);
     }
 
     public function provideCalculations()

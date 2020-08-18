@@ -30,7 +30,7 @@ class FilesystemTest extends TestCase
 
     public function testRecursiveCopy()
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(\RuntimeException::class);
         $tmp = sys_get_temp_dir();
         $basePath = $tmp . "/n98_testdir";
         $folder1 = $basePath . "/folder1";

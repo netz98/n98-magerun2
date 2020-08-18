@@ -55,7 +55,7 @@ class ConfigTest extends TestCase
         $loader->loadStageTwo("");
         $config->load();
 
-        $this->assertInternalType('array', $config->getConfig());
+        $this->assertIsArray($config->getConfig());
         $this->assertGreaterThan(4, count($config->getConfig()));
 
         $config->setLoader($loader);
@@ -163,7 +163,7 @@ class ConfigTest extends TestCase
         $this->assertEquals([], $config->getDetectSubFolders());
         $config->loadPartialConfig(false);
         $actual = $config->getDetectSubFolders();
-        $this->assertInternalType('array', $actual);
+        $this->assertIsArray($actual);
         $this->assertNotEquals([], $actual);
     }
 }
