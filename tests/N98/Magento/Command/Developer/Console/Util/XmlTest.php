@@ -18,7 +18,7 @@ class XmlTest extends TestCase
     {
         $xml = simplexml_load_string($xml);
         $xml = Xml::addSimpleXmlNodesByXPath($xml, $path);
-        $this->assertContains($expected, $xml->asXML());
+        $this->assertStringContainsString($expected, $xml->asXML());
     }
 
     /**
