@@ -112,7 +112,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
     {
         $display = $this->getMagerunTester($command)->getDisplay();
 
-        $this->assertNotContains($needle, $display, $message);
+        $this->assertStringNotContainsString($needle, $display, $message);
     }
 
     /**
