@@ -208,6 +208,13 @@ Example:
 $ n98-magerun2.phar customer:create foo@example.com password123 John Doe base
 ```
 
+You can add additional any number of custom fields, example:
+
+```sh
+$ n98-magerun2.phar customer:create foo@example.com password123 John Doe base taxvat DE12345678
+```
+
+
 ### List Customers
 
 List customers. The output is limited to 1000 (can be changed by
