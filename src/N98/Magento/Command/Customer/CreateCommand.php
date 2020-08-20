@@ -200,6 +200,11 @@ class CreateCommand extends AbstractCustomerCommand
     private function getAdditionalFields($input)
     {
         $additionalFields = $input->getArgument('additionalFields');
+
+        if (count($additionalFields) == 0) {
+            return [];
+        }
+
         if (count($additionalFields) % 2 !== 0) {
             throw new \Exception('Additional fields must be formated as name1 value2 name2 value2, uneven paramater count specified');
         }
