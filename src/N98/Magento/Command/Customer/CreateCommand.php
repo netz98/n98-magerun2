@@ -38,6 +38,7 @@ class CreateCommand extends AbstractCustomerCommand
             ->addArgument('firstname', InputArgument::OPTIONAL, 'Firstname')
             ->addArgument('lastname', InputArgument::OPTIONAL, 'Lastname')
             ->addArgument('website', InputArgument::OPTIONAL, 'Website')
+            ->addArgument('additionalFields', InputArgument::IS_ARRAY, 'Additional fields, specifiy as field_name1 value2 field_name2 value2')
             ->addOption(
                 'format',
                 null,
@@ -102,14 +103,24 @@ class CreateCommand extends AbstractCustomerCommand
 
         $website = $this->getHelperSet()->get('parameter')->askWebsite($input, $output);
 
+        try {
+            $additionalFields = $this->getAdditionalFields($input);
+        } catch (\Exception $e) {
+            $output->writeln('<error>' . $e->getMessage() . '</error>');
+            return 1;
+        }
+
         // create new customer
         $customer = $this->getCustomer();
         $customer->setWebsiteId($website->getId());
         $customer->loadByEmail($email);
 
+        $customer->addData($additionalFields);
+
         $outputPlain = $input->getOption('format') === null;
 
         $table = [];
+
         $isError = false;
 
         if (!$customer->getId()) {
@@ -184,5 +195,20 @@ class CreateCommand extends AbstractCustomerCommand
                 throw $e;
             }
         }
+    }
+
+    private function getAdditionalFields($input)
+    {
+        $additionalFields = $input->getArgument('additionalFields');
+        if (count($additionalFields) % 2 !== 0) {
+            throw new \Exception('Additional fields must be formated as name1 value2 name2 value2, uneven paramater count specified');
+        }
+
+        $result = [];
+        foreach (range(0, count($additionalFields) / 2 - 1) as $index) {
+            $result[$additionalFields[$index * 2]] = $additionalFields[$index * 2 + 1];
+        }
+
+        return $result;
     }
 }
