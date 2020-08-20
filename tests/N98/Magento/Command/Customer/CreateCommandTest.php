@@ -35,6 +35,30 @@ class CreateCommandTest extends TestCase
         $this->assertdisplayContains($input, $generatedEmail . ',Password123,John,Doe');
     }
 
+    public function testExecuteAdditionalFields()
+    {
+        $generatedEmail = uniqid('', true) . '@example.com';
+
+        $input = [
+            'command'   => 'customer:create',
+            'email'     => $generatedEmail,
+            'password'  => 'Password123',
+            'firstname' => 'John',
+            'lastname'  => 'Doe',
+            'website'   => $this->getWebsiteCode(),
+            'additionalFields' => ['prefix', 'Mr']
+        ];
+        $this->assertDisplayContains($input, 'successfully created');
+
+        // Format option
+        $generatedEmail = uniqid('', true) . '@example.com';
+        $input['email'] = $generatedEmail;
+        $input['--format'] = 'csv';
+
+        $this->assertDisplayContains($input, 'email,password,firstname,lastname');
+        $this->assertdisplayContains($input, $generatedEmail . ',Password123,John,Doe');
+    }
+
     /**
      * @return string
      */
