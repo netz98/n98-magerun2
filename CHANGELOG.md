@@ -1,6 +1,24 @@
 RECENT CHANGES
 ==============
 
+4.2.0
+-----
+
+- New: #598: #597 Add support for additional fields to customer:create (by Alexander Menk)
+- New: #596: Support Magento 2.4.0 (by Christian Münch)
+- New: #586: MySQL 8 Support (by Callum Atwal)
+- New: #575: Env Checker (by Slawomir Boczek)
+- New: #552: Support Magento 2.3.5 (by Alexander Menk)
+- Imp: #551: When mysqldump fails, make db:dump fail as well (Pieter Hoste)
+- New: #547: Add table groups 'oauth' and 'klarna', update README.md (by Timon de Groot)
+- New: #544: --skip-magento-compatibility-check (by Timon de Groot)
+- Imp: #568: Strip all dotmailer tables (by Arnoud Beekman)
+- Imp: #548: Db console strip temp tables (by Doug Hatcher)
+- Imp: #543: Check if config:env:set does any changes (by Timon de Groot)
+- Imp: Updated Dependencies (Symfony latest 4.4.x) (by Christian Münch)
+- Imp: Update phpunit to 8.x (by Christian Münch)
+- Fix: #590: Fix format if db:status is dumped as CSV (by Christian Münch)
+
 4.1.0
 -----
 
