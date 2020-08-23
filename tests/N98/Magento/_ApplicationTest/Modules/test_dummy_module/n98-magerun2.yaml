@@ -1,5 +1,5 @@
 autoloaders:
-  TestModule: %module%/src
+  TestModule: '%module%/src'
 
 commands:
   customCommands:
