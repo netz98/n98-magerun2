@@ -13,3 +13,6 @@
 
 phpunit.xml
 .php_cs.cache
+
+# Gitub
+super-linter.log
