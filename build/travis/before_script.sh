@@ -18,6 +18,7 @@ if [ ! -z ${MAGENTO_VERSION+x} ]; then
 
     echo "installing magento ${MAGENTO_VERSION}"
 
+    export COMPOSER_MEMORY_LIMIT=-1;
     export N98_MAGERUN2_TEST_MAGENTO_ROOT="./${MAGENTO_VERSION}"
 
     bin/n98-magerun2 install \
