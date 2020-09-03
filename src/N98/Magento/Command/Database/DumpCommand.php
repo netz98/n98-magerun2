@@ -95,6 +95,12 @@ class DumpCommand extends AbstractDatabaseCommand
                 'Include stored routines in dump (procedures & functions)'
             )
             ->addOption(
+                'no-tablespaces',
+                null,
+                InputOption::VALUE_NONE,
+                'Use this option if you want to create a dump without having the PROCESS privilege'
+            )
+            ->addOption(
                 'stdout',
                 null,
                 InputOption::VALUE_NONE,
@@ -283,6 +289,10 @@ HELP;
 
         if ($input->getOption('add-routines')) {
             $execs->addOptions('--routines ');
+        }
+
+        if ($input->getOption('no-tablespaces')) {
+            $execs->addOptions('--no-tablespaces ');
         }
 
         if ($this->checkColumnStatistics()) {

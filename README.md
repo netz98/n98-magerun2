@@ -586,6 +586,7 @@ Dumps configured Magento database with `mysqldump`.
 | `--human-readable`        | Use a single insert with column names per row.                                        |
 | `--git-friendly`          | Use one insert statement, but with line breaks instead of separate insert statements. |
 | `--add-routines`          | Include stored routines in dump (procedures & functions).                             |
+| `--no-tablespaces`        | Use this option if you want to create a dump without having the PROCESS privilege.    |
 | `--stdout`                | Dump to stdout                                                                        |
 | `--strip`                 | Tables to strip (dump only structure of those tables)                                 |
 | `--exclude`               | Tables to exclude entirely from the dump (including structure)                        |
