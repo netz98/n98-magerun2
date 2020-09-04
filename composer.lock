@@ -1932,7 +1932,7 @@
         },
         {
             "name": "symfony/validator",
-            "version": "v4.4.12",
+            "version": "v4.4.13",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/validator.git",
