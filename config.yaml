@@ -250,10 +250,9 @@ commands:
           email_coupon_attribute
           email_failed_auth
           email_importer
-          email_rules
           email_order
           email_review
-          email_template
+          email_rules
           email_wishlist
 
       - id: 2fa
