@@ -1,6 +1,16 @@
 RECENT CHANGES
 ==============
 
+4.3.0
+-----
+
+- New: #615: Add option to dump db with —no-tablespaces option (by Torben Höhn)
+- Imp: Updated Symfony and Composer components to latest v4.4 (by dependabot)
+- Add: #617: Gitleaks config (by Christian Münch) 
+- Add: Github super linter (by Christian Münch)
+- Fix: #603: Fixed typos in help (by Rico Neitzel)
+- Fix: #621: Correct list of 'dotmailer' tables (by Dan Wallis)
+
 4.2.0
 -----
 
