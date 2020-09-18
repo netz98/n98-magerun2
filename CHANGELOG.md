@@ -6,7 +6,7 @@ RECENT CHANGES
 
 - New: #615: Add option to dump db with —no-tablespaces option (by Torben Höhn)
 - Imp: Updated Symfony and Composer components to latest v4.4 (by dependabot)
-- Add: #617: Gitleaks config (by Christian Münch) 
+- Add: #617: Gitleaks config (by Christian Münch)
 - Add: Github super linter (by Christian Münch)
 - Fix: #603: Fixed typos in help (by Rico Neitzel)
 - Fix: #621: Correct list of 'dotmailer' tables (by Dan Wallis)
@@ -32,7 +32,7 @@ RECENT CHANGES
 4.1.0
 -----
 
-- New: Three new commands (config:env:create, config:env:show, config:env:set) (by Peter Jaap Blaakmeer)  
+- New: Three new commands (config:env:create, config:env:show, config:env:set) (by Peter Jaap Blaakmeer)
 - Imp: Update Composer to 1.10.5
 - Fix: #535: Twig 2.0 compatibility
 - Imp: #538: Support Magento 2.3.4 (by Alexander Menk)
@@ -70,7 +70,7 @@ RECENT CHANGES
 - New: #374: Add "area" option to dev:console (by Christian Münch)
 - New: #494: Add mycli support (by Christian Münch)
 - Add: roave/security-advisories component for a better security
-- Add: Magento 2.3.3 in installer (by Christian Münch) 
+- Add: Magento 2.3.3 in installer (by Christian Münch)
 - Add: #503: Captainhook suppport (by Christian Münch)
 - Add: #501: Strip B2B quotes as part of @quotes alias (by Dan Wallis)
 - Imp: Match Magento Code Style (v2.2.10)
@@ -78,7 +78,7 @@ RECENT CHANGES
 - Imp: Update PHPUnit to 6.5
 - Imp: Update php-cs-fixer to 2.16
 - Imp: #504: Enable PHP 7.3 for travis builds (by Christian Münch)
-- Imp: #492: Update readme (by operator888) 
+- Imp: #492: Update readme (by operator888)
 - Fix: Composer package naming (vfsStream)
 - Fix: #488: mcrypt is optional module in Magento 2.3 (by Christian Münch)
 - Fix: #487: Downgrade versions command broken (by Christian Münch)
@@ -100,8 +100,8 @@ RECENT CHANGES
 - Add: #475: Update travis versions (by Christian Münch)
 - Add: #476: Update versions for installer (by Christian Münch)
 - New: #466: Phar dist package (by Thomas Negeli)
-- New: command admin:token:create (by Christian Münch) 
-- New: command customer:token:create (by Christian Münch) 
+- New: command admin:token:create (by Christian Münch)
+- New: command customer:token:create (by Christian Münch)
 
 3.0.10
 ------
@@ -126,7 +126,7 @@ RECENT CHANGES
 3.0.7
 -----
 
-- Fix for Composer autoloader / Magento 2.2.8 (thanks mystix, Rick Schippers) 
+- Fix for Composer autoloader / Magento 2.2.8 (thanks mystix, Rick Schippers)
 
 3.0.6
 -----
@@ -237,7 +237,7 @@ RECENT CHANGES
 2.1.1
 -----
 
-* Upgrade embedded composer package 
+* Upgrade embedded composer package
 * Fix: Fix "area code not set" error message in customer commands (by Christian Münch)
 * Fix wrong headlines in cutomer:list command (by Christian Münch)
 
@@ -265,7 +265,7 @@ RECENT CHANGES
 * Imp: Strip admin tables (by Max Chadwick, #309)
 * Imp: Updated Magento releases (by Kristof Ringleff, #311)
 * Imp: More config values for install command (by Manuele Menozzi, #312)
-* New: Command media:dump (by Elias Kotlyar, #319)    
+* New: Command media:dump (by Elias Kotlyar, #319)
 * Fix: Undefined index during cronjob execution (by Anton Evers, #201)
 * Imp: Code imrovements (by Tom Klingenberg)
 * Fix: Magento 2.2 Compatibility (by Christian Münch)
@@ -483,4 +483,4 @@ open source digital commerce platform, Magento 2.0.
 References
 ----------
 
-* Visit our blog: http://magerun.net
+* Visit our blog: <https://magerun.net>
