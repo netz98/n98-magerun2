@@ -70,6 +70,12 @@ class DumpCommand extends AbstractDatabaseCommand
                 'Do everything but the actual dump'
             )
             ->addOption(
+                'set-gtid-purged-off',
+                null,
+                InputOption::VALUE_NONE,
+                'add --set-gtid-purged=OFF'
+            )
+            ->addOption(
                 'no-single-transaction',
                 null,
                 InputOption::VALUE_NONE,
@@ -285,6 +291,10 @@ HELP;
 
         if ($input->getOption('human-readable')) {
             $execs->addOptions('--complete-insert --skip-extended-insert ');
+        }
+
+        if ($input->getOption('set-gtid-purged-off')) {
+            $execs->addOptions('--set-gtid-purged=OFF ');
         }
 
         if ($input->getOption('add-routines')) {
