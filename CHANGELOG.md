@@ -1,6 +1,11 @@
 RECENT CHANGES
 ==============
 
+4.4.0-dev
+---------
+
+- Updated Symfony dependencies (Dependabot)
+
 4.3.0
 -----
 
