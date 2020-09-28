@@ -26,7 +26,7 @@ class ApplicationTest extends TestCase
 
         $buffer = file_get_contents($projectDir . '/CHANGELOG.md');
 
-        $versionFromChangelog = preg_match('^([0-9]|[1-9][0-9]*)\.([0-9]|[1-9][0-9]*)\.([0-9]|[1-9][0-9]*)(?:-([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?(?:\+[0-9A-Za-z-]+)?$', $buffer, $matches) ? $matches[0] : null;
+        $versionFromChangelog = preg_match('#^([0-9]|[1-9][0-9]*)\.([0-9]|[1-9][0-9]*)\.([0-9]|[1-9][0-9]*)(?:-([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?(?:\+[0-9A-Za-z-]+)?$#', $buffer, $matches) ? $matches[0] : null;
 
         $this->assertEquals(Application::APP_VERSION, $versionFromVersionTxt, 'version.txt same as APP_VERSION');
         $this->assertEquals(Application::APP_VERSION, $versionFromChangelog, 'CHANGELOG.md same as APP_VERSION');
