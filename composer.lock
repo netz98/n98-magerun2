@@ -2350,16 +2350,16 @@
         },
         {
             "name": "captainhook/captainhook",
-            "version": "5.4.0",
+            "version": "5.4.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/CaptainHookPhp/captainhook.git",
-                "reference": "63627ba9b1140674164ea66619ee1225555edaca"
+                "reference": "5e3762fe39b2144ad0941dbd2281e5c828dc49d2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/CaptainHookPhp/captainhook/zipball/63627ba9b1140674164ea66619ee1225555edaca",
-                "reference": "63627ba9b1140674164ea66619ee1225555edaca",
+                "url": "https://api.github.com/repos/CaptainHookPhp/captainhook/zipball/5e3762fe39b2144ad0941dbd2281e5c828dc49d2",
+                "reference": "5e3762fe39b2144ad0941dbd2281e5c828dc49d2",
                 "shasum": ""
             },
             "require": {
@@ -2424,7 +2424,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2020-09-27T22:24:07+00:00"
+            "time": "2020-10-15T14:41:17+00:00"
         },
         {
             "name": "doctrine/annotations",
