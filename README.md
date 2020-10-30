@@ -969,3 +969,15 @@ Toggles the status for a CMS block based on the given Block identifier.
 ```sh
 n98-magerun2.phar cms:block:toggle [blockId]
 ```
+
+### Change Admin user status
+
+Changes the admin user based on the options, the command will toggle
+the status if no options are supplied.
+
+```sh
+n98-magerun2.phar admin:user:change-status [user] [--activate] [--deactivate]
+```
+
+_Note: It is possible for a user to exist with a username that matches
+the email of a different user. In this case the first matched user will be changed._
