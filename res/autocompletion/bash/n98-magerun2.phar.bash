@@ -177,7 +177,7 @@ _n98-magerun2()
             opts="${opts} "
             ;;
             dev:module:create)
-            opts="${opts} --minimal --add-blocks --add-helpers --add-models --add-setup --add-all --enable --modman --add-readme --add-composer --author-name --author-email --description"
+            opts="${opts} --minimal --add-blocks --add-helpers --add-models --add-setup --add-all --enable --modman --add-readme --add-composer --add-strict-types --author-name --author-email --description"
             ;;
             dev:module:list)
             opts="${opts} --vendor --format"
