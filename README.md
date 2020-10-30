@@ -961,3 +961,11 @@ n98-magerun2.phar script -d foo=bar filename
 
 It's possible to define multiple values by passing more than one
 option.
+
+### Toggle CMS Block status
+
+Toggles the status for a CMS block based on the given Block identifier.
+
+```sh
+n98-magerun2.phar cms:block:toggle [blockId]
+```
