@@ -1,5 +1,9 @@
 <?php
 
+{%  if addStrictTypes %}
+declare(strict_types=1);
+
+{%  endif %}
 use Magento\Framework\Component\ComponentRegistrar;
 
 ComponentRegistrar::register(

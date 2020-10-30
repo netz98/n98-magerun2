@@ -32,6 +32,7 @@ class CreateCommand extends AbstractMagentoCommand
             ->addOption('modman', null, InputOption::VALUE_NONE, 'Create all files in folder with a modman file.')
             ->addOption('add-readme', null, InputOption::VALUE_NONE, 'Adds a readme.md file to generated module')
             ->addOption('add-composer', null, InputOption::VALUE_NONE, 'Adds a composer.json file to generated module')
+            ->addOption('add-strict-types', null, InputOption::VALUE_NONE, 'Add strict_types declaration to generated PHP files')
             ->addOption('author-name', null, InputOption::VALUE_OPTIONAL, 'Author for readme.md or composer.json')
             ->addOption('author-email', null, InputOption::VALUE_OPTIONAL, 'Author for readme.md or composer.json')
             ->addOption('description', null, InputOption::VALUE_OPTIONAL, 'Description for readme.md or composer.json')
@@ -142,6 +143,7 @@ class CreateCommand extends AbstractMagentoCommand
             'authorName'      => $input->getOption('author-name'),
             'authorEmail'     => $input->getOption('author-email'),
             'description'     => $input->getOption('description'),
+            'addStrictTypes'  => $input->getOption('add-strict-types'),
         ]);
     }
 

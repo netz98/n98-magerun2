@@ -1,5 +1,9 @@
 <?php
 
+{%  if addStrictTypes %}
+declare(strict_types=1);
+
+{%  endif %}
 namespace {{ vendorNamespace }}\{{ moduleName }}\Setup;
 
 use Magento\Framework\Setup\ModuleContextInterface;
