@@ -4,17 +4,16 @@ declare(strict_types=1);
 
 namespace N98\Magento\Command\Admin\User;
 
-use Magento\User\Model\User;
+use function is_string;
 use Magento\User\Model\ResourceModel\User as UserResourceModel;
 use Magento\User\Model\ResourceModel\User\CollectionFactory;
+use Magento\User\Model\User;
 use N98\Magento\Command\AbstractMagentoCommand;
+use function sprintf;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-
-use function is_string;
-use function sprintf;
 
 /**
  * Class ToggleBlockCommand
@@ -28,13 +27,13 @@ class ChangeStatusCommand extends AbstractMagentoCommand
 
     protected $userResourceModel;
     protected $userCollectionFactory;
-    
+
     public function inject(UserResourceModel $userResourceModel, CollectionFactory $userCollectionFactory): void
     {
         $this->userResourceModel = $userResourceModel;
         $this->userCollectionFactory = $userCollectionFactory;
     }
-    
+
     protected function configure(): void
     {
         $this
@@ -99,7 +98,7 @@ class ChangeStatusCommand extends AbstractMagentoCommand
             return true;
         }
 
-        if($input->getOption(self::DEACTIVATE_OPTION) === true) {
+        if ($input->getOption(self::DEACTIVATE_OPTION) === true) {
             return false;
         }
 

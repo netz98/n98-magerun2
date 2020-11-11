@@ -4,16 +4,15 @@ declare(strict_types=1);
 
 namespace N98\Magento\Command\Cms;
 
+use function is_string;
 use Magento\Cms\Api\BlockRepositoryInterface;
-use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Exception\NoSuchEntityException;
 use N98\Magento\Command\AbstractMagentoCommand;
+use function sprintf;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-
-use function is_string;
-use function sprintf;
 
 /**
  * Class ToggleBlockCommand
