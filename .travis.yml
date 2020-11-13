@@ -40,6 +40,10 @@ matrix:
         -0 -n1 -P8 php -l | grep -v '^No syntax errors detected'; test $? -eq 1
 
     # Magento Versions
+    - name: Magento 2.4.1 PHP 7.4
+      php: 7.4
+      env: MAGENTO_VERSION="magento-ce-2.4.1" INSTALL_SAMPLE_DATA=0
+
     - name: Magento 2.4.0 PHP 7.4
       php: 7.4
       env: MAGENTO_VERSION="magento-ce-2.4.0" INSTALL_SAMPLE_DATA=0
