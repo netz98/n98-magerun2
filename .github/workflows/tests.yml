@@ -25,7 +25,7 @@ jobs:
         env:
           MYSQL_ROOT_PASSWORD: root
         ports:
-          - 3306:3306
+          - 3306
         options: --tmpfs /tmp:rw --tmpfs /var/lib/mysql:rw --health-cmd="mysqladmin ping"
     env:
       MAGENTO_MARKETPLACE_USERNAME: ${{ secrets.MAGENTO_MARKETPLACE_USERNAME }}
@@ -39,14 +39,16 @@ jobs:
           tools: composer:v1
           php-version: ${{ matrix.php-version }}
           extensions: mbstring, intl
+      - name: Install Composer Presissimo Plugin
+        run: composer global require hirak/prestissimo
       - name: Install dependencies
-        run: composer install
+        run: composer --ansi install
       - name: Install Magento ${{ matrix.magento-version }}
         run: |
           composer global config http-basic.repo.magento.com "${MAGENTO_MARKETPLACE_USERNAME}" "${MAGENTO_MARKETPLACE_PASSWORD}";
-          bin/n98-magerun2 install \
+          bin/n98-magerun2 --ansi install \
           --magentoVersionByName="${{ matrix.magento-version }}" --installationFolder="./magento" \
-          --dbHost=localhost --dbUser=root --dbPass=root --dbName="magento" \
+          --dbHost=mysql --dbPort=3306 --dbUser=root --dbPass=root --dbName="magento" \
           --useDefaultConfigParams=yes \
           --baseUrl="http://gitbub.magerun.test/";
 
