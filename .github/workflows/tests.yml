@@ -1,0 +1,44 @@
+name: Tests
+on: [push]
+
+jobs:
+  phpunit:
+    name: Unit Tests
+    runs-on: ${{ matrix.operating-system }}
+    strategy:
+      matrix:
+        include:
+          - magento-version: 2.4.1
+            operating-system: ubuntu-latest
+            php-version: 7.4
+    services:
+      es:
+        image: docker.elastic.co/elasticsearch/elasticsearch:7.8.0
+        ports:
+          - 9200:9200
+          - 9300:9300
+        options: -e="discovery.type=single-node" --health-cmd="curl http://localhost:9200/_cluster/health" --health-interval=10s --health-timeout=5s --health-retries=10
+      mysql:
+        image: mysql:5.7
+        env:
+          MYSQL_ROOT_PASSWORD: root
+        ports:
+          - 3306:3306
+        options: --tmpfs /tmp:rw --tmpfs /var/lib/mysql:rw --health-cmd="mysqladmin ping"
+    env:
+      MAGENTO_MARKETPLACE_USERNAME: ${{ secrets.MAGENTO_MARKETPLACE_USERNAME }}
+      MAGENTO_MARKETPLACE_PASSWORD: ${{ secrets.MAGENTO_MARKETPLACE_PASSWORD }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-versions }}
+          extensions: mbstring, intl
+      - name: install Magento
+        run: |
+          bin/n98-magerun2 install \
+          --magentoVersionByName="${{ matrix.magento-version }}" --installationFolder="./magento" \
+          --dbHost=localhost --dbUser=root --dbPass=root --dbName="magento" \
+          --useDefaultConfigParams=yes \
+          --baseUrl="http://gitbub.magerun.test/"
