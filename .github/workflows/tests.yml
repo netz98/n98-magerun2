@@ -19,6 +19,18 @@ jobs:
             php-version: 7.3
             mysql-version: 5.7
             elsticsearch-version: 7.8.0
+
+          - magento-version: magento-ce-2.3.5-p2
+            operating-system: ubuntu-latest
+            php-version: 7.3
+            mysql-version: 5.7
+            elsticsearch-version: 7.8.0
+          
+          - magento-version: magento-ce-2.3.4
+            operating-system: ubuntu-latest
+            php-version: 7.3
+            mysql-version: 5.7
+            elsticsearch-version: 7.8.0
           
     services:
       elaticsearch:
