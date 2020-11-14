@@ -31,6 +31,7 @@ jobs:
       MAGENTO_MARKETPLACE_USERNAME: ${{ secrets.MAGENTO_MARKETPLACE_USERNAME }}
       MAGENTO_MARKETPLACE_PASSWORD: ${{ secrets.MAGENTO_MARKETPLACE_PASSWORD }}
       COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
     steps:
       - uses: actions/checkout@v2
 
@@ -48,6 +49,9 @@ jobs:
 
       - name: Install dependencies
         run: composer --ansi install
+
+      - name: Run php-cs-fixer
+        run: vendor/bin/php-cs-fixer --diff --dry-run -v fix
 
       - name: Install Magento ${{ matrix.magento-version }}
         run: |
