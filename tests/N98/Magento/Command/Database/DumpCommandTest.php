@@ -142,6 +142,52 @@ class DumpCommandTest extends TestCase
         );
     }
 
+    public function testWithIncludeOptions()
+    {
+        $input = [
+            'command'        => 'db:dump',
+            '--add-time'     => true,
+            '--only-command' => true,
+            '--force'        => true,
+            '--include'      => 'core_config_data',
+            '--compression'  => 'gzip',
+        ];
+
+        $dbConfig = $this->getDatabaseConnection()->getConfig();
+        $db = $dbConfig['dbname'];
+
+        $this->assertDisplayNotContains($input, "--ignore-table=$db.core_config_data");
+        $this->assertDisplayContains($input, "catalog_product_entity");
+        $this->assertDisplayContains($input, ".sql.gz");
+    }
+
+    public function testWithIncludeExcludeOptions()
+    {
+        $input = [
+            'command'        => 'db:dump',
+            '--add-time'     => true,
+            '--only-command' => true,
+            '--force'        => true,
+            '--include'      => '@development',
+        ];
+
+        $dbConfig = $this->getDatabaseConnection()->getConfig();
+        $db = $dbConfig['dbname'];
+
+        $this->assertDisplayRegExp($input, "/--ignore-table=$db.customer_entity/");
+        $this->assertDisplayRegExp($input, "/--ignore-table=$db.customer_address_entity/");
+        $this->assertDisplayRegExp($input, "/--ignore-table=$db.sales_order/");
+        $this->assertDisplayContains($input, "admin_user");
+        $this->assertDisplayNotContains($input, ".sql.gz");
+
+        $input['--exclude'] = '@admin';
+        $this->assertDisplayRegExp($input, "/--ignore-table=$db.customer_entity/");
+        $this->assertDisplayRegExp($input, "/--ignore-table=$db.customer_address_entity/");
+        $this->assertDisplayRegExp($input, "/--ignore-table=$db.sales_order/");
+        $this->assertDisplayNotContains($input, "admin_user");
+
+    }
+
     /**
      * @test
      * @link https://github.com/netz98/n98-magerun2/issues/200

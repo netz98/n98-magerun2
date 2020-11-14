@@ -125,6 +125,12 @@ class DumpCommand extends AbstractDatabaseCommand
                 'Tables to exclude entirely from the dump (including structure)'
             )
             ->addOption(
+                'include',
+                'i',
+                InputOption::VALUE_OPTIONAL,
+                'Tables to include entirely in the dump (including structure)'
+            )
+            ->addOption(
                 'force',
                 'f',
                 InputOption::VALUE_NONE,
@@ -441,13 +447,23 @@ HELP;
      */
     private function excludeTables(InputInterface $input, OutputInterface $output)
     {
-        if (!$input->getOption('exclude')) {
-            return [];
+        $excludeTables = [];
+
+        if ($input->getOption('include')) {
+            $database = $this->getDatabaseHelper();
+            $includeTables = $this->resolveDatabaseTables($input->getOption('include'));
+            $excludeTables = array_diff($database->getTables(), $includeTables);
         }
 
-        $excludeTables = $this->resolveDatabaseTables($input->getOption('exclude'));
+        if ($input->getOption('exclude')) {
+            $excludeTables = array_merge($excludeTables, $this->resolveDatabaseTables($input->getOption('exclude')));
+            if (isset($includeTables)) { // only needed when also "include" was given
+                asort($excludeTables);
+                $excludeTables = array_unique($excludeTables);
+            }
+        }
 
-        if ($this->nonCommandOutput($input)) {
+        if ($excludeTables && $this->nonCommandOutput($input)) {
             $output->writeln(
                 sprintf('<comment>Excluded: <info>%s</info></comment>', implode(' ', $excludeTables))
             );
