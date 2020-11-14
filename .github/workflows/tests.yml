@@ -28,14 +28,18 @@ jobs:
     env:
       MAGENTO_MARKETPLACE_USERNAME: ${{ secrets.MAGENTO_MARKETPLACE_USERNAME }}
       MAGENTO_MARKETPLACE_PASSWORD: ${{ secrets.MAGENTO_MARKETPLACE_PASSWORD }}
+      COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - uses: actions/checkout@v2
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
+          tools: composer:v1
           php-version: ${{ matrix.php-version }}
           extensions: mbstring, intl
-      - name: install Magento
+      - name: Install dependencies
+        run: composer install
+      - name: Install Magento ${{ matrix.magento-version }}
         run: |
           bin/n98-magerun2 install \
           --magentoVersionByName="${{ matrix.magento-version }}" --installationFolder="./magento" \
