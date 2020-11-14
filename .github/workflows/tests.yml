@@ -13,13 +13,21 @@ jobs:
             php-version: 7.4
             mysql-version: 8.0
             elsticsearch-version: 7.8.0
+
+          - magento-version: magento-ce-2.4.0
+            operating-system: ubuntu-latest
+            php-version: 7.3
+            mysql-version: 5.7
+            elsticsearch-version: 7.8.0
+          
     services:
-      es:
+      elaticsearch:
         image: docker.elastic.co/elasticsearch/elasticsearch:${{ matrix.elsticsearch-version }}
         ports:
           - 9200:9200
           - 9300:9300
         options: -e="discovery.type=single-node" --health-cmd="curl http://localhost:9200/_cluster/health" --health-interval=10s --health-timeout=5s --health-retries=10
+        
       mysql:
         image: mysql:${{ matrix.mysql-version }}
         env:
