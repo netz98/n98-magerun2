@@ -11,15 +11,17 @@ jobs:
           - magento-version: magento-ce-2.4.1
             operating-system: ubuntu-latest
             php-version: 7.4
+            mysql-version: 8.0
+            elsticsearch-version: 7.8.0
     services:
       es:
-        image: docker.elastic.co/elasticsearch/elasticsearch:7.8.0
+        image: docker.elastic.co/elasticsearch/elasticsearch:${{ matrix.elsticsearch-version }}
         ports:
           - 9200:9200
           - 9300:9300
         options: -e="discovery.type=single-node" --health-cmd="curl http://localhost:9200/_cluster/health" --health-interval=10s --health-timeout=5s --health-retries=10
       mysql:
-        image: mysql:5.7
+        image: mysql:${{ matrix.mysql-version }}
         env:
           MYSQL_ROOT_PASSWORD: root
         ports:
@@ -41,8 +43,10 @@ jobs:
         run: composer install
       - name: Install Magento ${{ matrix.magento-version }}
         run: |
+          composer global config http-basic.repo.magento.com "${MAGENTO_MARKETPLACE_USERNAME}" "${MAGENTO_MARKETPLACE_PASSWORD}";
           bin/n98-magerun2 install \
           --magentoVersionByName="${{ matrix.magento-version }}" --installationFolder="./magento" \
           --dbHost=localhost --dbUser=root --dbPass=root --dbName="magento" \
           --useDefaultConfigParams=yes \
-          --baseUrl="http://gitbub.magerun.test/"
+          --baseUrl="http://gitbub.magerun.test/";
+
