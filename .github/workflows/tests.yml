@@ -25,7 +25,7 @@ jobs:
         env:
           MYSQL_ROOT_PASSWORD: root
         ports:
-          - 3306
+          - 3306:3306
         options: --tmpfs /tmp:rw --tmpfs /var/lib/mysql:rw --health-cmd="mysqladmin ping"
     env:
       MAGENTO_MARKETPLACE_USERNAME: ${{ secrets.MAGENTO_MARKETPLACE_USERNAME }}
@@ -48,7 +48,7 @@ jobs:
           composer global config http-basic.repo.magento.com "${MAGENTO_MARKETPLACE_USERNAME}" "${MAGENTO_MARKETPLACE_PASSWORD}";
           bin/n98-magerun2 --ansi install \
           --magentoVersionByName="${{ matrix.magento-version }}" --installationFolder="./magento" \
-          --dbHost=mysql --dbPort=3306 --dbUser=root --dbPass=root --dbName="magento" \
+          --dbHost=127.0.0.1 --dbPort=3306 --dbUser=root --dbPass=root --dbName="magento" \
           --useDefaultConfigParams=yes \
           --baseUrl="http://gitbub.magerun.test/";
 
