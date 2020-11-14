@@ -33,16 +33,22 @@ jobs:
       COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - uses: actions/checkout@v2
+
+      # https://github.com/marketplace/actions/setup-php-action#matrix-setup
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
           tools: composer:v1
           php-version: ${{ matrix.php-version }}
           extensions: mbstring, intl
+          coverage: none
+
       - name: Install Composer Presissimo Plugin
         run: composer global require hirak/prestissimo
+
       - name: Install dependencies
         run: composer --ansi install
+
       - name: Install Magento ${{ matrix.magento-version }}
         run: |
           composer global config http-basic.repo.magento.com "${MAGENTO_MARKETPLACE_USERNAME}" "${MAGENTO_MARKETPLACE_PASSWORD}";
@@ -52,3 +58,12 @@ jobs:
           --useDefaultConfigParams=yes \
           --baseUrl="http://gitbub.magerun.test/";
 
+      - name: Run PHPUnit (Developer Mode)
+        run: vendor/bin/phpunit --debug --process-isolation
+
+      - name: Activate Magento Production Mode
+        working-directory: ./magento
+        run: bin/magento -- deploy:mode:set --skip-compilation production
+
+      - name: Run PHPUnit (Production Mode)
+        run: vendor/bin/phpunit --debug --process-isolation
