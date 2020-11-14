@@ -59,7 +59,7 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          tools: composer:v1
+          tools: composer:v1, cs2pr
           php-version: ${{ matrix.php-version }}
           extensions: mbstring, intl
           coverage: none
@@ -71,7 +71,7 @@ jobs:
         run: composer --ansi install
 
       - name: Run php-cs-fixer
-        run: vendor/bin/php-cs-fixer --diff --dry-run -v fix
+        run: vendor/bin/php-cs-fixer fix --dry-run --format=checkstyle | cs2pr
 
       - name: Install Magento ${{ matrix.magento-version }}
         run: |
@@ -82,12 +82,15 @@ jobs:
           --useDefaultConfigParams=yes \
           --baseUrl="http://gitbub.magerun.test/";
 
+      - name: Configure matchers
+        uses: mheap/phpunit-matcher-action@master
+
       - name: Run PHPUnit (Developer Mode)
-        run: vendor/bin/phpunit --debug --process-isolation
+        run: vendor/bin/phpunit --process-isolation --teamcity
 
       - name: Activate Magento Production Mode
         working-directory: ./magento
         run: bin/magento deploy:mode:set --skip-compilation production
 
       - name: Run PHPUnit (Production Mode)
-        run: vendor/bin/phpunit --debug --process-isolation
+        run: vendor/bin/phpunit --process-isolation --teamcity
