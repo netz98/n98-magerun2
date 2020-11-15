@@ -5,14 +5,7 @@ name: Lint Code Base
 # https://help.github.com/en/articles/workflow-syntax-for-github-actions
 #
 
-#############################
-# Start the job on all push #
-#############################
-on:
-  push:
-    branches: [develop]
-  pull_request:
-    branches: [develop]
+on: [push, pull_request]
 
 ###############
 # Set the Job #
