@@ -157,7 +157,7 @@ class DumpCommandTest extends TestCase
         $db = $dbConfig['dbname'];
 
         $this->assertDisplayNotContains($input, "--ignore-table=$db.core_config_data");
-        $this->assertDisplayContains($input, "catalog_product_entity");
+        $this->assertDisplayContains($input, "--ignore-table=$db.catalog_product_entity");
         $this->assertDisplayContains($input, ".sql.gz");
     }
 
@@ -174,17 +174,17 @@ class DumpCommandTest extends TestCase
         $dbConfig = $this->getDatabaseConnection()->getConfig();
         $db = $dbConfig['dbname'];
 
-        $this->assertDisplayRegExp($input, "/--ignore-table=$db.customer_entity/");
-        $this->assertDisplayRegExp($input, "/--ignore-table=$db.customer_address_entity/");
-        $this->assertDisplayRegExp($input, "/--ignore-table=$db.sales_order/");
-        $this->assertDisplayContains($input, "admin_user");
+        $this->assertDisplayNotContains($input, "--ignore-table=$db.customer_entity");
+        $this->assertDisplayNotContains($input, "--ignore-table=$db.customer_address_entity");
+        $this->assertDisplayNotContains($input, "--ignore-table=$db.admin_user");
+        $this->assertDisplayContains($input, "--ignore-table=$db.catalog_product_entity");
         $this->assertDisplayNotContains($input, ".sql.gz");
 
         $input['--exclude'] = '@admin';
-        $this->assertDisplayRegExp($input, "/--ignore-table=$db.customer_entity/");
-        $this->assertDisplayRegExp($input, "/--ignore-table=$db.customer_address_entity/");
-        $this->assertDisplayRegExp($input, "/--ignore-table=$db.sales_order/");
-        $this->assertDisplayNotContains($input, "admin_user");
+        $this->assertDisplayNotContains($input, "--ignore-table=$db.customer_entity");
+        $this->assertDisplayNotContains($input, "--ignore-table=$db.customer_address_entity");
+        $this->assertDisplayContains($input, "--ignore-table=$db.admin_user");
+        $this->assertDisplayContains($input, "--ignore-table=$db.catalog_product_entity");
 
     }
 
