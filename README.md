@@ -590,6 +590,7 @@ Dumps configured Magento database with `mysqldump`.
 | `--stdout`                | Dump to stdout                                                                        |
 | `--strip`                 | Tables to strip (dump only structure of those tables)                                 |
 | `--exclude`               | Tables to exclude entirely from the dump (including structure)                        |
+| `--include`               | Tables to include entirely to the dump (default: all tables are included)             |
 | `--force` `-f`            | Do not prompt if all options are defined                                              |
 | `--keep-column-statistics`| Retains `column statistics` table in `mysqldump`                                      |
 
