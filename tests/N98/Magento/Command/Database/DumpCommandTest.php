@@ -185,7 +185,6 @@ class DumpCommandTest extends TestCase
         $this->assertDisplayNotContains($input, "--ignore-table=$db.customer_address_entity");
         $this->assertDisplayContains($input, "--ignore-table=$db.admin_user");
         $this->assertDisplayContains($input, "--ignore-table=$db.catalog_product_entity");
-
     }
 
     /**
