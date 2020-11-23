@@ -32,6 +32,7 @@ class ImportCommand extends AbstractDatabaseCommand
             )
             ->addOption('drop', null, InputOption::VALUE_NONE, 'Drop and recreate database before import')
             ->addOption('drop-tables', null, InputOption::VALUE_NONE, 'Drop tables before import')
+            ->addOption('force', null, InputOption::VALUE_NONE, 'Continue even if an SQL error occurs')
             ->setDescription('Imports database with mysql cli client according to database defined in env.php');
 
         $help = <<<HELP
@@ -121,9 +122,14 @@ HELP;
 
         $compressor = AbstractCompressor::create($input->getOption('compression'));
 
+        $exec = 'mysql ';
+        if ($input->getOption('force')) {
+            $exec = 'mysql --force ';
+        }
+
         // create import command
         $exec = $compressor->getDecompressingCommand(
-            'mysql ' . $dbHelper->getMysqlClientToolConnectionString(),
+            $exec . $dbHelper->getMysqlClientToolConnectionString(),
             $fileName
         );
         if ($input->getOption('only-command')) {
