@@ -682,6 +682,10 @@ Available Table Groups:
 | `--drop-tables`                 | Drop tables before import                                                          |
 | `--force`                       | Continue even if an SQL error occurs                                               |
 
+```sh
+n98-magerun2.phar db:import
+```
+
 ### Clear static view files
 
 ```sh
