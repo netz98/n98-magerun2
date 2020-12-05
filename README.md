@@ -149,6 +149,8 @@ Detailed information is available in the bash-completions FAQ:
 
 ## Usage / Commands
 
+> **NOTE** There are more commands available as documented here. Please use the list command to see all.
+
 All commands try to detect the current Magento root directory. If you
 have multiple Magento installations you must change your working
 directory to the preferred installation.
@@ -577,22 +579,23 @@ Dumps configured Magento database with `mysqldump`.
 
 | Option                    | Description                                                                           |
 | --------------------------| --------------------------------------------------------------------------------------|
+| `--add-routines`          | Include stored routines in dump (procedures & functions).                             |
 | `--add-time`              | Adds time to filename (only if filename was not provided)                             |
 | `--compression` `-c`      | Compress the dump file using one of the supported algorithms                          |
+| `--dry-run`               | Do everything but the actual dump. Useful to test.                                    |
+| `--exclude`               | Tables to exclude entirely from the dump (including structure)                        |
+| `--force` `-f`            | Do not prompt if all options are defined                                              |
+| `--git-friendly`          | Use one insert statement, but with line breaks instead of separate insert statements. |
+| `--human-readable`        | Use a single insert with column names per row.                                        |
+| `--include`               | Tables to include entirely to the dump (default: all tables are included)             |
+| `--keep-column-statistics`| Retains `column statistics` table in `mysqldump`                                      |
+| `--no-single-transaction` | Do not use single-transaction (not recommended, this is blocking)                     |
+| `--no-tablespaces`        | Use this option if you want to create a dump without having the PROCESS privilege.    |
 | `--only-command`          | Print only mysqldump command. Does not execute.                                       |
 | `--print-only-filename`   | Execute and prints not output except the dump filename                                |
-| `--dry-run`               | Do everything but the actual dump. Useful to test.                                    |
-| `--no-single-transaction` | Do not use single-transaction (not recommended, this is blocking)                     |
-| `--human-readable`        | Use a single insert with column names per row.                                        |
-| `--git-friendly`          | Use one insert statement, but with line breaks instead of separate insert statements. |
-| `--add-routines`          | Include stored routines in dump (procedures & functions).                             |
-| `--no-tablespaces`        | Use this option if you want to create a dump without having the PROCESS privilege.    |
+| `--set-gtid-purged-off'`  | Adds --set-gtid-purged=OFF to mysqlqump                                               |
 | `--stdout`                | Dump to stdout                                                                        |
 | `--strip`                 | Tables to strip (dump only structure of those tables)                                 |
-| `--exclude`               | Tables to exclude entirely from the dump (including structure)                        |
-| `--include`               | Tables to include entirely to the dump (default: all tables are included)             |
-| `--force` `-f`            | Do not prompt if all options are defined                                              |
-| `--keep-column-statistics`| Retains `column statistics` table in `mysqldump`                                      |
 
 ```sh
 n98-magerun2.phar db:dump
@@ -658,6 +661,27 @@ Available Table Groups:
 
 ---
 
+### Import database
+
+- Requires MySQL CLI tools
+
+**Arguments**
+
+- filename - Dump filename
+
+**Options**
+
+| Option                          | Description                                                                           |
+| --------------------------------| --------------------------------------------------------------------------------------|
+| `--connection=CONNECTION`       | Select DB connection type for Magento configurations with several databases        |                                 |                                                              |
+| `-c`, `--compression=COMPRESSION` | The compression of the specified file                                              |
+| `--only-command`                | Print only mysql command. Do not execute                                           |
+| `--only-if-empty`               | Imports only if database is empty                                                  |
+| `--optimize`                    | Convert verbose INSERTs to short ones before import (not working with compression) |
+| `--drop`                        | Drop and recreate database before import                                           |
+| `--drop-tables`                 | Drop tables before import                                                          |
+| `--force`                       | Continue even if an SQL error occurs                                               |
+
 ### Clear static view files
 
 ```sh
@@ -681,6 +705,37 @@ To clear assets for specific theme(s) only:
 ```sh
 n98-magerun2.phar dev:asset:clear --theme=Magento/luma
 ```
+
+### List Themes
+
+```sh
+n98-magerun2.phar dev:theme:list
+```
+
+---
+
+### Create Module Skeleton
+
+Creates an empty module and registers it in current Magento shop.
+
+```sh
+n98-magerun2.phar dev:module:create [-m|--minimal] [--add-blocks] [--add-helpers] [--add-models] [--add-setup] [--add-all] [-e|--enable] [--modman] [--add-readme] [--add-composer] [--add-strict-types] [--author-name [AUTHOR-NAME]] [--author-email [AUTHOR-EMAIL]] [--description [DESCRIPTION]] [-h|--help] [-q|--quiet] [-v|vv|vvv|--verbose] [-V|--version] [--ansi] [--no-ansi] [-n|--no-interaction] [--root-dir [ROOT-DIR]] [--skip-config] [--skip-root-check] [--skip-core-commands [SKIP-CORE-COMMANDS]] [--skip-magento-compatibility-check] [--] <command> <vendorNamespace> <moduleName>
+```
+
+### List modules
+
+```sh
+n98-magerun2.phar dev:module:list [--vendor=VENDOR]
+```
+
+---
+
+### List Observers
+
+```sh
+n98-magerun2.phar dev:module:observer:list [--sort] <event> [<area>
+```
+
 
 ---
 
