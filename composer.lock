@@ -2315,23 +2315,23 @@
         },
         {
             "name": "captainhook/captainhook",
-            "version": "5.4.3",
+            "version": "5.4.4",
             "source": {
                 "type": "git",
-                "url": "https://github.com/CaptainHookPhp/captainhook.git",
-                "reference": "b5cd61789054379a57a0b5f85477ae490244a38e"
+                "url": "https://github.com/captainhookphp/captainhook.git",
+                "reference": "c91b567364f20bc7c3d2db064cd59b4c4c731983"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/CaptainHookPhp/captainhook/zipball/b5cd61789054379a57a0b5f85477ae490244a38e",
-                "reference": "b5cd61789054379a57a0b5f85477ae490244a38e",
+                "url": "https://api.github.com/repos/captainhookphp/captainhook/zipball/c91b567364f20bc7c3d2db064cd59b4c4c731983",
+                "reference": "c91b567364f20bc7c3d2db064cd59b4c4c731983",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
                 "ext-spl": "*",
                 "ext-xml": "*",
-                "php": "^7.2",
+                "php": ">=7.2",
                 "sebastianfeldmann/camino": "^0.9.2",
                 "sebastianfeldmann/cli": "^3.3",
                 "sebastianfeldmann/git": "^3.4",
@@ -2351,7 +2351,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "6.0.x-dev"
+                    "dev-main": "6.0.x-dev"
                 },
                 "captainhook": {
                     "config": "captainhook.json"
@@ -2389,7 +2389,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2020-10-28T09:32:32+00:00"
+            "time": "2020-12-07T19:38:34+00:00"
         },
         {
             "name": "doctrine/annotations",
