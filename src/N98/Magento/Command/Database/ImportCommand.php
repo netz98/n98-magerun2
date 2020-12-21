@@ -160,11 +160,13 @@ HELP;
             $dbHelper->dropTables($output);
         }
 
-        $this->doImport($output, $fileName, $exec);
+        $success = $this->doImport($output, $fileName, $exec);
 
         if ($input->getOption('optimize')) {
             unlink($fileName);
         }
+
+        return $success ? 0 : 1;
     }
 
     public function asText()
@@ -194,10 +196,12 @@ HELP;
      * @param string $fileName
      * @param string $exec
      *
-     * @return void
+     * @return bool
      */
-    protected function doImport(OutputInterface $output, $fileName, $exec)
+    protected function doImport(OutputInterface $output, $fileName, $exec): bool
     {
+        $success = true;
+
         $returnValue = null;
         $commandOutput = null;
         $output->writeln(
@@ -207,7 +211,10 @@ HELP;
         exec($exec, $commandOutput, $returnValue);
         if ($returnValue != 0) {
             $output->writeln('<error>' . implode(PHP_EOL, $commandOutput) . '</error>');
+            $success = false;
         }
         $output->writeln('<info>Finished</info>');
+
+        return $success;
     }
 }
