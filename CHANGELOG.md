@@ -4,6 +4,12 @@ RECENT CHANGES
 4.5.0-dev
 ---------
 
+- Imp: Updated Symfony dependencies (Dependabot)
+- Imp: Updated faker dependency (Dependabot)
+- Imp: Updated captainhook dependency (Dependabot)
+- Imp: Updated php-cs-fixer dependency (Dependabot)
+- Fix: When the mysql import fails, make db:import fail as well (by Pieter Hoste)
+- Fix: Set php version to 7.4 in Github actions (by Christian Münch)
 
 4.4.0
 -----
