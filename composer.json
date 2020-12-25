@@ -54,16 +54,13 @@
          "n98/magerun2-dist": "Deploys only the phar file. Use this to prevent dependency conflicts."
     },
     "autoload": {
-        "psr-0": {
-            "N98": "src"
-        },
         "psr-4": {
-            "N98\\": "shared/src/N98"
+            "N98\\": "src/N98"
         }
     },
     "autoload-dev": {
-        "psr-0": {
-            "N98": "tests"
+        "psr-4": {
+            "N98\\": "tests/N98"
         }
     },
     "authors": [
