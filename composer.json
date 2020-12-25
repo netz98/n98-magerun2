@@ -52,7 +52,7 @@
     },
     "suggest": {
          "n98/magerun2-dist": "Deploys only the phar file. Use this to prevent dependency conflicts."
-    }, 
+    },
     "autoload": {
         "psr-0": {
             "N98": "src"
