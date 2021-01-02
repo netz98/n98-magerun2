@@ -5,7 +5,7 @@ from command line.
 
 ## Build Status
 
-| **Latest Release**         | ![Tests](https://github.com/cmuench/n98-magerun2/workflows/Tests/badge.svg?branch=master) [![Quality Score Master Branch](https://scrutinizer-ci.com/g/netz98/n98-magerun2/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/netz98/n98-magerun2/)  ![https://packagist.org/packages/n98/magerun2](https://poser.pugx.org/n98/magerun2/v/stable.png)     |
+| **Latest Release**         | ![Maintenance Badge](https://img.shields.io/maintenance/yes/2021.svg) ![Tests](https://github.com/cmuench/n98-magerun2/workflows/Tests/badge.svg?branch=master) [![Quality Score Master Branch](https://scrutinizer-ci.com/g/netz98/n98-magerun2/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/netz98/n98-magerun2/)  ![https://packagist.org/packages/n98/magerun2](https://poser.pugx.org/n98/magerun2/v/stable.png)     |
 |------------------------    |-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | **Development Branch**     | ![Tests](https://github.com/cmuench/n98-magerun2/workflows/Tests/badge.svg?branch=develop) [![Quality Score Develop Branch](https://scrutinizer-ci.com/g/netz98/n98-magerun2/badges/quality-score.png?b=develop)](https://scrutinizer-ci.com/g/netz98/n98-magerun2/)                                                                                                     |
 
