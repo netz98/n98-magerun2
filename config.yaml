@@ -219,7 +219,7 @@ commands:
 
       - id: trade
         description: Current trade data (customers and orders). You usally do not want those in developer systems.
-        tables: "@customers @sales @quotes @klarna"
+        tables: "@customers @sales @quotes @klarna @mailchimp"
 
       - id: development
         description: Removes logs and trade data so developers do not have to work with real customer data
