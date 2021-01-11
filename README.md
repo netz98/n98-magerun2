@@ -645,9 +645,10 @@ Available Table Groups:
 | `@development`            | Removes logs, sessions, trade data and admin users so developers do not have to work with real customer data or admin user accounts. |
 | `@dotmailer`              | Dotmailer module tables                                                                    |
 | `@ee_changelog`           | Changelog tables of new indexer since EE 1.13                                              |
-| `@idx`                    | Tables with `_idx` suffix and index event tables                                           |
+| `@idx`                    | Tables with `_idx` suffix and index event tables.                                          |
 | `@klarna`                 | Klarna tables containing information about klarna payments and their quotes/orders.        |
-| `@log`                    | Log tables                                                                                 |
+| `@log`                    | Log tables.                                                                                |
+| `@mailchimp`              | Mailchimp tables.                                                                          |
 | `@newrelic_reporting`     | New Relic reporting tables. These tables provide production metric data for New Relic.     |
 | `@oauth`                  | OAuth sessions, tokens, etc.                                                               |
 | `@quotes`                 | Cart (quote) data and B2B quotes.                                                          |
@@ -657,7 +658,7 @@ Available Table Groups:
 | `@sessions`               | Database session tables.                                                                   |
 | `@stripped`               | Standard definition for a stripped dump (logs and sessions).                               |
 | `@trade`                  | Current trade data (customers, orders and quotes). You usually do not want those in developer systems. |
-| `@temp`                   | Indexer __temp tables                                                                      |
+| `@temp`                   | Indexer __temp tables.                                                                     |
 
 ---
 
