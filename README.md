@@ -580,7 +580,7 @@ Dumps configured Magento database with `mysqldump`.
 | Option                    | Description                                                                           |
 | --------------------------| --------------------------------------------------------------------------------------|
 | `--add-routines`          | Include stored routines in dump (procedures & functions).                             |
-| `--add-time`              | Adds time to filename (only if filename was not provided)                             |
+| `--add-time`              | Adds time to filename (only if filename was provided)                                 |
 | `--compression` `-c`      | Compress the dump file using one of the supported algorithms                          |
 | `--dry-run`               | Do everything but the actual dump. Useful to test.                                    |
 | `--exclude`               | Tables to exclude entirely from the dump (including structure)                        |
