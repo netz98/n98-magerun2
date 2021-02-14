@@ -54,6 +54,7 @@ jobs:
           - 3306
         options: --tmpfs /tmp:rw --tmpfs /var/lib/mysql:rw --health-cmd="mysqladmin ping"
     env:
+      N98_MAGERUN2_TEST_MAGENTO_ROOT: ${{ env.GITHUB_WORKSPACE }}/magento
       MAGENTO_MARKETPLACE_USERNAME: ${{ secrets.MAGENTO_MARKETPLACE_USERNAME }}
       MAGENTO_MARKETPLACE_PASSWORD: ${{ secrets.MAGENTO_MARKETPLACE_PASSWORD }}
       COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
