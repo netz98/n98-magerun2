@@ -92,11 +92,11 @@ jobs:
         uses: mheap/phpunit-matcher-action@master
 
       - name: Run PHPUnit (Developer Mode)
-        run: N98_MAGERUN2_TEST_MAGENTO_ROOT=$GITHUB_WORKSPACE/magento vendor/bin/phpunit --process-isolation --teamcity
+        run: vendor/bin/phpunit --process-isolation --teamcity
 
       - name: Activate Magento Production Mode
         working-directory: ./magento
         run: bin/magento deploy:mode:set --skip-compilation production
 
       - name: Run PHPUnit (Production Mode)
-        run: N98_MAGERUN2_TEST_MAGENTO_ROOT=$GITHUB_WORKSPACE/magento vendor/bin/phpunit --process-isolation --teamcity
+        run: vendor/bin/phpunit --process-isolation --teamcity
