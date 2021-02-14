@@ -61,9 +61,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Set env
-        run: echo ::set-env name=workspace::$GITHUB_WORKSPACE
-
       - name: Dump GitHub context
         env:
           GITHUB_CONTEXT: ${{ toJson(env) }}
@@ -101,7 +98,7 @@ jobs:
 
       - name: Run PHPUnit (Developer Mode)
         env:
-          N98_MAGERUN2_TEST_MAGENTO_ROOT: ${{ env.workspace }}/magento
+          N98_MAGERUN2_TEST_MAGENTO_ROOT: ${{ github.workspace }}/magento
         run: vendor/bin/phpunit --process-isolation --teamcity
 
       - name: Activate Magento Production Mode
@@ -110,5 +107,5 @@ jobs:
 
       - name: Run PHPUnit (Production Mode)
         env:
-          N98_MAGERUN2_TEST_MAGENTO_ROOT: ${{ env.workspace }}/magento
+          N98_MAGERUN2_TEST_MAGENTO_ROOT: ${{ github.workspace }}/magento
         run: vendor/bin/phpunit --process-isolation --teamcity
