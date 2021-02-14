@@ -1,15 +1,20 @@
 RECENT CHANGES
 ==============
 
-4.5.0-dev
----------
+4.5.0
+-----
 
+- Add: Magento 2.4.2 (by Christian Münch)
+- Imp: Change autoloading from PSR-0 to PSR-4 (by Tom Klingenberg)
+- Imp: Updated n98/junit-xml dependency (by Tom Klingenberg)
 - Imp: Updated Symfony dependencies (Dependabot)
 - Imp: Updated faker dependency (Dependabot)
 - Imp: Updated captainhook dependency (Dependabot)
 - Imp: Updated php-cs-fixer dependency (Dependabot)
+- Imp: Test with PHP 7.4 in github actions (by Christian Münch)
 - Fix: When the mysql import fails, make db:import fail as well (by Pieter Hoste)
 - Fix: Set php version to 7.4 in Github actions (by Christian Münch)
+- Fix: db:dump set correct default value (by Torben Höhn) 
 
 4.4.0
 -----
