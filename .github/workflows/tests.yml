@@ -63,7 +63,7 @@ jobs:
 
       - name: Dump GitHub context
         env:
-          GITHUB_CONTEXT: ${{ toJson(env) }}
+          GITHUB_CONTEXT: ${{ toJson(github) }}
         run: echo "$GITHUB_CONTEXT"
 
       # https://github.com/marketplace/actions/setup-php-action#matrix-setup
