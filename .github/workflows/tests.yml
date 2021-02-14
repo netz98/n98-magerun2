@@ -54,13 +54,20 @@ jobs:
           - 3306
         options: --tmpfs /tmp:rw --tmpfs /var/lib/mysql:rw --health-cmd="mysqladmin ping"
     env:
-      N98_MAGERUN2_TEST_MAGENTO_ROOT: ${{ env.GITHUB_WORKSPACE }}/magento
       MAGENTO_MARKETPLACE_USERNAME: ${{ secrets.MAGENTO_MARKETPLACE_USERNAME }}
       MAGENTO_MARKETPLACE_PASSWORD: ${{ secrets.MAGENTO_MARKETPLACE_PASSWORD }}
       COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
       - uses: actions/checkout@v2
+
+      - name: Set env
+        run: echo ::set-env name=workspace::$GITHUB_WORKSPACE
+
+      - name: Dump GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(env) }}
+        run: echo "$GITHUB_CONTEXT"
 
       # https://github.com/marketplace/actions/setup-php-action#matrix-setup
       - name: Setup PHP
@@ -93,6 +100,8 @@ jobs:
         uses: mheap/phpunit-matcher-action@master
 
       - name: Run PHPUnit (Developer Mode)
+        env:
+          N98_MAGERUN2_TEST_MAGENTO_ROOT: ${{ env.workspace }}/magento
         run: vendor/bin/phpunit --process-isolation --teamcity
 
       - name: Activate Magento Production Mode
@@ -100,4 +109,6 @@ jobs:
         run: bin/magento deploy:mode:set --skip-compilation production
 
       - name: Run PHPUnit (Production Mode)
+        env:
+          N98_MAGERUN2_TEST_MAGENTO_ROOT: ${{ env.workspace }}/magento
         run: vendor/bin/phpunit --process-isolation --teamcity
