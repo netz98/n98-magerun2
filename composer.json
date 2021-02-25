@@ -27,7 +27,7 @@
         "ext-posix": "*",
         "ext-zip": "*",
         "adbario/php-dot-notation": "^2.2",
-        "composer/composer": "~1.10.5",
+        "composer/composer": "~2.0.11",
         "fzaninotto/faker": "~1.4",
         "n98/junit-xml": "~1.0",
         "pbergman/tree-helper": "^1.0",
