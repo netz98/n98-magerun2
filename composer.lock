@@ -2361,16 +2361,16 @@
         },
         {
             "name": "captainhook/captainhook",
-            "version": "5.4.4",
+            "version": "5.4.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/captainhookphp/captainhook.git",
-                "reference": "c91b567364f20bc7c3d2db064cd59b4c4c731983"
+                "reference": "ece43fa22ff8b2cfae0e845c58c1367c547ff181"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/captainhookphp/captainhook/zipball/c91b567364f20bc7c3d2db064cd59b4c4c731983",
-                "reference": "c91b567364f20bc7c3d2db064cd59b4c4c731983",
+                "url": "https://api.github.com/repos/captainhookphp/captainhook/zipball/ece43fa22ff8b2cfae0e845c58c1367c547ff181",
+                "reference": "ece43fa22ff8b2cfae0e845c58c1367c547ff181",
                 "shasum": ""
             },
             "require": {
@@ -2435,7 +2435,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2020-12-07T19:38:34+00:00"
+            "time": "2021-03-05T15:04:36+00:00"
         },
         {
             "name": "doctrine/annotations",
@@ -4695,23 +4695,20 @@
         },
         {
             "name": "sebastianfeldmann/camino",
-            "version": "0.9.3",
+            "version": "0.9.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianfeldmann/camino.git",
-                "reference": "e6274a8283555e620f4d00129f1c4b0119017c79"
+                "reference": "3b611368e22e8565c3a6504613136402ed9e6f69"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianfeldmann/camino/zipball/e6274a8283555e620f4d00129f1c4b0119017c79",
-                "reference": "e6274a8283555e620f4d00129f1c4b0119017c79",
+                "url": "https://api.github.com/repos/sebastianfeldmann/camino/zipball/3b611368e22e8565c3a6504613136402ed9e6f69",
+                "reference": "3b611368e22e8565c3a6504613136402ed9e6f69",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.1"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "^7.0"
+                "php": ">=7.1"
             },
             "type": "library",
             "extra": {
@@ -4746,28 +4743,27 @@
                     "type": "github"
                 }
             ],
-            "time": "2020-07-24T16:20:02+00:00"
+            "time": "2020-12-08T09:25:24+00:00"
         },
         {
             "name": "sebastianfeldmann/cli",
-            "version": "3.3.0",
+            "version": "3.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianfeldmann/cli.git",
-                "reference": "5709d610c46b09aa100a653c706497491f567eb9"
+                "reference": "490a6ba01d62e56d597b4d3377024feb87871f6f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianfeldmann/cli/zipball/5709d610c46b09aa100a653c706497491f567eb9",
-                "reference": "5709d610c46b09aa100a653c706497491f567eb9",
+                "url": "https://api.github.com/repos/sebastianfeldmann/cli/zipball/490a6ba01d62e56d597b4d3377024feb87871f6f",
+                "reference": "490a6ba01d62e56d597b4d3377024feb87871f6f",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.2"
+                "php": ">=7.2"
             },
             "require-dev": {
-                "phpunit/phpunit": "^7.0",
-                "symfony/process": "^4.3"
+                "symfony/process": "^4.3 | ^5.0"
             },
             "type": "library",
             "extra": {
@@ -4801,26 +4797,26 @@
                     "type": "github"
                 }
             ],
-            "time": "2020-08-27T18:10:25+00:00"
+            "time": "2020-12-08T09:20:06+00:00"
         },
         {
             "name": "sebastianfeldmann/git",
-            "version": "3.4.0",
+            "version": "3.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianfeldmann/git.git",
-                "reference": "b6ca1859f9a9c6eb77f0981fc9cb69ce7494542c"
+                "reference": "8bdbc4ec14970942ace6b73a1a4f7df1caaefdcd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianfeldmann/git/zipball/b6ca1859f9a9c6eb77f0981fc9cb69ce7494542c",
-                "reference": "b6ca1859f9a9c6eb77f0981fc9cb69ce7494542c",
+                "url": "https://api.github.com/repos/sebastianfeldmann/git/zipball/8bdbc4ec14970942ace6b73a1a4f7df1caaefdcd",
+                "reference": "8bdbc4ec14970942ace6b73a1a4f7df1caaefdcd",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
                 "ext-xml": "*",
-                "php": "^7.2",
+                "php": ">=7.2",
                 "sebastianfeldmann/cli": "^3.0"
             },
             "type": "library",
@@ -4855,7 +4851,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2020-10-22T09:20:53+00:00"
+            "time": "2021-02-18T11:53:27+00:00"
         },
         {
             "name": "symfony/options-resolver",
