@@ -31,7 +31,7 @@ class ConsoleCommand extends AbstractDatabaseCommand
                 'Same as `-A` option to MySQL client to turn off ' .
                 'auto-complete (avoids long initial connection time).'
             )
-            ->setDescription('Opens mysql client by database config from local.xml');
+            ->setDescription('Opens mysql client by database config from env.php');
         parent::configure();
     }
 
