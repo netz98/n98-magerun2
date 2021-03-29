@@ -1,5 +1,16 @@
 name: Tests
-on: [pull_request_target]
+on:
+  push:
+    branches:
+      - 'master'
+      - 'develop'
+      - 'bugfix/*'
+      - 'feature/*'
+      - 'release/*'
+  pull_request_target:
+    branches:
+      - 'master'
+      - 'develop'
 
 jobs:
   phpunit:
