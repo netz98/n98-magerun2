@@ -1972,16 +1972,16 @@
         },
         {
             "name": "symfony/validator",
-            "version": "v4.4.20",
+            "version": "v4.4.21",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/validator.git",
-                "reference": "08c3add0462f22f00b856c0d0361cf51897d51aa"
+                "reference": "c00da06b82b8591548f52b4d6aad0faa0985843e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/validator/zipball/08c3add0462f22f00b856c0d0361cf51897d51aa",
-                "reference": "08c3add0462f22f00b856c0d0361cf51897d51aa",
+                "url": "https://api.github.com/repos/symfony/validator/zipball/c00da06b82b8591548f52b4d6aad0faa0985843e",
+                "reference": "c00da06b82b8591548f52b4d6aad0faa0985843e",
                 "shasum": ""
             },
             "require": {
@@ -2002,7 +2002,7 @@
             "require-dev": {
                 "doctrine/annotations": "^1.10.4",
                 "doctrine/cache": "~1.0",
-                "egulias/email-validator": "^2.1.10",
+                "egulias/email-validator": "^2.1.10|^3",
                 "symfony/cache": "^3.4|^4.0|^5.0",
                 "symfony/config": "^3.4|^4.0|^5.0",
                 "symfony/dependency-injection": "^3.4|^4.0|^5.0",
@@ -2070,7 +2070,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-03-03T22:57:07+00:00"
+            "time": "2021-03-23T11:25:54+00:00"
         },
         {
             "name": "symfony/var-dumper",
@@ -3685,12 +3685,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "3dfe1d2b81a55b9c51dc87ce89f1ee2beaaf1093"
+                "reference": "d113d94cd9d8bc7ec35be1179315ed06b21b26c8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/3dfe1d2b81a55b9c51dc87ce89f1ee2beaaf1093",
-                "reference": "3dfe1d2b81a55b9c51dc87ce89f1ee2beaaf1093",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/d113d94cd9d8bc7ec35be1179315ed06b21b26c8",
+                "reference": "d113d94cd9d8bc7ec35be1179315ed06b21b26c8",
                 "shasum": ""
             },
             "conflict": {
@@ -3757,7 +3757,7 @@
                 "ezsystems/platform-ui-assets-bundle": ">=4.2,<4.2.3",
                 "ezsystems/repository-forms": ">=2.3,<2.3.2.1",
                 "ezyang/htmlpurifier": "<4.1.1",
-                "facade/ignition": "<=2.5.1,>=2.0|<=1.16.13",
+                "facade/ignition": "<1.16.14|>=2,<2.4.2|>=2.5,<2.5.2",
                 "firebase/php-jwt": "<2",
                 "flarum/sticky": ">=0.1-beta.14,<=0.1-beta.15",
                 "flarum/tags": "<=0.1-beta.13",
@@ -4007,7 +4007,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-03-23T02:23:40+00:00"
+            "time": "2021-03-26T11:01:20+00:00"
         },
         {
             "name": "sebastian/code-unit-reverse-lookup",
