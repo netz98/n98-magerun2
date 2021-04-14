@@ -86,11 +86,11 @@ class DatabaseHelper extends AbstractHelper
         if (isset($config['db']['table_prefix'])) {
             $this->dbSettings['prefix'] = (string) $config['db']['table_prefix'];
         }
-
-        if (
-            isset($this->dbSettings['host'])
-            && strpos($this->dbSettings['host'], ':') !== false
-        ) {
+       
+        if (strpos($this->dbSettings['host'], '/') !== false) {
+            $this->dbSettings['unix_socket'] = $this->dbSettings['host'];
+            unset($this->dbSettings['host']);
+        } elseif (strpos($this->dbSettings['host'], ':') !== false) {
             list($this->dbSettings['host'], $this->dbSettings['port']) = explode(':', $this->dbSettings['host']);
         }
 
