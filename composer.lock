@@ -2323,16 +2323,16 @@
         },
         {
             "name": "captainhook/captainhook",
-            "version": "5.5.2",
+            "version": "5.6.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/captainhookphp/captainhook.git",
-                "reference": "425f8b26401756ea0fd32bdbde9c1466a9c66f20"
+                "reference": "888e065ee81dce154265dafe1c1861c981c85fe3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/captainhookphp/captainhook/zipball/425f8b26401756ea0fd32bdbde9c1466a9c66f20",
-                "reference": "425f8b26401756ea0fd32bdbde9c1466a9c66f20",
+                "url": "https://api.github.com/repos/captainhookphp/captainhook/zipball/888e065ee81dce154265dafe1c1861c981c85fe3",
+                "reference": "888e065ee81dce154265dafe1c1861c981c85fe3",
                 "shasum": ""
             },
             "require": {
@@ -2397,7 +2397,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2021-03-30T21:17:37+00:00"
+            "time": "2021-04-15T18:26:12+00:00"
         },
         {
             "name": "doctrine/annotations",
@@ -3652,12 +3652,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "aa48fe959b0236eede9c51a38f47df2bb81ef137"
+                "reference": "6c88e3fbd5e56eaf1869ec290db225b5c5dbe322"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/aa48fe959b0236eede9c51a38f47df2bb81ef137",
-                "reference": "aa48fe959b0236eede9c51a38f47df2bb81ef137",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/6c88e3fbd5e56eaf1869ec290db225b5c5dbe322",
+                "reference": "6c88e3fbd5e56eaf1869ec290db225b5c5dbe322",
                 "shasum": ""
             },
             "conflict": {
@@ -3774,6 +3774,9 @@
                 "monolog/monolog": ">=1.8,<1.12",
                 "moodle/moodle": "<3.5.17|>=3.7,<3.7.9|>=3.8,<3.8.8|>=3.9,<3.9.5|>=3.10,<3.10.2",
                 "namshi/jose": "<2.2",
+                "neos/flow": ">=1,<1.0.4|>=1.1,<1.1.1|>=2,<2.0.1|>=2.3,<2.3.16|>=3,<3.0.12|>=3.1,<3.1.10|>=3.2,<3.2.13|>=3.3,<3.3.13|>=4,<4.0.6",
+                "neos/neos": ">=1.1,<1.1.3|>=1.2,<1.2.13|>=2,<2.0.4|>=2.3,<2.9.99|>=3,<3.0.20|>=3.1,<3.1.18|>=3.2,<3.2.14|>=3.3,<3.3.23|>=4,<4.0.17|>=4.1,<4.1.16|>=4.2,<4.2.12|>=4.3,<4.3.3",
+                "neos/swiftmailer": ">=4.1,<4.1.99|>=5.4,<5.4.5",
                 "nette/application": ">=2,<2.0.19|>=2.1,<2.1.13|>=2.2,<2.2.10|>=2.3,<2.3.14|>=2.4,<2.4.16|>=3,<3.0.6",
                 "nette/nette": ">=2,<2.0.19|>=2.1,<2.1.13",
                 "nystudio107/craft-seomatic": "<3.3",
@@ -3820,6 +3823,7 @@
                 "propel/propel1": ">=1,<=1.7.1",
                 "pterodactyl/panel": "<0.7.19|>=1-rc.0,<=1-rc.6",
                 "pusher/pusher-php-server": "<2.2.1",
+                "pwweb/laravel-core": "<=0.3.6-beta",
                 "rainlab/debugbar-plugin": "<3.1",
                 "robrichards/xmlseclibs": "<3.0.4",
                 "sabberworm/php-css-parser": ">=1,<1.0.1|>=2,<2.0.1|>=3,<3.0.1|>=4,<4.0.1|>=5,<5.0.9|>=5.1,<5.1.3|>=5.2,<5.2.1|>=6,<6.0.2|>=7,<7.0.4|>=8,<8.0.1|>=8.1,<8.1.1|>=8.2,<8.2.1|>=8.3,<8.3.1",
@@ -3827,8 +3831,9 @@
                 "scheb/two-factor-bundle": ">=0,<3.26|>=4,<4.11",
                 "sensiolabs/connect": "<4.2.3",
                 "serluck/phpwhois": "<=4.2.6",
-                "shopware/core": "<=6.3.4",
-                "shopware/platform": "<=6.3.5.1",
+                "shopware/core": "<=6.3.5.2",
+                "shopware/platform": "<=6.3.5.2",
+                "shopware/production": "<=6.3.5.2",
                 "shopware/shopware": "<5.6.9",
                 "silverstripe/admin": ">=1.0.3,<1.0.4|>=1.1,<1.1.1",
                 "silverstripe/assets": ">=1,<1.4.7|>=1.5,<1.5.2",
@@ -3905,9 +3910,10 @@
                 "typo3/cms-backend": ">=7,<=7.6.50|>=8,<=8.7.39|>=9,<=9.5.24|>=10,<=10.4.13|>=11,<=11.1",
                 "typo3/cms-core": ">=6.2,<=6.2.56|>=7,<=7.6.50|>=8,<=8.7.39|>=9,<9.5.25|>=10,<10.4.14|>=11,<11.1.1",
                 "typo3/cms-form": ">=8,<=8.7.39|>=9,<=9.5.24|>=10,<=10.4.13|>=11,<=11.1",
-                "typo3/flow": ">=1,<1.0.4|>=1.1,<1.1.1|>=2,<2.0.1|>=2.3,<2.3.16|>=3,<3.0.10|>=3.1,<3.1.7|>=3.2,<3.2.7|>=3.3,<3.3.5",
-                "typo3/neos": ">=1.1,<1.1.3|>=1.2,<1.2.13|>=2,<2.0.4",
+                "typo3/flow": ">=1,<1.0.4|>=1.1,<1.1.1|>=2,<2.0.1|>=2.3,<2.3.16|>=3,<3.0.12|>=3.1,<3.1.10|>=3.2,<3.2.13|>=3.3,<3.3.13|>=4,<4.0.6",
+                "typo3/neos": ">=1.1,<1.1.3|>=1.2,<1.2.13|>=2,<2.0.4|>=2.3,<2.3.99|>=3,<3.0.20|>=3.1,<3.1.18|>=3.2,<3.2.14|>=3.3,<3.3.23|>=4,<4.0.17|>=4.1,<4.1.16|>=4.2,<4.2.12|>=4.3,<4.3.3",
                 "typo3/phar-stream-wrapper": ">=1,<2.1.1|>=3,<3.1.1",
+                "typo3/swiftmailer": ">=4.1,<4.1.99|>=5.4,<5.4.5",
                 "typo3fluid/fluid": ">=2,<2.0.8|>=2.1,<2.1.7|>=2.2,<2.2.4|>=2.3,<2.3.7|>=2.4,<2.4.4|>=2.5,<2.5.11|>=2.6,<2.6.10",
                 "ua-parser/uap-php": "<3.8",
                 "usmanhalalit/pixie": "<1.0.3|>=2,<2.0.2",
@@ -3980,7 +3986,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-04-09T08:01:23+00:00"
+            "time": "2021-04-15T10:01:35+00:00"
         },
         {
             "name": "sebastian/code-unit-reverse-lookup",
@@ -4771,16 +4777,16 @@
         },
         {
             "name": "sebastianfeldmann/git",
-            "version": "3.5.0",
+            "version": "3.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianfeldmann/git.git",
-                "reference": "8bdbc4ec14970942ace6b73a1a4f7df1caaefdcd"
+                "reference": "ca827dc741a90043ee46e59a96b1ca88b9ed5264"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianfeldmann/git/zipball/8bdbc4ec14970942ace6b73a1a4f7df1caaefdcd",
-                "reference": "8bdbc4ec14970942ace6b73a1a4f7df1caaefdcd",
+                "url": "https://api.github.com/repos/sebastianfeldmann/git/zipball/ca827dc741a90043ee46e59a96b1ca88b9ed5264",
+                "reference": "ca827dc741a90043ee46e59a96b1ca88b9ed5264",
                 "shasum": ""
             },
             "require": {
@@ -4821,7 +4827,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2021-02-18T11:53:27+00:00"
+            "time": "2021-04-10T08:31:02+00:00"
         },
         {
             "name": "symfony/options-resolver",
