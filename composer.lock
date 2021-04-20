@@ -2323,16 +2323,16 @@
         },
         {
             "name": "captainhook/captainhook",
-            "version": "5.5.2",
+            "version": "5.8.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/captainhookphp/captainhook.git",
-                "reference": "425f8b26401756ea0fd32bdbde9c1466a9c66f20"
+                "reference": "154aea58b13e1c5e5005aad04270a94ccb010fe9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/captainhookphp/captainhook/zipball/425f8b26401756ea0fd32bdbde9c1466a9c66f20",
-                "reference": "425f8b26401756ea0fd32bdbde9c1466a9c66f20",
+                "url": "https://api.github.com/repos/captainhookphp/captainhook/zipball/154aea58b13e1c5e5005aad04270a94ccb010fe9",
+                "reference": "154aea58b13e1c5e5005aad04270a94ccb010fe9",
                 "shasum": ""
             },
             "require": {
@@ -2397,7 +2397,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2021-03-30T21:17:37+00:00"
+            "time": "2021-04-19T15:31:14+00:00"
         },
         {
             "name": "doctrine/annotations",
@@ -4777,16 +4777,16 @@
         },
         {
             "name": "sebastianfeldmann/git",
-            "version": "3.5.0",
+            "version": "3.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianfeldmann/git.git",
-                "reference": "8bdbc4ec14970942ace6b73a1a4f7df1caaefdcd"
+                "reference": "ca827dc741a90043ee46e59a96b1ca88b9ed5264"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianfeldmann/git/zipball/8bdbc4ec14970942ace6b73a1a4f7df1caaefdcd",
-                "reference": "8bdbc4ec14970942ace6b73a1a4f7df1caaefdcd",
+                "url": "https://api.github.com/repos/sebastianfeldmann/git/zipball/ca827dc741a90043ee46e59a96b1ca88b9ed5264",
+                "reference": "ca827dc741a90043ee46e59a96b1ca88b9ed5264",
                 "shasum": ""
             },
             "require": {
@@ -4827,7 +4827,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2021-02-18T11:53:27+00:00"
+            "time": "2021-04-10T08:31:02+00:00"
         },
         {
             "name": "symfony/options-resolver",
