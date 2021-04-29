@@ -2389,16 +2389,16 @@
         },
         {
             "name": "captainhook/captainhook",
-            "version": "5.8.0",
+            "version": "5.8.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/captainhookphp/captainhook.git",
-                "reference": "154aea58b13e1c5e5005aad04270a94ccb010fe9"
+                "reference": "9447fc26d3163d9ecd09b8ef244437d8984ca7e0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/captainhookphp/captainhook/zipball/154aea58b13e1c5e5005aad04270a94ccb010fe9",
-                "reference": "154aea58b13e1c5e5005aad04270a94ccb010fe9",
+                "url": "https://api.github.com/repos/captainhookphp/captainhook/zipball/9447fc26d3163d9ecd09b8ef244437d8984ca7e0",
+                "reference": "9447fc26d3163d9ecd09b8ef244437d8984ca7e0",
                 "shasum": ""
             },
             "require": {
@@ -2463,7 +2463,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2021-04-19T15:31:14+00:00"
+            "time": "2021-04-28T19:06:23+00:00"
         },
         {
             "name": "doctrine/annotations",
@@ -3718,12 +3718,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "f2510590cd0a4611f201878c8589890d708339b9"
+                "reference": "a9d356baedee32afbb2179a2a61a45b215f8c95e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/f2510590cd0a4611f201878c8589890d708339b9",
-                "reference": "f2510590cd0a4611f201878c8589890d708339b9",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/a9d356baedee32afbb2179a2a61a45b215f8c95e",
+                "reference": "a9d356baedee32afbb2179a2a61a45b215f8c95e",
                 "shasum": ""
             },
             "conflict": {
@@ -3863,7 +3863,7 @@
                 "paragonie/random_compat": "<2",
                 "passbolt/passbolt_api": "<2.11",
                 "paypal/merchant-sdk-php": "<3.12",
-                "pear/archive_tar": "<1.4.13",
+                "pear/archive_tar": "<1.4.12",
                 "personnummer/personnummer": "<3.0.2",
                 "phpfastcache/phpfastcache": ">=5,<5.0.13",
                 "phpmailer/phpmailer": "<6.1.6",
@@ -4053,7 +4053,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-04-28T02:21:40+00:00"
+            "time": "2021-04-28T18:10:37+00:00"
         },
         {
             "name": "sebastian/code-unit-reverse-lookup",
