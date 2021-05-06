@@ -2389,16 +2389,16 @@
         },
         {
             "name": "captainhook/captainhook",
-            "version": "5.8.1",
+            "version": "5.9.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/captainhookphp/captainhook.git",
-                "reference": "9447fc26d3163d9ecd09b8ef244437d8984ca7e0"
+                "reference": "76987f60c5c77d106ec6b589e4d658d7a2a7d6f5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/captainhookphp/captainhook/zipball/9447fc26d3163d9ecd09b8ef244437d8984ca7e0",
-                "reference": "9447fc26d3163d9ecd09b8ef244437d8984ca7e0",
+                "url": "https://api.github.com/repos/captainhookphp/captainhook/zipball/76987f60c5c77d106ec6b589e4d658d7a2a7d6f5",
+                "reference": "76987f60c5c77d106ec6b589e4d658d7a2a7d6f5",
                 "shasum": ""
             },
             "require": {
@@ -2408,8 +2408,9 @@
                 "php": ">=7.2",
                 "sebastianfeldmann/camino": "^0.9.2",
                 "sebastianfeldmann/cli": "^3.3",
-                "sebastianfeldmann/git": "^3.4",
+                "sebastianfeldmann/git": "^3.7",
                 "symfony/console": "^2.7 || ^3.0 || ^4.0 || ^5.0",
+                "symfony/filesystem": "^2.7 || ^3.0 || ^4.0 || ^5.0",
                 "symfony/process": "^2.7 || ^3.0 || ^4.0 || ^5.0"
             },
             "replace": {
@@ -2463,7 +2464,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2021-04-28T19:06:23+00:00"
+            "time": "2021-05-05T12:43:16+00:00"
         },
         {
             "name": "doctrine/annotations",
