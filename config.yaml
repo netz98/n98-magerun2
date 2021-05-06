@@ -185,6 +185,7 @@ commands:
             sales_creditmemo_*
           sales_recurring_* sales_refunded_* sales_payment_*
           enterprise_sales_* enterprise_customer_sales_* sales_bestsellers_* magento_customercustomattributes_sales_flat_*
+          inventory_reservation
           paypal_billing_agreement*
           paypal_payment_transaction
           paypal_settlement_report*
