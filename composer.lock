@@ -2005,16 +2005,16 @@
         },
         {
             "name": "symfony/validator",
-            "version": "v4.4.22",
+            "version": "v4.4.24",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/validator.git",
-                "reference": "65525b93ebc48c2992271f435e1391bbb049367a"
+                "reference": "0a947c69d66d5560f244a754524445b9002b1e4b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/validator/zipball/65525b93ebc48c2992271f435e1391bbb049367a",
-                "reference": "65525b93ebc48c2992271f435e1391bbb049367a",
+                "url": "https://api.github.com/repos/symfony/validator/zipball/0a947c69d66d5560f244a754524445b9002b1e4b",
+                "reference": "0a947c69d66d5560f244a754524445b9002b1e4b",
                 "shasum": ""
             },
             "require": {
@@ -2034,7 +2034,7 @@
             },
             "require-dev": {
                 "doctrine/annotations": "^1.10.4",
-                "doctrine/cache": "~1.0",
+                "doctrine/cache": "^1.0|^2.0",
                 "egulias/email-validator": "^2.1.10|^3",
                 "symfony/cache": "^3.4|^4.0|^5.0",
                 "symfony/config": "^3.4|^4.0|^5.0",
@@ -2103,7 +2103,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-04-14T09:41:13+00:00"
+            "time": "2021-05-16T21:41:25+00:00"
         },
         {
             "name": "symfony/var-dumper",
@@ -3724,12 +3724,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "b690895fa1530e85397d5070517e45e098be6d18"
+                "reference": "9d9641b43426b6614603313428170f3b2e7d61fa"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/b690895fa1530e85397d5070517e45e098be6d18",
-                "reference": "b690895fa1530e85397d5070517e45e098be6d18",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/9d9641b43426b6614603313428170f3b2e7d61fa",
+                "reference": "9d9641b43426b6614603313428170f3b2e7d61fa",
                 "shasum": ""
             },
             "conflict": {
@@ -3766,6 +3766,7 @@
                 "datadog/dd-trace": ">=0.30,<0.30.2",
                 "david-garcia/phpwhois": "<=4.3.1",
                 "derhansen/sf_event_mgt": "<4.3.1|>=5,<5.1.1",
+                "directmailteam/direct-mail": "<5.2.4",
                 "doctrine/annotations": ">=1,<1.2.7",
                 "doctrine/cache": ">=1,<1.3.2|>=1.4,<1.4.2",
                 "doctrine/common": ">=2,<2.4.3|>=2.5,<2.5.1",
@@ -4070,7 +4071,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-05-21T19:22:20+00:00"
+            "time": "2021-05-24T17:46:12+00:00"
         },
         {
             "name": "sebastian/code-unit-reverse-lookup",
