@@ -144,7 +144,7 @@ commands:
     table-groups:
       - id: admin
         description: Admin tables
-        tables: admin* magento_logging_event magento_logging_event_changes ui_bookmark
+        tables: admin* authorization_role magento_logging_event magento_logging_event_changes ui_bookmark
 
       - id: oauth
         description: OAuth tables
