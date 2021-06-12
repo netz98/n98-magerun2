@@ -7,6 +7,7 @@ RECENT CHANGES
 - Add: ui_bookmark to admin group (by Leland Clemmons)
 - Add: inventory_reservation to @sales group (by Dan Wallis)
 - Add: mailchimp table group (by Timon de Groot)
+- Add: Magento 2.4.2-p1 (by Christian Münch)
 - Fix: Changed filename in README where database config comes from. (by Martien Mortiaux)
 - Fix: Remove whitespace to fix code violations (by Christian Münch)
 - Fix: Remove push trigger for tests / github actions (by Christian Münch)

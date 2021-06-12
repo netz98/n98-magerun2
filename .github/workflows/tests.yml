@@ -19,6 +19,12 @@ jobs:
     strategy:
       matrix:
         include:
+          - magento-version: magento-ce-2.4.2-p1
+            operating-system: ubuntu-latest
+            php-version: 7.4
+            mysql-version: 8.0
+            elsticsearch-version: 7.9.0
+
           - magento-version: magento-ce-2.4.2
             operating-system: ubuntu-latest
             php-version: 7.4
