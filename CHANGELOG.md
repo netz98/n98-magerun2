@@ -1,6 +1,22 @@
 RECENT CHANGES
 ==============
 
+4.6.0
+-----
+
+- Add: ui_bookmark to admin group (by Leland Clemmons)
+- Add: inventory_reservation to @sales group (by Dan Wallis)
+- Add: mailchimp table group (by Timon de Groot)
+- Fix: Changed filename in README where database config comes from. (by Martien Mortiaux)
+- Fix: Remove whitespace to fix code violations (by Christian Münch)
+- Fix: Remove push trigger for tests / github actions (by Christian Münch)
+- Imp: Updated symfony dependencies (console, event-dispatcher, finder, process, validator, yaml) (Dependbot)
+- Imp: Updated composer dependencies  (Dependbot)
+- Imp: Updated captainhook dependency  (Dependbot)
+- Imp: Updated php-cs-fixer dependency  (Dependbot)
+- Imp: Updated phpunit dependency  (Dependbot)
+- Imp: Updated psy shell dependency  (Dependbot)
+
 4.5.0
 -----
 
