@@ -2,6 +2,7 @@
 
 namespace N98\Magento\Command;
 
+use Composer\Config;
 use Composer\Downloader\FilesystemException;
 use Composer\IO\ConsoleIO;
 use Composer\Util\RemoteFilesystem;
@@ -79,7 +80,7 @@ EOT
         }
 
         $io = new ConsoleIO($input, $output, $this->getHelperSet());
-        $rfs = new RemoteFilesystem($io);
+        $rfs = new RemoteFilesystem($io, new Config());
 
         $loadUnstable = $input->getOption('unstable');
         if ($loadUnstable) {
