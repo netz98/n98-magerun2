@@ -39,7 +39,7 @@ jobs:
       run: bash ./build.sh
 
     - name: Test self-update command
-      run: bash ./n98-magerun2.phar self-update --unstable
+      run: php ./n98-magerun2.phar self-update --unstable
 
 
     # Add a test script to composer.json, for instance: "test": "vendor/bin/phpunit"
