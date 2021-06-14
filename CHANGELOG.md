@@ -1,6 +1,11 @@
 RECENT CHANGES
 ==============
 
+4.6.1
+-----
+
+- Fix: broken self-update command (by Christian Münch)
+
 4.6.0
 -----
 
