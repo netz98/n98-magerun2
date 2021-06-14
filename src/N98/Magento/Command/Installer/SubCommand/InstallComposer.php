@@ -60,7 +60,7 @@ class InstallComposer extends AbstractSubCommand
     {
         $this->output->writeln('<info>Could not find composer. Try to download it.</info>');
         $io = new ConsoleIO($this->input, $this->output, $this->getCommand()->getHelperSet());
-        $rfs = new RemoteFilesystem($io,  new Config());
+        $rfs = new RemoteFilesystem($io, new Config());
         $composerInstaller = $rfs->getContents('getcomposer.org', 'https://getcomposer.org/installer', true);
 
         $tempComposerInstaller = $this->config['installationFolder'] . '/_composer_installer.php';
