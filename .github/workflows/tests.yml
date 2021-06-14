@@ -117,3 +117,9 @@ jobs:
 
       - name: Run PHPUnit (Production Mode)
         run: vendor/bin/phpunit --process-isolation --teamcity
+
+      - name: Create phar
+        run: bash ./build.sh
+
+      - name: Test self-update command
+        run: bash ./n98-magerun2.phar self-update --unstable
