@@ -143,7 +143,11 @@ abstract class AbstractCronCommand extends AbstractMagentoCommand
         if (isset($jobConfig['schedule'])) {
             $expr = $this->getCronExpression($jobConfig);
 
-            if ($expr == 'always') {
+            if (empty($expr)) {
+                return ['m' => '-', 'h' => '-', 'D' => '-', 'M' => '-', 'WD' => '-'];
+            }
+
+            if ($expr === 'always') {
                 return ['m' => '*', 'h' => '*', 'D' => '*', 'M' => '*', 'WD' => '*'];
             }
 
