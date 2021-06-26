@@ -75,6 +75,7 @@ commands:
     - N98\Magento\Command\Customer\InfoCommand
     - N98\Magento\Command\Customer\ListCommand
     - N98\Magento\Command\Customer\Token\CreateCommand
+    - N98\Magento\Command\Database\AddDefaultAuthorizationRoles
     - N98\Magento\Command\Database\ConsoleCommand
     - N98\Magento\Command\Database\CreateCommand
     - N98\Magento\Command\Database\DropCommand
@@ -144,7 +145,7 @@ commands:
     table-groups:
       - id: admin
         description: Admin tables
-        tables: admin* magento_logging_event magento_logging_event_changes ui_bookmark
+        tables: admin* magento_logging_event magento_logging_event_changes ui_bookmark authorization_role authorization_rule
 
       - id: oauth
         description: OAuth tables

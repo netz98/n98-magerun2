@@ -7,6 +7,7 @@ use N98\Magento\Command\Database\Compressor\AbstractCompressor;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Input\StringInput;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
@@ -33,6 +34,7 @@ class ImportCommand extends AbstractDatabaseCommand
             ->addOption('drop', null, InputOption::VALUE_NONE, 'Drop and recreate database before import')
             ->addOption('drop-tables', null, InputOption::VALUE_NONE, 'Drop tables before import')
             ->addOption('force', null, InputOption::VALUE_NONE, 'Continue even if an SQL error occurs')
+            ->addOption('skip-authorization-entry-creation', null, InputOption::VALUE_NONE, 'Do not create authorization rule/role entries if they are missing')
             ->setDescription('Imports database with mysql cli client according to database defined in env.php');
 
         $help = <<<HELP
@@ -165,6 +167,8 @@ HELP;
         if ($input->getOption('optimize')) {
             unlink($fileName);
         }
+
+        $this->getApplication()->run(new StringInput('db:add-default-authorization-entries'), $output);
 
         return $success ? 0 : 1;
     }

@@ -163,6 +163,17 @@ class DatabaseHelper extends AbstractHelper
     }
 
     /**
+     * Returns the tablename with optional table prefix
+     *
+     * @param string $tableName
+     * @return string
+     */
+    public function getTableName($tableName)
+    {
+        return $this->dbSettings['prefix'] . $tableName;
+    }
+
+    /**
      * Creates a PDO DSN for the adapter from $this->_config settings.
      *
      * @see Zend_Db_Adapter_Pdo_Abstract
