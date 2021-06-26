@@ -39,6 +39,8 @@ class AddDefaultAuthorizationRoles extends AbstractDatabaseCommand
         $statement = $connection->query('SELECT COUNT(*) AS cnt FROM ' . $roleTableName);
         $cnt = (int) $statement->fetchColumn(0);
 
+        $actionCount = 0;
+
         if ($cnt === 0) {
             $sql = 'INSERT INTO ' . $roleTableName
                 . ' (role_id, parent_id, tree_level, sort_order, role_type, user_id, user_type, role_name) '
@@ -52,7 +54,8 @@ class AddDefaultAuthorizationRoles extends AbstractDatabaseCommand
                 return 1;
             }
 
-            $output->writeln('<comment>Default authorization role inserted</comment>');
+            $output->writeln('<info>Default authorization role inserted</info>');
+            $actionCount++;
         }
 
         $statement = $connection->query('SELECT COUNT(*) AS cnt FROM ' . $ruleTableName);
@@ -71,7 +74,13 @@ class AddDefaultAuthorizationRoles extends AbstractDatabaseCommand
                 return 1;
             }
 
-            $output->writeln('<comment>Default authorization rule inserted</comment>');
+            $output->writeln('<info>Default authorization rule inserted</info>');
+
+            $actionCount++;
+        }
+
+        if ($actionCount === 0) {
+            $output->writeln('<info>Default authorization tables</info> <comment>OK</comment>');
         }
 
         return 0;
