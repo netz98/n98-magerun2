@@ -676,16 +676,31 @@ Available Table Groups:
 | --------------------------------| --------------------------------------------------------------------------------------|
 | `--connection=CONNECTION`       | Select DB connection type for Magento configurations with several databases        |                                 |                                                              |
 | `-c`, `--compression=COMPRESSION` | The compression of the specified file                                              |
-| `--only-command`                | Print only mysql command. Do not execute                                           |
-| `--only-if-empty`               | Imports only if database is empty                                                  |
-| `--optimize`                    | Convert verbose INSERTs to short ones before import (not working with compression) |
 | `--drop`                        | Drop and recreate database before import                                           |
 | `--drop-tables`                 | Drop tables before import                                                          |
 | `--force`                       | Continue even if an SQL error occurs                                               |
+| `--only-command`                | Print only mysql command. Do not execute                                           |
+| `--only-if-empty`               | Imports only if database is empty                                                  |
+| `--optimize`                    | Convert verbose INSERTs to short ones before import (not working with compression) |
+| `--skip-authorization-entry-creation` | Add default entry to authorization_role and authorization_rule tables. |
+
 
 ```sh
 n98-magerun2.phar db:import
 ```
+
+### Fix empty authorization tables
+
+If you run `db:dump` with stripped option and `@admin` group, the authorization_rule and authorization_role tables are empty.
+This blocks the creation of admin users.
+
+You can re-create the default entries by running the command:
+
+```sh
+n98-magerun2.phar db:add-default-authorization-entries
+```
+
+If you are using the `db:import` command to import the stripped SQL dump, then this command will be implicitly called.
 
 ### Clear static view files
 
