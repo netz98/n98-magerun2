@@ -2005,16 +2005,16 @@
         },
         {
             "name": "symfony/validator",
-            "version": "v4.4.25",
+            "version": "v4.4.26",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/validator.git",
-                "reference": "29c14955e8b2e7351aaa11553cb36d4a689b7b11"
+                "reference": "1f20bad74b6d62f1a5779eeed47e91f3fa476094"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/validator/zipball/29c14955e8b2e7351aaa11553cb36d4a689b7b11",
-                "reference": "29c14955e8b2e7351aaa11553cb36d4a689b7b11",
+                "url": "https://api.github.com/repos/symfony/validator/zipball/1f20bad74b6d62f1a5779eeed47e91f3fa476094",
+                "reference": "1f20bad74b6d62f1a5779eeed47e91f3fa476094",
                 "shasum": ""
             },
             "require": {
@@ -2103,7 +2103,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-05-26T17:39:37+00:00"
+            "time": "2021-06-30T07:16:09+00:00"
         },
         {
             "name": "symfony/var-dumper",
