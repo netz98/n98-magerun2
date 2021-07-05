@@ -8,6 +8,7 @@ RECENT CHANGES
 - Imp: Add handling for missing authorization rule/role in db:import (by Christian Münch, Alexander Menk)
 - Add: Add table authorization_role to table group @admin (by hannes011)
 - Fix: #781 - empty cron expression (by Christian Münch)
+- Fix: #789 - sampledata:deploy returns composer error, bin/magento works
 
 4.6.1
 -----
