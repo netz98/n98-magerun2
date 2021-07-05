@@ -144,7 +144,7 @@ class AutoloaderDecorator implements AutoloaderInterface
              *
              * @see https://github.com/netz98/n98-magerun2/issues/789
              */
-            if ($prefixPsr4 === 'Composer\\') {
+            if (in_array($prefixPsr4, ['Composer\\', 'Composer\\Semver\\'])) {
                 continue;
             }
 
