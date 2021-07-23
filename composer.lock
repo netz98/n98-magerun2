@@ -128,16 +128,16 @@
         },
         {
             "name": "composer/composer",
-            "version": "2.1.3",
+            "version": "2.1.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/composer.git",
-                "reference": "fc5c4573aafce3a018eb7f1f8f91cea423970f2e"
+                "reference": "ac679902e9f66b85a8f9d8c1c88180f609a8745d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/composer/zipball/fc5c4573aafce3a018eb7f1f8f91cea423970f2e",
-                "reference": "fc5c4573aafce3a018eb7f1f8f91cea423970f2e",
+                "url": "https://api.github.com/repos/composer/composer/zipball/ac679902e9f66b85a8f9d8c1c88180f609a8745d",
+                "reference": "ac679902e9f66b85a8f9d8c1c88180f609a8745d",
                 "shasum": ""
             },
             "require": {
@@ -146,7 +146,7 @@
                 "composer/semver": "^3.0",
                 "composer/spdx-licenses": "^1.2",
                 "composer/xdebug-handler": "^2.0",
-                "justinrainbow/json-schema": "^5.2.10",
+                "justinrainbow/json-schema": "^5.2.11",
                 "php": "^5.3.2 || ^7.0 || ^8.0",
                 "psr/log": "^1.0",
                 "react/promise": "^1.2 || ^2.7",
@@ -217,7 +217,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-06-09T14:31:20+00:00"
+            "time": "2021-07-23T08:35:47+00:00"
         },
         {
             "name": "composer/metadata-minifier",
@@ -546,16 +546,16 @@
         },
         {
             "name": "justinrainbow/json-schema",
-            "version": "5.2.10",
+            "version": "5.2.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/justinrainbow/json-schema.git",
-                "reference": "2ba9c8c862ecd5510ed16c6340aa9f6eadb4f31b"
+                "reference": "2ab6744b7296ded80f8cc4f9509abbff393399aa"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/justinrainbow/json-schema/zipball/2ba9c8c862ecd5510ed16c6340aa9f6eadb4f31b",
-                "reference": "2ba9c8c862ecd5510ed16c6340aa9f6eadb4f31b",
+                "url": "https://api.github.com/repos/justinrainbow/json-schema/zipball/2ab6744b7296ded80f8cc4f9509abbff393399aa",
+                "reference": "2ab6744b7296ded80f8cc4f9509abbff393399aa",
                 "shasum": ""
             },
             "require": {
@@ -608,7 +608,7 @@
                 "json",
                 "schema"
             ],
-            "time": "2020-05-27T16:41:55+00:00"
+            "time": "2021-07-22T09:24:00+00:00"
         },
         {
             "name": "n98/junit-xml",
@@ -1297,16 +1297,16 @@
         },
         {
             "name": "symfony/filesystem",
-            "version": "v4.4.25",
+            "version": "v4.4.26",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/filesystem.git",
-                "reference": "2d926ebd76f52352deb3c9577d8c1d4b96eae429"
+                "reference": "a501126eb6ec9288a3434af01b3d4499ec1268a0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/filesystem/zipball/2d926ebd76f52352deb3c9577d8c1d4b96eae429",
-                "reference": "2d926ebd76f52352deb3c9577d8c1d4b96eae429",
+                "url": "https://api.github.com/repos/symfony/filesystem/zipball/a501126eb6ec9288a3434af01b3d4499ec1268a0",
+                "reference": "a501126eb6ec9288a3434af01b3d4499ec1268a0",
                 "shasum": ""
             },
             "require": {
@@ -1352,7 +1352,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-05-26T17:30:55+00:00"
+            "time": "2021-06-30T07:12:23+00:00"
         },
         {
             "name": "symfony/finder",
@@ -3724,12 +3724,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "fc5e5d772af47d035df8178172391259b6e30566"
+                "reference": "64e01b7b1a368f90949e3b42d5a89da6feee53d3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/fc5e5d772af47d035df8178172391259b6e30566",
-                "reference": "fc5e5d772af47d035df8178172391259b6e30566",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/64e01b7b1a368f90949e3b42d5a89da6feee53d3",
+                "reference": "64e01b7b1a368f90949e3b42d5a89da6feee53d3",
                 "shasum": ""
             },
             "conflict": {
@@ -3818,6 +3818,7 @@
                 "friendsofsymfony/rest-bundle": ">=1.2,<1.2.2",
                 "friendsofsymfony/user-bundle": ">=1.2,<1.3.5",
                 "friendsoftypo3/mediace": ">=7.6.2,<7.6.5",
+                "froala/wysiwyg-editor": "<3.2.7",
                 "fuel/core": "<1.8.1",
                 "getgrav/grav": "<=1.7.10",
                 "getkirby/cms": "<=3.5.6",
@@ -4003,9 +4004,9 @@
                 "tribalsystems/zenario": "<8.8.53370",
                 "truckersmp/phpwhois": "<=4.3.1",
                 "twig/twig": "<1.38|>=2,<2.7",
-                "typo3/cms": ">=6.2,<6.2.30|>=7,<7.6.32|>=8,<8.7.38|>=9,<9.5.25|>=10,<10.4.14|>=11,<11.1.1",
+                "typo3/cms": ">=6.2,<6.2.30|>=7,<7.6.32|>=8,<8.7.38|>=9,<9.5.28|>=10,<10.4.18|>=11,<11.3.1",
                 "typo3/cms-backend": ">=7,<=7.6.50|>=8,<=8.7.39|>=9,<=9.5.24|>=10,<=10.4.13|>=11,<=11.1",
-                "typo3/cms-core": ">=6.2,<=6.2.56|>=7,<=7.6.50|>=8,<=8.7.39|>=9,<9.5.25|>=10,<10.4.14|>=11,<11.1.1",
+                "typo3/cms-core": ">=6.2,<=6.2.56|>=7,<=7.6.50|>=8,<8.7.41|>=9,<9.5.28|>=10,<10.4.18|>=11,<11.3.1",
                 "typo3/cms-form": ">=8,<=8.7.39|>=9,<=9.5.24|>=10,<=10.4.13|>=11,<=11.1",
                 "typo3/flow": ">=1,<1.0.4|>=1.1,<1.1.1|>=2,<2.0.1|>=2.3,<2.3.16|>=3,<3.0.12|>=3.1,<3.1.10|>=3.2,<3.2.13|>=3.3,<3.3.13|>=4,<4.0.6",
                 "typo3/neos": ">=1.1,<1.1.3|>=1.2,<1.2.13|>=2,<2.0.4|>=2.3,<2.3.99|>=3,<3.0.20|>=3.1,<3.1.18|>=3.2,<3.2.14|>=3.3,<3.3.23|>=4,<4.0.17|>=4.1,<4.1.16|>=4.2,<4.2.12|>=4.3,<4.3.3",
@@ -4088,7 +4089,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-07-13T18:03:10+00:00"
+            "time": "2021-07-22T20:03:32+00:00"
         },
         {
             "name": "sebastian/code-unit-reverse-lookup",
@@ -4674,6 +4675,7 @@
                     "type": "github"
                 }
             ],
+            "abandoned": true,
             "time": "2020-11-30T07:30:19+00:00"
         },
         {
