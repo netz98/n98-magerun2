@@ -3,6 +3,8 @@
 The n98 magerun cli tools provides some handy tools to work with Magento
 from command line.
 
+[![Gitter](https://badges.gitter.im/netz98/magerun.svg)](https://gitter.im/netz98/magerun?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
+
 ## Build Status
 
 | **Latest Release**         | ![Maintenance Badge](https://img.shields.io/maintenance/yes/2021.svg) ![Tests](https://github.com/cmuench/n98-magerun2/workflows/Tests/badge.svg?branch=master) [![Quality Score Master Branch](https://scrutinizer-ci.com/g/netz98/n98-magerun2/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/netz98/n98-magerun2/)  ![https://packagist.org/packages/n98/magerun2](https://poser.pugx.org/n98/magerun2/v/stable.png)     |
