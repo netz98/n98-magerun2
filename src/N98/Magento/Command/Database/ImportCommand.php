@@ -168,7 +168,9 @@ HELP;
             unlink($fileName);
         }
 
-        $this->getApplication()->run(new StringInput('db:add-default-authorization-entries'), $output);
+        if (!$input->getOption('skip-authorization-entry-creation')) {
+            $this->getApplication()->run(new StringInput('db:add-default-authorization-entries'), $output);
+        }
 
         return $success ? 0 : 1;
     }
