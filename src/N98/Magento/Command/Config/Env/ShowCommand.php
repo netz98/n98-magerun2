@@ -73,6 +73,11 @@ class ShowCommand extends AbstractMagentoCommand
             $table =[];
 
             foreach ($flattenArray as $configKey => $configValue) {
+                // prevents a crash when a key contains an empty array as value
+                if ($configValue === []) {
+                    $configValue = '';
+                }
+
                 $table[] = [
                     'key' => $configKey,
                     'value' => $configValue,
