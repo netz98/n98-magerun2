@@ -344,7 +344,7 @@ n98-magerun2.phar config:env:set --input-format=json cron_consumers_runner.consu
 ### Show env.php settings
 
 ```sh
-n98-magerun2.phar config:env:show config:env:show [options] [<key>]
+n98-magerun2.phar config:env:show [options] [<key>]
 ```
 
 If no key is passed, the whole content of the file is displayed as table.
