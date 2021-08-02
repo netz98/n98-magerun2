@@ -22,4 +22,22 @@ class ShowCommandTest extends TestCase
             'install.date'
         );
     }
+
+    public function testExecuteWithEmptyArrayValue()
+    {
+        $this->assertExecute(
+            [
+                'command' => 'config:env:set',
+                '--input-format' => 'json',
+                'key' => 'magerun.test',
+                'value' => '[]'
+            ]
+        );
+
+        $this->assertExecute(
+            [
+                'command' => 'config:env:show',
+            ]
+        );
+    }
 }
