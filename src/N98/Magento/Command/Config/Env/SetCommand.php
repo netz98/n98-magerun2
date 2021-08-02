@@ -6,6 +6,7 @@ use Adbar\Dot;
 use N98\Magento\Command\AbstractMagentoCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
@@ -14,6 +15,9 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class SetCommand extends AbstractMagentoCommand
 {
+    const INPUT_FORMAT_PLAIN = 'plain';
+    const INPUT_FORMAT_JSON  = 'json';
+
     protected function configure()
     {
         $this
@@ -21,6 +25,13 @@ class SetCommand extends AbstractMagentoCommand
             ->setDescription('Set value in env.php')
             ->addArgument('key', InputArgument::REQUIRED, 'config key')
             ->addArgument('value', InputArgument::OPTIONAL, 'config value', '')
+            ->addOption(
+                'input-format',
+                null,
+                InputOption::VALUE_REQUIRED,
+                'Input Format. One of [' . implode(',', $this->getInputFormats()) . ']',
+                self::INPUT_FORMAT_PLAIN
+            )
             ->setHelp('Modify config in env.php file. Use config:env:show command to see the existing values.');
     }
 
@@ -45,9 +56,10 @@ class SetCommand extends AbstractMagentoCommand
 
         $key = $input->getArgument('key');
         $value = $input->getArgument('value');
+        $parsedValue = $this->parseValue($value, $input);
 
         $checksumBefore = sha1($env->toJson());
-        $env->set($key, $value);
+        $env->set($key, $parsedValue);
         $checksumAfter = sha1($env->toJson());
 
         if ($checksumBefore !== $checksumAfter) {
@@ -63,5 +75,34 @@ class SetCommand extends AbstractMagentoCommand
         } else {
             $output->writeln('<info>Config was already set</info>');
         }
+    }
+
+    private function parseValue(string $value, InputInterface $input)
+    {
+        $parsedValue = $value;
+
+        $inputFormat = $input->getOption('input-format');
+        if (!in_array($inputFormat, $this->getInputFormats(), true)) {
+            throw new \InvalidArgumentException('Input format ' . $inputFormat . ' is not supported, please use one of [' . implode(',', $this->getInputFormats()) . ']');
+        }
+
+        switch ($inputFormat) {
+            case self::INPUT_FORMAT_JSON:
+                $parsedValue = json_decode($value, true);
+                if ($parsedValue === null) {
+                    throw new \InvalidArgumentException('Can\'t parse value as json: ' . $value);
+                }
+                break;
+        }
+
+        return $parsedValue;
+    }
+
+    private function getInputFormats(): array
+    {
+        return [
+            self::INPUT_FORMAT_PLAIN,
+            self::INPUT_FORMAT_JSON,
+        ];
     }
 }
