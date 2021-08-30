@@ -2010,16 +2010,16 @@
         },
         {
             "name": "symfony/validator",
-            "version": "v4.4.29",
+            "version": "v4.4.30",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/validator.git",
-                "reference": "43ee727eac546610f8da01cf69857fde34b394ea"
+                "reference": "63b91fdc6c15d416b9a12190b441ba0f98fedd13"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/validator/zipball/43ee727eac546610f8da01cf69857fde34b394ea",
-                "reference": "43ee727eac546610f8da01cf69857fde34b394ea",
+                "url": "https://api.github.com/repos/symfony/validator/zipball/63b91fdc6c15d416b9a12190b441ba0f98fedd13",
+                "reference": "63b91fdc6c15d416b9a12190b441ba0f98fedd13",
                 "shasum": ""
             },
             "require": {
@@ -2109,7 +2109,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-07-27T06:31:16+00:00"
+            "time": "2021-08-26T06:05:05+00:00"
         },
         {
             "name": "symfony/var-dumper",
