@@ -1047,6 +1047,7 @@ n98-magerun2.phar script -d foo=bar filename
 It's possible to define multiple values by passing more than one
 option.
 
+<<<<<<< HEAD
 ### Toggle CMS Block status
 
 Toggles the status for a CMS block based on the given Block identifier.
@@ -1066,3 +1067,26 @@ n98-magerun2.phar admin:user:change-status [user] [--activate] [--deactivate]
 
 _Note: It is possible for a user to exist with a username that matches
 the email of a different user. In this case the first matched user will be changed._
+
+### Script Repository
+
+You can organize your scripts in a repository.
+Simply place a script in folder */usr/local/share/n98-magerun2/scripts* or in your home dir
+in folder *<HOME>/.n98-magerun2/scripts*.
+
+Scripts must have the file extension *.magerun*.
+
+After that you can list all scripts with the *script:repo:list* command.
+The first line of the script can contain a comment (line prefixed with #) which will be displayed as description.
+
+```sh
+$ n98-magerun2.phar script:repo:list [--format[="..."]]
+```
+
+If you want to execute a script from the repository this can be done by *script:repo:run* command.
+
+```sh
+$ n98-magerun2.phar script:repo:run [-d|--define[="..."]] [--stop-on-error] [script]
+```
+
+Script argument is optional. If you don't specify any you can select one from a list.
