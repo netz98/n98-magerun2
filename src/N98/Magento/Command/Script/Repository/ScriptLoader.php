@@ -38,6 +38,11 @@ final class ScriptLoader
     /**
      * @var array
      */
+    private $excludedScriptFolders;
+
+    /**
+     * @var array
+     */
     private $scriptFolders;
 
     /**
@@ -46,15 +51,21 @@ final class ScriptLoader
     private $scriptFiles;
 
     /**
-     * @param array $scriptFolders provided from the config file (config: script.folders, see YAML for details)
+     * @param array $scriptFolders provided by config file (config: script.folders, see YAML for details)
+     * @param array $excludedScriptFolders provided by config file (config: script.excluded_folders)
      * @param string $basename
      * @param string $magentoRootFolder
      */
-    public function __construct(array $scriptFolders, $basename, $magentoRootFolder)
-    {
+    public function __construct(
+        array $scriptFolders,
+        array $excludedScriptFolders,
+        $basename,
+        $magentoRootFolder
+    ) {
         $this->basename = $basename;
         $this->magentoRootFolder = $magentoRootFolder;
         $this->scriptFolders = $scriptFolders;
+        $this->excludedScriptFolders = $excludedScriptFolders;
     }
 
     /**
@@ -156,22 +167,24 @@ final class ScriptLoader
 
     /**
      * @param array $folders to search for magerun scripts in
-     * @return Finder|\Symfony\Component\Finder\SplFileInfo[]
+     * @return Finder
      */
     private function createScriptFilesFinder(array $folders)
     {
-        /* @var $finder Finder */
-        $finder = Finder::create()
+        return Finder::create()
             ->files()
-            ->exclude('pub')
+            ->exclude($this->excludedScriptFolders)
             ->followLinks()
             ->ignoreUnreadableDirs(true)
+            ->ignoreVCS(true)
             ->name('*' . AbstractRepositoryCommand::MAGERUN_EXTENSION)
             ->in($folders);
-
-        return $finder;
     }
 
+    /**
+     * @param \Symfony\Component\Finder\SplFileInfo $file
+     * @return array
+     */
     private function createScriptFile(SplFileInfo $file)
     {
         $pathname = $file->getPathname();
