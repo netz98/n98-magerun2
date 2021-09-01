@@ -21,6 +21,27 @@ script:
   folders:
     - /usr/share/n98-magerun2/scripts
     - /usr/local/share/n98-magerun2/scripts
+  excluded-folders:
+    - .github
+    - dev
+    - etc
+    - generated
+    - phpserver
+    - pub
+    - setup
+    - var
+    - vendor/amzn
+    - vendor/codeception
+    - vendor/dotmailer
+    - vendor/elasticsearch
+    - vendor/friendsofphp
+    - vendor/laminas
+    - vendor/magento
+    - vendor/paragonie
+    - vendor/phpunit
+    - vendor/sebastian
+    - vendor/symfony
+    - vendor/zendframework
 
 init:
   code: admin

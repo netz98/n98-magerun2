@@ -26,12 +26,18 @@ class AbstractRepositoryCommand extends AbstractMagentoCommand
 
         $config = $application->getConfig();
         $configScriptFolders = $config['script']['folders'];
+        $excludedFolders = $config['script']['excluded-folders'];
+
         $baseName = $application::APP_NAME;
         $magentoRootFolder = $application->getMagentoRootFolder();
 
-        $loader = new ScriptLoader($configScriptFolders, $baseName, $magentoRootFolder);
-        $files = $loader->getFiles();
+        $loader = new ScriptLoader(
+            $configScriptFolders,
+            $excludedFolders,
+            $baseName,
+            $magentoRootFolder
+        );
 
-        return $files;
+        return $loader->getFiles();
     }
 }
