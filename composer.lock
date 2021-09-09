@@ -3633,16 +3633,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "8.5.19",
+            "version": "8.5.20",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "496281b64ec781856ed0a583483b5923b4033722"
+                "reference": "9deefba183198398a09b927a6ac6bc1feb0b7b70"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/496281b64ec781856ed0a583483b5923b4033722",
-                "reference": "496281b64ec781856ed0a583483b5923b4033722",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/9deefba183198398a09b927a6ac6bc1feb0b7b70",
+                "reference": "9deefba183198398a09b927a6ac6bc1feb0b7b70",
                 "shasum": ""
             },
             "require": {
@@ -3722,7 +3722,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2021-07-31T15:15:06+00:00"
+            "time": "2021-08-31T06:44:38+00:00"
         },
         {
             "name": "roave/security-advisories",
@@ -3730,12 +3730,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "05f521f12b6e072bc77aaa78191907987d0454ff"
+                "reference": "07bff2dda1a042b95afcbdb1542e6123829a4ed6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/05f521f12b6e072bc77aaa78191907987d0454ff",
-                "reference": "05f521f12b6e072bc77aaa78191907987d0454ff",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/07bff2dda1a042b95afcbdb1542e6123829a4ed6",
+                "reference": "07bff2dda1a042b95afcbdb1542e6123829a4ed6",
                 "shasum": ""
             },
             "conflict": {
@@ -3811,7 +3811,7 @@
                 "ezsystems/ezplatform-rest": ">=1.2,<=1.2.2|>=1.3,<=1.3.1",
                 "ezsystems/ezplatform-user": ">=1,<1.0.1",
                 "ezsystems/ezpublish-kernel": "<=6.13.8.1|>=7,<=7.5.15.1",
-                "ezsystems/ezpublish-legacy": ">=5.3,<5.3.12.6|>=5.4,<5.4.14.2|>=2011,<2017.12.7.3|>=2018.6,<2018.6.1.4|>=2018.9,<2018.9.1.3|>=2019.3,<2019.3.5.1",
+                "ezsystems/ezpublish-legacy": "<=2017.12.7.3|>=2018.6,<=2019.3.5.1",
                 "ezsystems/platform-ui-assets-bundle": ">=4.2,<4.2.3",
                 "ezsystems/repository-forms": ">=2.3,<2.3.2.1",
                 "ezyang/htmlpurifier": "<4.1.1",
@@ -3824,7 +3824,7 @@
                 "flarum/tags": "<=0.1-beta.13",
                 "fluidtypo3/vhs": "<5.1.1",
                 "fooman/tcpdf": "<6.2.22",
-                "forkcms/forkcms": "<5.8.3",
+                "forkcms/forkcms": "<=5.9.2",
                 "fossar/tcpdf-parser": "<6.2.22",
                 "francoisjacquet/rosariosis": "<6.5.1",
                 "friendsofsymfony/oauth2-php": "<1.3",
@@ -3951,7 +3951,7 @@
                 "shopware/core": "<=6.4.3",
                 "shopware/platform": "<=6.4.3",
                 "shopware/production": "<=6.3.5.2",
-                "shopware/shopware": "<=5.6.9",
+                "shopware/shopware": "<5.6.10",
                 "showdoc/showdoc": "<=2.9.8",
                 "silverstripe/admin": ">=1.0.3,<1.0.4|>=1.1,<1.1.1",
                 "silverstripe/assets": ">=1,<1.4.7|>=1.5,<1.5.2",
@@ -3979,6 +3979,7 @@
                 "ssddanbrown/bookstack": "<0.29.2",
                 "stormpath/sdk": ">=0,<9.9.99",
                 "studio-42/elfinder": "<2.1.59",
+                "subrion/cms": "<=4.2.1",
                 "sulu/sulu": "<1.6.41|>=2,<2.0.10|>=2.1,<2.1.1",
                 "swiftmailer/swiftmailer": ">=4,<5.4.5",
                 "sylius/admin-bundle": ">=1,<1.0.17|>=1.1,<1.1.9|>=1.2,<1.2.2",
@@ -4115,7 +4116,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-09-03T16:04:40+00:00"
+            "time": "2021-09-08T18:03:47+00:00"
         },
         {
             "name": "sebastian/code-unit-reverse-lookup",
