@@ -9,6 +9,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\StringInput;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Terminal;
 
 /**
  * Class ImportCommand
@@ -208,6 +209,11 @@ HELP;
     {
         $success = true;
 
+        $sttyMode = null;
+        if (Terminal::hasSttyAvailable()) {
+            $sttyMode = exec('stty -g');
+        }
+
         $returnValue = null;
         $commandOutput = null;
         $output->writeln(
@@ -220,6 +226,11 @@ HELP;
             $success = false;
         }
         $output->writeln('<info>Finished</info>');
+
+        if (!is_null($sttyMode)) {
+            // Restore stty mode because 'pv' breaks it in some cases
+            exec(sprintf('stty %s', $sttyMode));
+        }
 
         return $success;
     }
