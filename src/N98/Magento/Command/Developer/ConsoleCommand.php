@@ -115,6 +115,7 @@ class ConsoleCommand extends AbstractMagentoCommand
         $shell = new Shell($config);
         $shell->setScopeVariables([
             'di'              => $this->getObjectManager(),
+            'dh'              => new DevelopmentHelper($this->getObjectManager()),
             'magentoVersion'  => $this->getObjectManager()->get(ProductMetadataInterface::class),
             'magerun'         => $this->getApplication(),
             'magerunInternal' => (object) ['currentModule' => ''],
@@ -194,3 +195,4 @@ help;
             ->load(Area::PART_TRANSLATE);
     }
 }
+
