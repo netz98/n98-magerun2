@@ -932,6 +932,17 @@ Variable `$di` is made available with a
 `Magento\Framework\ObjectManagerInterface` instance to allow creation of
 object instances.
 
+Variable `$dh` provides convenient debugging functions. Type `$dh->` and press 
+Tab for a list.
+
+Example:
+    
+    n98-magerun2 dev:console --area=adminhtml
+        // show name of category 123 in default store
+        $dh->debugCategoryById(123)['name']; 
+        // show name of product id 123
+        $dh->debugProductById(123)['name']; 
+
 The interactive console works as
 [REPL](https://en.wikipedia.org/wiki/Read%E2%80%93eval%E2%80%93print_loop).
 It's possible to enter any PHP code. The code will be executed immediately.
