@@ -107,16 +107,16 @@ class DatabaseHelper extends AbstractHelper
      * Connects to the database without initializing magento
      *
      * @param OutputInterface $output = null
-     *
+     * @param bool $reconnect = false
      * @return PDO
      * @throws RuntimeException pdo mysql extension is not installed
      * @throws \Magento\Framework\Exception\FileSystemException
      */
-    public function getConnection(OutputInterface $output = null)
+    public function getConnection(OutputInterface $output = null, bool $reconnect = false)
     {
         $output = $this->fallbackOutput($output);
 
-        if ($this->_connection) {
+        if (!$reconnect && $this->_connection) {
             return $this->_connection;
         }
 
