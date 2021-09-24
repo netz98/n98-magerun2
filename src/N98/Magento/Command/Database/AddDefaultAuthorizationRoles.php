@@ -31,7 +31,7 @@ class AddDefaultAuthorizationRoles extends AbstractDatabaseCommand
         $this->detectDbSettings($output);
 
         $dbHelper = $this->getDatabaseHelper();
-        $connection =  $dbHelper->getConnection($output);
+        $connection =  $dbHelper->getConnection($output, true);
 
         $roleTableName = $dbHelper->getTableName('authorization_role');
         $ruleTableName = $dbHelper->getTableName('authorization_rule');
