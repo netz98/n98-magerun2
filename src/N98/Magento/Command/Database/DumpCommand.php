@@ -494,7 +494,8 @@ HELP;
      */
     protected function postDumpPipeCommands()
     {
-        return ' | LANG=C LC_CTYPE=C LC_ALL=C sed -e ' . escapeshellarg('s/DEFINER[ ]*=[ ]*[^*]*\*/\*/');
+        return ' | LANG=C LC_CTYPE=C LC_ALL=C sed -E '
+            . escapeshellarg('s/DEFINER[ ]*=[ ]*`[^`]+`@`[^`]+`/DEFINER=CURRENT_USER/g');
     }
 
     /**
