@@ -50,6 +50,4 @@ class DevelopmentHelper
     {
         return $this->di->get('Magento\Customer\Api\CustomerRepositoryInterface');
     }
-
-
 }

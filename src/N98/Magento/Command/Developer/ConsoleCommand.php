@@ -195,4 +195,3 @@ help;
             ->load(Area::PART_TRANSLATE);
     }
 }
-

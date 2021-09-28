@@ -138,7 +138,7 @@ class DatabaseHelper extends AbstractHelper
             $this->dbSettings['username'],
             $this->dbSettings['password']
         );
-        $this->_connection ->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+        $this->_connection->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
 
         /** @link http://bugs.mysql.com/bug.php?id=18551 */
         $this->_connection->query("SET SQL_MODE=''");
