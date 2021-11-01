@@ -62,10 +62,10 @@ if [[ ! -f "${phing_bin}" ]]; then
     echo "provision: download composer.phar and install build dependencies ..."
     composer="composer.phar"
     rm -rf vendor
-    wget -q -O "${composer}" https://getcomposer.org/download/1.3.2/composer.phar
+    wget -q -O "${composer}" https://getcomposer.org/download/2.1.10/composer.phar
     chmod +x "${composer}"
     php -f "${composer}" -- --version
-    php -f "${composer}" -- --profile -q install --prefer-dist --no-interaction --ignore-platform-reqs
+    php -f "${composer}" -- --profile -q install --no-plugins --prefer-dist --no-interaction --ignore-platform-reqs
     rm "${composer}"
 fi
 
