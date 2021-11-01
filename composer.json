@@ -15,10 +15,13 @@
     "config": {
         "use-include-path": false,
         "preferred-install": "dist",
+        "platform": {
+            "php": "7.3.0"
+        },
         "sort-packages": true
     },
     "require": {
-        "php": "^7.1",
+        "php": "^7.3",
         "ext-PDO": "*",
         "ext-SimpleXML": "*",
         "ext-dom": "*",
