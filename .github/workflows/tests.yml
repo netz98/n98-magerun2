@@ -95,7 +95,7 @@ jobs:
 
       - name: Install Composer Presissimo Plugin
         run: composer global require hirak/prestissimo
-        if: ${{ matrix.composer-version }} == 'v1'
+        if: matrix.composer-version == 'v1'
 
       - name: Install dependencies
         run: composer --ansi install
