@@ -24,36 +24,42 @@ jobs:
             php-version: 7.4
             mysql-version: 8.0
             elsticsearch-version: 7.9.0
+            composer-version: v2
 
           - magento-version: magento-ce-2.4.2
             operating-system: ubuntu-latest
             php-version: 7.4
             mysql-version: 8.0
             elsticsearch-version: 7.9.0
+            composer-version: v2
 
           - magento-version: magento-ce-2.4.1
             operating-system: ubuntu-latest
             php-version: 7.4
             mysql-version: 8.0
             elsticsearch-version: 7.8.0
+            composer-version: v2
 
           - magento-version: magento-ce-2.4.0
             operating-system: ubuntu-latest
             php-version: 7.3
             mysql-version: 5.7
             elsticsearch-version: 7.8.0
+            composer-version: v1
 
           - magento-version: magento-ce-2.3.5-p2
             operating-system: ubuntu-latest
             php-version: 7.3
             mysql-version: 5.7
             elsticsearch-version: 7.8.0
+            composer-version: v1
           
           - magento-version: magento-ce-2.3.4
             operating-system: ubuntu-latest
             php-version: 7.3
             mysql-version: 5.7
             elsticsearch-version: 7.8.0
+            composer-version: v1
           
     services:
       elaticsearch:
@@ -82,13 +88,14 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          tools: composer:v1, cs2pr
+          tools: composer:${{ matrix.composer-version }}, cs2pr
           php-version: ${{ matrix.php-version }}
           extensions: mbstring, intl
           coverage: none
 
       - name: Install Composer Presissimo Plugin
         run: composer global require hirak/prestissimo
+        if: ${{ matrix.composer-version }} == 'v1'
 
       - name: Install dependencies
         run: composer --ansi install
