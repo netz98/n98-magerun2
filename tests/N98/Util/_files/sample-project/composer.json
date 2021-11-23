@@ -1,0 +1,96 @@
+{
+    "name": "magento/project-community-edition",
+    "description": "eCommerce Platform for Growth (Community Edition)",
+    "type": "project",
+    "license": [
+        "OSL-3.0",
+        "AFL-3.0"
+    ],
+    "config": {
+        "preferred-install": "dist",
+        "sort-packages": true
+    },
+    "require": {
+        "magento/composer-root-update-plugin": "^1.1",
+        "magento/module-bundle-sample-data": "100.3.*",
+        "magento/module-catalog-rule-sample-data": "100.3.*",
+        "magento/module-catalog-sample-data": "100.3.*",
+        "magento/module-cms-sample-data": "100.3.*",
+        "magento/module-configurable-sample-data": "100.3.*",
+        "magento/module-customer-sample-data": "100.3.*",
+        "magento/module-downloadable-sample-data": "100.3.*",
+        "magento/module-grouped-product-sample-data": "100.3.*",
+        "magento/module-msrp-sample-data": "100.3.*",
+        "magento/module-offline-shipping-sample-data": "100.3.*",
+        "magento/module-product-links-sample-data": "100.3.*",
+        "magento/module-review-sample-data": "100.3.*",
+        "magento/module-sales-rule-sample-data": "100.3.*",
+        "magento/module-sales-sample-data": "100.3.*",
+        "magento/module-swatches-sample-data": "100.3.*",
+        "magento/module-tax-sample-data": "100.3.*",
+        "magento/module-theme-sample-data": "100.3.*",
+        "magento/module-widget-sample-data": "100.3.*",
+        "magento/module-wishlist-sample-data": "100.3.*",
+        "magento/product-community-edition": "2.3.4",
+        "magento/sample-data-media": "100.3.*"
+    },
+    "require-dev": {
+        "allure-framework/allure-phpunit": "~1.2.0",
+        "dealerdirect/phpcodesniffer-composer-installer": "^0.5.0",
+        "friendsofphp/php-cs-fixer": "~2.14.0",
+        "lusitanian/oauth": "~0.8.10",
+        "magento/magento-coding-standard": "~4.0.0",
+        "magento/magento2-functional-testing-framework": "2.5.3",
+        "pdepend/pdepend": "2.5.2",
+        "phpcompatibility/php-compatibility": "^9.3",
+        "phpmd/phpmd": "@stable",
+        "phpunit/phpunit": "~6.5.0",
+        "sebastian/phpcpd": "~3.0.0",
+        "squizlabs/php_codesniffer": "~3.4.0"
+    },
+    "conflict": {
+        "gene/bluefoot": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Magento\\Framework\\": "lib/internal/Magento/Framework/",
+            "Magento\\Setup\\": "setup/src/Magento/Setup/",
+            "Magento\\": "app/code/Magento/",
+            "Zend\\Mvc\\Controller\\": "setup/src/Zend/Mvc/Controller/"
+        },
+        "psr-0": {
+            "": [
+                "app/code/",
+                "generated/code/"
+            ]
+        },
+        "files": [
+            "app/etc/NonComposerComponentRegistration.php"
+        ],
+        "exclude-from-classmap": [
+            "**/dev/**",
+            "**/update/**",
+            "**/Test/**"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Magento\\Sniffs\\": "dev/tests/static/framework/Magento/Sniffs/",
+            "Magento\\Tools\\": "dev/tools/Magento/Tools/",
+            "Magento\\Tools\\Sanity\\": "dev/build/publication/sanity/Magento/Tools/Sanity/",
+            "Magento\\TestFramework\\Inspection\\": "dev/tests/static/framework/Magento/TestFramework/Inspection/",
+            "Magento\\TestFramework\\Utility\\": "dev/tests/static/framework/Magento/TestFramework/Utility/"
+        }
+    },
+    "version": "2.3.4",
+    "minimum-stability": "stable",
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://repo.magento.com/"
+        }
+    ],
+    "extra": {
+        "magento-force": "override"
+    }
+}

@@ -37,7 +37,7 @@ class InfoCommandTest extends TestCase
 
     public function testCounts()
     {
-        $counts = ['Attribute Count', 'Customer Count', 'Category Count', 'Product Count'];
+        $counts = ['Admin User Count', 'Attribute Count', 'Customer Count', 'Category Count', 'Product Count'];
 
         $this->assertEmpty(array_diff($counts, array_keys($this->command->getInfo())));
     }
