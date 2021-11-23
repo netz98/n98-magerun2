@@ -275,14 +275,19 @@ copy already stored in `--installationFolder` on the given database.
 
 ---
 
-### Magento system info
+### Magento System Info
 
-Provides info like the edition and version or the configured cache
-backends.
+Provides infos like the edition, version or the configured cache
+backends, amount of data or installed packages.
 
 ```sh
 n98-magerun2.phar sys:info
 ```
+**Options:**
+
+| Option        | Description                                                                            |
+| ------------- | --------------------------------------|
+| `--sort`     | Sort table by name                     |
 
 ---
 
