@@ -61,6 +61,16 @@ class InfoCommand extends AbstractMagentoCommand
      */
     protected $deploymentConfig;
 
+    /**
+     * @var \Magento\Framework\App\Config\ScopeConfigInterface
+     */
+    protected $scopeConfig;
+
+    /**
+     * @var \Magento\User\Model\ResourceModel\User\CollectionFactory
+     */
+    protected $userCollectionFactory;
+
     protected function configure()
     {
         $this
@@ -88,6 +98,8 @@ class InfoCommand extends AbstractMagentoCommand
      * @param \Magento\Framework\App\Cache\Type\FrontendPool $frontendPool
      * @param \Magento\Framework\App\DeploymentConfig $deploymentConfig
      * @param \Magento\Framework\Module\ModuleListInterface $moduleList
+     * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
+     * @param \Magento\User\Model\ResourceModel\User\CollectionFactory $userCollectionFactory
      */
     public function inject(
         \Magento\Framework\App\ProductMetadataInterface $productMetadata,
@@ -97,7 +109,9 @@ class InfoCommand extends AbstractMagentoCommand
         \Magento\Eav\Model\Entity\AttributeFactory $attributeFactory,
         \Magento\Framework\App\Cache\Type\FrontendPool $frontendPool,
         \Magento\Framework\App\DeploymentConfig $deploymentConfig,
-        \Magento\Framework\Module\ModuleListInterface $moduleList
+        \Magento\Framework\Module\ModuleListInterface $moduleList,
+        \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
+        \Magento\User\Model\ResourceModel\User\CollectionFactory $userCollectionFactory
     ) {
         $this->productMetadata = $productMetadata;
         $this->customerFactory = $customerFactory;
@@ -107,6 +121,8 @@ class InfoCommand extends AbstractMagentoCommand
         $this->frontendPool = $frontendPool;
         $this->deploymentConfig = $deploymentConfig;
         $this->moduleList = $moduleList;
+        $this->scopeConfig = $scopeConfig;
+        $this->userCollectionFactory = $userCollectionFactory;
     }
 
     public function hasInfo()
@@ -136,12 +152,14 @@ class InfoCommand extends AbstractMagentoCommand
 
         $this->addVersionInfo();
         $this->addDeploymentInfo();
+        $this->addSearchEngineInfo();
         $this->addCacheInfos();
         $this->addVendors();
         $this->addAttributeCount();
         $this->addCustomerCount();
         $this->addCategoryCount();
         $this->addProductCount();
+        $this->addAdminUserInfos();
 
         $table = [];
         foreach ($this->infos as $key => $value) {
@@ -160,6 +178,17 @@ class InfoCommand extends AbstractMagentoCommand
                 ->setHeaders(['name', 'value'])
                 ->renderByFormat($output, $table, $input->getOption('format'));
         }
+    }
+
+    protected function addAdminUserInfos()
+    {
+        $adminUserCollection = $this->userCollectionFactory->create();
+        $this->infos['Admin User Count'] = $adminUserCollection->getSize();
+    }
+
+    protected function addSearchEngineInfo()
+    {
+        $this->infos['Search Engine'] = $this->scopeConfig->getValue('catalog/search/engine');
     }
 
     /**
@@ -246,5 +275,6 @@ class InfoCommand extends AbstractMagentoCommand
         }
 
         $this->infos['Vendors'] = implode(', ', array_unique($vendors));
+        $this->infos['Module Count'] = count($moduleList);
     }
 }
