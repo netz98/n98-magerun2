@@ -2,7 +2,6 @@
 
 namespace N98\Util;
 
-use Exception;
 use RuntimeException;
 
 /**
