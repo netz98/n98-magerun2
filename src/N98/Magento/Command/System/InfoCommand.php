@@ -5,6 +5,7 @@ namespace N98\Magento\Command\System;
 use Magento\Framework\App\State as AppState;
 use N98\Magento\Command\AbstractMagentoCommand;
 use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
+use N98\Util\ProjectComposer;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -81,6 +82,7 @@ class InfoCommand extends AbstractMagentoCommand
                 InputArgument::OPTIONAL,
                 'Only output value of named param like "version". Key is case insensitive.'
             )
+            ->addOption('sort', '', InputOption::VALUE_NONE, 'Sort by name')
             ->addOption(
                 'format',
                 null,
@@ -160,8 +162,12 @@ class InfoCommand extends AbstractMagentoCommand
         $this->addCategoryCount();
         $this->addProductCount();
         $this->addAdminUserInfos();
+        $this->analyseComposer();
 
         $table = [];
+
+        ksort($this->infos);
+
         foreach ($this->infos as $key => $value) {
             $table[] = [$key, $value];
         }
@@ -172,11 +178,43 @@ class InfoCommand extends AbstractMagentoCommand
             if (!isset($this->infos[$settingArgument])) {
                 throw new \InvalidArgumentException('Unknown key: ' . $settingArgument);
             }
-            $output->writeln((string) $this->infos[$settingArgument]);
+            $output->writeln((string)$this->infos[$settingArgument]);
         } else {
             $this->getHelper('table')
                 ->setHeaders(['name', 'value'])
                 ->renderByFormat($output, $table, $input->getOption('format'));
+        }
+    }
+
+    protected function analyseComposer()
+    {
+        $composerProjectUtil = new ProjectComposer(
+            $this->getApplication()->getMagentoRootFolder()
+        );
+
+        if (!$composerProjectUtil->isLockFile()) {
+            $this->infos['Composer Lock File'] = 'not found';
+
+            return;
+        }
+
+        $this->infos['Composer Lock File'] = 'found';
+
+        $installedPackages = $composerProjectUtil->getComposerLockPackages();
+        $this->infos['Composer Package Count'] = count($installedPackages);
+
+        $packagesToCheck = [
+            'magento/composer-root-update-plugin' => 'Magento Composer Root Update Plugin',
+            'magento/composer-dependency-version-audit-plugin' => 'Magento Composer Dependency Version Audit Plugin',
+            'magento/magento-coding-standard' => 'Magento Coding Standard Package',
+            'magento/magento2-functional-testing-framework' => 'Magento Functional Testing Framework',
+            'magento/module-inventory' => 'MSI Packages',
+            'magento/module-catalog-sample-data' => 'Sample Data Packages',
+        ];
+
+        foreach ($packagesToCheck as $packageToCheck => $label) {
+            $isStandardPackage = isset($installedPackages[$packageToCheck]) ? 'installed' : 'not installed';
+            $this->infos[$label] = $isStandardPackage;
         }
     }
 
@@ -197,32 +235,32 @@ class InfoCommand extends AbstractMagentoCommand
     protected function addProductCount()
     {
         $this->infos['Product Count'] = $this->productFactory
-                                                ->create()
-                                                ->getCollection()
-                                                ->getSize();
+            ->create()
+            ->getCollection()
+            ->getSize();
     }
 
     protected function addCustomerCount()
     {
         $this->infos['Customer Count'] = $this->customerFactory->create()
-                                                ->getCollection()
-                                                ->getSize();
+            ->getCollection()
+            ->getSize();
     }
 
     protected function addCategoryCount()
     {
         $this->infos['Category Count'] = $this->categoryFactory
-                                                ->create()
-                                                ->getCollection()
-                                                ->getSize();
+            ->create()
+            ->getCollection()
+            ->getSize();
     }
 
     protected function addAttributeCount()
     {
         $this->infos['Attribute Count'] = $this->attributeFactory
-                                                ->create()
-                                                ->getCollection()
-                                                ->getSize();
+            ->create()
+            ->getCollection()
+            ->getSize();
     }
 
     protected function addCacheInfos()
