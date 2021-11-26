@@ -1,4 +1,4 @@
-name: Tests
+name: Test Magento Installations
 on:
   push:
     branches:
@@ -103,6 +103,18 @@ jobs:
       - name: Install Composer Presissimo Plugin
         run: composer global require hirak/prestissimo
         if: matrix.composer-version == 'v1'
+
+      - name: Get Composer Cache Directory
+        id: composer-cache
+        run: |
+          echo "::set-output name=dir::$(composer config cache-files-dir)"
+
+      - uses: actions/cache@v2
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-composer-
 
       - name: Install dependencies
         run: composer --ansi install
