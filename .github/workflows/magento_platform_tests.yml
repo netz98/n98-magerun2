@@ -104,8 +104,7 @@ jobs:
         if: ${{ github.actor == 'dependabot[bot]' }}
         with:
           # Check out the pull request HEAD
-          ref: ${{ github.event.pull_request.head.sha }}
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          ref: ${{ github.event.pull_request.head.sha }}          
 
       - name: Checkout
         uses: actions/checkout@v2
