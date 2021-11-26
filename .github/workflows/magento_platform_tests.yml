@@ -88,12 +88,7 @@ jobs:
       MAGENTO_MARKETPLACE_PASSWORD: ${{ secrets.MAGENTO_MARKETPLACE_PASSWORD }}
       COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          # Full git history is needed to get a proper list of changed files
-          fetch-depth: 0
-
+    steps:      
       # https://github.com/marketplace/actions/setup-php-action#matrix-setup
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
@@ -103,11 +98,29 @@ jobs:
           extensions: mbstring, intl
           coverage: none
 
+      - uses: actions/checkout@v2
+        with:
+          # Full git history is needed to get a proper list of changed files
+          fetch-depth: 0
+
       - name: Install Composer Presissimo Plugin
         run: composer global require hirak/prestissimo
         if: matrix.composer-version == 'v1'
 
+      - name: Get Composer Cache Directory
+        id: composer-cache
+        run: |
+          echo "::set-output name=dir::$(composer config cache-files-dir)"
+
+      - uses: actions/cache@v2
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-composer-
+
       - name: Install dependencies
+        if: steps.composer-cache.outputs.cache-hit != 'true'
         run: composer install --prefer-dist --no-progress --no-suggest
 
       - name: Run php-cs-fixer
