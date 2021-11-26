@@ -1,4 +1,4 @@
-name: Test Magento Installations
+name: Magento Platform Tests
 on:
   push:
     branches:
@@ -90,6 +90,9 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+        with:
+          # Full git history is needed to get a proper list of changed files
+          fetch-depth: 0
 
       # https://github.com/marketplace/actions/setup-php-action#matrix-setup
       - name: Setup PHP

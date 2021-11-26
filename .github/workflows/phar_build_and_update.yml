@@ -1,4 +1,4 @@
-name: PHP Composer
+name: Phar build and update test
 
 on: [push, pull_request]
 
@@ -15,6 +15,9 @@ jobs:
 
     - name: Checkout
       uses: actions/checkout@v2
+      with:
+        # Full git history is needed to get a proper list of changed files
+        fetch-depth: 0
 
     - name: Check Security
       uses: symfonycorp/security-checker-action@v2
