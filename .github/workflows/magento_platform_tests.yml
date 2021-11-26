@@ -10,7 +10,7 @@ on:
   pull_request_target:
     branches:
       - 'master'
-      - 'develop'
+      - 'develop'      
 
 jobs:
   phpunit:
@@ -97,8 +97,16 @@ jobs:
           php-version: ${{ matrix.php-version }}
           extensions: mbstring, intl
           coverage: none
+       
+      - uses: Checkout as dependabot
+        if: ${{ github.actor == 'dependabot[bot]' }}
+        with:
+          # Check out the pull request HEAD
+          ref: ${{ github.event.pull_request.head.sha }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
 
-      - uses: actions/checkout@v2
+      - uses: Checkout
+        if: ${{ github.actor != 'dependabot[bot]' }}
         with:
           # Full git history is needed to get a proper list of changed files
           fetch-depth: 0
