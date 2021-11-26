@@ -120,7 +120,8 @@ jobs:
             ${{ runner.os }}-composer-
 
       - name: Install dependencies
-        run: composer --ansi install
+        if: steps.composer-cache.outputs.cache-hit != 'true'
+        run: composer install --prefer-dist --no-progress --no-suggest
 
       - name: Run php-cs-fixer
         run: vendor/bin/php-cs-fixer fix --dry-run --format=checkstyle | cs2pr
