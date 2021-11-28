@@ -16,20 +16,20 @@
         stopOnFailure="false"
         stopOnIncomplete="false"
         stopOnSkipped="false">
-  <php>
-    <env name="MAGERUN_SKIP_CORE_COMMANDS" value="1"/>
-  </php>
-  <testsuites>
-    <testsuite name="n98-magerun2-tests">
-      <directory>./tests</directory>
-    </testsuite>
-  </testsuites>
-  <coverage includeUncoveredFiles="true">
-    <include>
-      <directory suffix=".php">./src</directory>
-    </include>
-    <exclude>
-      <file>src/bootstrap.php</file>
-    </exclude>
-  </coverage>
+    <php>
+        <env name="MAGERUN_SKIP_CORE_COMMANDS" value="1"/>
+    </php>
+    <testsuites>
+        <testsuite name="n98-magerun2-tests">
+            <directory>./tests</directory>
+        </testsuite>
+    </testsuites>
+    <coverage includeUncoveredFiles="true">
+        <include>
+            <directory suffix=".php">./src</directory>
+        </include>
+        <exclude>
+            <file>src/bootstrap.php</file>
+        </exclude>
+    </coverage>
 </phpunit>
