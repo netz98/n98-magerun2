@@ -195,16 +195,18 @@ CONFIG;
 
         $config = $application->getConfig();
 
-        // Check for loaded project data
-        $this->assertArraySubset(
-            [
-                'foo' => [
-                    'bar' => [
-                        'magerun' => 'rockz!'
-                    ]
+        $expected = [
+            'foo' => [
+                'bar' => [
+                    'magerun' => 'rockz!'
                 ]
-            ],
-            $config
-        );
+            ]
+        ];
+
+        // replaced deprecated assertArraySubset with a less elegant (but simpler) approach
+        foreach ($expected as $expectedKey => $expectedValue) {
+            $this->assertArrayHasKey($expectedKey, $config);
+            $this->assertEquals($expectedValue, $config[$expectedKey]);
+        }
     }
 }
