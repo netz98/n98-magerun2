@@ -60,8 +60,8 @@ class FilesystemTest extends TestCase
         rmdir($dest . "/folder2");
         rmdir($dest);
 
-        $this->assertFileNotExists($dest . "/folder1/file1.txt");
-        $this->assertFileNotExists($dest);
+        $this->assertFileDoesNotExist($dest . "/folder1/file1.txt");
+        $this->assertFileDoesNotExist($dest);
 
         is_dir($tmp . '/a') || mkdir($tmp . '/a');
         touch($tmp . '/file1.txt');
@@ -89,7 +89,7 @@ class FilesystemTest extends TestCase
         $this->fileSystem->recursiveCopy($basePath, $dest, ['ignore.me']);
         $this->assertFileExists($dest . "/folder1/file1.txt");
         $this->assertFileExists($dest . "/folder2/file2.txt");
-        $this->assertFileNotExists($dest . "/folder1/ignore.me");
+        $this->assertFileDoesNotExist($dest . "/folder1/ignore.me");
 
         //cleanup
         unlink($file1);
@@ -126,7 +126,7 @@ class FilesystemTest extends TestCase
         $this->fileSystem->recursiveRemoveDirectory($basePath);
 
         $this->assertFileExists($symLinkedFile);
-        $this->assertFileNotExists($basePath);
+        $this->assertFileDoesNotExist($basePath);
     }
 
     public function testRecursiveRemove()
@@ -144,7 +144,7 @@ class FilesystemTest extends TestCase
         touch($file2);
 
         $this->fileSystem->recursiveRemoveDirectory($basePath);
-        $this->assertFileNotExists($basePath);
+        $this->assertFileDoesNotExist($basePath);
     }
 
     public function testRecursiveRemoveWithTrailingSlash()
@@ -162,7 +162,7 @@ class FilesystemTest extends TestCase
         touch($file2);
 
         $this->fileSystem->recursiveRemoveDirectory($basePath . "/");
-        $this->assertFileNotExists($basePath);
+        $this->assertFileDoesNotExist($basePath);
     }
 
     public function testFalseIsReturnedIfDirectoryNotExist()
@@ -194,8 +194,8 @@ class FilesystemTest extends TestCase
 
         $this->fileSystem->recursiveRemoveDirectory($basePath, true);
         $this->assertFileExists($basePath);
-        $this->assertFileNotExists($folder1);
-        $this->assertFileNotExists($folder2);
+        $this->assertFileDoesNotExist($folder1);
+        $this->assertFileDoesNotExist($folder2);
     }
 
     /**
