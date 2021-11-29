@@ -92,11 +92,8 @@ jobs:
       - name: Set env
         run: echo ::set-env name=workspace::$GITHUB_WORKSPACE
 
-      - name: Dump GitHub context
-        env:
-          GITHUB_CONTEXT: ${{ toJson(env) }}
-
       - name: Define Magento ROOT for tests
+        run: echo "Set Magento root to $WORKSPACE"
         env:
           N98_MAGERUN2_TEST_MAGENTO_ROOT: ${{ env.workspace }}/magento
 
