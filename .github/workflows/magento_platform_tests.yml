@@ -100,13 +100,13 @@ jobs:
       
       - name: Checkout PR
         uses: actions/checkout@v2
-        if: github.event_name = 'pull_request'
+        if: github.event_name == 'pull_request'
         with:
           ref: ${{ github.event.pull_request.head.sha }}
 
       - name: Checkout HEAD
         uses: actions/checkout@v2
-        if: github.event_name = 'push'
+        if: github.event_name == 'push'
 
       - name: Install Composer Presissimo Plugin
         run: composer global require hirak/prestissimo
