@@ -87,11 +87,14 @@ class DatabaseHelper extends AbstractHelper
             $this->dbSettings['prefix'] = (string) $config['db']['table_prefix'];
         }
 
-        if (strpos($this->dbSettings['host'], '/') !== false) {
-            $this->dbSettings['unix_socket'] = $this->dbSettings['host'];
-            unset($this->dbSettings['host']);
-        } elseif (strpos($this->dbSettings['host'], ':') !== false) {
-            list($this->dbSettings['host'], $this->dbSettings['port']) = explode(':', $this->dbSettings['host']);
+        // Analyse hostname
+        if (isset($this->dbSettings['host'])) {
+            if (strpos($this->dbSettings['host'], '/') !== false) {
+                $this->dbSettings['unix_socket'] = $this->dbSettings['host'];
+                unset($this->dbSettings['host']);
+            } elseif (strpos($this->dbSettings['host'], ':') !== false) {
+                list($this->dbSettings['host'], $this->dbSettings['port']) = explode(':', $this->dbSettings['host']);
+            }
         }
 
         if (isset($this->dbSettings['comment'])) {
@@ -126,11 +129,14 @@ class DatabaseHelper extends AbstractHelper
             throw new RuntimeException('pdo_mysql extension is not installed');
         }
 
-        if (strpos($this->dbSettings['host'], '/') !== false) {
-            $this->dbSettings['unix_socket'] = $this->dbSettings['host'];
-            unset($this->dbSettings['host']);
-        } elseif (strpos($this->dbSettings['host'], ':') !== false) {
-            list($this->dbSettings['host'], $this->dbSettings['port']) = explode(':', $this->dbSettings['host']);
+        // Analyse hostname
+        if (isset($this->dbSettings['host'])) {
+            if (strpos($this->dbSettings['host'], '/') !== false) {
+                $this->dbSettings['unix_socket'] = $this->dbSettings['host'];
+                unset($this->dbSettings['host']);
+            } elseif (strpos($this->dbSettings['host'], ':') !== false) {
+                list($this->dbSettings['host'], $this->dbSettings['port']) = explode(':', $this->dbSettings['host']);
+            }
         }
 
         /*
