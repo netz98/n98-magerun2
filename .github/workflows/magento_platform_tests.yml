@@ -85,11 +85,21 @@ jobs:
         options: --tmpfs /tmp:rw --tmpfs /var/lib/mysql:rw --health-cmd="mysqladmin ping"
     env:
       MAGENTO_MARKETPLACE_USERNAME: ${{ secrets.MAGENTO_MARKETPLACE_USERNAME }}
-      MAGENTO_MARKETPLACE_PASSWORD: ${{ secrets.MAGENTO_MARKETPLACE_PASSWORD }}
-      N98_MAGERUN2_TEST_MAGENTO_ROOT: ${{ env.GITHUB_WORKSPACE }}/magento
+      MAGENTO_MARKETPLACE_PASSWORD: ${{ secrets.MAGENTO_MARKETPLACE_PASSWORD }}      
       COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
+      - name: Set env
+        run: echo ::set-env name=workspace::$GITHUB_WORKSPACE
+
+      - name: Dump GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(env) }}
+
+      - name: Define Magento ROOT for tests
+        env:
+          N98_MAGERUN2_TEST_MAGENTO_ROOT: ${{ env.workspace }}/magento
+
       # https://github.com/marketplace/actions/setup-php-action#matrix-setup
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
