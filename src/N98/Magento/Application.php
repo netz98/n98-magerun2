@@ -488,7 +488,6 @@ class Application extends BaseApplication
             }
         } catch (\Exception $ex) {
             $this->renderThrowable($ex, $output);
-            var_dump('test');
             $output->writeln(
                 '<info>Use --skip-core-commands to not require the Magento app/bootstrap.php which caused ' .
                 'the exception.</info>'

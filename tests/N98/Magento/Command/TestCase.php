@@ -7,9 +7,8 @@ use Magento\Framework\DB\Adapter\AdapterInterface;
 use N98\Magento\Application;
 use N98\Magento\MagerunCommandTester;
 use N98\Magento\TestApplication;
-use PHPUnit_Framework_MockObject_MockObject;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Console\Output\NullOutput;
-use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Class TestCase
@@ -42,7 +41,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @return Application|\PHPUnit\Framework\MockObject\MockObject
+     * @return Application|MockObject
      * @throws \Exception
      */
     public function getApplication()

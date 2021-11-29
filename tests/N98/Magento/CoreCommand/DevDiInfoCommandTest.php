@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 namespace N98\Magento\CoreCommand;
 
-class DevDiInfoCommandTest extends AbstractMagentoCoreCommandTest
+class DevDiInfoCommandTest extends AbstractMagentoCoreCommandTestCase
 {
     public function testExecute()
     {

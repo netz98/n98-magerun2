@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 namespace N98\Magento\CoreCommand;
 
-class IndexerInfoCommandTest extends AbstractMagentoCoreCommandTest
+class IndexerInfoCommandTest extends AbstractMagentoCoreCommandTestCase
 {
     public function testExecute()
     {
