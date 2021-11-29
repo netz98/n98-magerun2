@@ -4,22 +4,22 @@ RECENT CHANGES
 4.8.0-dev
 ---------
 
+- Add: #875: Environment variable support in Magerun scripts (by Christian Münch)
 - Add: #874: Experimental MySQL SSL support (by Karsten Deubert) 
 - Add: #867: PHPUnit 9 compatiblity (by Karsten Deubert)
 - Add: New test suite to run core command tests (by Christian Münch)
-- Add: Add Magento 2.4.3 to installer and test pipeline (by Christian Münch)
-- Imp: #875: Add environment variable support in Magerun scripts (by Christian Münch)
+- Add: Magento 2.4.3 to installer and test pipeline (by Christian Münch)
 - Imp: #835: Replace the definer instead of trying to remove it (by Alin Alexandru)
 - Imp: #820: Optimize script repo performance by exclude lists (by Christian Münch)
 - Imp: #806: Implement input format json for config env set command (by Pieter Hoste)
-- Imp: #805 - Skip authorization creation during db import if option is specified (by Luca Gallinari)
+- Imp: #805: Skip authorization creation during db import if option is specified (by Luca Gallinari)
 - Imp: #620: dev:console: Provide convenience functions to dump entities (by Alexander Menk)
-- Imp: Improve error handling in PDO (by Alexander Menk)
+- Imp: Error handling in PDO (by Alexander Menk)
 - Imp: Updated dependencies
   - dev: captainhook, phpunit, vfsstream, , php-cs-fixer
   - application: composer, symfony, phing, psysh, symfony-console-autocomplete, twig
 - Imp: Refactoring of Github Actions (Composer 2, Test Pull Requests) 
-- Fix: #828: Fix error on db:import --drop (by Alexander Menk)
+- Fix: #828: Eerror on db:import --drop (by Alexander Menk)
 - Fix: #824: Restore terminal mode after import (by Jeroen Vermeulen)
 
 4.7.0
