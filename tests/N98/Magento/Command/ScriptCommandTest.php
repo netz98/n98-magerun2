@@ -20,6 +20,10 @@ class ScriptCommandTest extends TestCase
         $this->assertDisplayRegExp($input, '~^\Qmagento.edition: \E(Community|Enterprise)\R$~m');
         $this->assertDisplayRegExp($input, '~^\Qmagento.version: \E\d\.\d+\.\d+.*\R$~m');
 
+        // Test ENV vars
+        $this->assertDisplayRegExp($input, '~^\QPath ENV Variable: \E.*\R$~m');
+
+        // Magerun related variables
         $this->assertDisplayContains($input, 'magerun.version: ' . $this->getApplication()->getVersion());
 
         $this->assertDisplayContains($input, 'code');

@@ -13,6 +13,7 @@ ${bar}=${foo}.gz
 ! echo "magento.version: ${magento.version}"
 ! echo "php.version: ${php.version}"
 ! echo "magerun.version: ${magerun.version}"
+! echo "Path ENV Variable: ${env.PATH}"
 
  # Ignore this line and trim whitespaces for next command
       sys:website:list

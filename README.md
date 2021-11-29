@@ -1059,11 +1059,18 @@ n98-magerun2.phar script -d foo=bar filename
 
 # This will register the variable ${foo} with value bar.
 ```
-
 It's possible to define multiple values by passing more than one
 option.
 
-<<<<<<< HEAD
+Environment variables can be used in a script by using the `env.` prefix.
+
+Example:
+
+```
+!echo "My current working directory is: ${env.PWD}"
+!echo "Path: ${env.PATH}"
+```
+
 ### Toggle CMS Block status
 
 Toggles the status for a CMS block based on the given Block identifier.
