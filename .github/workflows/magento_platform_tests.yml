@@ -86,7 +86,7 @@ jobs:
     env:
       MAGENTO_MARKETPLACE_USERNAME: ${{ secrets.MAGENTO_MARKETPLACE_USERNAME }}
       MAGENTO_MARKETPLACE_PASSWORD: ${{ secrets.MAGENTO_MARKETPLACE_PASSWORD }}
-      N98_MAGERUN2_TEST_MAGENTO_ROOT: ${{ env.GITHUB_WORKSPACE }}/magento
+      N98_MAGERUN2_TEST_MAGENTO_ROOT: ${{ github.workspace }}/magento
       COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
