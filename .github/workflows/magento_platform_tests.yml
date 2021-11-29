@@ -89,13 +89,15 @@ jobs:
       COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
-      - name: Set env
-        run: echo ::set-env name=workspace::$GITHUB_WORKSPACE
+      - name: Dump GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJSON(github) }}
+          run: echo "Register Github context"
 
       - name: Define Magento ROOT for tests
         run: echo "Set Magento root to $WORKSPACE"
         env:
-          N98_MAGERUN2_TEST_MAGENTO_ROOT: ${{ env.workspace }}/magento
+          N98_MAGERUN2_TEST_MAGENTO_ROOT: ${{ github.workspace }}/magento
 
       # https://github.com/marketplace/actions/setup-php-action#matrix-setup
       - name: Setup PHP
