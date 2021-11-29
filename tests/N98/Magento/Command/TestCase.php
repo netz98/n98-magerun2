@@ -8,6 +8,8 @@ use N98\Magento\Application;
 use N98\Magento\MagerunCommandTester;
 use N98\Magento\TestApplication;
 use PHPUnit_Framework_MockObject_MockObject;
+use Symfony\Component\Console\Output\NullOutput;
+use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Class TestCase
@@ -23,6 +25,11 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
     private $testApplication;
 
     /**
+     * @var array
+     */
+    private $testers = [];
+
+    /**
      * getter for the magento root directory of the test-suite
      *
      * @see ApplicationTest::testExecute
@@ -35,7 +42,8 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @return Application|PHPUnit_Framework_MockObject_MockObject
+     * @return Application|\PHPUnit\Framework\MockObject\MockObject
+     * @throws \Exception
      */
     public function getApplication()
     {
@@ -63,11 +71,6 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
 
         return $this->testApplication;
     }
-
-    /**
-     * @var array
-     */
-    private $testers = [];
 
     /**
      * @param string|array $command name or input
@@ -124,7 +127,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
     {
         $display = $this->getMagerunTester($command)->getDisplay();
 
-        $this->assertRegExp($pattern, $display, $message);
+        $this->assertMatchesRegularExpression($pattern, $display, $message);
     }
 
     /**
@@ -148,5 +151,10 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
         $this->assertSame(0, $status, $message);
 
         return $tester;
+    }
+
+    protected function registerCoreCommands()
+    {
+        $this->getApplication()->registerMagentoCoreCommands(new NullOutput());
     }
 }

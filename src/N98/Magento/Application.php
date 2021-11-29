@@ -471,7 +471,7 @@ class Application extends BaseApplication
      *
      * @param OutputInterface $output
      */
-    protected function registerMagentoCoreCommands(OutputInterface $output)
+    public function registerMagentoCoreCommands(OutputInterface $output)
     {
         $magentoRootFolder = $this->getMagentoRootFolder();
         if (0 === strlen($magentoRootFolder)) {
@@ -488,6 +488,7 @@ class Application extends BaseApplication
             }
         } catch (\Exception $ex) {
             $this->renderThrowable($ex, $output);
+            var_dump('test');
             $output->writeln(
                 '<info>Use --skip-core-commands to not require the Magento app/bootstrap.php which caused ' .
                 'the exception.</info>'
