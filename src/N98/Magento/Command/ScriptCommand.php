@@ -326,6 +326,10 @@ HELP;
         $this->scriptVars['${magerun.version}'] = $this->getApplication()->getVersion();
         $this->scriptVars['${script.file}'] = $this->_scriptFilename;
         $this->scriptVars['${script.dir}'] = dirname($this->_scriptFilename);
+
+        foreach (getenv() as $envName => $envValue) {
+            $this->scriptVars['${env.' . $envName . '}'] = $envValue;
+        }
     }
 
     /**
