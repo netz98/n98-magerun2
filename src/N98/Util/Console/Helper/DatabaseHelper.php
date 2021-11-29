@@ -133,10 +133,26 @@ class DatabaseHelper extends AbstractHelper
             list($this->dbSettings['host'], $this->dbSettings['port']) = explode(':', $this->dbSettings['host']);
         }
 
+        /*
+         * section added to pass through ssl related driver options to PDO
+         * see https://www.php.net/manual/en/ref.pdo-mysql.php
+         *
+         * example:
+         *   'driver_options' => [
+         *     PDO::MYSQL_ATTR_SSL_CA => '/etc/mysql/ca-cert.pem',
+         *     PDO::MYSQL_ATTR_SSL_CERT => '/etc/mysql/client-cert.pem',
+         *     PDO::MYSQL_ATTR_SSL_KEY => '/etc/mysql/client-key.pem',
+         *   ]
+         */
+        $connectionOptions = (array_key_exists('driver_options', $this->dbSettings) && count($this->dbSettings['driver_options']))
+            ? $this->dbSettings['driver_options']
+            : null;
+
         $this->_connection = new PDO(
             $this->dsn(),
             $this->dbSettings['username'],
-            $this->dbSettings['password']
+            $this->dbSettings['password'],
+            $connectionOptions
         );
         $this->_connection->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
 
@@ -250,7 +266,50 @@ class DatabaseHelper extends AbstractHelper
             $string = '-h' . escapeshellarg($this->dbSettings['host']);
         }
 
-        $string .= ' '
+        /*
+         * section added to pass through ssl related driver options as mysqldump parameters
+         * see https://www.php.net/manual/en/ref.pdo-mysql.php
+         * see https://dev.mysql.com/doc/refman/5.7/en/connection-options.html#encrypted-connection-options
+         * see https://dev.mysql.com/doc/refman/8.0/en/connection-options.html#encrypted-connection-options
+         *
+         * example:
+         *   'driver_options' => [
+         *     PDO::MYSQL_ATTR_SSL_CA => '/etc/mysql/ca-cert.pem',
+         *     PDO::MYSQL_ATTR_SSL_CERT => '/etc/mysql/client-cert.pem',
+         *     PDO::MYSQL_ATTR_SSL_KEY => '/etc/mysql/client-key.pem',
+         *   ]
+         */
+        $connectionOptions = (array_key_exists('driver_options', $this->dbSettings) && count($this->dbSettings['driver_options']))
+            ? $this->dbSettings['driver_options']
+            : [];
+
+        $sslConfigMap = [
+            PDO::MYSQL_ATTR_SSL_CA => '--ssl-ca',
+            PDO::MYSQL_ATTR_SSL_CERT => '--ssl-cert',
+            PDO::MYSQL_ATTR_SSL_KEY => '--ssl-key'
+        ];
+
+        $sslOptions = [];
+
+        foreach ($sslConfigMap as $mappingSource => $mappingTarget) {
+            if (array_key_exists($mappingSource, $connectionOptions) && !empty($connectionOptions[$mappingSource])) {
+                $sslOptions[] = $mappingTarget.'='.escapeshellarg($connectionOptions[$mappingSource]);
+            }
+        }
+
+        // see https://dev.mysql.com/doc/refman/8.0/en/connection-options.html#option_general_ssl-mode
+        if (array_key_exists(PDO::MYSQL_ATTR_SSL_CA, $connectionOptions)) {
+            if (!array_key_exists(PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT, $connectionOptions)
+                || $connectionOptions[PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT]
+            ) {
+                $sslOptions[] = '--ssl-mode=VERIFY_CA';
+            } else {
+                $sslOptions[] = '--ssl-mode=REQUIRED';
+            }
+        }
+
+        $string .= ' '.implode(' ', $sslOptions)
+            . ' '
             . '-u' . escapeshellarg($this->dbSettings['username'])
             . ' '
             . (isset($this->dbSettings['port'])
