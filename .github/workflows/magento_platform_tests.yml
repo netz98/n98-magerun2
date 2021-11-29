@@ -90,9 +90,9 @@ jobs:
 
     steps:
       - name: Dump GitHub context
+        run: echo "Register Github context"
         env:
-          GITHUB_CONTEXT: ${{ toJSON(github) }}
-          run: echo "Register Github context"
+          GITHUB_CONTEXT: ${{ toJSON(github) }}          
 
       - name: Define Magento ROOT for tests
         run: echo "Set Magento root to $WORKSPACE"
