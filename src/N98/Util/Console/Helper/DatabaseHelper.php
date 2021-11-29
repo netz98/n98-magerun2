@@ -293,7 +293,7 @@ class DatabaseHelper extends AbstractHelper
 
         foreach ($sslConfigMap as $mappingSource => $mappingTarget) {
             if (array_key_exists($mappingSource, $connectionOptions) && !empty($connectionOptions[$mappingSource])) {
-                $sslOptions[] = $mappingTarget.'='.escapeshellarg($connectionOptions[$mappingSource]);
+                $sslOptions[] = $mappingTarget . '=' . escapeshellarg($connectionOptions[$mappingSource]);
             }
         }
 
@@ -308,7 +308,7 @@ class DatabaseHelper extends AbstractHelper
             }
         }
 
-        $string .= ' '.implode(' ', $sslOptions)
+        $string .= ' ' . implode(' ', $sslOptions)
             . ' '
             . '-u' . escapeshellarg($this->dbSettings['username'])
             . ' '
