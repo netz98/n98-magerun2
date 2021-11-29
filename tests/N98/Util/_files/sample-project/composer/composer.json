@@ -1,0 +1,23 @@
+{
+    "name": "n98/magerun2-composer1-fake-project",
+    "description": "Fake Project to test Composer Util",
+    "type": "project",
+    "require": {
+        "symfony/console": "*"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "N98\\Magerun2Composer1FakeProject\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Christian Münch",
+            "email": "christian@muench-worms.de"
+        }
+    ],
+    "require-dev": {
+        "phpunit/phpunit": "*"
+    }
+}
