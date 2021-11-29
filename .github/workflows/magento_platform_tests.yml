@@ -10,7 +10,7 @@ on:
   pull_request_target:
     branches:
       - 'master'
-      - 'develop'      
+      - 'develop'
 
 jobs:
   phpunit:
@@ -60,14 +60,14 @@ jobs:
             mysql-version: 5.7
             elsticsearch-version: 7.6.0
             composer-version: v1
-          
+
           - magento-version: magento-ce-2.3.4
             operating-system: ubuntu-latest
             php-version: 7.3
             mysql-version: 5.7
             elsticsearch-version: 7.6.0
             composer-version: v1
-          
+
     services:
       elaticsearch:
         image: docker.elastic.co/elasticsearch/elasticsearch:${{ matrix.elsticsearch-version }}
@@ -75,7 +75,7 @@ jobs:
           - 9200:9200
           - 9300:9300
         options: -e="discovery.type=single-node" --health-cmd="curl http://localhost:9200/_cluster/health" --health-interval=10s --health-timeout=5s --health-retries=10
-        
+
       mysql:
         image: mysql:${{ matrix.mysql-version }}
         env:
@@ -88,7 +88,7 @@ jobs:
       MAGENTO_MARKETPLACE_PASSWORD: ${{ secrets.MAGENTO_MARKETPLACE_PASSWORD }}
       COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-    steps:      
+    steps:
       # https://github.com/marketplace/actions/setup-php-action#matrix-setup
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
@@ -97,14 +97,14 @@ jobs:
           php-version: ${{ matrix.php-version }}
           extensions: mbstring, intl
           coverage: none
-       
-      # https://docs.github.com/en/code-security/supply-chain-security/keeping-your-dependencies-updated-automatically/automating-dependabot-with-github-actions#handling-pull_request-events 
+
+      # https://docs.github.com/en/code-security/supply-chain-security/keeping-your-dependencies-updated-automatically/automating-dependabot-with-github-actions#handling-pull_request-events
       - name: Checkout as dependabot
         uses: actions/checkout@v2
         if: ${{ github.actor == 'dependabot[bot]' }}
         with:
           # Check out the pull request HEAD
-          ref: ${{ github.event.pull_request.head.sha }}          
+          ref: ${{ github.event.pull_request.head.sha }}
 
       - name: Checkout
         uses: actions/checkout@v2
@@ -130,7 +130,11 @@ jobs:
             ${{ runner.os }}-composer-
 
       - name: Install dependencies
-        if: steps.composer-cache.outputs.cache-hit != 'true'
+        # If we have a very broad restore-keys in the previous caching action,
+        # we might pull outdated dependencies from a parent branch for new branches.
+        # Over time, just running composer all the time to give it a chance
+        # to fix the outdated dependencies should be faster than having to pull
+        # everything from scratch for every new branch.
         run: composer install --prefer-dist --no-progress --no-suggest
 
       - name: Run php-cs-fixer
