@@ -13,11 +13,15 @@ jobs:
       with:
         php-version: '7.4'
 
-    - name: Checkout
+    - name: Checkout PR
       uses: actions/checkout@v2
+      if: github.event_name = 'pull_request'
       with:
-        # Full git history is needed to get a proper list of changed files
-        fetch-depth: 0
+        ref: ${{ github.event.pull_request.head.sha }}
+
+    - name: Checkout HEAD
+      uses: actions/checkout@v2
+      if: github.event_name = 'push'
 
     - name: Check Security
       uses: symfonycorp/security-checker-action@v2
