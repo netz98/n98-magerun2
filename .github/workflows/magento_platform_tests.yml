@@ -100,7 +100,7 @@ jobs:
       
       - name: Checkout PR
         uses: actions/checkout@v2
-        if: github.event_name == 'pull_request'
+        if: github.event_name == 'pull_request_target'
         with:
           ref: ${{ github.event.pull_request.head.sha }}
 
