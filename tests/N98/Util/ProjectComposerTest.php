@@ -20,7 +20,7 @@ class ProjectComposerTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->sut = new ProjectComposer(__DIR__ . '/_files/sample-project');
+        $this->sut = new ProjectComposer(__DIR__ . '/_files/sample-project/composer');
     }
 
     /**
@@ -47,6 +47,6 @@ class ProjectComposerTest extends TestCase
     {
         $returnedPackages = $this->sut->getComposerLockPackages();
 
-        $this->assertCount(487, $returnedPackages);
+        $this->assertCount(44, $returnedPackages);
     }
 }
