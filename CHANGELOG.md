@@ -4,6 +4,7 @@ RECENT CHANGES
 4.8.0-dev
 ---------
 
+- Add: #884: Hyvä Support for sys:info and sys:check command (by Christian Münch)
 - Add: #875: Environment variable support in Magerun scripts (by Christian Münch)
 - Add: #874: Experimental MySQL SSL support (by Karsten Deubert) 
 - Add: #867: PHPUnit 9 compatiblity (by Karsten Deubert)
