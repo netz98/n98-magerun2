@@ -32,7 +32,7 @@ class InfoCommandTest extends TestCase
 
     public function testCryptKey()
     {
-        $this->assertRegExp('/^[a-f0-9]{32}$/', $this->command->getInfo(self::CRYPT_KEY_INFO));
+        $this->assertMatchesRegularExpression('/^[a-f0-9]{32}$/', $this->command->getInfo(self::CRYPT_KEY_INFO));
     }
 
     public function testCounts()

@@ -54,7 +54,7 @@ abstract class CheckAbstract implements SimpleCheck, CommandAware, CommandConfig
         $this->_env = $envArray;
         $this->_dot = new Dot($envArray);
 
-        call_user_func([$this, 'checkEnv']);
+        $this->checkEnv();
     }
 
     /**

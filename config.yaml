@@ -505,6 +505,36 @@ commands:
         - N98\Magento\Command\System\Check\Env\ExistsCheck
         - N98\Magento\Command\System\Check\Env\KeyExistsCheck
         - N98\Magento\Command\System\Check\Env\CacheTypesCheck
+      hyva:
+        - N98\Magento\Command\System\Check\Hyva\InstallationBasicComposerPackagesCheck
+        - N98\Magento\Command\System\Check\Hyva\MissingGraphQLPackagesCheck
+        - N98\Magento\Command\System\Check\Hyva\IsCaptchaEnabledCheck
+
+    hyva:
+      main-package: hyva-themes/magento2-default-theme
+      installation-required-basic-packages:
+        - hyva-themes/magento2-reset-theme
+        - hyva-themes/magento2-graphql-tokens
+        - hyva-themes/magento2-email-module
+        - hyva-themes/magento2-default-theme
+      installation-required-graphql-packages:
+        - magento/module-bundle-graph-ql
+        - magento/module-catalog-customer-graph-ql
+        - magento/module-catalog-graph-ql
+        - magento/module-catalog-url-rewrite-graph-ql
+        - magento/module-configurable-product-graph-ql
+        - magento/module-customer-graph-ql
+        - magento/module-directory-graph-ql
+        - magento/module-downloadable-graph-ql
+        - magento/module-eav-graph-ql
+        - magento/module-graph-ql
+        - magento/module-grouped-product-graph-ql
+        - magento/module-quote-graph-ql
+        - magento/module-related-product-graph-ql
+        - magento/module-sales-graph-ql
+        - magento/module-store-graph-ql
+        - magento/module-swatches-graph-ql
+        - magento/module-url-rewrite-graph-ql
 
     filesystem:
       folders:

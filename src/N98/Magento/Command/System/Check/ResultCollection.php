@@ -22,12 +22,52 @@ class ResultCollection implements \IteratorAggregate
     protected $_resultGroup;
 
     /**
+     * Key/Value registry for checks
+     *
+     * @var array
+     */
+    protected $registry;
+
+    /**
+     * Register value in registry
+     *
+     * @param string $key
+     * @param mixed $value
+     */
+    public function setRegistryValue($key, $value)
+    {
+        $this->registry[$key] = $value;
+    }
+
+    /**
+     * Check if key exists
+     *
+     * @param $key
+     * @return bool
+     */
+    public function hasRegistryKey($key): bool
+    {
+        return isset($this->registry[$key]);
+    }
+
+    /**
+     * Return a registry value
+     *
+     * @param string $key
+     * @return mixed
+     */
+    public function getRegistryValue($key)
+    {
+        return $this->registry[$key];
+    }
+
+    /**
      * @param Result $result
      * @return $this
      */
     public function addResult(Result $result)
     {
-        $this->_results[] = $result;
+        $this->_results[$result->getResultGroup()][] = $result;
 
         return $this;
     }
@@ -59,6 +99,16 @@ class ResultCollection implements \IteratorAggregate
      */
     public function getIterator()
     {
-        return new \ArrayObject($this->_results);
+        $filteredResults = [];
+
+        foreach ($this->_results as $resultGroup => $groupResults) {
+            foreach ($groupResults as $result) {
+                if (!$result->isSkipped()) {
+                    $filteredResults[$resultGroup][] = $result;
+                }
+            }
+        }
+
+        return new \ArrayObject($filteredResults);
     }
 }

@@ -19,6 +19,11 @@ class Charset
     const UNICODE_CROSS_CHAR = 10006;
 
     /**
+     * @var int
+     */
+    const UNICODE_WHITE_SQUARE_CHAR = 9633;
+
+    /**
      * @param int|array $codes
      * @return string
      */

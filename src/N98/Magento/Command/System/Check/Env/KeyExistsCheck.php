@@ -12,7 +12,7 @@ class KeyExistsCheck extends CheckAbstract
     public function checkEnv()
     {
         $requiredKeys = $this->_commandConfig['env']['required-keys'];
-        foreach ($requiredKeys as $key => $value) {
+        foreach ($requiredKeys as $value) {
             $this->envKeyExist($value);
         }
     }
