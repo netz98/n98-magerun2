@@ -509,6 +509,7 @@ commands:
         - N98\Magento\Command\System\Check\Hyva\InstallationBasicComposerPackagesCheck
         - N98\Magento\Command\System\Check\Hyva\MissingGraphQLPackagesCheck
         - N98\Magento\Command\System\Check\Hyva\IsCaptchaEnabledCheck
+        - N98\Magento\Command\System\Check\Hyva\IncompatibleBundledModulesCheck
 
     hyva:
       main-package: hyva-themes/magento2-default-theme
@@ -535,6 +536,20 @@ commands:
         - magento/module-store-graph-ql
         - magento/module-swatches-graph-ql
         - magento/module-url-rewrite-graph-ql
+
+      incompatible-bundled-modules:
+        '>=2.4.0 <=2.4.2':
+          - Dotdigitalgroup_Email
+          - Dotdigitalgroup_Enterprise
+          - Dotdigitalgroup_Chat
+          - Dotdigitalgroup_Sms
+        '>=2.4.3':
+          - Dotdigitalgroup_Email
+          - Dotdigitalgroup_Enterprise
+          - Dotdigitalgroup_Chat
+          - Dotdigitalgroup_ChatGraphQl
+          - Dotdigitalgroup_EmailGraphQl
+          - Dotdigitalgroup_Sms
 
     filesystem:
       folders:
