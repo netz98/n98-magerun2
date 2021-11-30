@@ -152,6 +152,7 @@ jobs:
           --magentoVersionByName="${{ matrix.magento-version }}" --installationFolder="./magento" \
           --dbHost=127.0.0.1 --dbPort=${{ job.services.mysql.ports['3306'] }} --dbUser=root --dbPass=root --dbName="magento" \
           --useDefaultConfigParams=yes \
+          --installSampleData=no \
           --baseUrl="http://gitbub.magerun.test/";
 
       - name: Configure matchers
