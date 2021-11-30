@@ -166,7 +166,9 @@ class InfoCommand extends AbstractMagentoCommand
 
         $table = [];
 
-        ksort($this->infos);
+        if ($input->getOption('sort')) {
+            ksort($this->infos);
+        }
 
         foreach ($this->infos as $key => $value) {
             $table[] = [$key, $value];
