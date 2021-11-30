@@ -210,6 +210,8 @@ class InfoCommand extends AbstractMagentoCommand
             'magento/magento2-functional-testing-framework' => 'Magento Functional Testing Framework',
             'magento/module-inventory' => 'MSI Packages',
             'magento/module-catalog-sample-data' => 'Sample Data Packages',
+            'hyva-themes/magento2-default-theme' => 'Hyva Default Theme',
+            'hyva-themes/magento2-theme-module' => 'Hyva Theme Module',
         ];
 
         foreach ($packagesToCheck as $packageToCheck => $label) {

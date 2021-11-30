@@ -103,7 +103,7 @@ class CreateCommandTest extends TestCase
 
         $commandTester = new CommandTester($command);
         $commandTester->execute($options);
-        $this->assertRegExp(
+        $this->assertMatchesRegularExpression(
             '/The password must have at least 6 characters. Leading or trailing spaces will be ignored./',
             $commandTester->getDisplay()
         );

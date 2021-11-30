@@ -28,6 +28,11 @@ class Result
     /**
      * @var string
      */
+    const STATUS_SKIPPED = 'skipped';
+
+    /**
+     * @var string
+     */
     private $status;
 
     /**
@@ -53,11 +58,19 @@ class Result
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isValid()
     {
         return $this->status === self::STATUS_OK;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isSkipped()
+    {
+        return $this->status === self::STATUS_SKIPPED;
     }
 
     /**
@@ -70,7 +83,11 @@ class Result
             $status = $status ? self::STATUS_OK : self::STATUS_ERROR;
         }
 
-        if (!in_array($status, [self::STATUS_OK, self::STATUS_ERROR, self::STATUS_WARNING])) {
+        if (!in_array(
+            $status,
+            [self::STATUS_OK, self::STATUS_ERROR, self::STATUS_WARNING, self::STATUS_SKIPPED],
+            true
+        )) {
             throw new LogicException(
                 'Wrong status was given. Use constants: Result::OK, Result::ERROR, Result::WARNING'
             );

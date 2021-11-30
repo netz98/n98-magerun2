@@ -10,6 +10,7 @@ use N98\Magento\Command\CommandAware;
 use N98\Magento\Command\CommandConfigAware;
 use N98\Magento\Command\System\Check\Result;
 use N98\Magento\Command\System\Check\ResultCollection;
+use N98\Magento\Framework\AreaAware;
 use N98\Util\Console\Helper\InjectionHelper;
 use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
 use N98\Util\Unicode\Charset;
@@ -40,6 +41,11 @@ class CheckCommand extends AbstractMagentoCommand
      * @var State
      */
     private $appState;
+
+    /**
+     * @var array
+     */
+    private $registry;
 
     protected function configure()
     {
@@ -110,7 +116,7 @@ HELP;
 
         $areaCode = 'adminhtml';
 
-        if ($check instanceof \N98\Magento\Framework\AreaAware) {
+        if ($check instanceof AreaAware) {
             $areaCode = $check->getAreaCode();
         }
 
@@ -118,23 +124,23 @@ HELP;
             $areaCode,
             function () use ($check, $results, $checkGroupClass) {
                 switch (true) {
-                case $check instanceof Check\SimpleCheck:
-                    $check->check($results);
-                    break;
+                    case $check instanceof Check\SimpleCheck:
+                        $check->check($results);
+                        break;
 
-                case $check instanceof Check\StoreCheck:
-                    $this->checkStores($results, $checkGroupClass, $check);
-                    break;
+                    case $check instanceof Check\StoreCheck:
+                        $this->checkStores($results, $checkGroupClass, $check);
+                        break;
 
-                case $check instanceof Check\WebsiteCheck:
-                    $this->checkWebsites($results, $checkGroupClass, $check);
-                    break;
+                    case $check instanceof Check\WebsiteCheck:
+                        $this->checkWebsites($results, $checkGroupClass, $check);
+                        break;
 
-                default:
-                    throw new LogicException(
-                        sprintf('Unhandled check-class "%s"', $checkGroupClass)
-                    );
-            }
+                    default:
+                        throw new LogicException(
+                            sprintf('Unhandled check-class "%s"', $checkGroupClass)
+                        );
+                }
             }
         );
     }
@@ -145,29 +151,34 @@ HELP;
      */
     protected function _printResults(OutputInterface $output, ResultCollection $results)
     {
-        $lastResultGroup = null;
-        foreach ($results as $result) {
-            if ($result->getResultGroup() != $lastResultGroup) {
-                $this->writeSection($output, str_pad(strtoupper($result->getResultGroup()), 60, ' ', STR_PAD_BOTH));
+        foreach ($results as $resultGroupName => $groupResults) {
+            if (count($groupResults) > 0) {
+                $this->writeSection($output, str_pad(strtoupper($resultGroupName), 60, ' ', STR_PAD_BOTH));
+            } else {
+                continue;
             }
-            if ($result->getMessage()) {
-                switch ($result->getStatus()) {
-                    case Result::STATUS_WARNING:
-                    case Result::STATUS_ERROR:
-                        $output->write('<error>' . Charset::convertInteger(Charset::UNICODE_CROSS_CHAR) . '</error> ');
-                        break;
 
-                    case Result::STATUS_OK:
-                    default:
-                        $output->write(
-                            '<info>' . Charset::convertInteger(Charset::UNICODE_CHECKMARK_CHAR) . '</info> '
-                        );
-                        break;
+            foreach ($groupResults as $result) {
+                if ($result->getMessage()) {
+                    switch ($result->getStatus()) {
+                        case Result::STATUS_SKIPPED:
+                            break;
+
+                        case Result::STATUS_WARNING:
+                        case Result::STATUS_ERROR:
+                            $output->write('<error>' . Charset::convertInteger(Charset::UNICODE_CROSS_CHAR) . '</error> ');
+                            break;
+
+                        case Result::STATUS_OK:
+                        default:
+                            $output->write(
+                                '<info>' . Charset::convertInteger(Charset::UNICODE_CHECKMARK_CHAR) . '</info> '
+                            );
+                            break;
+                    }
+                    $output->writeln($result->getMessage());
                 }
-                $output->writeln($result->getMessage());
             }
-
-            $lastResultGroup = $result->getResultGroup();
         }
     }
 
@@ -179,13 +190,20 @@ HELP;
     protected function _printTable(InputInterface $input, OutputInterface $output, ResultCollection $results)
     {
         $table = [];
-        foreach ($results as $result) {
-            /* @var $result Result */
-            $table[] = [
-                $result->getResultGroup(),
-                strip_tags($result->getMessage()),
-                $result->getStatus(),
-            ];
+
+        foreach ($results as $groupResults) {
+            if (count($groupResults) === 0) {
+                continue;
+            }
+
+            foreach ($groupResults as $result) {
+                /* @var $result Result */
+                $table[] = [
+                    $result->getResultGroup(),
+                    strip_tags($result->getMessage()),
+                    $result->getStatus(),
+                ];
+            }
         }
 
         $this->getHelper('table')
