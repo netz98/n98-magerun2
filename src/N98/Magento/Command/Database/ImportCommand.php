@@ -191,6 +191,11 @@ HELP;
     protected function checkFilename(InputInterface $input)
     {
         $fileName = $input->getArgument('filename');
+
+        if ($fileName === null) {
+            throw new \InvalidArgumentException('Please provide a file name');
+        }
+
         if (!file_exists($fileName)) {
             throw new \InvalidArgumentException('File does not exist');
         }
