@@ -7,7 +7,7 @@ RECENT CHANGES
 - Add: #884: Hyvä Support for sys:info and sys:check command (by Christian Münch)
 - Add: #875: Environment variable support in Magerun scripts (by Christian Münch)
 - Add: #874: Experimental MySQL SSL support (by Karsten Deubert) 
-- Add: #867: PHPUnit 9 compatiblity (by Karsten Deubert)
+- Add: #867: PHPUnit 9 compatibility (by Karsten Deubert)
 - Add: New test suite to run core command tests (by Christian Münch)
 - Add: Magento 2.4.3 to installer and test pipeline (by Christian Münch)
 - Imp: #835: Replace the definer instead of trying to remove it (by Alin Alexandru)
