@@ -1,4 +1,17 @@
 name: Magento Platform Tests
+
+check_paths: &check_paths
+  - '.github'
+  - 'config.yaml'
+  - 'bin/**'
+  - 'res/***'
+  - 'src/***'
+  - 'tests/***'
+  - 'composer.json'
+  - 'composer.lock'
+  - 'phpunit.xml.dist'
+  - 'version.txt'
+
 on:
   push:
     branches:
@@ -7,10 +20,12 @@ on:
       - 'bugfix/*'
       - 'feature/*'
       - 'release/*'
+    paths: *check_paths
   pull_request_target:
     branches:
       - 'master'
       - 'develop'
+    paths: *check_paths
 
 jobs:
   phpunit:
