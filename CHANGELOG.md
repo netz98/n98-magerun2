@@ -17,7 +17,7 @@ RECENT CHANGES
 - Imp: #620: dev:console: Provide convenience functions to dump entities (by Alexander Menk)
 - Imp: Error handling in PDO (by Alexander Menk)
 - Imp: Updated dependencies
-  - dev: captainhook, phpunit, vfsstream, , php-cs-fixer
+  - dev: captainhook, phpunit, vfsstream, php-cs-fixer
   - application: composer, symfony, phing, psysh, symfony-console-autocomplete, twig
 - Imp: Refactoring of Github Actions (Composer 2, Test Pull Requests) 
 - Fix: #828: Eerror on db:import --drop (by Alexander Menk)
