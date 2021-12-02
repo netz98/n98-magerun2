@@ -34,7 +34,7 @@ We support the following PHP Versions:
 
 - PHP 7.4
 - PHP 7.3
-- PHP 7.2
+- PHP 7.2 (only with older versions, available as phar)
 
 ## Installation
 
