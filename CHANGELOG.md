@@ -1,8 +1,8 @@
 RECENT CHANGES
 ==============
 
-4.8.0-dev
----------
+4.8.0
+-----
 
 - Add: #884: Hyvä Support for sys:info and sys:check command (by Christian Münch)
 - Add: #875: Environment variable support in Magerun scripts (by Christian Münch)
@@ -20,7 +20,8 @@ RECENT CHANGES
     - dev: captainhook, phpunit, vfsstream, php-cs-fixer
     - application: composer, symfony, phing, psysh, symfony-console-autocomplete, twig
 - Imp: Refactoring of Github Actions (Composer 2, Test Pull Requests)
-- Fix: #828: Eerror on db:import --drop (by Alexander Menk)
+- Fix: #888: Check if file name was provided for db import command (by Torben Höhn)
+- Fix: #828: Error on db:import --drop (by Alexander Menk)
 - Fix: #824: Restore terminal mode after import (by Jeroen Vermeulen)
 
 4.7.0
