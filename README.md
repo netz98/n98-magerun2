@@ -29,12 +29,13 @@ We support the following Magento Versions:
 
 - 2.4.x Open Source/Commerce
 - 2.3.x Open Source/Commerce
+- 2.2.x Open Source/Commerce (last compatible n98-magerun2 version is v3.2.0)
 
 We support the following PHP Versions:
 
 - PHP 7.4
 - PHP 7.3
-- PHP 7.2 (only with older versions, available as phar)
+- PHP 7.2 (last compatible version is v4.7.0)
 
 ## Installation
 
@@ -87,7 +88,7 @@ The base-installation is now complete and you can verify it:
 The command should execute successfully and show you the version number
 of N98-Magerun like:
 
-`n98-magerun2 version 3.2.0 by netz98 GmbH`
+`n98-magerun2 version 4.8.0 by netz98 GmbH`
 
 You now have successfully installed Magerun! You can tailor the
 installation further like installing it system-wide and enable
@@ -101,10 +102,17 @@ If you want to use the command system wide you can copy it to
 sudo cp ./n98-magerun2.phar /usr/local/bin/
 ```
 
-### Install with Composer
+### Install the phar via Composer
 
-The installation via Composer is not recommended. Please use the phar
-file instead of the Composer version. We are not able to provide
+We offer a special dist package to install the phar file via Composer.
+See <https://packagist.org/packages/n98/magerun2-dist> for more details.
+The main advantage of the dist package is that there are no package dependencies.
+
+### Install with Composer (Source Package) - not recommended
+
+The installation via Composer is **not recommended**, 
+because it's impossible to be compatible with all project and Magento core dependencies. 
+Please use the phar file instead of the Composer version. We are not able to provide
 compatibility to all Magento versions anymore.
 
 ## Update
