@@ -2554,21 +2554,21 @@
     "packages-dev": [
         {
             "name": "bamarni/symfony-console-autocomplete",
-            "version": "v1.4.3",
+            "version": "v1.5.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bamarni/symfony-console-autocomplete.git",
-                "reference": "5c4bb625e24254afad08d306f37d47b3bc58abea"
+                "reference": "dd317d566b0c5d9e12d4e549cb6c048d2aed0812"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bamarni/symfony-console-autocomplete/zipball/5c4bb625e24254afad08d306f37d47b3bc58abea",
-                "reference": "5c4bb625e24254afad08d306f37d47b3bc58abea",
+                "url": "https://api.github.com/repos/bamarni/symfony-console-autocomplete/zipball/dd317d566b0c5d9e12d4e549cb6c048d2aed0812",
+                "reference": "dd317d566b0c5d9e12d4e549cb6c048d2aed0812",
                 "shasum": ""
             },
             "require": {
                 "ext-simplexml": "*",
-                "php": "^7.0|^8.0",
+                "php": "^7.1|^8.0",
                 "symfony/console": "^2.5|^3|^4|^5|^6",
                 "symfony/process": "^2.5|^3|^4|^5|^6"
             },
@@ -2603,9 +2603,9 @@
             "description": "Shell completion for Symfony Console based scripts",
             "support": {
                 "issues": "https://github.com/bamarni/symfony-console-autocomplete/issues",
-                "source": "https://github.com/bamarni/symfony-console-autocomplete/tree/v1.4.3"
+                "source": "https://github.com/bamarni/symfony-console-autocomplete/tree/v1.5.3"
             },
-            "time": "2021-12-09T17:46:35+00:00"
+            "time": "2021-12-11T02:53:55+00:00"
         },
         {
             "name": "captainhook/captainhook",
