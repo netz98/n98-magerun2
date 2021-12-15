@@ -4,6 +4,8 @@ namespace N98\Magento;
 
 use BadMethodCallException;
 use Composer\Autoload\ClassLoader;
+use Composer\Cache;
+use Composer\Composer;
 use Exception;
 use Magento\Framework\ObjectManagerInterface;
 use N98\Magento\Application\ApplicationAwareInterface;
@@ -15,6 +17,7 @@ use N98\Magento\Application\Magento1Initializer;
 use N98\Magento\Application\Magento2Initializer;
 use N98\Magento\Application\MagentoDetector;
 use N98\Util\Console\Helper\TwigHelper;
+use ReflectionProperty;
 use Symfony\Component\Console\Application as BaseApplication;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Event\ConsoleEvent;
@@ -126,6 +129,7 @@ class Application extends BaseApplication
         parent::__construct(self::APP_NAME, self::APP_VERSION);
 
         $this->preloadClassesBeforeMagentoCore();
+        $this->disableComposerGarbageCollector();
     }
 
     /**
@@ -704,11 +708,35 @@ class Application extends BaseApplication
     /**
      * Force to load some classes before the Magento core loads the classes
      * in a different version
+     *
+     * @return void
      */
     private function preloadClassesBeforeMagentoCore()
     {
         if ($this->autoloader instanceof ClassLoader) {
             $this->autoloader->loadClass('Symfony\Component\Console\Question\Question');
+        }
+    }
+
+    /**
+     * Mark Composer cache as collected
+     *
+     * Avoid Composer garbage collection call.
+     *
+     * @return void
+     * @see \Composer\Cache::gcIsNecessary
+     * @link https://github.com/netz98/n98-magerun2/issues/897
+     */
+    private function disableComposerGarbageCollector()
+    {
+        // We simulate a a composer test suite run which disables the GC
+        putenv("COMPOSER_TEST_SUITE=1");
+
+        // We also change the Cache::$cacheCollected static property
+        if (!property_exists(Cache::class, 'cacheCollected')) {
+            $reflectionProperty = new ReflectionProperty(Cache::class, 'cacheCollected');
+            $reflectionProperty->setAccessible(true);
+            $reflectionProperty->setValue(true);
         }
     }
 }
