@@ -1,6 +1,13 @@
 RECENT CHANGES
 ==============
 
+4.9.0-dev
+---------
+
+- Fix: #898: Disable Composer gc during Magerun process (by Christian Münch)
+- Add: Dependency information in README (by Christian Münch)
+- Imp: Updated dependencies (faker, psysh, symfony-console-autocomplete, php-cs-fixer)
+
 4.8.0
 -----
 
