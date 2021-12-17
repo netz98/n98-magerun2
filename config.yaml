@@ -86,6 +86,7 @@ commands:
     - N98\Magento\Command\Config\Env\CreateCommand
     - N98\Magento\Command\Config\Env\ShowCommand
     - N98\Magento\Command\Config\Env\SetCommand
+    - N98\Magento\Command\Config\Env\DeleteCommand
     - N98\Magento\Command\Config\Store\DeleteCommand
     - N98\Magento\Command\Config\Store\GetCommand
     - N98\Magento\Command\Config\Store\SetCommand
