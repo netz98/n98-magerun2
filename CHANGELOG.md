@@ -1,12 +1,13 @@
 RECENT CHANGES
 ==============
 
-4.9.0-dev
----------
+4.9.0
+-----
 
-- Fix: #898: Disable Composer gc during Magerun process (by Christian Münch)
+- Add: #899: config:env:delete command (by Pieter Hoste) 
 - Add: Dependency information in README (by Christian Münch)
-- Imp: Updated dependencies (faker, psysh, symfony-console-autocomplete, php-cs-fixer)
+- Imp: Updated dependencies (faker, psysh, symfony-console-autocomplete, php-cs-fixer, captainhook)
+- Fix: #898: Disable Composer gc during Magerun process (by Christian Münch)
 
 4.8.0
 -----
