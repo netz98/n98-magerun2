@@ -122,10 +122,6 @@ jobs:
         run: composer global require hirak/prestissimo
         if: matrix.composer-version == 'v1'
 
-      - name: Allow all Composer plugins
-        run: composer global config allow-plugins true
-        if: matrix.composer-version == 'v2'
-
       # Temporary downgrade until incompatibilities to Composer 2.2 are fixed
       - name: Downgrade Composer v2 to 2.1.14
         run: composer self-updarte --2 2.1.14
