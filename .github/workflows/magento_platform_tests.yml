@@ -147,7 +147,9 @@ jobs:
 
       - name: Install Magento ${{ matrix.magento-version }}
         run: |
+          
           composer global config http-basic.repo.magento.com "${MAGENTO_MARKETPLACE_USERNAME}" "${MAGENTO_MARKETPLACE_PASSWORD}";
+          composer global config allow-plugins true
           bin/n98-magerun2 --ansi install \
           --magentoVersionByName="${{ matrix.magento-version }}" --installationFolder="./magento" \
           --dbHost=127.0.0.1 --dbPort=${{ job.services.mysql.ports['3306'] }} --dbUser=root --dbPass=root --dbName="magento" \
