@@ -124,7 +124,7 @@ jobs:
 
       # Temporary downgrade until incompatibilities to Composer 2.2 are fixed
       - name: Downgrade Composer v2 to 2.1.14
-        run: composer self-updarte --2 2.1.14
+        run: composer self-update --2 2.1.14
         if: matrix.composer-version == 'v2'
 
       - name: Get Composer Cache Directory
