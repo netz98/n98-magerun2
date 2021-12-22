@@ -1,10 +1,15 @@
 RECENT CHANGES
 ==============
 
+4.10.0-dev
+----------
+
+unreleased
+
 4.9.1
 -----
 
-Fix: #901: dev:console command outputs "must be compatible with" error (by Mark Shust)
+- Fix: #901: dev:console command outputs "must be compatible with" error (by Mark Shust)
 
 
 4.9.0
