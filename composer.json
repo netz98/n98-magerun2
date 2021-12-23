@@ -30,7 +30,7 @@
         "ext-posix": "*",
         "ext-zip": "*",
         "adbario/php-dot-notation": "^2.2",
-        "composer/composer": "~2.1.1",
+        "composer/composer": "~2.2.1",
         "fakerphp/faker": "~1.16",
         "n98/junit-xml": "~1.0",
         "pbergman/tree-helper": "^1.0",
