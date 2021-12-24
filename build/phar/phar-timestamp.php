@@ -11,7 +11,7 @@ use Seld\PharUtils\Timestamps;
 echo "reset phar file timestamps to latest commit timestamp (reproducible builds)\n";
 
 # seld/phar-utils via build requirements
-require __DIR__ . '/../../vendor/seld/phar-utils/src/Timestamps.php';
+require __DIR__ . '/../../../../vendor/seld/phar-utils/src/Timestamps.php';
 
 $projectDir = __DIR__ . '/../..';
 
