@@ -64,6 +64,7 @@ class ChooseInstallationFolder extends AbstractSubCommand
             $installationFolder = $validateInstallationFolder($installationFolder);
         }
 
+        $this->config->setString('initialFolder', getcwd());
         $this->config->setString('installationFolder', realpath($installationFolder));
         \chdir($this->config->getString('installationFolder'));
 
