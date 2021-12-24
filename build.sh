@@ -95,6 +95,7 @@ ls -al "${phar}"
 
 cd -
 cp -vp "${build_dir}"/"${phar}" "${phar}"
+chmod +x ${phar}
 rm -rf "${build_dir}"
 
 trap - EXIT

@@ -88,7 +88,7 @@ EOT
 
         $client = new Client();
         try {
-            $response = $client->get('https://raw.githubusercontent.com/' . $versionTxtUrl);
+            $response = $client->get($versionTxtUrl);
             $latestVersion = (string) $response->getBody();
         } catch (GuzzleException $e) {
             throw new \RuntimeException('Cannot get version: ' . $e->getMessage());
