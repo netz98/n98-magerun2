@@ -47,7 +47,17 @@ establish_build_dir "${build_dir}"
 
 git clone --quiet --no-local --depth 1 -- . "${build_dir}"
 
-composer_bin="${base_dir}/vendor/bin/composer"
+if command -v composer &> /dev/null
+then
+	composer_bin="composer"
+else
+	echo "Composer was not found. Try to install it ..."
+	# install composer
+	php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+	php composer-setup.php
+	composer_bin="${base_dir}/composer.phar"
+fi
+
 phing_bin="${base_dir}/vendor/bin/phing"
 
 # Set COMPOSER_HOME if HOME and COMPOSER_HOME not set (shell with no home-dir, e.g. build server with webhook)
@@ -55,18 +65,6 @@ if [[ -z ${HOME+x} && -z ${COMPOSER_HOME+x} ]]; then
   echo "provision: create COMPOSER_HOME directory for composer (no HOME)"
   mkdir -p "build/composer-home"
   export COMPOSER_HOME="$(pwd -P)/build/composer-home"
-fi
-
-# build systems that do not have a composer install running get one for free
-if [[ ! -f "${phing_bin}" ]]; then
-    echo "provision: download composer.phar and install build dependencies ..."
-    composer="composer.phar"
-    rm -rf vendor
-    wget -q -O "${composer}" https://getcomposer.org/download/2.1.10/composer.phar
-    chmod +x "${composer}"
-    php -f "${composer}" -- --version
-    php -f "${composer}" -- --profile -q install --no-plugins --prefer-dist --no-interaction --ignore-platform-reqs
-    rm "${composer}"
 fi
 
 echo "with: $(php --version|head -n 1)"
@@ -82,7 +80,7 @@ echo "provision: ulimits (soft) set from $(ulimit -Sn) to $(ulimit -Hn) (hard) f
 if [ "$(uname -s)" != "Darwin" ]; then
   ulimit -Sn $(ulimit -Hn)
 fi
-timestamp="$(git log --format=format:%ct HEAD -1)" # reproduceable build
+timestamp="$(git log --format=format:%ct HEAD -1)" # reproducible build
 echo "build timestamp: ${timestamp}"
 
 php -f "${phing_bin}" -dphar.readonly=0 -- \
