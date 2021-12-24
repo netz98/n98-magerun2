@@ -60,9 +60,6 @@ class DownloadMagento extends AbstractSubCommand
             $args->addArg('-vvv');
         }
 
-        /**
-         * @TODO use composer helper
-         */
         $process = $args->createProcess();
         if (OutputInterface::VERBOSITY_VERBOSE <= $this->output->getVerbosity()) {
             $this->output->writeln($process->getCommandLine());

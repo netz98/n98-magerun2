@@ -2,9 +2,7 @@
 
 namespace N98\Magento\Command\Installer\SubCommand;
 
-use Composer\Config;
-use Composer\IO\ConsoleIO;
-use Composer\Util\RemoteFilesystem;
+use GuzzleHttp\Client;
 use N98\Magento\Command\SubCommand\AbstractSubCommand;
 use N98\Util\OperatingSystem;
 
@@ -47,7 +45,7 @@ class InstallComposer extends AbstractSubCommand
         if ($composerUseSamePhpBinary) {
             $this->config['composer_bin'] = [
                 OperatingSystem::getCurrentPhpBinary(),
-                $composerBin = OperatingSystem::locateProgram($composerBin),
+                OperatingSystem::locateProgram($composerBin),
             ];
         }
     }
@@ -59,17 +57,20 @@ class InstallComposer extends AbstractSubCommand
     protected function downloadComposer()
     {
         $this->output->writeln('<info>Could not find composer. Try to download it.</info>');
-        $io = new ConsoleIO($this->input, $this->output, $this->getCommand()->getHelperSet());
-        $rfs = new RemoteFilesystem($io, new Config());
-        $composerInstaller = $rfs->getContents('getcomposer.org', 'https://getcomposer.org/installer', true);
 
-        $tempComposerInstaller = $this->config['installationFolder'] . '/_composer_installer.php';
+        $client = new Client();
+        $response = $client->get('https://getcomposer.org/installer');
+        $composerInstaller = (string) $response->getBody();
+
+        $tempComposerInstaller = $this->config['initialFolder'] . '/_composer_installer.php';
         file_put_contents($tempComposerInstaller, $composerInstaller);
 
+        $composerInstallerOptions = '--force --install-dir=' . $this->config['initialFolder'];
+
         if (OperatingSystem::isWindows()) {
-            $installCommand = 'php ' . $tempComposerInstaller . ' --force';
+            $installCommand = 'php ' . $tempComposerInstaller . ' ' . $composerInstallerOptions;
         } else {
-            $installCommand = '/usr/bin/env php ' . $tempComposerInstaller . ' --force';
+            $installCommand = '/usr/bin/env php ' . $tempComposerInstaller . ' ' . $composerInstallerOptions;
         }
 
         $this->output->writeln('<comment>' . $installCommand . '</comment>');
@@ -82,6 +83,6 @@ class InstallComposer extends AbstractSubCommand
             $this->output->writeln('<info>Successfully installed composer to Magento root</info>');
         }
 
-        return $this->config['installationFolder'] . '/composer.phar';
+        return $this->config['initialFolder'] . '/composer.phar';
     }
 }

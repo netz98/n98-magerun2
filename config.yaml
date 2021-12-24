@@ -65,7 +65,6 @@ event:
     - N98\Magento\Application\Console\EventSubscriber\CheckRootUser
     - N98\Magento\Application\Console\EventSubscriber\VarDirectoryChecker
     - N98\Magento\Application\Console\EventSubscriber\DevUrnCatalogAutoPath
-    - N98\Magento\Command\ComposerWrapper\EventSubscriber
 
 commands:
   customCommands:
@@ -324,92 +323,71 @@ commands:
         package: magento/project-community-edition
         version: 2.4.3-p1
         options:
-          prefer-dist: true
-          stability: alpha
           repository-url: https://repo.magento.com
       - name: magento-ce-2.4.3
         package: magento/project-community-edition
         version: 2.4.3
         options:
-          prefer-dist: true
-          stability: alpha
           repository-url: https://repo.magento.com
       - name: magento-ce-2.4.2-p1
         package: magento/project-community-edition
         version: 2.4.2-p1
         options:
-          prefer-dist: true
-          stability: alpha
           repository-url: https://repo.magento.com
       - name: magento-ce-2.4.2
         package: magento/project-community-edition
         version: 2.4.2
         options:
-          prefer-dist: true
-          stability: alpha
           repository-url: https://repo.magento.com
       - name: magento-ce-2.4.1
         package: magento/project-community-edition
         version: 2.4.1-p1
         options:
-          prefer-dist: true
-          stability: alpha
           repository-url: https://repo.magento.com
       - name: magento-ce-2.4.0
         package: magento/project-community-edition
         version: 2.4.0
         options:
-          prefer-dist: true
-          stability: alpha
+          repository-url: https://repo.magento.com
+      - name: magento-ce-2.3.7-p2
+        package: magento/project-community-edition
+        version: 2.3.7-p2
+        options:
           repository-url: https://repo.magento.com
       - name: magento-ce-2.3.5-p2
         package: magento/project-community-edition
         version: 2.3.5-p2
         options:
-          prefer-dist: true
-          stability: alpha
           repository-url: https://repo.magento.com
       - name: magento-ce-2.3.5
         package: magento/project-community-edition
         version: 2.3.5
         options:
-          prefer-dist: true
-          stability: alpha
           repository-url: https://repo.magento.com
       - name: magento-ce-2.3.4
         package: magento/project-community-edition
         version: 2.3.4
         options:
-          prefer-dist: true
-          stability: alpha
           repository-url: https://repo.magento.com
       - name: magento-ce-2.3.3
         package: magento/project-community-edition
         version: 2.3.3
         options:
-          prefer-dist: true
-          stability: alpha
           repository-url: https://repo.magento.com
       - name: magento-ce-2.3.2
         package: magento/project-community-edition
         version: 2.3.2
         options:
-          prefer-dist: true
-          stability: alpha
           repository-url: https://repo.magento.com
       - name: magento-ce-2.3.1
         package: magento/project-community-edition
         version: 2.3.1
         options:
-          prefer-dist: true
-          stability: alpha
           repository-url: https://repo.magento.com
       - name: magento-ce-2.3.0
         package: magento/project-community-edition
         version: 2.3.0
         options:
-          prefer-dist: true
-          stability: alpha
           repository-url: https://repo.magento.com
 
     installation:

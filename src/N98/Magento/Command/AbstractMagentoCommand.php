@@ -2,10 +2,6 @@
 
 namespace N98\Magento\Command;
 
-use Composer\Factory as ComposerFactory;
-use Composer\IO\ConsoleIO;
-use Composer\Package\Loader\ArrayLoader as PackageLoader;
-use Composer\Package\PackageInterface;
 use Magento\Deploy\Model\Mode;
 use Magento\Framework\App\State;
 use Magento\Framework\ObjectManager\ObjectManager;
@@ -13,7 +9,6 @@ use Magento\Framework\ObjectManagerInterface;
 use N98\Magento\Command\SubCommand\ConfigBag;
 use N98\Magento\Command\SubCommand\SubCommandFactory;
 use N98\Util\Console\Helper\InjectionHelper;
-use N98\Util\Console\Helper\MagentoHelper;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\RuntimeException;
 use Symfony\Component\Console\Helper\FormatterHelper;
@@ -193,41 +188,6 @@ abstract class AbstractMagentoCommand extends Command
     }
 
     /**
-     * @param InputInterface $input
-     * @param OutputInterface $output
-     * @param array|PackageInterface $config
-     * @param string $targetFolder
-     * @param bool $preferSource
-     * @return \Composer\Package\PackageInterface
-     */
-    public function downloadByComposerConfig(
-        InputInterface $input,
-        OutputInterface $output,
-        $config,
-        $targetFolder,
-        $preferSource = true
-    ) {
-        $dm = $this->getComposerDownloadManager($input, $output);
-        if (!$config instanceof PackageInterface) {
-            $package = $this->createComposerPackageByConfig($config);
-        } else {
-            $package = $config;
-        }
-
-        $helper = new MagentoHelper();
-        $helper->detect($targetFolder);
-        if ($this->isSourceTypeRepository($package->getSourceType()) && $helper->getRootFolder() == $targetFolder) {
-            $package->setInstallationSource('source');
-            $this->checkRepository($package, $targetFolder);
-            $dm->update($package, $package, $targetFolder);
-        } else {
-            $dm->download($package, $targetFolder, $preferSource);
-        }
-
-        return $package;
-    }
-
-    /**
      * brings locally cached repository up to date if it is missing the requested tag
      *
      * @param PackageInterface $package
@@ -268,26 +228,6 @@ abstract class AbstractMagentoCommand extends Command
     public function isSourceTypeRepository($type)
     {
         return in_array($type, ['git', 'hg']);
-    }
-
-    /**
-     * obtain composer
-     *
-     * @param InputInterface $input
-     * @param OutputInterface $output
-     *
-     * @return \Composer\Composer
-     */
-    public function getComposer(InputInterface $input, OutputInterface $output)
-    {
-        $io = new ConsoleIO($input, $output, $this->getHelperSet());
-        $config = [
-            'config' => [
-                'secure-http' => false,
-            ],
-        ];
-
-        return ComposerFactory::create($io, $config);
     }
 
     /**

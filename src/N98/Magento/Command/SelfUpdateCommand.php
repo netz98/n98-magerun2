@@ -2,11 +2,10 @@
 
 namespace N98\Magento\Command;
 
-use Composer\Config;
-use Composer\Downloader\FilesystemException;
-use Composer\IO\ConsoleIO;
-use Composer\Util\RemoteFilesystem;
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\GuzzleException;
 use N98\Util\Markdown\VersionFilePrinter;
+use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -56,7 +55,6 @@ EOT
      * @param \Symfony\Component\Console\Input\InputInterface $input
      * @param \Symfony\Component\Console\Output\OutputInterface $output
      * @return int|null|void
-     * @throws \Composer\Downloader\FilesystemException
      * @throws \Exception
      */
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -67,40 +65,43 @@ EOT
 
         // check for permissions in local filesystem before start connection process
         if (!is_writable($tempDirectory = dirname($tempFilename))) {
-            throw new FilesystemException(
+            throw new \RuntimeException(
                 'n98-magerun2 update failed: the "' . $tempDirectory .
                 '" directory used to download the temp file could not be written'
             );
         }
 
         if (!is_writable($localFilename)) {
-            throw new FilesystemException(
+            throw new \RuntimeException(
                 'n98-magerun2 update failed: the "' . $localFilename . '" file could not be written'
             );
         }
 
-        $io = new ConsoleIO($input, $output, $this->getHelperSet());
-        $rfs = new RemoteFilesystem($io, new Config());
-
         $loadUnstable = $input->getOption('unstable');
         if ($loadUnstable) {
             $versionTxtUrl = self::VERSION_TXT_URL_UNSTABLE;
-            $remoteFilename = self::MAGERUN_DOWNLOAD_URL_UNSTABLE;
+            $remotePharDownloadUrl = self::MAGERUN_DOWNLOAD_URL_UNSTABLE;
         } else {
             $versionTxtUrl = self::VERSION_TXT_URL_STABLE;
-            $remoteFilename = self::MAGERUN_DOWNLOAD_URL_STABLE;
+            $remotePharDownloadUrl = self::MAGERUN_DOWNLOAD_URL_STABLE;
         }
 
-        $latest = trim($rfs->getContents('raw.githubusercontent.com', $versionTxtUrl, false));
+        $client = new Client();
+        try {
+            $response = $client->get('https://raw.githubusercontent.com/' . $versionTxtUrl);
+            $latestVersion = (string) $response->getBody();
+        } catch (GuzzleException $e) {
+            throw new \RuntimeException('Cannot get version: ' . $e->getMessage());
+        }
 
-        if ($this->isOutdatedVersion($latest, $loadUnstable)) {
-            $output->writeln(sprintf("Updating to version <info>%s</info>.", $latest));
+        if ($this->isOutdatedVersion($latestVersion, $loadUnstable)) {
+            $output->writeln(sprintf("Updating to version <info>%s</info>.", $latestVersion));
 
             try {
-                $this->downloadNewVersion($output, $rfs, $remoteFilename, $tempFilename);
+                $this->downloadNewPhar($output, $remotePharDownloadUrl, $tempFilename);
                 $this->checkNewPharFile($tempFilename, $localFilename);
 
-                $changelog = $this->getChangelog($output, $loadUnstable, $rfs);
+                $changelog = $this->getChangelog($output, $loadUnstable);
 
                 if (!$isDryRun) {
                     $this->replaceExistingPharFile($tempFilename, $localFilename);
@@ -143,16 +144,33 @@ EOT
 
     /**
      * @param \Symfony\Component\Console\Output\OutputInterface $output
-     * @param $rfs
-     * @param $remoteFilename
-     * @param $tempFilename
+     * @param string $remoteUrl
+     * @param string $tempFilename
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    private function downloadNewVersion(OutputInterface $output, $rfs, $remoteFilename, $tempFilename)
+    private function downloadNewPhar(OutputInterface $output, string $remoteUrl, string $tempFilename)
     {
-        $rfs->copy('raw.github.com', $remoteFilename, $tempFilename);
+        try {
+            $progressBar = new ProgressBar($output);
+            $client = new Client([
+                'progress' => function (
+                    $downloadTotal,
+                    $downloadedBytes,
+                    $uploadTotal,
+                    $uploadedBytes
+                ) use ($progressBar) {
+                    $progressBar->setMaxSteps($downloadTotal);
+                    $progressBar->setProgress($downloadedBytes);
+                },
+            ]);
 
-        if (!file_exists($tempFilename)) {
-            $output->writeln('<error>The download of the new n98-magerun2 version failed for an unexpected reason');
+            $client->get($remoteUrl, ['sink' => $tempFilename]);
+
+            if (!file_exists($tempFilename)) {
+                $output->writeln('<error>The download of the new n98-magerun2 version failed for an unexpected reason');
+            }
+        } catch (\GuzzleException $e) {
+            throw new \RuntimeException('Cannot download phar file: ' . $e->getMessage());
         }
     }
 
@@ -185,37 +203,32 @@ EOT
     }
 
     /**
+     * Download changelog
+     *
      * @param \Symfony\Component\Console\Output\OutputInterface $output
      * @param bool $loadUnstable
-     * @param RemoteFilesystem $rfs
      * @return string
      */
-    private function getChangelog(OutputInterface $output, $loadUnstable, $rfs)
+    private function getChangelog(OutputInterface $output, $loadUnstable)
     {
         $changelog = '';
 
-        if ($loadUnstable) {
-            $changeLogContent = $rfs->getContents(
-                'raw.github.com',
-                self::CHANGELOG_DOWNLOAD_URL_UNSTABLE,
-                false
-            );
-        } else {
-            $changeLogContent = $rfs->getContents(
-                'raw.github.com',
-                self::CHANGELOG_DOWNLOAD_URL_STABLE,
-                false
-            );
-        }
-
-        if ($changeLogContent) {
-            $versionFilePrinter = new VersionFilePrinter($changeLogContent);
-            $previousVersion = $this->getApplication()->getVersion();
-            $changelog .= $versionFilePrinter->printFromVersion($previousVersion) . "\n";
-        }
-
-        if ($loadUnstable) {
-            $unstableFooterMessage = <<<UNSTABLE_FOOTER
+        try {
+            if ($loadUnstable) {
+                $changeLogUrl = self::CHANGELOG_DOWNLOAD_URL_UNSTABLE;
+            } else {
+                $changeLogUrl = self::CHANGELOG_DOWNLOAD_URL_STABLE;
+            }
+            $client = new Client();
+            $response = $client->get($changeLogUrl);
+            $changeLogContent = (string)$response->getBody();
+            if ($changeLogContent) {
+                $versionFilePrinter = new VersionFilePrinter($changeLogContent);
+                $previousVersion = $this->getApplication()->getVersion();
+                $changelog .= $versionFilePrinter->printFromVersion($previousVersion) . "\n";
+            }
+            if ($loadUnstable) {
+                $unstableFooterMessage = <<<UNSTABLE_FOOTER
 <comment>
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !! DEVELOPMENT VERSION. DO NOT USE IN PRODUCTION !!
@@ -223,7 +236,10 @@ EOT
 </comment>
 UNSTABLE_FOOTER;
 
-            $changelog .= $unstableFooterMessage . "\n";
+                $changelog .= $unstableFooterMessage . "\n";
+            }
+        } catch (GuzzleException $e) {
+            throw new \RuntimeException('Cannot download changelog: ' . $e->getMessage());
         }
 
         return $changelog;
