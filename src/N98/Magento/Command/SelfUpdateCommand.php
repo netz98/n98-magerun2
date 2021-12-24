@@ -152,6 +152,8 @@ EOT
     {
         try {
             $progressBar = new ProgressBar($output);
+            $progressBar->setFormat(' %current%/%max% [%bar%] %percent:3s%% %elapsed:6s%/%estimated:-6s%');
+
             $client = new Client([
                 'progress' => function (
                     $downloadTotal,
