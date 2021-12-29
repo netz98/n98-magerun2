@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4bac1122e5a52c09ea253efb23972e5a",
+    "content-hash": "7e04f76ab0e640cf69539cfca28fa304",
     "packages": [
         {
             "name": "adbario/php-dot-notation",
@@ -137,21 +137,22 @@
         },
         {
             "name": "composer/composer",
-            "version": "2.1.14",
+            "version": "2.2.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/composer.git",
-                "reference": "cd28fc05b0c9d3beaf58b57018725c4dc15a6446"
+                "reference": "2c1887d4f296d027e383bd2b39e2bff0210bc14f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/composer/zipball/cd28fc05b0c9d3beaf58b57018725c4dc15a6446",
-                "reference": "cd28fc05b0c9d3beaf58b57018725c4dc15a6446",
+                "url": "https://api.github.com/repos/composer/composer/zipball/2c1887d4f296d027e383bd2b39e2bff0210bc14f",
+                "reference": "2c1887d4f296d027e383bd2b39e2bff0210bc14f",
                 "shasum": ""
             },
             "require": {
                 "composer/ca-bundle": "^1.0",
                 "composer/metadata-minifier": "^1.0",
+                "composer/pcre": "^1.0",
                 "composer/semver": "^3.0",
                 "composer/spdx-licenses": "^1.2",
                 "composer/xdebug-handler": "^2.0",
@@ -181,7 +182,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-main": "2.1-dev"
+                    "dev-main": "2.2-dev"
                 }
             },
             "autoload": {
@@ -215,7 +216,7 @@
             "support": {
                 "irc": "ircs://irc.libera.chat:6697/composer",
                 "issues": "https://github.com/composer/composer/issues",
-                "source": "https://github.com/composer/composer/tree/2.1.14"
+                "source": "https://github.com/composer/composer/tree/2.2.2"
             },
             "funding": [
                 {
@@ -231,7 +232,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-11-30T09:51:43+00:00"
+            "time": "2021-12-29T13:15:27+00:00"
         },
         {
             "name": "composer/metadata-minifier",
@@ -1215,16 +1216,16 @@
         },
         {
             "name": "symfony/console",
-            "version": "v4.4.34",
+            "version": "v4.4.36",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/console.git",
-                "reference": "329b3a75cc6b16d435ba1b1a41df54a53382a3f0"
+                "reference": "621379b62bb19af213b569b60013200b11dd576f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/console/zipball/329b3a75cc6b16d435ba1b1a41df54a53382a3f0",
-                "reference": "329b3a75cc6b16d435ba1b1a41df54a53382a3f0",
+                "url": "https://api.github.com/repos/symfony/console/zipball/621379b62bb19af213b569b60013200b11dd576f",
+                "reference": "621379b62bb19af213b569b60013200b11dd576f",
                 "shasum": ""
             },
             "require": {
@@ -1285,7 +1286,7 @@
             "description": "Eases the creation of beautiful and testable command line interfaces",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/console/tree/v4.4.34"
+                "source": "https://github.com/symfony/console/tree/v4.4.36"
             },
             "funding": [
                 {
@@ -1301,7 +1302,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-11-04T12:23:33+00:00"
+            "time": "2021-12-15T10:33:10+00:00"
         },
         {
             "name": "symfony/deprecation-contracts",
@@ -1599,16 +1600,16 @@
         },
         {
             "name": "symfony/finder",
-            "version": "v5.4.0",
+            "version": "v5.4.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/finder.git",
-                "reference": "d2f29dac98e96a98be467627bd49c2efb1bc2590"
+                "reference": "e77046c252be48c48a40816187ed527703c8f76c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/finder/zipball/d2f29dac98e96a98be467627bd49c2efb1bc2590",
-                "reference": "d2f29dac98e96a98be467627bd49c2efb1bc2590",
+                "url": "https://api.github.com/repos/symfony/finder/zipball/e77046c252be48c48a40816187ed527703c8f76c",
+                "reference": "e77046c252be48c48a40816187ed527703c8f76c",
                 "shasum": ""
             },
             "require": {
@@ -1642,7 +1643,7 @@
             "description": "Finds files and directories via an intuitive fluent interface",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/finder/tree/v5.4.0"
+                "source": "https://github.com/symfony/finder/tree/v5.4.2"
             },
             "funding": [
                 {
@@ -1658,7 +1659,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-11-28T15:25:38+00:00"
+            "time": "2021-12-15T11:06:13+00:00"
         },
         {
             "name": "symfony/polyfill-ctype",
@@ -1983,16 +1984,16 @@
         },
         {
             "name": "symfony/process",
-            "version": "v4.4.35",
+            "version": "v4.4.36",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/process.git",
-                "reference": "c2098705326addae6e6742151dfade47ac71da1b"
+                "reference": "a35d6b8f82e2272504f23a267de49b8717ca0028"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/process/zipball/c2098705326addae6e6742151dfade47ac71da1b",
-                "reference": "c2098705326addae6e6742151dfade47ac71da1b",
+                "url": "https://api.github.com/repos/symfony/process/zipball/a35d6b8f82e2272504f23a267de49b8717ca0028",
+                "reference": "a35d6b8f82e2272504f23a267de49b8717ca0028",
                 "shasum": ""
             },
             "require": {
@@ -2025,7 +2026,7 @@
             "description": "Executes commands in sub-processes",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/process/tree/v4.4.35"
+                "source": "https://github.com/symfony/process/tree/v4.4.36"
             },
             "funding": [
                 {
@@ -2041,7 +2042,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-11-22T22:36:24+00:00"
+            "time": "2021-12-19T16:27:15+00:00"
         },
         {
             "name": "symfony/service-contracts",
