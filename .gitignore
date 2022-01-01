@@ -2,6 +2,7 @@
 /vendor/
 
 # Build
+/box.phar
 /n98-magerun2.phar
 /build/output/
 
