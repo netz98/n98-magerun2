@@ -1,0 +1,7 @@
+#!/bin/bash
+
+## Description: Run n98-magerun2 code checks
+## Usage: qa
+## Example: "qa"
+
+vendor/bin/php-cs-fixer fix --verbose --dry-run --diff
