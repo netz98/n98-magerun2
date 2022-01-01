@@ -1,0 +1,8 @@
+#!/bin/bash
+
+## Description: Run phpunit tests of n98-magerun2 against Magento 2.4
+## Usage: unit-test-24 <command> [options] [args]
+## Example: "unit-test-24"
+
+export N98_MAGERUN2_TEST_MAGENTO_ROOT=/opt/magento-test-environments/magento_2_4_3_p1
+vendor/bin/phpunit $@

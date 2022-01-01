@@ -34,6 +34,7 @@ Build phar with:
         <exclude name="*/*/bin/**" />
 
         <!-- Vcs, development -->
+        <exclude name=".ddev/**" />
         <exclude name="**/.github/**" />
         <exclude name="**/.editorconfig"/>
         <exclude name="**/.php_cs*"/>
