@@ -11,6 +11,7 @@
         "src",
         "res"
     ],
+    "git-commit-short": "git_commit_short",
     "stub": "build/phar/_cli_stub.php",
     "output": "n98-magerun2.phar"
 }
