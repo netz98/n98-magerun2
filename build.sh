@@ -4,51 +4,113 @@
 #
 # usage: ./build.sh from project root
 set -euo pipefail
+
 IFS=$'\n\t'
+BOX_BIN="./box.phar"
+PHAR_OUTPUT_FILE="./n98-magerun2.phar"
+COMPOSER_BIN="composer"
 
-if [ ! -f box.phar ]; then
-  curl -L https://github.com/box-project/box/releases/download/3.14.0/box.phar -o box.phar
-  chmod +x ./box.phar
-fi
+function system_setup() {
+  if [ "$(uname -s)" != "Darwin" ]; then
+    ulimit -Sn $(ulimit -Hn)
+  fi
+}
 
-BOX_BIN="./box.phar";
-phar="n98-magerun2.phar";
+function check_dependencies() {
+  DEPENDENCY_ERROR=false
 
-if command -v composer &> /dev/null
-then
-	composer_bin="composer"
-else
-	echo "Composer was not found. Try to install it ..."
-	# install composer
-	php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
-	php composer-setup.php
-	composer_bin="${base_dir}/composer.phar"
-fi
+  if command -v curl &>/dev/null; then
+    echo "curl found"
+  else
+    echo "curl not found!"
+    DEPENDENCY_ERROR=true
+  fi
 
-#composer dump-autoload
-#patch -p1 < build/phar/patches/composer_autoloader.patch
+  if command -v git &>/dev/null; then
+    echo "git found"
+  else
+    echo "git not found!"
+    DEPENDENCY_ERROR=true
+  fi
 
-echo "with: $(php --version|head -n 1)"
-echo "with: $("${composer_bin}" --version)"
-echo "with: $("${BOX_BIN}" --version)"
-echo "build version: $(git --no-pager log --oneline -1)"
-echo "provision: ulimits (soft) set from $(ulimit -Sn) to $(ulimit -Hn) (hard) for faster phar builds..."
-if [ "$(uname -s)" != "Darwin" ]; then
-  ulimit -Sn $(ulimit -Hn)
-fi
+  if command -v php &>/dev/null; then
+    echo "php found"
+  else
+    echo "php not found!"
+    DEPENDENCY_ERROR=true
+  fi
 
-timestamp="$(git log --format=format:%ct HEAD -1)" # reproducible build
-echo "build timestamp: ${timestamp}"
+  if [ $DEPENDENCY_ERROR = true ]; then
+    echo "Some dependecies are not found. Cannot build."
+    exit 1
+  fi
 
-$BOX_BIN compile;
+}
 
-php -f build/phar/phar-timestamp.php -- $timestamp
+function download_box() {
+  if [ ! -f box.phar ]; then
+    curl -L https://github.com/box-project/box/releases/download/3.14.0/box.phar -o $BOX_BIN
+    chmod +x ./box.phar
+  fi
+}
 
-php -f "${phar}" -- --version
-ls -al "${phar}"
+function download_composer() {
+  if command -v composer &>/dev/null; then
+    COMPOSER_BIN="composer"
+  else
+    echo "Composer was not found. Try to install it ..."
+    # install composer
+    php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+    php composer-setup.php
+    COMPOSER_BIN="${base_dir}/composer.phar"
+  fi
+}
 
-chmod +x ${phar}
+function find_commit_timestamp() {
+  LAST_COMMIT_TIMESTAMP="$(git log --format=format:%ct HEAD -1)" # reproducible build
+}
 
-$BOX_BIN verify ${phar};
+function create_new_phar() {
+  # set composer suffix, otherwise Composer will generate a file with a unique identifier
+  # which will then create a no reproducable phar file with a differenz MD5
+  $COMPOSER_BIN config autoloader-suffix N98MagerunNTS
+
+  $BOX_BIN compile
+
+  # unset composer suffix
+  $COMPOSER_BIN config autoloader-suffix --unset
+
+  # Set timestamp of newly generted phar file to the commit timestamp
+  php -f build/phar/phar-timestamp.php -- $LAST_COMMIT_TIMESTAMP
+
+  # Run a signature verification after the timestamp manipulation
+  $BOX_BIN verify $PHAR_OUTPUT_FILE
+
+  # make phar executable
+  chmod +x $PHAR_OUTPUT_FILE
+
+  # Print version of new phar file which is also a test
+  php -f $PHAR_OUTPUT_FILE -- --version
+
+  # List new phar file for debugging
+  ls -al "$PHAR_OUTPUT_FILE"
+}
+
+function print_info_before_build() {
+  echo "with: $(php --version | head -n 1)"
+  echo "with: $("${COMPOSER_BIN}" --version)"
+  echo "with: $("${BOX_BIN}" --version)"
+  echo "build version: $(git --no-pager log --oneline -1)"
+  echo "last commit timestamp: ${LAST_COMMIT_TIMESTAMP}"
+  echo "provision: ulimits (soft) set from $(ulimit -Sn) to $(ulimit -Hn) (hard) for faster phar builds..."
+}
+
+check_dependencies
+system_setup
+download_box
+download_composer
+find_commit_timestamp
+print_info_before_build
+create_new_phar
 
 echo "done."
