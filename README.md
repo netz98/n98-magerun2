@@ -1139,3 +1139,7 @@ $ n98-magerun2.phar script:repo:run [-d|--define[="..."]] [--stop-on-error] [scr
 ```
 
 Script argument is optional. If you don't specify any you can select one from a list.
+
+## Development
+
+https://github.com/netz98/n98-magerun2/wiki
