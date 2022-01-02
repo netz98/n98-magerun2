@@ -6,6 +6,7 @@
 ADDITIONAL_OPTIONS="";
 PHAR_FILE=$1;
 MAGENTO_ROOT_DIR=$2;
+TESTS_WITH_ERRORS=false;
 
 function verify() {
 	if [ -z "$PHAR_FILE" ]; then
@@ -25,11 +26,12 @@ function assert_command_contains {
 
 	echo -n "$command"
 
-	$PHAR_FILE --root-dir="$N98_MAGERUN2_TEST_MAGENTO_ROOT" $command $ADDITIONAL_OPTIONS | grep "$find" > /dev/null;
+	$PHAR_FILE --root-dir="$MAGENTO_ROOT_DIR" $command $ADDITIONAL_OPTIONS | grep "$find" > /dev/null;
 
 	if [ $? -eq 0 ]; then
 		echo -e "\t\tok";
 	else
+		TESTS_WITH_ERRORS=true;
 		echo -e "\t\tfailure";
 	fi;
 }
@@ -258,3 +260,9 @@ function test_magento_core_commands() {
 verify;
 test_magerun_commands;
 test_magento_core_commands;
+
+if [ $TESTS_WITH_ERRORS = true ]; then
+	exit 1;
+fi
+
+exit 0;
