@@ -682,7 +682,7 @@ class Application extends BaseApplication
         $skipMagento2CoreCommands = new InputOption(
             '--skip-core-commands',
             '',
-            InputOption::VALUE_OPTIONAL,
+            InputOption::VALUE_NONE,
             'Do not include Magento 2 core commands'
         );
         $inputDefinition->addOption($skipMagento2CoreCommands);
