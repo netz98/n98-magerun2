@@ -22,7 +22,7 @@ function verify() {
 
 function db_query {
 	local sql=$1;
-	$PHAR_FILE --root-dir="$MAGENTO_ROOT_DIR" --skip-core-commands db:query "$sql"
+	$PHAR_FILE --no-interaction --root-dir="$MAGENTO_ROOT_DIR" --skip-core-commands db:query "$sql"
 }
 
 function assert_command_contains {
@@ -31,13 +31,17 @@ function assert_command_contains {
 
 	echo -n "$command"
 
-	$PHAR_FILE --root-dir="$MAGENTO_ROOT_DIR" $command $ADDITIONAL_OPTIONS | grep "$find" > /dev/null;
+  local output=""
+	output=$(($PHAR_FILE --no-interaction --root-dir="$MAGENTO_ROOT_DIR" $command $ADDITIONAL_OPTIONS | grep "$find") 2>&1);
 
 	if [ $? -eq 0 ]; then
 		echo -e "\t\tok";
 	else
 		TESTS_WITH_ERRORS=true;
 		echo -e "\t\tfailure";
+		echo "----------------------------------------------------------------";
+		echo "$output";
+		echo "----------------------------------------------------------------";
 	fi;
 }
 
@@ -313,9 +317,11 @@ function test_magento_core_commands() {
 	#  setup:backup
 	#  setup:config:set
 	#  setup:db-data:upgrade
+	assert_command_contains "setup:db-data:upgrade" "Data install/update"
 	#  setup:db-declaration:generate-patch
 	#  setup:db-declaration:generate-whitelist
 	#  setup:db-schema:upgrade
+	assert_command_contains "setup:db-schema:upgrade" "Schema creation/updates"
 	#  setup:db:status
 	assert_command_contains "setup:db:status" "All modules are up to date."
 	#  setup:di:compile
