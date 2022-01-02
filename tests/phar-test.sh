@@ -120,7 +120,7 @@ function test_magerun_commands() {
 	#  dev:module:list
 	assert_command_contains "dev:module:list" "Magento_Store"
 	#  dev:module:observer:list
-	assert_command_contains "dev:module:observer:list sales_order_place_after global" "Observers in [global] area registered for [sales_order_place_after] event"
+	assert_command_contains "dev:module:observer:list sales_order_place_after global" "Observer name"
 	#  dev:report:count
 	#  dev:symlinks
 	#  dev:template-hints
@@ -142,7 +142,7 @@ function test_magerun_commands() {
 	#  integration:list
 	assert_command_contains "integration:list" "magerun-test"
 	#  integration:show
-	assert_command_contains "integration:show" "Consumer Key"
+	assert_command_contains "integration:show magerun-test" "Consumer Key"
 	#  integration:delete
 	assert_command_contains "integration:delete magerun-test" "Successfully deleted integration Magerun Tests"
 	#  media:dump
@@ -151,13 +151,14 @@ function test_magerun_commands() {
 	#  search:engine:list
 	assert_command_contains "search:engine:list" "label"
 	#  sys:check
-	#  sys:cron:history
 	#  sys:cron:list
 	assert_command_contains "sys:cron:list" "indexer_reindex_all_invalid"
 	#  sys:cron:run
-	assert_command_contains "sys:cron:run sales_clean_quotes" "Run Magento\Sales\Cron\CleanExpiredQuotes::execute done"
+	assert_command_contains "sys:cron:run sales_clean_quotes" "done"
 	#  sys:cron:schedule
-	assert_command_contains "schedule sales_clean_quotes" "Scheduling Magento\Sales\Cron\CleanExpiredQuotes::execute done"
+	assert_command_contains "sys:cron:schedule sales_clean_quotes" "done"
+	#  sys:cron:history
+	assert_command_contains "sys:cron:history sales_clean_quotes" "done"
 	#  sys:info
 	assert_command_contains "sys:info" "Magento System Information"
 	#  sys:maintenance
@@ -239,7 +240,7 @@ function test_magento_core_commands() {
 	#  dotdigital:migrate
 	#  dotdigital:sync
 	#  downloadable:domains:add
-	assert_command_contains "downloadable:domains:add" "example.com was added to the whitelist."
+	assert_command_contains "downloadable:domains:add example.com" "example.com was added to the whitelist."
 	#  downloadable:domains:show
 	assert_command_contains "downloadable:domains:show" "example.com"
 	#  downloadable:domains:remove

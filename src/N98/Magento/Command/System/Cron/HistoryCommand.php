@@ -47,22 +47,38 @@ class HistoryCommand extends AbstractCronCommand
         $timezone = $input->getOption('timezone')
             ? $input->getOption('timezone') : $this->scopeConfig->getValue('general/locale/timezone');
 
+        // If Magento config contains a invalid timezone
+        if (empty($timezone)) {
+            $timezone = 'UTC';
+        }
+
         if (!$input->getOption('format')) {
             $output->writeln('<info>Times shown in <comment>' . $timezone . '</comment></info>');
         }
 
-        $date = $this->getObjectManager()->create('Magento\Framework\Stdlib\DateTime\DateTime');
+        $dateFactory = $this->getObjectManager()->get('Magento\Framework\Stdlib\DateTime\DateTimeFactory');
+        $date = $dateFactory->create();
         $offset = $date->calculateOffset($timezone);
+
         $this->cronScheduleCollection
             ->addFieldToFilter('status', ['neq' => Schedule::STATUS_PENDING])
             ->addOrder('finished_at', \Magento\Framework\Data\Collection::SORT_ORDER_DESC);
 
         $table = [];
         foreach ($this->cronScheduleCollection as $job) {
+            $finishedAt = '';
+
+            if ($job->getFinishedAt()) {
+                $finishedAt = date(
+                    'Y-m-d H:i:s',
+                    strtotime($job->getFinishedAt()) + $offset
+                );
+            }
+
             $table[] = [
                 $job->getJobCode(),
                 $job->getStatus(),
-                $job->getFinishedAt() ? $date->gmtDate(null, $date->timestamp($job->getFinishedAt()) + $offset) : '',
+                $finishedAt
             ];
         }
         $this->getHelper('table')
