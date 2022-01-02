@@ -112,15 +112,15 @@ function test_magerun_commands() {
 	assert_command_contains "db:variables" "innodb_buffer_pool_size"
 	#  design:demo-notice
 	assert_command_contains "design:demo-notice --on" "Demo Notice enabled for store default"
-	assert_command_contains "design:demo-notice --ff" "Demo Notice disabled for store default"
-	#  dev:asset:clear
-	assert_command_contains "dev:asset:clear" "deployed_version.txt"
+	assert_command_contains "design:demo-notice --off" "Demo Notice disabled for store default"
+	#  dev:asset:clear (we can run the command after we have created assets)
+	#assert_command_contains "dev:asset:clear" "deployed_version.txt"
 	#  dev:console
 	#  dev:module:create
 	#  dev:module:list
 	assert_command_contains "dev:module:list" "Magento_Store"
 	#  dev:module:observer:list
-	assert_command_contains "dev:module:observer:list dev:module:observer:list sales_order_place_after global" "Observers in [global] area registered for [sales_order_place_after] event"
+	assert_command_contains "dev:module:observer:list sales_order_place_after global" "Observers in [global] area registered for [sales_order_place_after] event"
 	#  dev:report:count
 	#  dev:symlinks
 	#  dev:template-hints
@@ -138,14 +138,13 @@ function test_magerun_commands() {
 	#  index:trigger:recreate
 	assert_command_contains "index:trigger:recreate" "Skipped indexer Catalog Search."
 	#  integration:create
-
-	assert_command_contains "integration:create 'Magerun Tests' magerun@example.com https://localhost" "Integration ID"
+	assert_command_contains "integration:create magerun-test magerun@example.com https://localhost" "Integration ID"
 	#  integration:list
-	assert_command_contains "integration:list" "Magerun Tests"
+	assert_command_contains "integration:list" "magerun-test"
 	#  integration:show
 	assert_command_contains "integration:show" "Consumer Key"
 	#  integration:delete
-	assert_command_contains "integration:delete 'Magerun Tests'" "Successfully deleted integration Magerun Tests"
+	assert_command_contains "integration:delete magerun-test" "Successfully deleted integration Magerun Tests"
 	#  media:dump
 	#  script:repo:list
 	#  script:repo:run
