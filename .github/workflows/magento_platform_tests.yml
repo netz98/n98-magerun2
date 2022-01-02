@@ -149,7 +149,7 @@ jobs:
         run: |
           composer global config http-basic.repo.magento.com "${MAGENTO_MARKETPLACE_USERNAME}" "${MAGENTO_MARKETPLACE_PASSWORD}";
           bin/n98-magerun2 --ansi install \
-          --magentoVersionByName="${{ matrix.magento-version }}" --installationFolder="./magento" \
+          --magentoVersionByName="${{ matrix.magento-version }}" --installationFolder="${N98_MAGERUN2_TEST_MAGENTO_ROOT}" \
           --dbHost=127.0.0.1 --dbPort=${{ job.services.mysql.ports['3306'] }} --dbUser=root --dbPass=root --dbName="magento" \
           --useDefaultConfigParams=yes \
           --installSampleData=no \
@@ -171,4 +171,4 @@ jobs:
       - name: Run phar functional tests
         run: |
           bash ./build.sh
-          bash tests/phar-test.sh ./n98-magerun2.phar ./magento
+          bash tests/phar-test.sh "./n98-magerun2.phar" "${N98_MAGERUN2_TEST_MAGENTO_ROOT}"
