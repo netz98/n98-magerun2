@@ -187,7 +187,7 @@ function test_magento_core_commands() {
 	# admin:user:unlock
 	assert_command_contains "admin:user:unlock xyz" "Couldn't find the user account"
 	#  app:config:dump
-	assert_command_contains "app:config:dump" "Done. Config types dumped: scopes, system, themes, i18n"
+	assert_command_contains "app:config:dump" "Done"
 	#  app:config:import
 	assert_command_contains "app:config:import" "Nothing to import."
 	#  app:config:status
