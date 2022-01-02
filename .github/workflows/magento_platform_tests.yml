@@ -168,7 +168,7 @@ jobs:
       - name: Run PHPUnit (Production Mode)
         run: vendor/bin/phpunit --process-isolation --teamcity
 
-      - name: Run phar tests
+      - name: Run phar functional tests
         run: |
           bash ./build.sh
-          bash tests/phar-test.sh
+          bash tests/phar-test.sh ./n98-magerun2.phar
