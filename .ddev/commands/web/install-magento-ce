@@ -49,7 +49,7 @@ install_magento() {
 		check_if_db_exists
 
 		if [ ! -d $MAGENTO_ROOT_DIR ]; then
-			composer create-project --repository-url=https://repo.magento.com/ magento/project-community-edition="$MAGENTO_VERSION" "$MAGENTO_ROOT_DIR"
+			composer --no-interaction create-project --repository-url=https://repo.magento.com/ magento/project-community-edition="$MAGENTO_VERSION" "$MAGENTO_ROOT_DIR"
 		fi
 
 		cd $MAGENTO_ROOT_DIR
