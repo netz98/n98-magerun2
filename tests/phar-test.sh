@@ -322,8 +322,8 @@ function test_magento_core_commands() {
 	#  setup:db-declaration:generate-whitelist
 	#  setup:db-schema:upgrade
 	assert_command_contains "setup:db-schema:upgrade" "Schema creation/updates"
-	#  setup:db:status
-	assert_command_contains "setup:db:status" "All modules are up to date."
+	#  setup:db:status (currently disabled. Seems to be inconsistent between different Magento versions)
+	#assert_command_contains "setup:db:status" "All modules are up to date."
 	#  setup:di:compile
 	#  setup:install
 	#  setup:performance:generate-fixtures
