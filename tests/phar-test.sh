@@ -5,17 +5,18 @@
 
 ADDITIONAL_OPTIONS="";
 PHAR_FILE=$1;
+MAGENTO_ROOT_DIR=$2;
 
 function verify() {
 	if [ -z "$PHAR_FILE" ]; then
-		echo "usage: $0 <phar-file>";
+		echo "usage: $0 <phar-file> <magento-root-dir>";
 		exit 1;
 	fi
 
-	if [ -z "$N98_MAGERUN2_TEST_MAGENTO_ROOT" ]; then
-		echo "Set environment variable \$N98_MAGERUN2_TEST_MAGENTO_ROOT"
-		exit 1;
-	fi
+	if [ -z "$MAGENTO_ROOT_DIR" ]; then
+		echo "usage: $0 <phar-file> <magento-root-dir>";
+  	exit 1;
+  fi
 }
 
 function assert_command_contains {
