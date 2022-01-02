@@ -122,15 +122,15 @@ class ReportCommand extends AbstractMagentoCommand
 
             $row = [
                 $cacheId,
-                date('Y-m-d H:i:s', $metadata['expire']),
+                isset($metadata['expire']) ? date('Y-m-d H:i:s', $metadata['expire']) : '',
             ];
 
             if ($mTime) {
-                $row[] = date('Y-m-d H:i:s', $metadata['mtime']);
+                $row[] = isset($metadata['mtime']) ? date('Y-m-d H:i:s', $metadata['mtime']) : '';
             }
 
             if ($tags) {
-                $row[] = implode(', ', $metadata['tags']);
+                $row[] = isset($metadata['tags']) ? implode(', ', $metadata['tags']) : '';
             }
 
             $table[] = $row;
