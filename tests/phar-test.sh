@@ -86,7 +86,7 @@ function test_magerun_commands() {
 	#  config:store:delete
 	assert_command_contains "config:store:delete n98/magerun/example" "deleted path"
 	#  customer:create
-	db_query "DELETE FROM customers WHERE email = 'foo@example.com"
+	db_query "DELETE FROM customers WHERE email = 'foo@example.com'"
 	assert_command_contains "customer:create foo@example.com Password123 Firstname Lastname" "Customer foo@example.com successfully created"
 	#  customer:info
 	assert_command_contains "customer:info foo@example.com" "foo@example.com"
@@ -158,7 +158,7 @@ function test_magerun_commands() {
 	#  sys:cron:schedule
 	assert_command_contains "sys:cron:schedule sales_clean_quotes" "done"
 	#  sys:cron:history
-	assert_command_contains "sys:cron:history sales_clean_quotes" "done"
+	assert_command_contains "sys:cron:history" "done"
 	#  sys:info
 	assert_command_contains "sys:info" "Magento System Information"
 	#  sys:maintenance
@@ -244,7 +244,7 @@ function test_magento_core_commands() {
 	#  downloadable:domains:show
 	assert_command_contains "downloadable:domains:show" "example.com"
 	#  downloadable:domains:remove
-	assert_command_contains "downloadable:domains:remove" "example.com was removed from the whitelist."
+	assert_command_contains "downloadable:domains:remove example.com" "example.com was removed from the whitelist."
 	#  encryption:payment-data:update
 	#  help (covered by n98-magerun2)
 	#  i18n:collect-phrases
