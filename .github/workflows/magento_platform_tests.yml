@@ -153,7 +153,7 @@ jobs:
           --dbHost=127.0.0.1 --dbPort=${{ job.services.mysql.ports['3306'] }} --dbUser=root --dbPass=root --dbName="magento" \
           --useDefaultConfigParams=yes \
           --installSampleData=no \
-          --baseUrl="http://gitbub.magerun.test/";
+          --baseUrl="http://github.magerun.test/";
 
       - name: Configure matchers
         uses: mheap/phpunit-matcher-action@master
@@ -167,3 +167,8 @@ jobs:
 
       - name: Run PHPUnit (Production Mode)
         run: vendor/bin/phpunit --process-isolation --teamcity
+
+      - name: Run phar tests
+        run: |
+          bash ./build.sh
+          bash tests/phar-test.sh
