@@ -86,7 +86,7 @@ function test_magerun_commands() {
 	#  config:store:delete
 	assert_command_contains "config:store:delete n98/magerun/example" "deleted path"
 	#  customer:create
-	db_query "DELETE FROM customers WHERE email = 'foo@example.com'"
+	db_query "DELETE FROM customer_entity WHERE email = 'foo@example.com'"
 	assert_command_contains "customer:create foo@example.com Password123 Firstname Lastname" "Customer foo@example.com successfully created"
 	#  customer:info
 	assert_command_contains "customer:info foo@example.com" "foo@example.com"
@@ -144,7 +144,7 @@ function test_magerun_commands() {
 	#  integration:show
 	assert_command_contains "integration:show magerun-test" "Consumer Key"
 	#  integration:delete
-	assert_command_contains "integration:delete magerun-test" "Successfully deleted integration Magerun Tests"
+	assert_command_contains "integration:delete magerun-test" "Successfully deleted integration"
 	#  media:dump
 	#  script:repo:list
 	#  script:repo:run
@@ -158,7 +158,7 @@ function test_magerun_commands() {
 	#  sys:cron:schedule
 	assert_command_contains "sys:cron:schedule sales_clean_quotes" "done"
 	#  sys:cron:history
-	assert_command_contains "sys:cron:history" "done"
+	assert_command_contains "sys:cron:history" "Last executed jobs"
 	#  sys:info
 	assert_command_contains "sys:info" "Magento System Information"
 	#  sys:maintenance
