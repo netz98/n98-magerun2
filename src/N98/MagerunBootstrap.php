@@ -28,7 +28,7 @@ class MagerunBootstrap
             $loader = self::getLoader();
         }
 
-        // @lnk https://github.com/humbug/php-scoper/issues/298 
+        // @link https://github.com/humbug/php-scoper/issues/298
         $GLOBALS['__composer_autoload_files'] = [
             /* vendor/guzzlehttp/psr7/src/functions_include.php */
             'a0edc8309cc5e1d60e3047b5df6b7052' => false,
