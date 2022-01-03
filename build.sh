@@ -56,13 +56,11 @@ function download_box() {
 
 function download_composer() {
   if command -v composer &>/dev/null; then
-    COMPOSER_BIN="composer"
   else
     echo "Composer was not found. Try to install it ..."
     # install composer
     php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
-    php composer-setup.php
-    COMPOSER_BIN="./composer.phar"
+    php composer-setup.php --install-dir=/usr/local/bin --filename=composer
   fi
 }
 
