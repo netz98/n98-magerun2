@@ -56,6 +56,7 @@ function download_box() {
 
 function download_composer() {
   if command -v composer &>/dev/null; then
+    true; # do nothing
   else
     echo "Composer was not found. Try to install it ..."
     # install composer
