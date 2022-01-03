@@ -62,7 +62,7 @@ function download_composer() {
     # install composer
     php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
     php composer-setup.php
-    COMPOSER_BIN="${base_dir}/composer.phar"
+    COMPOSER_BIN="./composer.phar"
   fi
 }
 

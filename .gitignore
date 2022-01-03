@@ -3,6 +3,8 @@
 
 # Build
 /box.phar
+/composer.phar
+/composer-setup.php
 /n98-magerun2.phar
 /build/output/
 
