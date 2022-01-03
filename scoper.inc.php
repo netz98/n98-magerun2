@@ -16,7 +16,7 @@ return [
         'N98\\*',
         'GuzzleHttp\\*',
         'Symfony\\Polyfill\\*',
-        'Symfony\Component\Console\\*'
+        'Symfony\\Component\\Console\\*',
     ],
     'files-whitelist' => array_map(
         static function ($file) {
