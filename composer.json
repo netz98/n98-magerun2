@@ -74,5 +74,10 @@
     "bin": [
         "bin/n98-magerun2"
     ],
-    "prefer-stable": true
+    "prefer-stable": true,
+    "scripts": {
+        "post-autoload-dump": [
+            "N98\\Magento\\Composer\\FixBrokenStaticAutoloader::fix"
+        ]
+    }
 }
