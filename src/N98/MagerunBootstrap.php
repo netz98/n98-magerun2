@@ -28,14 +28,6 @@ class MagerunBootstrap
             $loader = self::getLoader();
         }
 
-        // @link https://github.com/humbug/php-scoper/issues/298
-        $GLOBALS['__composer_autoload_files'] = [
-            /* vendor/guzzlehttp/psr7/src/functions_include.php */
-            'a0edc8309cc5e1d60e3047b5df6b7052' => false,
-            /* vendor/guzzlehttp/guzzle/src/functions_include.php */
-            '37a3dc5111fe8f707ab4c132ef1dbc62' => false,
-        ];
-
         $application = new Magento\Application($loader);
 
         return $application;
