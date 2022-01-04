@@ -23,7 +23,7 @@ class TestCommand extends AbstractMagentoCommand
     protected function configure()
     {
         $this
-            ->setName('magerun:example-modulet:test')
+            ->setName('magerun:example-module:test')
             ->setDescription('Test command for functional testing')
         ;
     }

@@ -350,7 +350,7 @@ function test_custom_module() {
 	mkdir -p $HOME/.n98-magerun/modules;
 	cp -r tests/example-module $HOME/.n98-magerun/modules/example-module;
 
-	assert_command_contains "magerun:example-modulet:test" "98.00"
+	assert_command_contains "magerun:example-module:test" "98.00"
 
 	rm -Rf $HOME/.n98-magerun/modules/example-module
 }
