@@ -346,9 +346,19 @@ function test_magento_core_commands() {
 
 }
 
+function test_custom_module() {
+	mkdir -p $HOME/.n98-magerun/modules;
+	cp -r tests/example-module $HOME/.n98-magerun/modules/example-module;
+
+	assert_command_contains "magerun:example-modulet:test" "98.00"
+
+	rm -Rf $HOME/.n98-magerun/modules/example-module
+}
+
 verify;
 test_magerun_commands;
 test_magento_core_commands;
+test_custom_module;
 
 if [ $TESTS_WITH_ERRORS = true ]; then
 	exit 1;
