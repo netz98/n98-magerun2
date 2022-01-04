@@ -29,7 +29,7 @@ function assert_command_contains {
 	local command=$1;
 	local find=$2;
 
-	echo -n "$command"
+	echo -n "- $command"
 
   local output=""
 	output=$(($PHAR_FILE --no-interaction --root-dir="$MAGENTO_ROOT_DIR" $command $ADDITIONAL_OPTIONS | grep "$find") 2>&1);
@@ -347,18 +347,30 @@ function test_magento_core_commands() {
 }
 
 function test_custom_module() {
-	mkdir -p $HOME/.n98-magerun/modules;
-	cp -r tests/example-module $HOME/.n98-magerun/modules/example-module;
+	mkdir -p $MAGENTO_ROOT_DIR/lib/n98-magerun2/modules;
+	cp -r tests/example-module $MAGENTO_ROOT_DIR/lib/n98-magerun2/modules/example-module;
 
 	assert_command_contains "magerun:example-module:test" "98.00"
 
-	rm -Rf $HOME/.n98-magerun/modules/example-module
+	rm -Rf $MAGENTO_ROOT_DIR/lib/n98-magerun2/modules/example-module
 }
 
 verify;
+
+echo "=================================================="
+echo "MAGERUN COMMANDS"
+echo "=================================================="
 test_magerun_commands;
-test_magento_core_commands;
+
+echo "=================================================="
+echo "MAGERUN CUSTOM MODULE"
+echo "=================================================="
 test_custom_module;
+
+echo "=================================================="
+echo "MAGENTO CORE COMMANDS"
+echo "=================================================="
+test_magento_core_commands;
 
 if [ $TESTS_WITH_ERRORS = true ]; then
 	exit 1;
