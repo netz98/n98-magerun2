@@ -1,9 +1,6 @@
 {
     "compression": "GZ",
     "algorithm": "SHA512",
-    "compactors": [
-        "KevinGH\\Box\\Compactor\\PhpScoper"
-    ],
     "datetime": "release-date",
     "files": [
         "config.yaml",

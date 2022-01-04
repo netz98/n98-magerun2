@@ -184,13 +184,23 @@ class Config
 
         foreach ($this->getArray('autoloaders') as $prefix => $path) {
             $autoloader->add($prefix, $path);
-            $this->debugWriteln(sprintf($mask, 'PSR-2', $prefix, $path));
+            $this->debugWriteln(sprintf($mask, 'PSR-0', $prefix, $path));
         }
 
         foreach ($this->getArray('autoloaders_psr4') as $prefix => $path) {
             $autoloader->addPsr4($prefix, $path);
             $this->debugWriteln(sprintf($mask, 'PSR-4', OutputFormatter::escape($prefix), $path));
         }
+
+        /**
+         * We use box.phar to create the phar file and to dump the autoloader.
+         * Box will always enable Class Map Authoritative which does not allow to load classes on runtime.
+         * We need this to support custom commands and modules in n98-magerun2.
+         * So we disable the Class Map Authoritative setting on runtime.
+         *
+         * @link https://github.com/box-project/box/blob/master/doc/configuration.md#dumping-the-composer-autoloader-dump-autoload
+         */
+        $autoloader->setClassMapAuthoritative(false);
     }
 
     /**
