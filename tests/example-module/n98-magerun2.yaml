@@ -1,5 +1,6 @@
+---
 autoloaders_psr4:
-  N98MagerunExampleModule\: %module%/src
+  N98MagerunExampleModule\: '%module%/src'
 
 commands:
   customCommands:
