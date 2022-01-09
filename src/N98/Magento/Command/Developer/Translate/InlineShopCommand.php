@@ -7,6 +7,8 @@ use N98\Magento\Command\AbstractMagentoStoreConfigCommand;
 
 class InlineShopCommand extends AbstractMagentoStoreConfigCommand
 {
+    use TranslateFunctionsTrait;
+
     /**
      * @var string
      */

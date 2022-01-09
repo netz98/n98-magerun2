@@ -4,84 +4,20 @@ namespace N98\Magento\Command\Config;
 
 use Magento\Framework\ObjectManager\ObjectManager;
 use N98\Magento\Command\AbstractMagentoCommand;
+use N98\Magento\Command\Config\Store\ConfigReaderTrait;
+use N98\Magento\Command\Config\Store\ConfigWriterTrait;
 
 abstract class AbstractConfigCommand extends AbstractMagentoCommand
 {
+    use ConfigWriterTrait;
+    use ConfigReaderTrait;
+
     const DISPLAY_NULL_UNKNOWN_VALUE = 'NULL (NULL/"unknown" value)';
-
-    /**
-     * \Magento\Framework\App\Config\Storage\WriterInterface
-     */
-    private $configWriter;
-
-    /**
-     * @var \Magento\Framework\App\Config\ScopePoolInterface
-     */
-    protected $_scopePool;
 
     /**
      * @var array
      */
     protected $_scopes = [];
-
-    /**
-     * @return \Magento\Framework\Encryption\EncryptorInterface
-     */
-    protected function getEncryptionModel()
-    {
-        return $this->getObjectManager()->get('\Magento\Framework\Encryption\EncryptorInterface');
-    }
-
-    /**
-     * @return \Magento\Framework\App\Config
-     */
-    protected function _getConfigModel()
-    {
-        return $this->getObjectManager()->get('\Magento\Framework\App\Config');
-    }
-
-    /**
-     * @return \Magento\Store\Model\StoreManagerInterface
-     */
-    protected function _getStoreManager()
-    {
-        return $this->getObjectManager()->get('\Magento\Store\Model\StoreManagerInterface');
-    }
-
-    /**
-     * @return \Magento\Framework\App\Config\ScopePoolInterface
-     */
-    protected function getScopePool()
-    {
-        if (!$this->_scopePool) {
-            $this->_scopePool = $this->getObjectManager()->get('\Magento\Framework\App\Config\ScopePool');
-        }
-
-        return $this->_scopePool;
-    }
-
-    /**
-     * @param string $scope
-     * @return \Magento\Framework\App\Config\Data
-     */
-    protected function getScope($scope)
-    {
-        return $this->getScopePool()->getScope($scope);
-    }
-
-    /**
-     * @return \Magento\Framework\App\Config\Storage\WriterInterface
-     */
-    protected function getConfigWriter()
-    {
-        if (!$this->configWriter) {
-            /** @var ObjectManager $objectManager */
-            $objectManager = $this->getObjectManager();
-            $this->configWriter = $objectManager->get('\Magento\Framework\App\Config\Storage\WriterInterface');
-        }
-
-        return $this->configWriter;
-    }
 
     /**
      * @param string $value

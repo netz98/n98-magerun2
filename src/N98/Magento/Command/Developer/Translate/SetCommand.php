@@ -2,15 +2,19 @@
 
 namespace N98\Magento\Command\Developer\Translate;
 
+use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Store\Model\ScopeInterface;
 use Magento\Translation\Model\ResourceModel\StringUtils;
 use N98\Magento\Command\AbstractMagentoCommand;
+use N98\Magento\Command\Config\Store\ConfigReaderTrait;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class SetCommand extends AbstractMagentoCommand
 {
+    use ConfigReaderTrait;
+
     protected function configure()
     {
         $this
@@ -38,8 +42,7 @@ class SetCommand extends AbstractMagentoCommand
 
         $store = $this->getHelper('parameter')->askStore($input, $output);
 
-        $scopeConfig = $this->getObjectManager()->get( \Magento\Framework\App\Config\ScopeConfigInterface::class);
-        $localeCode = $scopeConfig->getValue(
+        $localeCode = $this->getScopeConfigValue(
             'general/locale/code',
             ScopeInterface::SCOPE_STORE,
             $store

@@ -10,6 +10,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class SetCommand extends AbstractConfigCommand
 {
+    use ConfigWriterTrait;
+
     /**
      * @var array
      */
@@ -85,7 +87,7 @@ HELP;
             $value = $this->_formatValue($value, ($input->getOption('encrypt') ? 'encrypt' : ''));
         }
 
-        $this->getConfigWriter()->save(
+        $this->saveScopeConfigValue(
             $input->getArgument('path'),
             $value,
             $scope,
