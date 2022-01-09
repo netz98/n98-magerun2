@@ -180,7 +180,7 @@ function test_magerun_commands() {
 	#  sys:info
 	assert_command_contains "sys:info" "Magento System Information"
 	#  sys:maintenance
-	assert_command_contains "sys:maintenance --on" "off"
+	assert_command_contains "sys:maintenance --on" "on"
 	assert_command_contains "sys:maintenance --off" "off"
 	#  sys:setup:change-version
 	#  sys:setup:compare-versions
