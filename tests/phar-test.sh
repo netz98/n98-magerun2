@@ -63,19 +63,24 @@ function test_magerun_commands() {
 	#  admin:user:list
 	assert_command_contains "admin:user:list" "username"
 	#  cache:clean
+	assert_command_contains "cache:clean layout" "cache cleaned"
 	#  cache:disable
 	assert_command_contains "cache:disable full_page" "The following cache types were disabled"
 	#  cache:enable
 	assert_command_contains "cache:enable full_page" "The following cache types were enabled"
 	#  cache:flush
+	assert_command_contains "cache:flush" "cache flushed"
 	#  cache:list
 	assert_command_contains "cache:list" "full_page"
 	#  cache:report
 	assert_command_contains "cache:report" "EXPIRE"
 	#  cache:view
+	assert_command_contains "cache:view INITIAL_CONFIG" "data"
 	#  cms:block:toggle
 	#  config:data:acl
+	assert_command_contains "config:data:acl" "ACL Tree"
 	#  config:data:di
+	assert_command_contains "config:data:di" "DateTimeInterface"
 	#  config:env:create
 	#  config:env:set
 	assert_command_contains "config:env:set magerun.example foo" "Config magerun.example successfully set to foo"
@@ -100,6 +105,7 @@ function test_magerun_commands() {
 	assert_command_contains "customer:change-password foo@example.com Password1234" "Password successfully change"
 	#  customer:token:create
 	#  db:add-default-authorization-entries
+	assert_command_contains "db:add-default-authorization-entries" "OK"
 	#  db:console
 	#  db:create
 	#  db:drop
@@ -109,7 +115,7 @@ function test_magerun_commands() {
 	assert_command_contains "db:info" "PDO-Connection-String"
 	#  db:maintain:check-tables
 	#  db:query
-	#assert_command_contains "db:query 'SHOW TABLES'" "catalog_product_entity"
+	#assert_command_contains "db:query 'SELECT 1'" "1"
 	#  db:status
 	assert_command_contains "db:status" "InnoDB Buffer Pool hit"
 	#  db:variables
@@ -128,7 +134,11 @@ function test_magerun_commands() {
 	#  dev:report:count
 	#  dev:symlinks
 	#  dev:template-hints
+	assert_command_contains "dev:template-hints --on" "enabled"
+	assert_command_contains "dev:template-hints --off" "disabled"
 	#  dev:template-hints-blocks
+	assert_command_contains "dev:template-hints-blocks --on" "enabled"
+	assert_command_contains "dev:template-hints-blocks --off" "disabled"
 	#  dev:theme:list
 	assert_command_contains "dev:theme:list" "Magento/backend"
 	#  eav:attribute:list
@@ -137,6 +147,7 @@ function test_magerun_commands() {
 	#  eav:attribute:view
 	assert_command_contains "eav:attribute:view catalog_product sku" "catalog_product_entity"
 	#  generation:flush
+	assert_command_contains "generation:flush Symfony" "Removed"
 	#  index:list
 	assert_command_contains "index:list" "catalogsearch_fulltext"
 	#  index:trigger:recreate
@@ -150,11 +161,14 @@ function test_magerun_commands() {
 	#  integration:delete
 	assert_command_contains "integration:delete magerun-test" "Successfully deleted integration"
 	#  media:dump
+	assert_command_contains "media:dump" "Compress"
 	#  script:repo:list
+	assert_command_contains "script:repo:list" "Script"
 	#  script:repo:run
 	#  search:engine:list
 	assert_command_contains "search:engine:list" "label"
 	#  sys:check
+	assert_command_contains "sys:check" "Env"
 	#  sys:cron:list
 	assert_command_contains "sys:cron:list" "indexer_reindex_all_invalid"
 	#  sys:cron:run
@@ -166,10 +180,14 @@ function test_magerun_commands() {
 	#  sys:info
 	assert_command_contains "sys:info" "Magento System Information"
 	#  sys:maintenance
+	assert_command_contains "sys:maintenance --on" "off"
+	assert_command_contains "sys:maintenance --off" "off"
 	#  sys:setup:change-version
 	#  sys:setup:compare-versions
+	assert_command_contains "sys:setup:compare-versions" "Setup"
 	#  sys:setup:downgrade-versions
 	#  sys:store:config:base-url:list
+	assert_command_contains "sys:store:config:base-url:list" "unsecure_baseurl"
 	#  sys:store:list
 	assert_command_contains "sys:store:list" "default"
 	#  sys:url:list
