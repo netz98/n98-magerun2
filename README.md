@@ -782,6 +782,32 @@ Creates an empty module and registers it in current Magento shop.
 n98-magerun2.phar dev:module:create [-m|--minimal] [--add-blocks] [--add-helpers] [--add-models] [--add-setup] [--add-all] [-e|--enable] [--modman] [--add-readme] [--add-composer] [--add-strict-types] [--author-name [AUTHOR-NAME]] [--author-email [AUTHOR-EMAIL]] [--description [DESCRIPTION]] [-h|--help] [-q|--quiet] [-v|vv|vvv|--verbose] [-V|--version] [--ansi] [--no-ansi] [-n|--no-interaction] [--root-dir [ROOT-DIR]] [--skip-config] [--skip-root-check] [--skip-core-commands [SKIP-CORE-COMMANDS]] [--skip-magento-compatibility-check] [--] <command> <vendorNamespace> <moduleName>
 ```
 
+### Inline Translation Management
+
+Enable/disable inline translation feature for Magento Admin:
+
+```sh
+n98-magerun2.phar dev:translate:admin [--on] [--off]
+```
+
+Enable/disable inline translation feature for shop frontend:
+
+```sh
+n98-magerun2.phar dev:translate:shop [--on] [--off] <store>
+```
+
+Set a translation (saved in translation table)
+
+```sh
+n98-magerun2.phar dev:translate:set <string> <translate> [<store>]
+```
+
+Export inline translations
+
+```sh
+n98-magerun2.phar dev:translate:export [--store=<storecode>] <locale> <filename>
+```
+
 ### List modules
 
 ```sh
