@@ -39,7 +39,7 @@
         "symfony/event-dispatcher": "~4.4",
         "symfony/finder": "~5.3",
         "symfony/process": "~4.4",
-        "symfony/validator": "~4.4",
+        "symfony/validator": "~5.4",
         "symfony/yaml": "~5.3",
         "twig/twig": "~3.3"
     },
