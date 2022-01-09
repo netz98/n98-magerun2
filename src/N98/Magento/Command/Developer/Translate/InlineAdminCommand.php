@@ -22,7 +22,7 @@ class InlineAdminCommand extends AbstractMagentoStoreConfigCommand
     /**
      * @var string
      */
-    protected $commandName = 'dev:translation:admin';
+    protected $commandName = 'dev:translate:admin';
 
     /**
      * @var string

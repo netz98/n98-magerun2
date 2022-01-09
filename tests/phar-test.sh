@@ -160,6 +160,17 @@ function test_magerun_commands() {
 	#  dev:module:observer:list
 	assert_command_contains "dev:module:observer:list sales_order_place_after global" "Observer name"
 	#  dev:report:count
+	#  dev:translate:set
+	assert_command_contains "dev:translate:set foo foo_translate" "Translated"
+	assert_command_contains "dev:translate:set foo foo_translate default" "Translated"
+	#  dev:translate:admin
+	assert_command_contains "dev:translate:admin --on" "enabled"
+	assert_command_contains "dev:translate:admin --off" "disabled"
+	#  dev:translate:export
+	assert_command_contains "dev:translate:export en_US" "Exporting"
+	#  dev:translate:shop
+	assert_command_contains "dev:translate:shop --on" "enabled"
+	assert_command_contains "dev:translate:shop --off" "disabled"
 	#  dev:symlinks
 	assert_command_contains "dev:symlinks --on" "allowed"
 	assert_command_contains "dev:symlinks --off" "denied"
