@@ -167,60 +167,6 @@ abstract class AbstractMagentoCommand extends Command
     }
 
     /**
-     * @param InputInterface $input
-     * @param OutputInterface $output
-     * @return \Composer\Downloader\DownloadManager
-     */
-    public function getComposerDownloadManager($input, $output)
-    {
-        return $this->getComposer($input, $output)->getDownloadManager();
-    }
-
-    /**
-     * @param array $config
-     * @return PackageInterface
-     */
-    public function createComposerPackageByConfig(array $config)
-    {
-        $packageLoader = new PackageLoader();
-
-        return $packageLoader->load($config);
-    }
-
-    /**
-     * brings locally cached repository up to date if it is missing the requested tag
-     *
-     * @param PackageInterface $package
-     * @param string $targetFolder
-     */
-    protected function checkRepository(PackageInterface $package, $targetFolder)
-    {
-        if ($package->getSourceType() == 'git') {
-            $command = sprintf(
-                'cd %s && git rev-parse refs/tags/%s',
-                escapeshellarg($targetFolder),
-                escapeshellarg($package->getSourceReference())
-            );
-            $existingTags = shell_exec($command);
-            if (!$existingTags) {
-                $command = sprintf('cd %s && git fetch', escapeshellarg($targetFolder));
-                shell_exec($command);
-            }
-        } elseif ($package->getSourceType() == 'hg') {
-            $command = sprintf(
-                'cd %s && hg log --template "{tags}" -r %s',
-                escapeshellarg($targetFolder),
-                escapeshellarg($package->getSourceReference())
-            );
-            $existingTag = shell_exec($command);
-            if ($existingTag === $package->getSourceReference()) {
-                $command = sprintf('cd %s && hg pull', escapeshellarg($targetFolder));
-                shell_exec($command);
-            }
-        }
-    }
-
-    /**
      * @param string $type
      *
      * @return bool
