@@ -37,7 +37,7 @@ class InlineAdminCommand extends AbstractMagentoStoreConfigCommand
     /**
      * If required, handle the output and possible change of the developer IP restrictions
      *
-     * @param StoreInterface $store
+     * @param \Magento\Store\Api\Data\StoreInterface $store
      * @param bool $disabled
      */
     protected function afterSave(StoreInterface $store, $disabled)

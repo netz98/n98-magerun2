@@ -3,6 +3,7 @@
 namespace N98\Magento\Command;
 
 use Exception;
+use Magento\Store\Api\Data\StoreInterface;
 use N98\Util\Console\Helper\ParameterHelper;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputArgument;
@@ -191,18 +192,18 @@ abstract class AbstractMagentoStoreConfigCommand extends AbstractMagentoCommand
     }
 
     /**
-     * @param \Magento\Store\Model\Store $store
+     * @param \Magento\Store\Api\Data\StoreInterface $store
      * @param bool $disabled
      */
-    protected function beforeSave(\Magento\Store\Model\Store $store, $disabled)
+    protected function beforeSave(StoreInterface $store, $disabled)
     {
     }
 
     /**
-     * @param \Magento\Store\Model\Store $store
+     * @param \Magento\Store\Api\Data\StoreInterface $store
      * @param bool $disabled
      */
-    protected function afterSave(\Magento\Store\Model\Store $store, $disabled)
+    protected function afterSave(StoreInterface $store, $disabled)
     {
     }
 }
