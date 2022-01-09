@@ -9,7 +9,8 @@
     "force-autodiscovery": true,
     "directories": [
         "src",
-        "res"
+        "res",
+        "vendor/twig/twig/src"
     ],
     "git-commit-short": "git_commit_short",
     "stub": "build/phar/_cli_stub.php",
