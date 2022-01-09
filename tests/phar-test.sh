@@ -345,6 +345,7 @@ function test_magento_core_commands() {
 	#  maintenance:status
 	assert_command_contains "maintenance:status" "Status: maintenance mode is not active"
 	#  module:config:status
+	assert_command_contains "setup:upgrade" "Updating modules"
 	assert_command_contains "module:config:status" "The modules configuration is up to date."
 	#  module:disable
 	#  module:enable
@@ -379,7 +380,6 @@ function test_magento_core_commands() {
 	#  setup:static-content:deploy
 	#  setup:store-config:set
 	#  setup:uninstall
-	#  setup:upgrade
 	#  store:list
 	assert_command_contains "store:list" "Website ID"
 	#  store:website:list
