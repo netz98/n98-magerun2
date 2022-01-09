@@ -2,7 +2,6 @@
 
 namespace N98\Magento\Command\Developer\Translate;
 
-use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Store\Model\ScopeInterface;
 use Magento\Translation\Model\ResourceModel\StringUtils;
 use N98\Magento\Command\AbstractMagentoCommand;
