@@ -2,7 +2,6 @@
 
 namespace N98\Magento\Command\Config;
 
-use Magento\Framework\ObjectManager\ObjectManager;
 use N98\Magento\Command\AbstractMagentoCommand;
 use N98\Magento\Command\Config\Store\ConfigReaderTrait;
 use N98\Magento\Command\Config\Store\ConfigWriterTrait;

@@ -37,8 +37,8 @@ trait TranslateFunctionsTrait
         $output = new ConsoleOutput();
 
         $devRestriction = $this->getScopeConfigValue(
-        'dev/restrict/allow_ips',
-        ScopeInterface::SCOPE_STORE,
+            'dev/restrict/allow_ips',
+            ScopeInterface::SCOPE_STORE,
             $store
         );
 

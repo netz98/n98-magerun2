@@ -2,9 +2,8 @@
 
 namespace N98\Magento\Command\Config\Store;
 
-use Magento\Framework\App\Config\ScopePool;
 use Magento\Framework\App\Config\ScopeConfigInterface;
-use Magento\Store\Api\Data\StoreInterface;
+use Magento\Framework\App\Config\ScopePool;
 use Magento\Store\Model\StoreManagerInterface;
 
 trait ConfigReaderTrait

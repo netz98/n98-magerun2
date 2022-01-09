@@ -2,10 +2,8 @@
 
 namespace N98\Magento\Command\Developer\Translate;
 
-use Mage;
 use Magento\Framework\Translate\ResourceInterface;
 use N98\Magento\Command\AbstractMagentoCommand;
-use N98\Util\Console\Helper\DatabaseHelper;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
