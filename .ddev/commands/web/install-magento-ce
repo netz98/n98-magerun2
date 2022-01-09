@@ -65,7 +65,7 @@ install_magento() {
 			"--db-host=db"
 			"--db-user=db"
 			"--db-password=db"
-			"--db-name=db"
+			"--db-name=${MAGENTO_DB_NAME}"
 			"--cleanup-database"
 			"--backend-frontname=admin"
 			"--timezone=${TZ}"
