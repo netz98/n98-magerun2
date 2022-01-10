@@ -166,8 +166,12 @@ class DeleteCommand extends AbstractCustomerCommand
             }
 
             if ($this->shouldRemove($questionHelper, $input, $output)) {
-                #$customer = $this->customerRepository->getById($customerToDelete->getId());
+                $isSecure = $this->registry->registry('isSecureArea');
+                $this->registry->unregister('isSecureArea');
+                $this->registry->register('isSecureArea', true);
                 $this->customerRepository->delete($customer);
+                $this->registry->unregister('isSecureArea');
+                $this->registry->register('isSecureArea', $isSecure);
             } else {
                 $this->output->writeln('<error>Aborting delete</error>');
             }
@@ -264,7 +268,7 @@ class DeleteCommand extends AbstractCustomerCommand
     protected function getCustomerById($id)
     {
         /** @var Customer $customer */
-        $customer = $this->customerRepository()->getById($id);
+        $customer = $this->customerRepository->getById($id);
         if (!$customer->getId()) {
             /** @var $parameterHelper ParameterHelper */
             $parameterHelper = $this->getHelper('parameter');
