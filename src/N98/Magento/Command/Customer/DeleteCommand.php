@@ -7,16 +7,13 @@ use Magento\Customer\Api\CustomerRepositoryInterface;
 use Magento\Customer\Api\Data\CustomerInterface as Customer;
 use Magento\Customer\Model\ResourceModel\Customer\Collection\Interceptor as CustomerCollection;
 use Magento\Framework\App\State\Proxy as AppState;
-use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Registry;
 use Symfony\Component\Console\Helper\QuestionHelper;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Question\Question;
-use Magento\Framework\App\Area;
-use Magento\Framework\Registry;
 
 /**
  * Class DeleteCommand
@@ -292,7 +289,6 @@ class DeleteCommand extends AbstractCustomerCommand
      */
     protected function batchDelete(CustomerCollection $customerCollection): int
     {
-
         $count = 0;
         foreach ($customerCollection as $customerToDelete) {
             $customer = $this->customerRepository->getById($customerToDelete->getId());
