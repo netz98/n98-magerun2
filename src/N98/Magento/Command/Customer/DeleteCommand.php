@@ -46,12 +46,12 @@ class DeleteCommand extends AbstractCustomerCommand
     {
         $this
             ->setName('customer:delete')
-            ->addOption('id', null,InputOption::VALUE_OPTIONAL, 'Customer Id or email')
+            ->addOption('id', null, InputOption::VALUE_OPTIONAL, 'Customer Id or email')
             ->addOption('email', null, InputOption::VALUE_OPTIONAL, 'Email')
             ->addOption('firstname', null, InputOption::VALUE_OPTIONAL, 'Firstname')
             ->addOption('lastname', null, InputOption::VALUE_OPTIONAL, 'Lastname')
             ->addOption('website', null, InputOption::VALUE_OPTIONAL, 'Website')
-            ->addOption('force', 'f', InputOption::VALUE_OPTIONAL, 'Force delete' )
+            ->addOption('force', 'f', InputOption::VALUE_OPTIONAL, 'Force delete')
             ->addOption('all', 'a', InputOption::VALUE_OPTIONAL, 'Delete all customers')
             ->addOption('range', 'r', InputOption::VALUE_OPTIONAL, 'Delete a range of customers by Id')
             ->addOption('fuzzy', null, InputOption::VALUE_OPTIONAL, 'Fuzziness')
@@ -74,7 +74,7 @@ class DeleteCommand extends AbstractCustomerCommand
     }
 
     /**
-     * @param InputInterface  $input
+     * @param InputInterface $input
      * @param OutputInterface $output
      *
      * @return int
@@ -185,8 +185,14 @@ class DeleteCommand extends AbstractCustomerCommand
                 $filterAttributes[] = ['attribute' => 'email', $filterType => "$filterPrefix$email$filterPostfix"];
             }
             if ($firstname && $lastname) {
-                $filterAttributes[] = ['attribute' => 'firstname', $filterType => "$filterPrefix$firstname$filterPostfix"];
-                $filterAttributes[] = ['attribute' => 'lastname', $filterType => "$filterPrefix$lastname$filterPostfix"];
+                $filterAttributes[] = [
+                    'attribute' => 'firstname',
+                    $filterType => "$filterPrefix$firstname$filterPostfix"
+                ];
+                $filterAttributes[] = [
+                    'attribute' => 'lastname',
+                    $filterType => "$filterPrefix$lastname$filterPostfix"
+                ];
             }
 
             if ($range) {
@@ -215,7 +221,7 @@ class DeleteCommand extends AbstractCustomerCommand
             $customerCollection->addAttributeToSelect('firstname')
                 ->addAttributeToSelect('lastname')
                 ->addAttributeToSelect('email');
-            if(count($filterAttributes)){
+            if (count($filterAttributes)) {
                 $customerCollection->addFieldToFilter($filterAttributes);
             }
 
@@ -298,21 +304,5 @@ class DeleteCommand extends AbstractCustomerCommand
         }
 
         return $count;
-    }
-
-    /**
-     * @param string $answer
-     *
-     * @return string
-     */
-    public function validateInt(string $answer): string
-    {
-        if ((int)$answer === 0) {
-            throw new RuntimeException(
-                'The range should be numeric and above 0 e.g. 1'
-            );
-        }
-
-        return $answer;
     }
 }
