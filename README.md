@@ -221,7 +221,7 @@ n98-magerun2.phar customer:create foo@example.com password123 John Doe base
 You can add additional any number of custom fields, example:
 
 ```sh
-n98-magerun2.phar customer:create foo@example.com password123 John Doe base taxvat DE12345678
+n98-magerun2.phar customer:create foo@example.com passworD123 John Doe base taxvat DE12345678 prefix Mrs.
 ```
 
 
@@ -248,6 +248,23 @@ n98-magerun2.phar customer:change-password [email] [password] [website]
 ```sh
 n98-magerun2.phar customer:token:create <email>
 ```
+
+### Delete customer
+
+```sh
+n98-magerun2.phar customer:delete [-f|--force] [-a|--all] [-r|--range] [--fuzzy] [--id] [--website] [--email] [--firstname] [--lastname]
+```
+
+Examples:
+```sh
+n98-magerun2.phar customer:delete --id 1                            # Will delete customer with Id 1
+n98-magerun2.phar customer:delete --fuzzy=true --email=test         # Will delete all customers with email like "%test%"
+n98-magerun2.phar customer:delete --all                             # Will delete all customers
+n98-magerun2.phar customer:delete --range                           # Will prompt for start and end Ids for batch deletion
+```
+Deletes customer(s) by given id or a combination of the website id and email or website id and firstname and lastname.
+In addition, you can delete a range of customer ids or delete all customers.
+
 
 ---
 
