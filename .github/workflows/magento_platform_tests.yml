@@ -188,27 +188,26 @@ jobs:
           cd "$GITHUB_WORKSPACE/magento";
           composer install --no-interaction;
           bin/magento setup:install \
-            --no-interaction \
             --db-host="127.0.0.1" \
             --db-user=root \
-            --db-password=root \  
+            --db-password=root \
             --db-name=magento \
-            --backend-frontname=admin \ 
+            --backend-frontname=admin \
             --timezone="Europe/Berlin" \
-            --currency=EUR \
-            --base-url="http://github.magerun.test/" \ 
-            --base-url-secure="http://github.magerun.test/" \ 
+            --currency="EUR" \
+            --base-url="http://github.magerun.test/" \
+            --base-url-secure="http://github.magerun.test/" \
             --use-rewrites=1 \
-            --use-secure=1 \  
-            --use-secure-admin=1 \  
+            --use-secure=1 \
+            --use-secure-admin=1 \
             --admin-user=admin \
-            --admin-password=Password123 \  
+            --admin-password=Password123 \
             --admin-firstname=Armin \
             --admin-lastname=Admin \
-            --admin-email=admin@example.com \
-            --search-engine=elasticsearch7" \
-            --elasticsearch-host=127.0.0.1 \
-          	--elasticsearch-port=9200
+            --admin-email="admin@example.com" \
+            --search-engine="elasticsearch7" \
+            --elasticsearch-host="127.0.0.1" \
+            --elasticsearch-port=9200;
         if: matrix.use-git-repository == true
 
       - name: Install ${{ matrix.magento-version }} via n98-magerun2
