@@ -184,7 +184,7 @@ jobs:
 
       - name: Install Magento via git
         run: |
-          git clone --branch "${{ matrix.git-branch }}" --single-branch ${{ matrix.git-repository }} $MAGENTO_ROOT_DIR;
+          git clone --branch "${{ matrix.git-branch }}" --single-branch ${{ matrix.git-repository }} "$GITHUB_WORKSPACE/magento";
           cd "$GITHUB_WORKSPACE/magento";
           composer install --no-interaction;
           bin/magento setup:install \
