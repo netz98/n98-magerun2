@@ -226,14 +226,14 @@ jobs:
         uses: mheap/phpunit-matcher-action@master
 
       - name: Run PHPUnit (Developer Mode)
-        run: vendor/bin/phpunit --process-isolation --teamcity
+        run: vendor/bin/phpunit --debug --process-isolation
 
       - name: Activate Magento Production Mode
         working-directory: ./magento
         run: bin/magento deploy:mode:set --skip-compilation production
 
       - name: Run PHPUnit (Production Mode)
-        run: vendor/bin/phpunit --process-isolation --teamcity
+        run: vendor/bin/phpunit --debug --process-isolation
 
       - name: Run phar functional tests
         run: |
