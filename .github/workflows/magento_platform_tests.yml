@@ -38,6 +38,8 @@ jobs:
             elsticsearch-version: 7.9.0
             composer-version: v2
             use-git-repository: false
+            git-repository: ''
+            git-branch: ''
 
           - magento-version: magento-ce-2.4.2-p1
             operating-system: ubuntu-latest
@@ -46,6 +48,8 @@ jobs:
             elsticsearch-version: 7.9.0
             composer-version: v2
             use-git-repository: false
+            git-repository: ''
+            git-branch: ''
 
           - magento-version: magento-ce-2.4.2
             operating-system: ubuntu-latest
@@ -54,6 +58,8 @@ jobs:
             elsticsearch-version: 7.9.0
             composer-version: v2
             use-git-repository: false
+            git-repository: ''
+            git-branch: ''
 
           - magento-version: magento-ce-2.4.1
             operating-system: ubuntu-latest
@@ -62,6 +68,8 @@ jobs:
             elsticsearch-version: 7.7.0
             composer-version: v1
             use-git-repository: false
+            git-repository: ''
+            git-branch: ''
 
           - magento-version: magento-ce-2.4.0
             operating-system: ubuntu-latest
@@ -70,6 +78,8 @@ jobs:
             elsticsearch-version: 7.6.0
             composer-version: v1
             use-git-repository: false
+            git-repository: ''
+            git-branch: ''
 
           - magento-version: magento-ce-2.3.5-p2
             operating-system: ubuntu-latest
@@ -78,6 +88,8 @@ jobs:
             elsticsearch-version: 7.6.0
             composer-version: v1
             use-git-repository: false
+            git-repository: ''
+            git-branch: ''
 
           - magento-version: magento-ce-2.3.4
             operating-system: ubuntu-latest
@@ -86,6 +98,8 @@ jobs:
             elsticsearch-version: 7.6.0
             composer-version: v1
             use-git-repository: false
+            git-repository: ''
+            git-branch: ''
 
     services:
       elaticsearch:
