@@ -23,13 +23,23 @@ class JUnitSessionTest extends \PHPUnit\Framework\TestCase
         $session = new JUnitSession("name");
         $this->assertInstanceOf(JUnitSession::class, $session);
         $this->assertSame('name', $session->getName());
-        $this->assertSame(0, $session->save(null));
+        $this->assertSame(0, $session->save('foo.xml'));
         $document = $session->getDocument();
         $this->assertInstanceOf(Document::class, $document);
         $this->assertSame($document, $session->getDocument());
-        $this->assertFalse(@$session->save(null));
+        $saveResult = $session->save('foo.xml');
+        $this->assertGreaterThan(0, $saveResult);
         $this->assertNotNull($session->addTestSuite());
         usleep(1000);
         $this->assertGreaterThan(0.001, $session->getDuration());
     }
+
+    protected function tearDown(): void
+    {
+        if (is_file('foo.xml')) {
+            unlink('foo.xml');
+        }
+    }
+
+
 }
