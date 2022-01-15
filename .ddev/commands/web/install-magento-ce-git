@@ -1,0 +1,101 @@
+#!/bin/bash
+
+## Description: Install Magento CE from public open source GIT repository
+## Usage: install-magento-ce-git <branch> <use_elasticsearch yes|no>
+## Example: "install-magento-ce-git 2.4-develop yes"
+
+if [ $# -ne 2 ]; then
+	echo "usage: ddev install-magento-ce-git <branch> <use_elasticsearch yes|no>"
+	exit 1
+fi
+
+CURRENT_DIR=$(dirname "$0")
+GIT_BRANCH=$1
+NORMALIZED_GIT_BRANCH=${GIT_BRANCH/[-_.\/]/-}
+USE_ELASTICSEARCH=$2
+MAGENTO_DB_NAME="magento_${NORMALIZED_GIT_BRANCH//[-]/_}"
+MAGENTO_ROOT_DIR="/opt/magento-test-environments/magento_${NORMALIZED_GIT_BRANCH//[-]/_}"
+MAGENTO_SUBDOMAIN="${NORMALIZED_GIT_BRANCH//[-_.]/-}"
+
+check_if_db_exists() {
+	echo "SHOW DATABASES" | mysql -hdb -udb -pdb | grep -q "$MAGENTO_DB_NAME"
+
+	if [ $? -eq 1 ]; then
+		echo "CREATE DATABASE ${MAGENTO_DB_NAME}" | mysql -hdb -uroot -proot
+
+		if [ $? -eq 0 ]; then
+			echo "Database ${MAGENTO_DB_NAME} created"
+		fi
+
+		echo "GRANT ALL PRIVILEGES ON *.* TO 'db'@'%'" | mysql -hdb -uroot -proot
+
+		if [ $? -eq 0 ]; then
+			echo "Database privileges updated"
+		fi
+	fi
+}
+
+install_magento() {
+	if [ -d "$MAGENTO_ROOT_DIR" ]; then
+		echo "Magento in $MAGENTO_ROOT_DIR already exists. Skip installation."
+		exit 0
+	fi
+
+	if [ ! -f "./app/etc/env.php" ]; then
+		echo -e "=========================================================="
+		echo -e "> Setup Magento git branch ${GIT_BRANCH} ..."
+		echo -e "=========================================================="
+
+		check_if_db_exists
+
+		if [ ! -d $MAGENTO_ROOT_DIR ]; then
+			git clone --branch "${GIT_BRANCH}" https://github.com/magento/magento2 $MAGENTO_ROOT_DIR
+			composer --no-interaction
+		fi
+
+		cd $MAGENTO_ROOT_DIR
+
+		if [ -d "./generated" ]; then
+			rm -Rf ./generated
+		fi
+
+		# build magento setup arguments
+		MAGENTO_SETUP_ARGS=(
+			"php" "bin/magento" "setup:install"
+			"--no-interaction"
+			"--db-host=db"
+			"--db-user=db"
+			"--db-password=db"
+			"--db-name=db"
+			"--cleanup-database"
+			"--backend-frontname=admin"
+			"--timezone=${TZ}"
+			"--currency=EUR"
+			"--base-url=http://${MAGENTO_SUBDOMAIN}.${DDEV_PROJECT}.ddev.site/"
+			"--base-url-secure=https://${MAGENTO_SUBDOMAIN}.${DDEV_PROJECT}.ddev.site/"
+			"--use-rewrites=1"
+			"--use-secure=1"
+			"--use-secure-admin=1"
+			"--admin-user=admin"
+			"--admin-password=Password123"
+			"--admin-firstname=Armin"
+			"--admin-lastname=Admin"
+			"--admin-email=admin@example.com"
+		)
+
+		if [[ "$USE_ELASTICSEARCH" == "yes" ]]; then
+			# Configure Standard Magento Elasticsearch
+			MAGENTO_SETUP_ARGS+=(
+				"--search-engine=elasticsearch7"
+				"--elasticsearch-host=elasticsearch"
+				"--elasticsearch-port=9200"
+			)
+		fi
+
+		# Execute Magento installer based on setup arguments
+		#echo ${MAGENTO_SETUP_ARGS[*]}  # debug
+		command ${MAGENTO_SETUP_ARGS[*]}
+	fi
+}
+
+install_magento
