@@ -184,7 +184,8 @@ jobs:
 
       - name: Install Magento via git
         run: |
-          git clone --branch "${{ matrix.git-branch }}" ${{ matrix.git-repository }} $MAGENTO_ROOT_DIR;
+          git clone --branch "${{ matrix.git-branch }}" --single-branch ${{ matrix.git-repository }} $MAGENTO_ROOT_DIR;
+          cd $MAGENTO_ROOT_DIR;
           bin/magento setup:install \
             --no-interaction \
             --db-host="127.0.0.1" \
@@ -206,7 +207,7 @@ jobs:
             --admin-email=admin@example.com
         if: matrix.use-git-repository == true
 
-      - name: Install Magento ${{ matrix.magento-version }} via n98-magerun2
+      - name: Install ${{ matrix.magento-version }} via n98-magerun2
         run: |
           bin/n98-magerun2 --ansi install \
           --magentoVersionByName="${{ matrix.magento-version }}" --installationFolder="$GITHUB_WORKSPACE/magento" \
