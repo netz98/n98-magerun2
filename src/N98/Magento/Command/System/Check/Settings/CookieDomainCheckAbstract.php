@@ -27,13 +27,13 @@ abstract class CookieDomainCheckAbstract extends CheckAbstract
      * @param Result $result
      * @param StoreInterface $store
      * @param string $baseUrl setting
-     * @param string $cookieDomain setting
+     * @param string|null $cookieDomain setting
      */
     protected function checkSettings(Result $result, StoreInterface $store, $baseUrl, $cookieDomain)
     {
         $errorMessage = 'cookie-domain and ' . $this->class . ' base-URL do not match';
 
-        if (strlen($cookieDomain)) {
+        if ($cookieDomain !== null && strlen($cookieDomain)) {
             $isValid = $this->validateCookieDomainAgainstUrl($cookieDomain, $baseUrl);
 
             $result->setStatus($isValid);
