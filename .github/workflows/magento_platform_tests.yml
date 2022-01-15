@@ -186,17 +186,19 @@ jobs:
         run: |
           git clone --branch "${{ matrix.git-branch }}" --single-branch ${{ matrix.git-repository }} "$GITHUB_WORKSPACE/magento";
           cd "$GITHUB_WORKSPACE/magento";
+          mysqladmin -uroot -proot create magento; 
           composer install --no-interaction;
           bin/magento setup:install \
             --db-host="127.0.0.1" \
             --db-user=root \
             --db-password=root \
             --db-name=magento \
+            --cleanup-database \
+            --session-save=db \
             --backend-frontname=admin \
             --timezone="Europe/Berlin" \
             --currency="EUR" \
             --base-url="http://github.magerun.test/" \
-            --base-url-secure="http://github.magerun.test/" \
             --use-rewrites=1 \
             --use-secure=1 \
             --use-secure-admin=1 \
