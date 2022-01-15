@@ -12,14 +12,13 @@ mariadb_version: "10.3"
 mysql_version: ""
 nfs_mount_enabled: false
 mutagen_enabled: false
-use_dns_when_possible: true
-timezone: ""
-composer_version: ""
-web_environment: []
 hooks:
   post-start:
-    - composer: install
-    - exec: bash .ddev/hook_01_setup.sh
+  - composer: install
+  - exec: bash .ddev/hook_01_setup.sh
+use_dns_when_possible: true
+composer_version: ""
+web_environment: []
 
 # Key features of ddev's config.yaml:
 
