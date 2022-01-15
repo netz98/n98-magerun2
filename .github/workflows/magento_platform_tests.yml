@@ -205,7 +205,10 @@ jobs:
             --admin-password=Password123 \  
             --admin-firstname=Armin \
             --admin-lastname=Admin \
-            --admin-email=admin@example.com
+            --admin-email=admin@example.com \
+            --search-engine=elasticsearch7" \
+            --elasticsearch-host=127.0.0.1 \
+          	--elasticsearch-port=9200
         if: matrix.use-git-repository == true
 
       - name: Install ${{ matrix.magento-version }} via n98-magerun2
