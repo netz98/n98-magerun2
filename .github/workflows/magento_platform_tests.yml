@@ -1,5 +1,6 @@
 ---
 name: Magento Platform Tests
+
 on:
   push:
     branches:
@@ -29,6 +30,7 @@ jobs:
             use-git-repository: true
             git-repository: https://github.com/magento/magento2.git
             git-branch: 2.4-develop
+
           - magento-version: magento-ce-2.4.3-p1
             operating-system: ubuntu-latest
             php-version: 7.4
@@ -167,6 +169,7 @@ jobs:
           composer global config http-basic.repo.magento.com "${MAGENTO_MARKETPLACE_USERNAME}" "${MAGENTO_MARKETPLACE_PASSWORD}";
 
       - name: Install Magento via git
+        run: |
           git clone --branch "${{ matrix.git-branch }}" ${{ matrix.git-repository }} $MAGENTO_ROOT_DIR;
           bin/magento setup:install \
             --no-interaction \
