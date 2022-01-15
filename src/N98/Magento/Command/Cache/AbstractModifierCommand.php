@@ -2,6 +2,9 @@
 
 namespace N98\Magento\Command\Cache;
 
+use Exception;
+use Magento\Framework\App\Cache\Manager;
+use Magento\Framework\App\Cache\StateInterface;
 use N98\Magento\Command\AbstractMagentoCommand;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
@@ -37,7 +40,7 @@ abstract class AbstractModifierCommand extends AbstractMagentoCommand
      */
     public function getCacheManager()
     {
-        return $this->getObjectManager()->get('\Magento\Framework\App\Cache\Manager');
+        return $this->getObjectManager()->get(Manager::class);
     }
 
     /**
@@ -76,7 +79,7 @@ abstract class AbstractModifierCommand extends AbstractMagentoCommand
         }
 
         /** @var $cacheState \Magento\Framework\App\Cache\StateInterface */
-        $cacheState = $this->getObjectManager()->get('\Magento\Framework\App\Cache\StateInterface');
+        $cacheState = $this->getObjectManager()->get(StateInterface::class);
         $touchedTypes = [];
 
         try {
@@ -90,7 +93,7 @@ abstract class AbstractModifierCommand extends AbstractMagentoCommand
             }
 
             $cacheState->persist();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $output->writeln(sprintf(static::EXCEPTION_MESSAGE, $e->getMessage()));
         }
 
