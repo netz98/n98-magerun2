@@ -4,9 +4,15 @@
 # set -x;
 
 ADDITIONAL_OPTIONS="";
+PHP_BIN="php"
 PHAR_FILE=$1;
 MAGENTO_ROOT_DIR=$2;
 TESTS_WITH_ERRORS=false;
+
+function print_info_before_test() {
+  echo "with: $($PHP_BIN --version | head -n 1)"
+  echo "with: $($PHP_BIN -f $PHAR_FILE -- --no-interaction --version | head -n 1)"
+}
 
 function verify() {
 	if [ -z "$PHAR_FILE" ]; then
@@ -22,7 +28,7 @@ function verify() {
 
 function db_query {
 	local sql=$1;
-	$PHAR_FILE --no-interaction --root-dir="$MAGENTO_ROOT_DIR" --skip-core-commands db:query "$sql"
+	$PHP_BIN -f $PHAR_FILE -- --no-interaction --root-dir="$MAGENTO_ROOT_DIR" --skip-core-commands db:query "$sql"
 }
 
 function assert_command_contains {
@@ -32,7 +38,7 @@ function assert_command_contains {
 	echo -n "- $command"
 
   local output=""
-	output=$(($PHAR_FILE --no-interaction --root-dir="$MAGENTO_ROOT_DIR" $command $ADDITIONAL_OPTIONS | grep "$find") 2>&1);
+	output=$(($PHP_BIN -f $PHAR_FILE -- --no-interaction --root-dir="$MAGENTO_ROOT_DIR" $command $ADDITIONAL_OPTIONS | grep "$find") 2>&1);
 
 	if [ $? -eq 0 ]; then
 		echo -e "\t\tok";
@@ -356,16 +362,17 @@ function test_custom_module() {
 }
 
 verify;
+print_info_before_test;
 
 echo "=================================================="
 echo "MAGERUN COMMANDS"
 echo "=================================================="
-test_magerun_commands;
+#test_magerun_commands;
 
 echo "=================================================="
 echo "MAGERUN CUSTOM MODULE"
 echo "=================================================="
-test_custom_module;
+#test_custom_module;
 
 echo "=================================================="
 echo "MAGENTO CORE COMMANDS"
