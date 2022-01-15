@@ -40,6 +40,4 @@ class JUnitSessionTest extends \PHPUnit\Framework\TestCase
             unlink('foo.xml');
         }
     }
-
-
 }
