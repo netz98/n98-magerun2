@@ -173,7 +173,7 @@ jobs:
         # Over time, just running composer all the time to give it a chance
         # to fix the outdated dependencies should be faster than having to pull
         # everything from scratch for every new branch.
-        run: composer install --prefer-dist --no-progress --no-suggest
+        run: composer install --no-interaction --prefer-dist --no-progress --no-suggest
 
       - name: Run php-cs-fixer
         run: vendor/bin/php-cs-fixer fix --dry-run --format=checkstyle | cs2pr
@@ -186,6 +186,7 @@ jobs:
         run: |
           git clone --branch "${{ matrix.git-branch }}" --single-branch ${{ matrix.git-repository }} $MAGENTO_ROOT_DIR;
           cd $MAGENTO_ROOT_DIR;
+          composer install --no-interaction;
           bin/magento setup:install \
             --no-interaction \
             --db-host="127.0.0.1" \
