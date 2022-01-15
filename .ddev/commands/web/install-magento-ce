@@ -37,7 +37,7 @@ check_if_db_exists() {
 
 install_magento() {
 	if [ -d "$MAGENTO_ROOT_DIR" ]; then
-		echo "Magento in $MAGENTO_ROOT_DIR already exists. Skip installation".
+		echo "Magento in $MAGENTO_ROOT_DIR already exists. Skip installation"
 		exit 0
 	fi
 
