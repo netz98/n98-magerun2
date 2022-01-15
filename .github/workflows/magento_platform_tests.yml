@@ -19,12 +19,22 @@ jobs:
     strategy:
       matrix:
         include:
+          - magento-version: magento-ce-2.4-develop
+            operating-system: ubuntu-latest
+            php-version: 8.1
+            mysql-version: 8.0
+            elsticsearch-version: 7.16.0
+            composer-version: v2
+            use-git-repository: true
+            git-repository: https://github.com/magento/magento2.git
+            git-branch: 2.4-develop
           - magento-version: magento-ce-2.4.3-p1
             operating-system: ubuntu-latest
             php-version: 7.4
             mysql-version: 8.0
             elsticsearch-version: 7.9.0
             composer-version: v2
+            use-git-repository: false
 
           - magento-version: magento-ce-2.4.2-p1
             operating-system: ubuntu-latest
@@ -32,6 +42,7 @@ jobs:
             mysql-version: 8.0
             elsticsearch-version: 7.9.0
             composer-version: v2
+            use-git-repository: false
 
           - magento-version: magento-ce-2.4.2
             operating-system: ubuntu-latest
@@ -39,6 +50,7 @@ jobs:
             mysql-version: 8.0
             elsticsearch-version: 7.9.0
             composer-version: v2
+            use-git-repository: false
 
           - magento-version: magento-ce-2.4.1
             operating-system: ubuntu-latest
@@ -46,6 +58,7 @@ jobs:
             mysql-version: 8.0
             elsticsearch-version: 7.7.0
             composer-version: v1
+            use-git-repository: false
 
           - magento-version: magento-ce-2.4.0
             operating-system: ubuntu-latest
@@ -53,6 +66,7 @@ jobs:
             mysql-version: 5.7
             elsticsearch-version: 7.6.0
             composer-version: v1
+            use-git-repository: false
 
           - magento-version: magento-ce-2.3.5-p2
             operating-system: ubuntu-latest
@@ -60,6 +74,7 @@ jobs:
             mysql-version: 5.7
             elsticsearch-version: 7.6.0
             composer-version: v1
+            use-git-repository: false
 
           - magento-version: magento-ce-2.3.4
             operating-system: ubuntu-latest
@@ -67,6 +82,7 @@ jobs:
             mysql-version: 5.7
             elsticsearch-version: 7.6.0
             composer-version: v1
+            use-git-repository: false
 
     services:
       elaticsearch:
@@ -120,7 +136,7 @@ jobs:
 
       - name: Install Composer Presissimo Plugin
         run: composer global require hirak/prestissimo
-        if: matrix.composer-version == 'v1'
+        if matrix.composer-version == 'v1'
 
       - name: Get Composer Cache Directory
         id: composer-cache
@@ -145,15 +161,42 @@ jobs:
       - name: Run php-cs-fixer
         run: vendor/bin/php-cs-fixer fix --dry-run --format=checkstyle | cs2pr
 
-      - name: Install Magento ${{ matrix.magento-version }}
+      - name: Setup Magento Repository Credentials
         run: |
           composer global config http-basic.repo.magento.com "${MAGENTO_MARKETPLACE_USERNAME}" "${MAGENTO_MARKETPLACE_PASSWORD}";
+
+      - name: Install Magento via git
+          git clone --branch "${{ matrix.git-branch }}" ${{ matrix.git-repository }} $MAGENTO_ROOT_DIR;
+          bin/magento setup:install \
+            --no-interaction \
+            --db-host="127.0.0.1" \
+            --db-user=root \
+            --db-password=root \  
+            --db-name=magento \
+            --backend-frontname=admin \ 
+            --timezone="Europe/Berlin" \
+            --currency=EUR \
+            --base-url="http://github.magerun.test/" \ 
+            --base-url-secure="http://github.magerun.test/" \ 
+            --use-rewrites=1 \
+            --use-secure=1 \  
+            --use-secure-admin=1 \  
+            --admin-user=admin \
+            --admin-password=Password123 \  
+            --admin-firstname=Armin \
+            --admin-lastname=Admin \
+            --admin-email=admin@example.com
+        if: matrix.use-git-repository == true
+
+      - name: Install Magento ${{ matrix.magento-version }} via n98-magerun2
+        run: |
           bin/n98-magerun2 --ansi install \
           --magentoVersionByName="${{ matrix.magento-version }}" --installationFolder="$GITHUB_WORKSPACE/magento" \
           --dbHost=127.0.0.1 --dbPort=${{ job.services.mysql.ports['3306'] }} --dbUser=root --dbPass=root --dbName="magento" \
           --useDefaultConfigParams=yes \
           --installSampleData=no \
           --baseUrl="http://github.magerun.test/";
+        if: matrix.use-git-repository == false
 
       - name: Configure matchers
         uses: mheap/phpunit-matcher-action@master
