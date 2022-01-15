@@ -2,7 +2,7 @@
 
 namespace N98\Magento\Command\Cache;
 
-use Magento\Framework\App\Cache\TypeList as CacheTypeList;
+use Magento\Framework\App\Cache\TypeList;
 use N98\Magento\Command\AbstractMagentoCommand;
 use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
 use Symfony\Component\Console\Input\InputInterface;
@@ -43,9 +43,12 @@ class ListCommand extends AbstractMagentoCommand
             );
     }
 
-    public function inject(
-        CacheTypeList $cacheTypeList
-    ) {
+    /**
+     * @param \Magento\Framework\App\Cache\TypeList $cacheTypeList
+     * @return void
+     */
+    public function inject(TypeList $cacheTypeList)
+    {
         $this->cacheTypeList = $cacheTypeList;
     }
 
