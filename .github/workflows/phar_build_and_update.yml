@@ -1,3 +1,4 @@
+---
 name: Phar build and update test
 
 on: [push, pull_request]

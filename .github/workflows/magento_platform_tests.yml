@@ -1,3 +1,4 @@
+---
 name: Magento Platform Tests
 on:
   push:
@@ -136,7 +137,7 @@ jobs:
 
       - name: Install Composer Presissimo Plugin
         run: composer global require hirak/prestissimo
-        if matrix.composer-version == 'v1'
+        if: matrix.composer-version == 'v1'
 
       - name: Get Composer Cache Directory
         id: composer-cache
