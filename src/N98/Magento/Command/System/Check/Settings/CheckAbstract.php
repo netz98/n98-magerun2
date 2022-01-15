@@ -72,7 +72,9 @@ abstract class CheckAbstract implements StoreCheck
         $arguments = [];
         foreach ($parameters as $parameter) {
             $paramName = $parameter->getName();
-            $paramClass = $parameter->getClass();
+            $paramClass = $parameter->getType() && !$parameter->getType()->isBuiltin()
+                ? new \ReflectionClass($parameter->getType()->getName())
+                : null;
 
             // create named parameter from type-hint if applicable
             if ($paramClass) {
