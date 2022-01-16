@@ -426,12 +426,12 @@ print_info_before_test;
 echo "=================================================="
 echo "MAGERUN COMMANDS"
 echo "=================================================="
-#test_magerun_commands;
+test_magerun_commands;
 
 echo "=================================================="
 echo "MAGERUN CUSTOM MODULE"
 echo "=================================================="
-#test_custom_module;
+test_custom_module;
 
 echo "=================================================="
 echo "MAGENTO CORE COMMANDS"
