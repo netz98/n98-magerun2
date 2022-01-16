@@ -29,7 +29,7 @@
         "ext-json": "*",
         "ext-posix": "*",
         "ext-zip": "*",
-        "adbario/php-dot-notation": "^2.2",
+        "dflydev/dot-access-data": "^3.0",
         "fakerphp/faker": "~1.16",
         "guzzlehttp/guzzle": "^7.4",
         "n98/junit-xml": "~1.0",

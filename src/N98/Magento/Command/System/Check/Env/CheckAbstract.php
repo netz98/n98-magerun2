@@ -2,7 +2,7 @@
 
 namespace N98\Magento\Command\System\Check\Env;
 
-use Adbar\Dot;
+use Dflydev\DotAccessData\Data;
 use N98\Magento\Command\CommandAware;
 use N98\Magento\Command\CommandConfigAware;
 use N98\Magento\Command\System\Check\ResultCollection;
@@ -28,7 +28,7 @@ abstract class CheckAbstract implements SimpleCheck, CommandAware, CommandConfig
     protected $_checkCommand;
 
     /**
-     * @var Dot
+     * @var \Dflydev\DotAccessData\Data
      */
     protected $_dot;
 
@@ -52,7 +52,7 @@ abstract class CheckAbstract implements SimpleCheck, CommandAware, CommandConfig
 
         $envArray = include $this->_envFilePath;
         $this->_env = $envArray;
-        $this->_dot = new Dot($envArray);
+        $this->_dot = new Data($envArray);
 
         $this->checkEnv();
     }
