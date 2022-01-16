@@ -2,8 +2,9 @@
 
 namespace N98\Magento\Command\Config\Env;
 
-use Adbar\Dot;
+use Dflydev\DotAccessData\Data;
 use N98\Magento\Command\AbstractMagentoCommand;
+use RuntimeException;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -36,22 +37,22 @@ class DeleteCommand extends AbstractMagentoCommand
         $envFilePath = $this->getApplication()->getMagentoRootFolder() . '/app/etc/env.php';
 
         if (!file_exists($envFilePath)) {
-            throw new \RuntimeException('env.php file does not exist.');
+            throw new RuntimeException('env.php file does not exist.');
         }
 
         $envConfig = include $envFilePath;
-        $env = new Dot($envConfig);
+        $env = new Data($envConfig);
 
         $key = $input->getArgument('key');
 
-        $checksumBefore = sha1($env->toJson());
-        $env->delete($key);
-        $checksumAfter = sha1($env->toJson());
+        $checksumBefore = sha1(\json_encode($env->export(), JSON_THROW_ON_ERROR));
+        $env->remove($key);
+        $checksumAfter = sha1(\json_encode($env->export(), JSON_THROW_ON_ERROR));
 
         if ($checksumBefore !== $checksumAfter) {
             if (@file_put_contents(
                 $envFilePath,
-                "<?php\n\nreturn " . EnvHelper::exportVariable($env->all()) . ";\n"
+                "<?php\n\nreturn " . EnvHelper::exportVariable($env->export()) . ";\n"
             )
             ) {
                 $output->writeln(sprintf('<info>Config <comment>%s</comment> successfully removed</info>', $key));

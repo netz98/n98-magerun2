@@ -2,7 +2,7 @@
 
 namespace N98\Magento\Command\Config\Env;
 
-use Adbar\Dot;
+use Dflydev\DotAccessData\Data;
 use N98\Magento\Command\AbstractMagentoCommand;
 use RecursiveArrayIterator;
 use RecursiveIteratorIterator;
@@ -64,10 +64,10 @@ class CreateCommand extends AbstractMagentoCommand
             $envConfig = include __DIR__ . '/stubs/env.php';
         }
 
-        $env = new Dot($envConfig);
+        $env = new Data($envConfig);
 
         $iterator = new RecursiveIteratorIterator(
-            new RecursiveArrayIterator($env->all()),
+            new RecursiveArrayIterator($env->export()),
             RecursiveIteratorIterator::SELF_FIRST
         );
 
@@ -95,7 +95,7 @@ class CreateCommand extends AbstractMagentoCommand
             }
         }
 
-        file_put_contents($envFilePath, "<?php\n\nreturn " . EnvHelper::exportVariable($env->all()) . ";\n");
+        file_put_contents($envFilePath, "<?php\n\nreturn " . EnvHelper::exportVariable($env->export()) . ";\n");
     }
 
     /**
