@@ -7,9 +7,9 @@ from command line.
 
 ## Build Status
 
-| **Latest Release**         | ![Maintenance Badge](https://img.shields.io/maintenance/yes/2022.svg) ![Tests](https://github.com/netz98/n98-magerun2/workflows/magento_platform_tests.yml/badge.svg?branch=master) [![Quality Score Master Branch](https://scrutinizer-ci.com/g/netz98/n98-magerun2/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/netz98/n98-magerun2/)  ![https://packagist.org/packages/n98/magerun2](https://poser.pugx.org/n98/magerun2/v/stable.png)     |
+| **Latest Release**         | ![Maintenance Badge](https://img.shields.io/maintenance/yes/2022.svg) ![Tests](https://github.com/netz98/n98-magerun2/actions/workflows/magento_platform_tests.yml/badge.svg?branch=master) [![Quality Score Master Branch](https://scrutinizer-ci.com/g/netz98/n98-magerun2/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/netz98/n98-magerun2/)  ![https://packagist.org/packages/n98/magerun2](https://poser.pugx.org/n98/magerun2/v/stable.png)     |
 |------------------------    |-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **Development Branch**     | ![Tests](https://github.com/netz98/n98-magerun2/workflows/magento-platform-tests.yml/badge.svg?branch=develop) [![Quality Score Develop Branch](https://scrutinizer-ci.com/g/netz98/n98-magerun2/badges/quality-score.png?b=develop)](https://scrutinizer-ci.com/g/netz98/n98-magerun2/)                                                                                                     |
+| **Development Branch**     | ![Tests](https://github.com/netz98/n98-magerun2/actions/workflows/magento_platform_tests.yml/badge.svg?branch=develop) [![Quality Score Develop Branch](https://scrutinizer-ci.com/g/netz98/n98-magerun2/badges/quality-score.png?b=develop)](https://scrutinizer-ci.com/g/netz98/n98-magerun2/)                                                                                                     |
 
 Development is done in **develop** branch.
 
