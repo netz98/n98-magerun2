@@ -20,6 +20,7 @@ jobs:
     runs-on: ${{ matrix.operating-system }}
     strategy:
       matrix:
+        experimental: [false]
         include:
           - magento-version: magento-ce-2.4-develop
             operating-system: ubuntu-latest
@@ -30,6 +31,7 @@ jobs:
             use-git-repository: true
             git-repository: https://github.com/magento/magento2.git
             git-branch: 2.4-develop
+            experimental: true
 
           - magento-version: magento-ce-2.4.3-p1
             operating-system: ubuntu-latest
