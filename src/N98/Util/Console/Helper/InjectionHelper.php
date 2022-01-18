@@ -49,10 +49,7 @@ class InjectionHelper extends AbstractHelper
         $parameters = $this->getMethod($class, '__construct');
         $argumentsToInject = array_map([$objectManager, 'get'], $parameters);
 
-        $refl = new \ReflectionClass($class);
-        $object = $refl->newInstanceArgs($argumentsToInject);
-
-        return $object;
+        return (new \ReflectionClass($class))->newInstanceArgs($argumentsToInject);
     }
 
     /**
@@ -77,17 +74,20 @@ class InjectionHelper extends AbstractHelper
             );
         }
 
-        $result = array_map([$this, 'getParameterClass'], $method->getParameters());
-
-        return $result;
+        return array_map([$this, 'getParameterClass'], $method->getParameters());
     }
 
     /**
      * @param \ReflectionParameter $parameter
      * @return null|string
+     * @throws \ReflectionException
      */
     private function getParameterClass(\ReflectionParameter $parameter)
     {
-        return $parameter->getClass() !== null ? $parameter->getClass()->getName() : null;
+        $class = $parameter->getType() && !$parameter->getType()->isBuiltin()
+            ? (new \ReflectionClass($parameter->getType()->getName()))->getName()
+            : null;
+
+        return $class;
     }
 }

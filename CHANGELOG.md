@@ -1,8 +1,21 @@
 RECENT CHANGES
 ==============
 
-4.10.0-dev
-----------
+5.0.0-dev
+---------
+
+- Replace dependency "adbario/php-dot-notation" with "dflydev/dot-access-data"
+- PHP 8.1 compatibility
+- Port dev:translate commands
+- Remove Composer download methods in abstract command
+- Add phar functional tests
+- Replace phar build process
+- Removed phing dependency
+- Removed composer dependency
+- Improved Github actions to test Magento development versions
+- Add guzzle dependency
+- Add ddev developer setup
+- Update 3rd party dependencies (symfony/yaml, symfony/finder, phpunit, captainhook, psysh, twig, phar-utils)
 
 unreleased
 

@@ -61,7 +61,7 @@ class TimeElapsedTest extends \PHPUnit\Framework\TestCase
     public function invalidDatetime()
     {
         $this->expectException(\Exception::class);
-        $this->expectExceptionMessage('DateTime::__construct():');
+        $this->expectExceptionMessage('Failed to parse time string');
         TimeElapsed::full(' 0000----12T13:44:40Z', 0);
     }
 }

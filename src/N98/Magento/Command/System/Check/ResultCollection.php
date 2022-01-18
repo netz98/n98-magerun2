@@ -97,7 +97,7 @@ class ResultCollection implements \IteratorAggregate
     /**
      * @return Traversable An instance of an object implementing <b>Iterator</b> or
      */
-    public function getIterator()
+    public function getIterator(): Traversable
     {
         $filteredResults = [];
 

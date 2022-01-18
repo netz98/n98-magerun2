@@ -21,7 +21,7 @@ class RendererFactory
      */
     public function create($format)
     {
-        $format = strtolower($format);
+        $format = strtolower($format ?? '');
         if (isset(self::$formats[$format])) {
             $rendererClass = self::$formats[$format];
             return new $rendererClass();

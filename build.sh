@@ -6,6 +6,7 @@
 set -euo pipefail
 
 IFS=$'\n\t'
+PHP_BIN="php"
 BOX_BIN="./box.phar"
 PHAR_OUTPUT_FILE="./n98-magerun2.phar"
 COMPOSER_BIN="composer"
@@ -33,7 +34,7 @@ function check_dependencies() {
     DEPENDENCY_ERROR=true
   fi
 
-  if command -v php &>/dev/null; then
+  if command -v $PHP_BIN &>/dev/null; then
     echo "php found"
   else
     echo "php not found!"
@@ -74,29 +75,29 @@ function create_new_phar() {
   # which will then create a no reproducable phar file with a differenz MD5
   $COMPOSER_BIN config autoloader-suffix N98MagerunNTS
 
-  $BOX_BIN compile
+  $PHP_BIN $BOX_BIN compile
 
   # unset composer suffix
   $COMPOSER_BIN config autoloader-suffix --unset
 
   # Set timestamp of newly generted phar file to the commit timestamp
-  php -f build/phar/phar-timestamp.php -- $LAST_COMMIT_TIMESTAMP
+  $PHP_BIN -f build/phar/phar-timestamp.php -- $LAST_COMMIT_TIMESTAMP
 
   # Run a signature verification after the timestamp manipulation
-  $BOX_BIN verify $PHAR_OUTPUT_FILE
+  $PHP_BIN $BOX_BIN verify $PHAR_OUTPUT_FILE
 
   # make phar executable
   chmod +x $PHAR_OUTPUT_FILE
 
   # Print version of new phar file which is also a test
-  php -f $PHAR_OUTPUT_FILE -- --version
+  $PHP_BIN -f $PHAR_OUTPUT_FILE -- --version
 
   # List new phar file for debugging
   ls -al "$PHAR_OUTPUT_FILE"
 }
 
 function print_info_before_build() {
-  echo "with: $(php --version | head -n 1)"
+  echo "with: $($PHP_BIN --version | head -n 1)"
   echo "with: $("${COMPOSER_BIN}" --version)"
   echo "with: $("${BOX_BIN}" --version)"
   echo "build version: $(git --no-pager log --oneline -1)"

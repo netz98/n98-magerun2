@@ -2,8 +2,10 @@
 
 namespace N98\Magento\Command\Config\Env;
 
-use Adbar\Dot;
+use Dflydev\DotAccessData\Data;
+use InvalidArgumentException;
 use N98\Magento\Command\AbstractMagentoCommand;
+use RuntimeException;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -48,24 +50,24 @@ class SetCommand extends AbstractMagentoCommand
         $envFilePath = $this->getApplication()->getMagentoRootFolder() . '/app/etc/env.php';
 
         if (!file_exists($envFilePath)) {
-            throw new \RuntimeException('env.php file does not exist.');
+            throw new RuntimeException('env.php file does not exist.');
         }
 
         $envConfig = include $envFilePath;
-        $env = new Dot($envConfig);
+        $env = new Data($envConfig);
 
         $key = $input->getArgument('key');
         $value = $input->getArgument('value');
         $parsedValue = $this->parseValue($value, $input);
 
-        $checksumBefore = sha1($env->toJson());
+        $checksumBefore = sha1(json_encode($env->export(), JSON_THROW_ON_ERROR));
         $env->set($key, $parsedValue);
-        $checksumAfter = sha1($env->toJson());
+        $checksumAfter = sha1(json_encode($env->export(), JSON_THROW_ON_ERROR));
 
         if ($checksumBefore !== $checksumAfter) {
             if (@file_put_contents(
                 $envFilePath,
-                "<?php\n\nreturn " . EnvHelper::exportVariable($env->all()) . ";\n"
+                "<?php\n\nreturn " . EnvHelper::exportVariable($env->export()) . ";\n"
             )
             ) {
                 $output->writeln(sprintf('<info>Config <comment>%s</comment> successfully set to <comment>%s</comment></info>', $key, $value));
@@ -83,14 +85,14 @@ class SetCommand extends AbstractMagentoCommand
 
         $inputFormat = $input->getOption('input-format');
         if (!in_array($inputFormat, $this->getInputFormats(), true)) {
-            throw new \InvalidArgumentException('Input format ' . $inputFormat . ' is not supported, please use one of [' . implode(',', $this->getInputFormats()) . ']');
+            throw new InvalidArgumentException('Input format ' . $inputFormat . ' is not supported, please use one of [' . implode(',', $this->getInputFormats()) . ']');
         }
 
         switch ($inputFormat) {
             case self::INPUT_FORMAT_JSON:
                 $parsedValue = json_decode($value, true);
                 if ($parsedValue === null) {
-                    throw new \InvalidArgumentException('Can\'t parse value as json: ' . $value);
+                    throw new InvalidArgumentException('Can\'t parse value as json: ' . $value);
                 }
                 break;
         }

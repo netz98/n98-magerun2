@@ -2,9 +2,11 @@
 
 namespace N98\Magento\Command\Config\Env;
 
-use Adbar\Dot;
+use Dflydev\DotAccessData\Data;
+use InvalidArgumentException;
 use N98\Magento\Command\AbstractMagentoCommand;
 use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
+use RuntimeException;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -45,13 +47,13 @@ class ShowCommand extends AbstractMagentoCommand
         $envFilePath = $this->getApplication()->getMagentoRootFolder() . '/app/etc/env.php';
 
         if (!file_exists($envFilePath)) {
-            throw new \RuntimeException('env.php file does not exist.');
+            throw new RuntimeException('env.php file does not exist.');
         }
 
         $keyToShow = $input->getArgument('key');
 
         $envConfig = include $envFilePath;
-        $env = new Dot($envConfig);
+        $env = new Data($envConfig);
 
         $cloner = new VarCloner();
         $cloner->setMaxItems(-1);
@@ -59,18 +61,18 @@ class ShowCommand extends AbstractMagentoCommand
         $dumper = new CliDumper();
         $dumper->setColors(true);
 
-        $flattenArray = $env->flatten();
+        $flattenArray = $this->flatten($env->export());
 
         ksort($flattenArray);
 
         if ($keyToShow !== null) {
             if (!isset($flattenArray[$keyToShow])) {
-                throw new \InvalidArgumentException('Unknown key: ' . $keyToShow);
+                throw new InvalidArgumentException('Unknown key: ' . $keyToShow);
             }
 
             $output->writeln($flattenArray[$keyToShow]);
         } else {
-            $table =[];
+            $table = [];
 
             foreach ($flattenArray as $configKey => $configValue) {
                 // prevents a crash when a key contains an empty array as value
@@ -88,5 +90,27 @@ class ShowCommand extends AbstractMagentoCommand
                 ->setHeaders(['key', 'value'])
                 ->renderByFormat($output, $table, $input->getOption('format'));
         }
+    }
+
+    /**
+     * @param array $data
+     * @param string $pathPrefix
+     * @return array
+     * @link https://github.com/dflydev/dflydev-dot-access-data/issues/16#issuecomment-699638023
+     */
+    private function flatten(array $data, string $pathPrefix = ''): array
+    {
+        $ret = [];
+
+        foreach ($data as $key => $value) {
+            $fullKey = ltrim($pathPrefix . '.' . $key, '.');
+            if (is_array($value)) {
+                $ret += $this->flatten($value, $fullKey);
+            } else {
+                $ret[$fullKey] = $value;
+            }
+        }
+
+        return $ret;
     }
 }
