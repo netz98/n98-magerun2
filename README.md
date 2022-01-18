@@ -7,9 +7,9 @@ from command line.
 
 ## Build Status
 
-| **Latest Release**         | ![Tests](https://github.com/netz98/n98-magerun2/actions/workflows/magento_platform_tests.yml/badge.svg?branch=master) ![https://packagist.org/packages/n98/magerun2](https://poser.pugx.org/n98/magerun2/v/stable.png) ![Maintenance Badge](https://img.shields.io/maintenance/yes/2022.svg)   |
-|------------------------    |------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **Development Branch**     | ![Tests](https://github.com/netz98/n98-magerun2/actions/workflows/magento_platform_tests.yml/badge.svg?branch=develop)                                                                                                     |
+| **Latest Release**     | ![Tests](https://github.com/netz98/n98-magerun2/actions/workflows/magento_platform_tests.yml/badge.svg?branch=master) ![https://packagist.org/packages/n98/magerun2](https://poser.pugx.org/n98/magerun2/v/stable.png) ![Maintenance Badge](https://img.shields.io/maintenance/yes/2022.svg) |
+|------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **Development Branch** | ![Tests](https://github.com/netz98/n98-magerun2/actions/workflows/magento_platform_tests.yml/badge.svg?branch=develop)                                                                                                                                                                       |
 
 Development is done in **develop** branch.
 
@@ -181,7 +181,7 @@ php n98-magerun2.phar list
 Global config parameters:
 
 | Parameter                            | Description                                 |
-| -------------------------------------| --------------------------------------------|
+|--------------------------------------|---------------------------------------------|
 | `--root-dir`                         | Force Magento root dir. No auto detection.  |
 | `--skip-config`                      | Do not load any custom config.              |
 | `--skip-root-check`                  | Do not check if n98-magerun2 runs as root.  |
@@ -252,15 +252,15 @@ n98-magerun2.phar customer:token:create <email>
 ### Delete customer
 
 ```sh
-n98-magerun2.phar customer:delete [-f|--force] [-a|--all] [-r|--range] [--fuzzy] [--id] [--website] [--email] [--firstname] [--lastname]
+n98-magerun2.phar customer:delete [-f|--force] [-a|--all] [-r|--range] [--fuzzy] [--id=ID] [--website=ID] [--email=EMAIL] [--firstname=STRING] [--lastname=STRING]
 ```
 
 Examples:
 ```sh
-n98-magerun2.phar customer:delete --id 1                            # Will delete customer with Id 1
-n98-magerun2.phar customer:delete --fuzzy=true --email=test         # Will delete all customers with email like "%test%"
-n98-magerun2.phar customer:delete --all                             # Will delete all customers
-n98-magerun2.phar customer:delete --range                           # Will prompt for start and end Ids for batch deletion
+n98-magerun2.phar customer:delete --id 1                     # Will delete customer with Id 1
+n98-magerun2.phar customer:delete --fuzzy --email=test       # Will delete all customers with email like "%test%"
+n98-magerun2.phar customer:delete --all                      # Will delete all customers
+n98-magerun2.phar customer:delete --range                    # Will prompt for start and end Ids for batch deletion
 ```
 Deletes customer(s) by given id or a combination of the website id and email or website id and firstname and lastname.
 In addition, you can delete a range of customer ids or delete all customers.
@@ -310,9 +310,9 @@ n98-magerun2.phar sys:info
 ```
 **Options:**
 
-| Option        | Description                                                                            |
-| ------------- | --------------------------------------|
-| `--sort`     | Sort table by name                     |
+| Option   | Description        |
+|----------|--------------------|
+| `--sort` | Sort table by name |
 
 ---
 
@@ -421,11 +421,11 @@ n98-magerun2.phar config:store:set [--scope[="..."]] [--scope-id[="..."]] [--enc
 
 **Options:**
 
-| Option        | Description                                                                            |
-| ------------- | -------------------------------------------------------------------------------------- |
-| `--scope`     | The config value's scope (default: `default`). Can be `default`, `websites`, `stores`) |
-| `--scope-id`  | The config value's scope ID (default: `0`)                                             |
-| `--encrypt`   | Encrypt the config value using crypt key                                               |
+| Option       | Description                                                                            |
+|--------------|----------------------------------------------------------------------------------------|
+| `--scope`    | The config value's scope (default: `default`). Can be `default`, `websites`, `stores`) |
+| `--scope-id` | The config value's scope ID (default: `0`)                                             |
+| `--encrypt`  | Encrypt the config value using crypt key                                               |
 
 ### Get Store Config
 
@@ -439,14 +439,14 @@ n98-magerun2.phar config:store:get [--scope="..."] [--scope-id="..."] [--decrypt
 
 **Options:**
 
-| Option             | Description                                                                            |
-| ------------------ | -------------------------------------------------------------------------------------- |
-| `--scope`          | The config value's scope (`default`, `websites`, `stores`)                             |
-| `--scope-id`       | The config value's scope ID                                                            |
-| `--decrypt`        | Decrypt the config value using crypt key defined in `env.php`                          |
-| `--update-script`  | Output as update script lines                                                          |
-| `--magerun-script` | Output for usage with `config:store:set`                                               |
-| `--format`         | Output as `json`, `xml` or `csv`                                                       |
+| Option             | Description                                                   |
+|--------------------|---------------------------------------------------------------|
+| `--scope`          | The config value's scope (`default`, `websites`, `stores`)    |
+| `--scope-id`       | The config value's scope ID                                   |
+| `--decrypt`        | Decrypt the config value using crypt key defined in `env.php` |
+| `--update-script`  | Output as update script lines                                 |
+| `--magerun-script` | Output for usage with `config:store:set`                      |
+| `--format`         | Output as `json`, `xml` or `csv`                              |
 
 **Help:**
 
@@ -470,11 +470,11 @@ n98-magerun2.phar config:store:delete [--scope[="..."]] [--scope-id[="..."]] [--
 
 **Options:**
 
-| Option        | Description                                                                            |
-| ------------- | -------------------------------------------------------------------------------------- |
-| `--scope`     | The config value's scope (default, websites, stores)                                   |
-| `--scope-id`  | The config value's scope ID                                                            |
-| `--all`       | Delete all entries by path                                                             |
+| Option       | Description                                          |
+|--------------|------------------------------------------------------|
+| `--scope`    | The config value's scope (default, websites, stores) |
+| `--scope-id` | The config value's scope ID                          |
+| `--all`      | Delete all entries by path                           |
 
 ### Display ACL Tree
 
@@ -498,9 +498,9 @@ n98-magerun2.phar config:data:di <type>
 
 **Options:**
 
-| Option          | Description                                                                                   |
-| --------------- | --------------------------------------------------------------------------------------------- |
-| `--scope` `-s`  | Config scope (`global`, `adminhtml`, `frontend`, `webapi_rest`, `webapi_soap`, ...) (default: `global`) |
+| Option         | Description                                                                                             |
+|----------------|---------------------------------------------------------------------------------------------------------|
+| `--scope` `-s` | Config scope (`global`, `adminhtml`, `frontend`, `webapi_rest`, `webapi_soap`, ...) (default: `global`) |
 
 ---
 
@@ -617,7 +617,7 @@ n98-magerun2.phar db:console [options]
 **Options:**
 
 | Option                         | Description                                                                                          |
-| ------------------------------ | -----------------------------------------------------------------------------------------------------|
+|--------------------------------|------------------------------------------------------------------------------------------------------|
 | `--use-mycli-instead-of-mysql` | Use `mycli` as the MySQL client instead of `mysql`                                                   |
 | `--no-auto-rehash`             | Same as `-A` option to MySQL client to turn off auto-complete (avoids long initial connection time). |
 | `--connection=CONNECTION`      | Select DB connection type for Magento configurations with several databases (default: `default`)     |
@@ -634,25 +634,25 @@ Dumps configured Magento database with `mysqldump`.
 
 **Options**
 
-| Option                    | Description                                                                           |
-| --------------------------| --------------------------------------------------------------------------------------|
-| `--add-routines`          | Include stored routines in dump (procedures & functions).                             |
-| `--add-time`              | Adds time to filename (only if filename was provided)                                 |
-| `--compression` `-c`      | Compress the dump file using one of the supported algorithms                          |
-| `--dry-run`               | Do everything but the actual dump. Useful to test.                                    |
-| `--exclude`               | Tables to exclude entirely from the dump (including structure)                        |
-| `--force` `-f`            | Do not prompt if all options are defined                                              |
-| `--git-friendly`          | Use one insert statement, but with line breaks instead of separate insert statements. |
-| `--human-readable`        | Use a single insert with column names per row.                                        |
-| `--include`               | Tables to include entirely to the dump (default: all tables are included)             |
-| `--keep-column-statistics`| Retains `column statistics` table in `mysqldump`                                      |
-| `--no-single-transaction` | Do not use single-transaction (not recommended, this is blocking)                     |
-| `--no-tablespaces`        | Use this option if you want to create a dump without having the PROCESS privilege.    |
-| `--only-command`          | Print only mysqldump command. Does not execute.                                       |
-| `--print-only-filename`   | Execute and prints not output except the dump filename                                |
-| `--set-gtid-purged-off'`  | Adds --set-gtid-purged=OFF to mysqlqump                                               |
-| `--stdout`                | Dump to stdout                                                                        |
-| `--strip`                 | Tables to strip (dump only structure of those tables)                                 |
+| Option                     | Description                                                                           |
+|----------------------------|---------------------------------------------------------------------------------------|
+| `--add-routines`           | Include stored routines in dump (procedures & functions).                             |
+| `--add-time`               | Adds time to filename (only if filename was provided)                                 |
+| `--compression` `-c`       | Compress the dump file using one of the supported algorithms                          |
+| `--dry-run`                | Do everything but the actual dump. Useful to test.                                    |
+| `--exclude`                | Tables to exclude entirely from the dump (including structure)                        |
+| `--force` `-f`             | Do not prompt if all options are defined                                              |
+| `--git-friendly`           | Use one insert statement, but with line breaks instead of separate insert statements. |
+| `--human-readable`         | Use a single insert with column names per row.                                        |
+| `--include`                | Tables to include entirely to the dump (default: all tables are included)             |
+| `--keep-column-statistics` | Retains `column statistics` table in `mysqldump`                                      |
+| `--no-single-transaction`  | Do not use single-transaction (not recommended, this is blocking)                     |
+| `--no-tablespaces`         | Use this option if you want to create a dump without having the PROCESS privilege.    |
+| `--only-command`           | Print only mysqldump command. Does not execute.                                       |
+| `--print-only-filename`    | Execute and prints not output except the dump filename                                |
+| `--set-gtid-purged-off'`   | Adds --set-gtid-purged=OFF to mysqlqump                                               |
+| `--stdout`                 | Dump to stdout                                                                        |
+| `--strip`                  | Tables to strip (dump only structure of those tables)                                 |
 
 ```sh
 n98-magerun2.phar db:dump
@@ -692,30 +692,30 @@ n98-magerun2.phar db:dump --strip="@stripped"
 
 Available Table Groups:
 
-| Table Group               | Description                                                                                |
-| --------------------------| -------------------------------------------------------------------------------------------|
-| `@2fa`                    | 2FA tables. These tables are used for storing 2FA information for admin users.             |
-| `@admin`                  | Admin users, roles, sessions, etc.                                                         |
-| `@aggregated`             | Aggregated tables used for generating reports, etc.                                        |
-| `@dotmailer`              | Dotmailer data(`email_abandoned_cart` `email_automation` `email_campaign` `email_contact`).|
-| `@customers`              | Customer data (and company data from the B2B extension).                                   |
-| `@development`            | Removes logs, sessions, trade data and admin users so developers do not have to work with real customer data or admin user accounts. |
-| `@dotmailer`              | Dotmailer module tables                                                                    |
-| `@ee_changelog`           | Changelog tables of new indexer since EE 1.13                                              |
-| `@idx`                    | Tables with `_idx` suffix and index event tables.                                          |
-| `@klarna`                 | Klarna tables containing information about klarna payments and their quotes/orders.        |
-| `@log`                    | Log tables.                                                                                |
-| `@mailchimp`              | Mailchimp tables.                                                                          |
-| `@newrelic_reporting`     | New Relic reporting tables. These tables provide production metric data for New Relic.     |
-| `@oauth`                  | OAuth sessions, tokens, etc.                                                               |
-| `@quotes`                 | Cart (quote) data and B2B quotes.                                                          |
-| `@replica`                | Replica tables, these are generated from Magento Staging functionality.                    |
-| `@sales`                  | Sales data (orders, invoices, creditmemos etc).                                            |
-| `@search`                 | Search related tables (catalogsearch\_).                                                   |
-| `@sessions`               | Database session tables.                                                                   |
-| `@stripped`               | Standard definition for a stripped dump (logs and sessions).                               |
-| `@trade`                  | Current trade data (customers, orders and quotes). You usually do not want those in developer systems. |
-| `@temp`                   | Indexer __temp tables.                                                                     |
+| Table Group           | Description                                                                                                                          |
+|-----------------------|--------------------------------------------------------------------------------------------------------------------------------------|
+| `@2fa`                | 2FA tables. These tables are used for storing 2FA information for admin users.                                                       |
+| `@admin`              | Admin users, roles, sessions, etc.                                                                                                   |
+| `@aggregated`         | Aggregated tables used for generating reports, etc.                                                                                  |
+| `@dotmailer`          | Dotmailer data(`email_abandoned_cart` `email_automation` `email_campaign` `email_contact`).                                          |
+| `@customers`          | Customer data (and company data from the B2B extension).                                                                             |
+| `@development`        | Removes logs, sessions, trade data and admin users so developers do not have to work with real customer data or admin user accounts. |
+| `@dotmailer`          | Dotmailer module tables                                                                                                              |
+| `@ee_changelog`       | Changelog tables of new indexer since EE 1.13                                                                                        |
+| `@idx`                | Tables with `_idx` suffix and index event tables.                                                                                    |
+| `@klarna`             | Klarna tables containing information about klarna payments and their quotes/orders.                                                  |
+| `@log`                | Log tables.                                                                                                                          |
+| `@mailchimp`          | Mailchimp tables.                                                                                                                    |
+| `@newrelic_reporting` | New Relic reporting tables. These tables provide production metric data for New Relic.                                               |
+| `@oauth`              | OAuth sessions, tokens, etc.                                                                                                         |
+| `@quotes`             | Cart (quote) data and B2B quotes.                                                                                                    |
+| `@replica`            | Replica tables, these are generated from Magento Staging functionality.                                                              |
+| `@sales`              | Sales data (orders, invoices, creditmemos etc).                                                                                      |
+| `@search`             | Search related tables (catalogsearch\_).                                                                                             |
+| `@sessions`           | Database session tables.                                                                                                             |
+| `@stripped`           | Standard definition for a stripped dump (logs and sessions).                                                                         |
+| `@trade`              | Current trade data (customers, orders and quotes). You usually do not want those in developer systems.                               |
+| `@temp`               | Indexer __temp tables.                                                                                                               |
 
 ---
 
@@ -729,17 +729,17 @@ Available Table Groups:
 
 **Options**
 
-| Option                          | Description                                                                           |
-| --------------------------------| --------------------------------------------------------------------------------------|
-| `--connection=CONNECTION`       | Select DB connection type for Magento configurations with several databases        |                                 |                                                              |
-| `-c`, `--compression=COMPRESSION` | The compression of the specified file                                              |
-| `--drop`                        | Drop and recreate database before import                                           |
-| `--drop-tables`                 | Drop tables before import                                                          |
-| `--force`                       | Continue even if an SQL error occurs                                               |
-| `--only-command`                | Print only mysql command. Do not execute                                           |
-| `--only-if-empty`               | Imports only if database is empty                                                  |
-| `--optimize`                    | Convert verbose INSERTs to short ones before import (not working with compression) |
-| `--skip-authorization-entry-creation` | Add default entry to authorization_role and authorization_rule tables. |
+| Option                                | Description                                                                        |
+|---------------------------------------|------------------------------------------------------------------------------------|
+| `--connection=CONNECTION`             | Select DB connection type for Magento configurations with several databases        |                                 |                                                              |
+| `-c`, `--compression=COMPRESSION`     | The compression of the specified file                                              |
+| `--drop`                              | Drop and recreate database before import                                           |
+| `--drop-tables`                       | Drop tables before import                                                          |
+| `--force`                             | Continue even if an SQL error occurs                                               |
+| `--only-command`                      | Print only mysql command. Do not execute                                           |
+| `--only-if-empty`                     | Imports only if database is empty                                                  |
+| `--optimize`                          | Convert verbose INSERTs to short ones before import (not working with compression) |
+| `--skip-authorization-entry-creation` | Add default entry to authorization_role and authorization_rule tables.             |
 
 
 ```sh
@@ -767,9 +767,9 @@ n98-magerun2.phar dev:asset:clear [--theme="..."]
 
 **Options**
 
-| Option                  | Description                                                                           |
-| ------------------------| --------------------------------------------------------------------------------------|
-| `--theme`               | The specific theme(s) to clear                                                        |
+| Option    | Description                    |
+|-----------|--------------------------------|
+| `--theme` | The specific theme(s) to clear |
 
 To clear assets for all themes:
 
@@ -948,13 +948,13 @@ n98-magerun2.phar integration:create [options] [--] <name> <email> <endpoint>
 
 **Options**
 
-| Option                                       | Description                           |
-| ---------------------------------------------| --------------------------------------|
-| `--consumer-key=CONSUMER-KEY`                | Consumer Key (length 32 chars)        |
-| `--consumer-secret=CONSUMER-SECRET`          | Consumer Secret (length 32 chars)     |
-| `--access-token=ACCESS-TOKEN`                | Access-Token (length 32 chars)        |
-| `--access-token-secret=ACCESS-TOKEN-SECRET`  | Access-Token Secret (length 32 chars) |
-| `--resource=RESOURCE` `-r`                   | Defines a granted ACL resource (multiple values allowed) |
+| Option                                      | Description                                              |
+|---------------------------------------------|----------------------------------------------------------|
+| `--consumer-key=CONSUMER-KEY`               | Consumer Key (length 32 chars)                           |
+| `--consumer-secret=CONSUMER-SECRET`         | Consumer Secret (length 32 chars)                        |
+| `--access-token=ACCESS-TOKEN`               | Access-Token (length 32 chars)                           |
+| `--access-token-secret=ACCESS-TOKEN-SECRET` | Access-Token Secret (length 32 chars)                    |
+| `--resource=RESOURCE` `-r`                  | Defines a granted ACL resource (multiple values allowed) |
 
 If no ACL resource is defined the new integration token will be created with FULL ACCESS.
 
@@ -1109,15 +1109,15 @@ ${my.var}=?
 
 **Pre-defined variables:**
 
-| Variable             | Description                                         |
-| ---------------------| ----------------------------------------------------|
-| `${magento.root}`    | Magento Root-Folder                                 |
-| `${magento.version}` | Magento Version i.e. 2.0.0.0                        |
-| `${magento.edition}` | Magento Edition -> Community or Enterprise          |
-| `${magerun.version}` | Magerun version i.e. 2.1.0                          |
-| `${php.version}`     | PHP Version                                         |
-| `${script.file}`     | Current script file path                            |
-| `${script.dir}`      | Current script file dir                             |
+| Variable             | Description                                |
+|----------------------|--------------------------------------------|
+| `${magento.root}`    | Magento Root-Folder                        |
+| `${magento.version}` | Magento Version i.e. 2.0.0.0               |
+| `${magento.edition}` | Magento Edition -> Community or Enterprise |
+| `${magerun.version}` | Magerun version i.e. 2.1.0                 |
+| `${php.version}`     | PHP Version                                |
+| `${script.file}`     | Current script file path                   |
+| `${script.dir}`      | Current script file dir                    |
 
 Variables can be passed to a script with "--define (-d)" option.
 

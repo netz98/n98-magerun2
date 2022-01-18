@@ -126,7 +126,6 @@ function test_magerun_commands() {
 	#  config:store:delete
 	assert_command_contains "config:store:delete n98/magerun/example" "deleted path"
 	#  customer:create
-	db_query "DELETE FROM customer_entity WHERE email = 'foo@example.com'"
 	assert_command_contains "customer:create foo@example.com Password123 Firstname Lastname" "Customer foo@example.com successfully created"
 	#  customer:info
 	assert_command_contains "customer:info foo@example.com" "foo@example.com"
@@ -134,6 +133,8 @@ function test_magerun_commands() {
 	assert_command_contains "customer:list foo@example.com"
 	#  customer:change-password
 	assert_command_contains "customer:change-password foo@example.com Password1234" "Password successfully change"
+	#  customer:delete
+  assert_command_contains "customer:delete --fuzzy --email=foo --force" "Successfully deleted 1 customer/s"
 	#  customer:token:create
 	#  db:add-default-authorization-entries
 	assert_command_contains "db:add-default-authorization-entries" "OK"
