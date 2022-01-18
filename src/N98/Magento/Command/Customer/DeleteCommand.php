@@ -48,10 +48,10 @@ class DeleteCommand extends AbstractCustomerCommand
             ->addOption('firstname', null, InputOption::VALUE_OPTIONAL, 'Firstname')
             ->addOption('lastname', null, InputOption::VALUE_OPTIONAL, 'Lastname')
             ->addOption('website', null, InputOption::VALUE_OPTIONAL, 'Website')
-            ->addOption('force', 'f', InputOption::VALUE_OPTIONAL, 'Force delete')
-            ->addOption('all', 'a', InputOption::VALUE_OPTIONAL, 'Delete all customers')
-            ->addOption('range', 'r', InputOption::VALUE_OPTIONAL, 'Delete a range of customers by Id')
-            ->addOption('fuzzy', null, InputOption::VALUE_OPTIONAL, 'Fuzziness')
+            ->addOption('force', 'f', InputOption::VALUE_NONE, 'Force delete')
+            ->addOption('all', 'a', InputOption::VALUE_NONE, 'Delete all customers')
+            ->addOption('range', 'r', InputOption::VALUE_NONE, 'Delete a range of customers by Id')
+            ->addOption('fuzzy', null, InputOption::VALUE_NONE, 'Fuzziness')
             ->setDescription('Deletes a customer/user for shop frontend by given options by matching or fuzzy search and/or range.');
     }
 
@@ -71,7 +71,7 @@ class DeleteCommand extends AbstractCustomerCommand
     }
 
     /**
-     * @param InputInterface $input
+     * @param InputInterface  $input
      * @param OutputInterface $output
      *
      * @return int
@@ -108,6 +108,7 @@ class DeleteCommand extends AbstractCustomerCommand
         $range = $this->input->getOption('range');
         $all = $this->input->getOption('all');
         $fuzzy = $this->input->getOption('fuzzy');
+        $force = $this->input->getOption('force');
 
         // Get args required
         // we need at least:
@@ -122,7 +123,7 @@ class DeleteCommand extends AbstractCustomerCommand
         //      range
         //      OR
         //      all
-        if (!($id || ($website && ($email || ($lastname && $firstname)))) && !($range) && !($all) && !($fuzzy)) {
+        if (!($id || ($website && ($email || ($lastname && $firstname)))) && ($range || $all || $fuzzy)) {
 
             // Delete more than one customer ?
             $question = new Question('<question>Delete more than 1 customer?</question> ');
@@ -131,12 +132,10 @@ class DeleteCommand extends AbstractCustomerCommand
             if ($batchDelete) {
                 // Batch deletion
                 $all = $input->getOption('all');
-                if ($all === null) {
+                if ($all) {
                     $question = new Question('<question>Delete all customers?:</question> ');
                     $all = $questionHelper->ask($input, $output, $question);
-                }
-
-                if (!$all) {
+                } else {
                     $range = $input->getOption('range');
                     if ($all === null) {
                         $question = new Question('<question>Delete a range of customers?</question> ');
@@ -162,7 +161,7 @@ class DeleteCommand extends AbstractCustomerCommand
                 return false;
             }
 
-            if ($this->shouldRemove($questionHelper, $input, $output)) {
+            if ($force || $this->shouldRemove($questionHelper, $input, $output)) {
                 $isSecure = $this->registry->registry('isSecureArea');
                 $this->registry->unregister('isSecureArea');
                 $this->registry->register('isSecureArea', true);
@@ -210,7 +209,7 @@ class DeleteCommand extends AbstractCustomerCommand
 
                 // Range delete, takes precedence over --all
                 $filterAttributes[] = [
-                    'entity_id',
+                    'attribute' => 'entity_id',
                     [
                         'from' => $ranges[0],
                         'to'   => $ranges[1],
@@ -226,7 +225,7 @@ class DeleteCommand extends AbstractCustomerCommand
                 $customerCollection->addFieldToFilter($filterAttributes);
             }
 
-            if ($this->shouldRemove($questionHelper, $input, $output)) {
+            if ($force || $this->shouldRemove($questionHelper, $input, $output)) {
                 $count = $this->batchDelete($customerCollection);
                 $this->output->writeln('<info>Successfully deleted ' . $count . ' customer/s</info>');
             } else {
@@ -240,20 +239,15 @@ class DeleteCommand extends AbstractCustomerCommand
      */
     protected function shouldRemove($questionHelper, $input, $output)
     {
-        $shouldRemove = $this->input->getOption('force');
-        if (!$shouldRemove) {
-            $question = new ConfirmationQuestion(
-                '<question>Are you sure?</question> <comment>[n]</comment>: ',
-                false
-            );
-            $shouldRemove = $questionHelper->ask(
-                $input,
-                $output,
-                $question
-            );
-        }
-
-        return $shouldRemove;
+        $question = new ConfirmationQuestion(
+            '<question>Are you sure?</question> <comment>[n]</comment>: ',
+            false
+        );
+        return $questionHelper->ask(
+            $input,
+            $output,
+            $question
+        );
     }
 
     /**
@@ -290,18 +284,17 @@ class DeleteCommand extends AbstractCustomerCommand
     protected function batchDelete(CustomerCollection $customerCollection): int
     {
         $count = 0;
+        $this->registry->unregister('isSecureArea');
+        $this->registry->register('isSecureArea', true);
+        $isSecure = $this->registry->registry('isSecureArea');
         foreach ($customerCollection as $customerToDelete) {
             $customer = $this->customerRepository->getById($customerToDelete->getId());
-            $isSecure = $this->registry->registry('isSecureArea');
-
-            $this->registry->unregister('isSecureArea');
-            $this->registry->register('isSecureArea', true);
             if ($this->customerRepository->delete($customer)) {
                 $count++;
             }
-            $this->registry->unregister('isSecureArea');
-            $this->registry->register('isSecureArea', $isSecure);
         }
+        $this->registry->unregister('isSecureArea');
+        $this->registry->register('isSecureArea', $isSecure);
 
         return $count;
     }

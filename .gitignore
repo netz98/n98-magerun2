@@ -2,6 +2,7 @@
 /vendor/
 
 # Build
+/box.json
 /box.phar
 /composer.phar
 /composer-setup.php
