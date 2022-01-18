@@ -134,7 +134,7 @@ function test_magerun_commands() {
 	#  customer:change-password
 	assert_command_contains "customer:change-password foo@example.com Password1234" "Password successfully change"
 	#  customer:delete
-  assert_command_contains "customer:delete --fuzzy --email=foo --force" "Successfully deleted 1 customer/s"
+	assert_command_contains "customer:delete --fuzzy --email=foo --force" "Successfully deleted 1 customer/s"
 	#  customer:token:create
 	#  db:add-default-authorization-entries
 	assert_command_contains "db:add-default-authorization-entries" "OK"
