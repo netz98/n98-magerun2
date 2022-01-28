@@ -35,7 +35,7 @@
         "n98/junit-xml": "~1.0",
         "pbergman/tree-helper": "^1.0",
         "psy/psysh": "~0.7",
-        "symfony/console": "~4.4",
+        "symfony/console": "~5.4",
         "symfony/event-dispatcher": "~4.4",
         "symfony/finder": "~5.3",
         "symfony/process": "~4.4",
