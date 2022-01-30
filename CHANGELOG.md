@@ -4,18 +4,25 @@ RECENT CHANGES
 5.0.0-dev
 ---------
 
-- Replace dependency "adbario/php-dot-notation" with "dflydev/dot-access-data"
-- PHP 8.1 compatibility
-- Port dev:translate commands
-- Remove Composer download methods in abstract command
-- Add phar functional tests
-- Replace phar build process
-- Removed phing dependency
-- Removed composer dependency
-- Improved Github actions to test Magento development versions
-- Add guzzle dependency
-- Add ddev developer setup
-- Update 3rd party dependencies (symfony/yaml, symfony/finder, phpunit, captainhook, psysh, twig, phar-utils)
+- Add: #56: Delete customer command (by Andreas Mautz)
+- Add: #906: guzzle dependency (by Christian Münch)
+- Add: #917: ddev developer setup (by Christian Münch)
+- Add: #922: phar functional tests (by Christian Münch)
+- Add: #924: dev:translate commands (by Christian Münch)
+- Add: #927: PHP 8.1 compatibility (by Christian Münch)
+- Add: Commit hash to version command (by Christian Münch)
+- Imp: #918: Replace phar build process (by Christian Münch)
+- Imp: Github actions to test Magento development versions (by Christian Münch)
+- Imp: Replace dependency "adbario/php-dot-notation" with "dflydev/dot-access-data"
+- Imp: Update 3rd party dependencies 
+       (symfony/yaml, symfony/event-dispatcher, fakerphp, symfony/finder, 
+       phpunit, captainhook, psysh, twig, phar-utils)
+- Del: Composer download methods in abstract command
+- Del: phing developer dependency
+- Del: Bundled Composer library
+- Fix: #934: install command. Allow for xdebug ^3.0 (by Martin Århof)
+- Fix: Error in sys:cron:history command (by Christian Münch)
+- Fix: PHP warnings in cache:report command (by Christian Münch)
 
 unreleased
 
