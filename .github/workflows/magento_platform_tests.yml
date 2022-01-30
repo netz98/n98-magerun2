@@ -224,7 +224,7 @@ jobs:
         if: matrix.use-git-repository == false
 
       - name: Configure matchers
-        uses: mheap/phpunit-matcher-action@master
+        uses: mheap/phpunit-matcher-action@main
 
       - name: Run PHPUnit (Developer Mode)
         run: vendor/bin/phpunit --debug --process-isolation
