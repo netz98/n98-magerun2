@@ -17,8 +17,6 @@ use N98\Magento\Application\Magento2Initializer;
 use N98\Magento\Application\MagentoDetector;
 use N98\Magento\Command\DummyCommand;
 use N98\Util\Console\Helper\TwigHelper;
-use function stream_get_wrappers;
-use function stream_wrapper_restore;
 use Symfony\Component\Console\Application as BaseApplication;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Event\ConsoleEvent;
@@ -488,8 +486,8 @@ class Application extends BaseApplication
             $this->requireOnce($magentoRootFolder . '/app/bootstrap.php');
 
             // Magento 2.3.1 removes phar stream wrapper.
-            if (!in_array('phar', stream_get_wrappers(), true)) {
-                stream_wrapper_restore('phar');
+            if (!in_array('phar', \stream_get_wrappers(), true)) {
+                \stream_wrapper_restore('phar');
             }
         } catch (Exception $ex) {
             $this->renderThrowable($ex, $output);
