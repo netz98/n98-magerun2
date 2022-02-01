@@ -624,7 +624,7 @@ class DatabaseHelper extends AbstractHelper
             ? vsprintf('SQLSTATE[%s]: %s: %s', $statement->errorInfo())
             : 'no error info for statement';
 
-        if (strlen($message)) {
+        if ($message !== '') {
             $message .= ': ';
         } else {
             $message = '';
@@ -664,7 +664,7 @@ class DatabaseHelper extends AbstractHelper
     {
         $db = $this->getConnection();
         $prefix = $this->dbSettings['prefix'];
-        if (strlen($prefix) > 0) {
+        if ($prefix != '') {
             $statement = $db->prepare('SHOW TABLE STATUS LIKE :like', [PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY]);
             $statement->execute(
                 [':like' => $prefix . '%']

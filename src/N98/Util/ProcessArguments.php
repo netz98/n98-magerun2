@@ -77,7 +77,7 @@ class ProcessArguments
     {
         $buffer = (string) $value;
 
-        if (is_string($key) && strlen($key)) {
+        if (is_string($key) && !empty($key)) {
             $buffer = $this->conditionalPrefix($key, $prefix) . $this->conditionalValue($value, $separator);
         }
 

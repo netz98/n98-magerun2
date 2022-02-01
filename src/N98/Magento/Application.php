@@ -5,6 +5,7 @@ namespace N98\Magento;
 use BadMethodCallException;
 use Composer\Autoload\ClassLoader;
 use Exception;
+use Magento\Framework\Console\Cli;
 use Magento\Framework\ObjectManagerInterface;
 use N98\Magento\Application\ApplicationAwareInterface;
 use N98\Magento\Application\Config;
@@ -14,6 +15,7 @@ use N98\Magento\Application\DetectionResult;
 use N98\Magento\Application\Magento1Initializer;
 use N98\Magento\Application\Magento2Initializer;
 use N98\Magento\Application\MagentoDetector;
+use N98\Magento\Command\DummyCommand;
 use N98\Util\Console\Helper\TwigHelper;
 use Symfony\Component\Console\Application as BaseApplication;
 use Symfony\Component\Console\Command\Command;
@@ -27,6 +29,9 @@ use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use UnexpectedValueException;
+
+use function stream_get_wrappers;
+use function stream_wrapper_restore;
 
 /**
  * Class Application
@@ -220,7 +225,7 @@ class Application extends BaseApplication
     {
         $input = $this->config->checkConfigCommandAlias($input);
 
-        $event = new ConsoleEvent(new \N98\Magento\Command\DummyCommand(), $input, $output);
+        $event = new ConsoleEvent(new DummyCommand(), $input, $output);
         $this->dispatcher->dispatch($event, Events::RUN_BEFORE);
 
         return parent::doRun($input, $output);
@@ -411,7 +416,7 @@ class Application extends BaseApplication
      * @param InputInterface $input
      * @return bool
      */
-    protected function _checkSkipConfigOption(InputInterface $input)
+    protected function _checkSkipConfigOption(InputInterface $input): bool
     {
         return $input->hasParameterOption('--skip-config');
     }
@@ -419,7 +424,7 @@ class Application extends BaseApplication
     /**
      * @return bool
      */
-    public function isPharMode()
+    public function isPharMode(): bool
     {
         return $this->_isPharMode;
     }
@@ -459,9 +464,10 @@ class Application extends BaseApplication
     }
 
     /**
+     * @param \Symfony\Component\Console\Input\InputInterface $input
      * @return bool
      */
-    protected function _checkSkipMagento2CoreCommandsOption(InputInterface $input)
+    protected function _checkSkipMagento2CoreCommandsOption(InputInterface $input): bool
     {
         return $input->hasParameterOption('--skip-core-commands') || getenv('MAGERUN_SKIP_CORE_COMMANDS');
     }
@@ -471,10 +477,10 @@ class Application extends BaseApplication
      *
      * @param OutputInterface $output
      */
-    public function registerMagentoCoreCommands(OutputInterface $output)
+    public function registerMagentoCoreCommands(OutputInterface $output): void
     {
         $magentoRootFolder = $this->getMagentoRootFolder();
-        if (0 === strlen($magentoRootFolder)) {
+        if (empty($magentoRootFolder)) {
             return;
         }
 
@@ -483,10 +489,10 @@ class Application extends BaseApplication
             $this->requireOnce($magentoRootFolder . '/app/bootstrap.php');
 
             // Magento 2.3.1 removes phar stream wrapper.
-            if (!in_array('phar', \stream_get_wrappers(), true)) {
-                \stream_wrapper_restore('phar');
+            if (!in_array('phar', stream_get_wrappers(), true)) {
+                stream_wrapper_restore('phar');
             }
-        } catch (\Exception $ex) {
+        } catch (Exception $ex) {
             $this->renderThrowable($ex, $output);
             $output->writeln(
                 '<info>Use --skip-core-commands to not require the Magento app/bootstrap.php which caused ' .
@@ -496,7 +502,7 @@ class Application extends BaseApplication
             return;
         }
 
-        $coreCliApplication = new \Magento\Framework\Console\Cli();
+        $coreCliApplication = new Cli();
         $coreCliApplicationCommands = $coreCliApplication->all();
 
         foreach ($coreCliApplicationCommands as $coreCliApplicationCommand) {
@@ -639,7 +645,7 @@ class Application extends BaseApplication
     /**
      * @return InputDefinition
      */
-    protected function getDefaultInputDefinition()
+    protected function getDefaultInputDefinition(): InputDefinition
     {
         $inputDefinition = parent::getDefaultInputDefinition();
 
@@ -707,7 +713,7 @@ class Application extends BaseApplication
      *
      * @return void
      */
-    private function preloadClassesBeforeMagentoCore()
+    private function preloadClassesBeforeMagentoCore(): void
     {
         if ($this->autoloader instanceof ClassLoader) {
             $this->autoloader->loadClass('Symfony\Component\Console\Question\Question');

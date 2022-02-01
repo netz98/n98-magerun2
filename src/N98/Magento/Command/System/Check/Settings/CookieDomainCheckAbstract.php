@@ -33,7 +33,7 @@ abstract class CookieDomainCheckAbstract extends CheckAbstract
     {
         $errorMessage = 'cookie-domain and ' . $this->class . ' base-URL do not match';
 
-        if ($cookieDomain !== null && strlen($cookieDomain)) {
+        if ($cookieDomain !== null && $cookieDomain !== '') {
             $isValid = $this->validateCookieDomainAgainstUrl($cookieDomain, $baseUrl);
 
             $result->setStatus($isValid);
@@ -112,7 +112,7 @@ abstract class CookieDomainCheckAbstract extends CheckAbstract
         }
 
         $prefix = substr($siteDomain, 0, -$cookieLen);
-        if (0 === strlen($prefix)) {
+        if ($prefix === null || $prefix === '') {
             return false;
         }
 
