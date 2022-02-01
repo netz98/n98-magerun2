@@ -17,6 +17,8 @@ use N98\Magento\Application\Magento2Initializer;
 use N98\Magento\Application\MagentoDetector;
 use N98\Magento\Command\DummyCommand;
 use N98\Util\Console\Helper\TwigHelper;
+use function stream_get_wrappers;
+use function stream_wrapper_restore;
 use Symfony\Component\Console\Application as BaseApplication;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Event\ConsoleEvent;
@@ -29,9 +31,6 @@ use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use UnexpectedValueException;
-
-use function stream_get_wrappers;
-use function stream_wrapper_restore;
 
 /**
  * Class Application

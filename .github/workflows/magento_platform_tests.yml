@@ -177,7 +177,7 @@ jobs:
         run: composer install --no-interaction --prefer-dist --no-progress --no-suggest
 
       - name: Run php-cs-fixer
-        run: vendor/bin/php-cs-fixer fix --dry-run --format=checkstyle | cs2pr
+        run: vendor/bin/php-cs-fixer fix --diff --dry-run
 
       - name: Setup Magento Repository Credentials
         run: |
