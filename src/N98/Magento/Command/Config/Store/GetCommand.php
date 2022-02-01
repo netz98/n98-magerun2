@@ -93,7 +93,7 @@ HELP;
             $collection->addFieldToFilter('scope', ['eq' => $scope]);
         }
 
-        if (strlen($scopeId = $input->getOption('scope-id'))) {
+        if ($scopeId = $input->getOption('scope-id') != '') {
             $collection->addFieldToFilter(
                 'scope_id',
                 ['eq' => $scopeId]

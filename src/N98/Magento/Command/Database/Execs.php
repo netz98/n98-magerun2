@@ -106,7 +106,7 @@ class Execs
             implode(' ', $this->options)
         );
 
-        if (strlen($this->fileName)) {
+        if ($this->fileName != '') {
             $command .= ' ' . $separator . ' ' . escapeshellarg($this->fileName);
         }
 

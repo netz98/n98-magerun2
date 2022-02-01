@@ -256,14 +256,14 @@ class InstallMagento extends AbstractSubCommand
         }
 
         if ($useDefaultConfigParams) {
-            if (isset($defaults['encryption-key']) && strlen($defaults['encryption-key']) > 0) {
+            if (isset($defaults['encryption-key']) && $defaults['encryption-key'] != '') {
                 $argv['encryption-key'] = $defaults['encryption-key'];
             }
-            if (strlen($defaults['use-secure']) > 0) {
+            if ($defaults['use-secure'] != '') {
                 $argv['use-secure'] = $defaults['use-secure'];
                 $argv['base-url-secure'] = str_replace('http://', 'https://', $baseUrl);
             }
-            if (strlen($defaults['use-rewrites']) > 0) {
+            if ($defaults['use-rewrites'] != '') {
                 $argv['use-rewrites'] = $defaults['use-rewrites'];
             }
         }

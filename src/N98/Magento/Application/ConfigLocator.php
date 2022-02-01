@@ -69,9 +69,9 @@ class ConfigLocator
      *
      * @return ConfigFile|null
      */
-    public function getProjectConfigFile()
+    public function getProjectConfigFile(): ?ConfigFile
     {
-        if (!strlen($this->magentoRootFolder)) {
+        if ($this->magentoRootFolder === '') {
             return null;
         }
 
@@ -94,7 +94,7 @@ class ConfigLocator
      * @param string $magerunStopFileFolder
      * @return ConfigFile|null
      */
-    public function getStopFileConfigFile($magerunStopFileFolder)
+    public function getStopFileConfigFile($magerunStopFileFolder): ?ConfigFile
     {
         if (empty($magerunStopFileFolder)) {
             return null;
@@ -119,13 +119,13 @@ class ConfigLocator
     /**
      * @return array
      */
-    private function getUserConfigFilePaths()
+    private function getUserConfigFilePaths(): array
     {
         $paths = [];
 
         $homeDirectory = OperatingSystem::getHomeDir();
 
-        if (!strlen($homeDirectory)) {
+        if (empty($homeDirectory)) {
             return $paths;
         }
 
