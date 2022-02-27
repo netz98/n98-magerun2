@@ -1,7 +1,11 @@
 # netz98 magerun CLI tools for Magento 2
 
+![n98-magerun Logo](.github/doc/magerun-logo.png)
+
 The n98 magerun cli tools provides some handy tools to work with Magento
 from command line.
+
+> The swiss army knife for Magento developers, sysadmins and devops
 
 [![Gitter](https://badges.gitter.im/netz98/magerun.svg)](https://gitter.im/netz98/magerun)
 
