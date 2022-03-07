@@ -654,7 +654,7 @@ Dumps configured Magento database with `mysqldump`.
 | `--no-tablespaces`         | Use this option if you want to create a dump without having the PROCESS privilege.    |
 | `--only-command`           | Print only mysqldump command. Does not execute.                                       |
 | `--print-only-filename`    | Execute and prints not output except the dump filename                                |
-| `--set-gtid-purged-off'`   | Adds --set-gtid-purged=OFF to mysqlqump                                               |
+| `--set-gtid-purged-off`    | Adds --set-gtid-purged=OFF to mysqlqump                                               |
 | `--stdout`                 | Dump to stdout                                                                        |
 | `--strip`                  | Tables to strip (dump only structure of those tables)                                 |
 
@@ -735,7 +735,7 @@ Available Table Groups:
 
 | Option                                | Description                                                                        |
 |---------------------------------------|------------------------------------------------------------------------------------|
-| `--connection=CONNECTION`             | Select DB connection type for Magento configurations with several databases        |                                 |                                                              |
+| `--connection=CONNECTION`             | Select DB connection type for Magento configurations with several databases        |
 | `-c`, `--compression=COMPRESSION`     | The compression of the specified file                                              |
 | `--drop`                              | Drop and recreate database before import                                           |
 | `--drop-tables`                       | Drop tables before import                                                          |
