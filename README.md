@@ -638,25 +638,25 @@ Dumps configured Magento database with `mysqldump`.
 
 **Options**
 
-| Option                     | Description                                                                           |
-|----------------------------|---------------------------------------------------------------------------------------|
-| `--add-routines`           | Include stored routines in dump (procedures & functions).                             |
-| `--add-time`               | Adds time to filename (only if filename was provided)                                 |
-| `--compression` `-c`       | Compress the dump file using one of the supported algorithms                          |
-| `--dry-run`                | Do everything but the actual dump. Useful to test.                                    |
-| `--exclude`                | Tables to exclude entirely from the dump (including structure)                        |
-| `--force` `-f`             | Do not prompt if all options are defined                                              |
-| `--git-friendly`           | Use one insert statement, but with line breaks instead of separate insert statements. |
-| `--human-readable`         | Use a single insert with column names per row.                                        |
-| `--include`                | Tables to include entirely to the dump (default: all tables are included)             |
-| `--keep-column-statistics` | Retains `column statistics` table in `mysqldump`                                      |
-| `--no-single-transaction`  | Do not use single-transaction (not recommended, this is blocking)                     |
-| `--no-tablespaces`         | Use this option if you want to create a dump without having the PROCESS privilege.    |
-| `--only-command`           | Print only mysqldump command. Does not execute.                                       |
-| `--print-only-filename`    | Execute and prints not output except the dump filename                                |
-| `--set-gtid-purged-off`    | Adds --set-gtid-purged=OFF to mysqlqump                                               |
-| `--stdout`                 | Dump to stdout                                                                        |
-| `--strip`                  | Tables to strip (dump only structure of those tables)                                 |
+| Option                     | Description                                                                                  |
+|----------------------------|----------------------------------------------------------------------------------------------|
+| `--add-routines`           | Include stored routines in dump (procedures & functions).                                    |
+| `--add-time suffix`        | Adds time to filename (only if filename was provided). Requires value [suffix, prefix, no]   |
+| `--compression` `-c`       | Compress the dump file using one of the supported algorithms                                 |
+| `--dry-run`                | Do everything but the actual dump. Useful to test.                                           |
+| `--exclude`                | Tables to exclude entirely from the dump (including structure)                               |
+| `--force` `-f`             | Do not prompt if all options are defined                                                     |
+| `--git-friendly`           | Use one insert statement, but with line breaks instead of separate insert statements.        |
+| `--human-readable`         | Use a single insert with column names per row.                                               |
+| `--include`                | Tables to include entirely to the dump (default: all tables are included)                    |
+| `--keep-column-statistics` | Retains `column statistics` table in `mysqldump`                                             |
+| `--no-single-transaction`  | Do not use single-transaction (not recommended, this is blocking)                            |
+| `--no-tablespaces`         | Use this option if you want to create a dump without having the PROCESS privilege.           |
+| `--only-command`           | Print only mysqldump command. Does not execute.                                              |
+| `--print-only-filename`    | Execute and prints not output except the dump filename                                       |
+| `--set-gtid-purged-off`    | Adds --set-gtid-purged=OFF to mysqlqump                                                      |
+| `--stdout`                 | Dump to stdout                                                                               |
+| `--strip`                  | Tables to strip (dump only structure of those tables)                                        |
 
 ```sh
 n98-magerun2.phar db:dump
