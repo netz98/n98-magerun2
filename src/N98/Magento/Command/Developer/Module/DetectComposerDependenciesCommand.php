@@ -409,7 +409,7 @@ class DetectComposerDependenciesCommand extends AbstractMagentoCommand
         // That's the case if the Magento core is not installed via Composer
         // e.g. the source code version for core developers.
         if (!isset($this->localInstalledPackagesFromLockFile[$packageName])) {
-            return '*'
+            return '*';
         }
 
         $installedVersion = $this->localInstalledPackagesFromLockFile[$packageName];
