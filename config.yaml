@@ -114,6 +114,7 @@ commands:
     - N98\Magento\Command\Developer\Asset\ClearCommand
     - N98\Magento\Command\Developer\ConsoleCommand
     - N98\Magento\Command\Developer\Module\CreateCommand
+    - N98\Magento\Command\Developer\Module\DetectComposerDependenciesCommand
     - N98\Magento\Command\Developer\Report\CountCommand
     - N98\Magento\Command\Developer\SymlinksCommand
     - N98\Magento\Command\Developer\TemplateHintsBlocksCommand
