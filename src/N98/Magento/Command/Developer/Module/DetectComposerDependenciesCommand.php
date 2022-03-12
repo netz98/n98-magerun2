@@ -406,6 +406,12 @@ class DetectComposerDependenciesCommand extends AbstractMagentoCommand
      */
     private function getVersionConstraintByPackageName(string $packageName)
     {
+        // That's the case if the Magento core is not installed via Composer
+        // e.g. the source code version for core developers.
+        if (!isset($this->localInstalledPackagesFromLockFile[$packageName])) {
+            return '*'
+        }
+
         $installedVersion = $this->localInstalledPackagesFromLockFile[$packageName];
 
         if ($installedVersion !== '') {
