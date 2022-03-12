@@ -50,7 +50,7 @@ install_magento() {
 
 		if [ ! -d $MAGENTO_ROOT_DIR ]; then
 			git clone --branch "${GIT_BRANCH}" https://github.com/magento/magento2 $MAGENTO_ROOT_DIR
-			composer --no-interaction
+			composer --no-interaction install
 		fi
 
 		cd $MAGENTO_ROOT_DIR
