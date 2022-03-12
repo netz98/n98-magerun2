@@ -162,6 +162,15 @@ function test_magerun_commands() {
 	#  dev:module:create
 	assert_command_contains "dev:module:create Magerun123 TestModule" "Created directory"
 	cleanup_files_in_magento "app/code/N98/Magerun123"
+
+	#  dev:module:detect-composer-dependencies
+	if [ -f vendor/magento/module-catalog-rule ]; then
+		assert_command_contains "dev:module:detect-composer-dependencies vendor/magento/module-catalog-rule" "magento/module-catalog"
+	fi
+	if [ -f app/code/Magento/CatalogRule ]; then
+		assert_command_contains "dev:module:detect-composer-dependencies app/code/Magento/CatalogRule" "magento/module-catalog"
+	fi
+
 	#  dev:module:list
 	assert_command_contains "dev:module:list" "Magento_Store"
 	#  dev:module:observer:list

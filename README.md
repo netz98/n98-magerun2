@@ -803,7 +803,15 @@ Creates an empty module and registers it in current Magento shop.
 n98-magerun2.phar dev:module:create [-m|--minimal] [--add-blocks] [--add-helpers] [--add-models] [--add-setup] [--add-all] [-e|--enable] [--modman] [--add-readme] [--add-composer] [--add-strict-types] [--author-name [AUTHOR-NAME]] [--author-email [AUTHOR-EMAIL]] [--description [DESCRIPTION]] [-h|--help] [-q|--quiet] [-v|vv|vvv|--verbose] [-V|--version] [--ansi] [--no-ansi] [-n|--no-interaction] [--root-dir [ROOT-DIR]] [--skip-config] [--skip-root-check] [--skip-core-commands [SKIP-CORE-COMMANDS]] [--skip-magento-compatibility-check] [--] <command> <vendorNamespace> <moduleName>
 ```
 
-### Inline Translation Management
+### Detect Composer Dependencies in Module
+
+The source code of one or more modules can be scanned for dependencies.
+
+```sh
+n98-magerun2.phar dev:module:detect-composer-dependencies [--only-missing] <directory>
+```
+
+The `--only-missing` option will filter the output so that only the missing dependencies are listed.
 
 Enable/disable inline translation feature for Magento Admin:
 
