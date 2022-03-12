@@ -164,11 +164,11 @@ function test_magerun_commands() {
 	cleanup_files_in_magento "app/code/N98/Magerun123"
 
 	#  dev:module:detect-composer-dependencies
-	if [ -f vendor/magento/module-catalog-rule ]; then
-		assert_command_contains "dev:module:detect-composer-dependencies vendor/magento/module-catalog-rule" "magento/module-catalog"
+	if [ -d "${MAGENTO_ROOT_DIR}/vendor/magento/module-catalog-rule" ]; then
+		assert_command_contains "dev:module:detect-composer-dependencies ${MAGENTO_ROOT_DIR}/vendor/magento/module-catalog-rule" "magento/module-catalog"
 	fi
-	if [ -f app/code/Magento/CatalogRule ]; then
-		assert_command_contains "dev:module:detect-composer-dependencies app/code/Magento/CatalogRule" "magento/module-catalog"
+	if [ -d $directory "${MAGENTO_ROOT_DIR}/app/code/Magento/CatalogRule" ]; then
+		assert_command_contains "dev:module:detect-composer-dependencies ${MAGENTO_ROOT_DIR}/app/code/Magento/CatalogRule" "magento/module-catalog"
 	fi
 
 	#  dev:module:list
