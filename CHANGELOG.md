@@ -11,6 +11,7 @@ RECENT CHANGES
 - Add: #924: dev:translate commands (by Christian Münch)
 - Add: #927: PHP 8.1 compatibility (by Christian Münch)
 - Add: Commit hash to version command (by Christian Münch)
+- Add: #954: dev:module:detect-composer-dependencies command (by Alexander Dite, Jens Richter)
 - Imp: #918: Replace phar build process (by Christian Münch)
 - Imp: Github actions to test Magento development versions (by Christian Münch)
 - Imp: Replace dependency "adbario/php-dot-notation" with "dflydev/dot-access-data"
