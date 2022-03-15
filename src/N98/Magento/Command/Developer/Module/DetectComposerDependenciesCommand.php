@@ -35,7 +35,7 @@ class DetectComposerDependenciesCommand extends AbstractMagentoCommand
     protected function configure(): void
     {
         $this->setName('dev:module:detect-composer-dependencies')
-            ->addArgument('path', InputArgument::IS_ARRAY, 'Path to modules')
+            ->addArgument('path', InputArgument::IS_ARRAY|InputArgument::REQUIRED, 'Path to modules')
             ->addOption('only-missing', null, InputOption::VALUE_NONE, 'Print only missing dependencies.')
             ->setDescription(
                 'This command will search for any soft and hard dependencies '
