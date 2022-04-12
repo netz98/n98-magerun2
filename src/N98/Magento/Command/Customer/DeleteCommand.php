@@ -133,7 +133,8 @@ class DeleteCommand extends AbstractCustomerCommand
                 $all = $input->getOption('all');
                 if ($all) {
                     $question = new ConfirmationQuestion(
-                        '<question>Delete all customers?:</question> <comment>[n]</comment>: ', false
+                        '<question>Delete all customers?:</question> <comment>[n]</comment>: ',
+                        false
                     );
                     $all = $questionHelper->ask($input, $output, $question);
 
@@ -144,7 +145,8 @@ class DeleteCommand extends AbstractCustomerCommand
                     $range = $input->getOption('range');
                     if ($all === null) {
                         $question = new ConfirmationQuestion(
-                            '<question>Delete a range of customers?</question> <comment>[n]</comment>: ',false
+                            '<question>Delete a range of customers?</question> <comment>[n]</comment>: ',
+                            false
                         );
                         $range = $questionHelper->ask($input, $output, $question);
                     }
