@@ -245,6 +245,7 @@ jobs:
 
       - name: Install ${{ matrix.magento-version }} via n98-magerun2
         run: |
+          mysqladmin -h127.0.0.1 -P ${{ job.services.mysql.ports[3306] }} -uroot -proot create magento; \
           bin/n98-magerun2 --ansi install \
           --magentoVersionByName="${{ matrix.magento-version }}" --installationFolder="$GITHUB_WORKSPACE/magento" \
           --dbHost=127.0.0.1 --dbPort=${{ job.services.mysql.ports['3306'] }} --dbUser=root --dbPass=root --dbName="magento" \
