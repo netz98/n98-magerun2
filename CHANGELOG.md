@@ -27,8 +27,6 @@ RECENT CHANGES
 - Fix: Error in sys:cron:history command (by Christian Münch)
 - Fix: PHP warnings in cache:report command (by Christian Münch)
 
-unreleased
-
 4.9.1
 -----
 
