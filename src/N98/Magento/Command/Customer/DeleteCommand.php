@@ -91,7 +91,6 @@ class DeleteCommand extends AbstractCustomerCommand
         $questionHelper = $this->getHelperSet()->get('question');
 
         // defaults
-        $range = $all = false;
         $filterType = 'eq';
         $filterPrefix = '';
         $filterPostfix = '';
@@ -126,19 +125,27 @@ class DeleteCommand extends AbstractCustomerCommand
         if (!($id || ($website && ($email || ($lastname && $firstname)))) && ($range || $all || $fuzzy)) {
 
             // Delete more than one customer ?
-            $question = new Question('<question>Delete more than 1 customer?</question> ');
+            $question = new Question('<question>Delete more than 1 customer?</question> <comment>[n]</comment>: ');
             $batchDelete = $questionHelper->ask($input, $output, $question);
 
             if ($batchDelete) {
                 // Batch deletion
                 $all = $input->getOption('all');
                 if ($all) {
-                    $question = new Question('<question>Delete all customers?:</question> ');
+                    $question = new ConfirmationQuestion(
+                        '<question>Delete all customers?:</question> <comment>[n]</comment>: ', false
+                    );
                     $all = $questionHelper->ask($input, $output, $question);
+
+                    if (!$all) {
+                        return false;
+                    }
                 } else {
                     $range = $input->getOption('range');
                     if ($all === null) {
-                        $question = new Question('<question>Delete a range of customers?</question> ');
+                        $question = new ConfirmationQuestion(
+                            '<question>Delete a range of customers?</question> <comment>[n]</comment>: ',false
+                        );
                         $range = $questionHelper->ask($input, $output, $question);
                     }
 
@@ -179,7 +186,9 @@ class DeleteCommand extends AbstractCustomerCommand
             }
 
             if ($website) {
-                $filterAttributes[] = ['attribute' => 'website', $filterType => $website];
+                $parameterHelper = $this->getHelper('parameter');
+                $website = $parameterHelper->askWebsite($this->input, $this->output);
+                $filterAttributes[] = ['attribute' => 'website_id', $filterType => $website->getId()];
             }
             if ($email) {
                 $filterAttributes[] = ['attribute' => 'email', $filterType => "$filterPrefix$email$filterPostfix"];

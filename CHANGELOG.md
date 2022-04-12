@@ -1,8 +1,8 @@
 RECENT CHANGES
 ==============
 
-5.0.0-dev
----------
+5.0.0
+-----
 
 - Add: #56: Delete customer command (by Andreas Mautz)
 - Add: #906: guzzle dependency (by Christian Münch)
@@ -12,12 +12,14 @@ RECENT CHANGES
 - Add: #927: PHP 8.1 compatibility (by Christian Münch)
 - Add: Commit hash to version command (by Christian Münch)
 - Add: #954: dev:module:detect-composer-dependencies command (by Alexander Dite, Jens Richter)
+- Add: Test MageOS in Github Actions
+- Add: Update version list of install command (MageOS and Adobe)
 - Imp: #918: Replace phar build process (by Christian Münch)
 - Imp: Github actions to test Magento development versions (by Christian Münch)
 - Imp: Replace dependency "adbario/php-dot-notation" with "dflydev/dot-access-data"
 - Imp: Update 3rd party dependencies 
        (symfony/yaml, symfony/event-dispatcher, fakerphp, symfony/finder, 
-       phpunit, captainhook, psysh, twig, phar-utils)
+       phpunit, captainhook, psysh, twig, phar-utils, symfony-console-autocomplete)
 - Del: Composer download methods in abstract command
 - Del: phing developer dependency
 - Del: Bundled Composer library
