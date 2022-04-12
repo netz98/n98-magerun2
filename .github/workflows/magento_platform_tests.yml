@@ -42,7 +42,17 @@ jobs:
             git-repository: ''
             experimental: true
 
-          - magento-version: magento-ce-2.4.3-p1
+          - magento-version: magento-ce-2.4.4
+            operating-system: ubuntu-latest
+            php-version: 8.1
+            mysql-version: 8.0
+            elsticsearch-version: 7.16.0
+            composer-version: v2
+            use-git-repository: false
+            git-repository: ''
+            git-branch: ''
+
+          - magento-version: magento-ce-2.4.3-p2
             operating-system: ubuntu-latest
             php-version: 7.4
             mysql-version: 8.0
@@ -92,6 +102,16 @@ jobs:
             git-repository: ''
             git-branch: ''
 
+          - magento-version: magento-ce-2.3.7-p3
+            operating-system: ubuntu-latest
+            php-version: 7.3
+            mysql-version: 5.7
+            elsticsearch-version: 7.6.0
+            composer-version: v1
+            use-git-repository: false
+            git-repository: ''
+            git-branch: ''
+            
           - magento-version: magento-ce-2.3.5-p2
             operating-system: ubuntu-latest
             php-version: 7.3
