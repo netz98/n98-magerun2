@@ -15,8 +15,6 @@ use UnexpectedValueException;
 use WpOrg\Requests\Hooks;
 use WpOrg\Requests\Requests;
 
-use function error_reporting;
-
 /**
  * @codeCoverageIgnore
  * @author Igor Wiedler <igor@wiedler.ch>
@@ -100,7 +98,6 @@ EOT
         }
 
         $latestVersion = $response->body;
-
 
         if ($this->isOutdatedVersion($latestVersion, $loadUnstable)) {
             $output->writeln(sprintf("Updating to version <info>%s</info>.", $latestVersion));
@@ -248,7 +245,6 @@ UNSTABLE_FOOTER;
 
             $changelog .= $unstableFooterMessage . "\n";
         }
-
 
         return $changelog;
     }
