@@ -1,6 +1,10 @@
 RECENT CHANGES
 ==============
 
+5.0.1
+-----
+- Fix: #964: Broken with guzzle dependency chain
+
 5.0.0
 -----
 
