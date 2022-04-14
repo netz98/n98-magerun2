@@ -155,9 +155,24 @@ EOT
     private function downloadNewPhar(OutputInterface $output, string $remoteUrl, string $tempFilename)
     {
         $progressBar = new ProgressBar($output);
-        $progressBar->setFormat('[%bar%] %current% downloaded');
+        $progressBar->setFormat('[%bar%] %current% of %max% bytes downloaded');
 
         $hooks = new Hooks();
+
+        $response = Requests::head($remoteUrl, [], ['verify' => false]);
+
+        if (!$response->success) {
+            throw new RuntimeException('Cannot download phar file: ' . $response->status_code);
+        }
+
+        $filesize = $response->headers['content-length'];
+
+        $hooks->register('curl.after_request', function (&$headers, &$info) use (&$filesize) {
+            $filesize = $info['size_download'];
+        });
+
+        $progressBar->setMaxSteps($filesize);
+
         $hooks->register(
             'request.progress',
             function ($data, $responseBytes, $responseByteLimit) use ($progressBar) {
@@ -165,7 +180,7 @@ EOT
             }
         );
 
-        $response = Requests::get($remoteUrl, [], ['hooks' => $hooks, 'verify' => false]);
+        $response = Requests::get($remoteUrl, [], ['blocking' => true, 'hooks' => $hooks, 'verify' => false]);
 
         if (!$response->success) {
             throw new RuntimeException('Cannot download phar file: ' . $response->status_code);
