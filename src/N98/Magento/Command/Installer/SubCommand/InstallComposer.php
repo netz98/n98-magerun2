@@ -2,9 +2,9 @@
 
 namespace N98\Magento\Command\Installer\SubCommand;
 
-use GuzzleHttp\Client;
 use N98\Magento\Command\SubCommand\AbstractSubCommand;
 use N98\Util\OperatingSystem;
+use WpOrg\Requests\Requests;
 
 /**
  * Class InstallComposer
@@ -58,9 +58,13 @@ class InstallComposer extends AbstractSubCommand
     {
         $this->output->writeln('<info>Could not find composer. Try to download it.</info>');
 
-        $client = new Client();
-        $response = $client->get('https://getcomposer.org/installer');
-        $composerInstaller = (string) $response->getBody();
+        $response = Requests::get('https://getcomposer.org/installer');
+
+        if (!$response->success) {
+            throw new \RuntimeException('Cannot download Composer installer: ' . $response->status_code);
+        }
+
+        $composerInstaller = $response->body;
 
         $tempComposerInstaller = $this->config['initialFolder'] . '/_composer_installer.php';
         file_put_contents($tempComposerInstaller, $composerInstaller);
@@ -79,9 +83,9 @@ class InstallComposer extends AbstractSubCommand
         $installationOutput = implode(PHP_EOL, $installationOutput);
         if ($returnStatus !== self::EXEC_STATUS_OK) {
             throw new \Exception('Installation failed.' . $installationOutput);
-        } else {
-            $this->output->writeln('<info>Successfully installed composer to Magento root</info>');
         }
+
+        $this->output->writeln('<info>Successfully installed composer to Magento root</info>');
 
         return $this->config['initialFolder'] . '/composer.phar';
     }

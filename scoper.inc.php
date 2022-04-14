@@ -16,7 +16,6 @@ return [
         'Composer\\*',
         'Magento\\*',
         'N98\\*',
-        'GuzzleHttp\\*',
         'Symfony\\Polyfill\\*',
         'Symfony\\Component\\Console\\*',
     ],
