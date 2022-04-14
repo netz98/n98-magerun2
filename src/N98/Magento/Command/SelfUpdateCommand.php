@@ -2,13 +2,20 @@
 
 namespace N98\Magento\Command;
 
-use GuzzleHttp\Client;
-use GuzzleHttp\Exception\GuzzleException;
+use Exception;
 use N98\Util\Markdown\VersionFilePrinter;
+use Phar;
+use PharException;
+use RuntimeException;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use UnexpectedValueException;
+use WpOrg\Requests\Hooks;
+use WpOrg\Requests\Requests;
+
+use function error_reporting;
 
 /**
  * @codeCoverageIgnore
@@ -17,12 +24,12 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class SelfUpdateCommand extends AbstractMagentoCommand
 {
-    const VERSION_TXT_URL_UNSTABLE = 'https://raw.githubusercontent.com/netz98/n98-magerun2/develop/version.txt';
-    const MAGERUN_DOWNLOAD_URL_UNSTABLE = 'https://files.magerun.net/n98-magerun2-dev.phar';
-    const VERSION_TXT_URL_STABLE = 'https://raw.githubusercontent.com/netz98/n98-magerun2/master/version.txt';
-    const MAGERUN_DOWNLOAD_URL_STABLE = 'https://files.magerun.net/n98-magerun2.phar';
-    const CHANGELOG_DOWNLOAD_URL_UNSTABLE = 'https://raw.github.com/netz98/n98-magerun2/develop/CHANGELOG.md';
-    const CHANGELOG_DOWNLOAD_URL_STABLE = 'https://raw.github.com/netz98/n98-magerun2/master/CHANGELOG.md';
+    public const VERSION_TXT_URL_UNSTABLE = 'https://raw.githubusercontent.com/netz98/n98-magerun2/develop/version.txt';
+    public const MAGERUN_DOWNLOAD_URL_UNSTABLE = 'https://files.magerun.net/n98-magerun2-dev.phar';
+    public const VERSION_TXT_URL_STABLE = 'https://raw.githubusercontent.com/netz98/n98-magerun2/master/version.txt';
+    public const MAGERUN_DOWNLOAD_URL_STABLE = 'https://files.magerun.net/n98-magerun2.phar';
+    public const CHANGELOG_DOWNLOAD_URL_UNSTABLE = 'https://raw.github.com/netz98/n98-magerun2/develop/CHANGELOG.md';
+    public const CHANGELOG_DOWNLOAD_URL_STABLE = 'https://raw.github.com/netz98/n98-magerun2/master/CHANGELOG.md';
 
     protected function configure()
     {
@@ -65,14 +72,14 @@ EOT
 
         // check for permissions in local filesystem before start connection process
         if (!is_writable($tempDirectory = dirname($tempFilename))) {
-            throw new \RuntimeException(
+            throw new RuntimeException(
                 'n98-magerun2 update failed: the "' . $tempDirectory .
                 '" directory used to download the temp file could not be written'
             );
         }
 
         if (!is_writable($localFilename)) {
-            throw new \RuntimeException(
+            throw new RuntimeException(
                 'n98-magerun2 update failed: the "' . $localFilename . '" file could not be written'
             );
         }
@@ -86,13 +93,14 @@ EOT
             $remotePharDownloadUrl = self::MAGERUN_DOWNLOAD_URL_STABLE;
         }
 
-        $client = new Client();
-        try {
-            $response = $client->get($versionTxtUrl);
-            $latestVersion = (string) $response->getBody();
-        } catch (GuzzleException $e) {
-            throw new \RuntimeException('Cannot get version: ' . $e->getMessage());
+        $response = Requests::get($versionTxtUrl, [], ['verify' => false]);
+
+        if (!$response->success) {
+            throw new RuntimeException('Cannot get version: ' . $response->status_code);
         }
+
+        $latestVersion = $response->body;
+
 
         if ($this->isOutdatedVersion($latestVersion, $loadUnstable)) {
             $output->writeln(sprintf("Updating to version <info>%s</info>.", $latestVersion));
@@ -115,9 +123,9 @@ EOT
                 $output->writeln('<info>---------------------------------</info>');
 
                 $this->_exit(0);
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 @unlink($tempFilename);
-                if (!$e instanceof \UnexpectedValueException && !$e instanceof \PharException) {
+                if (!$e instanceof UnexpectedValueException && !$e instanceof PharException) {
                     throw $e;
                 }
                 $output->writeln('<error>The download is corrupted (' . $e->getMessage() . ').</error>');
@@ -146,33 +154,30 @@ EOT
      * @param \Symfony\Component\Console\Output\OutputInterface $output
      * @param string $remoteUrl
      * @param string $tempFilename
-     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     private function downloadNewPhar(OutputInterface $output, string $remoteUrl, string $tempFilename)
     {
-        try {
-            $progressBar = new ProgressBar($output);
-            $progressBar->setFormat('[%bar%] %current% of %max% bytes downloaded');
+        $progressBar = new ProgressBar($output);
+        $progressBar->setFormat('[%bar%] %current% downloaded');
 
-            $client = new Client([
-                'progress' => function (
-                    $downloadTotal,
-                    $downloadedBytes,
-                    $uploadTotal,
-                    $uploadedBytes
-                ) use ($progressBar) {
-                    $progressBar->setMaxSteps($downloadTotal);
-                    $progressBar->setProgress($downloadedBytes);
-                },
-            ]);
-
-            $client->get($remoteUrl, ['sink' => $tempFilename]);
-
-            if (!file_exists($tempFilename)) {
-                $output->writeln('<error>The download of the new n98-magerun2 version failed for an unexpected reason');
+        $hooks = new Hooks();
+        $hooks->register(
+            'request.progress',
+            function ($data, $responseBytes, $responseByteLimit) use ($progressBar) {
+                $progressBar->setProgress($responseBytes);
             }
-        } catch (\GuzzleException $e) {
-            throw new \RuntimeException('Cannot download phar file: ' . $e->getMessage());
+        );
+
+        $response = Requests::get($remoteUrl, [], ['hooks' => $hooks, 'verify' => false]);
+
+        if (!$response->success) {
+            throw new RuntimeException('Cannot download phar file: ' . $response->status_code);
+        }
+
+        file_put_contents($tempFilename, $response->body);
+
+        if (!file_exists($tempFilename)) {
+            $output->writeln('<error>The download of the new n98-magerun2 version failed for an unexpected reason');
         }
     }
 
@@ -182,11 +187,11 @@ EOT
      */
     private function checkNewPharFile($tempFilename, $localFilename)
     {
-        \error_reporting(E_ALL); // supress notices
+        error_reporting(E_ALL); // supress notices
 
         @chmod($tempFilename, 0777 & ~umask());
         // test the phar validity
-        $phar = new \Phar($tempFilename);
+        $phar = new Phar($tempFilename);
         // free the variable to unlock the file
         unset($phar);
     }
@@ -198,7 +203,7 @@ EOT
     private function replaceExistingPharFile($tempFilename, $localFilename)
     {
         if (!@rename($tempFilename, $localFilename)) {
-            throw new \RuntimeException(
+            throw new RuntimeException(
                 sprintf('Cannot replace existing phar file "%s". Please check permissions.', $localFilename)
             );
         }
@@ -215,22 +220,25 @@ EOT
     {
         $changelog = '';
 
-        try {
-            if ($loadUnstable) {
-                $changeLogUrl = self::CHANGELOG_DOWNLOAD_URL_UNSTABLE;
-            } else {
-                $changeLogUrl = self::CHANGELOG_DOWNLOAD_URL_STABLE;
-            }
-            $client = new Client();
-            $response = $client->get($changeLogUrl);
-            $changeLogContent = (string)$response->getBody();
-            if ($changeLogContent) {
-                $versionFilePrinter = new VersionFilePrinter($changeLogContent);
-                $previousVersion = $this->getApplication()->getVersion();
-                $changelog .= $versionFilePrinter->printFromVersion($previousVersion) . "\n";
-            }
-            if ($loadUnstable) {
-                $unstableFooterMessage = <<<UNSTABLE_FOOTER
+        if ($loadUnstable) {
+            $changeLogUrl = self::CHANGELOG_DOWNLOAD_URL_UNSTABLE;
+        } else {
+            $changeLogUrl = self::CHANGELOG_DOWNLOAD_URL_STABLE;
+        }
+        $response = Requests::get($changeLogUrl, [], ['verify' => false]);
+
+        if (!$response->success) {
+            throw new RuntimeException('Cannot download changelog: ' . $response->status_code);
+        }
+
+        $changeLogContent = $response->body;
+        if ($changeLogContent) {
+            $versionFilePrinter = new VersionFilePrinter($changeLogContent);
+            $previousVersion = $this->getApplication()->getVersion();
+            $changelog .= $versionFilePrinter->printFromVersion($previousVersion) . "\n";
+        }
+        if ($loadUnstable) {
+            $unstableFooterMessage = <<<UNSTABLE_FOOTER
 <comment>
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !! DEVELOPMENT VERSION. DO NOT USE IN PRODUCTION !!
@@ -238,11 +246,9 @@ EOT
 </comment>
 UNSTABLE_FOOTER;
 
-                $changelog .= $unstableFooterMessage . "\n";
-            }
-        } catch (GuzzleException $e) {
-            throw new \RuntimeException('Cannot download changelog: ' . $e->getMessage());
+            $changelog .= $unstableFooterMessage . "\n";
         }
+
 
         return $changelog;
     }
