@@ -272,4 +272,4 @@ jobs:
           composer self-update --2
           bash ./build.sh
           bash tests/phar-test.sh "./n98-magerun2.phar" "$GITHUB_WORKSPACE/magento"
-          composer self-update --rollback
+          composer self-update --rollback &> /dev/null || true
