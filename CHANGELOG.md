@@ -1,6 +1,10 @@
 RECENT CHANGES
 ==============
 
+5.0.2
+-----
+- Fix: #966: InstalledVersions.php could not be opened
+
 5.0.1
 -----
 - Fix: #964: Broken with guzzle dependency chain
