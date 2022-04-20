@@ -20,6 +20,7 @@ jobs:
     runs-on: ${{ matrix.operating-system }}
     strategy:
       matrix:
+        php-versions: ['7.3', '7.4', '8.1']
         include:
           - magento-version: magento-ce-2.4-develop
             operating-system: ubuntu-latest
@@ -267,10 +268,23 @@ jobs:
       - name: Run PHPUnit (Production Mode)
         run: vendor/bin/phpunit --debug --process-isolation
 
-      - name: Run phar functional tests
+      - name: Setup PHP for Composer
+        uses: shivammathur/setup-php@v2
+        with:
+          tools: composer:2
+          php-version: '7.4'
+
+      - name: Build phar file
         run: |
           composer self-update --2
           composer global remove hirak/prestissimo
           bash ./build.sh
-          bash tests/phar-test.sh "./n98-magerun2.phar" "$GITHUB_WORKSPACE/magento"
           composer self-update --rollback &> /dev/null || true
+
+      - name: Setup PHP for Composer
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+
+      - name: Run phar functional tests
+        run: bash tests/phar-test.sh "./n98-magerun2.phar" "$GITHUB_WORKSPACE/magento"
