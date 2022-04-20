@@ -270,6 +270,7 @@ jobs:
       - name: Run phar functional tests
         run: |
           composer self-update --2
+          composer global remove hirak/prestissimo
           bash ./build.sh
           bash tests/phar-test.sh "./n98-magerun2.phar" "$GITHUB_WORKSPACE/magento"
           composer self-update --rollback &> /dev/null || true
