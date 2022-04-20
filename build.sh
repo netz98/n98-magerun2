@@ -75,6 +75,10 @@ function create_new_phar() {
   # which will then create a no reproducable phar file with a differenz MD5
   $COMPOSER_BIN config autoloader-suffix N98MagerunNTS
 
+  # Required for some Github Action edge cases where the file vendor/composer/installed.php
+  # could not be found if previous Magerun installation was done with Composer 1
+  $COMPOSER_BIN dump-autoload
+
   $PHP_BIN $BOX_BIN compile
 
   # unset composer suffix
