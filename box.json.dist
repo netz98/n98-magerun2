@@ -4,7 +4,8 @@
     "datetime": "release-date",
     "files": [
         "config.yaml",
-        "src/bootstrap.php"
+        "src/bootstrap.php",
+        "vendor/composer/installed.php"
     ],
     "force-autodiscovery": true,
     "directories": [
