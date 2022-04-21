@@ -25,7 +25,7 @@ class RunCommand extends AbstractCronCommand
             ->setDescription('Runs a cronjob by job code');
         $help = <<<HELP
 If no `job` argument is passed you can select a job from a list.
-See it in action: http://www.youtube.com/watch?v=QkzkLgrfNaM
+See it in action: https://www.youtube.com/watch?v=QkzkLgrfNaM
 HELP;
         $this->setHelp($help);
     }
@@ -59,7 +59,7 @@ HELP;
         $schedule
             ->setJobCode($jobCode)
             ->setStatus(Schedule::STATUS_RUNNING)
-            ->setExecutedAt(strftime('%Y-%m-%d %H:%M:%S', $this->getCronTimestamp()))
+            ->setFinishedAt(date('Y-m-d H:i:s', $this->getCronTimestamp()))
             ->save();
 
         try {
@@ -67,13 +67,13 @@ HELP;
 
             $schedule
                 ->setStatus(Schedule::STATUS_SUCCESS)
-                ->setFinishedAt(strftime('%Y-%m-%d %H:%M:%S', $this->getCronTimestamp()))
+                ->setFinishedAt(date('Y-m-d H:i:s', $this->getCronTimestamp()))
                 ->save();
         } catch (Exception $e) {
             $schedule
                 ->setStatus(Schedule::STATUS_ERROR)
                 ->setMessages($e->getMessage())
-                ->setFinishedAt(strftime('%Y-%m-%d %H:%M:%S', $this->getCronTimestamp()))
+                ->setFinishedAt(date('Y-m-d H:i:s', $this->getCronTimestamp()))
                 ->save();
         }
 
