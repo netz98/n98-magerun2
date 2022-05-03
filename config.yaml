@@ -204,14 +204,18 @@ commands:
             sales_order_status_history
             sales_order_tax
             sales_order_tax_item
+            sequence_order_*
           sales_invoice
             sales_invoice_*
             sales_invoiced_*
+            sequence_invoice_*
           sales_shipment
             sales_shipment_*
             sales_shipping_*
+            sequence_shipment_*
           sales_creditmemo
             sales_creditmemo_*
+            sequence_creditmemo_*
           sales_recurring_* sales_refunded_* sales_payment_*
           enterprise_sales_* enterprise_customer_sales_* sales_bestsellers_* magento_customercustomattributes_sales_flat_*
           inventory_reservation
@@ -219,6 +223,7 @@ commands:
           paypal_payment_transaction
           paypal_settlement_report*
           magento_rma magento_rma_grid magento_rma_status_history magento_rma_shipping_label magento_rma_item_entity
+            sequence_rma_item_*
           magento_sales_order_grid_archive magento_sales_creditmemo_grid_archive magento_sales_invoice_grid_archive magento_sales_shipment_grid_archive
 
       - id: quotes
