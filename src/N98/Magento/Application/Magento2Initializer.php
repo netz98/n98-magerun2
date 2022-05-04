@@ -34,7 +34,7 @@ class Magento2Initializer
     public function init($magentoRootFolder)
     {
         $this->requireOnce($magentoRootFolder . '/app/bootstrap.php');
-        $this->pharWrapperFix();
+        \N98\Util\PharWrapper::ensurePharWrapperIsRegistered();
 
         $magentoAutoloader = AutoloaderRegistry::getAutoloader();
 
@@ -78,18 +78,5 @@ class Magento2Initializer
         }
 
         $requireOnce($path);
-    }
-
-    /**
-     * Magento 2.3.1 removes the phar wrapper
-     */
-    private function pharWrapperFix()
-    {
-        // Magento 2.3.1 removes phar stream wrapper.
-        if (!in_array('phar', \stream_get_wrappers(), true)) {
-            if (!\stream_wrapper_restore('phar')) {
-                stream_wrapper_register('phar', \TYPO3\PharStreamWrapper\PharStreamWrapper::class);
-            }
-        }
     }
 }

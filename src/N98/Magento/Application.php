@@ -484,11 +484,7 @@ class Application extends BaseApplication
         // Magento was found -> register core cli commands
         try {
             $this->requireOnce($magentoRootFolder . '/app/bootstrap.php');
-
-            // Magento 2.3.1 removes phar stream wrapper.
-            if (!in_array('phar', \stream_get_wrappers(), true)) {
-                \stream_wrapper_restore('phar');
-            }
+            \N98\Util\PharWrapper::ensurePharWrapperIsRegistered();
         } catch (Exception $ex) {
             $this->renderThrowable($ex, $output);
             $output->writeln(
