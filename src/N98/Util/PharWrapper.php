@@ -16,7 +16,8 @@ class PharWrapper
      * Some dummy method to let the autoloader load the class before it's unregistered
      */
     public static function init()
-    {}
+    {
+    }
 
     /**
      * Magento 2.3.1 removes the phar wrapper so we re-register it
