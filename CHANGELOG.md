@@ -1,6 +1,13 @@
 RECENT CHANGES
 ==============
 
+5.0.x
+-----
+
+- Fallback logic for phar stream wrapper
+
+unrelesed
+
 5.0.2
 -----
 - Fix: #966: InstalledVersions.php could not be opened
