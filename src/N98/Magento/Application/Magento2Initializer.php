@@ -33,6 +33,7 @@ class Magento2Initializer
      */
     public function init($magentoRootFolder)
     {
+        \N98\Util\PharWrapper::init();
         $this->requireOnce($magentoRootFolder . '/app/bootstrap.php');
         \N98\Util\PharWrapper::ensurePharWrapperIsRegistered();
 

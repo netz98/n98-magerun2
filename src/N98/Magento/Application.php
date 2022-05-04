@@ -483,6 +483,7 @@ class Application extends BaseApplication
 
         // Magento was found -> register core cli commands
         try {
+            \N98\Util\PharWrapper::init();
             $this->requireOnce($magentoRootFolder . '/app/bootstrap.php');
             \N98\Util\PharWrapper::ensurePharWrapperIsRegistered();
         } catch (Exception $ex) {
