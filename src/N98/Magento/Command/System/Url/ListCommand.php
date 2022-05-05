@@ -110,7 +110,7 @@ HELP;
         }
 
         $stores = explode(',', (string) $input->getArgument('stores'));
-        if (empty($stores) {
+        if (empty($stores)) {
             $stores = array_keys($this->storeManager->getStores());
         }
 
