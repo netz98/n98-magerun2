@@ -89,11 +89,13 @@ HELP;
             'like' => str_replace('*', '%', $searchPath),
         ]);
 
-        if ($scope = $input->getOption('scope')) {
+        $scope = $input->getOption('scope');
+        if ($scope) {
             $collection->addFieldToFilter('scope', ['eq' => $scope]);
         }
 
-        if ($scopeId = $input->getOption('scope-id') != '') {
+        $scopeId = $input->getOption('scope-id');
+        if ($scopeId !== '') {
             $collection->addFieldToFilter(
                 'scope_id',
                 ['eq' => $scopeId]
