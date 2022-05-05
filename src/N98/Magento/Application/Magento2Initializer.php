@@ -33,9 +33,7 @@ class Magento2Initializer
      */
     public function init($magentoRootFolder)
     {
-        \N98\Util\PharWrapper::init();
-        $this->requireOnce($magentoRootFolder . '/app/bootstrap.php');
-        \N98\Util\PharWrapper::ensurePharWrapperIsRegistered();
+        self::loadMagentoBootstrap($magentoRootFolder);
 
         $magentoAutoloader = AutoloaderRegistry::getAutoloader();
 
@@ -63,21 +61,12 @@ class Magento2Initializer
         return $app;
     }
 
-    /**
-     * use require-once inside a function with it's own variable scope w/o any other variables
-     * and $this unbound.
-     *
-     * @param string $path
-     */
-    private function requireOnce($path)
+    public static function loadMagentoBootstrap($magentoRootFolder)
     {
-        $requireOnce = function () {
-            require_once func_get_arg(0);
-        };
-        if (50400 <= PHP_VERSION_ID) {
-            $requireOnce->bindTo(null);
-        }
-
-        $requireOnce($path);
+        \N98\Util\PharWrapper::init();
+        $oldErrorHandler = set_error_handler(function() { return true; }, E_WARNING);
+        require_once $magentoRootFolder . '/app/bootstrap.php';
+        set_error_handler($oldErrorHandler, E_WARNING);
+        \N98\Util\PharWrapper::ensurePharWrapperIsRegistered();
     }
 }

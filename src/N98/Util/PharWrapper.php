@@ -26,9 +26,7 @@ class PharWrapper
     {
         // Magento 2.3.1 removes phar stream wrapper.
         if (!in_array('phar', \stream_get_wrappers(), true)) {
-            if (!\stream_wrapper_restore('phar')) {
-                stream_wrapper_register('phar', \TYPO3\PharStreamWrapper\PharStreamWrapper::class);
-            }
+            \stream_wrapper_restore('phar');
         }
     }
 }
