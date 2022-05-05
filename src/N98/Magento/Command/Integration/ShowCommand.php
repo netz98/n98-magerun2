@@ -2,14 +2,17 @@
 
 namespace N98\Magento\Command\Integration;
 
+use Magento\Authorization\Model\UserContextInterface;
+use Magento\Integration\Model\Integration;
 use Magento\Integration\Model\IntegrationService;
+use Magento\Integration\Model\Oauth\TokenFactory;
 use Magento\Integration\Model\OauthService;
-use Magento\Integration\Model\ResourceModel\Oauth\Token\CollectionFactory as TokenCollectionFactory;
 use N98\Magento\Command\AbstractMagentoCommand;
-use N98\Magento\Command\Integration\Renderer\TableRenderer;
+use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
 use Symfony\Component\Console\Exception\RuntimeException;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
@@ -29,26 +32,37 @@ class ShowCommand extends AbstractMagentoCommand
     private $oauthService;
 
     /**
-     * @var TokenCollectionFactory
+     * @var TokenFactory
      */
-    private $tokenCollectionFactory;
+    private $tokenFactory;
 
     protected function configure()
     {
         $this
             ->setName('integration:show')
             ->addArgument('name', InputArgument::REQUIRED, 'Name or ID of the integration')
-            ->setDescription('Show details of an existing integration.');
+            ->setDescription('Show details of an existing integration.')
+            ->addArgument(
+                'key',
+                InputArgument::OPTIONAL,
+                'Only output value of named param like "Access Token". Key is case insensitive.'
+            )
+            ->addOption(
+                'format',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'Output Format. One of [' . implode(',', RendererFactory::getFormats()) . ']'
+            );
     }
 
     public function inject(
         IntegrationService $integrationService,
         OauthService $oauthService,
-        TokenCollectionFactory $tokenCollectionFactory
+        TokenFactory $tokenFactory
     ) {
         $this->integrationService = $integrationService;
         $this->oauthService = $oauthService;
-        $this->tokenCollectionFactory = $tokenCollectionFactory;
+        $this->tokenFactory = $tokenFactory;
     }
 
     /**
@@ -73,17 +87,72 @@ class ShowCommand extends AbstractMagentoCommand
 
         $consumerModel = $this->oauthService->loadConsumer($integrationModel->getConsumerId());
 
-        $tokenModel = $this->tokenCollectionFactory
-            ->create()
-            ->addFilterByConsumerId($integrationModel->getConsumerId())
-            ->getFirstItem();
-
-        $table = new TableRenderer(
-            $output,
-            $integrationModel,
-            $consumerModel,
-            $tokenModel
+        $tokenModel = $this->tokenFactory->create();
+        $tokenModel->loadByConsumerIdAndUserType(
+            $integrationModel->getConsumerId(),
+            UserContextInterface::USER_TYPE_INTEGRATION
         );
-        $table->render();
+
+        $data = array_merge(
+            $this->getIntegrationData($integrationModel),
+            $this->getConsumerData($consumerModel),
+            $this->getTokenData($tokenModel)
+        );
+
+        if (($settingArgument = $input->getArgument('key')) !== null) {
+            $settingArgument = strtolower($settingArgument);
+            $data = array_change_key_case($data, CASE_LOWER);
+            if (!isset($data[$settingArgument])) {
+                throw new \InvalidArgumentException('Unknown key: ' . $settingArgument);
+            }
+            $output->writeln((string)$data[$settingArgument]);
+            return 0;
+        }
+
+        $table = [];
+
+        foreach ($data as $key => $value) {
+            $table[] = [$key, $value];
+        }
+
+        if (($settingArgument = $input->getArgument('key')) !== null) {
+            $settingArgument = strtolower($settingArgument);
+            $data = array_change_key_case($data, CASE_LOWER);
+            if (!isset($data[$settingArgument])) {
+                throw new \InvalidArgumentException('Unknown key: ' . $settingArgument);
+            }
+            $output->writeln((string)$this->infos[$settingArgument]);
+        } else {
+            $this->getHelper('table')
+                ->setHeaders(['name', 'value'])
+                ->renderByFormat($output, $table, $input->getOption('format'));
+        }
+    }
+
+    private function getIntegrationData($integrationModel): array
+    {
+        return [
+            'Integration ID' => $integrationModel->getId(),
+            'Name' => $integrationModel->getName(),
+            'Email' => $integrationModel->getEmail(),
+            'Endpoint' => $integrationModel->getEndpoint(),
+            'Status' => $integrationModel->getStatus() == Integration::STATUS_ACTIVE ? 'Active' : 'Inactive',
+        ];
+    }
+
+    private function getConsumerData($consumerModel): array
+    {
+        return [
+            'Consumer Key' => $consumerModel->getKey(),
+            'Consumer Secret' => $consumerModel->getSecret(),
+        ];
+    }
+
+    private function getTokenData($tokenModel): array
+    {
+        return [
+            'Access Token' => $tokenModel->getToken(),
+            'Access Token Secret' => $tokenModel->getSecret(),
+        ];
     }
 }
