@@ -3,7 +3,6 @@
 namespace N98\Magento\Command\Integration;
 
 use Magento\Authorization\Model\UserContextInterface;
-use Magento\Integration\Model\Integration;
 use Magento\Integration\Model\IntegrationService;
 use Magento\Integration\Model\Oauth\TokenFactory;
 use Magento\Integration\Model\OauthService;
@@ -21,6 +20,8 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class ShowCommand extends AbstractMagentoCommand
 {
+    use IntegrationDataTrait;
+
     /**
      * @var IntegrationService
      */
@@ -127,32 +128,5 @@ class ShowCommand extends AbstractMagentoCommand
                 ->setHeaders(['name', 'value'])
                 ->renderByFormat($output, $table, $input->getOption('format'));
         }
-    }
-
-    private function getIntegrationData($integrationModel): array
-    {
-        return [
-            'Integration ID' => $integrationModel->getId(),
-            'Name' => $integrationModel->getName(),
-            'Email' => $integrationModel->getEmail(),
-            'Endpoint' => $integrationModel->getEndpoint(),
-            'Status' => $integrationModel->getStatus() == Integration::STATUS_ACTIVE ? 'Active' : 'Inactive',
-        ];
-    }
-
-    private function getConsumerData($consumerModel): array
-    {
-        return [
-            'Consumer Key' => $consumerModel->getKey(),
-            'Consumer Secret' => $consumerModel->getSecret(),
-        ];
-    }
-
-    private function getTokenData($tokenModel): array
-    {
-        return [
-            'Access Token' => $tokenModel->getToken(),
-            'Access Token Secret' => $tokenModel->getSecret(),
-        ];
     }
 }

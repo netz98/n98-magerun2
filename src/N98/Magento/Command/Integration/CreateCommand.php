@@ -10,7 +10,7 @@ use Magento\Integration\Model\Oauth\Consumer as ConsumerModel;
 use Magento\Integration\Model\Oauth\Token;
 use Magento\Integration\Model\ResourceModel\Oauth\Consumer;
 use N98\Magento\Command\AbstractMagentoCommand;
-use N98\Magento\Command\Integration\Renderer\TableRenderer as TableRenderer;
+use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
 use Symfony\Component\Console\Exception\RuntimeException;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -23,6 +23,8 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class CreateCommand extends AbstractMagentoCommand
 {
+    use IntegrationDataTrait;
+
     /**
      * @var \Magento\Integration\Model\IntegrationFactory
      */
@@ -70,6 +72,12 @@ class CreateCommand extends AbstractMagentoCommand
             ->addOption('access-token', '', InputOption::VALUE_REQUIRED, 'Access-Token (length 32 chars)')
             ->addOption('access-token-secret', '', InputOption::VALUE_REQUIRED, 'Access-Token Secret (length 32 chars)')
             ->addOption('resource', 'r', InputOption::VALUE_IS_ARRAY|InputOption::VALUE_REQUIRED, 'Defines a granted ACL resource', [])
+            ->addOption(
+                'format',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'Output Format. One of [' . implode(',', RendererFactory::getFormats()) . ']'
+            )
             ->setDescription('Create a new integration');
 
         $help = <<<HELP
@@ -130,13 +138,21 @@ HELP;
         $this->grantPermissions($integrationModel, $grantedResources);
         $tokenModel = $this->activateToken($integrationModel, $accessToken, $accessTokenSecret);
 
-        $table = new TableRenderer(
-            $output,
-            $integrationModel,
-            $consumerModel,
-            $tokenModel
+        $data = array_merge(
+            $this->getIntegrationData($integrationModel),
+            $this->getConsumerData($consumerModel),
+            $this->getTokenData($tokenModel)
         );
-        $table->render();
+
+        $table = [];
+
+        foreach ($data as $key => $value) {
+            $table[] = [$key, $value];
+        }
+
+        $this->getHelper('table')
+            ->setHeaders(['name', 'value'])
+            ->renderByFormat($output, $table, $input->getOption('format'));
     }
 
     /**
