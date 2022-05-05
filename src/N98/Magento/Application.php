@@ -39,7 +39,7 @@ class Application extends BaseApplication
     /**
      * @var string
      */
-    const APP_NAME = 'n98-magerun2';
+    const APP_NAME = '@application_name@';
 
     /**
      * @var string
@@ -125,7 +125,13 @@ class Application extends BaseApplication
     public function __construct($autoloader = null)
     {
         $this->autoloader = $autoloader;
-        parent::__construct(self::APP_NAME, self::APP_VERSION);
+
+        $appName = self::APP_NAME;
+        if ($appName === '@application_name@') {
+            $appName = 'n98-magerun2';
+        }
+
+        parent::__construct($appName, self::APP_VERSION);
 
         $this->preloadClassesBeforeMagentoCore();
     }

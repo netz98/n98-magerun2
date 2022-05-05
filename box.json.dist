@@ -13,6 +13,9 @@
         "res",
         "vendor/twig/twig/src"
     ],
+    "replacements": {
+        "application_name": "n98-magerun2"
+    },
     "git-commit-short": "git_commit_short",
     "stub": "build/phar/_cli_stub.php",
     "output": "n98-magerun2.phar"

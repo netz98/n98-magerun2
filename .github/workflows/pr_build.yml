@@ -1,0 +1,58 @@
+name: PR Build
+
+defaults:
+  run:
+    shell: bash
+
+on:
+  pull_request:
+    paths:
+      - "bin/**"
+      - "config.yaml"
+      - "composer.json"
+      - "composer.lock"
+      - "res/**"
+      - "scoper.inc.php"
+      - "src/**"
+      - "vendor/**"
+
+jobs:
+  build:
+    name: Build phar file for PR
+    runs-on: ubuntu-20.04
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          # We need to get all branches and tags for git describe to work properly
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      # Find out info about how github is getting the hash
+      - run: "git describe --tags --always --dirty"
+      - run: "(git log --oneline | head -5) || true"
+
+      - name: Get Composer Cache Directory
+        id: composer-cache
+        run: |
+          echo "::set-output name=dir::$(composer config cache-files-dir)"
+
+      - uses: actions/cache@v3
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-composer-
+
+      - name: Install dependencies
+        if: steps.composer-cache.outputs.cache-hit != 'true'
+        run: composer install --prefer-dist --no-progress --no-suggest
+
+      - name: Create phar
+        run: bash ./build.sh
+
+      - name: Upload all artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: n98-magerun2.phar
+          path: ${{ github.workspace }}/n98-magerun2.phar
