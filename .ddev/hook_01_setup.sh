@@ -40,8 +40,8 @@ function setup_test_magento_environments() {
 
     sudo chown -R "$(id -u):$(id -g)" /opt/magento-test-environments
 
-    $INSTALL_MAGENTO_CE_CMD "2.3.7-p2" no
-    $INSTALL_MAGENTO_CE_CMD "2.4.3-p1" yes
+    $INSTALL_MAGENTO_CE_CMD "2.3.7-p3" no
+    $INSTALL_MAGENTO_CE_CMD "2.4.4" yes
 }
 
 setup_composer
