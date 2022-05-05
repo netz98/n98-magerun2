@@ -3,8 +3,12 @@
 namespace N98\Magento\Application;
 
 use Composer\Autoload\ClassLoader;
+use Magento\Framework\App\Bootstrap;
 use Magento\Framework\Autoload\AutoloaderRegistry;
+use Magento\Store\Model\Store;
+use Magento\Store\Model\StoreManager;
 use N98\Magento\Framework\App\Magerun;
+use N98\Util\PharWrapper;
 
 /**
  * Class Magento2Initializer
@@ -48,11 +52,11 @@ class Magento2Initializer
         }
 
         $params = $_SERVER;
-        $params[\Magento\Store\Model\StoreManager::PARAM_RUN_CODE] = 'admin';
-        $params[\Magento\Store\Model\Store::CUSTOM_ENTRY_POINT_PARAM] = true;
+        $params[StoreManager::PARAM_RUN_CODE] = 'admin';
+        $params[Store::CUSTOM_ENTRY_POINT_PARAM] = true;
         $params['entryPoint'] = basename(__FILE__);
 
-        $bootstrap = \Magento\Framework\App\Bootstrap::create(BP, $params);
+        $bootstrap = Bootstrap::create(BP, $params);
         /** @var \Magento\Framework\App\Cron $app */
         $app = $bootstrap->createApplication(Magerun::class, []);
         /* @var $app \N98\Magento\Framework\App\Magerun */
@@ -63,10 +67,17 @@ class Magento2Initializer
 
     public static function loadMagentoBootstrap($magentoRootFolder)
     {
-        \N98\Util\PharWrapper::init();
-        $oldErrorHandler = set_error_handler(function() { return true; }, E_WARNING);
-        require_once $magentoRootFolder . '/app/bootstrap.php';
-        set_error_handler($oldErrorHandler, E_WARNING);
-        \N98\Util\PharWrapper::ensurePharWrapperIsRegistered();
+        static $loaded;
+
+        if (!$loaded) {
+            PharWrapper::init();
+            $oldErrorHandler = set_error_handler(function () {
+                return true;
+            }, E_WARNING);
+            require_once $magentoRootFolder . '/app/bootstrap.php';
+            set_error_handler($oldErrorHandler, E_WARNING);
+            PharWrapper::ensurePharWrapperIsRegistered();
+            $loaded = true;
+        }
     }
 }
