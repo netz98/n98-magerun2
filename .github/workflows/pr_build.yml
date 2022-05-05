@@ -64,3 +64,6 @@ jobs:
         with:
           name: n98-magerun2.phar
           path: ${{ github.workspace }}/n98-magerun2.phar
+
+      - name: Test run phar file
+        run: php ./n98-magerun2.phar --version
