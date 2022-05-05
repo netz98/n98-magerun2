@@ -490,9 +490,7 @@ class Application extends BaseApplication
 
         // Magento was found -> register core cli commands
         try {
-            \N98\Util\PharWrapper::init();
-            $this->requireOnce($magentoRootFolder . '/app/bootstrap.php');
-            \N98\Util\PharWrapper::ensurePharWrapperIsRegistered();
+            \N98\Magento\Application\Magento2Initializer::loadMagentoBootstrap($magentoRootFolder);
         } catch (Exception $ex) {
             $this->renderThrowable($ex, $output);
             $output->writeln(
@@ -518,24 +516,6 @@ class Application extends BaseApplication
             }
             $this->add($coreCliApplicationCommand);
         }
-    }
-
-    /**
-     * use require-once inside a function with it's own variable scope w/o any other variables
-     * and $this unbound.
-     *
-     * @param string $path
-     */
-    private function requireOnce($path)
-    {
-        $requireOnce = function () {
-            require_once func_get_arg(0);
-        };
-        if (50400 <= PHP_VERSION_ID) {
-            $requireOnce->bindTo(null);
-        }
-
-        $requireOnce($path);
     }
 
     /**
