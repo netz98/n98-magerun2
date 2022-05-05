@@ -11,6 +11,8 @@ class RendererFactory
     protected static $formats = [
         'csv'  => 'N98\Util\Console\Helper\Table\Renderer\CsvRenderer',
         'json' => 'N98\Util\Console\Helper\Table\Renderer\JsonRenderer',
+        'json_array' => 'N98\Util\Console\Helper\Table\Renderer\JsonArrayRenderer',
+        'yaml'  => 'N98\Util\Console\Helper\Table\Renderer\YamlRenderer',
         'xml'  => 'N98\Util\Console\Helper\Table\Renderer\XmlRenderer',
     ];
 
