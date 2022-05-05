@@ -55,9 +55,8 @@ class TableHelper extends AbstractHelper
      * @param OutputInterface $outputInterface
      * @param array $rows
      * @param string $format [optional]
-     * @param string $preserveKeys [optional]
      */
-    public function renderByFormat(OutputInterface $outputInterface, array $rows, $format = null, $preserveKeys = true)
+    public function renderByFormat(OutputInterface $outputInterface, array $rows, $format = null)
     {
         $rendererFactory = new RendererFactory();
         $renderer = $rendererFactory->create($format);
