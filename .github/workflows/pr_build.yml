@@ -49,9 +49,7 @@ jobs:
         run: composer install --prefer-dist --no-progress --no-suggest
 
       - name: Extract branch name
-        id: step_one
-        run: |
-          echo "::set-env name=BRANCH_NAME::$(echo ${GITHUB_REF#refs/heads/})" >> $GITHUB_ENV
+        run: echo "BRANCH_NAME=$(echo ${GITHUB_REF#refs/heads/})" >> $GITHUB_ENV
 
       - name: Set application name
         run: cat box.json.dist | jq -r '.replacements.application_name = "n98-magerun2-dev ${{ env.BRANCH_NAME }}"' > box.json
