@@ -127,7 +127,8 @@ class Application extends BaseApplication
         $this->autoloader = $autoloader;
 
         $appName = self::APP_NAME;
-        if ($appName === '@application_name@') {
+
+        if (strpos($appName, 'application_name') !== false) {
             $appName = 'n98-magerun2';
         }
 
