@@ -983,7 +983,13 @@ To see all available ACL resources, please run the command `config:data:acl`.
 #### Show infos about existing integration
 
 ```sh
-n98-magerun2.phar integration:show <name_or_id>
+n98-magerun2.phar integration:show --format[=FORMAT] <name_or_id> [key]
+```
+
+Example (print only Access Key):
+
+```sh
+n98-magerun2.phar integration:show 1 "Access Key"
 ```
 
 #### Delete integration
