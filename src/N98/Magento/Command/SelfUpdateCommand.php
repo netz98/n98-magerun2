@@ -53,6 +53,7 @@ EOT
      */
     public function isEnabled()
     {
+        return true;
         return $this->getApplication()->isPharMode();
     }
 
@@ -97,7 +98,7 @@ EOT
             throw new RuntimeException('Cannot get version: ' . $response->status_code);
         }
 
-        $latestVersion = $response->body;
+        $latestVersion = trim($response->body);
 
         if ($this->isOutdatedVersion($latestVersion, $loadUnstable)) {
             $output->writeln(sprintf("Updating to version <info>%s</info>.", $latestVersion));
