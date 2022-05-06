@@ -9,7 +9,7 @@ RECENT CHANGES
 - Imp: #976: Exclude sequence table data when associated entities are excluded (by Dan Wallis)
 - Imp: #979: Dynamically change application name in phar (by Christian Münch)
 - Imp: Update 3rd party dependencies (symfony/finder, psysh)
--- Imp: Github Actions (Artifact for PRs and dependabot for actions)
+- Imp: Github Actions (Artifact for PRs and dependabot for actions)
 - Fix: #984: integration show command (by Christian Münch)
 - Fix: #979 Replace strftime function calls (by Artur Jewuła)
 - Fix: #977: Prevent Deprecated Functionality under PHP 8.1 (by Jisse Reitsma)
