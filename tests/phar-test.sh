@@ -217,6 +217,9 @@ function test_magerun_commands() {
 	assert_command_contains "integration:list" "magerun-test"
 	#  integration:show
 	assert_command_contains "integration:show magerun-test" "Consumer Key"
+	assert_command_contains "integration:show magerun-test name" "magerun-test"
+	assert_command_contains "integration:show magerun-test --format=json" "Consumer Key"
+	assert_command_contains "integration:show magerun-test --format=yaml" "Consumer Key"
 	#  integration:delete
 	assert_command_contains "integration:delete magerun-test" "Successfully deleted integration"
 	#  media:dump
