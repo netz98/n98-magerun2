@@ -53,7 +53,6 @@ EOT
      */
     public function isEnabled()
     {
-        return true;
         return $this->getApplication()->isPharMode();
     }
 
