@@ -111,6 +111,7 @@ class ConsoleCommand extends AbstractMagentoCommand
         }
 
         $config->addCommands($commandsToAdd);
+        $config->setUpdateCheck('never');
 
         $shell = new Shell($config);
         $shell->setScopeVariables([
