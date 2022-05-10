@@ -1,6 +1,13 @@
 RECENT CHANGES
 ==============
 
+5.2.0-dev
+---------
+
+*unreleased*
+
+- Add: New dev:console debug helper functions (by Christian Münch)
+
 5.1.0
 -----
 
