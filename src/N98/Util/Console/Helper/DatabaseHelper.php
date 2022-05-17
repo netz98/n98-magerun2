@@ -725,7 +725,7 @@ class DatabaseHelper extends AbstractHelper
     {
         $this->detectDbSettings($output);
         $db = $this->getConnection();
-        $db->query('DROP DATABASE `' . $this->dbSettings['dbname'] . '`');
+        $db->query('DROP DATABASE IF EXISTS `' . $this->dbSettings['dbname'] . '`');
         $output->writeln('<info>Dropped database</info> <comment>' . $this->dbSettings['dbname'] . '</comment>');
     }
 
