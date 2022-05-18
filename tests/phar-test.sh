@@ -159,6 +159,8 @@ function test_magerun_commands() {
 	#assert_command_contains "dev:asset:clear" "deployed_version.txt"
 	#  dev:console
 	assert_command_interactive "dev:console" "exit" "Magento"
+	assert_command_interactive "dev:console" '$dh->debugCategoryById(2); exit' "include_in_menu"
+
 	#  dev:module:create
 	assert_command_contains "dev:module:create Magerun123 TestModule" "Created directory"
 	cleanup_files_in_magento "app/code/N98/Magerun123"
