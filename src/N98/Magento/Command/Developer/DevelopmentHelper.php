@@ -80,7 +80,16 @@ class DevelopmentHelper
      */
     public function debugCustomerById($id)
     {
-        return $this->getCustomerRepository()->getById($id)->debug();
+        return $this->getCustomerModel()->load($id)->debug();
+    }
+
+    /**
+     * @param $email
+     * @return array
+     */
+    public function debugCustomerByEmail($email)
+    {
+        return $this->getCustomerModel()->loadByEmail($email)->debug();
     }
 
     /**
@@ -91,9 +100,13 @@ class DevelopmentHelper
         return $this->di->get(\Magento\Customer\Api\CustomerRepositoryInterface::class);
     }
 
-    public function debugCustomerByEmail($email, $websiteId = 0)
+    /**
+     * @return \Magento\Customer\Model\Customer
+     */
+    public function getCustomerModel()
     {
-        return $this->getCustomerRepository()->get($email, $websiteId)->debug();
+        return $this->di->get(\Magento\Customer\Model\Customer::class);
+
     }
 
     /**
