@@ -87,9 +87,11 @@ class DevelopmentHelper
      * @param $email
      * @return array
      */
-    public function debugCustomerByEmail($email)
+    public function debugCustomerByEmail($email, $websiteId = 0)
     {
-        return $this->getCustomerModel()->loadByEmail($email)->debug();
+        // Remark: For simpliciy website is not validated and only has an effect, if
+        // the configuration customer/account_share/scope is 1
+        return $this->getCustomerModel()->setWebsiteId($websiteId)->loadByEmail($email)->debug();
     }
 
     /**
@@ -106,7 +108,6 @@ class DevelopmentHelper
     public function getCustomerModel()
     {
         return $this->di->get(\Magento\Customer\Model\Customer::class);
-
     }
 
     /**
