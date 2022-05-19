@@ -51,10 +51,32 @@ function assert_command_contains {
 	fi;
 }
 
+function assert_command_with_exitcode {
+	local command=$1;
+	local expected_exit_code=$2;
+
+	echo -n "- $command"
+
+  local output=""
+	output=$(($PHP_BIN -f $PHAR_FILE -- --no-interaction --root-dir="$MAGENTO_ROOT_DIR" $command $ADDITIONAL_OPTIONS | grep "$find") 2>&1);
+	exit_code=$?
+
+	if [ $exit_code -eq $expected_exit_code ]; then
+		echo -e "\t\tok";
+	else
+		TESTS_WITH_ERRORS=true;
+		echo -e "\t\tfailure";
+		echo "----------------------------------------------------------------";
+		echo "exit code: $exit_code"
+		echo "$output";
+		echo "----------------------------------------------------------------";
+	fi;
+}
+
 function assert_command_interactive {
 	local command=$1;
 	local input=$2
-	local find=$2;
+	local find=$3;
 
 	echo -n "- $command"
 
@@ -142,6 +164,7 @@ function test_magerun_commands() {
 	#  db:create
 	#  db:drop
 	#  db:dump
+	assert_command_with_exitcode "db:dump --stdout | head -n 10" 0
 	#  db:import
 	#  db:info
 	assert_command_contains "db:info" "PDO-Connection-String"
