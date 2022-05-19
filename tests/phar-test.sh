@@ -57,7 +57,7 @@ function assert_command_with_exitcode {
 
 	echo -n "- $command"
 
-	$PHP_BIN -f $PHAR_FILE -- --no-interaction --root-dir="$MAGENTO_ROOT_DIR" $command $ADDITIONAL_OPTIONS) 2>&1 > /dev/null;
+	$PHP_BIN -f $PHAR_FILE -- --no-interaction --root-dir="$MAGENTO_ROOT_DIR" $command $ADDITIONAL_OPTIONS 2>&1 > /dev/null;
 	exit_code=$?
 
 	if [ $exit_code -eq $expected_exit_code ]; then
