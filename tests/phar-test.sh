@@ -37,7 +37,7 @@ function assert_command_contains {
 
 	echo -n "- $command"
 
-  local output=""
+    local output=""
 	output=$(($PHP_BIN -f $PHAR_FILE -- --no-interaction --root-dir="$MAGENTO_ROOT_DIR" $command $ADDITIONAL_OPTIONS | grep "$find") 2>&1);
 
 	if [ $? -eq 0 ]; then
@@ -163,6 +163,11 @@ function test_magerun_commands() {
 	#  db:drop
 	#  db:dump
 	assert_command_with_exitcode "db:dump --stdout" 0
+	assert_command_contains "db:dump db.sql" "Finished"
+	assert_command_contains "db:dump --strip=@development db.sql" "Finished"
+	assert_command_contains "db:dump --print-only-filename db.sql" "db.sql"
+	assert_command_contains "db:dump --only-command db.sql" "mysqldump"
+
 	#  db:import
 	#  db:info
 	assert_command_contains "db:info" "PDO-Connection-String"
