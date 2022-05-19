@@ -51,10 +51,32 @@ function assert_command_contains {
 	fi;
 }
 
+function assert_command_with_exitcode {
+	local command=$1;
+	local expected_exit_code=$2;
+
+	echo -n "- $command"
+
+  local output=""
+	output=$(($PHP_BIN -f $PHAR_FILE -- --no-interaction --root-dir="$MAGENTO_ROOT_DIR" $command $ADDITIONAL_OPTIONS | grep "$find") 2>&1);
+	exit_code=$?
+
+	if [ $exit_code -eq $expected_exit_code ]; then
+		echo -e "\t\tok";
+	else
+		TESTS_WITH_ERRORS=true;
+		echo -e "\t\tfailure";
+		echo "----------------------------------------------------------------";
+		echo "exit code: $exit_code"
+		echo "$output";
+		echo "----------------------------------------------------------------";
+	fi;
+}
+
 function assert_command_interactive {
 	local command=$1;
 	local input=$2
-	local find=$2;
+	local find=$3;
 
 	echo -n "- $command"
 
@@ -142,6 +164,7 @@ function test_magerun_commands() {
 	#  db:create
 	#  db:drop
 	#  db:dump
+	assert_command_with_exitcode "db:dump --stdout | head -n 10" 0
 	#  db:import
 	#  db:info
 	assert_command_contains "db:info" "PDO-Connection-String"
@@ -159,6 +182,8 @@ function test_magerun_commands() {
 	#assert_command_contains "dev:asset:clear" "deployed_version.txt"
 	#  dev:console
 	assert_command_interactive "dev:console" "exit" "Magento"
+	assert_command_interactive "dev:console" '$dh->debugCategoryById(2); exit' "include_in_menu"
+
 	#  dev:module:create
 	assert_command_contains "dev:module:create Magerun123 TestModule" "Created directory"
 	cleanup_files_in_magento "app/code/N98/Magerun123"
@@ -215,6 +240,9 @@ function test_magerun_commands() {
 	assert_command_contains "integration:list" "magerun-test"
 	#  integration:show
 	assert_command_contains "integration:show magerun-test" "Consumer Key"
+	assert_command_contains "integration:show magerun-test name" "magerun-test"
+	assert_command_contains "integration:show magerun-test --format=json" "Consumer Key"
+	assert_command_contains "integration:show magerun-test --format=yaml" "Consumer Key"
 	#  integration:delete
 	assert_command_contains "integration:delete magerun-test" "Successfully deleted integration"
 	#  media:dump
