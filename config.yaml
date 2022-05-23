@@ -189,7 +189,7 @@ commands:
 
       - id: stripped
         description: Standard definition for a stripped dump (logs, sessions, dotmailer)
-        tables: "@log @sessions @dotmailer @newrelic_reporting @temp"
+        tables: "@log @sessions @dotmailer @newrelic_reporting @temp system_config_snapshot"
 
       - id: sales
         description: Sales data (orders, invoices, creditmemos etc)
