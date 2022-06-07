@@ -37,6 +37,7 @@ We support the following Magento Versions:
 
 We support the following PHP Versions:
 
+- PHP 8.1
 - PHP 7.4
 - PHP 7.3
 - PHP 7.2 (last compatible version is v4.7.0)
