@@ -165,6 +165,7 @@ class OperatingSystem
     }
 
     /**
+     * @deprecated 5.1.1 No longer used by internal code
      * @return bool
      */
     public static function isBashCompatibleShell()

@@ -38,7 +38,7 @@ class Exec
             throw new RuntimeException($message);
         }
 
-        if (OperatingSystem::isBashCompatibleShell() && self::isPipefailOptionAvailable()) {
+        if (self::isPipefailOptionAvailable()) {
             $command = self::SET_O_PIPEFAIL . $command;
         }
 
