@@ -218,6 +218,7 @@ jobs:
           git clone --branch "${{ matrix.git-branch }}" --single-branch ${{ matrix.git-repository }} "$GITHUB_WORKSPACE/magento";
           cd "$GITHUB_WORKSPACE/magento";
           mysqladmin -h127.0.0.1 -P ${{ job.services.mysql.ports[3306] }} -uroot -proot create magento; 
+          composer --version;
           composer install --no-interaction;
           bin/magento setup:install \
             --db-host="127.0.0.1:${{ job.services.mysql.ports[3306] }}" \
@@ -245,6 +246,7 @@ jobs:
 
       - name: Install ${{ matrix.magento-version }} via n98-magerun2
         run: |
+          composer --version;
           mysqladmin -h127.0.0.1 -P ${{ job.services.mysql.ports[3306] }} -uroot -proot create magento; \
           bin/n98-magerun2 --ansi install \
           --magentoVersionByName="${{ matrix.magento-version }}" --installationFolder="$GITHUB_WORKSPACE/magento" \
@@ -275,10 +277,11 @@ jobs:
 
       - name: Build phar file
         run: |
-          composer self-update --2
-          composer global remove hirak/prestissimo
-          bash ./build.sh
-          composer self-update --rollback &> /dev/null || true
+          composer self-update --2;
+          composer --version;
+          composer global remove hirak/prestissimo;
+          bash ./build.sh;
+          composer self-update --rollback &> /dev/null || true;
 
       - name: Setup PHP for Composer
         uses: shivammathur/setup-php@v2
