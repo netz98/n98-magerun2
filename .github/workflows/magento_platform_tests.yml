@@ -171,7 +171,17 @@ jobs:
           php-version: ${{ matrix.php-version }}
           extensions: mbstring, intl
           coverage: none
-      
+
+      - name: Setup Composer
+        run: |
+          composer global config --no-interaction --no-plugins "allow-plugins.composer/*" true;
+          composer global config --no-interaction --no-plugins "allow-plugins.dealerdirect/phpcodesniffer-composer-installer" true;
+          composer global config --no-interaction --no-plugins "allow-plugins.ergebnis/composer-normalize" true;
+          composer global config --no-interaction --no-plugins "allow-plugins.laminas/*" true;
+          composer global config --no-interaction --no-plugins "allow-plugins.magento/*" true;
+          composer global config --no-interaction --no-plugins "allow-plugins.n98/*" true;
+          composer global config --no-interaction --no-plugins "allow-plugins.phpstan/extension-installer" true;
+
       - name: Checkout PR
         uses: actions/checkout@v3
         if: github.event_name == 'pull_request_target'
