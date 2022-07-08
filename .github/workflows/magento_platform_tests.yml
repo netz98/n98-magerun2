@@ -26,7 +26,7 @@ jobs:
             php-version: 8.1
             mysql-version: 8.0
             elsticsearch-version: 7.16.0
-            composer-version: 2.3.7
+            composer-version: 2.2.14
             use-git-repository: true
             git-repository: https://github.com/magento/magento2.git
             git-branch: 2.4-develop
@@ -37,7 +37,7 @@ jobs:
             php-version: 7.4
             mysql-version: 8.0
             elsticsearch-version: 7.9.0
-            composer-version: 2.3.7
+            composer-version: 2.2.14
             use-git-repository: false
             git-repository: ''
             experimental: true
@@ -47,7 +47,7 @@ jobs:
             php-version: 8.1
             mysql-version: 8.0
             elsticsearch-version: 7.16.0
-            composer-version: 2.3.7
+            composer-version: 2.2.14
             use-git-repository: false
             git-repository: ''
             git-branch: ''
@@ -57,7 +57,7 @@ jobs:
             php-version: 7.4
             mysql-version: 8.0
             elsticsearch-version: 7.9.0
-            composer-version: 2.3.7
+            composer-version: 2.2.14
             use-git-repository: false
             git-repository: ''
             git-branch: ''
@@ -67,7 +67,7 @@ jobs:
             php-version: 7.4
             mysql-version: 8.0
             elsticsearch-version: 7.9.0
-            composer-version: 2.3.7
+            composer-version: 2.2.14
             use-git-repository: false
             git-repository: ''
             git-branch: ''
@@ -77,7 +77,7 @@ jobs:
             php-version: 7.4
             mysql-version: 8.0
             elsticsearch-version: 7.9.0
-            composer-version: 2.3.7
+            composer-version: 2.2.14
             use-git-repository: false
             git-repository: ''
             git-branch: ''
@@ -170,18 +170,7 @@ jobs:
           tools: composer:${{ matrix.composer-version }}, cs2pr
           php-version: ${{ matrix.php-version }}
           extensions: mbstring, intl
-          coverage: none
-
-      - name: Setup Composer
-        run: |
-          composer global config --no-interaction --no-plugins "allow-plugins.composer/*" true;
-          composer global config --no-interaction --no-plugins "allow-plugins.dealerdirect/phpcodesniffer-composer-installer" true;
-          composer global config --no-interaction --no-plugins "allow-plugins.ergebnis/composer-normalize" true;
-          composer global config --no-interaction --no-plugins "allow-plugins.laminas/*" true;
-          composer global config --no-interaction --no-plugins "allow-plugins.magento/*" true;
-          composer global config --no-interaction --no-plugins "allow-plugins.n98/*" true;
-          composer global config --no-interaction --no-plugins "allow-plugins.phpstan/extension-installer" true;
-        if: matrix.composer-version == '2.3.7'
+          coverage: none      
 
       - name: Checkout PR
         uses: actions/checkout@v3
