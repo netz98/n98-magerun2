@@ -11,6 +11,7 @@ use Symfony\Component\Console\Exception\RuntimeException;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
+use Symfony\Component\Process\Process;
 
 /**
  * Class DownloadMagento
@@ -46,36 +47,15 @@ class DownloadMagento extends AbstractSubCommand
             throw new RuntimeException('A magento installation already exists in this folder');
         }
 
-        $args = new ProcessArguments(array_merge($this->config['composer_bin'], ['create-project']));
-        $args
-            // Add composer options
-            ->addArgs($package['options'])
-            ->addArg('--no-dev')
-            // Add arguments
-            ->addArg($package['package'])
-            ->addArg($this->config->getString('installationFolder'))
-            ->addArg($package['version']);
+        $this->composerCreateProject($package);
 
-        if (OutputInterface::VERBOSITY_VERBOSE <= $this->output->getVerbosity()) {
-            $args->addArg('-vvv');
+        if ($this->config['composer_major_version'] === 2) {
+            $this->composerAllowPlugins('dealerdirect/phpcodesniffer-composer-installer');
+            $this->composerAllowPlugins('laminas/laminas-dependency-plugin');
+            $this->composerAllowPlugins('magento/*');
         }
 
-        $process = $args->createProcess();
-        if (OutputInterface::VERBOSITY_VERBOSE <= $this->output->getVerbosity()) {
-            $this->output->writeln($process->getCommandLine());
-        }
-
-        $process->setTimeout(86400);
-        $process->start();
-        $code = $process->wait(function ($type, $buffer) {
-            $this->output->write($buffer, false, OutputInterface::OUTPUT_RAW);
-        });
-
-        if (Exec::CODE_CLEAN_EXIT !== $code) {
-            throw new RuntimeException(
-                'Non-zero exit code for composer create-project command: ' . $process->getCommandLine()
-            );
-        }
+        $this->composerInstall();
     }
 
     /**
@@ -188,5 +168,81 @@ class DownloadMagento extends AbstractSubCommand
             return trim($_SERVER['MAGE_DIRS']['etc']['path'], DIRECTORY_SEPARATOR);
         }
         return 'app/etc';
+    }
+
+    /**
+     * @param $package
+     * @return void
+     */
+    private function composerCreateProject($package): void
+    {
+        $args = new ProcessArguments(array_merge($this->config['composer_bin'], ['create-project']));
+        $args
+            // Add composer options
+            ->addArgs($package['options'])
+            ->addArg('--no-dev')
+            ->addArg('--no-install')
+            // Add arguments
+            ->addArg($package['package'])
+            ->addArg($this->config->getString('installationFolder'))
+            ->addArg($package['version']);
+
+        if (OutputInterface::VERBOSITY_VERBOSE <= $this->output->getVerbosity()) {
+            $args->addArg('-vvv');
+        }
+
+        $process = $args->createProcess();
+        if (OutputInterface::VERBOSITY_VERBOSE <= $this->output->getVerbosity()) {
+            $this->output->writeln($process->getCommandLine());
+        }
+
+        $process->setTimeout(86400);
+        $process->start();
+        $code = $process->wait(function ($type, $buffer) {
+            $this->output->write($buffer, false, OutputInterface::OUTPUT_RAW);
+        });
+
+        if (Exec::CODE_CLEAN_EXIT !== $code) {
+            throw new RuntimeException(
+                'Non-zero exit code for composer create-project command: ' . $process->getCommandLine()
+            );
+        }
+    }
+
+    /**
+     * @param string $pluginName
+     * @return void
+     */
+    protected function composerAllowPlugins($pluginName): void
+    {
+        $process = new Process(
+            array_merge(
+                $this->config['composer_bin'],
+                [
+                    'config',
+                    'allow-plugins.' . $pluginName,
+                    'true'
+                ]
+            )
+        );
+
+        $process->setTimeout(86400);
+        $process->start();
+        $process->wait(function ($type, $buffer) {
+            $this->output->write('composer > ' . $buffer, false);
+        });
+    }
+
+    /**
+     * @return void
+     */
+    protected function composerInstall(): void
+    {
+        $process = new Process(array_merge($this->config['composer_bin'], ['install']));
+        $process->setTimeout(86400);
+        $process->start();
+        $process->wait(function ($type, $buffer) {
+            $this->output->write('composer > ' . $buffer, false);
+        });
     }
 }

@@ -3,6 +3,7 @@
 namespace N98\Magento\Command\Installer\SubCommand;
 
 use N98\Magento\Command\SubCommand\AbstractSubCommand;
+use N98\Util\Exec;
 use N98\Util\OperatingSystem;
 use WpOrg\Requests\Requests;
 
@@ -48,6 +49,8 @@ class InstallComposer extends AbstractSubCommand
                 OperatingSystem::locateProgram($composerBin),
             ];
         }
+
+        $this->config['composer_major_version'] = $this->getMajorComposerVersion();
     }
 
     /**
@@ -88,5 +91,23 @@ class InstallComposer extends AbstractSubCommand
         $this->output->writeln('<info>Successfully installed composer to Magento root</info>');
 
         return $this->config['initialFolder'] . '/composer.phar';
+    }
+
+    /**
+     * Composer 1 or Composer 2
+     *
+     * @param $output
+     * @param $matches
+     * @return int
+     * @throws \Exception
+     */
+    protected function getMajorComposerVersion(): int
+    {
+        Exec::run(implode(' ', array_merge($this->config['composer_bin'], [' --version'])), $output);
+        if (!preg_match('#(\d+)\.(\d+)\.(\d+)#', $output, $matches)) {
+            throw new \Exception('Could not detect a valid Composer version');
+        }
+
+        return (int) $matches[1];
     }
 }
