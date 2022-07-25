@@ -18,7 +18,6 @@ jobs:
   phpunit:
     name: Unit Tests
     runs-on: ${{ matrix.operating-system }}
-    fail-fast: true
     strategy:
       matrix:
         include:
