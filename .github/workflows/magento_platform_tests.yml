@@ -54,7 +54,7 @@ jobs:
             git-repository: ''
             git-branch: ''
             experimental: false
-            continue-on-error: false
+            continue-on-error: true
 
           - magento-version: magento-ce-2.4.3-p2
             operating-system: ubuntu-latest
@@ -66,7 +66,7 @@ jobs:
             git-repository: ''
             git-branch: ''
             experimental: false
-            continue-on-error: false
+            continue-on-error: true
 
           - magento-version: magento-ce-2.4.2-p1
             operating-system: ubuntu-latest
@@ -78,7 +78,7 @@ jobs:
             git-repository: ''
             git-branch: ''
             experimental: false
-            continue-on-error: false
+            continue-on-error: true
 
           - magento-version: magento-ce-2.4.2
             operating-system: ubuntu-latest
@@ -90,7 +90,7 @@ jobs:
             git-repository: ''
             git-branch: ''
             experimental: false
-            continue-on-error: false
+            continue-on-error: true
 
           - magento-version: magento-ce-2.4.1
             operating-system: ubuntu-latest
@@ -102,7 +102,7 @@ jobs:
             git-repository: ''
             git-branch: ''
             experimental: false
-            continue-on-error: false
+            continue-on-error: true
 
           - magento-version: magento-ce-2.4.0
             operating-system: ubuntu-latest
@@ -114,7 +114,7 @@ jobs:
             git-repository: ''
             git-branch: ''
             experimental: false
-            continue-on-error: false
+            continue-on-error: true
 
           - magento-version: magento-ce-2.3.7-p3
             operating-system: ubuntu-latest
@@ -126,7 +126,7 @@ jobs:
             git-repository: ''
             git-branch: ''
             experimental: false
-            continue-on-error: false
+            continue-on-error: true
             
           - magento-version: magento-ce-2.3.5-p2
             operating-system: ubuntu-latest
@@ -138,7 +138,7 @@ jobs:
             git-repository: ''
             git-branch: ''
             experimental: false
-            continue-on-error: false
+            continue-on-error: true
 
           - magento-version: magento-ce-2.3.4
             operating-system: ubuntu-latest
@@ -150,7 +150,7 @@ jobs:
             git-repository: ''
             git-branch: ''
             experimental: false
-            continue-on-error: false
+            continue-on-error: true
 
     services:
       elaticsearch:
