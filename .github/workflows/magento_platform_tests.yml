@@ -18,6 +18,8 @@ jobs:
   phpunit:
     name: Unit Tests
     runs-on: ${{ matrix.operating-system }}
+    experimental: [false]
+    continue-on-error: ${{ matrix.experimental }}
     strategy:
       matrix:
         include:
@@ -31,7 +33,6 @@ jobs:
             git-repository: https://github.com/magento/magento2.git
             git-branch: 2.4-develop
             experimental: true
-            continue-on-error: true
 
           - magento-version: mage-os-2.4-3-p1
             operating-system: ubuntu-latest
@@ -42,7 +43,6 @@ jobs:
             use-git-repository: false
             git-repository: ''
             experimental: true
-            continue-on-error: true
 
           - magento-version: magento-ce-2.4.4
             operating-system: ubuntu-latest
@@ -53,8 +53,6 @@ jobs:
             use-git-repository: false
             git-repository: ''
             git-branch: ''
-            experimental: false
-            continue-on-error: true
 
           - magento-version: magento-ce-2.4.3-p2
             operating-system: ubuntu-latest
@@ -65,8 +63,6 @@ jobs:
             use-git-repository: false
             git-repository: ''
             git-branch: ''
-            experimental: false
-            continue-on-error: true
 
           - magento-version: magento-ce-2.4.2-p1
             operating-system: ubuntu-latest
@@ -77,8 +73,6 @@ jobs:
             use-git-repository: false
             git-repository: ''
             git-branch: ''
-            experimental: false
-            continue-on-error: true
 
           - magento-version: magento-ce-2.4.2
             operating-system: ubuntu-latest
@@ -89,8 +83,6 @@ jobs:
             use-git-repository: false
             git-repository: ''
             git-branch: ''
-            experimental: false
-            continue-on-error: true
 
           - magento-version: magento-ce-2.4.1
             operating-system: ubuntu-latest
@@ -101,8 +93,6 @@ jobs:
             use-git-repository: false
             git-repository: ''
             git-branch: ''
-            experimental: false
-            continue-on-error: true
 
           - magento-version: magento-ce-2.4.0
             operating-system: ubuntu-latest
@@ -113,8 +103,6 @@ jobs:
             use-git-repository: false
             git-repository: ''
             git-branch: ''
-            experimental: false
-            continue-on-error: true
 
           - magento-version: magento-ce-2.3.7-p3
             operating-system: ubuntu-latest
@@ -126,7 +114,6 @@ jobs:
             git-repository: ''
             git-branch: ''
             experimental: false
-            continue-on-error: true
             
           - magento-version: magento-ce-2.3.5-p2
             operating-system: ubuntu-latest
@@ -137,8 +124,6 @@ jobs:
             use-git-repository: false
             git-repository: ''
             git-branch: ''
-            experimental: false
-            continue-on-error: true
 
           - magento-version: magento-ce-2.3.4
             operating-system: ubuntu-latest
@@ -149,8 +134,6 @@ jobs:
             use-git-repository: false
             git-repository: ''
             git-branch: ''
-            experimental: false
-            continue-on-error: true
 
     services:
       elaticsearch:
