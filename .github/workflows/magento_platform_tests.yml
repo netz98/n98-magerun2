@@ -18,10 +18,10 @@ jobs:
   phpunit:
     name: Unit Tests
     runs-on: ${{ matrix.operating-system }}
-    experimental: [false]
     continue-on-error: ${{ matrix.experimental }}
     strategy:
       matrix:
+        experimental: [false]
         include:
           - magento-version: magento-ce-2.4-develop
             operating-system: ubuntu-latest
