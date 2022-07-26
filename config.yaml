@@ -335,17 +335,17 @@ commands:
         package: magento/project-community-edition
         version: 2.4.4
         options:
-          repository-url: https://repo.mage-os.org
-      - name: mage-os-2.4-3-p1
+          repository-url: https://mirror.mage-os.org
+      - name: mage-os-2.4.3-p1
         package: magento/project-community-edition
         version: 2.4.3-p1
         options:
-          repository-url: https://repo.mage-os.org
-      - name: mage-os-2.4-3-p2
+          repository-url: https://mirror.mage-os.org
+      - name: mage-os-2.4.3-p2
         package: magento/project-community-edition
         version: 2.4.3-p2
         options:
-          repository-url: https://repo.mage-os.org
+          repository-url: https://mirror.mage-os.org
       - name: magento-ce-2.4.4
         package: magento/project-community-edition
         version: 2.4.4
