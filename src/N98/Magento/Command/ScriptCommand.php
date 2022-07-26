@@ -325,7 +325,7 @@ HELP;
         $this->scriptVars['${php.version}'] = substr(phpversion(), 0, strpos(phpversion(), '-'));
         $this->scriptVars['${magerun.version}'] = $this->getApplication()->getVersion();
         $this->scriptVars['${script.file}'] = $this->_scriptFilename;
-        $this->scriptVars['${script.dir}'] = dirname($this->_scriptFilename);
+        $this->scriptVars['${script.dir}'] = dirname(is_null($this->_scriptFilename) ? '' : $this->_scriptFilename);
 
         foreach (getenv() as $envName => $envValue) {
             $this->scriptVars['${env.' . $envName . '}'] = $envValue;
