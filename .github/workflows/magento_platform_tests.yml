@@ -43,7 +43,7 @@ jobs:
             git-repository: ''
             experimental: true
 
-          - magento-version: mage-os-2.4-3-p1
+          - magento-version: mage-os-2.4.3-p1
             operating-system: ubuntu-latest
             php-version: 7.4
             mysql-version: 8.0
