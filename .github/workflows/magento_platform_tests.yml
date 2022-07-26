@@ -35,7 +35,7 @@ jobs:
 
           - magento-version: mage-os-2.4.4
             operating-system: ubuntu-latest
-            php-version: 7.4
+            php-version: 8.1
             mysql-version: 8.0
             elsticsearch-version: 7.9.0
             composer-version: v2
