@@ -1818,16 +1818,16 @@
         },
         {
             "name": "captainhook/captainhook",
-            "version": "5.10.10",
+            "version": "5.10.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/captainhookphp/captainhook.git",
-                "reference": "7c54bc7633b175a257a7ed2a7fd3fba655c96b34"
+                "reference": "377ea566c5fb91e2fbec6ad0aadf21eb88e18cee"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/captainhookphp/captainhook/zipball/7c54bc7633b175a257a7ed2a7fd3fba655c96b34",
-                "reference": "7c54bc7633b175a257a7ed2a7fd3fba655c96b34",
+                "url": "https://api.github.com/repos/captainhookphp/captainhook/zipball/377ea566c5fb91e2fbec6ad0aadf21eb88e18cee",
+                "reference": "377ea566c5fb91e2fbec6ad0aadf21eb88e18cee",
                 "shasum": ""
             },
             "require": {
@@ -1889,7 +1889,7 @@
             ],
             "support": {
                 "issues": "https://github.com/captainhookphp/captainhook/issues",
-                "source": "https://github.com/captainhookphp/captainhook/tree/5.10.10"
+                "source": "https://github.com/captainhookphp/captainhook/tree/5.10.11"
             },
             "funding": [
                 {
@@ -1897,7 +1897,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2022-06-06T16:48:03+00:00"
+            "time": "2022-07-26T20:11:41+00:00"
         },
         {
             "name": "composer/pcre",
@@ -5004,16 +5004,16 @@
         },
         {
             "name": "sebastianfeldmann/git",
-            "version": "3.8.2",
+            "version": "3.8.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianfeldmann/git.git",
-                "reference": "e30b5ed4a87c6b16339bfc6a79c141aba83bade4"
+                "reference": "853066c3841faf96d3f0ea00822eeb3b6cd8d995"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianfeldmann/git/zipball/e30b5ed4a87c6b16339bfc6a79c141aba83bade4",
-                "reference": "e30b5ed4a87c6b16339bfc6a79c141aba83bade4",
+                "url": "https://api.github.com/repos/sebastianfeldmann/git/zipball/853066c3841faf96d3f0ea00822eeb3b6cd8d995",
+                "reference": "853066c3841faf96d3f0ea00822eeb3b6cd8d995",
                 "shasum": ""
             },
             "require": {
@@ -5053,7 +5053,7 @@
             ],
             "support": {
                 "issues": "https://github.com/sebastianfeldmann/git/issues",
-                "source": "https://github.com/sebastianfeldmann/git/tree/3.8.2"
+                "source": "https://github.com/sebastianfeldmann/git/tree/3.8.3"
             },
             "funding": [
                 {
@@ -5061,7 +5061,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2022-02-17T19:43:52+00:00"
+            "time": "2022-07-26T19:59:55+00:00"
         },
         {
             "name": "seld/phar-utils",
