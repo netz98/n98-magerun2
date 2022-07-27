@@ -423,16 +423,16 @@
         },
         {
             "name": "rmccue/requests",
-            "version": "v2.0.3",
+            "version": "v2.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/WordPress/Requests.git",
-                "reference": "b290dd974051bf1ead51d1947a5a56357e5b80ff"
+                "reference": "62bf29e0f1080b4f0f499d30adb6a382e70e9686"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/WordPress/Requests/zipball/b290dd974051bf1ead51d1947a5a56357e5b80ff",
-                "reference": "b290dd974051bf1ead51d1947a5a56357e5b80ff",
+                "url": "https://api.github.com/repos/WordPress/Requests/zipball/62bf29e0f1080b4f0f499d30adb6a382e70e9686",
+                "reference": "62bf29e0f1080b4f0f499d30adb6a382e70e9686",
                 "shasum": ""
             },
             "require": {
@@ -500,7 +500,7 @@
                 "issues": "https://github.com/WordPress/Requests/issues",
                 "source": "https://github.com/WordPress/Requests"
             },
-            "time": "2022-05-10T08:42:27+00:00"
+            "time": "2022-07-25T09:01:09+00:00"
         },
         {
             "name": "symfony/console",
