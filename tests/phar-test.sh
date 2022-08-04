@@ -140,9 +140,20 @@ function test_magerun_commands() {
 	#  config:env:show
 	assert_command_contains "config:env:show" "backend.frontName"
 	#  config:store:set
-	assert_command_contains "config:store:set n98/magerun/example 1" "n98/magerun/example => 1"
+	assert_command_contains "config:store:set n98/magerun/example defaultValue" "n98/magerun/example => defaultValue"
+	assert_command_contains "config:store:set --scope=stores --scope-id=1 n98/magerun/example myStore2value" "n98/magerun/example => myStore2value"
+
+	# --------------------------
 	#  config:store:get
+	# --------------------------
 	assert_command_contains "config:store:get n98/magerun/example" "n98/magerun/example"
+	assert_command_contains "config:store:get n98/magerun/example" "defaultValue"
+	assert_command_contains "config:store:get n98/magerun/example" "myStore2value"
+	assert_command_contains "config:store:get --scope=stores --scope-id=1 n98/magerun/example" "myStore2value"
+	assert_command_contains "config:store:get --scope=stores --scope-id=default n98/magerun/example" "myStore2value"
+	assert_command_contains "config:store:get --scope=default --scope-id=0 n98/magerun/example" "n98/magerun/example"
+	assert_command_contains "config:store:get --scope=default --scope-id=admin n98/magerun/example" "n98/magerun/example"
+	assert_command_contains "config:store:get --scope=not_existing n98/magerun/example" "Invalid scope parameter. It must be one of default,websites,stores"
 	#  config:store:delete
 	assert_command_contains "config:store:delete n98/magerun/example" "deleted path"
 	#  customer:create
