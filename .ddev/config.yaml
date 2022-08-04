@@ -17,7 +17,7 @@ hooks:
   - composer: install
   - exec: bash .ddev/hook_01_setup.sh
 use_dns_when_possible: true
-composer_version: ""
+composer_version: "2.2.17"
 web_environment: []
 
 # Key features of ddev's config.yaml:
