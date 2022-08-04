@@ -17,6 +17,15 @@ class GetCommand extends AbstractConfigCommand
      */
     private $collection;
 
+    /**
+     * @var array
+     */
+    protected $_scopes = [
+        'default',
+        'websites',
+        'stores'
+    ];
+
     protected function configure()
     {
         $this
@@ -40,7 +49,7 @@ EOT
                 InputOption::VALUE_REQUIRED,
                 'The config value\'s scope (default, websites, stores)'
             )
-            ->addOption('scope-id', null, InputOption::VALUE_REQUIRED, 'The config value\'s scope ID')
+            ->addOption('scope-id', null, InputOption::VALUE_REQUIRED, 'The config value\'s scope ID or scope code.')
             ->addOption(
                 'decrypt',
                 null,
@@ -52,7 +61,7 @@ EOT
             ->addOption(
                 'format',
                 null,
-                InputOption::VALUE_OPTIONAL,
+                InputOption::VALUE_REQUIRED,
                 'Output Format. One of [' . implode(',', RendererFactory::getFormats()) . ']'
             );
 
@@ -90,12 +99,18 @@ HELP;
         ]);
 
         $scope = $input->getOption('scope');
-        if ($scope) {
+        if ($scope !== null) {
+            $this->_validateScopeParam($scope);
             $collection->addFieldToFilter('scope', ['eq' => $scope]);
         }
 
         $scopeId = $input->getOption('scope-id');
-        if ($scopeId !== '') {
+
+        if ($scope !== null && $scopeId !== null) {
+            $scopeId = $this->_convertScopeIdParam($scope, $scopeId);
+        }
+
+        if ($scopeId !== null) {
             $collection->addFieldToFilter(
                 'scope_id',
                 ['eq' => $scopeId]

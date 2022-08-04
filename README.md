@@ -447,7 +447,7 @@ n98-magerun2.phar config:store:get [--scope="..."] [--scope-id="..."] [--decrypt
 | Option             | Description                                                   |
 |--------------------|---------------------------------------------------------------|
 | `--scope`          | The config value's scope (`default`, `websites`, `stores`)    |
-| `--scope-id`       | The config value's scope ID                                   |
+| `--scope-id`       | The config value's scope ID or scope code                     |
 | `--decrypt`        | Decrypt the config value using crypt key defined in `env.php` |
 | `--update-script`  | Output as update script lines                                 |
 | `--magerun-script` | Output for usage with `config:store:set`                      |
