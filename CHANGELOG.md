@@ -1,12 +1,23 @@
 RECENT CHANGES
 ==============
 
-5.2.0-dev
----------
+5.2.0
+-----
 
-*unreleased*
-
-- Add: New dev:console debug helper functions (by Christian Münch)
+- Add: #987: more dev:console debug helper functions (by Christian Münch)
+- Add: #1000: additional phar tests (by Christian Münch)
+- Imp: #957: Exclude system_config_snapshot from stripped dumps (by Alexander Menk)
+- Imp: #1008: Allow use of pipefail where supported (by Dan Wallis)
+- Imp: #1007: Upgrade compatibility list for PHP versions (by Lukasz Bajsarowicz) 
+- Imp: Change mage-os repo url and disable unstable dev build job (by Christian Münch)
+- Imp: Changed installation workflow starting with composer 2.3.7 (by Christian Münch)
+- Imp: Update 3rd party dependencies (Symfony, psysh, vfsstream, captainhook, requests lib, faker lib, phpunit, twig)
+- Fix: #993: Try to drop only existing databases (by Christian Münch)
+- Fix: #996: Customer Debug Functions in Dev Console Dev Helper (by Alexander Menk)
+- Fix: #998: Pass empty string as default value to getFileName (by Peter Jaap)
+- Fix: #1015: deprecated: passing null to dirname (by Alexander Menk).
+- Fix: #1019: type error in cache-list command on php 8.1 (by Tom Klingenberg)
+- Fix: #1024: config:store:get wrong filters applied (by Alexander Dite)
 
 5.1.0
 -----
