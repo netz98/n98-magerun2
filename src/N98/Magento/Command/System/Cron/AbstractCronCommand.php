@@ -97,13 +97,17 @@ abstract class AbstractCronCommand extends AbstractMagentoCommand
         $jobs = $this->cronConfig->getJobs();
 
         foreach ($jobs as $jobGroupCode => $jobGroup) {
-            foreach ($jobGroup as $jobKey => $job) {
+            foreach ($jobGroup as $jobKey => $jobConfig) {
                 $row = [
                     'Job'   => $job['name'] ?? $jobKey,
                     'Group' => $jobGroupCode,
                 ];
 
-                $row += $this->getSchedule($job);
+                if (!is_array($jobConfig)) {
+                    $jobConfig = [];
+                }
+
+                $row += $this->getSchedule($jobConfig);
 
                 $table[] = $row;
             }
