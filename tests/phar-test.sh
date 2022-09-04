@@ -460,6 +460,7 @@ function test_magento_core_commands() {
 	#  yotpo:reset
 	#  yotpo:sync
 	#  yotpo:update-metadata
+	assert_command_contains "route:list -m Magento_Backend -a adminhtml" "admin/dashboard/index"
 
 }
 

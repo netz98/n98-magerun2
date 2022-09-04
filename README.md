@@ -852,6 +852,10 @@ n98-magerun2.phar dev:module:list [--vendor=VENDOR]
 n98-magerun2.phar dev:module:observer:list [--sort] <event> [<area>
 ```
 
+### List Routes
+```sh
+n98-magerun2.phar route:list [-a|--area] [-m|--module] [-f|--format]
+```
 
 ---
 
