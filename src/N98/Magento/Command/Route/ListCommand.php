@@ -127,7 +127,7 @@ class ListCommand extends AbstractMagentoCommand
                     ];
 
                     foreach ($route['modules'] as $module) {
-                        if ($moduleOption !== $module) {
+                        if ($moduleOption !== null && $moduleOption !== $module) {
                             continue;
                         }
 
@@ -153,7 +153,7 @@ class ListCommand extends AbstractMagentoCommand
                     'Area',
                     'Frontname',
                     'Module',
-                    'Route'
+                    'Route',
                 ]
             )
             ->renderByFormat($output, $table, $input->getOption('format'))
