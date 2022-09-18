@@ -50,7 +50,7 @@ function check_dependencies() {
 
 function download_box() {
   if [ ! -f box.phar ]; then
-    curl -L https://github.com/box-project/box/releases/download/3.14.0/box.phar -o $BOX_BIN
+    curl -L https://github.com/box-project/box/releases/download/3.16.0/box.phar -o $BOX_BIN
     chmod +x ./box.phar
   fi
 }
