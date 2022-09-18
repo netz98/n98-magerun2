@@ -22,7 +22,7 @@ class DiCommand extends AbstractMagentoCommand
                 'scope',
                 's',
                 InputOption::VALUE_OPTIONAL,
-                'Config scope (global, adminhtml, frontend, webapi_rest, webapi_soap, ...)',
+                'Config scope (global, adminhtml, frontend, graphql, webapi_rest, webapi_soap, ...)',
                 'global'
             )
             ->setDescription('Dump dependency injection config');
@@ -44,7 +44,19 @@ class DiCommand extends AbstractMagentoCommand
 
         /** @var ConfigLoaderInterface $configLoader */
         $configLoader = $this->getObjectManager()->get(ConfigLoaderInterface::class);
-        $configDataPrimary = $configLoader->load('primary');
+
+        $configDataPrimary = [];
+
+        // Developer mode
+        if ($configLoader instanceof Magento\Framework\App\ObjectManager\ConfigLoader) {
+            $configDataPrimary = $configLoader->load('primary');
+        }
+
+        // Production mode
+        if ($configLoader instanceof \Magento\Framework\App\ObjectManager\ConfigLoader\Compiled) {
+            $configDataPrimary = $configLoader->load('global');
+        }
+
         $configDataScope = $configLoader->load($input->getOption('scope'));
 
         $configData = array_merge_recursive($configDataPrimary, $configDataScope);
