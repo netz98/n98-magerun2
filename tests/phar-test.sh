@@ -73,15 +73,16 @@ function assert_command_with_exitcode {
 
 function assert_command_interactive {
 	local command=$1;
+	local input=$2;
 	local find=$3;
 
   # https://stackoverflow.com/questions/5564450/handle-whitespaces-in-arguments-to-a-bash-script
-	terms=();
-	for i in "$@"
-	do
-			terms+=("$i")
-	done
-	input=${terms[1]// /\\ };
+	#terms=();
+	#for i in "$@"
+	#do
+ 	#		terms+=("$i")
+	#done
+	#input=${terms[1]// /\\ };
 
 	echo -n "- $command"
 
