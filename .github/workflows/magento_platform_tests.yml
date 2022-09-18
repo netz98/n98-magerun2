@@ -33,7 +33,7 @@ jobs:
           #  git-branch: 2.4-develop
           #  experimental: true
 
-          - magento-version: mage-os-2.4.4
+          - magento-version: mage-os-2.4.5
             operating-system: ubuntu-latest
             php-version: 8.1
             mysql-version: 8.0
@@ -41,7 +41,7 @@ jobs:
             composer-version: v2
             use-git-repository: false
             git-repository: ''
-            experimental: true
+            experimental: false
 
           - magento-version: mage-os-2.4.3-p1
             operating-system: ubuntu-latest
@@ -51,7 +51,7 @@ jobs:
             composer-version: v2
             use-git-repository: false
             git-repository: ''
-            experimental: true
+            experimental: false
 
           - magento-version: magento-ce-2.4.4
             operating-system: ubuntu-latest
@@ -228,6 +228,9 @@ jobs:
 
       - name: Run php-cs-fixer
         run: vendor/bin/php-cs-fixer fix --diff --dry-run
+
+      - name: Run PHPStan
+        run: vend/bin/phpstan analyse src
 
       - name: Setup Magento Repository Credentials
         run: |
