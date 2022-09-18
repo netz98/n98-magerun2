@@ -16,6 +16,7 @@ RECENT CHANGES
 - Fix: #1028: Check if job config is set (by Christian Münch)
 - Fix: #1037: dev:console Code Generator (by Christian Münch)
 - Del: Symfony Shell Command - Command was already broken (by Christian Münch)
+- Del: Drop active testing support for Magento 2.3.4 and 2.3.5
 
 5.2.0
 -----
