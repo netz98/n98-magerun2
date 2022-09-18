@@ -48,7 +48,7 @@ class DiCommand extends AbstractMagentoCommand
         $configDataPrimary = [];
 
         // Developer mode
-        if ($configLoader instanceof Magento\Framework\App\ObjectManager\ConfigLoader) {
+        if ($configLoader instanceof \Magento\Framework\App\ObjectManager\ConfigLoader) {
             $configDataPrimary = $configLoader->load('primary');
         }
 

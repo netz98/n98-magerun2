@@ -73,8 +73,15 @@ function assert_command_with_exitcode {
 
 function assert_command_interactive {
 	local command=$1;
-	local input=$2;
 	local find=$3;
+
+  # https://stackoverflow.com/questions/5564450/handle-whitespaces-in-arguments-to-a-bash-script
+	terms=();
+	for i in "$@"
+	do
+			terms+=("$i")
+	done
+	input=${terms[1]// /\\ };
 
 	echo -n "- $command"
 
@@ -199,7 +206,7 @@ function test_magerun_commands() {
 	assert_command_interactive "dev:console" '$dh->debugCategoryById(2); exit' "include_in_menu"
 
 	# We need a way to preserve the whitespaces in the argument $2
-	#assert_command_interactive "dev:console" 'make:module N98_Foo; make:class foo.bar; exit' "generated Foo/Bar.php"
+	assert_command_interactive "dev:console" 'make:module N98_Foo; make:class foo.bar; exit' "generated Foo/Bar.php"
 
 	#  dev:module:create
 	assert_command_contains "dev:module:create Magerun123 TestModule" "Created directory"
@@ -478,6 +485,9 @@ function test_custom_module() {
 
 verify;
 print_info_before_test;
+
+assert_command_interactive "dev:console" 'make:module N98_Foo; make:class foo.bar; exit' "generated Foo/Bar.php"
+exit;
 
 echo "=================================================="
 echo "MAGERUN COMMANDS"
