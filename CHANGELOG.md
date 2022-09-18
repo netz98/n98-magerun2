@@ -1,6 +1,21 @@
 RECENT CHANGES
 ==============
 
+5.3.0
+-----
+
+- Add: route:list command (by Gowri)
+- Add: installer command - Update installable versions (incl. mage-os) (by Christian Münch)
+- Add: ddev get-magento-source command for code completion in PhpStorm (by Christian Münch)
+- Add: Integrated phpstan in developer setup (by Christian Münch)
+- Imp: Update 3rd party dependencies (twig, phar-utils, phpunit, symfony)
+- Imp: Check phpstan in Github Actions (by Christian Münch)
+- Imp: Fix all phpstan warnings/errors of level 0 (by Christian Münch)
+- Imp: ddev setup (installed Magento versions) (by Christian Münch)
+- Fix: #1028: Check if job config is set (by Christian Münch)
+- Fix: #1037: dev:console Code Generator (by Christian Münch)
+- Del: Symfony Shell Command - Command was already broken (by Christian Münch)
+
 5.2.0
 -----
 
