@@ -1,0 +1,11 @@
+{
+  "compression": "GZ",
+  "force-autodiscovery": true,
+  "stub": false,
+  "main": false,
+  "directories": [
+    "app/code/Magento",
+    "lib/internal/Magento/Framework"
+  ],
+  "output": "magento-src.phar"
+}

@@ -1,0 +1,39 @@
+#!/bin/bash
+
+## Description: Generate a phar file with the source code of Magento for PhpStorm code completion
+## Usage: build-magento-source-phar
+## Example: "ddev build-magento-source-phar"
+
+PROJECT_DIR="/var/www/html";
+BOX_BIN="/var/www/html/box.phar";
+MAGENTO_ROOT_DIR="/opt/magento-test-environments/magento_${MAGERUN_SETUP_TEST_DEFAULT_MAGENTO_VERSION//[-.]/_}";
+
+if [ ! -f box.phar ]; then
+	echo "box.phar was not found!"
+	echo ""
+	echo "There are two options to solve the issue:"
+	echo "- Download a compatible box.phar and place it into /var/www/html directory."
+	echo "- Executing build.sh script will also download box.phar."
+	exit 1;
+fi
+
+if [ ! -f "$MAGENTO_ROOT_DIR/app/etc/env.php" ]; then
+	echo "Magento source code was not found."
+	echo "Seems that your developer setup in ddev is broken".
+	echo "Install the latest Magento version with install-magento-ce command."
+fi
+
+cp .ddev/box/magento.json "$MAGENTO_ROOT_DIR/box.json.dist"
+
+cd "$MAGENTO_ROOT_DIR"
+
+$BOX_BIN compile
+
+echo "-----------------------------------------------------";
+echo "Move magento-src.phar to $PROJECT_DIR                ";
+echo "-----------------------------------------------------";
+mv magento-src.phar "$PROJECT_DIR/magento-src.phar"
+
+cd "$PROJECT_DIR";
+$BOX_BIN extract magento-src.phar ./magento-src;
+rm magento-src.phar;
