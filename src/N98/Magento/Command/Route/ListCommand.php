@@ -158,5 +158,7 @@ class ListCommand extends AbstractMagentoCommand
             )
             ->renderByFormat($output, $table, $input->getOption('format'))
         ;
+
+        return 0;
     }
 }

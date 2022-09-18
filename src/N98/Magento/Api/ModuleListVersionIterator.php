@@ -35,14 +35,12 @@ class ModuleListVersionIterator extends IteratorIterator
     /**
      * @return ModuleVersion
      */
-    public function current()
+    public function current(): ModuleVersion
     {
         $current = parent::current();
 
         $module = new Module($current['name'], $current['setup_version']);
 
-        $moduleVersion = new ModuleVersion($module, $this->resource);
-
-        return $moduleVersion;
+        return new ModuleVersion($module, $this->resource);
     }
 }

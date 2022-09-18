@@ -57,6 +57,11 @@ abstract class CheckAbstract implements SimpleCheck, CommandAware, CommandConfig
         $this->checkEnv();
     }
 
+    public function checkEnv()
+    {
+        // override in sub-class
+    }
+
     /**
      * @param array $commandConfig
      */

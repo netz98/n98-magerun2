@@ -4,6 +4,7 @@ namespace N98\Magento\Command\Developer\Console\Util\Config;
 
 /**
  * Class FileWriter
+ *
  * @package N98\Magento\Command\Developer\Console\Util\Config
  */
 class FileWriter extends \DOMDocument
@@ -19,7 +20,7 @@ class FileWriter extends \DOMDocument
      */
     public static function createByFilepath($filepath)
     {
-        $dom = new static('1.0', 'UTF-8');
+        $dom = new static('1.0', 'UTF-8'); // @phpstan-ignore-line
         $dom->formatOutput = true;
         $dom->preserveWhiteSpace = false;
 

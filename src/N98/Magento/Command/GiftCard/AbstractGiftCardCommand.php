@@ -7,6 +7,7 @@ use N98\Magento\Command\AbstractMagentoCommand;
 
 /**
  * Class AbstractGiftCardCommand
+ *
  * @package N98\Magento\Command\GiftCard
  */
 abstract class AbstractGiftCardCommand extends AbstractMagentoCommand
@@ -26,7 +27,8 @@ abstract class AbstractGiftCardCommand extends AbstractMagentoCommand
      */
     public function getGiftcard($code = null)
     {
-        $giftcard = $this->getObjectManager()->get(Giftcardaccount::class);
+        // Giftcardaccount is part of Adobe Commerce -> no completion here
+        $giftcard = $this->getObjectManager()->get(Giftcardaccount::class); // @phpstan-ignore-line
         if ($code !== null) {
             $giftcard->loadByCode($code);
         }

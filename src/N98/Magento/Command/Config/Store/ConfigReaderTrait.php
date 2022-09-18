@@ -3,22 +3,16 @@
 namespace N98\Magento\Command\Config\Store;
 
 use Magento\Framework\App\Config\ScopeConfigInterface;
-use Magento\Framework\App\Config\ScopePool;
 use Magento\Store\Model\StoreManagerInterface;
 
 trait ConfigReaderTrait
 {
     /**
-     * @var \Magento\Framework\App\Config\ScopePoolInterface
-     */
-    protected $_scopePool;
-
-    /**
      * @return \Magento\Framework\Encryption\EncryptorInterface
      */
     protected function getEncryptionModel()
     {
-        return $this->getObjectManager()->get('\Magento\Framework\Encryption\EncryptorInterface');
+        return $this->getObjectManager()->get(\Magento\Framework\Encryption\EncryptorInterface::class);
     }
 
     /**
@@ -26,7 +20,7 @@ trait ConfigReaderTrait
      */
     protected function _getConfigModel()
     {
-        return $this->getObjectManager()->get('\Magento\Framework\App\Config');
+        return $this->getObjectManager()->get(\Magento\Framework\App\Config::class);
     }
 
     /**
@@ -35,27 +29,6 @@ trait ConfigReaderTrait
     protected function _getStoreManager()
     {
         return $this->getObjectManager()->get(StoreManagerInterface::class);
-    }
-
-    /**
-     * @return \Magento\Framework\App\Config\ScopePoolInterface
-     */
-    protected function getScopePool()
-    {
-        if (!$this->_scopePool) {
-            $this->_scopePool = $this->getObjectManager()->get(ScopePool::class);
-        }
-
-        return $this->_scopePool;
-    }
-
-    /**
-     * @param string $scope
-     * @return \Magento\Framework\App\Config\Data
-     */
-    protected function getScope($scope)
-    {
-        return $this->getScopePool()->getScope($scope);
     }
 
     /**
@@ -68,8 +41,6 @@ trait ConfigReaderTrait
      */
     protected function getScopeConfigValue($path, $scope, $scopeId = null)
     {
-        $scopeConfig = $this->getObjectManager()->get(ScopeConfigInterface::class);
-
-        return $scopeConfig->getValue($path, $scope, $scopeId);
+        return $this->getObjectManager()->get(ScopeConfigInterface::class)->getValue($path, $scope, $scopeId);
     }
 }

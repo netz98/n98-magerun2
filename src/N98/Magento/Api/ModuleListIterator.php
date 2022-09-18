@@ -27,12 +27,10 @@ class ModuleListIterator extends IteratorIterator
     /**
      * @return Module
      */
-    public function current()
+    public function current(): Module
     {
         $current = parent::current();
 
-        $module = new Module($current['name'], $current['setup_version']);
-
-        return $module;
+        return new Module($current['name'], $current['setup_version']);
     }
 }

@@ -3,7 +3,6 @@
 namespace N98\Magento\Command\Developer\Console;
 
 use Exception;
-use N98\Magento\Command\Developer\Console\Exception\NoModuleDefinedException;
 use N98\Util\BinaryString;
 use Psy\Exception\BreakException;
 use Psy\Exception\ErrorException;
@@ -78,11 +77,7 @@ class Shell extends PsyShell
             return;
         }
 
-        if ($e instanceof NoModuleDefinedException) {
-            $this->getConsoleOutput()->writeln('<warning>' . $e->getMessage() . '</warning>');
-
-            return;
-        } elseif ($e instanceof ErrorException) {
+        if ($e instanceof ErrorException) {
             if (BinaryString::startsWith($e->getMessage(), 'PHP error:  Use of undefined constant')) {
                 $this->getConsoleOutput()->writeln('<warning>Unknown command</warning>');
 

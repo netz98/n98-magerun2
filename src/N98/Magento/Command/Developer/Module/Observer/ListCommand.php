@@ -140,5 +140,7 @@ class ListCommand extends AbstractMagentoCommand
                 ->setHeaders(['Event', 'Observer name', 'Fires'])
                 ->setRows($table)
                 ->renderByFormat($output, $table, $input->getOption('format'));
+
+        return 0;
     }
 }

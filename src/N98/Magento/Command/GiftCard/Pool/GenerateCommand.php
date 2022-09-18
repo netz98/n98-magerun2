@@ -48,6 +48,8 @@ HELP;
         try {
             $this
                 ->getObjectManager()
+                // Giftcardaccount is part of Adobe Commerce -> no completion here
+                // @phpstan-ignore-next-line
                 ->create(Pool::class)
                 ->generatePool();
 

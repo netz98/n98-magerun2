@@ -18,7 +18,7 @@ use Symfony\Component\Yaml\Yaml;
  *
  * @package N98\Magento\Application
  */
-class ConfigFile
+final class ConfigFile
 {
     /**
      * @var string

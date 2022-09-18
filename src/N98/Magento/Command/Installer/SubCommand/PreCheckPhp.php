@@ -25,7 +25,7 @@ class PreCheckPhp extends AbstractSubCommand
     }
 
     /**
-     * @return array
+     * @return void
      */
     protected function checkExtensions()
     {

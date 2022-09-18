@@ -37,6 +37,11 @@ class ShowCommand extends AbstractMagentoCommand
      */
     private $tokenFactory;
 
+    /**
+     * @var array
+     */
+    private $infos = [];
+
     protected function configure()
     {
         $this

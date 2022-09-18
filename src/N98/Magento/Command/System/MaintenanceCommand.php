@@ -80,6 +80,8 @@ class MaintenanceCommand extends AbstractMagentoCommand
         } else {
             $this->handleEnable($flagDir, $output);
         }
+
+        return 0;
     }
 
     /**

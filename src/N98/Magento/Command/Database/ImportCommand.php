@@ -43,6 +43,8 @@ Imports an SQL file with mysql cli client into current configured database.
 
 You need to have MySQL client tools installed on your system.
 HELP;
+        $help .= "\n" . $this->getCompressionHelp();
+
         $this->setHelp($help);
     }
 
@@ -174,12 +176,6 @@ HELP;
         }
 
         return $success ? 0 : 1;
-    }
-
-    public function asText()
-    {
-        return parent::asText() . "\n" .
-        $this->getCompressionHelp();
     }
 
     /**

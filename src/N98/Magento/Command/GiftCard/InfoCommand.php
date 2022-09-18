@@ -62,6 +62,8 @@ HELP;
         $data = [
             ['Gift Card Account ID', $card->getId()],
             ['Code', $card->getCode()],
+            // Giftcardaccount is part of Adobe Commerce -> no completion here
+            // @phpstan-ignore-next-line
             ['Status', Giftcardaccount::STATUS_ENABLED == $card->getStatus() ? 'Enabled' : 'Disabled'],
             ['Date Created', $card->getDateCreated()],
             ['Expiration Date', $card->getDateExpires()],

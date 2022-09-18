@@ -8,6 +8,8 @@ use Magento\Customer\Api\Data\CustomerInterface as Customer;
 use Magento\Customer\Model\ResourceModel\Customer\Collection\Interceptor as CustomerCollection;
 use Magento\Framework\App\State\Proxy as AppState;
 use Magento\Framework\Registry;
+use N98\Util\Console\Helper\ParameterHelper;
+use RuntimeException;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -84,9 +86,6 @@ class DeleteCommand extends AbstractCustomerCommand
             return 1;
         }
 
-        $this->input = $input;
-        $this->output = $output;
-
         /** @var QuestionHelper $questionHelper */
         $questionHelper = $this->getHelperSet()->get('question');
 
@@ -97,17 +96,17 @@ class DeleteCommand extends AbstractCustomerCommand
         $filterAttributes = [];
 
         // arguments
-        $id = $this->input->getOption('id');
-        $email = $this->input->getOption('email');
-        $firstname = $this->input->getOption('firstname');
-        $lastname = $this->input->getOption('lastname');
-        $website = $this->input->getOption('website');
+        $id = $input->getOption('id');
+        $email = $input->getOption('email');
+        $firstname = $input->getOption('firstname');
+        $lastname = $input->getOption('lastname');
+        $website = $input->getOption('website');
 
         // options
-        $range = $this->input->getOption('range');
-        $all = $this->input->getOption('all');
-        $fuzzy = $this->input->getOption('fuzzy');
-        $force = $this->input->getOption('force');
+        $range = $input->getOption('range');
+        $all = $input->getOption('all');
+        $fuzzy = $input->getOption('fuzzy');
+        $force = $input->getOption('force');
 
         // Get args required
         // we need at least:
@@ -153,7 +152,7 @@ class DeleteCommand extends AbstractCustomerCommand
 
                     if (!$range) {
                         // Nothing to do
-                        $this->output->writeln('<error>Finished nothing to do</error>');
+                        $output->writeln('<error>Finished nothing to do</error>');
                         return false;
                     }
                 }
@@ -164,9 +163,9 @@ class DeleteCommand extends AbstractCustomerCommand
             // Single customer deletion without fuzziness
             // get customer by one of 'id' or 'email' or 'firstname' and 'lastname'
             try {
-                $customer = $this->getCustomerById($id);
+                $customer = $this->getCustomerById($input, $output, $id);
             } catch (Exception $e) {
-                $this->output->writeln('<error>No customer found!</error>');
+                $output->writeln('<error>No customer found!</error>');
                 return false;
             }
 
@@ -178,7 +177,7 @@ class DeleteCommand extends AbstractCustomerCommand
                 $this->registry->unregister('isSecureArea');
                 $this->registry->register('isSecureArea', $isSecure);
             } else {
-                $this->output->writeln('<error>Aborting delete</error>');
+                $output->writeln('<error>Aborting delete</error>');
             }
         } else {
             if ($fuzzy) {
@@ -189,7 +188,7 @@ class DeleteCommand extends AbstractCustomerCommand
 
             if ($website) {
                 $parameterHelper = $this->getHelper('parameter');
-                $website = $parameterHelper->askWebsite($this->input, $this->output);
+                $website = $parameterHelper->askWebsite($input, $output);
                 $filterAttributes[] = ['attribute' => 'website_id', $filterType => $website->getId()];
             }
             if ($email) {
@@ -238,11 +237,13 @@ class DeleteCommand extends AbstractCustomerCommand
 
             if ($force || $this->shouldRemove($questionHelper, $input, $output)) {
                 $count = $this->batchDelete($customerCollection);
-                $this->output->writeln('<info>Successfully deleted ' . $count . ' customer/s</info>');
+                $output->writeln('<info>Successfully deleted ' . $count . ' customer/s</info>');
             } else {
-                $this->output->writeln('<error>Aborting delete</error>');
+                $output->writeln('<error>Aborting delete</error>');
             }
         }
+
+        return 0;
     }
 
     /**
@@ -262,22 +263,24 @@ class DeleteCommand extends AbstractCustomerCommand
     }
 
     /**
+     * @param \Symfony\Component\Console\Input\InputInterface $input
+     * @param \Symfony\Component\Console\Output\OutputInterface $output
      * @param int|string $id
      *
      * @return Customer
-     * @throws RuntimeException
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    protected function getCustomerById($id)
+    protected function getCustomerById(InputInterface $input, OutputInterface $output, $id)
     {
         /** @var Customer $customer */
         $customer = $this->customerRepository->getById($id);
         if (!$customer->getId()) {
             /** @var $parameterHelper ParameterHelper */
             $parameterHelper = $this->getHelper('parameter');
-            $website = $parameterHelper->askWebsite($this->input, $this->output);
-            $email = $parameterHelper->askEmail($this->input, $this->output);
-            $customer = $this->customerRepository()
-                ->get($email, $website->getId());
+            $website = $parameterHelper->askWebsite($input, $output);
+            $email = $parameterHelper->askEmail($input, $output);
+            $customer = $this->customerRepository->get($email, $website->getId());
         }
 
         if (!$customer->getId()) {
@@ -291,6 +294,8 @@ class DeleteCommand extends AbstractCustomerCommand
      * @param CustomerCollection $customerCollection
      *
      * @return int
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     protected function batchDelete(CustomerCollection $customerCollection): int
     {

@@ -88,7 +88,7 @@ abstract class AbstractDatabaseCommand extends AbstractMagentoCommand
     {
         $messages = [];
         $messages[] = '';
-        $messages[] = '<comment>Compression option</comment>';
+        $messages[] = '<info>Compression option</info>';
         $messages[] = ' Supported compression: gzip';
         $messages[] = ' The gzip cli tool has to be installed.';
         $messages[] = ' Additionally, for data-to-csv option tar cli tool has to be installed too.';
