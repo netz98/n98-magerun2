@@ -3,7 +3,6 @@
 namespace N98\Magento\Command\Customer;
 
 use Magento\Customer\Model\Customer;
-use Magento\Customer\Model\Resource\Customer\Collection as CustomerCollection;
 use N98\Magento\Command\AbstractMagentoCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -12,6 +11,7 @@ class AbstractCustomerCommand extends AbstractMagentoCommand
 {
     /**
      * @return array
+     * @throws \Magento\Framework\Exception\LocalizedException
      */
     protected function getCustomerList($search = null)
     {
@@ -56,11 +56,11 @@ class AbstractCustomerCommand extends AbstractMagentoCommand
     }
 
     /**
-     * @return CustomerCollection
+     * @return \Magento\Customer\Model\ResourceModel\Customer\Collection
      */
     protected function getCustomerCollection()
     {
-        return $this->getCustomer()->getCollection();
+        return $this->getObjectManager()->create(\Magento\Customer\Model\ResourceModel\Customer\Collection::class);
     }
 
     /**

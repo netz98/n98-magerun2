@@ -3,7 +3,7 @@
 namespace N98\Magento\Command\Customer;
 
 use Magento\Customer\Api\AccountManagementInterface;
-use Magento\Framework\App\State\Proxy as AppState;
+use Magento\Framework\App\State as AppState;
 use Magento\Framework\Exception\LocalizedException;
 use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
 use Symfony\Component\Console\Helper\QuestionHelper;
