@@ -48,6 +48,7 @@ class BaseUrlListCommand extends AbstractMagentoCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $table = [];
         $this->detectMagento($output, true);
 
         if (!$input->getOption('format')) {

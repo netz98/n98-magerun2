@@ -47,13 +47,16 @@ class ListCommand extends AbstractMagentoCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $table = [];
+
         if ($input->getOption('format') === null) {
             $this->writeSection($output, 'Magento Websites');
         }
 
         foreach ($this->storeManager->getWebsites() as $website) {
-            $table[$website->getId()] = [
-                $website->getId(),
+            $websiteId = $website->getId();
+            $table[$websiteId] = [
+                $websiteId,
                 $website->getCode(),
             ];
         }

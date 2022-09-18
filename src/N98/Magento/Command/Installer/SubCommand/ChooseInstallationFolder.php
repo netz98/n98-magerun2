@@ -17,9 +17,9 @@ class ChooseInstallationFolder extends AbstractSubCommand
     public function execute()
     {
         $input = $this->input;
-        $validateInstallationFolder = function ($folderName) use ($input) {
+        $validateInstallationFolder = function ($folderName) {
             $folderName = rtrim(trim($folderName, ' '), '/');
-            if (substr($folderName, 0, 1) == '.') {
+            if ($folderName[0] === '.') {
                 $cwd = \getcwd();
                 if (empty($cwd) && isset($_SERVER['PWD'])) {
                     $cwd = $_SERVER['PWD'];

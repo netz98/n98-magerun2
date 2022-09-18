@@ -270,7 +270,7 @@ jobs:
       # we run phpstan after di:compile in production mode to prevent class not found errors in Magerun sources
       - name: Run PHPStan
         working-directory: ./magento
-        run: ../vendor/bin/phpstan analyse --autoload-file="../src/bootstrap.php" ../src
+        run: ../vendor/bin/phpstan analyse --level 1 --autoload-file="../src/bootstrap.php" ../src
 
       - name: Setup PHP for Composer
         uses: shivammathur/setup-php@v2

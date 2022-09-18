@@ -13,7 +13,7 @@ if [ ! -f box.phar ]; then
 	echo ""
 	echo "There are two options to solve the issue:"
 	echo "- Download a compatible box.phar and place it into /var/www/html directory."
-	echo "- Executing build.sh script will also download box.phar."
+	echo "- Execute 'ddev exec ./build.sh' which will also download box.phar."
 	exit 1;
 fi
 

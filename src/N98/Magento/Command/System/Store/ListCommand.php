@@ -47,6 +47,8 @@ class ListCommand extends AbstractMagentoCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $table = [];
+
         foreach ($this->storeManager->getStores() as $store) {
             $table[$store->getId()] = [
                 $store->getId(),

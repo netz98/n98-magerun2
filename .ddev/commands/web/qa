@@ -12,10 +12,6 @@ echo "---------------------------------------------------------";
 
 vendor/bin/php-cs-fixer fix --verbose --dry-run --diff;
 
-echo "---------------------------------------------------------";
-echo "RUN phpstan"
-echo "---------------------------------------------------------";
-
 if [ -z "$MAGERUN_SETUP_TEST_DEFAULT_MAGENTO_VERSION" ]; then
 		echo "Please add MAGERUN_SETUP_TEST_DEFAULT_MAGENTO_VERSION as web_environment variable in your .ddev/config.yaml."
 		echo "See: https://github.com/netz98/n98-magerun2/blob/develop/.ddev/config.yaml"
@@ -24,4 +20,16 @@ fi
 
 MAGENTO_ROOT_DIR="/opt/magento-test-environments/magento_${MAGERUN_SETUP_TEST_DEFAULT_MAGENTO_VERSION//[-.]/_}"
 cd "$MAGENTO_ROOT_DIR";
-/var/www/html/vendor/bin/phpstan analyze -a "$PROJECT_DIR/src/bootstrap.php" "$PROJECT_DIR/src";
+
+if [ ! -f generated/metadata/interception.php ]; then
+	echo "--------------------------------------------------------";
+	echo "Enable production mode to get all generated files";
+	echo "--------------------------------------------------------";
+	php bin/magento deploy:mode:set production;
+fi
+
+echo "---------------------------------------------------------";
+echo "RUN phpstan";
+echo "---------------------------------------------------------";
+
+$PROJECT_DIR/vendor/bin/phpstan analyze --level 1 -a "$PROJECT_DIR/src/bootstrap.php" "$PROJECT_DIR/src";

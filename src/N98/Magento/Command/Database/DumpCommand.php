@@ -522,9 +522,6 @@ HELP;
         $optionAddTime = 'no';
         if ($input->getOption('add-time')) {
             $optionAddTime = $input->getOption('add-time');
-            if (empty($optionAddTime)) {
-                $optionAddTime = 'suffix';
-            }
         }
 
         list($namePrefix, $nameSuffix) = $this->getFileNamePrefixSuffix($optionAddTime);

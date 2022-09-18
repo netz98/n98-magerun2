@@ -56,7 +56,7 @@ class Magento2Initializer
         $params[Store::CUSTOM_ENTRY_POINT_PARAM] = true;
         $params['entryPoint'] = basename(__FILE__);
 
-        $bootstrap = Bootstrap::create(BP, $params);
+        $bootstrap = Bootstrap::create($magentoRootFolder, $params);
         /** @var \Magento\Framework\App\Cron $app */
         $app = $bootstrap->createApplication(Magerun::class, []);
         /* @var $app \N98\Magento\Framework\App\Magerun */

@@ -86,6 +86,7 @@ HELP;
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $table = [];
         $collection = $this->collection;
 
         $searchPath = $input->getArgument('path');

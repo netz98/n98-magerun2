@@ -99,7 +99,7 @@ abstract class AbstractCronCommand extends AbstractMagentoCommand
         foreach ($jobs as $jobGroupCode => $jobGroup) {
             foreach ($jobGroup as $jobKey => $jobConfig) {
                 $row = [
-                    'Job'   => $job['name'] ?? $jobKey,
+                    'Job'   => $jobGroup['name'] ?? $jobKey,
                     'Group' => $jobGroupCode,
                 ];
 

@@ -70,6 +70,7 @@ class ParameterHelper extends AbstractHelper
             $store = $storeManager->getStore($input->getArgument($argumentName));
         } catch (Exception $e) {
             $stores = [];
+            $choices = [];
             $questionHelper = [];
             $i = 0;
             foreach ($storeManager->getStores($withDefaultStore) as $store) {
@@ -136,6 +137,8 @@ class ParameterHelper extends AbstractHelper
         } catch (Exception $e) {
             $i = 0;
             $websites = [];
+            $choices = [];
+
             foreach ($storeManager->getWebsites() as $website) {
                 $websites[$i] = $website->getId();
                 $choices[$i + 1] = '<comment>' . $website->getCode() . ' - ' . $website->getName() . '</comment>';
