@@ -230,7 +230,7 @@ jobs:
         run: vendor/bin/php-cs-fixer fix --diff --dry-run
 
       - name: Run PHPStan
-        run: vend/bin/phpstan analyse src
+        run: vendor/bin/phpstan analyse src
 
       - name: Setup Magento Repository Credentials
         run: |
