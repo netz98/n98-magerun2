@@ -1065,15 +1065,6 @@ The basic idea of the stateful console was developed by [Jacques
 Bodin-Hullin](https://github.com/jacquesbh) in this great tool
 [Installer](https://github.com/jacquesbh/installer).
 
-### n98-magerun Shell
-
-If you need autocompletion for all n98-magerun commands you can start
-with `shell command`.
-
-```sh
-n98-magerun2.phar shell
-```
-
 ### n98-magerun Script
 
 Run multiple commands from a script file.
