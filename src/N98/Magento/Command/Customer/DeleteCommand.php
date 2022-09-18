@@ -5,8 +5,6 @@ namespace N98\Magento\Command\Customer;
 use Exception;
 use Magento\Customer\Api\CustomerRepositoryInterface;
 use Magento\Customer\Api\Data\CustomerInterface as Customer;
-use Magento\Customer\Model\ResourceModel\Customer\Collection\Interceptor as CustomerCollection;
-use Magento\Framework\App\State\Proxy as AppState;
 use Magento\Framework\Registry;
 use N98\Util\Console\Helper\ParameterHelper;
 use RuntimeException;
@@ -27,11 +25,6 @@ class DeleteCommand extends AbstractCustomerCommand
      * @var CustomerRepositoryInterface
      */
     private $customerRepository;
-
-    /**
-     * @var AppState
-     */
-    private $appState;
 
     /**
      * @var Registry
@@ -59,16 +52,13 @@ class DeleteCommand extends AbstractCustomerCommand
 
     /**
      * @param CustomerRepositoryInterface $customerRepository
-     * @param AppState                    $appState
      * @param Registry                    $registry
      */
     public function inject(
         CustomerRepositoryInterface $customerRepository,
-        AppState                    $appState,
         Registry                    $registry
     ) {
         $this->customerRepository = $customerRepository;
-        $this->appState = $appState;
         $this->registry = $registry;
     }
 
@@ -231,9 +221,24 @@ class DeleteCommand extends AbstractCustomerCommand
             $customerCollection->addAttributeToSelect('firstname')
                 ->addAttributeToSelect('lastname')
                 ->addAttributeToSelect('email');
-            if (count($filterAttributes)) {
-                $customerCollection->addFieldToFilter($filterAttributes);
+
+            if (count($filterAttributes) === 0) {
+                $output->writeln(
+                    '<warning>No filter was specified. To delete all customer, ' .
+                             'add the --all option</warning>'
+                );
+
+                return 1;
             }
+
+            $customerCollection->addFieldToFilter($filterAttributes);
+
+            $output->writeln(
+                sprintf(
+                    '<info>Command will delete <comment>%s</comment> customers.</info>',
+                    $customerCollection->getSize()
+                )
+            );
 
             if ($force || $this->shouldRemove($questionHelper, $input, $output)) {
                 $count = $this->batchDelete($customerCollection);
@@ -291,13 +296,13 @@ class DeleteCommand extends AbstractCustomerCommand
     }
 
     /**
-     * @param CustomerCollection $customerCollection
+     * @param \Magento\Customer\Model\ResourceModel\Customer\Collection $customerCollection
      *
      * @return int
      * @throws \Magento\Framework\Exception\LocalizedException
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    protected function batchDelete(CustomerCollection $customerCollection): int
+    protected function batchDelete(\Magento\Customer\Model\ResourceModel\Customer\Collection $customerCollection): int
     {
         $count = 0;
         $this->registry->unregister('isSecureArea');

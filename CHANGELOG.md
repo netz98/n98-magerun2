@@ -12,6 +12,7 @@ RECENT CHANGES
 - Imp: Check phpstan in Github Actions (by Christian Münch)
 - Imp: Fix all phpstan warnings/errors of level 0 (by Christian Münch)
 - Imp: ddev setup (installed Magento versions) (by Christian Münch)
+- Imp: Add some checks to secure customer:delete command (by Christian Münch)
 - Fix: #1028: Check if job config is set (by Christian Münch)
 - Fix: #1037: dev:console Code Generator (by Christian Münch)
 - Del: Symfony Shell Command - Command was already broken (by Christian Münch)
