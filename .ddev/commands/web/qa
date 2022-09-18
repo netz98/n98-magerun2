@@ -2,7 +2,7 @@
 
 ## Description: Run n98-magerun2 code checks
 ## Usage: qa
-## Example: "qa"
+## Example: "ddev qa"
 
 PROJECT_DIR="/var/www/html";
 
