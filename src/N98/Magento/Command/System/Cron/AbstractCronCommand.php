@@ -64,6 +64,7 @@ abstract class AbstractCronCommand extends AbstractMagentoCommand
      * @param \Magento\Framework\Stdlib\DateTime\DateTime $dateTime
      * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
      * @param \Magento\Cron\Model\ResourceModel\Schedule\Collection $cronScheduleCollection
+     * @param \Magento\Cron\Model\ScheduleFactory $cronSchedulFactory
      */
     public function inject(
         \Magento\Framework\App\State $state,
@@ -72,7 +73,8 @@ abstract class AbstractCronCommand extends AbstractMagentoCommand
         \Magento\Framework\Stdlib\DateTime\TimezoneInterface $timezone,
         \Magento\Framework\Stdlib\DateTime\DateTime $dateTime,
         \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
-        \Magento\Cron\Model\ResourceModel\Schedule\Collection $cronScheduleCollection
+        \Magento\Cron\Model\ResourceModel\Schedule\Collection $cronScheduleCollection,
+        \Magento\Cron\Model\ScheduleFactory $cronSchedulFactory
     ) {
         $this->state = $state;
         $this->cronConfig = $cronConfig;
@@ -81,7 +83,7 @@ abstract class AbstractCronCommand extends AbstractMagentoCommand
         $this->productMetadata = $productMetadata;
         $this->timezone = $timezone;
         $this->dateTime = $dateTime;
-        $this->cronScheduleFactory = $this->getObjectManager()->create(\Magento\Cron\Model\ScheduleFactory::class);
+        $this->cronScheduleFactory = $cronSchedulFactory;
     }
 
     /**
