@@ -1,8 +1,8 @@
 #!/bin/bash
 
 ## Description: Generate a phar file with the source code of Magento for PhpStorm code completion
-## Usage: build-magento-source-phar
-## Example: "ddev build-magento-source-phar"
+## Usage: get-magento-source
+## Example: "ddev get-magento-source"
 
 PROJECT_DIR="/var/www/html";
 BOX_BIN="/var/www/html/box.phar";
@@ -18,22 +18,32 @@ if [ ! -f box.phar ]; then
 fi
 
 if [ ! -f "$MAGENTO_ROOT_DIR/app/etc/env.php" ]; then
-	echo "Magento source code was not found."
-	echo "Seems that your developer setup in ddev is broken".
-	echo "Install the latest Magento version with install-magento-ce command."
+	echo "Magento source code was not found.";
+	echo "Seems that your developer setup in ddev is broken.";
+	echo "Install the latest Magento version with install-magento-ce command.";
 fi
 
-cp .ddev/box/magento.json "$MAGENTO_ROOT_DIR/box.json.dist"
+cp .ddev/box/magento.json "$MAGENTO_ROOT_DIR/box.json.dist";
 
-cd "$MAGENTO_ROOT_DIR"
+cd "$MAGENTO_ROOT_DIR";
+
+# disable warnings during di compile - E_ALL&~E_NOTICE&~E_STRICT&~E_DEPRECATED
+php -d "error_reporting=22519" bin/magento setup:di:compile;
+
+# Code references this directories -> Force creation
+mkdir -p app/code/Magento lib/internal/Magento/Framework;
 
 $BOX_BIN compile
 
 echo "-----------------------------------------------------";
 echo "Move magento-src.phar to $PROJECT_DIR                ";
 echo "-----------------------------------------------------";
-mv magento-src.phar "$PROJECT_DIR/magento-src.phar"
+mv magento-src.phar "$PROJECT_DIR/magento-src.phar";
 
 cd "$PROJECT_DIR";
+
+if [ -d ./magento-src ]; then
+	rm -Rf ./magento-src;
+fi
 $BOX_BIN extract magento-src.phar ./magento-src;
 rm magento-src.phar;
