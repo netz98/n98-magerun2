@@ -197,6 +197,7 @@ function test_magerun_commands() {
 	#  dev:console
 	assert_command_interactive "dev:console" "exit" "Magento"
 	assert_command_interactive "dev:console" '$dh->debugCategoryById(2); exit' "include_in_menu"
+	assert_command_interactive "dev:console" 'make:module N98_Foo; make:class foo.bar; exit' "generated Foo/Bar.php"
 
 	#  dev:module:create
 	assert_command_contains "dev:module:create Magerun123 TestModule" "Created directory"

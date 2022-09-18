@@ -8,6 +8,7 @@ use Magento\Framework\App\State\CleanupFiles;
 use Magento\Framework\Filesystem;
 use Magento\Framework\Filesystem\Directory\ReadInterface;
 use Magento\Framework\Filesystem\Directory\WriteInterface;
+use Magento\Framework\Module\ModuleListInterface;
 use Magento\Framework\Module\Status;
 use N98\Magento\Command\Developer\Console\Structure\ModuleNameStructure;
 use Symfony\Component\Console\Input\ArrayInput;
@@ -45,6 +46,16 @@ class MakeModuleCommand extends AbstractGeneratorCommand
         /** @var $filesystem Filesystem */
         $appDirectoryWriter = $filesystem->getDirectoryWrite(DirectoryList::APP);
         $appDirectoryReader = $filesystem->getDirectoryRead(DirectoryList::APP);
+
+        $moduleList = $this->create(ModuleListInterface::class);
+        /** @var $moduleList ModuleListInterface */
+
+        $detectedModule = $moduleList->getOne($moduleName->getFullModuleName());
+        if ($detectedModule !== null) {
+            // module already exist!
+            $output->writeln('<warning>Module already exist. Skip creation.</warning>');
+            return $this->changeToNewModule($output, $moduleName);
+        }
 
         $this->createRegistrationFile($moduleName, $appDirectoryWriter);
         $this->createComposerFile($moduleName, $appDirectoryWriter);

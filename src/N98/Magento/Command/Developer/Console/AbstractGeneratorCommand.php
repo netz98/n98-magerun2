@@ -3,6 +3,8 @@
 namespace N98\Magento\Command\Developer\Console;
 
 use Exception;
+use Laminas\Code\Generator\FileGenerator;
+use Laminas\Filter\Word\SeparatorToSeparator;
 use Magento\Framework\Code\Generator\ClassGenerator;
 use Magento\Framework\Filesystem\Directory\ReadFactory as DirectoryReadFactory;
 use Magento\Framework\Filesystem\Directory\WriteFactory as DirectoryWriteFactory;
@@ -11,8 +13,6 @@ use Magento\Framework\Module\Dir as ModuleDir;
 use N98\Magento\Command\Developer\Console\Structure\ModuleNameStructure;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Zend\Code\Generator\FileGenerator;
-use Zend\Filter\Word\SeparatorToSeparator;
 
 /**
  * Class AbstractGeneratorCommand
