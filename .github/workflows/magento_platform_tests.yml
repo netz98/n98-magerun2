@@ -64,7 +64,7 @@ jobs:
             git-branch: ''
             experimental: false
 
-          - magento-version: magento-ce-2.4.4
+          - magento-version: magento-ce-2.4.4-p1
             operating-system: ubuntu-latest
             php-version: 8.1
             mysql-version: 8.0
@@ -283,7 +283,7 @@ jobs:
         run:
           bin/magento setup:di:compile;
           ../vendor/bin/phpstan analyse --level 1 --autoload-file="../src/bootstrap.php" ../src
-        if: matrix.magento_version == 'magento-ce-2.4.4'
+        if: matrix.magento-version == 'magento-ce-2.4.4-p1'
 
       - name: Setup PHP for Composer
         uses: shivammathur/setup-php@v2
