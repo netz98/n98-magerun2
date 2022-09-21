@@ -263,8 +263,8 @@ jobs:
       - name: Activate Magento Production Mode
         working-directory: ./magento
         run: |
-          bin/magento --no-interaction deploy:mode:set production --skip-compilation
-          bin/magento --no-interaction setup:di:compile
+          bin/magento --no-interaction deploy:mode:set production --skip-compilation;
+          bin/magento --no-interaction setup:di:compile;
 
       - name: Run PHPUnit (Production Mode)
         run: vendor/bin/phpunit --debug --process-isolation
