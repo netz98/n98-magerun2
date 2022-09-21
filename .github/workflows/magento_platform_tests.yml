@@ -43,15 +43,26 @@ jobs:
           #  git-repository: ''
           #  experimental: false
 
-          - magento-version: mage-os-2.4.3-p1
-            operating-system: ubuntu-latest
-            php-version: 7.4
-            mysql-version: 8.0
-            elsticsearch-version: 7.9.0
-            composer-version: 2.2.17
-            use-git-repository: false
-            git-repository: ''
-            experimental: false
+#          - magento-version: mage-os-2.4.3-p1
+#            operating-system: ubuntu-latest
+#            php-version: 7.4
+#            mysql-version: 8.0
+#            elsticsearch-version: 7.9.0
+#            composer-version: 2.2.17
+#            use-git-repository: false
+#            git-repository: ''
+#            experimental: false
+#
+#          - magento-version: magento-ce-2.4.5
+#            operating-system: ubuntu-latest
+#            php-version: 8.1
+#            mysql-version: 8.0
+#            elsticsearch-version: 7.16.0
+#            composer-version: 2.2.17
+#            use-git-repository: false
+#            git-repository: ''
+#            git-branch: ''
+#            experimental: false
 
           - magento-version: magento-ce-2.4.4
             operating-system: ubuntu-latest
@@ -64,71 +75,71 @@ jobs:
             git-branch: ''
             experimental: false
 
-          - magento-version: magento-ce-2.4.3-p2
-            operating-system: ubuntu-latest
-            php-version: 7.4
-            mysql-version: 8.0
-            elsticsearch-version: 7.9.0
-            composer-version: 2.2.17
-            use-git-repository: false
-            git-repository: ''
-            git-branch: ''
-            experimental: false
-
-          - magento-version: magento-ce-2.4.2-p1
-            operating-system: ubuntu-latest
-            php-version: 7.4
-            mysql-version: 8.0
-            elsticsearch-version: 7.9.0
-            composer-version: 2.2.17
-            use-git-repository: false
-            git-repository: ''
-            git-branch: ''
-            experimental: false
-
-          - magento-version: magento-ce-2.4.2
-            operating-system: ubuntu-latest
-            php-version: 7.4
-            mysql-version: 8.0
-            elsticsearch-version: 7.9.0
-            composer-version: 2.2.17
-            use-git-repository: false
-            git-repository: ''
-            git-branch: ''
-            experimental: false
-
-          - magento-version: magento-ce-2.4.1
-            operating-system: ubuntu-latest
-            php-version: 7.4
-            mysql-version: 8.0
-            elsticsearch-version: 7.7.0
-            composer-version: v1
-            use-git-repository: false
-            git-repository: ''
-            git-branch: ''
-            experimental: false
-
-          - magento-version: magento-ce-2.4.0
-            operating-system: ubuntu-latest
-            php-version: 7.3
-            mysql-version: 5.7
-            elsticsearch-version: 7.6.0
-            composer-version: v1
-            use-git-repository: false
-            git-repository: ''
-            git-branch: ''
-            experimental: false
-
-          - magento-version: magento-ce-2.3.7-p3
-            operating-system: ubuntu-latest
-            php-version: 7.3
-            mysql-version: 5.7
-            elsticsearch-version: 7.6.0
-            composer-version: v1
-            use-git-repository: false
-            git-repository: ''
-            git-branch: ''
-            experimental: false
+#          - magento-version: magento-ce-2.4.3-p2
+#            operating-system: ubuntu-latest
+#            php-version: 7.4
+#            mysql-version: 8.0
+#            elsticsearch-version: 7.9.0
+#            composer-version: 2.2.17
+#            use-git-repository: false
+#            git-repository: ''
+#            git-branch: ''
+#            experimental: false
+#
+#          - magento-version: magento-ce-2.4.2-p1
+#            operating-system: ubuntu-latest
+#            php-version: 7.4
+#            mysql-version: 8.0
+#            elsticsearch-version: 7.9.0
+#            composer-version: 2.2.17
+#            use-git-repository: false
+#            git-repository: ''
+#            git-branch: ''
+#            experimental: false
+#
+#          - magento-version: magento-ce-2.4.2
+#            operating-system: ubuntu-latest
+#            php-version: 7.4
+#            mysql-version: 8.0
+#            elsticsearch-version: 7.9.0
+#            composer-version: 2.2.17
+#            use-git-repository: false
+#            git-repository: ''
+#            git-branch: ''
+#            experimental: false
+#
+#          - magento-version: magento-ce-2.4.1
+#            operating-system: ubuntu-latest
+#            php-version: 7.4
+#            mysql-version: 8.0
+#            elsticsearch-version: 7.7.0
+#            composer-version: v1
+#            use-git-repository: false
+#            git-repository: ''
+#            git-branch: ''
+#            experimental: false
+#
+#          - magento-version: magento-ce-2.4.0
+#            operating-system: ubuntu-latest
+#            php-version: 7.3
+#            mysql-version: 5.7
+#            elsticsearch-version: 7.6.0
+#            composer-version: v1
+#            use-git-repository: false
+#            git-repository: ''
+#            git-branch: ''
+#            experimental: false
+#
+#          - magento-version: magento-ce-2.3.7-p3
+#            operating-system: ubuntu-latest
+#            php-version: 7.3
+#            mysql-version: 5.7
+#            elsticsearch-version: 7.6.0
+#            composer-version: v1
+#            use-git-repository: false
+#            git-repository: ''
+#            git-branch: ''
+#            experimental: false
 
     services:
       elaticsearch:
@@ -261,7 +272,9 @@ jobs:
 
       - name: Activate Magento Production Mode
         working-directory: ./magento
-        run: bin/magento deploy:mode:set production;
+        run: |
+          bin/magento setup:di:compile;
+          bin/magento deploy:mode:set production --skip-compilation;
 
       - name: Run PHPUnit (Production Mode)
         run: vendor/bin/phpunit --debug --process-isolation
