@@ -12,6 +12,7 @@ use Magento\Framework\Filesystem\Directory\WriteInterface;
 use N98\Magento\Command\Developer\Console\Structure\ThemeNameStructure;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
@@ -27,6 +28,12 @@ class MakeThemeCommand extends AbstractGeneratorCommand
             ->addArgument('area', InputArgument::REQUIRED, 'Area like "frontend"')
             ->addArgument('package', InputArgument::REQUIRED, 'Package like "Vendor"')
             ->addArgument('name', InputArgument::REQUIRED, 'Name of the theme')
+            ->addOption(
+                'modules-base-dir',
+                'd',
+                InputOption::VALUE_OPTIONAL,
+                'Directory where theme should be created. Default is app/design if not reconfigured'
+            )
             ->setDescription('Creates a new theme');
     }
 

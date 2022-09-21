@@ -70,10 +70,9 @@ XML;
         return $this;
     }
 
-    #[\ReturnTypeWillChange]
-    public function save(string $filename, int $options = 0)
+    public function saveFile(string $filename)
     {
-        $result = parent::save($filename, $options);
+        $result = parent::save($filename);
         if (false === $result) {
             return false;
         }

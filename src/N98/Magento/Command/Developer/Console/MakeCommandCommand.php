@@ -178,7 +178,7 @@ BODY;
             $classNameToGenerate
         );
 
-        $configWriter->save($diPath);
+        $configWriter->saveFile($diPath);
     }
 
     /**
@@ -187,8 +187,6 @@ BODY;
      */
     protected function createDiFileWriter($diPath)
     {
-        $configWriter = DiFileWriter::createByFilepath($diPath);
-
-        return $configWriter;
+        return DiFileWriter::createByFilepath($diPath);
     }
 }
