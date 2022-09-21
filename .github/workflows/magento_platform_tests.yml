@@ -64,49 +64,49 @@ jobs:
 #            git-branch: ''
 #            experimental: false
 
-          - magento-version: magento-ce-2.4.4
+#          - magento-version: magento-ce-2.4.4
+#            operating-system: ubuntu-latest
+#            php-version: 8.1
+#            mysql-version: 8.0
+#            elsticsearch-version: 7.16.0
+#            composer-version: 2.2.17
+#            use-git-repository: false
+#            git-repository: ''
+#            git-branch: ''
+#            experimental: false
+
+          - magento-version: magento-ce-2.4.3-p2
             operating-system: ubuntu-latest
-            php-version: 8.1
+            php-version: 7.4
             mysql-version: 8.0
-            elsticsearch-version: 7.16.0
+            elsticsearch-version: 7.9.0
             composer-version: 2.2.17
             use-git-repository: false
             git-repository: ''
             git-branch: ''
             experimental: false
 
-#          - magento-version: magento-ce-2.4.3-p2
-#            operating-system: ubuntu-latest
-#            php-version: 7.4
-#            mysql-version: 8.0
-#            elsticsearch-version: 7.9.0
-#            composer-version: 2.2.17
-#            use-git-repository: false
-#            git-repository: ''
-#            git-branch: ''
-#            experimental: false
-#
-#          - magento-version: magento-ce-2.4.2-p1
-#            operating-system: ubuntu-latest
-#            php-version: 7.4
-#            mysql-version: 8.0
-#            elsticsearch-version: 7.9.0
-#            composer-version: 2.2.17
-#            use-git-repository: false
-#            git-repository: ''
-#            git-branch: ''
-#            experimental: false
-#
-#          - magento-version: magento-ce-2.4.2
-#            operating-system: ubuntu-latest
-#            php-version: 7.4
-#            mysql-version: 8.0
-#            elsticsearch-version: 7.9.0
-#            composer-version: 2.2.17
-#            use-git-repository: false
-#            git-repository: ''
-#            git-branch: ''
-#            experimental: false
+          - magento-version: magento-ce-2.4.2-p1
+            operating-system: ubuntu-latest
+            php-version: 7.4
+            mysql-version: 8.0
+            elsticsearch-version: 7.9.0
+            composer-version: 2.2.17
+            use-git-repository: false
+            git-repository: ''
+            git-branch: ''
+            experimental: false
+
+          - magento-version: magento-ce-2.4.2
+            operating-system: ubuntu-latest
+            php-version: 7.4
+            mysql-version: 8.0
+            elsticsearch-version: 7.9.0
+            composer-version: 2.2.17
+            use-git-repository: false
+            git-repository: ''
+            git-branch: ''
+            experimental: false
 #
 #          - magento-version: magento-ce-2.4.1
 #            operating-system: ubuntu-latest
@@ -273,6 +273,8 @@ jobs:
       - name: Activate Magento Production Mode
         working-directory: ./magento
         run: |
+          php -v;
+          composer --version;
           bin/magento setup:di:compile;
           bin/magento deploy:mode:set production --skip-compilation;
 
