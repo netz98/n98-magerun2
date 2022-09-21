@@ -1,7 +1,7 @@
 RECENT CHANGES
 ==============
 
-5.3.0
+6.0.0
 -----
 
 - Add: route:list command (by Gowri)
@@ -13,13 +13,13 @@ RECENT CHANGES
 - Add: New option to run dev:console in PHP script mode (by Christian Münch)
 - Imp: Update 3rd party dependencies (twig, phar-utils, phpunit, symfony)
 - Imp: Check phpstan in Github Actions (by Christian Münch)
-- Imp: Fix all phpstan warnings/errors of level 0 (by Christian Münch)
+- Imp: Fix all phpstan warnings/errors of level 0 and level 1 (by Christian Münch)
 - Imp: ddev setup (installed Magento versions) (by Christian Münch)
 - Imp: Add some checks to secure customer:delete command (by Christian Münch)
 - Fix: #1028: Check if job config is set (by Christian Münch)
 - Fix: #1037: dev:console Code Generator (by Christian Münch)
 - Del: Symfony Shell Command - Command was already broken (by Christian Münch)
-- Del: Drop active testing support for Magento 2.3.4 and 2.3.5
+- Del: Drop active testing support for Magento 2.3.x (some commands could be imcompatible due to platform changes)
 
 5.2.0
 -----

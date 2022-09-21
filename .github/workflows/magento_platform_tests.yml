@@ -130,17 +130,6 @@ jobs:
             git-branch: ''
             experimental: false
 
-          - magento-version: magento-ce-2.3.7-p3
-            operating-system: ubuntu-latest
-            php-version: 7.3
-            mysql-version: 5.7
-            elsticsearch-version: 7.6.0
-            composer-version: v1
-            use-git-repository: false
-            git-repository: ''
-            git-branch: ''
-            experimental: false
-
     services:
       elaticsearch:
         image: docker.elastic.co/elasticsearch/elasticsearch:${{ matrix.elsticsearch-version }}
