@@ -38,12 +38,19 @@ class DevelopmentHelper
      * @param int $id
      * @param int $storeId
      * @return mixed
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function debugProductById($id, $storeId = 0)
     {
         return $this->getProductRepository()->getById($id, false, $storeId)->debug();
     }
 
+    /**
+     * @param int $id
+     * @param int $storeId
+     * @return array|string
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
     public function debugCategoryById($id, $storeId = 0)
     {
         return $this->getCategoryRepository()->get($id, $storeId)->debug();

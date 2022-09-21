@@ -73,21 +73,12 @@ function assert_command_with_exitcode {
 
 function assert_command_interactive {
 	local command=$1;
-	local input=$2;
-	local find=$3;
-
-  # https://stackoverflow.com/questions/5564450/handle-whitespaces-in-arguments-to-a-bash-script
-	#terms=();
-	#for i in "$@"
-	#do
- 	#		terms+=("$i")
-	#done
-	#input=${terms[1]// /\\ };
+	local find=$2;
 
 	echo -n "- $command"
 
 	local output=""
-	output=$((printf \"$input\" | $PHAR_FILE --no-interaction --root-dir="$MAGENTO_ROOT_DIR" $command $ADDITIONAL_OPTIONS | grep "$find") 2>&1);
+	output=$((echo $command | $PHAR_FILE --no-interaction --root-dir="$MAGENTO_ROOT_DIR" $ADDITIONAL_OPTIONS | grep "$find") 2>&1);
 
 	if [ $? -eq 0 ]; then
 		echo -e "\t\tok";
@@ -203,11 +194,10 @@ function test_magerun_commands() {
 	#  dev:asset:clear (we can run the command after we have created assets)
 	#assert_command_contains "dev:asset:clear" "deployed_version.txt"
 	#  dev:console
-	assert_command_interactive "dev:console" "exit" "Magento"
-	assert_command_interactive "dev:console" '$dh->debugCategoryById(2); exit' "include_in_menu"
-
-	# We need a way to preserve the whitespaces in the argument $2
-	assert_command_interactive "dev:console" 'make:module N98_Foo; make:class foo.bar; exit' "generated Foo/Bar.php"
+	assert_command_interactive "dev:console --auto-exit 'ls'" "di"
+  assert_command_interactive "dev:console --auto-exit -p '1+1" "2"
+  #assert_command_interactive "dev:console --auto-exit \"\$dh->debugCategoryById(2);\"" "include_in_menu"
+  #assert_command_interactive "dev:console --auto-exit 'make:module N98_Foo; make:class foo.bar;' "generated Foo/Bar.php"
 
 	#  dev:module:create
 	assert_command_contains "dev:module:create Magerun123 TestModule" "Created directory"
@@ -487,8 +477,7 @@ function test_custom_module() {
 verify;
 print_info_before_test;
 
-assert_command_interactive "dev:console" 'make:module N98_Foo; make:class foo.bar; exit' "generated Foo/Bar.php"
-exit;
+exit 0
 
 echo "=================================================="
 echo "MAGERUN COMMANDS"

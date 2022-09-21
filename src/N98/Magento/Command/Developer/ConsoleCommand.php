@@ -16,6 +16,7 @@ use PhpParser\Parser;
 use Psy\CodeCleaner;
 use Psy\Configuration;
 use Psy\Output\ShellOutput;
+use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -51,9 +52,10 @@ class ConsoleCommand extends AbstractMagentoCommand
     {
         $this
             ->setName('dev:console')
-            ->addOption('area', 'a', InputOption::VALUE_REQUIRED, 'Area to initialize')
-            ->addOption('auto-exit', 'e', InputOption::VALUE_NONE, 'Automatic exit after cmd')
             ->addArgument('cmd', InputArgument::OPTIONAL, 'Direct code to run')
+            ->addOption('area', 'a', InputOption::VALUE_REQUIRED, 'Area to initialize')
+            ->addOption('auto-exit', 'e', InputOption::VALUE_NONE | InputOption::VALUE_OPTIONAL, 'Automatic exit after cmd')
+            ->addOption('cmd-is-php', 'p', InputOption::VALUE_NONE | InputOption::VALUE_OPTIONAL, 'Use CMD argument as PHP script')
             ->setDescription(
                 'Opens PHP interactive shell with initialized Mage::app() <comment>(Experimental)</comment>'
             );
@@ -171,16 +173,31 @@ help;
         }
 
         if (!empty($cmd)) {
+            if ($input->getOption('cmd-is-php')) {
+                $shell->setOutput($consoleOutput);
+
+                return $shell->execute($cmd);
+            }
+
+            // Remove quotes possibly passed by command line
+            $cmd = trim($cmd, '"\'');
+
             $cmd = $this->filterCmdCode($cmd);
             $code = preg_split('/[\n;]+/', $cmd);
 
             if ($input->getOption('auto-exit')) {
                 $code[] = 'exit';
             }
+
+            $code = array_filter($code, function($line) {
+                $line = trim($line);
+                return !in_array($line, ['', ';']);
+            });
+
             $shell->addInput($code);
         }
 
-        $shell->run($input, $consoleOutput);
+        return $shell->run($input, $consoleOutput);
     }
 
     /**
