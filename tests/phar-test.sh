@@ -477,8 +477,6 @@ function test_custom_module() {
 verify;
 print_info_before_test;
 
-exit 0
-
 echo "=================================================="
 echo "MAGERUN COMMANDS"
 echo "=================================================="
