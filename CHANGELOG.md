@@ -8,6 +8,8 @@ RECENT CHANGES
 - Add: installer command - Update installable versions (incl. mage-os) (by Christian Münch)
 - Add: ddev get-magento-source command for code completion in PhpStorm (by Christian Münch)
 - Add: Integrated phpstan in developer setup (by Christian Münch)
+- Add: New option to define the modules base dir for module creation in dev:console make:module command (by Christian Münch)
+- Add: Auto exit option for dev:console (by Christian Münch)
 - Imp: Update 3rd party dependencies (twig, phar-utils, phpunit, symfony)
 - Imp: Check phpstan in Github Actions (by Christian Münch)
 - Imp: Fix all phpstan warnings/errors of level 0 (by Christian Münch)
