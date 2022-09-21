@@ -33,15 +33,15 @@ jobs:
           #  git-branch: 2.4-develop
           #  experimental: true
 
-          - magento-version: mage-os-2.4.5
-            operating-system: ubuntu-latest
-            php-version: 8.1
-            mysql-version: 8.0
-            elsticsearch-version: 7.9.0
-            composer-version: 2.2.17
-            use-git-repository: false
-            git-repository: ''
-            experimental: false
+          #- magento-version: mage-os-2.4.5
+          #  operating-system: ubuntu-latest
+          #  php-version: 8.1
+          #  mysql-version: 8.0
+          #  elsticsearch-version: 7.9.0
+          #  composer-version: 2.2.17
+          #  use-git-repository: false
+          #  git-repository: ''
+          #  experimental: false
 
           - magento-version: mage-os-2.4.3-p1
             operating-system: ubuntu-latest
@@ -192,8 +192,8 @@ jobs:
       - uses: actions/cache@v3
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
-          key: "php-${{ matrix.php-version }}-composer-${{ hashFiles('composer.lock') }}"
-          restore-keys: "php-${{ matrix.php-version }}-composer-"
+          key: "${{ runner.os }}-php-${{ matrix.php-version }}-composer-${{ hashFiles('composer.lock') }}"
+          restore-keys: "${{ runner.os }}-php-${{ matrix.php-version }}-composer-"
 
       - name: Install dependencies
         # If we have a very broad restore-keys in the previous caching action,
