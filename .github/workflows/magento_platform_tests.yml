@@ -262,8 +262,6 @@ jobs:
           --useDefaultConfigParams=yes \
           --installSampleData=no \
           --baseUrl="http://github.magerun.test/";
-          cd magento;
-          bin/magento setup:di:compile;
         if: matrix.use-git-repository == false
 
       - name: Configure matchers
@@ -274,8 +272,7 @@ jobs:
 
       - name: Activate Magento Production Mode
         working-directory: ./magento
-        run: |
-          bin/magento deploy:mode:set production --skip-compilation;
+        run: bin/magento deploy:mode:set production --skip-compilation;
 
       - name: Run PHPUnit (Production Mode)
         run: vendor/bin/phpunit --debug --process-isolation
@@ -283,13 +280,16 @@ jobs:
       # we run phpstan after di:compile in production mode to prevent class not found errors in Magerun sources
       - name: Run PHPStan
         working-directory: ./magento
-        run: ../vendor/bin/phpstan analyse --level 1 --autoload-file="../src/bootstrap.php" ../src
+        run:
+          bin/magento setup:di:compile;
+          ../vendor/bin/phpstan analyse --level 1 --autoload-file="../src/bootstrap.php" ../src
 
       - name: Setup PHP for Composer
         uses: shivammathur/setup-php@v2
         with:
           tools: composer:2
           php-version: '7.4'
+        if: matrix.magento_version == false
 
       - name: Build phar file
         run: |
