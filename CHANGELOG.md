@@ -10,6 +10,7 @@ RECENT CHANGES
 - Add: Integrated phpstan in developer setup (by Christian Münch)
 - Add: New option to define the modules base dir for module creation in dev:console make:module command (by Christian Münch)
 - Add: Auto exit option for dev:console (by Christian Münch)
+- Add: New option to run dev:console in PHP script mode (by Christian Münch)
 - Imp: Update 3rd party dependencies (twig, phar-utils, phpunit, symfony)
 - Imp: Check phpstan in Github Actions (by Christian Münch)
 - Imp: Fix all phpstan warnings/errors of level 0 (by Christian Münch)
