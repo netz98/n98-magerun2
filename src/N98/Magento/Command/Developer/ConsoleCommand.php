@@ -16,7 +16,6 @@ use PhpParser\Parser;
 use Psy\CodeCleaner;
 use Psy\Configuration;
 use Psy\Output\ShellOutput;
-use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -189,7 +188,7 @@ help;
                 $code[] = 'exit';
             }
 
-            $code = array_filter($code, function($line) {
+            $code = array_filter($code, function ($line) {
                 $line = trim($line);
                 return !in_array($line, ['', ';']);
             });
