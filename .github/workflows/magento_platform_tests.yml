@@ -33,47 +33,47 @@ jobs:
           #  git-branch: 2.4-develop
           #  experimental: true
 
-          #- magento-version: mage-os-2.4.5
-          #  operating-system: ubuntu-latest
-          #  php-version: 8.1
-          #  mysql-version: 8.0
-          #  elsticsearch-version: 7.9.0
-          #  composer-version: 2.2.17
-          #  use-git-repository: false
-          #  git-repository: ''
-          #  experimental: false
+          - magento-version: mage-os-2.4.5
+            operating-system: ubuntu-latest
+            php-version: 8.1
+            mysql-version: 8.0
+            elsticsearch-version: 7.9.0
+            composer-version: 2.2.17
+            use-git-repository: false
+            git-repository: ''
+            experimental: false
 
-#          - magento-version: mage-os-2.4.3-p1
-#            operating-system: ubuntu-latest
-#            php-version: 7.4
-#            mysql-version: 8.0
-#            elsticsearch-version: 7.9.0
-#            composer-version: 2.2.17
-#            use-git-repository: false
-#            git-repository: ''
-#            experimental: false
-#
-#          - magento-version: magento-ce-2.4.5
-#            operating-system: ubuntu-latest
-#            php-version: 8.1
-#            mysql-version: 8.0
-#            elsticsearch-version: 7.16.0
-#            composer-version: 2.2.17
-#            use-git-repository: false
-#            git-repository: ''
-#            git-branch: ''
-#            experimental: false
+          - magento-version: mage-os-2.4.3-p1
+            operating-system: ubuntu-latest
+            php-version: 7.4
+            mysql-version: 8.0
+            elsticsearch-version: 7.9.0
+            composer-version: 2.2.17
+            use-git-repository: false
+            git-repository: ''
+            experimental: false
 
-#          - magento-version: magento-ce-2.4.4
-#            operating-system: ubuntu-latest
-#            php-version: 8.1
-#            mysql-version: 8.0
-#            elsticsearch-version: 7.16.0
-#            composer-version: 2.2.17
-#            use-git-repository: false
-#            git-repository: ''
-#            git-branch: ''
-#            experimental: false
+          - magento-version: magento-ce-2.4.5
+            operating-system: ubuntu-latest
+            php-version: 8.1
+            mysql-version: 8.0
+            elsticsearch-version: 7.16.0
+            composer-version: 2.2.17
+            use-git-repository: false
+            git-repository: ''
+            git-branch: ''
+            experimental: false
+
+          - magento-version: magento-ce-2.4.4
+            operating-system: ubuntu-latest
+            php-version: 8.1
+            mysql-version: 8.0
+            elsticsearch-version: 7.16.0
+            composer-version: 2.2.17
+            use-git-repository: false
+            git-repository: ''
+            git-branch: ''
+            experimental: false
 
           - magento-version: magento-ce-2.4.3-p2
             operating-system: ubuntu-latest
@@ -107,39 +107,39 @@ jobs:
             git-repository: ''
             git-branch: ''
             experimental: false
-#
-#          - magento-version: magento-ce-2.4.1
-#            operating-system: ubuntu-latest
-#            php-version: 7.4
-#            mysql-version: 8.0
-#            elsticsearch-version: 7.7.0
-#            composer-version: v1
-#            use-git-repository: false
-#            git-repository: ''
-#            git-branch: ''
-#            experimental: false
-#
-#          - magento-version: magento-ce-2.4.0
-#            operating-system: ubuntu-latest
-#            php-version: 7.3
-#            mysql-version: 5.7
-#            elsticsearch-version: 7.6.0
-#            composer-version: v1
-#            use-git-repository: false
-#            git-repository: ''
-#            git-branch: ''
-#            experimental: false
-#
-#          - magento-version: magento-ce-2.3.7-p3
-#            operating-system: ubuntu-latest
-#            php-version: 7.3
-#            mysql-version: 5.7
-#            elsticsearch-version: 7.6.0
-#            composer-version: v1
-#            use-git-repository: false
-#            git-repository: ''
-#            git-branch: ''
-#            experimental: false
+
+          - magento-version: magento-ce-2.4.1
+            operating-system: ubuntu-latest
+            php-version: 7.4
+            mysql-version: 8.0
+            elsticsearch-version: 7.7.0
+            composer-version: v1
+            use-git-repository: false
+            git-repository: ''
+            git-branch: ''
+            experimental: false
+
+          - magento-version: magento-ce-2.4.0
+            operating-system: ubuntu-latest
+            php-version: 7.3
+            mysql-version: 5.7
+            elsticsearch-version: 7.6.0
+            composer-version: v1
+            use-git-repository: false
+            git-repository: ''
+            git-branch: ''
+            experimental: false
+
+          - magento-version: magento-ce-2.3.7-p3
+            operating-system: ubuntu-latest
+            php-version: 7.3
+            mysql-version: 5.7
+            elsticsearch-version: 7.6.0
+            composer-version: v1
+            use-git-repository: false
+            git-repository: ''
+            git-branch: ''
+            experimental: false
 
     services:
       elaticsearch:
@@ -158,14 +158,14 @@ jobs:
         options: --tmpfs /tmp:rw --tmpfs /var/lib/mysql:rw --health-cmd="mysqladmin ping"
     env:
       MAGENTO_MARKETPLACE_USERNAME: ${{ secrets.MAGENTO_MARKETPLACE_USERNAME }}
-      MAGENTO_MARKETPLACE_PASSWORD: ${{ secrets.MAGENTO_MARKETPLACE_PASSWORD }}      
+      MAGENTO_MARKETPLACE_PASSWORD: ${{ secrets.MAGENTO_MARKETPLACE_PASSWORD }}
       COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
       - name: Dump GitHub context
         run: echo "Register Github context"
         env:
-          GITHUB_CONTEXT: ${{ toJSON(github) }}          
+          GITHUB_CONTEXT: ${{ toJSON(github) }}
 
       - name: Define Magento ROOT for tests
         run: echo "Set Magento root to $WORKSPACE"
@@ -179,7 +179,7 @@ jobs:
           tools: composer:${{ matrix.composer-version }}, cs2pr
           php-version: ${{ matrix.php-version }}
           extensions: mbstring, intl
-          coverage: none      
+          coverage: none
 
       - name: Checkout PR
         uses: actions/checkout@v3
@@ -262,6 +262,8 @@ jobs:
           --useDefaultConfigParams=yes \
           --installSampleData=no \
           --baseUrl="http://github.magerun.test/";
+          cd magento;
+          bin/magento setup:di:compile;
         if: matrix.use-git-repository == false
 
       - name: Configure matchers
@@ -273,9 +275,6 @@ jobs:
       - name: Activate Magento Production Mode
         working-directory: ./magento
         run: |
-          php -v;
-          composer --version;
-          bin/magento setup:di:compile;
           bin/magento deploy:mode:set production --skip-compilation;
 
       - name: Run PHPUnit (Production Mode)
