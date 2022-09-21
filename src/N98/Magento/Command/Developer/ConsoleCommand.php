@@ -171,7 +171,9 @@ help;
         }
 
         if (!empty($cmd)) {
+            $cmd = $this->filterCmdCode($cmd);
             $code = preg_split('/[\n;]+/', $cmd);
+
             if ($input->getOption('auto-exit')) {
                 $code[] = 'exit';
             }
@@ -198,5 +200,14 @@ help;
         $this->areaList->getArea($areaToLoad)
             ->load(Area::PART_CONFIG)
             ->load(Area::PART_TRANSLATE);
+    }
+
+    /**
+     * @param string $codeToFilter
+     * @return string
+     */
+    private function filterCmdCode(string $codeToFilter): string
+    {
+        return str_replace(['<?php', '<?'], '', $codeToFilter);
     }
 }
