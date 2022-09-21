@@ -53,7 +53,6 @@ class ConsoleCommand extends AbstractMagentoCommand
             ->setName('dev:console')
             ->addOption('area', 'a', InputOption::VALUE_REQUIRED, 'Area to initialize')
             ->addOption('auto-exit', 'e', InputOption::VALUE_NONE, 'Automatic exit after cmd')
-            ->addOption('cmd-is-php', 'p', InputOption::VALUE_NONE, 'Use CMD argument as PHP script')
             ->addArgument('cmd', InputArgument::OPTIONAL, 'Direct code to run', '')
             ->setDescription(
                 'Opens PHP interactive shell with a initialized Magento application</comment>'
@@ -169,15 +168,12 @@ help;
         if ($cmd === '-') {
             $cmd = 'php://stdin';
             $cmd = @\file_get_contents($cmd);
+            if (OutputInterface::VERBOSITY_DEBUG <= $output->getVerbosity()) {
+                $output->writeln('<info>read commands from stdin</info>');
+            }
         }
 
         if (!empty($cmd)) {
-            if ($input->getOption('cmd-is-php')) {
-                $shell->setOutput($consoleOutput);
-
-                return $shell->execute($cmd);
-            }
-
             // Remove quotes possibly passed by command line
             $cmd = trim($cmd, '"\'');
 
@@ -185,7 +181,7 @@ help;
             $code = preg_split('/[\n;]+/', $cmd);
 
             if ($input->getOption('auto-exit')) {
-                $code[] = 'exit';
+                $input->setInteractive(false);
             }
 
             $code = array_filter($code, function ($line) {
