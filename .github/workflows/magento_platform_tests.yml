@@ -33,16 +33,6 @@ jobs:
           #  git-branch: 2.4-develop
           #  experimental: true
 
-          - magento-version: mage-os-2.4.5
-            operating-system: ubuntu-latest
-            php-version: 8.1
-            mysql-version: 8.0
-            elsticsearch-version: 7.9.0
-            composer-version: v2
-            use-git-repository: false
-            git-repository: ''
-            experimental: false
-
           - magento-version: mage-os-2.4.3-p1
             operating-system: ubuntu-latest
             php-version: 7.4
