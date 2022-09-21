@@ -264,6 +264,7 @@ jobs:
         working-directory: ./magento
         run: |
           bin/magento --no-interaction deploy:mode:set production --skip-compilation;
+          rm -Rf generated;
           bin/magento --no-interaction setup:di:compile;
 
       - name: Run PHPUnit (Production Mode)
