@@ -611,6 +611,60 @@ class DatabaseHelper extends AbstractHelper
     }
 
     /**
+     * Get list of database tables
+     *
+     * @param bool|null $withoutPrefix [optional] remove prefix from the returned table names. prefix is obtained from
+     *                                 magento database configuration. defaults to false.
+     *
+     * @return array
+     * @throws RuntimeException
+     * @throws \Magento\Framework\Exception\FileSystemException
+     */
+    public function getViews($withoutPrefix = null)
+    {
+        $withoutPrefix = (bool) $withoutPrefix;
+
+        $db = $this->getConnection();
+        $prefix = $this->dbSettings['prefix'];
+        $prefixLength = strlen($prefix);
+
+        $column = $columnName = 'table_name';
+
+        $input = [];
+
+        if ($withoutPrefix && $prefixLength) {
+            $column = sprintf('SUBSTRING(%1$s FROM 1 + CHAR_LENGTH(:name)) %1$s', $columnName);
+            $input[':name'] = $prefix;
+        }
+
+        $condition = 'table_schema = database()';
+
+        if ($prefixLength) {
+            $escape = '=';
+            $condition .= sprintf(" AND %s LIKE :like ESCAPE '%s'", $columnName, $escape);
+            $input[':like'] = $this->quoteLike($prefix, $escape) . '%';
+        }
+
+        $condition .= " AND LIKE 'view%'";
+
+        $query = sprintf('SELECT %s FROM information_schema.views WHERE %s;', $column, $condition);
+        $statement = $db->prepare($query, [PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY]);
+        $result = $statement->execute($input);
+
+        if (!$result) {
+            // @codeCoverageIgnoreStart
+            $this->throwRuntimeException(
+                $statement,
+                sprintf('Failed to obtain tables from database: %s', var_export($query, true))
+            );
+        } // @codeCoverageIgnoreEnd
+
+        $result = $statement->fetchAll(PDO::FETCH_COLUMN, 0);
+
+        return $result;
+    }
+
+    /**
      * throw a runtime exception and provide error info for the statement if available
      *
      * @param PDOStatement $statement
@@ -745,6 +799,23 @@ class DatabaseHelper extends AbstractHelper
         $query .= 'SET FOREIGN_KEY_CHECKS = 1;';
         $this->getConnection()->query($query);
         $output->writeln('<info>Dropped database tables</info> <comment>' . $count . ' tables dropped</comment>');
+    }
+
+    /**
+     * @param OutputInterface $output
+     * @return void
+     */
+    public function dropViews(OutputInterface $output)
+    {
+        $result = $this->getViews();
+        $query = '';
+        $count = 0;
+        foreach ($result as $viewName) {
+            $query .= 'DROP VIEW IF EXISTS `' . $viewName . '`; ';
+            $count++;
+        }
+        $this->getConnection()->query($query);
+        $output->writeln('<info>Dropped database views</info> <comment>' . $count . ' views dropped</comment>');
     }
 
     /**

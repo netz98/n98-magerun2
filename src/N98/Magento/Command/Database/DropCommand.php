@@ -22,7 +22,8 @@ class DropCommand extends AbstractDatabaseCommand
         $this
             ->setName('db:drop')
             ->addOption('tables', 't', InputOption::VALUE_NONE, 'Drop all tables instead of dropping the database')
-            ->addOption('force', 'f', InputOption::VALUE_NONE, 'Force')
+            ->addOption('force', 'f', InputOption::VALUE_NONE, 'Force (all passed options will be forced)')
+            ->addOption('views', 'v', InputOption::VALUE_NONE, 'Also drop views instead of database/tables only')
             ->setDescription('Drop current database');
 
         $help = <<<HELP
@@ -50,7 +51,7 @@ HELP;
         $dbHelper = $this->getHelper('database');
 
         if ($input->getOption('force')) {
-            $shouldDrop = true;
+            $dropIsConfirmed = true;
         } else {
             $question = new ConfirmationQuestion(
                 sprintf(
@@ -60,18 +61,22 @@ HELP;
                 false
             );
 
-            $shouldDrop = $questionHelper->ask(
+            $dropIsConfirmed = $questionHelper->ask(
                 $input,
                 $output,
                 $question
             );
         }
 
-        if ($shouldDrop) {
+        if ($dropIsConfirmed) {
             if ($input->getOption('tables')) {
                 $dbHelper->dropTables($output);
             } else {
                 $dbHelper->dropDatabase($output);
+            }
+
+            if ($input->getOption('views')) {
+                $dbHelper->dropViews($output);
             }
         }
 
