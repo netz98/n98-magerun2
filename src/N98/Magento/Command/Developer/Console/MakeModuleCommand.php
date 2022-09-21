@@ -14,6 +14,7 @@ use N98\Magento\Command\Developer\Console\Structure\ModuleNameStructure;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
@@ -22,11 +23,24 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class MakeModuleCommand extends AbstractGeneratorCommand
 {
+    /**
+     * Directory where module should be created in
+     *
+     * @var string
+     */
+    private $modulesBaseDir;
+
     protected function configure()
     {
         $this
             ->setName('make:module')
             ->addArgument('modulename', InputArgument::REQUIRED)
+            ->addOption(
+                'modules-base-dir',
+                'd',
+                InputOption::VALUE_OPTIONAL,
+                'Directory where module should be created. Default is app/code if not reconfigured'
+            )
             ->setDescription('Creates a new module');
     }
 
@@ -42,10 +56,18 @@ class MakeModuleCommand extends AbstractGeneratorCommand
     {
         $moduleName = new ModuleNameStructure($input->getArgument('modulename'));
 
+        $this->modulesBaseDir = $input->getOption('modules-base-dir');
+
+        if (empty($this->modulesBaseDir)) {
+            $magerunConfig = $this->getMagerunApplication()->getConfig();
+            $this->modulesBaseDir = $magerunConfig['commands'][__CLASS__]['defaultModulesBaseDir'];
+        }
+
         $filesystem = $this->get(Filesystem::class);
         /** @var $filesystem Filesystem */
-        $appDirectoryWriter = $filesystem->getDirectoryWrite(DirectoryList::APP);
-        $appDirectoryReader = $filesystem->getDirectoryRead(DirectoryList::APP);
+        $rootDirectoryWriter = $filesystem->getDirectoryWrite(DirectoryList::ROOT);
+
+        $appDirectoryReader = $filesystem->getDirectoryRead(DirectoryList::ROOT);
 
         $moduleList = $this->create(ModuleListInterface::class);
         /** @var $moduleList ModuleListInterface */
@@ -57,13 +79,16 @@ class MakeModuleCommand extends AbstractGeneratorCommand
             return $this->changeToNewModule($output, $moduleName);
         }
 
-        $this->createRegistrationFile($moduleName, $appDirectoryWriter);
-        $this->createComposerFile($moduleName, $appDirectoryWriter);
-        $this->createEtcModuleFile($moduleName, $appDirectoryWriter);
-        $this->createTestDirectories($moduleName, $appDirectoryWriter);
+        $this->createRegistrationFile($moduleName, $rootDirectoryWriter);
+        $this->createComposerFile($moduleName, $rootDirectoryWriter);
+        $this->createEtcModuleFile($moduleName, $rootDirectoryWriter);
+        $this->createTestDirectories($moduleName, $rootDirectoryWriter);
         $this->includeRegistrationFile($moduleName, $appDirectoryReader);
 
-        $output->writeln('<info>created new module </info><comment>' . $moduleName->getFullModuleName() . '</comment>');
+        $output->writeln(
+            '<info>created new module </info><comment>' . $moduleName->getFullModuleName() . '</comment>'
+            . '<info> in directory </info><comment>' . $this->modulesBaseDir . '</comment>'
+        );
 
         $this->activateNewModuleInSystem($output, $moduleName);
         $this->cleanClassCache();
@@ -106,7 +131,7 @@ class MakeModuleCommand extends AbstractGeneratorCommand
 
 FILE_BODY;
         $appDirectoryWriter->writeFile(
-            'code/' . $moduleName->getVendorName() . '/' . $moduleName->getShortModuleName() . '/registration.php',
+            $this->modulesBaseDir . '/' . $moduleName->getVendorName() . '/' . $moduleName->getShortModuleName() . '/registration.php',
             $registrationFileBody
         );
     }
@@ -128,7 +153,7 @@ FILE_BODY;
         );
 
         $appDirectoryWriter->writeFile(
-            'code/' . $moduleName->getVendorName() . '/' . $moduleName->getShortModuleName() . '/composer.json',
+            $this->modulesBaseDir . '/' . $moduleName->getVendorName() . '/' . $moduleName->getShortModuleName() . '/composer.json',
             $composerFileBody
         );
     }
@@ -152,7 +177,7 @@ FILE_BODY;
 FILE_BODY;
 
         $appDirectoryWriter->writeFile(
-            'code/' . $moduleName->getVendorName() . '/' . $moduleName->getShortModuleName() . '/etc/module.xml',
+            $this->modulesBaseDir . '/' . $moduleName->getVendorName() . '/' . $moduleName->getShortModuleName() . '/etc/module.xml',
             $moduleFileBody
         );
     }
@@ -165,7 +190,7 @@ FILE_BODY;
     private function createTestDirectories(ModuleNameStructure $moduleName, WriteInterface $appDirectoryWriter)
     {
         $appDirectoryWriter->create(
-            'code/' . $moduleName->getVendorName() . '/' . $moduleName->getShortModuleName() . '/Test/Unit'
+            $this->modulesBaseDir . '/' . $moduleName->getVendorName() . '/' . $moduleName->getShortModuleName() . '/Test/Unit'
         );
     }
 
@@ -176,7 +201,7 @@ FILE_BODY;
     private function includeRegistrationFile(ModuleNameStructure $moduleName, ReadInterface $appDirectoryReader)
     {
         $moduleRegistrationFile = $appDirectoryReader->getAbsolutePath(
-            'code/' . $moduleName->getVendorName() . '/' . $moduleName->getShortModuleName() . '/registration.php'
+            $this->modulesBaseDir . '/' . $moduleName->getVendorName() . '/' . $moduleName->getShortModuleName() . '/registration.php'
         );
 
         include $moduleRegistrationFile;

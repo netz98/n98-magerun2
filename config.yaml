@@ -10,6 +10,7 @@ plugin:
     - /usr/share/n98-magerun2/modules
     - /usr/local/share/n98-magerun2/modules
 
+# Helpers can be used via getHelper method in a CLI command class
 helpers:
   composer: N98\Util\Console\Helper\ComposerHelper
   database: N98\Util\Console\Helper\DatabaseHelper
@@ -67,6 +68,7 @@ event:
     - N98\Magento\Application\Console\EventSubscriber\VarDirectoryChecker
     - N98\Magento\Application\Console\EventSubscriber\DevUrnCatalogAutoPath
 
+# Command Registration
 commands:
   customCommands:
     - N98\Magento\Command\Admin\NotificationsCommand
@@ -168,6 +170,13 @@ commands:
     - dummy
 
   aliases: []
+
+  #-----------------------------------------------------
+  # Configuration for commands
+  #
+  # The configuration can be changed by magerun modules
+  # and on project and user level. See wiki for details.
+
 
   N98\Magento\Command\Database\DumpCommand:
     table-groups:
@@ -535,6 +544,10 @@ commands:
       - N98\Magento\Command\Developer\Console\MakeModelCommand
       - N98\Magento\Command\Developer\Console\MakeInterfaceCommand
       - N98\Magento\Command\Developer\Console\MakeThemeCommand
+
+  N98\Magento\Command\Developer\Console\MakeModuleCommand:
+    # Relative path from root directory
+    defaultModulesBaseDir: 'app/code'
 
   N98\Magento\Command\Media\DumpCommand:
     strip:
