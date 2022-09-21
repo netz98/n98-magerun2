@@ -51,8 +51,9 @@ class ConsoleCommand extends AbstractMagentoCommand
     {
         $this
             ->setName('dev:console')
-            ->addArgument('cmd', InputArgument::OPTIONAL, 'Direct code to run')
             ->addOption('area', 'a', InputOption::VALUE_REQUIRED, 'Area to initialize')
+            ->addOption('auto-exit', 'e', InputOption::VALUE_NONE, 'Automatic exit after cmd')
+            ->addArgument('cmd', InputArgument::OPTIONAL, 'Direct code to run')
             ->setDescription(
                 'Opens PHP interactive shell with initialized Mage::app() <comment>(Experimental)</comment>'
             );
@@ -171,6 +172,9 @@ help;
 
         if (!empty($cmd)) {
             $code = preg_split('/[\n;]+/', $cmd);
+            if ($input->getOption('auto-exit')) {
+                $code[] = 'exit';
+            }
             $shell->addInput($code);
         }
 
