@@ -283,6 +283,7 @@ jobs:
         run:
           bin/magento setup:di:compile;
           ../vendor/bin/phpstan analyse --level 1 --autoload-file="../src/bootstrap.php" ../src
+        if: matrix.magento_version == 'magento-ce-2.4.4'
 
       - name: Setup PHP for Composer
         uses: shivammathur/setup-php@v2
