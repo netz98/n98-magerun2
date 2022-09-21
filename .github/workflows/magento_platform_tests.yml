@@ -41,7 +41,7 @@ jobs:
             composer-version: v2
             use-git-repository: false
             git-repository: ''
-            experimental: true
+            experimental: false
 
           - magento-version: mage-os-2.4.3-p1
             operating-system: ubuntu-latest
@@ -51,7 +51,7 @@ jobs:
             composer-version: v2
             use-git-repository: false
             git-repository: ''
-            experimental: true
+            experimental: false
 
           - magento-version: magento-ce-2.4.4
             operating-system: ubuntu-latest
@@ -264,8 +264,6 @@ jobs:
         working-directory: ./magento
         run: |
           bin/magento --no-interaction deploy:mode:set production --skip-compilation;
-          rm -Rf generated;
-          bin/magento --no-interaction setup:di:compile;
 
       - name: Run PHPUnit (Production Mode)
         run: vendor/bin/phpunit --debug --process-isolation
