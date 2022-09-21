@@ -19,7 +19,7 @@ RECENT CHANGES
 - Fix: #1028: Check if job config is set (by Christian Münch)
 - Fix: #1037: dev:console Code Generator (by Christian Münch)
 - Del: Symfony Shell Command - Command was already broken (by Christian Münch)
-- Del: Drop active testing support for Magento 2.3.x (some commands could be imcompatible due to platform changes)
+- Del: Drop active testing support for Magento 2.3.x (some commands could be incompatible due to platform changes)
 
 5.2.0
 -----
@@ -38,6 +38,7 @@ RECENT CHANGES
 - Fix: #1015: deprecated: passing null to dirname (by Alexander Menk).
 - Fix: #1019: type error in cache-list command on php 8.1 (by Tom Klingenberg)
 - Fix: #1024: config:store:get wrong filters applied (by Alexander Dite)
+- Fix: typos and wrong infos in help text (by Christian Münch)
 
 5.1.0
 -----

@@ -70,12 +70,8 @@ XML;
         return $this;
     }
 
-    /**
-     * @param string $filename
-     * @param int|null $options [optional]
-     * @return int|false
-     */
-    public function save($filename, $options = null)
+    #[\ReturnTypeWillChange]
+    public function save(string $filename, int $options = 0)
     {
         $result = parent::save($filename, $options);
         if (false === $result) {

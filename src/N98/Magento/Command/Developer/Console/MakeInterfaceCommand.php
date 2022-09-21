@@ -2,11 +2,11 @@
 
 namespace N98\Magento\Command\Developer\Console;
 
+use Laminas\Code\Generator\FileGenerator;
 use Magento\Framework\Code\Generator\InterfaceGenerator;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Zend\Code\Generator\FileGenerator;
 
 /**
  * Class MakeInterfaceCommand

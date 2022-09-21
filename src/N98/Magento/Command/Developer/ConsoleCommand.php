@@ -56,7 +56,7 @@ class ConsoleCommand extends AbstractMagentoCommand
             ->addOption('cmd-is-php', 'p', InputOption::VALUE_NONE, 'Use CMD argument as PHP script')
             ->addArgument('cmd', InputArgument::OPTIONAL, 'Direct code to run', '')
             ->setDescription(
-                'Opens PHP interactive shell with initialized Mage::app() <comment>(Experimental)</comment>'
+                'Opens PHP interactive shell with a initialized Magento application</comment>'
             );
     }
 
