@@ -1,6 +1,10 @@
 RECENT CHANGES
 ==============
 
+6.0.1
+-----
+- Fix: Update twig (security fix)
+
 6.0.0
 -----
 
