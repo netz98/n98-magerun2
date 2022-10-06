@@ -59,7 +59,7 @@ HELP;
         $schedule
             ->setJobCode($jobCode)
             ->setStatus(Schedule::STATUS_RUNNING)
-            ->setFinishedAt(date('Y-m-d H:i:s', $this->getCronTimestamp()))
+            ->setExecutedAt(date('Y-m-d H:i:s', $this->getCronTimestamp()))
             ->save();
 
         try {
