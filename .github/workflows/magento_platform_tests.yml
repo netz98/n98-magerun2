@@ -33,7 +33,7 @@ jobs:
           #  git-branch: 2.4-develop
           #  experimental: true
 
-          - magento-version: mage-os-2.4.5
+          - magento-version: mage-os-2.4.5-p1
             operating-system: ubuntu-latest
             php-version: 8.1
             mysql-version: 8.0
@@ -53,7 +53,7 @@ jobs:
             git-repository: ''
             experimental: false
 
-          - magento-version: magento-ce-2.4.5
+          - magento-version: magento-ce-2.4.5-p1
             operating-system: ubuntu-latest
             php-version: 8.1
             mysql-version: 8.0
@@ -64,7 +64,7 @@ jobs:
             git-branch: ''
             experimental: false
 
-          - magento-version: magento-ce-2.4.4-p1
+          - magento-version: magento-ce-2.4.4-p2
             operating-system: ubuntu-latest
             php-version: 8.1
             mysql-version: 8.0
