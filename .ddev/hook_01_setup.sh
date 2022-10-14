@@ -40,7 +40,8 @@ function setup_test_magento_environments() {
 
     sudo chown -R "$(id -u):$(id -g)" /opt/magento-test-environments
 
-    $INSTALL_MAGENTO_CE_CMD "2.3.7-p3" no
+    # only with older PHP versions
+    #$INSTALL_MAGENTO_CE_CMD "2.3.7-p3" no
 
     # Change version in .ddev/config.yaml
     $INSTALL_MAGENTO_CE_CMD "$MAGERUN_SETUP_TEST_DEFAULT_MAGENTO_VERSION" yes
