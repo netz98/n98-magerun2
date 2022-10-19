@@ -1,8 +1,18 @@
 RECENT CHANGES
 ==============
 
+6.1.0
+-----
+
+- Add: Magento 2.4.5-p1 / 2.4.4-p2 (by Simon Sprankel) 
+- Imp: Update 3rd party dependencies (phpstan, requests library)
+- Fix: #969: Mark cron as executed (by Pieter Hoste)
+- Del: Magento 2.3.7 in ddev test setup (by Christian Münch)
+
+
 6.0.1
 -----
+
 - Fix: Update twig (security fix)
 
 6.0.0
