@@ -9,7 +9,6 @@ RECENT CHANGES
 - Fix: #969: Mark cron as executed (by Pieter Hoste)
 - Del: Magento 2.3.7 in ddev test setup (by Christian Münch)
 
-
 6.0.1
 -----
 
@@ -71,10 +70,12 @@ RECENT CHANGES
 
 5.0.2
 -----
+
 - Fix: #966: InstalledVersions.php could not be opened
 
 5.0.1
 -----
+
 - Fix: #964: Broken with guzzle dependency chain
 
 5.0.0
@@ -245,7 +246,6 @@ RECENT CHANGES
 -----
 
 - Fix: #521: admin:user:create throws Exception (by Christian Münch)
-
 
 4.0.3
 -----
@@ -485,6 +485,7 @@ RECENT CHANGES
 
 1.5.0
 -----
+
 * Fix: Add Phar checksum guide to readme (report by Max Chadwick, fix by Tom Klingenberg, #279)
 * Fix: Prevent exceptions in dev:console from being suppressed and hidden (by Jason Woods, #282)
 * Fix: Sync optimize() with Magerun1 (by Alexander Menk, #291)
@@ -498,6 +499,7 @@ RECENT CHANGES
 
 1.4.0
 -----
+
 * Fix: sys:cron:schedule 'area code is not set' exception. (by Pieter Hoste, #277)
 * Fix: Allow -1 as value for infinite max nesting level for xdebug (by Peter Jaap, #278)
 * Fix: Generate a shorter version of registration.php (by Alexander Turiak #280)
@@ -509,6 +511,7 @@ RECENT CHANGES
 
 1.3.3
 -----
+
 * Fix: Set forceUseDb option to type VALUE_NONE (by Juan Alonso, #273)
 * Fix: install Magento2 without development dependencies (by Tom Klingenberg, #272)
 * Fix: db:dump stdout output (report by Flip Hess, fix by Tom Klingenberg, #258)
@@ -519,10 +522,12 @@ RECENT CHANGES
 
 1.3.2
 -----
+
 * Fix: Wrong version identifiers 2.0.8 - 2.0.10 (by Tom Klingenberg, #229)
 
 1.3.1
 -----
+
 * Fix: Install command using wrong php binary and eating installer errors (report by David Lambauer, fix by Tom Klingenberg, #267)
 * Fix: Minor PHP version for Magento 2 extensions (by Alexander Turiak, #269)
 * Fix: Magento object manager usage in production mode (by Tom Klingenberg, #241)
@@ -543,6 +548,7 @@ RECENT CHANGES
 
 1.3.0
 -----
+
 * Fix: Fatal error when running Magerun 2 inside a Magento 1 tree (by Tom KLingenberg, #253)
 * Fix: Add missing areas to the observer list (by Pieter Hoste, #249)
 * Fix: Do not drop all sales_order_status* tables (report by Brent Jameson, fix by Tom KLingenberg, #239)
@@ -554,6 +560,7 @@ RECENT CHANGES
 
 1.2.2
 -----
+
 * Fix: Prevent hang on Travis (by Christian Münch, #238)
 * Fix: Script repository is the same as Magerun 1 (report by Jeroen Bleijenberg, #235)
 * New: Add Magento CE 2.0.7 and 2.1.1 (by Raul E Watson, #237)
@@ -561,10 +568,12 @@ RECENT CHANGES
 
 1.2.1
 -----
+
 * Fix: Build fixes and release to test continuous build on files.magerun.net (by Tom Klingenberg)
 
 1.2.0
 -----
+
 * Fix: Fatal error in Phpstorm .idea folder detection for path in dev:urn-catalog:generate (by Tom Klingenberg, #233)
 * Fix: Wrong template-hints config value (by Tommy Pyatt, #230)
 * Fix: Broken scope-id detection (by Christian Münch)
@@ -576,6 +585,7 @@ RECENT CHANGES
 
 1.1.17
 ------
+
 * Fix: Posix conform --root-dir parsing (report by Andreas Lutro, fix by Tom Klingenberg, #224)
 * Fix: Fix sys:maintenance --on and --off options (report by Rob Egginton, fix by Tom Klingenberg, #211)
 * Fix: Replace remaining instances of Magento 1 local.xml with Magento 2 env.php (by Matthew O'Loughlin, #207)
@@ -585,8 +595,11 @@ RECENT CHANGES
 1.1.16
 ------
 
+Fix: wrong version in Application.php
+
 1.1.15
 ------
+
 * Fix: Magento 2.1 version compatibility (by p-makowski, #214)
 * Fix: help description of system:setup:compare-versions (by p-makowski, #214)
 * Fix: PHP version requirements in documentation (report by Carsten Bohuslav, #204)
@@ -598,17 +611,20 @@ RECENT CHANGES
 
 1.1.14
 ------
+
 * Fix: Regression test for #199 (report by Pieter Hoste, fix by Tom Klingenberg, #200)
 * Fix: Travis build exited too early (by Tom Klingenberg)
 * Feature: Install command: magento-ce-2.0.7 version (by Raul E Watson, #202)
 
 1.1.13
 ------
+
 * Fix: Fix db:dump regression in 1.1.12 (report by Pieter Hoste, fix by Tom Klingenberg, #199)
 * Imp: Check repository connectivity in Travis build (by Tom Klingenberg)
 
 1.1.12
 ------
+
 * Fix: Fix open command detection (by Tom Klingenberg)
 * Fix: Wrong version display in sys:setup:compare-versions (by Tom Klingenberg)
 * Fix: Install command regression handling download errors in 1.1.11 (by Tom Klingenberg)
@@ -616,25 +632,30 @@ RECENT CHANGES
 
 1.1.11
 ------
+
 * Fix: Cron app state emulation (by Sam Tay, #196)
 * Fix: Install command missing PHP extension checks of mbstring and zip (by Tom Klingenberg)
 * Feature: Install command: magento-ce-2.0.6 version (by Raul E Watson, #197)
 
 1.1.10
 ------
+
 * Fix: db:console password parameter name (by Federico Rivollier)
 
 1.1.9
 -----
+
 * Fix: Build script not stop asking (by Christian Muench)
 * Fix: Bump version to build again (by Tom Klingenberg)
 
 1.1.8
 -----
+
 * Update: Composer to 1.0.3
 
 1.1.7
 -----
+
 * Fix: Check for optional replace-htaccess-file parameter (report by Matthias Zeis, fix by Tom Klingenberg, #191)
 * Fix: Add trailing namespace prefix slash (by Phillip Jackson, #190)
 * Update: Stabilize composer ^1.0.0 (by Tom Klingenberg)
@@ -643,10 +664,12 @@ RECENT CHANGES
 
 1.1.6
 -----
+
 * Fix: Fix module loader (report by Matthias Walter, fix by Tom Klingenberg)
 
 1.1.5
 -----
+
 * Fix: #172 Base-URL check on IP addresses (by Tom Klingenberg)
 * Fix: Whitespace and code-style (by Tom Klingenberg)
 * Feature: Install command: magento-ce-2.0.4 version (by Tom Klingenberg)
@@ -655,20 +678,24 @@ RECENT CHANGES
 
 1.1.4
 -----
+
 * Feature: Install command: magento-ce-2.0.1 and magento-ce-2.0.2 versions (by Tom Klingenberg)
 * Feature: #101 Porting command: eav:attribute:view (by Robbie Averill)
 * Feature: #120 Porting command: sys:setup:change-version (by Robbie Averill)
 
 1.1.3
 -----
+
 * Fix: #168 Version mismatch (by Tom Klingenberg)
 
 1.1.2
 -----
+
 * Fix: #168 Version mismatch (by Tom Klingenberg)
 
 1.1.1
 -----
+
 * Fix: #160 Stopfile broken (by Tom Klingenberg)
 * Fix: #157 Undefined index moduleFolder (by Robbie Averill)
 * Feature: #132 Porting command: giftcard:create (by Robbie Averill and Steve Robbins)
@@ -678,6 +705,7 @@ RECENT CHANGES
 
 1.0.0
 -----
+
 The first n98-magerun2 stable release to power the next-generation
 open source digital commerce platform, Magento 2.0.
 
