@@ -59,6 +59,10 @@ class Gzip extends AbstractCompressor
      */
     public function getFileName($fileName, $pipe = true)
     {
+        if ($fileName === null) {
+            $fileName = '';
+        }
+
         if (!strlen($fileName)) {
             return $fileName;
         }
