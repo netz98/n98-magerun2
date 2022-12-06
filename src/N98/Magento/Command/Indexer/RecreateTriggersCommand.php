@@ -16,24 +16,11 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class RecreateTriggersCommand extends AbstractIndexerCommand
 {
-    /**
-     * @var \Magento\Indexer\Model\Config
-     */
-    private $indexerCollection;
-
     protected function configure()
     {
         $this
             ->setName('index:trigger:recreate')
             ->setDescription('ReCreate all triggers');
-    }
-
-    /**
-     * @param \Magento\Indexer\Model\Config $indexerCollection
-     */
-    public function inject(\Magento\Indexer\Model\Indexer\Collection $indexerCollection)
-    {
-        $this->indexerCollection = $indexerCollection;
     }
 
     /**
