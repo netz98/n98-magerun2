@@ -50,12 +50,12 @@ HELP;
                 $index['code'],
                 $index['title'],
                 $index['status'],
-                $index['last_runtime'],
+                $index['last_updated'],
             ];
         }
 
         $this->getHelper('table')
-            ->setHeaders(['code', 'title', 'status', 'time'])
+            ->setHeaders(['code', 'title', 'status', 'last_updated'])
             ->renderByFormat($output, $table, $input->getOption('format'));
     }
 }
