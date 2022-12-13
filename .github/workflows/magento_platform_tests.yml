@@ -167,7 +167,7 @@ jobs:
         with:
           tools: composer:${{ matrix.composer-version }}, cs2pr
           php-version: ${{ matrix.php-version }}
-          extensions: mbstring, intl
+          extensions: mcrypt, mbstring, intl
           coverage: none
 
       - name: Checkout PR
