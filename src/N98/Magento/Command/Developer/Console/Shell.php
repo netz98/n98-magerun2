@@ -65,11 +65,11 @@ class Shell extends PsyShell
      *
      * Stores $e as the last Exception in the Shell Context.
      *
-     * @param Exception $e An exception instance
+     * @param \Throwable $e An exception instance
      * @throws ErrorException
      * @throws FatalErrorException
      */
-    public function writeException(Exception $e)
+    public function writeException(\Throwable $e)
     {
         $this->resetCodeBuffer();
 
