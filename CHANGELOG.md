@@ -1,6 +1,12 @@
 RECENT CHANGES
 ==============
 
+6.1.1
+-----
+
+- Fix: #1066: broken index:list command (by Christian Münch)
+- Imp: Update 3rd party dependencies (Symfony, psysh, captainhook, dydev-dot-access-data, phpunit, twig)
+
 6.1.0
 -----
 
