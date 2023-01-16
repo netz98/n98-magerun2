@@ -261,7 +261,9 @@ jobs:
 
       - name: Activate Magento Production Mode
         working-directory: ./magento
-        run: bin/magento deploy:mode:set production --skip-compilation;
+        run: |
+          rm -Rf generated/code;
+          bin/magento deploy:mode:set production;
 
       - name: Run PHPUnit (Production Mode)
         run: vendor/bin/phpunit --debug --process-isolation
@@ -269,8 +271,7 @@ jobs:
       # we run phpstan after di:compile in production mode to prevent class not found errors in Magerun sources
       - name: Run PHPStan
         working-directory: ./magento
-        run:
-          bin/magento setup:di:compile;
+        run:          
           ../vendor/bin/phpstan analyse --level 1 --autoload-file="../src/bootstrap.php" ../src
         if: matrix.magento-version == 'magento-ce-2.4.3-p2'
 
