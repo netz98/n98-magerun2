@@ -17,6 +17,7 @@
 namespace N98\Magento\Command\Developer\Console\Config;
 
 use N98\Magento\Command\Developer\Console\Util\Xml;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -44,7 +45,7 @@ class MakeConfigRoutesCommand extends AbstractSimpleConfigFileGeneratorCommand
      * @param InputInterface $input
      * @param OutputInterface $output
      *
-     * @return int|void
+     * @return int
      * @throws \Magento\Framework\Exception\FileSystemException
      * @throws \Exception
      */
@@ -56,7 +57,7 @@ class MakeConfigRoutesCommand extends AbstractSimpleConfigFileGeneratorCommand
         if ($this->getCurrentModuleDirectoryReader()->isExist($relativeConfigFilePath)) {
             $output->writeln('<warning>File already exists. Skiped generation</warning>');
 
-            return;
+            return Command::SUCCESS;
         }
 
         $referenceConfigFileContent = file_get_contents(__DIR__ . '/_files/reference_routes.xml');
@@ -74,6 +75,8 @@ class MakeConfigRoutesCommand extends AbstractSimpleConfigFileGeneratorCommand
         $this->getCurrentModuleDirectoryWriter()->writeFile($relativeConfigFilePath, $referenceConfigFileContent);
 
         $output->writeln('<info>generated </info><comment>' . $relativeConfigFilePath . '</comment>');
+
+        return Command::SUCCESS;
     }
 
     /**

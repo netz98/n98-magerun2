@@ -7,6 +7,7 @@ use N98\Util\Markdown\VersionFilePrinter;
 use Phar;
 use PharException;
 use RuntimeException;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -59,7 +60,7 @@ EOT
     /**
      * @param \Symfony\Component\Console\Input\InputInterface $input
      * @param \Symfony\Component\Console\Output\OutputInterface $output
-     * @return int|null|void
+     * @return int
      * @throws \Exception
      */
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -131,6 +132,8 @@ EOT
         } else {
             $output->writeln("<info>You are using the latest n98-magerun2 version.</info>");
         }
+
+        return Command::SUCCESS;
     }
 
     /**

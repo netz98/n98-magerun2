@@ -4,12 +4,11 @@ declare(strict_types=1);
 
 namespace N98\Magento\Command\Cms;
 
-use function is_string;
 use Magento\Cms\Api\BlockRepositoryInterface;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use N98\Magento\Command\AbstractMagentoCommand;
-use function sprintf;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -37,17 +36,24 @@ class ToggleBlockCommand extends AbstractMagentoCommand
             ->setDescription('Toggle Cms Block status');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output): void
+    /**
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     * @return int
+     * @throws \Exception
+     */
+    protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->detectMagento($output, true);
         if (!$this->initMagento()) {
-            return;
+            return Command::FAILURE;
         }
 
         $blockId = $input->getArgument(self::BLOCK_ID_ARGUMENT);
-        if (!is_string($blockId)) {
+        if (!\is_string($blockId)) {
             $output->writeln('Block Identifier is a required argument. Use --help for more information.');
-            return;
+
+            return Command::FAILURE;
         }
 
         try {
@@ -56,12 +62,16 @@ class ToggleBlockCommand extends AbstractMagentoCommand
             $block->setIsActive($newStatus);
             $this->blockRepository->save($block);
             $output->writeln(
-                sprintf('Block status has been changed to <info>%s</info>.', $newStatus ? 'Enabled' : 'Disabled')
+                \sprintf('Block status has been changed to <info>%s</info>.', $newStatus ? 'Enabled' : 'Disabled')
             );
         } catch (NoSuchEntityException $e) {
-            $output->writeln(sprintf('Block with ID <info>%s</info> does not exist.', $blockId));
+            $output->writeln(\sprintf('Block with ID <info>%s</info> does not exist.', $blockId));
+            return Command::FAILURE;
         } catch (LocalizedException $e) {
             $output->writeln('Something went wrong while editing the block status.');
+            return Command::FAILURE;
         }
+
+        return Command::SUCCESS;
     }
 }

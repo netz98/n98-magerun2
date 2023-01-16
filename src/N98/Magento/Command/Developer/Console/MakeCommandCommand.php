@@ -7,6 +7,7 @@ use Laminas\Code\Generator\MethodGenerator;
 use Magento\Framework\Code\Generator\ClassGenerator;
 use N98\Magento\Command\Developer\Console\Util\Config\DiFileWriter;
 use N98\Util\BinaryString;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -30,7 +31,7 @@ class MakeCommandCommand extends AbstractGeneratorCommand
      * @param InputInterface $input
      * @param OutputInterface $output
      *
-     * @return int|void
+     * @return int
      * @throws \Magento\Framework\Exception\FileSystemException
      */
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -75,6 +76,8 @@ class MakeCommandCommand extends AbstractGeneratorCommand
 
         // new class to di config
         $this->writeNewCommandToDiConfig($input, $classNameToGenerate);
+
+        return Command::SUCCESS;
     }
 
     /**

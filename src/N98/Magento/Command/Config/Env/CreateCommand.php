@@ -6,6 +6,7 @@ use Dflydev\DotAccessData\Data;
 use N98\Magento\Command\AbstractMagentoCommand;
 use RecursiveArrayIterator;
 use RecursiveIteratorIterator;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
@@ -43,7 +44,7 @@ class CreateCommand extends AbstractMagentoCommand
     /**
      * @param \Symfony\Component\Console\Input\InputInterface $input
      * @param \Symfony\Component\Console\Output\OutputInterface $output
-     * @return int|void
+     * @return int
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -96,6 +97,8 @@ class CreateCommand extends AbstractMagentoCommand
         }
 
         file_put_contents($envFilePath, "<?php\n\nreturn " . EnvHelper::exportVariable($env->export()) . ";\n");
+
+        return Command::SUCCESS;
     }
 
     /**

@@ -2,6 +2,7 @@
 
 namespace N98\Magento\Command\GiftCard;
 
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -36,7 +37,7 @@ HELP;
     /**
      * @param \Symfony\Component\Console\Input\InputInterface $input
      * @param \Symfony\Component\Console\Output\OutputInterface $output
-     * @return void
+     * @return int
      * @throws \Exception
      */
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -63,9 +64,11 @@ HELP;
         $giftcard->save();
         if (!$giftcard->getId()) {
             $output->writeln('<error>Failed to create gift card</error>');
-            return;
+            return Command::FAILURE;
         }
 
         $output->writeln('<info>Gift card <comment>' . $giftcard->getCode() . '</comment> was created</info>');
+
+        return Command::SUCCESS;
     }
 }

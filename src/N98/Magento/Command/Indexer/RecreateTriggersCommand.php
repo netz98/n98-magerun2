@@ -7,6 +7,7 @@
 
 namespace N98\Magento\Command\Indexer;
 
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -34,7 +35,7 @@ class RecreateTriggersCommand extends AbstractIndexerCommand
         $this->detectMagento($output, true);
 
         if (!$this->initMagento()) {
-            return;
+            return Command::FAILURE;
         }
 
         foreach ($this->getIndexerCollection() as $indexer) {
@@ -51,5 +52,7 @@ class RecreateTriggersCommand extends AbstractIndexerCommand
                 );
             }
         }
+
+        return Command::SUCCESS;
     }
 }

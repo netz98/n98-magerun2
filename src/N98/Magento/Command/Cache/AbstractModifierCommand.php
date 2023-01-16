@@ -6,6 +6,7 @@ use Exception;
 use Magento\Framework\App\Cache\Manager;
 use Magento\Framework\App\Cache\StateInterface;
 use N98\Magento\Command\AbstractMagentoCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\NullOutput;
@@ -46,7 +47,7 @@ abstract class AbstractModifierCommand extends AbstractMagentoCommand
     /**
      * @param \Symfony\Component\Console\Input\InputInterface $input
      * @param \Symfony\Component\Console\Output\OutputInterface $output
-     * @return int|null|void
+     * @return int
      * @throws \Exception
      */
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -75,7 +76,8 @@ abstract class AbstractModifierCommand extends AbstractMagentoCommand
 
         if (empty($types)) {
             $output->writeln(static::ABORT_MESSAGE);
-            return;
+
+            return Command::FAILURE;
         }
 
         /** @var $cacheState \Magento\Framework\App\Cache\StateInterface */
@@ -95,8 +97,12 @@ abstract class AbstractModifierCommand extends AbstractMagentoCommand
             $cacheState->persist();
         } catch (Exception $e) {
             $output->writeln(sprintf(static::EXCEPTION_MESSAGE, $e->getMessage()));
+
+            return Command::FAILURE;
         }
 
         $output->writeln(sprintf(static::SUCCESS_MESSAGE, implode(', ', $touchedTypes)));
+
+        return Command::SUCCESS;
     }
 }

@@ -4,6 +4,7 @@ namespace N98\Magento\Command\Database;
 
 use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
 use N98\Util\Filesystem;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -81,7 +82,7 @@ abstract class AbstractShowCommand extends AbstractDatabaseCommand
      * @param \Symfony\Component\Console\Output\OutputInterface $output
      *
      * @throws \InvalidArgumentException
-     * @return void
+     * @return int
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -103,6 +104,8 @@ abstract class AbstractShowCommand extends AbstractDatabaseCommand
         }
 
         $this->renderTable($header, $this->generateRows($outputVars, $hasDescription));
+
+        return Command::SUCCESS;
     }
 
     /**

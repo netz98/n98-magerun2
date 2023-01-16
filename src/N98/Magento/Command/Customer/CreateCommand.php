@@ -6,6 +6,7 @@ use Magento\Customer\Api\AccountManagementInterface;
 use Magento\Framework\App\State as AppState;
 use Magento\Framework\Exception\LocalizedException;
 use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -70,7 +71,7 @@ class CreateCommand extends AbstractCustomerCommand
     {
         $this->detectMagento($output, true);
         if (!$this->initMagento()) {
-            return 1;
+            return Command::FAILURE;
         }
 
         /** @var QuestionHelper $questionHelper */
@@ -167,7 +168,7 @@ class CreateCommand extends AbstractCustomerCommand
                 ->renderByFormat($output, $table, $input->getOption('format'));
         }
 
-        return $isError ? 1 : 0;
+        return $isError ? Command::FAILURE : Command::SUCCESS;
     }
 
     /**

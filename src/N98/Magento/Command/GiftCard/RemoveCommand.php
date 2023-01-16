@@ -2,6 +2,7 @@
 
 namespace N98\Magento\Command\GiftCard;
 
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -40,7 +41,7 @@ HELP;
     {
         $this->detectMagento($output, true);
         if (!$this->initMagento()) {
-            return;
+            return Command::FAILURE;
         }
 
         $this->setAdminArea();
@@ -50,11 +51,13 @@ HELP;
 
         if (!$card->getId()) {
             $output->writeln('<info>No gift card with matching code found</info>');
-            return;
+            return Command::FAILURE;
         }
 
         $card->delete();
 
         $output->writeln('<info>Deleted gift card with code <comment>' . $code . '</comment></info>');
+
+        return Command::SUCCESS;
     }
 }

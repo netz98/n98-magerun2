@@ -8,6 +8,7 @@ use Magento\Framework\Component\ComponentRegistrar;
 use Magento\Framework\Component\ComponentRegistrarInterface;
 use Magento\Framework\Filesystem\Io\File;
 use N98\Magento\Command\AbstractMagentoCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -81,7 +82,7 @@ class DetectComposerDependenciesCommand extends AbstractMagentoCommand
             $this->analyseModule($input, $output, $foundModulePath, $projectPsr4Namespaces);
         }
 
-        return 0;
+        return Command::SUCCESS;
     }
 
     /**

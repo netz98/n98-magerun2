@@ -8,6 +8,7 @@ use Magento\Integration\Model\Oauth\TokenFactory;
 use Magento\Integration\Model\OauthService;
 use N98\Magento\Command\AbstractMagentoCommand;
 use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\RuntimeException;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -74,7 +75,7 @@ class ShowCommand extends AbstractMagentoCommand
     /**
      * @param \Symfony\Component\Console\Input\InputInterface $input
      * @param \Symfony\Component\Console\Output\OutputInterface $output
-     * @return int|void
+     * @return int
      * @throws \Exception
      */
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -112,7 +113,8 @@ class ShowCommand extends AbstractMagentoCommand
                 throw new \InvalidArgumentException('Unknown key: ' . $settingArgument);
             }
             $output->writeln((string)$data[$settingArgument]);
-            return 0;
+
+            return Command::SUCCESS;
         }
 
         $table = [];
@@ -133,5 +135,7 @@ class ShowCommand extends AbstractMagentoCommand
                 ->setHeaders(['name', 'value'])
                 ->renderByFormat($output, $table, $input->getOption('format'));
         }
+
+        return Command::SUCCESS;
     }
 }

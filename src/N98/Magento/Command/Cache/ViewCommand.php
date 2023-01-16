@@ -5,6 +5,7 @@ namespace N98\Magento\Command\Cache;
 use Magento\Framework\App\CacheInterface;
 use Magento\PageCache\Model\Cache\Type as FullPageCache;
 use N98\Magento\Command\AbstractMagentoCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -65,7 +66,7 @@ class ViewCommand extends AbstractMagentoCommand
     /**
      * @param InputInterface $input
      * @param OutputInterface $output
-     * @return int|void
+     * @return int
      * @throws RuntimeException
      * @throws \Exception
      */
@@ -73,7 +74,7 @@ class ViewCommand extends AbstractMagentoCommand
     {
         $this->detectMagento($output, true);
         if (!$this->initMagento()) {
-            return;
+            return Command::FAILURE;
         }
 
         /** CacheInterface|FullPageCache $cacheInstance */
@@ -87,7 +88,7 @@ class ViewCommand extends AbstractMagentoCommand
         $cacheData = $cacheInstance->load($cacheId);
         if ($cacheData === false) {
             $output->writeln('Cache id <info>' . $cacheId . '</info> does not exist (anymore)');
-            return;
+            return Command::FAILURE;
         }
 
         if ($input->getOption('unserialize')) {
@@ -95,6 +96,8 @@ class ViewCommand extends AbstractMagentoCommand
         }
 
         $output->writeln($cacheData);
+
+        return Command::SUCCESS;
     }
 
     /**

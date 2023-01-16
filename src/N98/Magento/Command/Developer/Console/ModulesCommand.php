@@ -4,6 +4,7 @@ namespace N98\Magento\Command\Developer\Console;
 
 use Magento\Framework\Module\ModuleListInterface;
 use N98\Util\BinaryString;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -26,7 +27,7 @@ class ModulesCommand extends AbstractConsoleCommand
      * @param InputInterface $input
      * @param OutputInterface $output
      *
-     * @return int|void
+     * @return int
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -42,5 +43,7 @@ class ModulesCommand extends AbstractConsoleCommand
         }
 
         $output->writeln('<strong>' . implode(PHP_EOL, $modules) . '</strong>');
+
+        return Command::SUCCESS;
     }
 }

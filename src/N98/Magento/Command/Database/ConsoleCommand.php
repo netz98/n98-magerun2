@@ -3,6 +3,7 @@
 namespace N98\Magento\Command\Database;
 
 use N98\Util\Console\Helper\DatabaseHelper;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -39,7 +40,7 @@ class ConsoleCommand extends AbstractDatabaseCommand
      * @param InputInterface $input
      * @param OutputInterface $output
      *
-     * @return int|void
+     * @return int
      * @throws \Magento\Framework\Exception\FileSystemException
      */
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -60,6 +61,8 @@ class ConsoleCommand extends AbstractDatabaseCommand
         $args[] = $database->getMysqlClientToolConnectionString();
 
         $this->processCommand(implode(' ', $args));
+
+        return Command::SUCCESS;
     }
 
     /**

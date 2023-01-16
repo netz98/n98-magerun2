@@ -3,6 +3,7 @@
 namespace N98\Magento\Command\Customer;
 
 use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -44,7 +45,7 @@ HELP;
     {
         $this->detectMagento($output, true);
         if (!$this->initMagento()) {
-            return;
+            return Command::FAILURE;
         }
 
         $search = null;
@@ -70,6 +71,9 @@ HELP;
             $helper->renderByFormat($output, $table, $input->getOption('format'));
         } else {
             $output->writeln('<comment>No customers found</comment>');
+            return Command::FAILURE;
         }
+
+        return Command::SUCCESS;
     }
 }

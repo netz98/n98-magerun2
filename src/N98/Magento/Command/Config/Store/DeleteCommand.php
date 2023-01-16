@@ -5,6 +5,7 @@ namespace N98\Magento\Command\Config\Store;
 use Magento\Config\Model\ResourceModel\Config\Data\Collection;
 use Magento\Framework\App\Config\Storage\WriterInterface;
 use N98\Magento\Command\Config\AbstractConfigCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -59,7 +60,7 @@ HELP;
     /**
      * @param \Symfony\Component\Console\Input\InputInterface $input
      * @param \Symfony\Component\Console\Output\OutputInterface $output
-     * @return int|void
+     * @return int
      * @throws \Magento\Framework\Exception\LocalizedException
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      * @throws \Exception
@@ -68,7 +69,7 @@ HELP;
     {
         $this->detectMagento($output, true);
         if (!$this->initMagento()) {
-            return;
+            return Command::FAILURE;
         }
 
         $this->_validateScopeParam($input->getOption('scope'));
@@ -89,6 +90,8 @@ HELP;
                 ->setRows($deleted)
                 ->render($output);
         }
+
+        return Command::SUCCESS;
     }
 
     /**

@@ -8,6 +8,7 @@ use N98\Util\Console\Enabler;
 use N98\Util\Console\Helper\DatabaseHelper;
 use N98\Util\Exec;
 use N98\Util\VerifyOrDie;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -255,7 +256,7 @@ HELP;
      * @param InputInterface $input
      * @param OutputInterface $output
      *
-     * @return int|void
+     * @return int
      * @throws \Magento\Framework\Exception\FileSystemException
      */
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -276,7 +277,7 @@ HELP;
 
         $success = $this->runExecs($execs, $input, $output);
 
-        return $success ? 0 : 1;
+        return $success ? Command::SUCCESS : Command::FAILURE;
     }
 
     /**

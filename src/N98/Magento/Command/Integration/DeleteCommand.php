@@ -4,6 +4,7 @@ namespace N98\Magento\Command\Integration;
 
 use Magento\Integration\Model\IntegrationService;
 use N98\Magento\Command\AbstractMagentoCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\RuntimeException;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -47,7 +48,7 @@ class DeleteCommand extends AbstractMagentoCommand
     /**
      * @param \Symfony\Component\Console\Input\InputInterface $input
      * @param \Symfony\Component\Console\Output\OutputInterface $output
-     * @return int|void
+     * @return int
      * @throws \Exception
      */
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -72,5 +73,7 @@ class DeleteCommand extends AbstractMagentoCommand
                 $integrationModel->getId()
             )
         );
+
+        return Command::SUCCESS;
     }
 }

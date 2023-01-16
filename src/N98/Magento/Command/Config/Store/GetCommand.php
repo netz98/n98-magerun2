@@ -5,6 +5,7 @@ namespace N98\Magento\Command\Config\Store;
 use Magento\Config\Model\ResourceModel\Config\Data\Collection;
 use N98\Magento\Command\Config\AbstractConfigCommand;
 use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -82,7 +83,7 @@ HELP;
     /**
      * @param InputInterface $input
      * @param OutputInterface $output
-     * @return int|void
+     * @return int
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -129,7 +130,7 @@ HELP;
         if ($collection->count() == 0) {
             $output->writeln(sprintf("Couldn't find a config value for \"%s\"", $input->getArgument('path')));
 
-            return;
+            return Command::FAILURE;
         }
 
         foreach ($collection as $item) {
@@ -153,6 +154,8 @@ HELP;
         } else {
             $this->renderAsTable($output, $table, $input->getOption('format'));
         }
+
+        return Command::SUCCESS;
     }
 
     /**

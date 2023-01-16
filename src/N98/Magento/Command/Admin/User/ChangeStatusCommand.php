@@ -4,12 +4,11 @@ declare(strict_types=1);
 
 namespace N98\Magento\Command\Admin\User;
 
-use function is_string;
 use Magento\User\Model\ResourceModel\User as UserResourceModel;
 use Magento\User\Model\ResourceModel\User\CollectionFactory;
 use Magento\User\Model\User;
 use N98\Magento\Command\AbstractMagentoCommand;
-use function sprintf;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -48,29 +47,39 @@ class ChangeStatusCommand extends AbstractMagentoCommand
             );
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output): void
+    /**
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     * @return int
+     * @throws \Exception
+     */
+    protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->detectMagento($output, true);
         if (!$this->initMagento()) {
-            return;
+            return Command::FAILURE;
         }
 
         $username = $input->getArgument(self::USER_ARGUMENT);
-        if (!is_string($username)) {
+        if (!\is_string($username)) {
             $output->writeln('Please provide an username or email for the admin user. Use --help for more information.');
-            return;
+
+            return Command::FAILURE;
         }
 
         $user = $this->getUser($username);
         if ($user === null) {
-            $output->writeln(sprintf('Could not find a user associated to <info>%s</info>.', $username));
-            return;
+            $output->writeln(\sprintf('Could not find a user associated to <info>%s</info>.', $username));
+
+            return Command::FAILURE;
         }
 
         $newStatus = $this->getNewStatusForUser($user, $input);
         $user->setIsActive($newStatus);
         $this->userResourceModel->save($user);
-        $output->writeln(sprintf('User has been <info>%s</info>.', $newStatus ? 'activated' : 'deactivated'));
+        $output->writeln(\sprintf('User has been <info>%s</info>.', $newStatus ? 'activated' : 'deactivated'));
+
+        return Command::SUCCESS;
     }
 
     protected function getUser(string $username): ?User

@@ -9,6 +9,7 @@ namespace N98\Magento\Command\Media;
 
 use Magento\Framework\App\Filesystem\DirectoryList;
 use N98\Magento\Command\AbstractMagentoCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -48,7 +49,7 @@ class DumpCommand extends AbstractMagentoCommand
     /**
      * @param InputInterface $input
      * @param OutputInterface $output
-     * @return int|null|void
+     * @return int
      * @throws \Exception
      */
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -97,5 +98,7 @@ class DumpCommand extends AbstractMagentoCommand
         }
 
         $zip->close();
+
+        return Command::SUCCESS;
     }
 }

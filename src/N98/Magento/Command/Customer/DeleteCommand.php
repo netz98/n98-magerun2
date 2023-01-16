@@ -8,6 +8,7 @@ use Magento\Customer\Api\Data\CustomerInterface as Customer;
 use Magento\Framework\Registry;
 use N98\Util\Console\Helper\ParameterHelper;
 use RuntimeException;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -73,7 +74,7 @@ class DeleteCommand extends AbstractCustomerCommand
     {
         $this->detectMagento($output, true);
         if (!$this->initMagento()) {
-            return 1;
+            return Command::FAILURE;
         }
 
         /** @var QuestionHelper $questionHelper */
@@ -228,7 +229,7 @@ class DeleteCommand extends AbstractCustomerCommand
                              'add the --all option</warning>'
                 );
 
-                return 1;
+                return Command::FAILURE;
             }
 
             $customerCollection->addFieldToFilter($filterAttributes);
@@ -248,7 +249,7 @@ class DeleteCommand extends AbstractCustomerCommand
             }
         }
 
-        return 0;
+        return Command::SUCCESS;
     }
 
     /**

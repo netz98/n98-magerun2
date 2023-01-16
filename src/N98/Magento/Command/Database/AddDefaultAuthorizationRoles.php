@@ -2,6 +2,7 @@
 
 namespace N98\Magento\Command\Database;
 
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -23,7 +24,7 @@ class AddDefaultAuthorizationRoles extends AbstractDatabaseCommand
     /**
      * @param \Symfony\Component\Console\Input\InputInterface $input
      * @param \Symfony\Component\Console\Output\OutputInterface $output
-     * @return int|void
+     * @return int
      * @throws \Exception
      */
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -51,7 +52,7 @@ class AddDefaultAuthorizationRoles extends AbstractDatabaseCommand
             if (!$result) {
                 $output->writeln('<error>Cannot insert authorization role</error>');
 
-                return 1;
+                return Command::FAILURE;
             }
 
             $output->writeln('<info>Default authorization role inserted</info>');
@@ -71,7 +72,7 @@ class AddDefaultAuthorizationRoles extends AbstractDatabaseCommand
             if (!$result) {
                 $output->writeln('<error>Cannot insert authorization rule</error>');
 
-                return 1;
+                return Command::FAILURE;
             }
 
             $output->writeln('<info>Default authorization rule inserted</info>');
@@ -83,6 +84,6 @@ class AddDefaultAuthorizationRoles extends AbstractDatabaseCommand
             $output->writeln('<info>Default authorization tables</info> <comment>OK</comment>');
         }
 
-        return 0;
+        return Command::SUCCESS;
     }
 }

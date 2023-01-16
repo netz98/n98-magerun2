@@ -4,6 +4,7 @@ namespace N98\Magento\Command\Config\Data;
 
 use Magento\Framework\ObjectManager\ConfigLoaderInterface;
 use N98\Magento\Command\AbstractMagentoCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -31,7 +32,7 @@ class DiCommand extends AbstractMagentoCommand
     /**
      * @param \Symfony\Component\Console\Input\InputInterface $input
      * @param \Symfony\Component\Console\Output\OutputInterface $output
-     * @return int|void
+     * @return int
      * @throws \Exception
      */
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -39,7 +40,7 @@ class DiCommand extends AbstractMagentoCommand
         $this->detectMagento($output, true);
 
         if (!$this->initMagento()) {
-            return;
+            return Command::FAILURE;
         }
 
         /** @var ConfigLoaderInterface $configLoader */
@@ -84,5 +85,7 @@ class DiCommand extends AbstractMagentoCommand
         $dumpContent = $dumper->dump($cloner->cloneVar($config), true);
 
         $output->write($dumpContent);
+
+        return Command::SUCCESS;
     }
 }
