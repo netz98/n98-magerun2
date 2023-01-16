@@ -3,6 +3,7 @@
 namespace N98\Magento\Command\Admin\User;
 
 use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -25,14 +26,14 @@ class ListCommand extends AbstractAdminUserCommand
     /**
      * @param \Symfony\Component\Console\Input\InputInterface $input
      * @param \Symfony\Component\Console\Output\OutputInterface $output
-     * @return int|void
+     * @return int
      * @throws \Exception
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->detectMagento($output, true);
         if (!$this->initMagento()) {
-            return;
+            return Command::FAILURE;
         }
 
         $userList = $this->userModel->getCollection();
@@ -48,5 +49,7 @@ class ListCommand extends AbstractAdminUserCommand
         $this->getHelper('table')
             ->setHeaders(['id', 'username', 'email', 'status'])
             ->renderByFormat($output, $table, $input->getOption('format'));
+
+        return Command::SUCCESS;
     }
 }

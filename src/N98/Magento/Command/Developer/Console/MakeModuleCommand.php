@@ -11,6 +11,7 @@ use Magento\Framework\Filesystem\Directory\WriteInterface;
 use Magento\Framework\Module\ModuleListInterface;
 use Magento\Framework\Module\Status;
 use N98\Magento\Command\Developer\Console\Structure\ModuleNameStructure;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -48,7 +49,7 @@ class MakeModuleCommand extends AbstractGeneratorCommand
      * @param InputInterface $input
      * @param OutputInterface $output
      *
-     * @return int|void
+     * @return int
      * @throws \Magento\Framework\Exception\FileSystemException
      * @throws \Exception
      */
@@ -94,6 +95,8 @@ class MakeModuleCommand extends AbstractGeneratorCommand
         $this->cleanClassCache();
 
         $this->changeToNewModule($output, $moduleName);
+
+        return Command::SUCCESS;
     }
 
     /**

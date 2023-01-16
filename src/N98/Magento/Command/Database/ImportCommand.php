@@ -4,6 +4,7 @@ namespace N98\Magento\Command\Database;
 
 use Exception;
 use N98\Magento\Command\Database\Compressor\AbstractCompressor;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -114,7 +115,7 @@ HELP;
     /**
      * @param InputInterface $input
      * @param OutputInterface $output
-     * @return int|null|void
+     * @return int
      * @throws Exception
      */
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -140,13 +141,13 @@ HELP;
         if ($input->getOption('only-command')) {
             $output->writeln($exec);
 
-            return;
+            return Command::SUCCESS;
         } elseif ($input->getOption('only-if-empty')
             && count($dbHelper->getTables()) > 0
         ) {
             $output->writeln('<comment>Skip import. Database is not empty</comment>');
 
-            return;
+            return Command::SUCCESS;
         }
 
         if ($input->getOption('optimize')) {
@@ -175,7 +176,7 @@ HELP;
             $this->getApplication()->run(new StringInput('db:add-default-authorization-entries'), $output);
         }
 
-        return $success ? 0 : 1;
+        return $success ? Command::SUCCESS : Command::FAILURE;
     }
 
     /**

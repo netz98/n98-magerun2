@@ -53,7 +53,7 @@ HELP;
     /**
      * @param \Symfony\Component\Console\Input\InputInterface $input
      * @param \Symfony\Component\Console\Output\OutputInterface $output
-     * @return int|null|void
+     * @return int
      * @throws \Exception
      */
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -105,6 +105,7 @@ HELP;
         }
 
         $input = new ArrayInput($scriptArray);
+
         return $this->getApplication()->run($input, $output);
     }
 }

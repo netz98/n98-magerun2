@@ -5,8 +5,8 @@ if (!class_exists('N98\MagerunBootstrap')) {
 }
 
 try {
-    if (version_compare(PHP_VERSION, '7.2.0', '<')) {
-        throw new \ErrorException('PHP Version is lower than 7.2.0. Please upgrade your runtime.');
+    if (version_compare(PHP_VERSION, '7.3.0', '<')) {
+        throw new \ErrorException('PHP Version is lower than 7.3.0. Please upgrade your runtime.');
     }
     return N98\MagerunBootstrap::createApplication();
 } catch (Exception $e) {

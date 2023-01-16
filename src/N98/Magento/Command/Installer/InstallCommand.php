@@ -4,6 +4,7 @@ namespace N98\Magento\Command\Installer;
 
 use N98\Magento\Command\AbstractMagentoCommand;
 use N98\Magento\Command\Installer\SubCommand\SubCommandFactory;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -149,7 +150,7 @@ HELP;
 
         $subCommandFactory->create('DownloadMagento')->execute();
         if ($input->getOption('only-download')) {
-            return 0;
+            return Command::SUCCESS;
         }
 
         //$subCommandFactory->create('InstallComposerPackages')->execute();
@@ -162,6 +163,6 @@ HELP;
         $subCommandFactory->create('PostInstallation')->execute();
         $output->writeln('<info>Successfully installed magento</info>');
 
-        return 0;
+        return Command::SUCCESS;
     }
 }

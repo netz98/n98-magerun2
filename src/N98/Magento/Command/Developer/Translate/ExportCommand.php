@@ -4,6 +4,7 @@ namespace N98\Magento\Command\Developer\Translate;
 
 use Magento\Framework\Translate\ResourceInterface;
 use N98\Magento\Command\AbstractMagentoCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -30,14 +31,14 @@ class ExportCommand extends AbstractMagentoCommand
      * @param InputInterface $input
      * @param OutputInterface $output
      *
-     * @return int|void
+     * @return int
      * @throws \Exception
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->detectMagento($output);
         if (!$this->initMagento()) {
-            return;
+            return Command::FAILURE;
         }
 
         $filename = $input->getArgument('filename');
@@ -60,5 +61,7 @@ class ExportCommand extends AbstractMagentoCommand
         }
 
         fclose($f);
+
+        return Command::SUCCESS;
     }
 }

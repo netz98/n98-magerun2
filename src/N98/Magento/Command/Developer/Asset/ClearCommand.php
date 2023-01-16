@@ -7,6 +7,7 @@ use Magento\Framework\Filesystem;
 use Magento\Framework\Filesystem\Directory\Read;
 use Magento\Framework\Filesystem\Directory\WriteInterface;
 use N98\Magento\Command\AbstractMagentoCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -195,19 +196,19 @@ EOT;
     /**
      * @param InputInterface $input
      * @param OutputInterface $output
-     * @return void
+     * @return int
      * @throws \Exception
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->detectMagento($output, true);
         if (!$this->initMagento()) {
-            return;
+            return Command::FAILURE;
         }
 
         if ($this->runsInProductionMode($input, $output)) {
             $output->writeln('This command is not available in production mode');
-            return;
+            return Command::FAILURE;
         }
 
         $this->output = $output;
@@ -219,5 +220,7 @@ EOT;
         }
 
         $output->writeln($this->messages);
+
+        return Command::SUCCESS;
     }
 }

@@ -10,6 +10,7 @@ use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Framework\Filesystem;
 use Magento\Framework\Filesystem\Directory\WriteInterface;
 use N98\Magento\Command\Developer\Console\Structure\ThemeNameStructure;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -41,7 +42,7 @@ class MakeThemeCommand extends AbstractGeneratorCommand
      * @param InputInterface $input
      * @param OutputInterface $output
      *
-     * @return int|void
+     * @return int
      * @throws \Magento\Framework\Exception\FileSystemException
      */
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -88,6 +89,8 @@ class MakeThemeCommand extends AbstractGeneratorCommand
                 $relativePath
             );
         }
+
+        return Command::SUCCESS;
     }
 
     /**

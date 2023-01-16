@@ -7,6 +7,7 @@ use Magento\Integration\Model\Oauth\Token;
 use Magento\Integration\Model\Oauth\TokenFactory;
 use Magento\User\Model\User;
 use N98\Magento\Command\AbstractMagentoCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -55,7 +56,7 @@ class CreateCommand extends AbstractMagentoCommand
      * @param InputInterface $input
      * @param OutputInterface $output
      *
-     * @return int|void
+     * @return int
      * @throws Exception
      */
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -63,7 +64,7 @@ class CreateCommand extends AbstractMagentoCommand
         // Detect and Init Magento
         $this->detectMagento($output, true);
         if (!$this->initMagento()) {
-            return;
+            return Command::FAILURE;
         }
 
         // Username
@@ -85,7 +86,7 @@ class CreateCommand extends AbstractMagentoCommand
         $adminUser = $this->userModel->loadByUsername($username);
         if ($adminUser->getId() <= 0) {
             $output->writeln('<error>User was not found</error>');
-            return;
+            return Command::FAILURE;
         }
 
         /** @var Token $tokenModel */
@@ -93,5 +94,7 @@ class CreateCommand extends AbstractMagentoCommand
         $tokenModel->createAdminToken($adminUser->getId());
 
         $output->write($tokenModel->getToken(), !$input->getOption('no-newline'));
+
+        return Command::SUCCESS;
     }
 }

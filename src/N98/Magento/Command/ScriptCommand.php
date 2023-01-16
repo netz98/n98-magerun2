@@ -3,6 +3,7 @@
 namespace N98\Magento\Command;
 
 use N98\Util\BinaryString;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\RuntimeException;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputArgument;
@@ -124,7 +125,7 @@ HELP;
     /**
      * @param \Symfony\Component\Console\Input\InputInterface $input
      * @param \Symfony\Component\Console\Output\OutputInterface $output
-     * @return int|null|void
+     * @return int
      * @throws \Exception
      */
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -163,6 +164,8 @@ HELP;
                     $this->runMagerunCommand($input, $output, $commandString);
             }
         }
+
+        return Command::SUCCESS;
     }
 
     /**

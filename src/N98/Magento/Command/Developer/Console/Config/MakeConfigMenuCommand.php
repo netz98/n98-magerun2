@@ -16,6 +16,7 @@
 
 namespace N98\Magento\Command\Developer\Console\Config;
 
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -40,7 +41,7 @@ class MakeConfigMenuCommand extends AbstractSimpleConfigFileGeneratorCommand
      * @param InputInterface $input
      * @param OutputInterface $output
      *
-     * @return int|void
+     * @return int
      * @throws \Magento\Framework\Exception\FileSystemException
      */
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -51,12 +52,14 @@ class MakeConfigMenuCommand extends AbstractSimpleConfigFileGeneratorCommand
         if ($this->getCurrentModuleDirectoryReader()->isExist($relativeConfigFilePath)) {
             $output->writeln('<warning>File already exists. Skiped generation</warning>');
 
-            return;
+            return Command::SUCCESS;
         }
 
         $referenceConfigFileContent = file_get_contents(__DIR__ . '/_files/reference_menu.xml');
         $this->getCurrentModuleDirectoryWriter()->writeFile($relativeConfigFilePath, $referenceConfigFileContent);
 
         $output->writeln('<info>generated </info><comment>' . $relativeConfigFilePath . '</comment>');
+
+        return Command::SUCCESS;
     }
 }

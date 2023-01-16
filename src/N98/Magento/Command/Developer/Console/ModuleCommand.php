@@ -7,6 +7,7 @@ use N98\Magento\Command\Developer\Console\Structure\ModuleNameStructure;
 use N98\Util\BinaryString;
 use Psy\VarDumper\Presenter;
 use Psy\VarDumper\PresenterAware;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -45,7 +46,7 @@ class ModuleCommand extends AbstractGeneratorCommand implements PresenterAware
      * @param InputInterface $input
      * @param OutputInterface $output
      *
-     * @return int|void
+     * @return int
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -60,8 +61,12 @@ class ModuleCommand extends AbstractGeneratorCommand implements PresenterAware
                 $output->writeln('<info>Current module </info><comment>' . $module . '</comment>');
             } catch (\InvalidArgumentException $e) {
                 $output->writeln('<info>No module context defined</info>');
+
+                return Command::FAILURE;
             }
         }
+
+        return Command::SUCCESS;
     }
 
     /**

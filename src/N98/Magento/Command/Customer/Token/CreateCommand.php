@@ -6,6 +6,7 @@ use Exception;
 use Magento\Integration\Model\Oauth\Token;
 use Magento\Integration\Model\Oauth\TokenFactory;
 use N98\Magento\Command\Customer\AbstractCustomerCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -44,7 +45,7 @@ class CreateCommand extends AbstractCustomerCommand
      * @param InputInterface $input
      * @param OutputInterface $output
      *
-     * @return int|void
+     * @return int
      * @throws Exception
      */
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -52,13 +53,13 @@ class CreateCommand extends AbstractCustomerCommand
         // Detect and Init Magento
         $this->detectMagento($output, true);
         if (!$this->initMagento()) {
-            return;
+            return Command::FAILURE;
         }
 
         // Detect customer
         $customer = $this->detectCustomer($input, $output);
         if ($customer === null) {
-            return;
+            return Command::FAILURE;
         }
 
         /** @var Token $tokenModel */
@@ -66,5 +67,7 @@ class CreateCommand extends AbstractCustomerCommand
         $tokenModel->createCustomerToken($customer->getId());
 
         $output->write($tokenModel->getToken(), !$input->getOption('no-newline'));
+
+        return Command::SUCCESS;
     }
 }

@@ -9,6 +9,7 @@ use Magento\Store\Model\Store;
 use N98\Util\Console\Helper\ParameterHelper;
 use N98\Util\Exec;
 use N98\Util\OperatingSystem;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\RuntimeException;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -33,13 +34,13 @@ class OpenBrowserCommand extends AbstractMagentoCommand
      * @param OutputInterface $output
      * @throws RuntimeException
      * @throws \Exception
-     * @return int|void
+     * @return int
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->detectMagento($output);
         if (!$this->initMagento()) {
-            return;
+            return Command::FAILURE;
         }
 
         /** @var $parameter ParameterHelper */
@@ -56,6 +57,8 @@ class OpenBrowserCommand extends AbstractMagentoCommand
 
         $opener = $this->resolveOpenerCommand($output);
         Exec::run(escapeshellcmd($opener . ' ' . $url));
+
+        return Command::SUCCESS;
     }
 
     /**

@@ -7,6 +7,7 @@ use Magento\Framework\App\Route\Config;
 use Magento\Framework\Module\Dir\Reader;
 use N98\Magento\Command\AbstractMagentoCommand;
 use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -75,6 +76,11 @@ class ListCommand extends AbstractMagentoCommand
         $this->configReader = $configReader;
     }
 
+    /**
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     * @return int
+     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $table = [];
@@ -159,6 +165,6 @@ class ListCommand extends AbstractMagentoCommand
             ->renderByFormat($output, $table, $input->getOption('format'))
         ;
 
-        return 0;
+        return Command::SUCCESS;
     }
 }

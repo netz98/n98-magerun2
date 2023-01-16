@@ -5,6 +5,7 @@ namespace N98\Magento\Command\Database;
 use InvalidArgumentException;
 use N98\Util\Console\Helper\DatabaseHelper;
 use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -44,7 +45,7 @@ HELP;
      *
      * @throws InvalidArgumentException
      * @throws \Magento\Framework\Exception\FileSystemException
-     * @return void
+     * @return int
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -117,5 +118,7 @@ HELP;
                 ->setHeaders(['Name', 'Value'])
                 ->renderByFormat($output, $rows, $input->getOption('format'));
         }
+
+        return Command::SUCCESS;
     }
 }

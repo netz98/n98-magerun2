@@ -6,6 +6,7 @@ use Exception;
 use Magento\Customer\Model\Attribute as CustomerAttribute;
 use Magento\Customer\Model\Resource\Customer;
 use Magento\Eav\Model\Entity\Attribute\Frontend\DefaultFrontend;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -37,7 +38,7 @@ class InfoCommand extends AbstractCustomerCommand
      * @param InputInterface $input
      * @param OutputInterface $output
      *
-     * @return int|void
+     * @return int
      * @throws Exception
      */
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -45,13 +46,13 @@ class InfoCommand extends AbstractCustomerCommand
         // Detect and Init Magento
         $this->detectMagento($output, true);
         if (!$this->initMagento()) {
-            return;
+            return Command::FAILURE;
         }
 
         // Detect customer
         $customer = $this->detectCustomer($input, $output);
         if ($customer === null) {
-            return;
+            return Command::FAILURE;
         }
 
         /** @var Customer $customerResource */
@@ -96,5 +97,7 @@ class InfoCommand extends AbstractCustomerCommand
         $helperTable->setHeaders(['Code', 'Name', 'Value']);
         $helperTable->setRows($table);
         $helperTable->render($output);
+
+        return Command::SUCCESS;
     }
 }

@@ -3,6 +3,7 @@
 namespace N98\Magento\Command\Database;
 
 use N98\Util\Console\Helper\DatabaseHelper;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -35,7 +36,7 @@ HELP;
     /**
      * @param \Symfony\Component\Console\Input\InputInterface $input
      * @param \Symfony\Component\Console\Output\OutputInterface $output
-     * @return int|void
+     * @return int
      * @throws \Magento\Framework\Exception\FileSystemException
      */
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -73,5 +74,7 @@ HELP;
                 $dbHelper->dropDatabase($output);
             }
         }
+
+        return Command::SUCCESS;
     }
 }

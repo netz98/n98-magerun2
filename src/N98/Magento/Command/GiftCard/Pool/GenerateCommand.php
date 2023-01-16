@@ -4,6 +4,7 @@ namespace N98\Magento\Command\GiftCard\Pool;
 
 use Magento\GiftCardAccount\Model\Pool;
 use N98\Magento\Command\GiftCard\AbstractGiftCardCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -40,7 +41,7 @@ HELP;
     {
         $this->detectMagento($output, true);
         if (!$this->initMagento()) {
-            return;
+            return Command::FAILURE;
         }
 
         $this->setAdminArea();
@@ -56,6 +57,10 @@ HELP;
             $output->writeln('<info>Gift card pool was generated.</info>');
         } catch (\Exception $e) {
             $output->writeln('<error>Failed to generate gift card pool!</error>');
+
+            return Command::FAILURE;
         }
+
+        return Command::SUCCESS;
     }
 }

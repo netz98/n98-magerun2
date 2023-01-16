@@ -5,6 +5,7 @@ namespace N98\Magento\Command\Developer\Report;
 use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Framework\Filesystem;
 use N98\Magento\Command\AbstractMagentoCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Finder\Finder;
@@ -46,7 +47,7 @@ class CountCommand extends AbstractMagentoCommand
     /**
      * @param InputInterface $input
      * @param OutputInterface $output
-     * @return int|void
+     * @return int
      * @throws \Exception
      */
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -61,6 +62,8 @@ class CountCommand extends AbstractMagentoCommand
         }
 
         $output->writeln($count);
+
+        return Command::SUCCESS;
     }
 
     /**

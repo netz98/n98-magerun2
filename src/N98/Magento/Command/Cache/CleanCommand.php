@@ -2,6 +2,7 @@
 
 namespace N98\Magento\Command\Cache;
 
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -42,7 +43,7 @@ HELP;
     {
         $this->detectMagento($output, true);
         if (!$this->initMagento()) {
-            return;
+            return Command::FAILURE;
         }
 
         $cacheManager = $this->getCacheManager();
@@ -63,7 +64,7 @@ HELP;
             }
             if (empty($validTypesToClean)) {
                 $output->writeln('<error>Aborting clean</error>');
-                return;
+                return Command::FAILURE;
             }
         }
 
@@ -74,5 +75,7 @@ HELP;
                 $output->writeln('<info><comment>' . $type . '</comment> cache cleaned</info>');
             }
         }
+
+        return Command::SUCCESS;
     }
 }

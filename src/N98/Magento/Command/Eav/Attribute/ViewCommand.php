@@ -3,6 +3,7 @@
 namespace N98\Magento\Command\Eav\Attribute;
 
 use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -44,7 +45,7 @@ class ViewCommand extends AbstractAttributeCommand
     {
         $this->detectMagento($output, true);
         if (!$this->initMagento()) {
-            return;
+            return Command::FAILURE;
         }
 
         $entityType = $input->getArgument('entityType');
@@ -60,6 +61,8 @@ class ViewCommand extends AbstractAttributeCommand
             ->getHelper('table')
             ->setHeaders(['Type', 'Value'])
             ->renderByFormat($output, $table, $input->getOption('format'));
+
+        return Command::SUCCESS;
     }
 
     /**

@@ -3,6 +3,7 @@
 namespace N98\Magento\Command\Config\Store;
 
 use N98\Magento\Command\Config\AbstractConfigCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -60,14 +61,14 @@ HELP;
     /**
      * @param \Symfony\Component\Console\Input\InputInterface $input
      * @param \Symfony\Component\Console\Output\OutputInterface $output
-     * @return int|void
+     * @return int
      * @throws \Exception
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->detectMagento($output, true);
         if (!$this->initMagento()) {
-            return;
+            return Command::FAILURE;
         }
 
         $scope = $input->getOption('scope');
@@ -98,5 +99,7 @@ HELP;
             '<comment>' . $input->getArgument('path') . '</comment> => <comment>' . $valueDisplay .
             '</comment>'
         );
+
+        return Command::SUCCESS;
     }
 }

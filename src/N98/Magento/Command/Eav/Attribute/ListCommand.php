@@ -7,6 +7,7 @@ use Magento\Eav\Model\Entity\Type as EntityType;
 use Magento\Eav\Model\ResourceModel\Entity\Attribute\Collection as AttributeCollection;
 use N98\Magento\Command\AbstractMagentoCommand;
 use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -69,14 +70,14 @@ class ListCommand extends AbstractMagentoCommand
     /**
      * @param InputInterface $input
      * @param OutputInterface $output
-     * @return int|void
+     * @return int
      * @throws \Exception
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->detectMagento($output);
         if (!$this->initMagento()) {
-            return;
+            return Command::FAILURE;
         }
 
         $table = [];
@@ -126,5 +127,7 @@ class ListCommand extends AbstractMagentoCommand
         $this->getHelper('table')
             ->setHeaders($headers)
             ->renderByFormat($output, $table, $input->getOption('format'));
+
+        return Command::SUCCESS;
     }
 }

@@ -5,6 +5,7 @@ namespace N98\Magento\Command\Config\Data;
 use Magento\Framework\Acl\AclResource\Config\Reader\Filesystem as AclConfigReader;
 use N98\Magento\Command\AbstractMagentoCommand;
 use PBergman\Console\Helper\TreeHelper;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -34,7 +35,7 @@ class AclCommand extends AbstractMagentoCommand
      * @param InputInterface  $input
      * @param OutputInterface $output
      *
-     * @return int|void
+     * @return int
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -50,6 +51,8 @@ class AclCommand extends AbstractMagentoCommand
         }
 
         $tree->printTree($output);
+
+        return Command::SUCCESS;
     }
 
     /**

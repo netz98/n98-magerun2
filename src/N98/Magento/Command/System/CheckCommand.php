@@ -14,6 +14,7 @@ use N98\Magento\Framework\AreaAware;
 use N98\Util\Console\Helper\InjectionHelper;
 use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
 use N98\Util\Unicode\Charset;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -77,14 +78,14 @@ HELP;
     /**
      * @param InputInterface $input
      * @param OutputInterface $output
-     * @return int|void
+     * @return int
      * @throws \Exception
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->detectMagento($output);
         if (!$this->initMagento()) {
-            return;
+            return Command::FAILURE;
         }
 
         $this->config = $this->getCommandConfig();
@@ -103,6 +104,8 @@ HELP;
         } else {
             $this->_printResults($output, $results);
         }
+
+        return Command::SUCCESS;
     }
 
     /**

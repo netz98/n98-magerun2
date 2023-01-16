@@ -4,6 +4,7 @@ namespace N98\Magento\Command\Developer\Module;
 
 use N98\Magento\Command\AbstractMagentoCommand;
 use N98\Magento\Command\SubCommand\ConfigBag;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -42,7 +43,7 @@ class CreateCommand extends AbstractMagentoCommand
     /**
      * @param \Symfony\Component\Console\Input\InputInterface $input
      * @param \Symfony\Component\Console\Output\OutputInterface $output
-     * @return int|void
+     * @return int
      * @throws \InvalidArgumentException
      * @throws \Exception
      */
@@ -129,6 +130,8 @@ class CreateCommand extends AbstractMagentoCommand
         if (!$input->getOption('minimal')) {
             $subCommandFactory->create('CreateAdditionalFiles')->execute();
         }
+
+        return Command::SUCCESS;
     }
 
     private function initView(InputInterface $input, ConfigBag $configBag)

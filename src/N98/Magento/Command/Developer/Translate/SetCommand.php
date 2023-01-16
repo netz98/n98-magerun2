@@ -6,6 +6,7 @@ use Magento\Store\Model\ScopeInterface;
 use Magento\Translation\Model\ResourceModel\StringUtils;
 use N98\Magento\Command\AbstractMagentoCommand;
 use N98\Magento\Command\Config\Store\ConfigReaderTrait;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -29,14 +30,14 @@ class SetCommand extends AbstractMagentoCommand
      * @param InputInterface $input
      * @param OutputInterface $output
      *
-     * @return int|void
+     * @return int
      * @throws \Exception
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->detectMagento($output);
         if (!$this->initMagento()) {
-            return;
+            return Command::FAILURE;
         }
 
         $store = $this->getHelper('parameter')->askStore($input, $output);
@@ -63,5 +64,7 @@ class SetCommand extends AbstractMagentoCommand
                 $input->getArgument('translate')
             )
         );
+
+        return Command::SUCCESS;
     }
 }

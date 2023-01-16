@@ -4,6 +4,7 @@ namespace N98\Magento\Command\Generation;
 
 use N98\Magento\Command\AbstractMagentoCommand;
 use N98\Util\Filesystem;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -61,5 +62,7 @@ class FlushCommand extends AbstractMagentoCommand
             $filesystem->recursiveRemoveDirectory($directory->getPathname());
             $output->writeln('<info>Removed <comment>' . $directory->getBasename() . '</comment> folder</info>');
         }
+
+        return Command::SUCCESS;
     }
 }

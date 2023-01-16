@@ -16,6 +16,7 @@
 
 namespace N98\Magento\Command\Developer\Console\Config;
 
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -51,12 +52,14 @@ class MakeConfigSystemCommand extends AbstractSimpleConfigFileGeneratorCommand
         if ($this->getCurrentModuleDirectoryReader()->isExist($relativeConfigFilePath)) {
             $output->writeln('<warning>File already exists. Skiped generation</warning>');
 
-            return;
+            return Command::SUCCESS;
         }
 
         $referenceConfigFileContent = file_get_contents(__DIR__ . '/_files/reference_system.xml');
         $this->getCurrentModuleDirectoryWriter()->writeFile($relativeConfigFilePath, $referenceConfigFileContent);
 
         $output->writeln('<info>generated </info><comment>' . $relativeConfigFilePath . '</comment>');
+
+        return Command::SUCCESS;
     }
 }

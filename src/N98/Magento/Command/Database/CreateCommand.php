@@ -2,6 +2,7 @@
 
 namespace N98\Magento\Command\Database;
 
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -29,10 +30,12 @@ HELP;
     /**
      * @param InputInterface $input
      * @param OutputInterface $output
-     * @return int|void
+     * @return int
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->getHelper('database')->createDatabase($output);
+
+        return Command::SUCCESS;
     }
 }

@@ -2,6 +2,7 @@
 
 namespace N98\Magento\Command\Admin\User;
 
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -31,13 +32,13 @@ class DeleteUserCommand extends AbstractAdminUserCommand
      * @param InputInterface $input
      * @param OutputInterface $output
      * @throws \Exception
-     * @return int|void
+     * @return int
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->detectMagento($output);
         if (!$this->initMagento()) {
-            return;
+            return Command::FAILURE;
         }
 
         /** @var $questionHelper QuestionHelper */
@@ -64,7 +65,7 @@ class DeleteUserCommand extends AbstractAdminUserCommand
 
         if (!$user->getId()) {
             $output->writeln('<error>User was not found</error>');
-            return;
+            return Command::FAILURE;
         }
 
         $shouldRemove = $input->getOption('force');
@@ -86,9 +87,13 @@ class DeleteUserCommand extends AbstractAdminUserCommand
                 $output->writeln('<info>User was successfully deleted</info>');
             } catch (\Exception $e) {
                 $output->writeln('<error>' . $e->getMessage() . '</error>');
+                return Command::FAILURE;
             }
         } else {
             $output->writeln('<error>Aborting delete</error>');
+            return Command::FAILURE;
         }
+
+        return Command::SUCCESS;
     }
 }

@@ -11,6 +11,7 @@ use Magento\Integration\Model\Oauth\Token;
 use Magento\Integration\Model\ResourceModel\Oauth\Consumer;
 use N98\Magento\Command\AbstractMagentoCommand;
 use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\RuntimeException;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -117,7 +118,7 @@ HELP;
     /**
      * @param \Symfony\Component\Console\Input\InputInterface $input
      * @param \Symfony\Component\Console\Output\OutputInterface $output
-     * @return int|void
+     * @return int
      * @throws \Exception
      */
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -153,6 +154,8 @@ HELP;
         $this->getHelper('table')
             ->setHeaders(['name', 'value'])
             ->renderByFormat($output, $table, $input->getOption('format'));
+
+        return Command::SUCCESS;
     }
 
     /**

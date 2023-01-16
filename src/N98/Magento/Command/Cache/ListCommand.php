@@ -5,6 +5,7 @@ namespace N98\Magento\Command\Cache;
 use Magento\Framework\App\Cache\TypeList;
 use N98\Magento\Command\AbstractMagentoCommand;
 use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -87,6 +88,6 @@ class ListCommand extends AbstractMagentoCommand
                 ->setHeaders(['Name', 'Type', 'Enabled'])
                 ->renderByFormat($output, $tableData, $input->getOption('format'));
 
-        return 0;
+        return Command::SUCCESS;
     }
 }

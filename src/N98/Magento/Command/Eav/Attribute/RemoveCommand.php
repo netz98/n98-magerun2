@@ -6,6 +6,7 @@ use Magento\Eav\Model\Config as EavConfig;
 use Magento\Eav\Setup\EavSetup;
 use Magento\Eav\Setup\EavSetupFactory;
 use N98\Magento\Command\AbstractMagentoCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -62,19 +63,19 @@ class RemoveCommand extends AbstractMagentoCommand
     /**
      * @param InputInterface $input
      * @param OutputInterface $output
-     * @return int|void
+     * @return int
      * @throws \Exception
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->detectMagento($output);
         if (!$this->initMagento()) {
-            return;
+            return Command::FAILURE;
         }
 
         if ($this->runsInProductionMode($input, $output)) {
             $output->writeln('This command is not available in production mode');
-            return;
+            return Command::FAILURE;
         }
 
         $entityType = $input->getArgument('entityType');
@@ -103,5 +104,7 @@ class RemoveCommand extends AbstractMagentoCommand
                 ));
             }
         }
+
+        return Command::SUCCESS;
     }
 }

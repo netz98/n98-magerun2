@@ -28,9 +28,7 @@ class MagerunBootstrap
             $loader = self::getLoader();
         }
 
-        $application = new Magento\Application($loader);
-
-        return $application;
+        return new Magento\Application($loader);
     }
 
     /**

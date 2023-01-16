@@ -4,6 +4,7 @@ namespace N98\Magento\Command\System;
 
 use Magento\Framework\App\MaintenanceMode;
 use N98\Magento\Command\AbstractMagentoCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -60,18 +61,25 @@ class MaintenanceCommand extends AbstractMagentoCommand
 
         if ($input->getOption('off')) {
             if (!$flagDir->isExist(MaintenanceMode::FLAG_FILENAME)) {
-                return $output->writeln(self::ALREADY_DISABLED_MESSAGE);
+                $output->writeln(self::ALREADY_DISABLED_MESSAGE);
+
+                return Command::SUCCESS;
             }
 
-            return $this->handleDisable($flagDir, $output, $input->getOption('off'));
+            $this->handleDisable($flagDir, $output, $input->getOption('off'));
+
+            return Command::SUCCESS;
         }
 
         if ($input->getOption('on')) {
             if ($flagDir->isExist(MaintenanceMode::FLAG_FILENAME)) {
-                return $output->writeln(self::ALREADY_ENABLED_MESSAGE);
+                $output->writeln(self::ALREADY_ENABLED_MESSAGE);
+
+                return Command::SUCCESS;
             }
 
-            return $this->handleEnable($flagDir, $output, $input->getOption('on'));
+            $this->handleEnable($flagDir, $output, $input->getOption('on'));
+            return Command::SUCCESS;
         }
 
         // Toggle based on existence of flag file
@@ -81,7 +89,7 @@ class MaintenanceCommand extends AbstractMagentoCommand
             $this->handleEnable($flagDir, $output);
         }
 
-        return 0;
+        return Command::SUCCESS;
     }
 
     /**
