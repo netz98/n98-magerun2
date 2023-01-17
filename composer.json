@@ -51,7 +51,7 @@
     "require-dev": {
         "bamarni/symfony-console-autocomplete": "^1.2.0",
         "captainhook/captainhook": "^5.3",
-        "friendsofphp/php-cs-fixer": "~3.4.0",
+        "friendsofphp/php-cs-fixer": "~3.13.2",
         "mikey179/vfsstream": "^1.6",
         "phpstan/phpstan": "^1.8.5",
         "phpunit/phpunit": "^9",
