@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace N98\Magento\Command;
 
+use N98\Magento\Application\Console\Input\FilteredStringInput;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputInterface;
@@ -53,13 +54,12 @@ class MagentoCoreProxyCommand extends AbstractMagentoCommand
     {
         $config = $this->getCommandConfig();
 
-        $rawInput = $this->getRawInput();
-        $processCommand = [
-            $this->magentoRootDir . '/bin/magento',
-            ...$rawInput,
-        ];
+        $magentoCoreCommandInput = new FilteredStringInput($input->__toString());
 
-        $process = new Process($processCommand, $this->magentoRootDir);
+        $process = Process::fromShellCommandline(
+            $this->magentoRootDir . '/bin/magento ' . $magentoCoreCommandInput->__toString(),
+            $this->magentoRootDir
+        );
 
         $process->setTimeout($config['timeout']);
         $process->setTty($input->isInteractive());
@@ -75,30 +75,6 @@ class MagentoCoreProxyCommand extends AbstractMagentoCommand
         });
 
         return $process->getExitCode();
-    }
-
-    /**
-     * @return array
-     */
-    private function getRawInput(): array
-    {
-        $rawValues = $_SERVER['argv'];
-
-        // remove first array key => n98-magerun2.phar path -> we replace them with bin/magento later on.
-        unset($rawValues[0]);
-
-        foreach ($rawValues as $key => $rawValue) {
-            if (strpos($rawValue, '--root-dir') !== false
-                || strpos($rawValue, '--skip-root-check') !== false
-                || strpos($rawValue, '--skip-config') !== false
-                || strpos($rawValue, '--skip-core-commands') !== false
-                || strpos($rawValue, '--skip-magento-compatibility-check') !== false
-            ) {
-                unset($rawValues[$key]);
-            }
-        }
-
-        return $rawValues;
     }
 
     /**
@@ -178,13 +154,18 @@ class MagentoCoreProxyCommand extends AbstractMagentoCommand
                 $mode |= InputOption::VALUE_IS_ARRAY;
             }
 
+            $defaultValue = true;
+            if ($option['accept_value']) {
+                $defaultValue = $option['default'];
+            }
+
             $inputDefinition->addOption(
                 new InputOption(
                     $normalizedName,
                     $normalizedShortcut,
                     $mode,
                     $option['description'],
-                    $mode === InputArgument::OPTIONAL ? $option['default'] : null
+                    $mode !== InputOption::VALUE_NONE ? $defaultValue : null
                 )
             );
         }
