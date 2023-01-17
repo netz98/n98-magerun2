@@ -9,7 +9,6 @@ declare(strict_types=1);
 
 namespace N98\Magento\Command;
 
-use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputInterface;
@@ -129,9 +128,11 @@ class MagentoCoreProxyCommand extends AbstractMagentoCommand
             $normalizedName = substr($option['name'], 2);
             $normalizedShortcut = substr($option['name'], 1);
 
-            if (in_array(
-                $normalizedName,
-                ['help', 'quiet', 'verbose', 'version', 'ansi', 'no-ansi', 'no-interaction'])
+            if (
+                in_array(
+                    $normalizedName,
+                    ['help', 'quiet', 'verbose', 'version', 'ansi', 'no-ansi', 'no-interaction']
+                )
             ) {
                 continue;
             }
