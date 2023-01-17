@@ -19,7 +19,10 @@ if [ -z "$MAGERUN_SETUP_TEST_DEFAULT_MAGENTO_VERSION" ]; then
 fi
 
 MAGENTO_ROOT_DIR="/opt/magento-test-environments/magento_${MAGERUN_SETUP_TEST_DEFAULT_MAGENTO_VERSION//[-.]/_}"
+
+echo "change to dir: ${MAGENTO_ROOT_DIR}";
 cd "$MAGENTO_ROOT_DIR";
+
 
 if [ ! -f generated/metadata/interception.php ]; then
 	echo "--------------------------------------------------------";
