@@ -569,6 +569,10 @@ commands:
     # Relative path from root directory
     defaultModulesBaseDir: 'app/code'
 
+  N98\Magento\Command\MagentoCoreProxyCommand:
+    # 1 day timeout for core commands -> for long-running processes
+    timeout: 86400
+
   N98\Magento\Command\Media\DumpCommand:
     strip:
       folders:
