@@ -19,8 +19,11 @@ class PostInstallation extends AbstractSubCommand
         $this->getCommand()->getApplication()->reinit();
 
         $this->output->writeln('<info>Reindex all after installation</info>');
+
+        $indexerReindexInput = new ArrayInput(['command' => 'indexer:reindex']);
+        $indexerReindexInput->setInteractive(false);
         $this->getCommand()->getApplication()->run(
-            new ArrayInput(['command' => 'indexer:reindex']),
+            $indexerReindexInput,
             $this->output
         );
 
