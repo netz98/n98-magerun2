@@ -8,6 +8,7 @@
 declare(strict_types=1);
 
 namespace N98\Magento\Application;
+
 use N98\Magento\Command\MagentoCoreProxyCommandFactory;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
@@ -99,7 +100,7 @@ class MagentoCoreCommandProvider
      */
     private function removeCommands(array $data, array $commandNamesToRemove)
     {
-        return array_filter($data, function($row) use ($commandNamesToRemove) {
+        return array_filter($data, function ($row) use ($commandNamesToRemove) {
             return !in_array($row['name'], $commandNamesToRemove, true);
         });
     }
