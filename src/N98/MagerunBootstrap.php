@@ -9,7 +9,6 @@ namespace N98;
 
 use Composer\Autoload\ClassLoader;
 use ErrorException;
-use Symfony\Component\Console\Command\Command;
 
 /**
  * Bootstrap class for the Magerun applications (Symfony console based application)
@@ -49,8 +48,6 @@ class MagerunBootstrap
                 'php composer.phar install' . PHP_EOL
             );
         }
-
-        var_dump(Command::SUCCESS);
 
         return $loader;
     }
