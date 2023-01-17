@@ -11,11 +11,13 @@ use N98\Magento\Application\ApplicationAwareInterface;
 use N98\Magento\Application\Config;
 use N98\Magento\Application\ConfigurationLoader;
 use N98\Magento\Application\Console\Events;
+use N98\Magento\Application\MagentoCoreCommandProvider;
 use N98\Magento\Application\DetectionResult;
 use N98\Magento\Application\Magento1Initializer;
 use N98\Magento\Application\Magento2Initializer;
 use N98\Magento\Application\MagentoDetector;
 use N98\Magento\Command\DummyCommand;
+use N98\Magento\Command\MagentoCoreProxyCommandFactory;
 use N98\Util\Console\Helper\TwigHelper;
 use Symfony\Component\Console\Application as BaseApplication;
 use Symfony\Component\Console\Command\Command;
@@ -484,37 +486,29 @@ class Application extends BaseApplication
     public function registerMagentoCoreCommands(OutputInterface $output): void
     {
         $magentoRootFolder = $this->getMagentoRootFolder();
+
         if (empty($magentoRootFolder)) {
             return;
         }
 
-        // Magento was found -> register core cli commands
-        try {
-            \N98\Magento\Application\Magento2Initializer::loadMagentoBootstrap($magentoRootFolder);
-        } catch (Exception $ex) {
-            $this->renderThrowable($ex, $output);
-            $output->writeln(
-                '<info>Use --skip-core-commands to not require the Magento app/bootstrap.php which caused ' .
-                'the exception.</info>'
-            );
+        $provider = new MagentoCoreCommandProvider(
+            $magentoRootFolder,
+            new MagentoCoreProxyCommandFactory()
+        );
 
-            return;
-        }
+        $coreCommands = $provider->getCommands();
 
-        $coreCliApplication = new Cli();
-        $coreCliApplicationCommands = $coreCliApplication->all();
-
-        foreach ($coreCliApplicationCommands as $coreCliApplicationCommand) {
+        foreach ($coreCommands as $coreCommand) {
             if (OutputInterface::VERBOSITY_DEBUG <= $output->getVerbosity()) {
                 $output->writeln(
                     sprintf(
                         '<debug>Add core command </debug> <info>%s</info> -> <comment>%s</comment>',
-                        $coreCliApplicationCommand->getName(),
-                        get_class($coreCliApplicationCommand)
+                        $coreCommand->getName(),
+                        get_class($coreCommand)
                     )
                 );
             }
-            $this->add($coreCliApplicationCommand);
+            $this->add($coreCommand);
         }
     }
 
