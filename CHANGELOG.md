@@ -1,8 +1,8 @@
 RECENT CHANGES
 ==============
 
-7.0.0
------
+7.0.0-dev
+---------
 
 - Add: Magento 2.4.6
 - Imp: New internal proxy command to call Magento Core Commands
