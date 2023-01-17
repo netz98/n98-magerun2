@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace N98\Magento\Command;
 
+use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputInterface;
@@ -53,14 +54,15 @@ class MagentoCoreProxyCommand extends AbstractMagentoCommand
     {
         $config = $this->getCommandConfig();
 
+        $rawInput = $this->getRawInput();
         $processCommand = [
             $this->magentoRootDir . '/bin/magento',
-            $this->getRawInput(),
+            ...$rawInput,
         ];
 
         $process = new Process($processCommand, $this->magentoRootDir);
         $process->setTimeout($config['timeout']);
-        $process->setTty(true);
+        $process->setTty($input->isInteractive());
         $process->run(function ($type, $buffer) use ($output) {
             $output->write($buffer);
         });
@@ -68,10 +70,28 @@ class MagentoCoreProxyCommand extends AbstractMagentoCommand
         return $process->getExitCode();
     }
 
-    private function getRawInput(): string
+    /**
+     * @return array
+     */
+    private function getRawInput(): array
     {
+        $rawValues = $_SERVER['argv'];
+
         // remove first array key => n98-magerun2.phar path -> we replace them with bin/magento later on.
-        return implode(' ', array_slice($_SERVER['argv'], 1));
+        unset($rawValues[0]);
+
+        foreach ($rawValues as $key => $rawValue) {
+            if (strpos($rawValue, '--root-dir') !== false
+                || strpos($rawValue, '--skip-root-check') !== false
+                || strpos($rawValue, '--skip-config') !== false
+                || strpos($rawValue, '--skip-core-commands') !== false
+                || strpos($rawValue, '--skip-magento-compatibility-check') !== false
+            ) {
+                unset($rawValues[$key]);
+            }
+        }
+
+        return $rawValues;
     }
 
     /**

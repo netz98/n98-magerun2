@@ -619,7 +619,7 @@ class Application extends BaseApplication
     /**
      * @return InputDefinition
      */
-    protected function getDefaultInputDefinition(): InputDefinition
+    public function getDefaultInputDefinition(): InputDefinition
     {
         $inputDefinition = parent::getDefaultInputDefinition();
 

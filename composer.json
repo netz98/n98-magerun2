@@ -16,9 +16,12 @@
         "use-include-path": false,
         "preferred-install": "dist",
         "platform": {
-            "php": "7.3.0"
+            "php": "7.4.0"
         },
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "phpstan/extension-installer": true
+        }
     },
     "require": {
         "php": "^7.3||^8.0",
