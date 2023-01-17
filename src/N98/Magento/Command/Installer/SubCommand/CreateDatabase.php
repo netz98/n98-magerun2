@@ -60,7 +60,7 @@ class CreateDatabase extends AbstractSubCommand
             $db = $this->validateDatabaseSettings($this->input, $this->output);
 
             if ($db === false) {
-                throw new \InvalidArgumentException('Database configuration is invalid', null);
+                throw new \InvalidArgumentException('Database configuration is invalid');
             }
         } else {
             /** @var $questionHelper QuestionHelper */
