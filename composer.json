@@ -24,7 +24,7 @@
         }
     },
     "require": {
-        "php": "^7.3||^8.0",
+        "php": "^7.4||^8.0",
         "ext-PDO": "*",
         "ext-SimpleXML": "*",
         "ext-dom": "*",
@@ -37,6 +37,7 @@
         "laminas/laminas-filter": "^2.12",
         "n98/junit-xml": "~1.0",
         "pbergman/tree-helper": "^1.0",
+        "psr/container": "1.0.0",
         "psy/psysh": "~0.7",
         "rmccue/requests": "^2.0",
         "symfony/console": "^5.4",
