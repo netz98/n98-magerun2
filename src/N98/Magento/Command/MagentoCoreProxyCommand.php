@@ -9,7 +9,6 @@ declare(strict_types=1);
 
 namespace N98\Magento\Command;
 
-use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputInterface;
