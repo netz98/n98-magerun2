@@ -121,6 +121,11 @@ class Application extends BaseApplication
     private $autoExit = true;
 
     /**
+     * @var bool true if we run self-update command
+     */
+    private $isSelfUpdate = false;
+
+    /**
      * @param ClassLoader $autoloader
      */
     public function __construct($autoloader = null)
@@ -179,7 +184,7 @@ class Application extends BaseApplication
      */
     public function isMagentoEnterprise()
     {
-        return $this->detectionResult->isEnterpriseEdition();
+        return $this->detectionResult ? $this->detectionResult->isEnterpriseEdition() : false;
     }
 
     /**
@@ -383,35 +388,43 @@ class Application extends BaseApplication
             throw new UnexpectedValueException(sprintf('Config already initialized'));
         }
 
-        $loadExternalConfig = !$this->_checkSkipConfigOption($input);
+        $this->checkSelfUpdate();
+
+        $loadExternalConfig = !$this->_checkSkipConfigOption($input) && !$this->isSelfUpdate;
 
         $this->config = new Config($initConfig, $this->isPharMode(), $output);
         if ($this->configurationLoaderInjected) {
             $this->config->setLoader($this->configurationLoaderInjected);
         }
+
         $this->config->loadPartialConfig($loadExternalConfig);
-        $this->detectMagento($input, $output);
+
+        if (!$this->isSelfUpdate) {
+            $this->detectMagento($input, $output);
+        }
 
         $configLoader = $this->config->getLoader();
         $configLoader->loadStageTwo(
-            $this->getMagentoRootFolder(true),
+            $this->detectionResult ? $this->getMagentoRootFolder(true) : '',
             $loadExternalConfig,
-            $this->detectionResult->getMagerunStopFileFolder()
+            $this->detectionResult ? $this->detectionResult->getMagerunStopFileFolder() : ''
         );
+
+        // Load Magerun config
         $this->config->load();
 
-        if ($autoloader = $this->autoloader) {
+        if ($this->autoloader) {
             /**
              * Include commands shipped by Magento 2 core
              */
-            if (!$this->_checkSkipMagento2CoreCommandsOption($input)) {
+            if (!$this->_checkSkipMagento2CoreCommandsOption($input) && !$this->isSelfUpdate) {
                 $this->registerMagentoCoreCommands($output);
             }
-            $this->config->registerCustomAutoloaders($autoloader);
+
+            $this->config->registerCustomAutoloaders($this->autoloader);
             $this->registerEventSubscribers($input, $output);
             $this->config->registerCustomCommands($this);
         }
-
         $this->registerHelpers();
 
         $this->_isInitialized = true;
@@ -474,7 +487,8 @@ class Application extends BaseApplication
      */
     protected function _checkSkipMagento2CoreCommandsOption(InputInterface $input): bool
     {
-        return $input->hasParameterOption('--skip-core-commands') || getenv('MAGERUN_SKIP_CORE_COMMANDS');
+        return $input->hasParameterOption('--skip-core-commands')
+            || getenv('MAGERUN_SKIP_CORE_COMMANDS');
     }
 
     /**
@@ -691,6 +705,13 @@ class Application extends BaseApplication
     {
         if ($this->autoloader instanceof ClassLoader) {
             $this->autoloader->loadClass('Symfony\Component\Console\Question\Question');
+        }
+    }
+
+    private function checkSelfUpdate(): void
+    {
+        if (isset($_SERVER['argv'][1]) && $_SERVER['argv'][1] === 'self-update') {
+            $this->isSelfUpdate = true;
         }
     }
 }
