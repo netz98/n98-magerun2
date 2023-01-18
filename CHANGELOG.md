@@ -6,6 +6,7 @@ RECENT CHANGES
 
 - Add: Magento 2.4.6
 - Imp: New internal proxy command to call Magento Core Commands
+- Imp: Disabled Magento and config initialization if self-update command runs  
 - Del: Support for PHP 7.3
 - Del: Remove internal test setup for Composer 1 based Magento installations
 - Fix: Initialize Magento only once which should prevent several issues with DB and config.
