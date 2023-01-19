@@ -115,7 +115,7 @@ abstract class AbstractMagentoStoreConfigCommand extends AbstractMagentoCommand
     {
         $this->detectMagento($output);
         if (!$this->initMagento()) {
-            return Command::FAILURE
+            return Command::FAILURE;
         }
 
         $runOnStoreView = false;
