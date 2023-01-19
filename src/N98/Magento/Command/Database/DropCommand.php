@@ -23,7 +23,7 @@ class DropCommand extends AbstractDatabaseCommand
             ->setName('db:drop')
             ->addOption('tables', 't', InputOption::VALUE_NONE, 'Drop all tables instead of dropping the database')
             ->addOption('force', 'f', InputOption::VALUE_NONE, 'Force (all passed options will be forced)')
-            ->addOption('views', 'v', InputOption::VALUE_NONE, 'Also drop views instead of database/tables only')
+            ->addOption('views', null, InputOption::VALUE_NONE, 'Also drop views instead of database/tables only')
             ->setDescription('Drop current database');
 
         $help = <<<HELP
