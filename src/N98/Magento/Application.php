@@ -504,12 +504,22 @@ class Application extends BaseApplication
             return;
         }
 
-        $provider = new MagentoCoreCommandProvider(
-            $magentoRootFolder,
-            new MagentoCoreProxyCommandFactory()
-        );
+        try {
+            $provider = new MagentoCoreCommandProvider(
+                $magentoRootFolder,
+                new MagentoCoreProxyCommandFactory()
+            );
+            $coreCommands = $provider->getCommands();
+        } catch (\Exception $e) {
+            $output->writeln(
+                [
+                    '<error>Magento Core Commands cannot be loaded. Please verify if "bin/magento" is running.</error>',
+                    '<info>Only n98-magerun2 commands are available until the issue is fixed.</info>'
+                ]
+            );
 
-        $coreCommands = $provider->getCommands();
+            return;
+        }
 
         foreach ($coreCommands as $coreCommand) {
             if (OutputInterface::VERBOSITY_DEBUG <= $output->getVerbosity()) {
