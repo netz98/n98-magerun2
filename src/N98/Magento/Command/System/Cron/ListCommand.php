@@ -5,6 +5,7 @@ namespace N98\Magento\Command\System\Cron;
 use Magento\Framework\App\Area;
 use Magento\Framework\App\AreaList;
 use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -31,7 +32,7 @@ class ListCommand extends AbstractCronCommand
     /**
      * @param \Symfony\Component\Console\Input\InputInterface $input
      * @param \Symfony\Component\Console\Output\OutputInterface $output
-     * @return int|void
+     * @return int
      * @throws \Magento\Framework\Exception\LocalizedException
      */
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -54,5 +55,7 @@ class ListCommand extends AbstractCronCommand
         $this->getHelper('table')
             ->setHeaders(array_keys(current($table)))
             ->renderByFormat($output, $table, $input->getOption('format'));
+
+        return Command::SUCCESS;
     }
 }

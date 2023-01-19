@@ -4,6 +4,7 @@ namespace N98\Magento\Command\System\Cron;
 
 use Magento\Cron\Model\Schedule;
 use Magento\Framework\App\Area;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -30,7 +31,7 @@ HELP;
      * @param InputInterface $input
      * @param OutputInterface $output
      * @throws \Exception
-     * @return int|void
+     * @return int
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -58,5 +59,7 @@ HELP;
             ->save();
 
         $output->writeln('<info>done</info>');
+
+        return Command::SUCCESS;
     }
 }

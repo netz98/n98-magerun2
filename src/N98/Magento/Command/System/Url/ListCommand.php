@@ -8,6 +8,7 @@ use Magento\Sitemap\Model\ResourceModel\Cms\Page;
 use Magento\Store\Model\StoreManager;
 use Magento\Store\Model\StoreManagerInterface;
 use N98\Magento\Command\AbstractMagentoCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\RuntimeException;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -93,14 +94,14 @@ HELP;
     /**
      * @param \Symfony\Component\Console\Input\InputInterface $input
      * @param \Symfony\Component\Console\Output\OutputInterface $output
-     * @return int|null|void
+     * @return int
      * @throws \Exception
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->detectMagento($output, true);
         if (!$this->initMagento()) {
-            return;
+            return Command::FAILURE;
         }
 
         if ($input->getOption('add-all')) {
@@ -142,7 +143,7 @@ HELP;
         } // foreach ($stores as $storeId)
 
         if (count($urls) === 0) {
-            return;
+            return Command::SUCCESS;
         }
 
         foreach ($urls as $url) {
@@ -159,6 +160,8 @@ HELP;
             // ... and output
             $output->writeln($line);
         }
+
+        return Command::SUCCESS;
     }
 
     /**

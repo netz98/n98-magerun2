@@ -5,6 +5,7 @@ namespace N98\Magento\Command;
 use Exception;
 use Magento\Store\Api\Data\StoreInterface;
 use N98\Util\Console\Helper\ParameterHelper;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -106,7 +107,7 @@ abstract class AbstractMagentoStoreConfigCommand extends AbstractMagentoCommand
     /**
      * @param InputInterface $input
      * @param OutputInterface $output
-     * @return int|void
+     * @return int
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      * @throws \Exception
      */
@@ -114,7 +115,7 @@ abstract class AbstractMagentoStoreConfigCommand extends AbstractMagentoCommand
     {
         $this->detectMagento($output);
         if (!$this->initMagento()) {
-            return;
+            return Command::FAILURE
         }
 
         $runOnStoreView = false;
@@ -174,7 +175,8 @@ abstract class AbstractMagentoStoreConfigCommand extends AbstractMagentoCommand
         $this->afterSave($store, $isFalse);
 
         $input = new StringInput('cache:flush');
-        $this->getApplication()->run($input, new NullOutput());
+
+        return $this->getApplication()->run($input, new NullOutput());
     }
 
     /**

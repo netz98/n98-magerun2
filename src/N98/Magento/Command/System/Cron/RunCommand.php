@@ -6,6 +6,7 @@ use Exception;
 use Magento\Cron\Model\Schedule;
 use Magento\Framework\App\Area;
 use Magento\Framework\App\AreaList;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\RuntimeException;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -34,7 +35,7 @@ HELP;
      * @param InputInterface $input
      * @param OutputInterface $output
      * @throws \Exception
-     * @return int|void
+     * @return int
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -86,5 +87,7 @@ HELP;
         }
 
         $output->writeln('<info>done</info>');
+
+        return Command::SUCCESS;
     }
 }

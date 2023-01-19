@@ -4,6 +4,7 @@ namespace N98\Magento\Command\System\Store\Config;
 
 use N98\Magento\Command\AbstractMagentoCommand;
 use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -43,7 +44,7 @@ class BaseUrlListCommand extends AbstractMagentoCommand
     /**
      * @param InputInterface $input
      * @param OutputInterface $output
-     * @return void
+     * @return int
      * @throws \Exception
      */
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -69,5 +70,7 @@ class BaseUrlListCommand extends AbstractMagentoCommand
         $this->getHelper('table')
             ->setHeaders(['id', 'code', 'unsecure_baseurl', 'secure_baseurl'])
             ->renderByFormat($output, $table, $input->getOption('format'));
+
+        return Command::SUCCESS;
     }
 }
