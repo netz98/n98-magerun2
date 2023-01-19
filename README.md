@@ -2,7 +2,7 @@
 
 ![n98-magerun Logo](.github/doc/magerun-logo.png)
 
-The n98 magerun cli tools provides some handy tools to work with Magento
+The n98 magerun CLI Tools provides some handy tools to work with Magento / Mage-OS / Adobe Commerce
 from command line.
 
 > The swiss army knife for Magento developers, sysadmins and devops
@@ -32,14 +32,15 @@ or `install` are excluded).
 We support the following Magento Versions:
 
 - 2.4.x Open Source/Commerce
-- 2.3.x Open Source/Commerce
+- 2.3.x Open Source/Commerce (last compatible n98-magerun2 version is v5.2.0)
 - 2.2.x Open Source/Commerce (last compatible n98-magerun2 version is v3.2.0)
 
 We support the following PHP Versions:
 
+- PHP 8.2
 - PHP 8.1
 - PHP 7.4
-- PHP 7.3
+- PHP 7.3 (last compatible version is v6.1.1)
 - PHP 7.2 (last compatible version is v4.7.0)
 
 ## Installation
@@ -48,7 +49,7 @@ There are three ways to install the tools:
 
 ### Download and Install Phar File
 
-Download the latest stable N98-Magerun phar-file from the [file-server](https://files.magerun.net/):
+Download the latest stable n98-magerun phar-file from the [file-server](https://files.magerun.net/):
 
 ```sh
 wget https://files.magerun.net/n98-magerun2.phar
