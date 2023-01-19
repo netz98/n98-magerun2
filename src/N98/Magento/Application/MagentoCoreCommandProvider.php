@@ -88,6 +88,13 @@ class MagentoCoreCommandProvider
 
             $data = \json_decode($process->getOutput(), true);
 
+            // invalid JSON returned
+            if (!$data) {
+                throw new \RuntimeException(
+                    'Cannot decode the result of bin/magento'
+                );
+            }
+
             // cleanup some commands -> first entry is the help command
             $this->commandData = $this->removeCommands($data['commands'], ['help', 'list']);
         }
