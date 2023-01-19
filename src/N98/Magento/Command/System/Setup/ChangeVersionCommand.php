@@ -2,6 +2,7 @@
 
 namespace N98\Magento\Command\System\Setup;
 
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -31,7 +32,7 @@ HELP;
     /**
      * @param InputInterface $input
      * @param OutputInterface $output
-     * @return int|null|void
+     * @return int
      * @throws \Exception
      */
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -39,7 +40,7 @@ HELP;
         $this->detectMagento($output, true);
 
         if (!$this->initMagento()) {
-            return;
+            return Command::FAILURE;
         }
 
         $moduleVersion = $input->getArgument('version');
@@ -61,5 +62,7 @@ HELP;
                 $moduleVersion
             )
         );
+
+        return Command::SUCCESS;
     }
 }

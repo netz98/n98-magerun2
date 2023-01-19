@@ -4,6 +4,7 @@ namespace N98\Magento\Command\Database\Maintain;
 
 use N98\Magento\Command\AbstractMagentoCommand;
 use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -133,7 +134,7 @@ HELP;
      * @param \Symfony\Component\Console\Output\OutputInterface $output
      * @throws \InvalidArgumentException
      * @throws \Exception
-     * @return int|void
+     * @return int
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -198,6 +199,8 @@ HELP;
         $this->getHelper('table')
             ->setHeaders(['Table', 'Operation', 'Type', 'Status'])
             ->renderByFormat($this->output, $tableOutput, $this->input->getOption('format'));
+
+        return Command::SUCCESS;
     }
 
     /**
@@ -295,7 +298,7 @@ HELP;
         $connection = $this->dbHelper->getConnection($this->output);
         $query = $connection->prepare($sql);
         $query->execute();
-        $result = $query->fetch(\PDO::FETCH_ASSOC);
-        return $result;
+
+        return $query->fetch(\PDO::FETCH_ASSOC);
     }
 }

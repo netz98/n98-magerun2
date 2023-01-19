@@ -49,7 +49,7 @@ abstract class AbstractGeneratorCommand extends AbstractConsoleCommand
      * @param InputInterface $input
      * @param OutputInterface $output
      *
-     * @return int|void
+     * @return int
      */
     protected function catchedExecute(InputInterface $input, OutputInterface $output)
     {
