@@ -94,6 +94,7 @@ class ConsoleCommand extends AbstractMagentoCommand
             // do nothing
         }
 
+        error_reporting(E_ERROR | E_WARNING | E_PARSE);
         $config = new Configuration();
 
         $php5Parser = new Parser\Php5(new Lexer\Emulative());
