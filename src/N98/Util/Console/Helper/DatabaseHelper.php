@@ -648,6 +648,7 @@ class DatabaseHelper extends AbstractHelper
         $condition .= " AND LIKE 'view%'";
 
         $query = sprintf('SELECT %s FROM information_schema.views WHERE %s;', $column, $condition);
+        echo $query;
         $statement = $db->prepare($query, [PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY]);
         $result = $statement->execute($input);
 

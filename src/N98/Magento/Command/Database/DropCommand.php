@@ -69,14 +69,18 @@ HELP;
         }
 
         if ($dropIsConfirmed) {
-            if ($input->getOption('tables')) {
-                $dbHelper->dropTables($output);
+            $shouldDropTables = $input->getOption('tables');
+            $shouldDropViews = $input->getOption('views');
+
+            if ($shouldDropTables || $shouldDropViews) {
+                if ($shouldDropViews) {
+                    $dbHelper->dropViews($output);
+                }
+                if ($shouldDropTables) {
+                    $dbHelper->dropTables($output);
+                }
             } else {
                 $dbHelper->dropDatabase($output);
-            }
-
-            if ($input->getOption('views')) {
-                $dbHelper->dropViews($output);
             }
         }
 
