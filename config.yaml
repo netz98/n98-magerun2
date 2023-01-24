@@ -139,6 +139,7 @@ commands:
     - N98\Magento\Command\SearchEngine\ListCommand
     - N98\Magento\Command\Script\Repository\ListCommand
     - N98\Magento\Command\Script\Repository\RunCommand
+    - N98\Magento\Command\Setup\UpdateModulesSequenceCommand
     - N98\Magento\Command\System\CheckCommand
     - N98\Magento\Command\System\Cron\HistoryCommand
     - N98\Magento\Command\System\Cron\ListCommand

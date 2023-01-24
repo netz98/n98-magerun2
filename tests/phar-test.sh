@@ -263,6 +263,8 @@ function test_magerun_commands() {
 	assert_command_contains "integration:delete magerun-test" "Successfully deleted integration"
 	#  media:dump
 	assert_command_contains "media:dump" "Compress"
+	# setup:update-modules-sequence
+	assert_command_contains "setup:update-modules-sequence --keep-generated" "Update modules sequence"
 	#  script:repo:list
 	assert_command_contains "script:repo:list" "Script"
 	#  script:repo:run
