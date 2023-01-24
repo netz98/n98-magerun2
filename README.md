@@ -538,6 +538,14 @@ n98-magerun2.phar config:data:di <type>
 |----------------|---------------------------------------------------------------------------------------------------------|
 | `--scope` `-s` | Config scope (`global`, `adminhtml`, `frontend`, `webapi_rest`, `webapi_soap`, ...) (default: `global`) |
 
+### Print Indexer Config
+
+Print the data of all merged indexer.xml files.
+
+```sh
+n98-magerun2.phar config:data:indexer
+```
+
 ---
 
 ### List Magento cache status

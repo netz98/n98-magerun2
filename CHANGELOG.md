@@ -5,6 +5,7 @@ RECENT CHANGES
 ---------
 
 - Add: Magento 2.4.6
+- Add: #1041: New command config:data:indexer (by Christian Münch) 
 - Imp: New internal proxy command to call Magento Core Commands
 - Imp: Disabled Magento and config initialization if self-update command runs  
 - Del: Support for PHP 7.3
