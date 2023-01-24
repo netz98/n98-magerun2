@@ -538,6 +538,22 @@ n98-magerun2.phar config:data:di <type>
 |----------------|---------------------------------------------------------------------------------------------------------|
 | `--scope` `-s` | Config scope (`global`, `adminhtml`, `frontend`, `webapi_rest`, `webapi_soap`, ...) (default: `global`) |
 
+### Print MView Config
+
+Print the data of all merged mview.xml files.
+
+```sh
+n98-magerun2.phar config:data:mview [options]
+```
+
+**Options:**
+
+| Option            | Description                                                   |
+|-------------------|---------------------------------------------------------------|
+| `--scope` `-s`    | Config scope (`global`, `adminhtml`, `frontend`, `webapi_rest`, `webapi_soap`, ...) (default: `global`) |
+| `--tree` `-t`     | Print data as tree                                            |
+| `--format`        | Output as `json`, `xml` or `csv`                              |
+
 ### Print Indexer Config
 
 Print the data of all merged indexer.xml files.

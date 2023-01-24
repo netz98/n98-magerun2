@@ -73,27 +73,47 @@ class IndexerCommand extends AbstractMagentoCommand
         foreach ($data as $row) {
             $node = $tree->newNode('<info>' . $row['title'] . '</info>');
 
-            $actionClassNode = $node->newNode('indexer_id:');
-            $actionClassNode->addValue('<comment>' . $row['indexer_id'] . '</comment>');
+            if (!empty($row['indexer_id'])) {
+                $node->newNode(
+                    sprintf(
+                        '<info>indexer_id: </info><comment>%s</comment>',
+                        $row['indexer_id']
+                    )
+                );
+            }
 
-            $viewIdNode = $node->newNode('view_id:');
-            $viewIdNode->addValue('<comment>' . $row['view_id'] . '</comment>');
+            if (!empty($row['view_id'])) {
+                $node->newNode(
+                    sprintf(
+                        '<info>view_id: </info><comment>%s</comment>',
+                        $row['view_id']
+                    )
+                );
+            }
+
+            if (!empty($row['action_class'])) {
+                $node->newNode(
+                    sprintf(
+                        '<info>action_class: </info><comment>%s</comment>',
+                        $row['action_class']
+                    )
+                );
+            }
+
+            if (!empty($row['shared_index'])) {
+                $node->newNode(
+                    sprintf(
+                        '<info>shared_index: </info><comment>%s</comment>',
+                        $row['shared_index']
+                    )
+                );
+            }
 
             if (count($row['dependencies']) > 0) {
                 $dependenciesNode = $node->newNode('dependencies:');
                 foreach ($row['dependencies'] as $dependency) {#
                     $dependenciesNode->addValue('<comment>' . $dependency . '</comment>');
                 }
-            }
-
-            if (!empty($row['action_class'])) {
-                $actionClassNode = $node->newNode('action_class:');
-                $actionClassNode->addValue('<comment>' . $row['action_class'] . '</comment>');
-            }
-
-            if (!empty($row['shared_index'])) {
-                $sharedIndexNode = $node->newNode('shared_index:');
-                $sharedIndexNode->addValue('<comment>' . $row['shared_index'] . '</comment>');
             }
         }
 
