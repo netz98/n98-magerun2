@@ -132,6 +132,9 @@ function test_magerun_commands() {
 	assert_command_contains "config:data:acl" "ACL Tree"
 	#  config:data:di
 	assert_command_contains "config:data:di" "DateTimeInterface"
+	#  config:data:mview
+	assert_command_contains "config:data:mview" "catalog_category_flat"
+	assert_command_contains "config:data:mview -t" "MView Data Tree"
 	#  config:data:indexer
   assert_command_contains "config:data:indexer" "catalog_product_flat"
   assert_command_contains "config:data:indexer -t" "Indexer Data Tree"

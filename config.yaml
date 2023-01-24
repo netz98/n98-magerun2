@@ -94,6 +94,7 @@ commands:
     - N98\Magento\Command\Config\Store\SetCommand
     - N98\Magento\Command\Config\Data\AclCommand
     - N98\Magento\Command\Config\Data\DiCommand
+    - N98\Magento\Command\Config\Data\MViewCommand
     - N98\Magento\Command\Config\Data\IndexerCommand
     - N98\Magento\Command\Customer\CreateCommand
     - N98\Magento\Command\Customer\DeleteCommand
