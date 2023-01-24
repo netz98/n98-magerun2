@@ -133,7 +133,8 @@ function test_magerun_commands() {
 	#  config:data:di
 	assert_command_contains "config:data:di" "DateTimeInterface"
 	#  config:data:indexer
-  	assert_command_contains "config:data:indexer" "catalog_product_flat"
+  assert_command_contains "config:data:indexer" "catalog_product_flat"
+  assert_command_contains "config:data:indexer -t" "Indexer Data Tree"
 	#  config:env:create
 	#  config:env:set
 	assert_command_contains "config:env:set magerun.example foo" "Config magerun.example successfully set to foo"
