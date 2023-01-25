@@ -7,11 +7,13 @@ RECENT CHANGES
 - Add: Magento 2.4.6
 - Add: #1041: New command config:data:indexer (by Christian Münch) 
 - Add: #1042: New command config:data:mview (by Christian Münch) 
-- Imp: New internal proxy command to call Magento Core Commands
-- Imp: Disabled Magento and config initialization if self-update command runs  
+- Imp: New internal proxy command to call Magento Core Commands (by Christian Münch)
+- Imp: Disabled Magento and config initialization if self-update command runs (by Christian Münch)
+- Imp: Update 3rd party dependencies (Symfony, psysh, captainhook, php-cs-fixer, phpunit, twig)
 - Del: Support for PHP 7.3
 - Del: Remove internal test setup for Composer 1 based Magento installations
-- Fix: Initialize Magento only once which should prevent several issues with DB and config.
+- Fix: Initialize Magento only once which should prevent several issues with DB and config. (by Christian Münch)
+- Fix: Remove "please select" entry in search:engine:list command (by Christian Münch)
 
 6.1.1
 -----
