@@ -137,7 +137,6 @@ class AutoloaderDecorator implements AutoloaderInterface
     private function mirrorPsr4Pathes(ClassLoader $n98MagerunAutoloader)
     {
         foreach ($n98MagerunAutoloader->getPrefixesPsr4() as $prefixPsr4 => $pathes) {
-
             /**
              * Do not use n98-magerun2 bundled composer for Magento autoloader.
              * Magento could have a different Composer version bundled.

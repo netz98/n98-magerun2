@@ -147,7 +147,6 @@ HELP;
         }
 
         foreach ($urls as $url) {
-
             // pre-process
             $line = $input->getArgument('linetemplate');
             $line = str_replace('{url}', $url, $line);
@@ -165,9 +164,10 @@ HELP;
     }
 
     /**
+     * @param $entityCollection
      * @param string $linkBaseUrl
      * @param string $storeId
-     * @param array  $urls
+     * @param array $urls
      *
      * @return array
      */

@@ -74,7 +74,6 @@ class ListCommand extends AbstractMagentoCommand
         $tableData = [];
 
         foreach ($cacheTypes as $cacheType) {
-
             // If 'enabled' option is set, filter those who match
             if ($input->getOption('enabled') !== null && $input->getOption('enabled') != $cacheType->getStatus()) {
                 unset($cacheTypes[$cacheType->getId()]);

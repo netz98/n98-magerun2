@@ -126,7 +126,6 @@ class MagentoCoreProxyCommand extends AbstractMagentoCommand
     private function processInputDefinitionOptions(InputDefinition $inputDefinition, array $options): void
     {
         foreach ($options as $option) {
-
             // remove "--" at start
             $normalizedName = substr($option['name'], 2);
             $normalizedShortcut = substr($option['name'], 1);

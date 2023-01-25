@@ -83,7 +83,6 @@ class ListCommand extends AbstractMagentoCommand
             switch ($integration->getStatus()) {
                 case Integration::STATUS_ACTIVE:
                     break;
-
             }
 
             $table[] = [
