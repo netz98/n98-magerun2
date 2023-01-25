@@ -58,6 +58,11 @@ class ListCommand extends AbstractMagentoCommand
 
         $table = [];
         foreach ($searchEngines as $searchEngine) {
+            // remove "please select" value
+            if (empty($searchEngine['value'])) {
+                continue;
+            }
+
             $table[] = [
                 $searchEngine['value'],
                 $searchEngine['label'],
