@@ -113,7 +113,6 @@ class DeleteCommand extends AbstractCustomerCommand
         //      OR
         //      all
         if (!($id || ($website && ($email || ($lastname && $firstname)))) && ($range || $all || $fuzzy)) {
-
             // Delete more than one customer ?
             $question = new Question('<question>Delete more than 1 customer?</question> <comment>[n]</comment>: ');
             $batchDelete = $questionHelper->ask($input, $output, $question);

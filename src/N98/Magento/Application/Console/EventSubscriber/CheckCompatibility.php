@@ -54,7 +54,6 @@ class CheckCompatibility implements EventSubscriberInterface, ApplicationAwareIn
             }
 
             $productMetadata = $objectManager->get(\Magento\Framework\App\ProductMetadataInterface::class);
-
             $currentMagentoVersion = $productMetadata->getVersion();
 
             if ($this->isStableVersion($currentMagentoVersion) && version_compare($currentMagentoVersion, '2.3.0', '<')) {

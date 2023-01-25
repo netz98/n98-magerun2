@@ -145,18 +145,15 @@ HELP;
             $firstChar = substr($commandString, 0, 1);
 
             switch ($firstChar) {
-
-                // comment
                 case '#':
+                    // comment
                     break;
-
-                // set var
                 case '$':
+                    // set var
                     $this->registerVariable($input, $output, $commandString);
                     break;
-
-                // run shell script
                 case '!':
+                    // run shell script
                     $this->runShellCommand($output, $commandString);
                     break;
 
@@ -216,7 +213,6 @@ HELP;
     {
         if (preg_match('/^(\$\{[a-zA-Z0-9-_.]+\})=(.+)/', $commandString, $matches)) {
             if (isset($matches[2]) && $matches[2][0] === '?') {
-
                 // Variable is already defined
                 if (isset($this->scriptVars[$matches[1]])) {
                     return $this->scriptVars[$matches[1]];
