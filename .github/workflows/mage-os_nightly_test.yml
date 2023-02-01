@@ -49,9 +49,9 @@ jobs:
 
       - name: Install Mage-OS Nightly
         run: |
+          mysqladmin -h127.0.0.1 -P ${{ job.services.mysql.ports[3306] }} -uroot -proot create magento;
           composer create-project --stability alpha --repository-url=https://upstream-nightly.mage-os.org magento/project-community-edition mage-os;
           cd mage-os;
-          mysqladmin -h127.0.0.1 -P ${{ job.services.mysql.ports[3306] }} -uroot -proot create magento;
           bin/magento setup:install
           --base-url="https://github.magerun.test/" \
           --cleanup-database \
@@ -60,7 +60,7 @@ jobs:
           --currency="EUR" \
           --db-host="127.0.0.1:${{ job.services.mysql.ports[3306] }}" \
           --db-name=root \
-          --db-user=db \
+          --db-user=root \
           --db-password=magento \
           --elasticsearch-host="127.0.0.1" \
           --elasticsearch-port=9200 \
