@@ -51,8 +51,9 @@ jobs:
         run: |
           composer create-project --stability alpha --repository-url=https://upstream-nightly.mage-os.org magento/project-community-edition mage-os;
           cd mage-os;
+          mysqladmin -h127.0.0.1 -P ${{ job.services.mysql.ports[3306] }} -uroot -proot create magento;
           bin/magento setup:install
-          --base-url='https://mageeos-nightly.ddev.site/' \
+          --base-url="https://github.magerun.test/" \
           --cleanup-database \
           --backend-frontname=admin \
           --timezone="Europe/Berlin" \
