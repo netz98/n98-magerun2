@@ -2,6 +2,7 @@ name: Mage-OS Nightly Compatibilty Test
 on:
   schedule:
     - cron: '0 6 * * *' # run at 6 AM UTC
+  workflow_dispatch:
 
 jobs:
   test_develop_nightly:
