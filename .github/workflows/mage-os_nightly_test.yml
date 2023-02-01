@@ -59,9 +59,9 @@ jobs:
           --timezone="Europe/Berlin" \
           --currency="EUR" \
           --db-host="127.0.0.1:${{ job.services.mysql.ports[3306] }}" \
-          --db-name=root \
           --db-user=root \
-          --db-password=magento \
+          --db-password=root \
+          --db-name=magento \
           --elasticsearch-host="127.0.0.1" \
           --elasticsearch-port=9200 \
           --admin-firstname=Armin \
