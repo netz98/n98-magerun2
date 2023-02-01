@@ -112,8 +112,8 @@ jobs:
       elaticsearch:
         image: docker.elastic.co/elasticsearch/elasticsearch:${{ matrix.elasticsearch-version }}
         ports:
-          - 9200
-          - 9300
+          - 9200:9200
+          - 9300:9300
         options: -e="discovery.type=single-node" --health-cmd="curl http://localhost:9200/_cluster/health" --health-interval=10s --health-timeout=5s --health-retries=10
 
       mysql:
@@ -216,7 +216,7 @@ jobs:
             --admin-email="admin@example.com" \
             --search-engine="elasticsearch7" \
             --elasticsearch-host="127.0.0.1" \
-            --elasticsearch-port=${{ job.services.elasticsearch.ports[9200] }};
+            --elasticsearch-port=9200;
         if: matrix.use-git-repository == true
 
       - name: Install ${{ matrix.magento-version }} via n98-magerun2
