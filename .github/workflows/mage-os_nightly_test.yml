@@ -1,0 +1,79 @@
+name: Mage-OS Nightly Compatibilty Test
+on:
+  schedule:
+    - cron: '0 6 * * *' # run at 6 AM UTC
+
+jobs:
+  test_develop_nightly:
+    name: Deploy nightly
+    strategy:
+      fail-fast: false
+    runs-on: ubuntu-22.04
+
+    services:
+      elaticsearch:
+        image: docker.elastic.co/elasticsearch/elasticsearch:${{ matrix.elsticsearch-version }}
+        ports:
+          - 9200:9200
+          - 9300:9300
+        options: -e="discovery.type=single-node" --health-cmd="curl http://localhost:9200/_cluster/health" --health-interval=10s --health-timeout=5s --health-retries=10
+
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+        ports:
+          - 3306
+        options: --tmpfs /tmp:rw --tmpfs /var/lib/mysql:rw --health-cmd="mysqladmin ping"
+
+    steps:
+      - name: Checkout develop branch
+        uses: actions/checkout@v3.3.0
+        with:
+          ref: develop
+
+      - name: Dump GitHub context
+        run: echo "Register Github context"
+        env:
+          GITHUB_CONTEXT: ${{ toJSON(github) }}
+
+      # https://github.com/marketplace/actions/setup-php-action#matrix-setup
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          tools: composer:2.2.17
+          php-version: '8.1'
+          extensions: mbstring, intl, zip
+          coverage: none
+
+      - name: Install Mage-OS Nightly
+        run: |
+          composer create-project --stability alpha --repository-url=https://upstream-nightly.mage-os.org magento/project-community-edition mage-os;
+          cd mage-os;
+          bin/magento setup:install
+          --base-url='https://mageeos-nightly.ddev.site/' \
+          --cleanup-database \
+          --backend-frontname=admin \
+          --timezone="Europe/Berlin" \
+          --currency="EUR" \
+          --db-host="127.0.0.1:${{ job.services.mysql.ports[3306] }}" \
+          --db-name=root \
+          --db-user=db \
+          --db-password=magento \
+          --elasticsearch-host="127.0.0.1" \
+          --elasticsearch-port=9200 \
+          --admin-firstname=Armin \
+          --admin-lastname=Admin \
+          --admin-email="admin@example.com" \
+          --admin-user=admin \
+          --admin-password=admin123 \
+          --language=en_US;
+
+      - name: Build phar file
+        run: |
+          composer --version;
+          bash ./build.sh;
+          composer self-update --rollback &> /dev/null || true;
+
+      - name: Run phar functional tests
+        run: bash tests/phar-test.sh "./n98-magerun2.phar" "$GITHUB_WORKSPACE/mage-os"
