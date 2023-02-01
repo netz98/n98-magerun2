@@ -13,7 +13,7 @@ jobs:
 
     services:
       elaticsearch:
-        image: docker.elastic.co/elasticsearch/elasticsearch:${{ matrix.elsticsearch-version }}
+        image: docker.elastic.co/elasticsearch/elasticsearch:7.16.0
         ports:
           - 9200:9200
           - 9300:9300
