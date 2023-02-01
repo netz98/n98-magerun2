@@ -53,23 +53,27 @@ jobs:
           composer create-project --stability alpha --repository-url=https://upstream-nightly.mage-os.org magento/project-community-edition mage-os;
           cd mage-os;
           bin/magento setup:install
-          --base-url="https://github.magerun.test/" \
-          --cleanup-database \
-          --backend-frontname=admin \
-          --timezone="Europe/Berlin" \
-          --currency="EUR" \
-          --db-host="127.0.0.1:${{ job.services.mysql.ports[3306] }}" \
-          --db-user=root \
-          --db-password=root \
-          --db-name=magento \
-          --elasticsearch-host="127.0.0.1" \
-          --elasticsearch-port=9200 \
-          --admin-firstname=Armin \
-          --admin-lastname=Admin \
-          --admin-email="admin@example.com" \
-          --admin-user=admin \
-          --admin-password=admin123 \
-          --language=en_US;
+            --db-host="127.0.0.1:${{ job.services.mysql.ports[3306] }}" \
+            --db-user=root \
+            --db-password=root \
+            --db-name=magento \
+            --cleanup-database \
+            --session-save=db \
+            --backend-frontname=admin \
+            --timezone="Europe/Berlin" \
+            --currency="EUR" \
+            --base-url="http://github.magerun.test/" \
+            --use-rewrites=1 \
+            --use-secure=1 \
+            --use-secure-admin=1 \
+            --admin-user=admin \
+            --admin-password=Password123 \
+            --admin-firstname=Armin \
+            --admin-lastname=Admin \
+            --admin-email="admin@example.com" \
+            --search-engine="elasticsearch7" \
+            --elasticsearch-host="127.0.0.1" \
+            --elasticsearch-port=9200;
 
       - name: Build phar file
         run: |
