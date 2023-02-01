@@ -26,7 +26,7 @@ jobs:
           #  operating-system: ubuntu-latest
           #  php-version: 8.1
           #  mysql-version: 8.0
-          #  elsticsearch-version: 7.16.0
+          #  elasticsearch-version: 7.16.0
           #  composer-version: v2
           #  use-git-repository: true
           #  git-repository: https://github.com/magento/magento2.git
@@ -37,7 +37,7 @@ jobs:
             operating-system: ubuntu-latest
             php-version: 8.1
             mysql-version: 8.0
-            elsticsearch-version: 7.9.0
+            elasticsearch-version: 7.9.0
             composer-version: 2.2.17
             use-git-repository: false
             git-repository: ''
@@ -47,7 +47,7 @@ jobs:
             operating-system: ubuntu-latest
             php-version: 7.4
             mysql-version: 8.0
-            elsticsearch-version: 7.9.0
+            elasticsearch-version: 7.9.0
             composer-version: 2.2.17
             use-git-repository: false
             git-repository: ''
@@ -57,7 +57,7 @@ jobs:
             operating-system: ubuntu-latest
             php-version: 8.1
             mysql-version: 8.0
-            elsticsearch-version: 7.16.0
+            elasticsearch-version: 7.16.0
             composer-version: 2.2.17
             use-git-repository: false
             git-repository: ''
@@ -68,7 +68,7 @@ jobs:
             operating-system: ubuntu-latest
             php-version: 8.1
             mysql-version: 8.0
-            elsticsearch-version: 7.16.0
+            elasticsearch-version: 7.16.0
             composer-version: 2.2.17
             use-git-repository: false
             git-repository: ''
@@ -79,7 +79,7 @@ jobs:
             operating-system: ubuntu-latest
             php-version: 7.4
             mysql-version: 8.0
-            elsticsearch-version: 7.9.0
+            elasticsearch-version: 7.9.0
             composer-version: 2.2.17
             use-git-repository: false
             git-repository: ''
@@ -90,7 +90,7 @@ jobs:
             operating-system: ubuntu-latest
             php-version: 7.4
             mysql-version: 8.0
-            elsticsearch-version: 7.9.0
+            elasticsearch-version: 7.9.0
             composer-version: 2.2.17
             use-git-repository: false
             git-repository: ''
@@ -101,7 +101,7 @@ jobs:
             operating-system: ubuntu-latest
             php-version: 7.4
             mysql-version: 8.0
-            elsticsearch-version: 7.9.0
+            elasticsearch-version: 7.9.0
             composer-version: 2.2.17
             use-git-repository: false
             git-repository: ''
@@ -110,16 +110,17 @@ jobs:
 
     services:
       elaticsearch:
-        image: docker.elastic.co/elasticsearch/elasticsearch:${{ matrix.elsticsearch-version }}
+        image: docker.elastic.co/elasticsearch/elasticsearch:${{ matrix.elasticsearch-version }}
         ports:
-          - 9200:9200
-          - 9300:9300
+          - 9200
+          - 9300
         options: -e="discovery.type=single-node" --health-cmd="curl http://localhost:9200/_cluster/health" --health-interval=10s --health-timeout=5s --health-retries=10
 
       mysql:
         image: mysql:${{ matrix.mysql-version }}
         env:
           MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: magento
         ports:
           - 3306
         options: --tmpfs /tmp:rw --tmpfs /var/lib/mysql:rw --health-cmd="mysqladmin ping"
@@ -192,7 +193,6 @@ jobs:
         run: |
           git clone --branch "${{ matrix.git-branch }}" --single-branch ${{ matrix.git-repository }} "$GITHUB_WORKSPACE/magento";
           cd "$GITHUB_WORKSPACE/magento";
-          mysqladmin -h127.0.0.1 -P ${{ job.services.mysql.ports[3306] }} -uroot -proot create magento; 
           composer --version;
           composer install --no-interaction;
           bin/magento setup:install \
@@ -216,13 +216,12 @@ jobs:
             --admin-email="admin@example.com" \
             --search-engine="elasticsearch7" \
             --elasticsearch-host="127.0.0.1" \
-            --elasticsearch-port=9200;
+            --elasticsearch-port=${{ job.services.elasticsearch.ports[9200] }};
         if: matrix.use-git-repository == true
 
       - name: Install ${{ matrix.magento-version }} via n98-magerun2
         run: |
           composer --version;
-          mysqladmin -h127.0.0.1 -P ${{ job.services.mysql.ports[3306] }} -uroot -proot create magento; \
           bin/n98-magerun2 --ansi install \
           --magentoVersionByName="${{ matrix.magento-version }}" --installationFolder="$GITHUB_WORKSPACE/magento" \
           --dbHost=127.0.0.1 --dbPort=${{ job.services.mysql.ports['3306'] }} --dbUser=root --dbPass=root --dbName="magento" \
