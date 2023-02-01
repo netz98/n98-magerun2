@@ -111,6 +111,8 @@ jobs:
     services:
       elaticsearch:
         image: docker.elastic.co/elasticsearch/elasticsearch:${{ matrix.elasticsearch-version }}
+        # we bind the port to the host because the n98-magerun2 install command does not support to pass
+        # ES variables. So we cannot pass the random port via GitHub Action template variable.
         ports:
           - 9200:9200
           - 9300:9300
