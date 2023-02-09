@@ -267,8 +267,10 @@ class MagentoHelper extends AbstractHelper implements DetectionResultInterface
     protected function _search($searchFolder)
     {
         $this->writeDebug('Search for Magento in folder <info>' . $searchFolder . '</info>');
+        $appFolder = $searchFolder . '/app';
 
-        if (!is_dir($searchFolder . '/app')) {
+        if (!is_dir($appFolder)) {
+            $this->writeDebug('Not a folder: <info>' . $appFolder . '</info>');
             return false;
         }
 
@@ -276,11 +278,15 @@ class MagentoHelper extends AbstractHelper implements DetectionResultInterface
         $finder
             ->ignoreUnreadableDirs(true)
             ->depth(0)
-            ->followLinks()
-            ->name('Mage.php')
-            ->name('bootstrap.php')
-            ->name('autoload.php')
-            ->in($searchFolder . '/app');
+            ->followLinks();
+
+        $this->writeDebug('Searching for the following files in folder <info>' . $appFolder . '</info>');
+        foreach (['Mage.php', 'bootstrap.php', 'autoload.php'] as $fileName) {
+            $finder->name($fileName);
+            $this->writeDebug($fileName);
+        }
+
+        $finder->in($appFolder);
 
         if ($finder->count() > 0) {
             $files = iterator_to_array($finder, false);
@@ -290,6 +296,7 @@ class MagentoHelper extends AbstractHelper implements DetectionResultInterface
             foreach ($files as $file) {
                 if ($file->getFilename() == 'Mage.php') {
                     $hasMageFile = true;
+                    $this->writeDebug('Mage.php found');
                 }
             }
 
@@ -315,7 +322,6 @@ class MagentoHelper extends AbstractHelper implements DetectionResultInterface
 
         return false;
     }
-
     /**
      * @api
      *
