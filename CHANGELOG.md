@@ -1,13 +1,16 @@
 RECENT CHANGES
 ==============
 
-7.0.0-dev
----------
+7.0.0
+-----
 
 - Add: Magento 2.4.6
+- Add: Magento 2.4.5-p2
+- Add: Magento 2.4.4-p2
 - Add: #1041: New command config:data:indexer (by Christian Münch) 
 - Add: #1042: New command config:data:mview (by Christian Münch)
 - Add: #1126: Add CONTRIBUTING.md and CODE_OF_CONDUCT.md (by Christian Münch)
+- Imp: #1123: Make detection debug output more helpful (by Alexander Menk) 
 - Imp: New internal proxy command to call Magento Core Commands (by Christian Münch)
 - Imp: Disabled Magento and config initialization if self-update command runs (by Christian Münch)
 - Imp: Update 3rd party dependencies (Symfony, psysh, captainhook, php-cs-fixer, phpunit, twig)
