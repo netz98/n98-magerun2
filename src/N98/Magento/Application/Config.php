@@ -188,8 +188,13 @@ class Config
         }
 
         foreach ($this->getArray('autoloaders_psr4') as $prefix => $path) {
-            $autoloader->addPsr4($prefix, $path);
-            $this->debugWriteln(sprintf($mask, 'PSR-4', OutputFormatter::escape($prefix), $path));
+            if (is_array($path)) {
+                foreach ($path as $prefix => $subPath) {
+                    $this->addPsr4Namespace($autoloader, $prefix, $subPath, $mask);
+                }
+            } else {
+                $this->addPsr4Namespace($autoloader, $prefix, $path, $mask);
+            }
         }
 
         /**
@@ -344,5 +349,18 @@ class Config
         }
 
         return $anchor;
+    }
+
+    /**
+     * @param ClassLoader $autoloader
+     * @param $prefix
+     * @param $subPath
+     * @param string $mask
+     * @return void
+     */
+    protected function addPsr4Namespace(ClassLoader $autoloader, $prefix, $subPath, string $mask): void
+    {
+        $autoloader->addPsr4($prefix, $subPath);
+        $this->debugWriteln(sprintf($mask, 'PSR-4', OutputFormatter::escape($prefix), $subPath));
     }
 }

@@ -2,6 +2,7 @@
 
 namespace N98\Magento\Application;
 
+use Magento\Framework\Stdlib\ArrayUtils;
 use N98\Util\ArrayFunctions;
 use N98\Util\BinaryString;
 use N98\Util\OperatingSystem;
