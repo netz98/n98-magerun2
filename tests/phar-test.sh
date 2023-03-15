@@ -292,7 +292,8 @@ function test_magerun_commands() {
 	#  sys:setup:change-version
 	#  sys:setup:compare-versions
 	assert_command_contains "sys:setup:compare-versions" "Setup"
-	#  sys:setup:downgrade-versions
+	# sys:setup:downgrade-versions
+	assert_command_with_exitcode "sys:setup:downgrade-versions" 0
 	#  sys:store:config:base-url:list
 	assert_command_contains "sys:store:config:base-url:list" "unsecure_baseurl"
 	#  sys:store:list
