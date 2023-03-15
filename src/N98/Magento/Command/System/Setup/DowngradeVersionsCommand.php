@@ -62,9 +62,15 @@ HELP;
         $this->output = $output;
         $this->dryRun = $input->getOption('dry-run');
 
+        $status = Command::SUCCESS;
+
         foreach ($this->getModuleVersions() as $moduleVersion) {
-            $this->processModule($output, $moduleVersion);
+            if ($this->processModule($output, $moduleVersion) !== Command::SUCCESS) {
+                $status = Command::FAILURE;
+            }
         }
+
+        return $status;
     }
 
     /**
