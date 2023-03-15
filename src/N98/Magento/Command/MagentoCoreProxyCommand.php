@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace N98\Magento\Command;
 
 use N98\Magento\Application\Console\Input\FilteredStringInput;
+use N98\Util\OperatingSystem;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputInterface;
@@ -57,7 +58,7 @@ class MagentoCoreProxyCommand extends AbstractMagentoCommand
         $magentoCoreCommandInput = new FilteredStringInput($input->__toString());
 
         $process = Process::fromShellCommandline(
-            $this->magentoRootDir . '/bin/magento ' . $magentoCoreCommandInput->__toString(),
+            OperatingSystem::getPhpBinary() . ' ' . $this->magentoRootDir . '/bin/magento ' . $magentoCoreCommandInput->__toString(),
             $this->magentoRootDir
         );
 
