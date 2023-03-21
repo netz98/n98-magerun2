@@ -84,6 +84,11 @@ class Application extends BaseApplication
     protected $_isInitialized = false;
 
     /**
+     * @var bool
+     */
+    protected $isMagentoInitialized = false;
+
+    /**
      * @var EventDispatcher
      */
     protected $dispatcher;
@@ -221,6 +226,14 @@ class Application extends BaseApplication
     }
 
     /**
+     * @param bool $isInitialized
+     */
+    public function setIsInitialized(bool $isInitialized): void
+    {
+        $this->_isInitialized = $isInitialized;
+    }
+
+    /**
      * Runs the current application with possible command aliases
      *
      * @param InputInterface $input An Input instance
@@ -255,6 +268,10 @@ class Application extends BaseApplication
             return false;
         }
 
+        if ($this->isMagentoInitialized) {
+            return true;
+        }
+
         $isMagento2 = $this->detectionResult->getMajorVersion() === self::MAGENTO_MAJOR_VERSION_2;
         if ($isMagento2) {
             $magento2Initializer = new Magento2Initializer($this->getAutoloader());
@@ -264,6 +281,8 @@ class Application extends BaseApplication
             $magento1Initializer = new Magento1Initializer($this->getHelperSet());
             $magento1Initializer->init();
         }
+
+        $this->isMagentoInitialized = true;
 
         return true;
     }
