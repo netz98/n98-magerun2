@@ -4,6 +4,7 @@ RECENT CHANGES
 7.0.1
 -----
 
+- Fix: #447 : Memory usage within Magerun script (by Christian Münch)
 - Fix: #1144: Allow to add instead of replace a PSR-4 namespace (by Christian Münch)
 - Fix: #1147: Fix command return value and add phar test (by Christian Münch)
 - Fix: #1149: Use defined PHP binary for calls to bin/magento (by Christian Münch)
