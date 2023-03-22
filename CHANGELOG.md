@@ -8,7 +8,7 @@ RECENT CHANGES
 - Fix: #1144: Allow to add instead of replace a PSR-4 namespace (by Christian Münch)
 - Fix: #1147: Fix command return value and add phar test (by Christian Münch)
 - Fix: #1149: Use defined PHP binary for calls to bin/magento (by Christian Münch)
-- Imp: Update 3rd party dependencies (captainhook, php-cs-fixer, phpstan, phpunit)
+- Imp: Update 3rd party dependencies (captainhook, psysh, php-cs-fixer, phpstan, phpunit)
 
 7.0.0
 -----
