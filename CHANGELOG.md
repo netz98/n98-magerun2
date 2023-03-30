@@ -1,10 +1,15 @@
 RECENT CHANGES
 ==============
 
+7.0.2
+-----
+- Fix: #1164: Magento Core Commands cannot be loaded. Please verify if "bin/magento" is running
+- Imp: Update 3rd party dependencies (captainhook, phpstan, phpunit)
+
 7.0.1
 -----
 
-- Fix: #447 : Memory usage within Magerun script (by Christian Münch)
+- Fix: #447: Memory usage within Magerun script (by Christian Münch)
 - Fix: #1144: Allow to add instead of replace a PSR-4 namespace (by Christian Münch)
 - Fix: #1147: Fix command return value and add phar test (by Christian Münch)
 - Fix: #1149: Use defined PHP binary for calls to bin/magento (by Christian Münch)
