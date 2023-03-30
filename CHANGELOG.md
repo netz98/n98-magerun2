@@ -4,7 +4,7 @@ RECENT CHANGES
 7.0.2
 -----
 - Fix: #1164: Magento Core Commands cannot be loaded. Please verify if "bin/magento" is running
-- Imp: Update 3rd party dependencies (captainhook, phpstan, phpunit)
+- Imp: Update 3rd party dependencies (captainhook, phpstan, phpunit, psysh)
 
 7.0.1
 -----
