@@ -127,8 +127,6 @@ function test_magerun_commands() {
   #  cache:view
   # find a cache key which is always available
   #assert_command_contains "cache:view INTERCEPTION" "Magento"
-  # composer:redeploy-base-packages
-  assert_command_contains "composer:redeploy-base-packages" "bin/magento"
   #  cms:block:toggle
   #  config:data:acl
   assert_command_contains "config:data:acl" "ACL Tree"
@@ -472,7 +470,11 @@ function test_magento_core_commands() {
   #  yotpo:sync
   #  yotpo:update-metadata
   assert_command_contains "route:list -m Magento_Backend -a adminhtml" "admin/dashboard/index"
+}
 
+function test_troubleshooting_commands() {
+  # composer:redeploy-base-packages
+  assert_command_contains "composer:redeploy-base-packages" "bin/magento"
 }
 
 function test_custom_module() {
@@ -501,6 +503,11 @@ echo "=================================================="
 echo "MAGENTO CORE COMMANDS"
 echo "=================================================="
 test_magento_core_commands;
+
+echo "=================================================="
+echo "TROUBLESHOOTING COMMANDS"
+echo "=================================================="
+test_troubleshooting_commands;
 
 if [ $TESTS_WITH_ERRORS = true ]; then
   exit 1;
