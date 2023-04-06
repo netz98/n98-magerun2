@@ -1,6 +1,10 @@
 RECENT CHANGES
 ==============
 
+7.1.0-dev
+---------
+- Add: New command to redeploy base packages (by Christian Münch)
+
 7.0.2
 -----
 - Fix: #1164: Magento Core Commands cannot be loaded. Please verify if "bin/magento" is running
