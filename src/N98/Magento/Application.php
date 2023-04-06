@@ -45,7 +45,7 @@ class Application extends BaseApplication
     /**
      * @var string
      */
-    const APP_VERSION = '7.0.3';
+    const APP_VERSION = '7.1.0-dev';
 
     /**
      * @var int
@@ -387,8 +387,11 @@ class Application extends BaseApplication
      * @return void
      * @throws \Exception
      */
-    public function init(array $initConfig = [], InputInterface $input = null, OutputInterface $output = null)
-    {
+    public function init(
+        array $initConfig = [],
+        InputInterface $input = null,
+        OutputInterface $output = null
+    ) {
         if ($this->_isInitialized) {
             return;
         }
