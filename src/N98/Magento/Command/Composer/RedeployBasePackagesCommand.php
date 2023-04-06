@@ -10,8 +10,6 @@ declare(strict_types=1);
 namespace N98\Magento\Command\Composer;
 
 use Composer\Composer;
-use Composer\Config;
-use Composer\Console\Application;
 use Composer\IO\NullIO;
 use MagentoHackathon\Composer\Magento\Deploy\Manager\Entry;
 use MagentoHackathon\Composer\Magento\DeployManager;
