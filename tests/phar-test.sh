@@ -347,6 +347,8 @@ function test_magento_core_commands() {
 	assert_command_contains "customer:hash:upgrade" "Finished"
 	#  deploy:mode:set
 	#  deploy:mode:show
+	# composer:redeploy-base-packages
+	assert_command_contains "composer:redeploy-base-packages" "bin/magento"
 	#  dev:di:info
 	assert_command_contains "dev:di:info Magento\\Catalog\\Api\\Data\\ProductInterface" "DI configuration for the class"
 	#  dev:profiler:disable

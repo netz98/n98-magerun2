@@ -85,6 +85,7 @@ commands:
     - N98\Magento\Command\Cache\ReportCommand
     - N98\Magento\Command\Cache\ViewCommand
     - N98\Magento\Command\Cms\ToggleBlockCommand
+    - N98\Magento\Command\Composer\RedeployBasePackagesCommand
     - N98\Magento\Command\Config\Env\CreateCommand
     - N98\Magento\Command\Config\Env\ShowCommand
     - N98\Magento\Command\Config\Env\SetCommand
@@ -179,6 +180,11 @@ commands:
   # The configuration can be changed by magerun modules
   # and on project and user level. See wiki for details.
 
+  N98\Magento\Command\Composer\RedeployBasePackagesCommand:
+    packages:
+      - magento/magento2-base
+      - magento/magento2-ee-base
+      - magento/magento2-b2b-base
 
   N98\Magento\Command\Database\DumpCommand:
     table-groups:

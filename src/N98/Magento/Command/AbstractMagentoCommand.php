@@ -160,7 +160,7 @@ abstract class AbstractMagentoCommand extends Command
         }
 
         if ($this->_magentoRootFolder !== null) {
-            return;
+            return true;
         }
 
         throw new RuntimeException('Magento folder could not be detected');

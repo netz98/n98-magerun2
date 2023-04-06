@@ -1260,6 +1260,15 @@ $ n98-magerun2.phar script:repo:run [-d|--define[="..."]] [--stop-on-error] [scr
 
 Script argument is optional. If you don't specify any you can select one from a list.
 
+### Composer Redeploy Base Packages
+
+If files are missing after a Magento updates it could be that new files were added to the files map in the base packages
+of Magento. The `composer:redeploy-base-packages` command can fix this issue.
+
+```sh
+$ n98-magerun2.phar composer:redeploy-base-packages
+```
+
 ## Development
 
 https://github.com/netz98/n98-magerun2/wiki
