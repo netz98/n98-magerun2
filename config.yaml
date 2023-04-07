@@ -168,6 +168,8 @@ commands:
     - N98\Magento\Command\ScriptCommand
     - N98\Magento\Command\SelfUpdateCommand
     - N98\Magento\Command\Route\ListCommand
+    - N98\Magento\Command\Sales\SequenceAddCommand
+    - N98\Magento\Command\Sales\SequenceRemoveCommand
 
   disabled:
     - dummy
