@@ -61,8 +61,8 @@ function download_composer() {
   else
     echo "Composer was not found. Try to install it ..."
     # install composer
-    php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
-    php composer-setup.php --install-dir=/usr/local/bin --filename=composer
+    $PHP_BIN -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+    $PHP_BIN composer-setup.php --install-dir=/usr/local/bin --filename=composer
   fi
 }
 
