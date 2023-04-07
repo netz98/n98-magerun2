@@ -1237,6 +1237,29 @@ n98-magerun2.phar admin:user:change-status [user] [--activate] [--deactivate]
 _Note: It is possible for a user to exist with a username that matches
 the email of a different user. In this case the first matched user will be changed._
 
+### Add Sales Sequences for a given store
+Create sales sequences in the database if they are missing, this will recreate profiles to.
+
+```sh
+n98-magerun2.phar sales:sequence:add [store] 
+```
+
+If store is omitted, it'll run for all stores.  
+
+_Note: It is possible a sequence already exists, in this case nothing will happen, only missing tables are created._
+
+### Remove Sales Sequences for a given store
+Remove sales sequences from the database, warning, you cannot undo this, make sure you have database backups.
+
+```sh
+n98-magerun2.phar sales:sequence:remove [store] 
+```
+
+If store is omitted, it'll run for all stores. When the option `no-interaction` is given, it will run immediately without any interaction.
+Otherwise it will remind you and ask if you know what you're doing and ask for each store you are running it on.
+
+_Note: ._
+
 ### Script Repository
 
 You can organize your scripts in a repository.
