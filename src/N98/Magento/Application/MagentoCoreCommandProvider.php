@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace N98\Magento\Application;
 
 use N98\Magento\Command\MagentoCoreProxyCommandFactory;
+use N98\Util\OperatingSystem;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 
@@ -80,7 +81,10 @@ class MagentoCoreCommandProvider
     private function load()
     {
         if (empty($this->commandData)) {
-            $process = new Process(['bin/magento', '--format=json'], $this->magentoRootDirectory);
+            $process = new Process(
+                [OperatingSystem::getPhpBinary(), 'bin/magento', '--format=json'],
+                $this->magentoRootDirectory
+            );
             $process->run();
             if (!$process->isSuccessful()) {
                 throw new ProcessFailedException($process);
