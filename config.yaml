@@ -137,6 +137,7 @@ commands:
     - N98\Magento\Command\GiftCard\CreateCommand
     - N98\Magento\Command\GiftCard\InfoCommand
     - N98\Magento\Command\GiftCard\RemoveCommand
+    - N98\Magento\Command\Github\PullRequestCommand
     - N98\Magento\Command\Media\DumpCommand
     - N98\Magento\Command\OpenBrowserCommand
     - N98\Magento\Command\SearchEngine\ListCommand
