@@ -26,7 +26,7 @@ class OpenBrowserCommand extends AbstractMagentoCommand
         $this
             ->setName('open-browser')
             ->addArgument('store', InputArgument::OPTIONAL, 'Store code or ID')
-            ->setDescription('Open current project in browser <comment>(experimental)</comment>');
+            ->setDescription('Open current project in browser');
     }
 
     /**

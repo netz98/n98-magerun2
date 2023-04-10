@@ -30,7 +30,7 @@ class PullRequestCommand extends AbstractMagentoCommand
             ->addOption('patch', 'd', InputOption::VALUE_NONE, 'Download patch and prepare it for applying')
             ->addOption('diff', null, InputOption::VALUE_NONE, 'Raw diff download')
             ->addOption('json', null, InputOption::VALUE_NONE, 'Show pull request data as json')
-            ->setDescription('Download patch from github merge request');
+            ->setDescription('Download patch from github merge request <comment>(experimental)</comment>');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
