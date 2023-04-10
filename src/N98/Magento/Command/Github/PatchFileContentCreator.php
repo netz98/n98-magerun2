@@ -9,14 +9,13 @@ declare(strict_types=1);
 
 namespace N98\Magento\Command\Github;
 
-use N98\Util\OperatingSystem;
-
 class PatchFileContentCreator
 {
     /**
+     * @param string $diffContent
      * @return string
      */
-    public static function create(array $prData, string $diffContent): string
+    public static function create(string $diffContent): string
     {
         $diffContent = self::processAppCode($diffContent);
         $diffContent = self::processAppDesign($diffContent);
