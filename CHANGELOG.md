@@ -6,11 +6,15 @@ RECENT CHANGES
 
 - Add: New commands to manage sales sequences (by Jeroen Boersma)
 - Add: New command to redeploy base packages (by Christian Münch)
-- Fix: #1164: Magento Core Commands cannot be loaded. Please verify if "bin/magento" is running
 
+7.0.3
+-----
+
+- Fix: #1164: Magento Core Commands cannot be loaded. Please verify if "bin/magento" is running (by Christian Münch)
 
 7.0.2
 -----
+ 
 - Fix: #1164: Magento Core Commands cannot be loaded. Please verify if "bin/magento" is running
 - Imp: Update 3rd party dependencies (captainhook, phpstan, phpunit, psysh)
 
