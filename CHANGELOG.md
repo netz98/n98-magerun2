@@ -1,6 +1,10 @@
 RECENT CHANGES
 ==============
 
+7.0.3
+-----
+- Fix: #1164: Magento Core Commands cannot be loaded. Please verify if "bin/magento" is running (by Christian Münch)
+
 7.0.2
 -----
 - Fix: #1164: Magento Core Commands cannot be loaded. Please verify if "bin/magento" is running
