@@ -533,9 +533,16 @@ class Application extends BaseApplication
             );
             $coreCommands = $provider->getCommands();
         } catch (\Exception $e) {
+            if (OutputInterface::VERBOSITY_DEBUG <= $output->getVerbosity()) {
+                $output->writeln(
+                    sprintf('<debug>Exception: %s</debug>', $e->getMessage())
+                );
+            }
+
             $output->writeln(
                 [
                     '<error>Magento Core Commands cannot be loaded. Please verify if "bin/magento" is running.</error>',
+                    '<info>Run with <comment>-vvv</comment> option to see the error output.</info>',
                     '<info>Only n98-magerun2 commands are available until the issue is fixed.</info>'
                 ]
             );

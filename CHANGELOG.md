@@ -6,6 +6,7 @@ RECENT CHANGES
 
 - Add: New commands to manage sales sequences (by Jeroen Boersma)
 - Add: New command to redeploy base packages (by Christian Münch)
+- Imp: Add debug output if Magento Core Commands cannot be used (by Christian Münch)
 
 7.0.3
 -----
