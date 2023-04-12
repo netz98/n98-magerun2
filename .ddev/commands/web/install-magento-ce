@@ -26,7 +26,7 @@ MAGENTO_SUBDOMAIN="${MAGENTO_VERSION//[-_.]/-}"
 USE_ELASTICSEARCH=$2
 
 check_if_db_exists() {
-	echo "SHOW DATABASES" | mysql -hdb -udb -pdb | grep -q "$MAGENTO_DB_NAME"
+	echo "SHOW DATABASES" | mysql -hdb -udb -pdb | grep -qE "^$MAGENTO_DB_NAME\$"
 
 	if [ $? -eq 1 ]; then
 		echo "CREATE DATABASE ${MAGENTO_DB_NAME}" | mysql -hdb -uroot -proot
