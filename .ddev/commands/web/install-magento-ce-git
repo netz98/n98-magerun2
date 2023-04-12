@@ -26,7 +26,7 @@ MAGENTO_ROOT_DIR="/opt/magento-test-environments/magento_${NORMALIZED_GIT_BRANCH
 MAGENTO_SUBDOMAIN="${NORMALIZED_GIT_BRANCH//[-_.]/-}"
 
 check_if_db_exists() {
-	echo "SHOW DATABASES" | mysql -hdb -udb -pdb | grep -q "$MAGENTO_DB_NAME"
+	echo "SHOW DATABASES" | mysql -hdb -udb -pdb | grep -qE "^$MAGENTO_DB_NAME\$"
 
 	if [ $? -eq 1 ]; then
 		echo "CREATE DATABASE ${MAGENTO_DB_NAME}" | mysql -hdb -uroot -proot
