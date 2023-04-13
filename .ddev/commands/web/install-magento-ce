@@ -11,6 +11,14 @@ fi
 
 CURRENT_DIR=$(dirname "$0")
 
+if [ -x PHP_BIN ]; then
+  PHP_BIN="php"
+fi
+
+if [ -x $TZ ]; then
+  TZ="UTC"
+fi
+
 MAGENTO_VERSION=$1
 MAGENTO_DB_NAME="magento_${MAGENTO_VERSION//[-.]/_}"
 MAGENTO_ROOT_DIR="/opt/magento-test-environments/magento_${MAGENTO_VERSION//[-.]/_}"
@@ -36,7 +44,7 @@ check_if_db_exists() {
 }
 
 install_magento() {
-	if [ -d "$MAGENTO_ROOT_DIR" ]; then
+	if [ -f "$MAGENTO_ROOT_DIR" ]; then
 		echo "Magento in $MAGENTO_ROOT_DIR already exists. Skip installation"
 		exit 0
 	fi
@@ -49,7 +57,7 @@ install_magento() {
 		check_if_db_exists
 
 		if [ ! -d $MAGENTO_ROOT_DIR ]; then
-			composer --no-interaction create-project --repository-url=https://repo.magento.com/ magento/project-community-edition="$MAGENTO_VERSION" "$MAGENTO_ROOT_DIR"
+			"$PHP_BIN" /usr/local/bin/composer --no-interaction create-project --repository-url=https://repo.magento.com/ magento/project-community-edition="$MAGENTO_VERSION" "$MAGENTO_ROOT_DIR"
 		fi
 
 		cd $MAGENTO_ROOT_DIR
@@ -60,7 +68,7 @@ install_magento() {
 
 		# build magento setup arguments
 		MAGENTO_SETUP_ARGS=(
-			"php" "bin/magento" "setup:install"
+			"$PHP_BIN" "bin/magento" "setup:install"
 			"--no-interaction"
 			"--db-host=db"
 			"--db-user=db"
