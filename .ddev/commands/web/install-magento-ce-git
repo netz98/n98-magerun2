@@ -9,6 +9,14 @@ if [ $# -ne 2 ]; then
 	exit 1
 fi
 
+if [ -x PHP_BIN ]; then
+  PHP_BIN="php"
+fi
+
+if [ -x $TZ ]; then
+  TZ="UTC"
+fi
+
 CURRENT_DIR=$(dirname "$0")
 GIT_BRANCH=$1
 NORMALIZED_GIT_BRANCH=${GIT_BRANCH/[-_.\/]/-}
@@ -50,7 +58,7 @@ install_magento() {
 
 		if [ ! -d $MAGENTO_ROOT_DIR ]; then
 			git clone --branch "${GIT_BRANCH}" https://github.com/magento/magento2 $MAGENTO_ROOT_DIR
-			composer --no-interaction install
+			"$PHP_BIN" /usr/local/bin/composer --no-interaction install
 		fi
 
 		cd $MAGENTO_ROOT_DIR
@@ -61,7 +69,7 @@ install_magento() {
 
 		# build magento setup arguments
 		MAGENTO_SETUP_ARGS=(
-			"php" "bin/magento" "setup:install"
+			"$PHP_BIN" "bin/magento" "setup:install"
 			"--no-interaction"
 			"--db-host=db"
 			"--db-user=db"
