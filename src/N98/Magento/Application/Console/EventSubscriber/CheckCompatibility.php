@@ -6,7 +6,9 @@ use N98\Magento\Application;
 use N98\Magento\Application\ApplicationAwareInterface;
 use N98\Magento\Application\Console\Event;
 use N98\Magento\Application\Console\Events;
+use N98\Magento\Command\MagentoCoreProxyCommand;
 use Symfony\Component\Console\Event\ConsoleEvent;
+use Symfony\Component\Console\Exception\CommandNotFoundException;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -43,6 +45,33 @@ class CheckCompatibility implements EventSubscriberInterface, ApplicationAwareIn
     public function checkCompatibility(ConsoleEvent $event)
     {
         if ($event->getInput()->hasParameterOption('--skip-magento-compatibility-check')) {
+            // early exit if we should skip the compatibility check
+            return;
+        }
+
+        $commandName = $event->getInput()->getFirstArgument();
+        if ($commandName === null) {
+            return;
+        }
+        try {
+            $command = $this->application->get($commandName);
+        } catch (CommandNotFoundException $e) {
+            // let symfony handle this
+            return;
+        }
+
+        if ($command instanceof MagentoCoreProxyCommand) {
+            // We do no compatibility check for Magento Core Commands
+            return;
+        }
+
+        if ($command instanceof \N98\Magento\Command\Installer\InstallCommand) {
+            // We do not check the installer command
+            return;
+        }
+
+        if ($command instanceof \N98\Magento\Command\SelfUpdateCommand) {
+            // We do not check the update command
             return;
         }
 
