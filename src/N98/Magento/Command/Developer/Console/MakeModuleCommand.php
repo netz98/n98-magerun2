@@ -11,6 +11,7 @@ use Magento\Framework\Filesystem\Directory\WriteInterface;
 use Magento\Framework\Module\ModuleListInterface;
 use Magento\Framework\Module\Status;
 use N98\Magento\Command\Developer\Console\Structure\ModuleNameStructure;
+use N98\Util\ComposerLock;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputArgument;
@@ -30,6 +31,11 @@ class MakeModuleCommand extends AbstractGeneratorCommand
      * @var string
      */
     private $modulesBaseDir;
+    /**
+     *
+     * @var ComposerLock
+     */
+    private $magentoComposerLock;
 
     protected function configure()
     {
@@ -55,6 +61,10 @@ class MakeModuleCommand extends AbstractGeneratorCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $this->magentoComposerLock = new ComposerLock(
+            $this->getMagerunApplication()->getMagentoRootFolder()
+        );
+
         $moduleName = new ModuleNameStructure($input->getArgument('modulename'));
 
         $this->modulesBaseDir = $input->getOption('modules-base-dir');
@@ -151,6 +161,8 @@ FILE_BODY;
             [
                 'vendor'    => $moduleName->getVendorName(),
                 'module'    => $moduleName->getShortModuleName(),
+                'php_version' => '~' . PHP_MAJOR_VERSION . '.' . PHP_MINOR_VERSION . '.0',
+                'magento_framework_version' => '~' . $this->magentoComposerLock->getPackageByName('magento/framework')->version,
                 'namespace' => str_replace('\\', '\\\\', $this->getModuleNamespace($moduleName->getFullModuleName())),
             ]
         );

@@ -8,6 +8,7 @@ use Magento\Framework\Component\ComponentRegistrar;
 use Magento\Framework\Component\ComponentRegistrarInterface;
 use Magento\Framework\Filesystem\Io\File;
 use N98\Magento\Command\AbstractMagentoCommand;
+use N98\Util\ComposerLock;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -377,22 +378,8 @@ class DetectComposerDependenciesCommand extends AbstractMagentoCommand
 
     private function loadProjectComposerPackagesByLockFile(string $magentoRootPath)
     {
-        $packages = [];
-
-        $packagesConfig = json_decode(
-            \file_get_contents($magentoRootPath . '/composer.lock'),
-            false,
-            512,
-            JSON_THROW_ON_ERROR
-        );
-
-        if (isset($packagesConfig)) {
-            $packages = array_merge($packages, $packagesConfig->packages);
-        }
-
-        if (isset($packagesConfig->{'packages-dev'})) {
-            $packages = array_merge($packages, $packagesConfig->{'packages-dev'});
-        }
+        $composerLock = new ComposerLock($magentoRootPath);
+        $packages = $composerLock->getPackages();
 
         $this->localInstalledPackagesFromLockFile = [];
 
