@@ -58,37 +58,6 @@ class DownloadMagento extends AbstractSubCommand
         $this->composerInstall();
     }
 
-    /**
-     * construct a folder to where magerun will download the source to,
-     * cache git/hg repositories under COMPOSER_HOME
-     *
-     * @param $composer
-     * @param $package
-     * @param $installationFolder
-     *
-     * @return string
-     */
-    protected function getTargetFolderByType($composer, $package, $installationFolder)
-    {
-        $type = $package->getSourceType();
-        if ($this->getCommand()->isSourceTypeRepository($type)) {
-            $targetPath = sprintf(
-                '%s/%s/%s/%s',
-                $composer->getConfig()->get('cache-dir'),
-                '_n98_magerun_download',
-                $type,
-                preg_replace('{[^a-z0-9.]}i', '-', $package->getSourceUrl())
-            );
-        } else {
-            $targetPath = sprintf(
-                '%s/%s',
-                $installationFolder,
-                '_n98_magerun_download'
-            );
-        }
-
-        return $targetPath;
-    }
 
     /**
      * @param InputInterface $input
