@@ -118,6 +118,11 @@ HELP;
     private function needsDowngrade(ModuleInterface $module, $what, $currentVersion): bool
     {
         $targetVersion = $module->getVersion();
+
+        if ($targetVersion === null) {
+            return false;
+        }
+
         $needsDowngrade = 1 === \version_compare($currentVersion, $targetVersion);
 
         if (!$needsDowngrade) {
