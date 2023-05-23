@@ -108,9 +108,8 @@ class Filesystem
             if (!is_link($path) && is_dir($path)) {
                 // we call this function with the new path
                 $this->recursiveRemoveDirectory($path);
-
-            // if the new path is a file
             } else {
+                // if the new path is a file
                 // we remove the file
                 unlink($path);
             }

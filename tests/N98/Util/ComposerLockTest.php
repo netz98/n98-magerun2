@@ -32,5 +32,4 @@ class ComposerLockTest extends \PHPUnit\Framework\TestCase
 
         $this->assertEquals('1.1.1', $lock->getPackageByName('psr/container')->version);
     }
-
 }
