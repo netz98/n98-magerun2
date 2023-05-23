@@ -58,7 +58,6 @@ class DownloadMagento extends AbstractSubCommand
         $this->composerInstall();
     }
 
-
     /**
      * @param InputInterface $input
      * @param OutputInterface $output
