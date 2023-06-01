@@ -142,6 +142,7 @@ HELP;
                     $item->getValue(),
                     $input->getOption('decrypt') ? 'decrypt' : ''
                 ),
+                'updated_at' => $item->getUpdatedAt()
             ];
         }
 
@@ -172,13 +173,14 @@ HELP;
                 $row['scope'],
                 $row['scope_id'],
                 $this->renderTableValue($row['value'], $format),
+                $row['updated_at']
             ];
         }
 
         /* @var $tableHelper \N98\Util\Console\Helper\TableHelper */
         $tableHelper = $this->getHelper('table');
         $tableHelper
-            ->setHeaders(['Path', 'Scope', 'Scope-ID', 'Value'])
+            ->setHeaders(['Path', 'Scope', 'Scope-ID', 'Value', 'Updated At'])
             ->setRows($formattedTable)
             ->renderByFormat($output, $formattedTable, $format);
     }
