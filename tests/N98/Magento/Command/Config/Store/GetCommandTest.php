@@ -140,7 +140,7 @@ class GetCommandTest extends TestCase
             'path'     => 'n98_magerun/foo/bar',
             '--format' => 'csv',
         ];
-        $this->assertDisplayContains($input, 'Path,Scope,Scope-ID,Value');
+        $this->assertDisplayContains($input, 'Path,Scope,Scope-ID,Value,Updated At');
         $this->assertDisplayContains($input, 'n98_magerun/foo/bar,default,0,1234');
 
         /**
