@@ -909,6 +909,14 @@ n98-magerun2.phar dev:module:list [--vendor=VENDOR]
 
 ---
 
+### List modules missing their declaration in `app/etc/config.php`
+
+```sh
+n98-magerun2.phar dev:module:list-missing-declaration [--exclude=Some_ModuleName]
+```
+
+---
+
 ### List Observers
 
 ```sh
