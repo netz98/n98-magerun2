@@ -282,6 +282,7 @@ HELP;
         $commandString = $this->_replaceScriptVars($commandString);
         $input = new StringInput($commandString);
         $input->setInteractive($noInteraction);
+        $exitCode = $this->getApplication()->run($input, $output);
         if ($exitCode !== 0 && $this->_stopOnError) {
             $this->getApplication()->setAutoExit(true);
             throw new RuntimeException('Script stopped with errors');
