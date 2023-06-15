@@ -277,10 +277,11 @@ HELP;
      */
     protected function runMagerunCommand(InputInterface $input, OutputInterface $output, $commandString)
     {
+        $noInteraction = ! $input->getOption('no-interaction');
         $this->getApplication()->setAutoExit(false);
         $commandString = $this->_replaceScriptVars($commandString);
         $input = new StringInput($commandString);
-        $exitCode = $this->getApplication()->run($input, $output);
+        $input->setInteractive($noInteraction);
         if ($exitCode !== 0 && $this->_stopOnError) {
             $this->getApplication()->setAutoExit(true);
             throw new RuntimeException('Script stopped with errors');
