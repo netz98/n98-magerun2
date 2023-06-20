@@ -11,6 +11,7 @@
     "directories": [
         "src",
         "res",
+        "vendor/rmccue/requests/certificates",
         "vendor/twig/twig/src"
     ],
     "replacements": {
