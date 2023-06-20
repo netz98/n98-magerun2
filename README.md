@@ -1079,6 +1079,43 @@ n98-magerun2.phar integration:delete <name_or_id>
 
 ---
 
+### Github
+
+(experimental) Commands
+
+### Pull Requests
+
+Gets infos about Github Pull Requests.
+If no Github Repository is defined by `---repository` (-r) option the default
+Magento 2 Github Repository `magento/magento2` is used.
+For the [Mage-OS](https://github.com/mage-os/mageos-magento2) repository we provide a shortcut option `--mage-os`.
+
+If the command is executed without any options it will show infos about the PR.
+
+```sh
+# Magento 2 Open Source
+n98-magerun2.phar github:pr:patch <pr-number>
+
+# Mage-OS
+n98-magerun2.phar github:pr:patch --mage-os <pr-number>
+```
+
+*Create a patch file from PR:*
+
+```sh
+n98-magerun2.phar github:pr:patch --patch <pr-number>
+```
+
+Files of the magento2-base and magento2-ee-base and b2b base packages are currently not handled by the command.
+
+**List only the raw diff:**
+
+```sh
+n98-magerun2.phar github:pr:patch --diff <pr-number>
+```
+
+---
+
 ### Interactive Development Console
 
 Opens PHP interactive shell with initialized Magento Admin-Store.
