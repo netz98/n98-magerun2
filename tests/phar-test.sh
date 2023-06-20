@@ -250,6 +250,13 @@ function test_magerun_commands() {
   #  eav:attribute:remove
   #  eav:attribute:view
   assert_command_contains "eav:attribute:view catalog_product sku" "catalog_product_entity"
+  #  github:pr
+  assert_command_contains "github:pr 21787" "x_forwarded_for"
+  assert_command_contains "github:pr --patch 21787" "PR-21787-magento-magento2.patch"
+  assert_command_contains "github:pr --diff 21787" "setXForwardedFor"
+  assert_command_contains "github:pr --mage-os 1" "automatically"
+  assert_command_contains "github:pr --mage-os --patch 1" "PR-1-mage-os-mageos-magento2.patch"
+  assert_command_contains "github:pr --mage-os --diff 1" "server_url"
   #  generation:flush
   assert_command_contains "generation:flush Symfony" "Removed"
   #  index:list
