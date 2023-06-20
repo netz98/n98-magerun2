@@ -92,7 +92,7 @@ EOT
             $remotePharDownloadUrl = self::MAGERUN_DOWNLOAD_URL_STABLE;
         }
 
-        $response = Requests::get($versionTxtUrl, [], ['verify' => false]);
+        $response = Requests::get($versionTxtUrl, [], ['verify' => true]);
 
         if (!$response->success) {
             throw new RuntimeException('Cannot get version: ' . $response->status_code);
@@ -162,7 +162,7 @@ EOT
 
         $hooks = new Hooks();
 
-        $response = Requests::head($remoteUrl, [], ['verify' => false]);
+        $response = Requests::head($remoteUrl, [], ['verify' => true]);
 
         if (!$response->success) {
             throw new RuntimeException('Cannot download phar file: ' . $response->status_code);
@@ -183,7 +183,7 @@ EOT
             }
         );
 
-        $response = Requests::get($remoteUrl, [], ['blocking' => true, 'hooks' => $hooks, 'verify' => false]);
+        $response = Requests::get($remoteUrl, [], ['blocking' => true, 'hooks' => $hooks, 'verify' => true]);
 
         if (!$response->success) {
             throw new RuntimeException('Cannot download phar file: ' . $response->status_code);
@@ -240,7 +240,7 @@ EOT
         } else {
             $changeLogUrl = self::CHANGELOG_DOWNLOAD_URL_STABLE;
         }
-        $response = Requests::get($changeLogUrl, [], ['verify' => false]);
+        $response = Requests::get($changeLogUrl, [], ['verify' => true]);
 
         if (!$response->success) {
             throw new RuntimeException('Cannot download changelog: ' . $response->status_code);
