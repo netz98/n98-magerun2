@@ -6,6 +6,7 @@ RECENT CHANGES
 
 - Add: #1177: New commands to manage sales sequences (by Jeroen Boersma)
 - Add: #1176: New command to redeploy base packages (by Christian Münch)
+- Add: #1226: New sys:cron:kill command (by Christian Münch)
 - Imp: #1182: Add debug output if Magento Core Commands cannot be used (by Christian Münch)
 - Imp: #1185: Do less compatibility checks (by Christian Münch)
 - Imp: Update 3rd party dependencies (php-cs-fixer, psysh, phpstan, phpunit, requests, symfony)
