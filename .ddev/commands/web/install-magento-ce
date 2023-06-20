@@ -15,6 +15,10 @@ if [ -x PHP_BIN ]; then
   PHP_BIN="php"
 fi
 
+if [ ! -x COMPOSER_BIN ]; then
+  COMPOSER_BIN="/usr/local/bin/composer"
+fi
+
 if [ -x $TZ ]; then
   TZ="UTC"
 fi
@@ -57,7 +61,7 @@ install_magento() {
 		check_if_db_exists
 
 		if [ ! -d $MAGENTO_ROOT_DIR ]; then
-			"$PHP_BIN" /usr/local/bin/composer --no-interaction create-project --repository-url=https://repo.magento.com/ magento/project-community-edition="$MAGENTO_VERSION" "$MAGENTO_ROOT_DIR"
+			"$PHP_BIN" $COMPOSER_BIN --no-interaction create-project --repository-url=https://repo.magento.com/ magento/project-community-edition="$MAGENTO_VERSION" "$MAGENTO_ROOT_DIR"
 		fi
 
 		cd $MAGENTO_ROOT_DIR
