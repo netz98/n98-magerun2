@@ -276,6 +276,8 @@ function test_magerun_commands() {
   assert_command_contains "search:engine:list" "label"
   #  sys:check
   assert_command_contains "sys:check" "Env"
+  #  sys:cron:kill
+  assert_command_contains "sys:cron:kill not_exiting_job_code" "No process found to kill"
   #  sys:cron:list
   assert_command_contains "sys:cron:list" "indexer_reindex_all_invalid"
   #  sys:cron:run

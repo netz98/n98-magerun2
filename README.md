@@ -360,6 +360,17 @@ If no `job` argument is passed you can select a job from a list.
 See it in action: http://www.youtube.com/watch?v=QkzkLgrfNaM
 If option schedule is present, cron is not launched, but just scheduled immediately in magento crontab.
 
+### Kill a running job
+
+```sh
+n98-magerun2.phar sys:cron:kill [--timeout <seconds>] [job_code]
+```
+
+If no job is specified a interactive selection of all running jobs is shown.
+Jobs can only be killed if the process runs on the same machine as n98-magerun2.
+
+Default timeout of a process kill is 5 seconds.
+
 ### Cronjob History
 
 Last executed cronjobs with status.
