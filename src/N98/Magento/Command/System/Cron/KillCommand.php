@@ -9,8 +9,8 @@ declare(strict_types=1);
 
 namespace N98\Magento\Command\System\Cron;
 
-use _PHPStan_a3459023a\Symfony\Component\Console\Command\Command;
 use Magento\Cron\Model\Schedule;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
