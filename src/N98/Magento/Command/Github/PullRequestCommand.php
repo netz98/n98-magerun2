@@ -91,7 +91,7 @@ class PullRequestCommand extends AbstractMagentoCommand
     protected function fetchDiffContent($diffUrl): string
     {
         if ($this->diffContent === '') {
-            $response = Requests::get($diffUrl);
+            $response = Requests::get($diffUrl, [], ['verify' => false]);
             $this->diffContent = $response->body;
         }
 
@@ -134,7 +134,9 @@ class PullRequestCommand extends AbstractMagentoCommand
                 'https://api.github.com/repos/%s/pulls/%d.patch',
                 $this->repository,
                 $input->getArgument('number')
-            )
+            ),
+            [],
+            ['verify' => false]
         );
         return $pullRequestDataResponse;
     }
