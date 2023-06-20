@@ -3,6 +3,7 @@
 namespace N98\Magento\Command\Github;
 
 use N98\Magento\Command\AbstractMagentoCommand;
+use N98\Magento\Command\Github\PatchFileContent\Creator as PatchFileContentCreator;
 use N98\Util\OperatingSystem;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
