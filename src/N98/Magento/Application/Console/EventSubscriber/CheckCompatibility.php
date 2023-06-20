@@ -4,7 +4,6 @@ namespace N98\Magento\Application\Console\EventSubscriber;
 
 use N98\Magento\Application;
 use N98\Magento\Application\ApplicationAwareInterface;
-use N98\Magento\Application\Console\Event;
 use N98\Magento\Application\Console\Events;
 use N98\Magento\Command\MagentoCoreProxyCommand;
 use Symfony\Component\Console\Event\ConsoleEvent;
