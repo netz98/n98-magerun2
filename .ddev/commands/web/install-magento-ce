@@ -9,17 +9,15 @@ if [ $# -ne 2 ]; then
 	exit 1
 fi
 
-CURRENT_DIR=$(dirname "$0")
-
-if [ -x PHP_BIN ]; then
+if [ ! -x "$PHP_BIN" ]; then
   PHP_BIN="php"
 fi
 
-if [ ! -x COMPOSER_BIN ]; then
+if [ ! -x "$COMPOSER_BIN" ]; then
   COMPOSER_BIN="/usr/local/bin/composer"
 fi
 
-if [ -x $TZ ]; then
+if [ -z "$TZ" ]; then
   TZ="UTC"
 fi
 
@@ -48,7 +46,7 @@ check_if_db_exists() {
 }
 
 install_magento() {
-	if [ -f "$MAGENTO_ROOT_DIR" ]; then
+	if [ -d "$MAGENTO_ROOT_DIR" ]; then
 		echo "Magento in $MAGENTO_ROOT_DIR already exists. Skip installation"
 		exit 0
 	fi
@@ -64,7 +62,12 @@ install_magento() {
 			"$PHP_BIN" $COMPOSER_BIN --no-interaction create-project --repository-url=https://repo.magento.com/ magento/project-community-edition="$MAGENTO_VERSION" "$MAGENTO_ROOT_DIR"
 		fi
 
-		cd $MAGENTO_ROOT_DIR
+		if [ ! -d $MAGENTO_ROOT_DIR ]; then
+		  echo "Magento installation failed"
+      exit 1;
+    fi
+
+		cd $MAGENTO_ROOT_DIR || exit 1
 
 		if [ -d "./generated" ]; then
 			rm -Rf ./generated
