@@ -4,6 +4,9 @@ namespace N98\Magento\Command\Sales;
 
 use Magento\Framework\Event;
 use Magento\Framework\Event\Observer;
+use Magento\SalesSequence\Observer\SequenceRemovalObserver;
+use Magento\Store\Api\StoreInterface;
+use Magento\Store\Model\StoreManagerInterface;
 use N98\Magento\Command\AbstractMagentoCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\QuestionHelper;
@@ -71,15 +74,15 @@ class SequenceRemoveCommand extends AbstractMagentoCommand
 
         $di = $this->getObjectManager();
 
-        $storeManager = $di->get('Magento\Store\Model\StoreManagerInterface');
-        $sequenceRemoval = $di->get('Magento\SalesSequence\Observer\SequenceRemovalObserver');
+        $storeManager = $di->get(StoreManagerInterface::class);
+        $sequenceRemoval = $di->get(SequenceRemovalObserver::class);
 
         $stores = [$storeManager->getStore($storeCode)];
         if (!$storeCode) {
             $stores = $storeManager->getStores();
         }
 
-        /** @var \Magento\Store\Api\StoreInterface $store */
+        /** @var StoreInterface $store */
         foreach ($stores as $store) {
 
             if ($interaction) {
