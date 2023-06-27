@@ -14,12 +14,29 @@ use Symfony\Component\Console\Question\ConfirmationQuestion;
 
 class SequenceRemoveCommand extends AbstractMagentoCommand
 {
-
     protected function configure()
     {
-        $this->setName('sales:sequence:remove')
+        $help = <<<'HELP'
+                The 'sales:sequence:remove' command removes sequence tables and metadata 
+                for a specified store or for all stores if no store is specifically mentioned.
+                The store argument refers to the specific store for which the sequence tables 
+                and metadata are to be removed. This can be specified by either the store code or the store ID. 
+                If no store is specified, the command will apply to all stores.
+                
+                <comment>Examples</comment>:
+                
+                - Removes sequence tables and metadata for the store with ID 5.
+                  <info>sales:sequence:remove 5</info>         
+                
+                - Removes sequence tables and metadata for the store with code 'store_en'. 
+                  <info>sales:sequence:remove 'store_en'</info>
+                HELP;
+
+        $this
+            ->setName('sales:sequence:remove')
             ->setDescription('Remove sequence tables and metadata for given store or all stores')
-            ->addArgument('store', InputArgument::OPTIONAL, 'Store code');
+            ->setHelp($help)
+            ->addArgument('store', InputArgument::OPTIONAL, 'The store code or ID');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
