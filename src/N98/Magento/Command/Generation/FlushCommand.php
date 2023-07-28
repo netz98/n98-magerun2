@@ -59,8 +59,11 @@ class FlushCommand extends AbstractMagentoCommand
             }
 
             /* @var $directory \Symfony\Component\Finder\SplFileInfo */
-            $filesystem->recursiveRemoveDirectory($directory->getPathname());
-            $output->writeln('<info>Removed <comment>' . $directory->getBasename() . '</comment> folder</info>');
+            if ($filesystem->recursiveRemoveDirectory($directory->getPathname())) {
+                $output->writeln('<info>Removed <comment>' . $directory->getBasename() . '</comment> folder</info>');
+            } else {
+                $output->writeln('<error>Failed to remove <comment>' . $directory->getBasename() . '</comment> folder</error>');
+            }
         }
 
         return Command::SUCCESS;

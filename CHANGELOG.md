@@ -10,6 +10,7 @@ RECENT CHANGES
 - Imp: #1179: New github:pr command (by Christian Münch)
 - Imp: #1182: Add debug output if Magento Core Commands cannot be used (by Christian Münch)
 - Imp: #1185: Do less compatibility checks (by Christian Münch)
+- Imp: Print an error if generation:flush command cannot delete a directory (by Christian Münch)
 - Imp: Update 3rd party dependencies (php-cs-fixer, psysh, phpstan, phpunit, requests, symfony)
 
 7.0.3
