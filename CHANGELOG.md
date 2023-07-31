@@ -1,8 +1,8 @@
 RECENT CHANGES
 ==============
 
-7.1.0-dev
----------
+7.1.0
+-----
 
 - Add: #1177: New commands to manage sales sequences (by Jeroen Boersma)
 - Add: #1176: New command to redeploy base packages (by Christian Münch)
