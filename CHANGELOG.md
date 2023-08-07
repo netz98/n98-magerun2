@@ -6,7 +6,6 @@ RECENT CHANGES
 
 - Fix: #1259: Fix not correct routes for route:list command (by Bohdan Bakalov)
 
-
 7.1.0
 -----
 

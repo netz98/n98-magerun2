@@ -25,15 +25,32 @@ class ViewCommand extends AbstractMagentoCommand
     private $fpc;
 
     /**
+     * @var \Magento\Framework\Encryption\EncryptorInterface
+     */
+    private $encryptor;
+
+    /**
+     * @var \Magento\Framework\Serialize\SerializerInterface
+     */
+    private $serializer;
+
+    /**
      * @param CacheInterface $cache
      * @param FullPageCache $fpc
+     * @param \Magento\Framework\Encryption\EncryptorInterface $encryptor
+     * @param \Magento\Framework\Serialize\SerializerInterface $serializer
+     * @return void
      */
     public function inject(
         CacheInterface $cache,
-        FullPageCache $fpc
+        FullPageCache $fpc,
+        \Magento\Framework\Encryption\EncryptorInterface $encryptor,
+        \Magento\Framework\Serialize\SerializerInterface $serializer
     ) {
         $this->cache = $cache;
         $this->fpc = $fpc;
+        $this->encryptor = $encryptor;
+        $this->serializer = $serializer;
     }
 
     /**
@@ -59,6 +76,12 @@ class ViewCommand extends AbstractMagentoCommand
                 null,
                 InputOption::VALUE_NONE,
                 'Unserialize output'
+            )
+            ->addOption(
+                'decrypt',
+                null,
+                InputOption::VALUE_NONE,
+                'Decrypt output with encryption key'
             )
             ->setDescription('Prints a cache entry');
     }
@@ -91,8 +114,16 @@ class ViewCommand extends AbstractMagentoCommand
             return Command::FAILURE;
         }
 
-        if ($input->getOption('unserialize')) {
+        if ($input->getOption('unserialize') && !$input->getOption('decrypt')) {
             $cacheData = $this->decorateSerialized($cacheData);
+        }
+
+        if ($input->getOption('decrypt')) {
+            $cacheData = $this->decorateDecrypt($cacheData);
+
+            if ($input->getOption('unserialize')) {
+                $cacheData = $this->decorateSerialized($cacheData);
+            }
         }
 
         $output->writeln($cacheData);
@@ -106,10 +137,10 @@ class ViewCommand extends AbstractMagentoCommand
      */
     private function decorateSerialized($serialized)
     {
-        if (version_compare(phpversion(), '7.0', '>=')) {
-            $unserialized = \unserialize($serialized, false);
-        } else {
-            $unserialized = \unserialize($serialized);
+        try {
+            $unserialized = $this->serializer->unserialize($serialized);
+        } catch (\Exception $e) {
+            $unserialized = \unserialize($serialized, ['allowed_classes' => false]);
         }
 
         if ($unserialized === false) {
@@ -119,5 +150,14 @@ class ViewCommand extends AbstractMagentoCommand
         }
 
         return $buffer;
+    }
+
+    /**
+     * @param string $encrypted
+     * @return string
+     */
+    private function decorateDecrypt($encrypted)
+    {
+        return $this->encryptor->decrypt($encrypted);
     }
 }
