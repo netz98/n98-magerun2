@@ -126,7 +126,7 @@ function test_magerun_commands() {
   assert_command_contains "cache:report" "EXPIRE"
   #  cache:view
   # find a cache key which is always available
-  #assert_command_contains "cache:view INTERCEPTION" "Magento"
+  assert_command_contains "cache:view --decrypt --unserialize SYSTEM_SCOPES" "websites"
   #  cms:block:toggle
   #  config:data:acl
   assert_command_contains "config:data:acl" "ACL Tree"
