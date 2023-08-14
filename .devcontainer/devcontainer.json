@@ -1,0 +1,22 @@
+{
+  "image": "mcr.microsoft.com/devcontainers/universal:2",
+  "features": {
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {},
+    "ghcr.io/ddev/ddev/install-ddev:latest": {}
+  },
+  "portsAttributes": {
+    "3306": {
+      "label": "database"
+    },
+    "8027": {
+      "label": "mailhog"
+    },
+    "8080": {
+      "label": "web http"
+    },
+    "8443": {
+      "label": "web https"
+    }
+  },
+  "postCreateCommand": "bash -c 'ddev config global --omit-containers=ddev-router && ddev config --auto && ddev debug download-images'"
+}
