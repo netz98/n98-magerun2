@@ -142,6 +142,7 @@ class ListCommand extends AbstractMagentoCommand
 
                         if (isset($moduleActions[$module][$area])) {
                             foreach ($moduleActions[$module][$area] as $action) {
+                                $action = preg_replace('/_([^_]*)$/', '/$1', str_replace('/', '_', $action));
                                 $moduleRouteAction = $moduleRoute;
                                 $moduleRouteAction[] = $route['frontName'] . '/' . $action;
 
