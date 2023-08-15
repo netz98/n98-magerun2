@@ -123,35 +123,7 @@ class ListCommand extends AbstractMagentoCommand
         $moduleOption = $input->getOption('module');
 
         foreach ($areas as $area) {
-            if ($defaultRouter = $this->areaList->getDefaultRouter($area)) {
-                $routes = $this->configReader->read($area)[$defaultRouter]['routes'];
-
-                foreach ($routes as $route) {
-                    $routeInfo = [
-                        $area,
-                        $route['frontName'],
-                    ];
-
-                    foreach ($route['modules'] as $module) {
-                        if ($moduleOption !== null && $moduleOption !== $module) {
-                            continue;
-                        }
-
-                        $moduleRoute = $routeInfo;
-                        $moduleRoute[] = $module;
-
-                        if (isset($moduleActions[$module][$area])) {
-                            foreach ($moduleActions[$module][$area] as $action) {
-                                $action = preg_replace('/_([^_]*)$/', '/$1', str_replace('/', '_', $action));
-                                $moduleRouteAction = $moduleRoute;
-                                $moduleRouteAction[] = $route['frontName'] . '/' . $action;
-
-                                $table[] = $moduleRouteAction;
-                            }
-                        }
-                    }
-                }
-            }
+            $table = $this->processArea($area, $moduleOption, $moduleActions, $table);
         }
 
         $this->getHelper('table')
@@ -167,5 +139,59 @@ class ListCommand extends AbstractMagentoCommand
         ;
 
         return Command::SUCCESS;
+    }
+
+    /**
+     * @param $area
+     * @param $moduleOption
+     * @param array $moduleActions
+     * @param array $table
+     * @return array
+     */
+    private function processArea($area, $moduleOption, array $moduleActions, array $table): array
+    {
+        if ($defaultRouter = $this->areaList->getDefaultRouter($area)) {
+            $routes = $this->configReader->read($area)[$defaultRouter]['routes'];
+
+            foreach ($routes as $route) {
+                $table = $this->processSingleRoute($area, $route, $moduleOption, $moduleActions, $table);
+            }
+        }
+        return $table;
+    }
+
+    /**
+     * @param $area
+     * @param $route
+     * @param $moduleOption
+     * @param array $moduleActions
+     * @param array $table
+     * @return array
+     */
+    protected function processSingleRoute($area, $route, $moduleOption, array $moduleActions, array $table): array
+    {
+        $routeInfo = [
+            $area,
+            $route['frontName'],
+        ];
+
+        foreach ($route['modules'] as $module) {
+            if ($moduleOption !== null && $moduleOption !== $module) {
+                continue;
+            }
+
+            $moduleRoute = $routeInfo;
+            $moduleRoute[] = $module;
+
+            if (isset($moduleActions[$module][$area])) {
+                foreach ($moduleActions[$module][$area] as $action) {
+                    $moduleRouteAction = $moduleRoute;
+                    $moduleRouteAction[] = $route['frontName'] . '/' . ActionPathFormatter::format($action);
+
+                    $table[] = $moduleRouteAction;
+                }
+            }
+        }
+        return $table;
     }
 }

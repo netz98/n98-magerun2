@@ -479,6 +479,7 @@ function test_magento_core_commands() {
   #  yotpo:sync
   #  yotpo:update-metadata
   assert_command_contains "route:list -m Magento_Backend -a adminhtml" "admin/dashboard/index"
+  assert_command_contains "route:list -m Magento_Multishipping -a frontend" "multishipping/checkout_address/editaddress"
 }
 
 function test_troubleshooting_commands() {

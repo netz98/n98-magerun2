@@ -4,6 +4,7 @@ RECENT CHANGES
 7.2.0-dev (Unreleased)
 ----------------------
 
+- Fix: #1259: Fix not correct routes for route:list command (by Bohdan Bakalov)
 
 
 7.1.0
