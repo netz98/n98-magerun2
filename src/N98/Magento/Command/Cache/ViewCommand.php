@@ -120,7 +120,6 @@ class ViewCommand extends AbstractMagentoCommand
 
         if ($input->getOption('decrypt')) {
             $cacheData = $this->decorateDecrypt($cacheData);
-
             if ($input->getOption('unserialize')) {
                 $cacheData = $this->decorateSerialized($cacheData);
             }
@@ -146,7 +145,15 @@ class ViewCommand extends AbstractMagentoCommand
         if ($unserialized === false) {
             $buffer = $serialized;
         } else {
-            $buffer = json_encode($unserialized, JSON_PRETTY_PRINT);
+            try {
+                $buffer = json_encode($unserialized, JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR);
+            } catch (\JsonException $e) {
+                throw new RuntimeException(
+                    'Unserialized failed. Try without --unserialize option.',
+                    0,
+                    $e
+                );
+            }
         }
 
         return $buffer;
