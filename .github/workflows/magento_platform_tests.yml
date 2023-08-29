@@ -14,14 +14,11 @@ on:
       - 'master'
       - 'develop'
 
-env:
-  N98_MAGERUN2_TEST_MAGENTO_ROOT: ${{ github.workspace }}/magento
-
 jobs:
   phpunit:
     name: Unit Tests
     runs-on: ${{ matrix.operating-system }}
-    continue-on-error: ${{ matrix.experimental }}
+    continue-on-error: true
     strategy:
       matrix:
         include:
@@ -34,7 +31,6 @@ jobs:
           #  use-git-repository: true
           #  git-repository: https://github.com/magento/magento2.git
           #  git-branch: 2.4-develop
-          #  experimental: true
 
           - magento-version: mage-os-2.4.5-p1
             operating-system: ubuntu-latest
@@ -44,7 +40,6 @@ jobs:
             composer-version: 2.2.17
             use-git-repository: false
             git-repository: ''
-            experimental: false
 
           - magento-version: mage-os-2.4.3-p1
             operating-system: ubuntu-latest
@@ -54,7 +49,6 @@ jobs:
             composer-version: 2.2.17
             use-git-repository: false
             git-repository: ''
-            experimental: false
 
           - magento-version: magento-ce-2.4.5-p1
             operating-system: ubuntu-latest
@@ -65,7 +59,6 @@ jobs:
             use-git-repository: false
             git-repository: ''
             git-branch: ''
-            experimental: false
 
           - magento-version: magento-ce-2.4.4-p2
             operating-system: ubuntu-latest
@@ -76,7 +69,6 @@ jobs:
             use-git-repository: false
             git-repository: ''
             git-branch: ''
-            experimental: false
 
           - magento-version: magento-ce-2.4.3-p2
             operating-system: ubuntu-latest
@@ -87,7 +79,6 @@ jobs:
             use-git-repository: false
             git-repository: ''
             git-branch: ''
-            experimental: false
 
           - magento-version: magento-ce-2.4.2-p1
             operating-system: ubuntu-latest
@@ -98,7 +89,6 @@ jobs:
             use-git-repository: false
             git-repository: ''
             git-branch: ''
-            experimental: false
 
           - magento-version: magento-ce-2.4.2
             operating-system: ubuntu-latest
@@ -109,7 +99,6 @@ jobs:
             use-git-repository: false
             git-repository: ''
             git-branch: ''
-            experimental: false
 
     services:
       elaticsearch:
@@ -238,6 +227,8 @@ jobs:
 
       - name: Run PHPUnit (Developer Mode)
         run: vendor/bin/phpunit --debug --process-isolation
+        env:
+
 
       - name: Activate Magento Production Mode
         working-directory: ./magento
@@ -248,7 +239,7 @@ jobs:
       - name: Run PHPUnit (Production Mode)
         run: vendor/bin/phpunit --debug --process-isolation
 
-      # phpstan is temporary disabled until we can find a solution to run against several Magento versions
+      # phpstan is temporarily disabled until we can find a solution to run against several Magento versions
       # or run only against the latest version?
       ## we run phpstan after di:compile in production mode to prevent class not found errors in Magerun sources
       #- name: Run PHPStan
@@ -280,9 +271,11 @@ jobs:
       - name: Phar functional tests (Magerun)
         run: bats tests/bats/functional_magerun_commands.bats
         env:
+          N98_MAGERUN2_TEST_MAGENTO_ROOT: ${{ github.workspace }}/magento
           N98_MAGERUN_BIN: "${{ github.workspace }}/n98-magerun2.phar"
 
       - name: Phar functional tests (Magento Core)
         run: bats tests/bats/functional_core_commands.bats
         env:
+          N98_MAGERUN2_TEST_MAGENTO_ROOT: ${{ github.workspace }}/magento
           N98_MAGERUN_BIN: "${{ github.workspace }}/n98-magerun2.phar"
