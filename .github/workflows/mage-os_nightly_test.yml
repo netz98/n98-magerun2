@@ -34,6 +34,9 @@ jobs:
         with:
           ref: develop
 
+      - name: Linux Setup
+        run: ./.github/workflows/linux-setup.sh
+
       - name: Dump GitHub context
         run: echo "Register Github context"
         env:
@@ -81,5 +84,12 @@ jobs:
           bash ./build.sh;
           composer self-update --rollback &> /dev/null || true;
 
-      - name: Run phar functional tests
-        run: bash tests/phar-test.sh "./n98-magerun2.phar" "$GITHUB_WORKSPACE/mage-os"
+      - name: Phar functional tests (Magerun)
+        run: bats tests/bats/functional_magerun_commands.bats
+        env:
+          N98_MAGERUN_BIN: "${{ github.workspace }}/n98-magerun2.phar"
+
+      - name: Phar functional tests (Magento Core)
+        run: bats tests/bats/functional_core_commands.bats
+        env:
+          N98_MAGERUN_BIN: "${{ github.workspace }}/n98-magerun2.phar"

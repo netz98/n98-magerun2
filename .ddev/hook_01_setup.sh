@@ -47,5 +47,18 @@ function setup_test_magento_environments() {
     $INSTALL_MAGENTO_CE_CMD "$MAGERUN_SETUP_TEST_DEFAULT_MAGENTO_VERSION" yes
 }
 
+function setup_bats() {
+    echo -e "${txtblu}=========================================================="
+    echo -e "> Install Bats"
+    echo -e "==========================================================${txtrst}"
+
+    if [ ! -f /usr/local/bin/bats ]; then
+      git clone --branch v1.2.1 https://github.com/bats-core/bats-core.git /tmp/bats-core \
+        && pushd /tmp/bats-core >/dev/null \
+        && sudo ./install.sh /usr/local
+    fi
+}
+
 setup_composer
 setup_test_magento_environments
+setup_bats
