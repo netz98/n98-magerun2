@@ -227,8 +227,6 @@ jobs:
 
       - name: Run PHPUnit (Developer Mode)
         run: vendor/bin/phpunit --debug --process-isolation
-        env:
-
 
       - name: Activate Magento Production Mode
         working-directory: ./magento
@@ -271,11 +269,11 @@ jobs:
       - name: Phar functional tests (Magerun)
         run: bats tests/bats/functional_magerun_commands.bats
         env:
-          N98_MAGERUN2_TEST_MAGENTO_ROOT: ${{ github.workspace }}/magento
+          N98_MAGERUN2_TEST_MAGENTO_ROOT: "${{ github.workspace }}/magento"
           N98_MAGERUN_BIN: "${{ github.workspace }}/n98-magerun2.phar"
 
       - name: Phar functional tests (Magento Core)
         run: bats tests/bats/functional_core_commands.bats
         env:
-          N98_MAGERUN2_TEST_MAGENTO_ROOT: ${{ github.workspace }}/magento
+          N98_MAGERUN2_TEST_MAGENTO_ROOT: "${{ github.workspace }}/magento"
           N98_MAGERUN_BIN: "${{ github.workspace }}/n98-magerun2.phar"
