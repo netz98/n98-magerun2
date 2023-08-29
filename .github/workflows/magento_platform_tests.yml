@@ -14,6 +14,9 @@ on:
       - 'master'
       - 'develop'
 
+env:
+  N98_MAGERUN2_TEST_MAGENTO_ROOT: ${{ github.workspace }}/magento
+
 jobs:
   phpunit:
     name: Unit Tests
@@ -136,11 +139,6 @@ jobs:
         run: echo "Register Github context"
         env:
           GITHUB_CONTEXT: ${{ toJSON(github) }}
-
-      - name: Define Magento ROOT for tests
-        run: echo "Set Magento root to $WORKSPACE"
-        env:
-          N98_MAGERUN2_TEST_MAGENTO_ROOT: ${{ github.workspace }}/magento
 
       # https://github.com/marketplace/actions/setup-php-action#matrix-setup
       - name: Setup PHP

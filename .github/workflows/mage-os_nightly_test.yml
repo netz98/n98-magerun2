@@ -4,6 +4,9 @@ on:
     - cron: '0 6 * * *' # run at 6 AM UTC
   workflow_dispatch:
 
+env:
+  N98_MAGERUN2_TEST_MAGENTO_ROOT: ${{ github.workspace }}/magento
+
 jobs:
   test_develop_nightly:
     name: Deploy nightly
