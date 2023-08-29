@@ -18,7 +18,7 @@ setup() {
       exit 1
     fi
 
-    export BIN="${PHP_BIN} -f ${$N98_MAGERUN2_BIN} -- --no-interaction --root-dir=${N98_MAGERUN2_TEST_MAGENTO_ROOT}"
+    export BIN="${PHP_BIN} -f ${N98_MAGERUN2_BIN} -- --no-interaction --root-dir=${N98_MAGERUN2_TEST_MAGENTO_ROOT}"
 }
 
 @test "Command: admin:user:create" {
