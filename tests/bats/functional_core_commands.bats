@@ -8,17 +8,17 @@ setup() {
       export PHP_BIN="$(which php)"
     fi
 
-    if [ -z "$N98_MAGERUN_BIN" ]; then
-      echo "ENV variable N98_MAGERUN_BIN is missing"
+    if [ -z "$N98_MAGERUN2_BIN" ]; then
+      echo "ENV variable N98_MAGERUN2_BIN is missing"
       exit 1
     fi
 
-    if [ -z "$N98_MAGERUN_TEST_MAGENTO_ROOT" ]; then
-      echo "ENV variable N98_MAGERUN_TEST_MAGENTO_ROOT is missing"
+    if [ -z "$N98_MAGERUN2_TEST_MAGENTO_ROOT" ]; then
+      echo "ENV variable N98_MAGERUN2_TEST_MAGENTO_ROOT is missing"
       exit 1
     fi
 
-    export BIN="${PHP_BIN} -f ${N98_MAGERUN_BIN} -- --no-interaction --root-dir=${N98_MAGERUN_TEST_MAGENTO_ROOT}"
+    export BIN="${PHP_BIN} -f ${$N98_MAGERUN2_BIN} -- --no-interaction --root-dir=${N98_MAGERUN2_TEST_MAGENTO_ROOT}"
 }
 
 @test "Command: admin:user:create" {

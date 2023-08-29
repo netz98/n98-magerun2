@@ -8,22 +8,22 @@ setup() {
       export PHP_BIN="$(which php)"
     fi
 
-    if [ -z "$N98_MAGERUN_BIN" ]; then
-      echo "ENV variable N98_MAGERUN_BIN is missing"
+    if [ -z "$N98_MAGERUN2_BIN" ]; then
+      echo "ENV variable N98_MAGERUN2_BIN is missing"
       exit 1
     fi
 
-    if [ -z "$N98_MAGERUN_TEST_MAGENTO_ROOT" ]; then
-      echo "ENV variable N98_MAGERUN_TEST_MAGENTO_ROOT is missing"
+    if [ -z "$N98_MAGERUN2_TEST_MAGENTO_ROOT" ]; then
+      echo "ENV variable N98_MAGERUN2_TEST_MAGENTO_ROOT is missing"
       exit 1
     fi
 
-    export BIN="${PHP_BIN} -f ${N98_MAGERUN_BIN} -- --no-interaction --root-dir=${N98_MAGERUN_TEST_MAGENTO_ROOT}"
-    export BIN_INTERACTION="${PHP_BIN} -f ${N98_MAGERUN_BIN} -- --root-dir=${N98_MAGERUN_TEST_MAGENTO_ROOT}"
+    export BIN="${PHP_BIN} -f ${N98_MAGERUN2_BIN} -- --no-interaction --root-dir=${N98_MAGERUN2_TEST_MAGENTO_ROOT}"
+    export BIN_INTERACTION="${PHP_BIN} -f ${N98_MAGERUN2_BIN} -- --root-dir=${N98_MAGERUN2_TEST_MAGENTO_ROOT}"
 }
 
 function cleanup_files_in_magento() {
-  rm -Rf "${N98_MAGERUN_TEST_MAGENTO_ROOT}/$1"
+  rm -Rf "${N98_MAGERUN2_TEST_MAGENTO_ROOT}/$1"
 }
 
 @test "Command: admin:user:list" {
@@ -216,12 +216,12 @@ function cleanup_files_in_magento() {
 }
 
 @test "Command: dev:module:detect-composer-dependencies" {
-    if [ -d "${N98_MAGERUN_TEST_MAGENTO_ROOT}/vendor/magento/module-catalog-rule" ]; then
-      run $BIN "dev:module:detect-composer-dependencies" "${N98_MAGERUN_TEST_MAGENTO_ROOT}/vendor/magento/module-catalog-rule"
+    if [ -d "${N98_MAGERUN2_TEST_MAGENTO_ROOT}/vendor/magento/module-catalog-rule" ]; then
+      run $BIN "dev:module:detect-composer-dependencies" "${N98_MAGERUN2_TEST_MAGENTO_ROOT}/vendor/magento/module-catalog-rule"
       assert_output --partial "magento/module-catalog"
     fi
-    if [ -d $directory "${N98_MAGERUN_TEST_MAGENTO_ROOT}/app/code/Magento/CatalogRule" ]; then
-      run $BIN "dev:module:detect-composer-dependencies" "${N98_MAGERUN_TEST_MAGENTO_ROOT}/app/code/Magento/CatalogRule"
+    if [ -d $directory "${N98_MAGERUN2_TEST_MAGENTO_ROOT}/app/code/Magento/CatalogRule" ]; then
+      run $BIN "dev:module:detect-composer-dependencies" "${N98_MAGERUN2_TEST_MAGENTO_ROOT}/app/code/Magento/CatalogRule"
       assert_output --partial "magento/module-catalog"
     fi
 }
