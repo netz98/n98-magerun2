@@ -3,7 +3,8 @@ name: Deploy
 
 on:
   workflow_run:
-    workflows: ["Phar build and update test", "Magento Platform Tests"]
+    #workflows: ["Phar build and update test", "Magento Platform Tests"]
+    workflows: ["Phar build and update test"]
     types:
       - completed
 
