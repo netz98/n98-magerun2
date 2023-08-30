@@ -1,5 +1,5 @@
 ---
-name: Phar build and update test
+name: Deploy
 
 on:
   workflow_run:
