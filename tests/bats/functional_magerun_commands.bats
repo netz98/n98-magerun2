@@ -66,6 +66,14 @@ function cleanup_files_in_magento() {
   assert_output --partial "EXPIRE"
 }
 
+@test "Command: cache:remove:id" {
+  run $BIN "cache:remove:id" "app_action_list"
+  assert_output --partial "Cache entry with id app_action_list was removed"
+
+  run $BIN "cache:remove:id" --strict "not_exiting_cache_key_12345"
+  assert [ "$status" -eq 1 ]
+}
+
 @test "Command: config:data:acl" {
   run $BIN "config:data:acl"
   assert_output --partial "ACL Tree"

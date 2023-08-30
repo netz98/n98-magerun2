@@ -618,6 +618,15 @@ n98-magerun2.phar cache:flush [code]
 Keep in mind that `cache:flush` cleares the cache backend,
 so other cache types in the same backend will be cleared as well.
 
+### Remove entry by ID
+
+The command is not checking if the cache id exists. If you want to check if the cache id exists
+use the `cache:remove:id` command with the `--strict` option.
+
+```sh
+n98-magerun2.phar cache:remove:id [options[--strict] <id>
+```
+
 ### List Magento caches
 
 ```sh

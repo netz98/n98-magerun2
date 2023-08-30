@@ -83,6 +83,7 @@ commands:
     - N98\Magento\Command\Cache\EnableCommand
     - N98\Magento\Command\Cache\FlushCommand
     - N98\Magento\Command\Cache\ListCommand
+    - N98\Magento\Command\Cache\RemoveIdCommand
     - N98\Magento\Command\Cache\ReportCommand
     - N98\Magento\Command\Cache\ViewCommand
     - N98\Magento\Command\Cms\ToggleBlockCommand
