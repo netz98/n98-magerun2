@@ -660,6 +660,15 @@ Some entries are encrypted and can be decrypted with `--decrypt` option.
 The command uses the core cache by default. 
 If the FPC cache should be used, the `--fpc` option can be used.
 
+### Flush Catalog Images Cache
+
+Removes pre-generated catalog images and triggers `clean_catalog_images_cache_after` event which
+should invalidate the full page cache.
+
+```sh
+n98-magerun2.phar cache:catalog:image:flush
+```
+
 ---
 
 If no code is specified, all cache types will be enabled. Run

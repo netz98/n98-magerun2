@@ -31,6 +31,16 @@ function cleanup_files_in_magento() {
 	assert_output --partial "username"
 }
 
+@test "Command: cache:catalog:image:flush" {
+  run $BIN "cache:catalog:image:flush"
+  assert_output --partial "Catalog image cache flushed"
+  assert [ "$status" -eq 0 ]
+
+  run $BIN "cache:catalog:image:flush" --suppress-event
+  assert_output --partial "Catalog image cache flushed"
+  assert [ "$status" -eq 0 ]
+}
+
 @test "Command: cache:clean" {
 	run $BIN "cache:clean" "layout"
 	assert_output --partial "cleaned"
