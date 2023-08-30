@@ -639,6 +639,27 @@ If no code is specified, all cache types will be disabled. Run
 n98-magerun2.phar cache:enable [code]
 ```
 
+### Cache Report
+
+This command let you investigate what's stored inside your cache. It prints out a table with cache IDs.
+
+```sh
+n98-magerun2.phar cache:report [-t|--tags] [-m|--mtime] [--filter-id[="..."]] [--filter-tag[="..."]] [--fpc]
+```
+
+### Cache View
+
+Prints stored cache entry by ID.
+
+```sh
+n98-magerun2.phar cache:view [--unserialize] [--decrypt] [--fpc] id
+```
+
+If value is serialized you can force a pretty output with `--unserialize` option.
+Some entries are encrypted and can be decrypted with `--decrypt` option.
+The command uses the core cache by default. 
+If the FPC cache should be used, the `--fpc` option can be used.
+
 ---
 
 If no code is specified, all cache types will be enabled. Run
