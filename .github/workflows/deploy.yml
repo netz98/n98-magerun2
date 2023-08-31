@@ -33,9 +33,17 @@ jobs:
         run: |
          echo "${{ secrets.GPG_PRIVATE_KEY }}" | base64 --decode | gpg --import
 
+      - name: Import GPG key
+        uses: crazy-max/ghaction-import-gpg@v4
+        with:
+          gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
+          passphrase: ${{ secrets.GPG_PASSPHRASE }}
+
       - name: GPG sign phar
         run: |
-          echo "${{ secrets.GPG_PASSPHRASE }}" | gpg --batch --yes --passphrase-fd 0 --detach-sign -a -o n98-magerun.phar.asc n98-magerun.phar
+          echo "${{ secrets.GPG_PASSPHRASE }}" | gpg --batch --yes --pinentry-mode loopback --passphrase-fd 0 --detach-sign -a -o n98-magerun.phar.asc n98-magerun.phar
+        env:
+          GPG_TTY: $(tty)
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v2
