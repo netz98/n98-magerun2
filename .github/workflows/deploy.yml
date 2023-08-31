@@ -29,6 +29,9 @@ jobs:
       - name: Create phar
         run: bash ./build.sh
 
+      - name: Run phar file
+        run: php n98-magerun2.phar --version
+
       - name: Import GPG key
         uses: crazy-max/ghaction-import-gpg@v4
         with:
@@ -63,13 +66,6 @@ jobs:
         with:
           name: n98-magerun2.phar
           path: .
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          tools: composer:2
-          php-version: '7.4'
-      - name: Run phar file
-        run: php n98-magerun2.phar --version
 
       - name: rename phar file (deploy test)
         if: github.ref == 'refs/heads/deploy'
@@ -101,4 +97,4 @@ jobs:
           source: '*.phar,*.phar.asc'
           target: ${{ secrets.SSH_DEPLOY_TARGET }}
           strip_components: 1
-          rm: true
+          rm: false
