@@ -43,6 +43,9 @@ jobs:
         env:
           GPG_TTY: $(tty)
 
+      - name: GPG verify phar file
+        run: gpg --verify n98-magerun2.phar.asc n98-magerun2.phar
+
       - name: Upload artifacts
         uses: actions/upload-artifact@v2
         with:
@@ -68,3 +71,34 @@ jobs:
       - name: Run phar file
         run: php n98-magerun2.phar --version
 
+      - name: rename phar file (deploy test)
+        if: github.ref == 'refs/heads/deploy'
+        run: |
+          mv n98-magerun2.phar n98-magerun2-deploy.phar
+          mv n98-magerun2.phar.asc n98-magerun2-deploy.phar.asc
+
+      - name: rename phar file (develop / unstable)
+        if: github.ref == 'refs/heads/develop'
+        run: |
+          mv n98-magerun2.phar n98-magerun2-dev.phar
+          mv n98-magerun2.phar.asc n98-magerun2-dev.phar.asc
+
+      - name: rename phar file (tag)
+        if: startsWith(github.ref, 'refs/tags/')
+        run: |
+          # get tag part of github.ref
+          TAG=$(cut -d'/' -f3 <<< "$GITHUB_REF")
+          mv n98-magerun2.phar n98-magerun2-${TAG}.phar
+          mv n98-magerun2.phar.asc n98-magerun2-${TAG}.phar.asc
+
+      - name: Upload phar file to ssh remote
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.SSH_DEPLOY_HOST }}
+          username: ${{ secrets.SSH_DEPLOY_USERNAME }}
+          key: ${{ secrets.SSH_DEPLOY_PRIVATE_KEY }}
+          passphrase: ${{ secrets.SSH_DEPLOY_PASSPHRASE }}
+          source: '*.phar,*.phar.asc'
+          target: ${{ secrets.SSH_DEPLOY_TARGET }}
+          strip_components: 1
+          rm: true
