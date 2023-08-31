@@ -98,3 +98,4 @@ jobs:
           target: ${{ secrets.SSH_DEPLOY_TARGET }}
           strip_components: 1
           rm: false
+          overwrite: true
