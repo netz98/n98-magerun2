@@ -70,8 +70,9 @@ jobs:
       - name: rename phar file (deploy test)
         if: github.ref == 'refs/heads/deploy'
         run: |
-          mv n98-magerun2.phar n98-magerun2-deploy.phar
-          mv n98-magerun2.phar.asc n98-magerun2-deploy.phar.asc
+          TAG=deploy-test-1.2.3
+          mv n98-magerun2.phar n98-magerun2-${TAG}.phar
+          mv n98-magerun2.phar.asc n98-magerun2-${TAG}.phar.asc
           ls -l
 
       - name: rename phar file (develop / unstable)
