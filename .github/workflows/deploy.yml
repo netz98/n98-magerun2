@@ -2,15 +2,17 @@
 name: Deploy
 
 on:
-  workflow_run:
-    #workflows: ["Phar build and update test", "Magento Platform Tests"]
-    workflows: ["Phar build and update test"]
-    types:
-      - completed
+  push:
+    branches:
+      - develop
+      - deploy
+    tags:
+      # only tags with semver format
+      - '[0-9]+.[0-9]+.[0-9]+'
+
 jobs:
   create-signed-phar-file:
     runs-on: ubuntu-latest
-    if: "github.event.workflow_run.conclusion == 'success' && (github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/deploy' || startsWith(github.ref, 'refs/tags/'))"
     steps:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
