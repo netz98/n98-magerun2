@@ -35,9 +35,11 @@ jobs:
           gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
           passphrase: ${{ secrets.GPG_PASSPHRASE }}
 
-      - name: GPG sign phar
+      - name: GPG sign phar file (detached)
         run: |
-          echo "${{ secrets.GPG_PASSPHRASE }}" | gpg --batch --yes --pinentry-mode loopback --passphrase-fd 0 --detach-sign -a -o n98-magerun.phar.asc n98-magerun.phar
+          echo "${{ secrets.GPG_PASSPHRASE }}" | \
+          gpg --batch --yes --pinentry-mode loopback --passphrase-fd 0 --detach-sign -a \
+          -o n98-magerun2.phar.asc n98-magerun2.phar
         env:
           GPG_TTY: $(tty)
 
