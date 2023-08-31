@@ -25,3 +25,7 @@ phpunit.xml
 
 # Gitub
 super-linter.log
+
+# Act
+act.env
+act.secrets
