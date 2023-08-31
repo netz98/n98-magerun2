@@ -50,7 +50,7 @@ jobs:
         run: gpg --verify n98-magerun2.phar.asc n98-magerun2.phar
 
       - name: Upload artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: n98-magerun2.phar
           path: |
