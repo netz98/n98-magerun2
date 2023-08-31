@@ -93,7 +93,7 @@ jobs:
           mv n98-magerun2.phar.asc n98-magerun2-latest.phar.asc
           ls -l
 
-      - name: Upload phar file to ssh remote
+      - name: Upload phar file to files.magerun.net
         uses: appleboy/scp-action@master
         with:
           host: ${{ secrets.SSH_DEPLOY_HOST }}
@@ -104,3 +104,21 @@ jobs:
           target: ${{ secrets.SSH_DEPLOY_TARGET }}
           rm: false
           overwrite: true
+
+      - name: Run update tasks on files.magerun.net
+        uses: appleboy/ssh-action
+        with:
+          host: ${{ secrets.SSH_DEPLOY_HOST }}
+          username: ${{ secrets.SSH_DEPLOY_USERNAME }}
+          key: ${{ secrets.SSH_DEPLOY_PRIVATE_KEY }}
+          passphrase: ${{ secrets.SSH_DEPLOY_PASSPHRASE }}
+          script: |
+            build/build_phive.sh
+            curl -s https://files.magerun.net/list.php > public/index.html
+
+      - name: Invalidate cloudflare
+        run: |
+          curl -X POST 'https://api.cloudflare.com/client/v4/zones/${{ secrets.CLOUDFLARE_ZONE }}/purge_cache' \
+              -H 'Content-Type:application/json' \
+              -H "Authorization: Bearer ${{ secrets.CLOUDFLARE_TOKEN }}" \
+              --data-raw '{"purge_everything":true}'
