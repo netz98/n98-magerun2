@@ -7,15 +7,10 @@ on:
     workflows: ["Phar build and update test"]
     types:
       - completed
-    branches:
-      - develop
-      - deploy
-    tags: *
 jobs:
   create-signed-phar-file:
     runs-on: ubuntu-latest
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
-    #if: github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/deploy' || startsWith(github.ref, 'refs/tags/')
+    if: "${{ github.event.workflow_run.conclusion == 'success' }} && (github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/deploy' || startsWith(github.ref, 'refs/tags/'))"
     steps:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
