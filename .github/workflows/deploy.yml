@@ -62,7 +62,7 @@ jobs:
     needs: ["create-signed-phar-file"]
     steps:
       - name: Download artifacts
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: n98-magerun2.phar
           path: .
@@ -134,7 +134,7 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.DIST_REPO_DEPLOY_KEY }}
       - name: Download artifacts
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: n98-magerun2.phar
       - name: Update dist repo
@@ -148,7 +148,7 @@ jobs:
       - name: Checkout HEAD
         uses: actions/checkout@v3.6.0
       - name: Download artifacts
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: n98-magerun2.phar
       - name: Release
