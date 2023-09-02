@@ -27,5 +27,4 @@ phpunit.xml
 super-linter.log
 
 # Act
-act.env
-act.secrets
+/act*
