@@ -4,15 +4,15 @@ name: Magento Platform Tests
 on:
   push:
     branches:
-      - 'master'
-      - 'develop'
-      - 'bugfix/*'
-      - 'feature/*'
-      - 'release/*'
+      - "master"
+      - "develop"
+      - "bugfix/*"
+      - "feature/*"
+      - "release/*"
   pull_request_target:
     branches:
-      - 'master'
-      - 'develop'
+      - "master"
+      - "develop"
 
 jobs:
   phpunit:
@@ -39,7 +39,7 @@ jobs:
             elasticsearch-version: 7.9.0
             composer-version: 2.2.17
             use-git-repository: false
-            git-repository: ''
+            git-repository: ""
 
           - magento-version: mage-os-2.4.3-p1
             operating-system: ubuntu-latest
@@ -48,7 +48,17 @@ jobs:
             elasticsearch-version: 7.9.0
             composer-version: 2.2.17
             use-git-repository: false
-            git-repository: ''
+            git-repository: ""
+
+          - magento-version: magento-ce-2.4.6-p2
+            operating-system: ubuntu-latest
+            php-version: 8.1
+            mysql-version: 8.0
+            elasticsearch-version: 7.16.0
+            composer-version: 2.2.17
+            use-git-repository: false
+            git-repository: ""
+            git-branch: ""
 
           - magento-version: magento-ce-2.4.5-p1
             operating-system: ubuntu-latest
@@ -57,8 +67,8 @@ jobs:
             elasticsearch-version: 7.16.0
             composer-version: 2.2.17
             use-git-repository: false
-            git-repository: ''
-            git-branch: ''
+            git-repository: ""
+            git-branch: ""
 
           - magento-version: magento-ce-2.4.4-p2
             operating-system: ubuntu-latest
@@ -67,8 +77,8 @@ jobs:
             elasticsearch-version: 7.16.0
             composer-version: 2.2.17
             use-git-repository: false
-            git-repository: ''
-            git-branch: ''
+            git-repository: ""
+            git-branch: ""
 
           - magento-version: magento-ce-2.4.3-p2
             operating-system: ubuntu-latest
@@ -77,8 +87,8 @@ jobs:
             elasticsearch-version: 7.9.0
             composer-version: 2.2.17
             use-git-repository: false
-            git-repository: ''
-            git-branch: ''
+            git-repository: ""
+            git-branch: ""
 
           - magento-version: magento-ce-2.4.2-p1
             operating-system: ubuntu-latest
@@ -87,8 +97,8 @@ jobs:
             elasticsearch-version: 7.9.0
             composer-version: 2.2.17
             use-git-repository: false
-            git-repository: ''
-            git-branch: ''
+            git-repository: ""
+            git-branch: ""
 
           - magento-version: magento-ce-2.4.2
             operating-system: ubuntu-latest
@@ -97,8 +107,8 @@ jobs:
             elasticsearch-version: 7.9.0
             composer-version: 2.2.17
             use-git-repository: false
-            git-repository: ''
-            git-branch: ''
+            git-repository: ""
+            git-branch: ""
 
     services:
       elaticsearch:
@@ -250,7 +260,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           tools: composer:2
-          php-version: '7.4'
+          php-version: "7.4"
         if: matrix.magento_version == false
 
       - name: Build phar file
