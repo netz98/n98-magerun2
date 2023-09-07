@@ -24,4 +24,4 @@ jobs:
           uses: pantheon-systems/phpcompatibility-action@v1
           with:
             test-versions: ${{ env.MIN_PHP_VERSION }}-
-            paths: ${{ github.workspace }}/src, ${{ github.workspace }}/tests
+            paths: ${{ github.workspace }}/src,${{ github.workspace }}/tests
