@@ -1,0 +1,27 @@
+---
+name: PHP Compatibility
+on:
+  - push
+  - pull_request
+
+env:
+  MIN_PHP_VERSION: 7.4
+
+jobs:
+  php-compatibility:
+      name: PHP Compatibility
+      runs-on: ubuntu-latest
+      steps:
+        - name: Checkout PR
+          uses: actions/checkout@v4.0.0
+          if: github.event_name == 'pull_request_target'
+          with:
+            ref: ${{ github.event.pull_request.head.sha }}
+        - name: Checkout HEAD
+          uses: actions/checkout@v4.0.0
+          if: github.event_name == 'push'
+        - name: PHP Compatibility
+          uses: pantheon-systems/phpcompatibility-action@v1
+          with:
+            test-versions: ${{ env.MIN_PHP_VERSION }}-
+            paths: ${{ github.workspace }}/src, ${{ github.workspace }}/tests
