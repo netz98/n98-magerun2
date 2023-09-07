@@ -20,8 +20,22 @@ jobs:
         - name: Checkout HEAD
           uses: actions/checkout@v4.0.0
           if: github.event_name == 'push'
-        - name: PHP Compatibility
+        - name: Setup PHP
+          uses: shivammathur/setup-php@v2
+          with:
+            tools: composer:${{ matrix.composer-version }}, cs2pr
+            php-version: 8.2
+            extensions: mcrypt, mbstring, intl
+            coverage: none
+        - name: Test src directory
           uses: pantheon-systems/phpcompatibility-action@v1
           with:
+            skip-php-setup: true
             test-versions: ${{ env.MIN_PHP_VERSION }}-
-            paths: ${{ github.workspace }}/src,${{ github.workspace }}/tests
+            paths: ${{ github.workspace }}/src
+        - name: Test tests directory
+          uses: pantheon-systems/phpcompatibility-action@v1
+          with:
+            skip-php-setup: true
+            test-versions: ${{ env.MIN_PHP_VERSION }}-
+            paths: ${{ github.workspace }}/tests
