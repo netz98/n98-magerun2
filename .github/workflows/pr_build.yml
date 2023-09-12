@@ -29,13 +29,14 @@ jobs:
           fetch-depth: 0
           ref: ${{ github.event.pull_request.head.sha }}
 
-      # Find out info about how github is getting the hash
+      # Find out info about how GitHub is getting the hash
       - run: "git describe --tags --always --dirty"
       - run: "(git log --oneline | head -5) || true"
 
       - name: Get Composer Cache Directory
         id: composer-cache
-        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+        run: echo "dir=\"$(composer config cache-files-dir)\"" >> "$GITHUB_ENV"
+        shell: bash
 
       - uses: actions/cache@v3
         with:
@@ -49,10 +50,11 @@ jobs:
         run: composer install --prefer-dist --no-progress --no-suggest
 
       - name: Extract branch name
-        run: echo "BRANCH_NAME=$(echo ${GITHUB_REF#refs/heads/})" >> $GITHUB_ENV
+        run: echo "BRANCH_NAME=\"${GITHUB_REF#refs/heads/}\"" >> "$GITHUB_ENV"
+        shell: bash
 
       - name: Set application name
-        run: cat box.json.dist | jq -r '.replacements.application_name = "n98-magerun2-dev ${{ env.BRANCH_NAME }}"' > box.json
+        run: jq -r '.replacements.application_name = "n98-magerun2-dev ${{ env.BRANCH_NAME }}"' box.json.dist > box.json
 
       - name: Create phar
         run: bash ./build.sh

@@ -23,8 +23,16 @@ jobs:
           # extract tag part of github.ref
           PUSHED_VERSION=$(cut -d'/' -f3 <<< "$GITHUB_REF")
           LATEST_RELEASED_VERSION=$(curl -s https://raw.githubusercontent.com/netz98/n98-magerun2/master/version.txt | tr -d '[:space:]')
-          echo "pushed_version=$PUSHED_VERSION" >> $GITHUB_ENV
-          echo "latest_released_version=$LATEST_RELEASED_VERSION" >> $GITHUB_ENV
+          
+          # Check if curl was successful
+          if [[ -z "$LATEST_RELEASED_VERSION" ]]; then
+            echo "Failed to fetch the latest released version."
+            exit 1
+          fi
+          
+          echo "pushed_version=\"$PUSHED_VERSION\"" >> "$GITHUB_ENV"
+          echo "latest_released_version=\"$LATEST_RELEASED_VERSION\"" >> "$GITHUB_ENV"    
+
       - uses: jackbilestech/semver-compare@1.0.4
         if: startsWith(github.ref, 'refs/tags/')
         with:
@@ -91,13 +99,23 @@ jobs:
       - name: rename phar file (tag)
         if: startsWith(github.ref, 'refs/tags/')
         run: |
-          # get tag part of github.ref
+          # Get tag part of github.ref
           TAG=$(cut -d'/' -f3 <<< "$GITHUB_REF")
-          LATEST_VERSION=$(curl -s https://raw.githubusercontent.com/netz98/n98-magerun2/master/version.txt  | tr -d '[:space:]')
-          cp n98-magerun2.phar n98-magerun2-${TAG}.phar
-          cp n98-magerun2.phar.asc n98-magerun2-${TAG}.phar.asc
-          mv n98-magerun2.phar n98-magerun2-latest.phar
-          mv n98-magerun2.phar.asc n98-magerun2-latest.phar.asc
+          LATEST_VERSION=$(curl -s https://raw.githubusercontent.com/netz98/n98-magerun2/master/version.txt | tr -d '[:space:]')
+
+          # Check if curl was successful
+          if [[ -z "$LATEST_VERSION" ]]; then
+            echo "Failed to fetch the latest version."
+            exit 1
+          fi
+
+          # Rename files
+          cp "n98-magerun2.phar" "n98-magerun2-${TAG}.phar"
+          cp "n98-magerun2.phar.asc" "n98-magerun2-${TAG}.phar.asc"
+          mv "n98-magerun2.phar" "n98-magerun2-latest.phar"
+          mv "n98-magerun2.phar.asc" "n98-magerun2-latest.phar.asc"
+
+          # List files to verify
           ls -l
 
       - name: Upload phar file to files.magerun.net

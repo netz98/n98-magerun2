@@ -52,10 +52,20 @@ jobs:
 
       - name: Install Mage-OS Nightly
         run: |
-          composer create-project --stability alpha --repository-url=https://upstream-nightly.mage-os.org magento/project-community-edition mage-os;
-          cd mage-os;
+          # Define variables
+          DB_PORT="${{ job.services.mysql.ports[3306] }}"
+          ES_PORT="${{ job.services.elasticsearch.ports[9200] }}"
+          DB_HOST="127.0.0.1:${DB_PORT}"
+
+          # Create project
+          composer create-project --stability alpha --repository-url=https://upstream-nightly.mage-os.org magento/project-community-edition mage-os
+
+          # Change directory
+          cd mage-os
+
+          # Magento setup
           bin/magento setup:install \
-            --db-host="127.0.0.1:${{ job.services.mysql.ports[3306] }}" \
+            --db-host="$DB_HOST" \
             --db-user=root \
             --db-password=root \
             --db-name=magento \
@@ -75,7 +85,7 @@ jobs:
             --admin-email="admin@example.com" \
             --search-engine="elasticsearch7" \
             --elasticsearch-host="127.0.0.1" \
-            --elasticsearch-port=${{ job.services.elasticsearch.ports[9200] }};
+            --elasticsearch-port="$ES_PORT"
 
       - name: Build phar file
         run: |

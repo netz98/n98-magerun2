@@ -1,8 +1,12 @@
 ---
 name: PHP Compatibility
 on:
-  - push
-  - pull_request
+  push:
+    paths:
+      - "src/**"
+  pull_request:
+    paths:
+      - "src/**"
 
 env:
   MIN_PHP_VERSION: 7.4
