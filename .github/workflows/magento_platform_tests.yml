@@ -256,12 +256,11 @@ jobs:
       #   ../vendor/bin/phpstan analyse --level 1 --autoload-file="../src/bootstrap.php" ../src
       #  if: matrix.magento-version == 'magento-ce-2.4.5-p2'
 
-      - name: Setup PHP for Composer
+      - name: Setup PHP for phar build
         uses: shivammathur/setup-php@v2
         with:
           tools: composer:2
           php-version: "7.4"
-        if: matrix.magento_version == false
 
       - name: Build phar file
         run: |
@@ -271,7 +270,7 @@ jobs:
           bash ./build.sh;
           composer self-update --rollback &> /dev/null || true;
 
-      - name: Setup PHP for Composer
+      - name: Setup PHP for project tests
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php-version }}

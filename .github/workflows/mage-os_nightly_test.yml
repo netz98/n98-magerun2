@@ -1,3 +1,4 @@
+---
 name: Mage-OS Nightly Compatibilty Test
 on:
   schedule:
@@ -7,8 +8,6 @@ on:
 jobs:
   test_develop_nightly:
     name: Deploy nightly
-    strategy:
-      fail-fast: false
     runs-on: ubuntu-22.04
 
     services:

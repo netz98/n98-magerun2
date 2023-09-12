@@ -23,7 +23,7 @@ jobs:
         - name: Setup PHP
           uses: shivammathur/setup-php@v2
           with:
-            tools: composer:${{ matrix.composer-version }}, cs2pr
+            tools: composer:2.2.17, cs2pr
             php-version: 8.2
             extensions: mcrypt, mbstring, intl
             coverage: none
