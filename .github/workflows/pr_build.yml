@@ -54,7 +54,7 @@ jobs:
         shell: bash
 
       - name: Set application name
-        run: jq -r '.replacements.application_name = "n98-magerun2-dev ${{ env.BRANCH_NAME }}"' box.json.dist > box.json
+        run: jq -r --arg bn "${{ env.BRANCH_NAME }}" '.replacements.application_name = ("n98-magerun2-dev " + $bn)' box.json.dist > box.json
 
       - name: Create phar
         run: bash ./build.sh
