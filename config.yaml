@@ -606,6 +606,16 @@ commands:
   N98\Magento\Command\MagentoCoreProxyCommand:
     # 1 day timeout for core commands -> for long-running processes
     timeout: 86400
+    # Filter env variables which should be passed to the core command
+    is_env_variables_filtering_enabled: true
+    env_variables_to_filter:
+      - 'PHP_IDE_CONFIG'
+      - 'PHP_OPTIONS'
+      - 'XDEBUG_CONFIG'
+      - 'XDEBUG_SESSION'
+      - 'XDEBUG_SESSION_START'
+      - 'XDEBUG_TRACE'
+      - 'XDEBUG_PROFILE'
 
   N98\Magento\Command\Media\DumpCommand:
     strip:

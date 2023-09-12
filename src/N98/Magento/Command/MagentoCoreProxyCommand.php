@@ -56,11 +56,25 @@ class MagentoCoreProxyCommand extends AbstractMagentoCommand
         $config = $this->getCommandConfig();
 
         $magentoCoreCommandInput = new FilteredStringInput($input->__toString());
+        $envVariablesForBinMagento = $_ENV;
+
+        if ($config['is_env_variables_filtering_enabled'] === true) {
+            if (OutputInterface::VERBOSITY_VERBOSE <= $output->getVerbosity()) {
+                $output->writeln('<debug>Filtering environment variables for bin/magento</debug>');
+                // print filtered environment variables
+                foreach ($config['env_variables_to_filter'] as $key) {
+                    $output->writeln(sprintf('<debug>  - <comment>%s</comment></debug>', $key));
+                }
+            }
+            $envVariablesForBinMagento = $this->filterEnvironmentVariables(
+                $config['env_variables_to_filter']
+            );
+        }
 
         $process = Process::fromShellCommandline(
             OperatingSystem::getPhpBinary() . ' ' . $this->magentoRootDir . '/bin/magento ' . $magentoCoreCommandInput->__toString(),
             $this->magentoRootDir,
-            $this->filterEnvironmentVariables()
+            $envVariablesForBinMagento
         );
 
         $process->setTimeout($config['timeout']);
@@ -173,23 +187,14 @@ class MagentoCoreProxyCommand extends AbstractMagentoCommand
     }
 
     /**
+     * @param array $filterList
      * @return array
      */
-    protected function filterEnvironmentVariables(): array
+    protected function filterEnvironmentVariables(array $filterList): array
     {
         $envForBinMagento = $_ENV;
 
-        $unsetKeys = [
-            'PHP_IDE_CONFIG',
-            'PHP_OPTIONS',
-            'XDEBUG_CONFIG',
-            'XDEBUG_SESSION',
-            'XDEBUG_SESSION_START',
-            'XDEBUG_TRACE',
-            'XDEBUG_PROFILE'
-        ];
-
-        foreach ($unsetKeys as $key) {
+        foreach ($filterList as $key) {
             unset($envForBinMagento[$key]);
         }
 
