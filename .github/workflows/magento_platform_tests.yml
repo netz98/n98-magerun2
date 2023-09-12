@@ -17,6 +17,7 @@ on:
       - "res/**"
       - "scoper.inc.php"
       - "src/**"
+      - "version.txt"
   pull_request_target:
     branches:
       - "master"
@@ -29,6 +30,7 @@ on:
       - "res/**"
       - "scoper.inc.php"
       - "src/**"
+      - "version.txt"
 
 jobs:
   phpunit:

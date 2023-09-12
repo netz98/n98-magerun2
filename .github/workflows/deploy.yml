@@ -4,8 +4,17 @@ name: Deploy
 on:
   push:
     branches:
-      - develop
-      - deploy
+      - 'develop'
+    paths:
+      - "bin/**"
+      - "config.yaml"
+      - "composer.json"
+      - "composer.lock"
+      - "res/**"
+      - "scoper.inc.php"
+      - "src/**"
+      - "version.txt"
+
     tags:
       # only tags with semver format
       - '[0-9]+.[0-9]+.[0-9]+'

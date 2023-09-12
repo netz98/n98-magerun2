@@ -11,6 +11,7 @@ on:
       - "res/**"
       - "scoper.inc.php"
       - "src/**"
+      - "version.txt"
   pull_request:
     paths:
       - "bin/**"
@@ -20,6 +21,7 @@ on:
       - "res/**"
       - "scoper.inc.php"
       - "src/**"
+      - "version.txt"
 
 jobs:
   build:
