@@ -216,7 +216,7 @@ jobs:
           composer --version;
           composer install --no-interaction;
           bin/magento setup:install \
-            --db-host="127.0.0.1:${{ job.services.mysql.ports[3306] }}" \
+            --db-host="127.0.0.1:${{ job.services.mysql.ports['3306'] }}" \
             --db-user=root \
             --db-password=root \
             --db-name=magento \
