@@ -9,10 +9,26 @@ on:
       - "bugfix/*"
       - "feature/*"
       - "release/*"
+    paths:
+      - "bin/**"
+      - "config.yaml"
+      - "composer.json"
+      - "composer.lock"
+      - "res/**"
+      - "scoper.inc.php"
+      - "src/**"
   pull_request_target:
     branches:
       - "master"
       - "develop"
+    paths:
+      - "bin/**"
+      - "config.yaml"
+      - "composer.json"
+      - "composer.lock"
+      - "res/**"
+      - "scoper.inc.php"
+      - "src/**"
 
 jobs:
   phpunit:
