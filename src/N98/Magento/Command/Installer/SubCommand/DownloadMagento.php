@@ -38,7 +38,10 @@ class DownloadMagento extends AbstractSubCommand
 
     private function implementation()
     {
-        $this->checkMagentoConnectCredentials($this->input, $this->output);
+        // do magento connect credential check only if repository-url container repo.magento.com
+        if (strpos($this->config['magentoPackage']['package'], 'repo.magento.com') !== false) {
+            $this->checkMagentoConnectCredentials($this->input, $this->output);
+        }
 
         $package = $this->config['magentoVersionData'];
         $this->config->setArray('magentoPackage', $package);
