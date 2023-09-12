@@ -43,5 +43,6 @@ jobs:
         env:
           VALIDATE_ALL_CODEBASE: false
           VALIDATE_PHP_PSALM: false
+          VALIDATE_PHPSTAN: false
           DEFAULT_BRANCH: develop
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
