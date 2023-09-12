@@ -53,8 +53,8 @@ jobs:
       - name: Install Mage-OS Nightly
         run: |
           # Define variables
-          DB_PORT: "${{ job.services.mysql.ports['3306'] }}"
-          ES_PORT: "${{ job.services.elasticsearch.ports['9200'] }}"
+          DB_PORT="${{ job.services.mysql.ports['3306'] }}"
+          ES_PORT="${{ job.services.elasticsearch.ports['9200'] }}"
           DB_HOST="127.0.0.1:${DB_PORT}"
           
           # Create project
