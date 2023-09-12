@@ -2,6 +2,8 @@
 
 namespace N98\Magento\Command\Integration;
 
+use Exception;
+use Magento\Integration\Api\OauthServiceInterface;
 use Magento\Integration\Model\IntegrationService;
 use N98\Magento\Command\AbstractMagentoCommand;
 use Symfony\Component\Console\Command\Command;
@@ -22,7 +24,7 @@ class DeleteCommand extends AbstractMagentoCommand
     private $integrationService;
 
     /**
-     * @var OauthService
+     * @var OauthServiceInterface
      */
     private $oauthService;
 
@@ -40,16 +42,18 @@ class DeleteCommand extends AbstractMagentoCommand
     }
 
     public function inject(
-        IntegrationService $integrationService
+        IntegrationService $integrationService,
+        OauthServiceInterface $oauthService
     ) {
         $this->integrationService = $integrationService;
+        $this->oauthService = $oauthService;
     }
 
     /**
-     * @param \Symfony\Component\Console\Input\InputInterface $input
-     * @param \Symfony\Component\Console\Output\OutputInterface $output
+     * @param InputInterface $input
+     * @param OutputInterface $output
      * @return int
-     * @throws \Exception
+     * @throws Exception
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -66,6 +70,15 @@ class DeleteCommand extends AbstractMagentoCommand
         }
 
         $this->integrationService->delete($integrationModel->getId());
+
+        /**
+         * we have to delete the consumer entry, because there is no way
+         * reference on the database with cascade delete
+         *
+         * @see https://github.com/netz98/n98-magerun2/issues/1287
+         */
+        $this->oauthService->deleteConsumer($integrationModel->getConsumerId());
+
         $output->writeln(
             sprintf(
                 '<info>Successfully deleted integration <comment>%s</comment> with ID: <comment>%d</comment></info>',
