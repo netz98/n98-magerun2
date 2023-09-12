@@ -38,13 +38,13 @@ class DownloadMagento extends AbstractSubCommand
 
     private function implementation()
     {
+        $package = $this->config['magentoVersionData'];
+        $this->config->setArray('magentoPackage', $package);
+
         // do magento connect credential check only if repository-url container repo.magento.com
         if (strpos($this->config['magentoPackage']['package'], 'repo.magento.com') !== false) {
             $this->checkMagentoConnectCredentials($this->input, $this->output);
         }
-
-        $package = $this->config['magentoVersionData'];
-        $this->config->setArray('magentoPackage', $package);
 
         if (file_exists($this->config->getString('installationFolder') . '/' . $this->getConfigDir() . '/env.php')) {
             throw new RuntimeException('A magento installation already exists in this folder');
