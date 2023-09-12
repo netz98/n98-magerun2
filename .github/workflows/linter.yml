@@ -42,8 +42,11 @@ jobs:
         uses: super-linter/super-linter/slim@v5
         env:
           VALIDATE_ALL_CODEBASE: false
+          VALIDATE_NATURAL_LANGUAGE: false
+          VALIDATE_MARKDOWN: true
           VALIDATE_PHP_PHPCS: false
           VALIDATE_PHP_PHPSTAN: false
           VALIDATE_PHP_PSALM: false
-          DEFAULT_BRANCH: develop
+          MARKDOWN_CONFIG_FILE: '.markdown-lint.yml'
+          DEFAULT_BRANCH: 'develop'
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

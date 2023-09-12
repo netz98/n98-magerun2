@@ -1,6 +1,9 @@
 {
   "default": true,
   "MD007": { "indent": 4 },
+  "MD009": {
+    "no_trailing_spaces": false,
+  },
   "MD013": {
     "line_length": 160,
     "code_blocks": false,

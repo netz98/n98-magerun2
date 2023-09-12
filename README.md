@@ -116,8 +116,8 @@ The main advantage of the dist package is that there are no package dependencies
 
 ### Install with Composer (Source Package) - not recommended
 
-The installation via Composer is **not recommended**, 
-because it's impossible to be compatible with all project and Magento core dependencies. 
+The installation via Composer is **not recommended**,
+because it's impossible to be compatible with all project and Magento core dependencies.
 Please use the phar file instead of the Composer version. We are not able to provide
 compatibility to all Magento versions anymore.
 
@@ -196,16 +196,18 @@ Global config parameters:
 
 ### Call Core Magento Commands
 
-The tool can be used to run core Magento commands. We provide a internal *Proxy Command* which calls 
+The tool can be used to run core Magento commands. We provide a internal *Proxy Command* which calls
 the original Magento command via `bin/magento`.
 All options and arguments are passed to the original command.
 
 If you do not want to use the proxy command you can disable it with the `--skip-core-commands` option.
 
-One of the big advantages of the proxy command is that you can run any command without having to change the working directory to the Magento root directory 
+One of the big advantages of the proxy command is that you can run any command without having to change the working
+directory to the Magento root directory
 or to specify the path to `bin/magento` if your current working directory is inside the Magento installation.
 
-If you are outside the Magento root directory you can run any command by specifying the Magento root directory with the `--root-dir` option.
+If you are outside the Magento root directory you can run any command by specifying the Magento root directory with
+the `--root-dir` option.
 That is very useful if you have multiple Magento installations or if it is used in some kind of automation.
 
 For core commands we filter environment variables to avoid problems with enabled xdebug extension.
@@ -245,7 +247,6 @@ You can add additional any number of custom fields, example:
 ```sh
 n98-magerun2.phar customer:create foo@example.com passworD123 John Doe base taxvat DE12345678 prefix Mrs.
 ```
-
 
 ### List Customers
 
@@ -578,11 +579,11 @@ n98-magerun2.phar config:data:mview [options]
 
 **Options:**
 
-| Option            | Description                                                   |
-|-------------------|---------------------------------------------------------------|
-| `--scope` `-s`    | Config scope (`global`, `adminhtml`, `frontend`, `webapi_rest`, `webapi_soap`, ...) (default: `global`) |
-| `--tree` `-t`     | Print data as tree                                            |
-| `--format`        | Output as `json`, `xml` or `csv`                              |
+| Option         | Description                                                                                             |
+|----------------|---------------------------------------------------------------------------------------------------------|
+| `--scope` `-s` | Config scope (`global`, `adminhtml`, `frontend`, `webapi_rest`, `webapi_soap`, ...) (default: `global`) |
+| `--tree` `-t`  | Print data as tree                                                                                      |
+| `--format`     | Output as `json`, `xml` or `csv`                                                                        |
 
 ### Print Indexer Config
 
@@ -594,11 +595,11 @@ n98-magerun2.phar config:data:indexer [options]
 
 **Options:**
 
-| Option            | Description                                                   |
-|-------------------|---------------------------------------------------------------|
-| `--scope` `-s`    | Config scope (`global`, `adminhtml`, `frontend`, `webapi_rest`, `webapi_soap`, ...) (default: `global`) |
-| `--tree` `-t`     | Print data as tree                                            |
-| `--format`        | Output as `json`, `xml` or `csv`                              |
+| Option         | Description                                                                                             |
+|----------------|---------------------------------------------------------------------------------------------------------|
+| `--scope` `-s` | Config scope (`global`, `adminhtml`, `frontend`, `webapi_rest`, `webapi_soap`, ...) (default: `global`) |
+| `--tree` `-t`  | Print data as tree                                                                                      |
+| `--format`     | Output as `json`, `xml` or `csv`                                                                        |
 
 ---
 
@@ -685,7 +686,7 @@ n98-magerun2.phar cache:view [--unserialize] [--decrypt] [--fpc] id
 
 If value is serialized you can force a pretty output with `--unserialize` option.
 Some entries are encrypted and can be decrypted with `--decrypt` option.
-The command uses the core cache by default. 
+The command uses the core cache by default.
 If the FPC cache should be used, the `--fpc` option can be used.
 
 ### Flush Catalog Images Cache
@@ -771,25 +772,25 @@ Arguments:
 
 Options:
 
-| Option                     | Description                                                                                  |
-|----------------------------|----------------------------------------------------------------------------------------------|
-| `--add-routines`           | Include stored routines in dump (procedures & functions).                                    |
-| `--add-time suffix`        | Adds time to filename (only if filename was provided). Requires value [suffix, prefix, no]   |
-| `--compression` `-c`       | Compress the dump file using one of the supported algorithms                                 |
-| `--dry-run`                | Do everything but the actual dump. Useful to test.                                           |
-| `--exclude`                | Tables to exclude entirely from the dump (including structure)                               |
-| `--force` `-f`             | Do not prompt if all options are defined                                                     |
-| `--git-friendly`           | Use one insert statement, but with line breaks instead of separate insert statements.        |
-| `--human-readable`         | Use a single insert with column names per row.                                               |
-| `--include`                | Tables to include entirely to the dump (default: all tables are included)                    |
-| `--keep-column-statistics` | Retains `column statistics` table in `mysqldump`                                             |
-| `--no-single-transaction`  | Do not use single-transaction (not recommended, this is blocking)                            |
-| `--no-tablespaces`         | Use this option if you want to create a dump without having the PROCESS privilege.           |
-| `--only-command`           | Print only mysqldump command. Does not execute.                                              |
-| `--print-only-filename`    | Execute and prints not output except the dump filename                                       |
-| `--set-gtid-purged-off`    | Adds --set-gtid-purged=OFF to mysqlqump                                                      |
-| `--stdout`                 | Dump to stdout                                                                               |
-| `--strip`                  | Tables to strip (dump only structure of those tables)                                        |
+| Option                     | Description                                                                                |
+|----------------------------|--------------------------------------------------------------------------------------------|
+| `--add-routines`           | Include stored routines in dump (procedures & functions).                                  |
+| `--add-time suffix`        | Adds time to filename (only if filename was provided). Requires value [suffix, prefix, no] |
+| `--compression` `-c`       | Compress the dump file using one of the supported algorithms                               |
+| `--dry-run`                | Do everything but the actual dump. Useful to test.                                         |
+| `--exclude`                | Tables to exclude entirely from the dump (including structure)                             |
+| `--force` `-f`             | Do not prompt if all options are defined                                                   |
+| `--git-friendly`           | Use one insert statement, but with line breaks instead of separate insert statements.      |
+| `--human-readable`         | Use a single insert with column names per row.                                             |
+| `--include`                | Tables to include entirely to the dump (default: all tables are included)                  |
+| `--keep-column-statistics` | Retains `column statistics` table in `mysqldump`                                           |
+| `--no-single-transaction`  | Do not use single-transaction (not recommended, this is blocking)                          |
+| `--no-tablespaces`         | Use this option if you want to create a dump without having the PROCESS privilege.         |
+| `--only-command`           | Print only mysqldump command. Does not execute.                                            |
+| `--print-only-filename`    | Execute and prints not output except the dump filename                                     |
+| `--set-gtid-purged-off`    | Adds --set-gtid-purged=OFF to mysqlqump                                                    |
+| `--stdout`                 | Dump to stdout                                                                             |
+| `--strip`                  | Tables to strip (dump only structure of those tables)                                      |
 
 ```sh
 n98-magerun2.phar db:dump
@@ -819,7 +820,8 @@ Dumps your database and excludes some tables. This is useful for
 development or staging environments where you may want to provision a
 restricted database.
 
-Separate each table to strip by a space. You can use wildcards like `*` and `?` in the table names to strip multiple tables.
+Separate each table to strip by a space. You can use wildcards like `*` and `?` in the table names to strip multiple
+tables.
 In addition, you can specify pre-defined table groups, that start with an @ sign.
 
 Example: `dataflow_batch_export unimportant_module_* @log`
@@ -879,14 +881,14 @@ Options:
 | `--optimize`                          | Convert verbose INSERTs to short ones before import (not working with compression) |
 | `--skip-authorization-entry-creation` | Add default entry to authorization_role and authorization_rule tables.             |
 
-
 ```sh
 n98-magerun2.phar db:import
 ```
 
 ### Fix empty authorization tables
 
-If you run `db:dump` with stripped option and `@admin` group, the authorization_rule and authorization_role tables are empty.
+If you run `db:dump` with stripped option and `@admin` group, the authorization_rule and authorization_role tables are
+empty.
 This blocks the creation of admin users.
 
 You can re-create the default entries by running the command:
@@ -1201,11 +1203,11 @@ Variable `$di` is made available with a
 `Magento\Framework\ObjectManagerInterface` instance to allow creation of
 object instances.
 
-Variable `$dh` provides convenient debugging functions. Type `$dh->` and press 
-Tab for a list.
+Variable `$dh` provides convenient debugging functions.
+Type `$dh->` and press Tab for a list.
 
 Example:
-    
+
 ```bash
 n98-magerun2 dev:console --area=adminhtml
     // show name of category 123 in default store
@@ -1357,7 +1359,7 @@ Create sales sequences in the database if they are missing, this will recreate p
 n98-magerun2.phar sales:sequence:add [store] 
 ```
 
-If store is omitted, it'll run for all stores.  
+If store is omitted, it'll run for all stores.
 
 *Note: It is possible a sequence already exists, in this case nothing will happen, only missing tables are created.*
 
@@ -1369,7 +1371,8 @@ Remove sales sequences from the database, warning, you cannot undo this, make su
 n98-magerun2.phar sales:sequence:remove [store] 
 ```
 
-If store is omitted, it'll run for all stores. When the option `no-interaction` is given, it will run immediately without any interaction.
+If store is omitted, it'll run for all stores. When the option `no-interaction` is given, it will run immediately
+without any interaction.
 Otherwise it will remind you and ask if you know what you're doing and ask for each store you are running it on.
 
 *Note: .*
