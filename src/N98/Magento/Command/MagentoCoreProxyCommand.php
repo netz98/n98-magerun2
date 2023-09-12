@@ -59,7 +59,8 @@ class MagentoCoreProxyCommand extends AbstractMagentoCommand
 
         $process = Process::fromShellCommandline(
             OperatingSystem::getPhpBinary() . ' ' . $this->magentoRootDir . '/bin/magento ' . $magentoCoreCommandInput->__toString(),
-            $this->magentoRootDir
+            $this->magentoRootDir,
+            $this->filterEnvironmentVariables()
         );
 
         $process->setTimeout($config['timeout']);
@@ -169,5 +170,29 @@ class MagentoCoreProxyCommand extends AbstractMagentoCommand
                 )
             );
         }
+    }
+
+    /**
+     * @return array
+     */
+    protected function filterEnvironmentVariables(): array
+    {
+        $envForBinMagento = $_ENV;
+
+        $unsetKeys = [
+            'PHP_IDE_CONFIG',
+            'PHP_OPTIONS',
+            'XDEBUG_CONFIG',
+            'XDEBUG_SESSION',
+            'XDEBUG_SESSION_START',
+            'XDEBUG_TRACE',
+            'XDEBUG_PROFILE'
+        ];
+
+        foreach ($unsetKeys as $key) {
+            unset($envForBinMagento[$key]);
+        }
+
+        return $envForBinMagento;
     }
 }
