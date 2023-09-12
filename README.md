@@ -196,12 +196,14 @@ Global config parameters:
 
 ### Call Core Magento Commands
 
-The tool can be used to run core Magento commands. We provide a internal *Proxy Command* which calls the original Magento command via `bin/magento`.
+The tool can be used to run core Magento commands. We provide a internal *Proxy Command* which calls 
+the original Magento command via `bin/magento`.
 All options and arguments are passed to the original command.
 
 If you do not want to use the proxy command you can disable it with the `--skip-core-commands` option.
 
-One of the big advantages of the proxy command is that you can run any command without having to change the working directory to the Magento root directory or to specify the path to `bin/magento` if your current working directory is inside the Magento installation.
+One of the big advantages of the proxy command is that you can run any command without having to change the working directory to the Magento root directory 
+or to specify the path to `bin/magento` if your current working directory is inside the Magento installation.
 
 If you are outside the Magento root directory you can run any command by specifying the Magento root directory with the `--root-dir` option.
 That is very useful if you have multiple Magento installations or if it is used in some kind of automation.
@@ -276,12 +278,14 @@ n98-magerun2.phar customer:delete [-f|--force] [-a|--all] [-r|--range] [--fuzzy]
 ```
 
 Examples:
+
 ```sh
 n98-magerun2.phar customer:delete --id 1                     # Will delete customer with Id 1
 n98-magerun2.phar customer:delete --fuzzy --email=test       # Will delete all customers with email like "%test%"
 n98-magerun2.phar customer:delete --all                      # Will delete all customers
 n98-magerun2.phar customer:delete --range                    # Will prompt for start and end Ids for batch deletion
 ```
+
 Deletes customer(s) by given id or a combination of the website id and email or website id and firstname and lastname.
 In addition, you can delete a range of customer ids or delete all customers.
 
@@ -328,6 +332,7 @@ backends, amount of data or installed packages.
 ```sh
 n98-magerun2.phar sys:info
 ```
+
 **Options:**
 
 | Option   | Description        |
@@ -371,7 +376,7 @@ n98-magerun2.phar sys:cron:run [job]
 ```
 
 If no `job` argument is passed you can select a job from a list.
-See it in action: http://www.youtube.com/watch?v=QkzkLgrfNaM
+See it in action: <http://www.youtube.com/watch?v=QkzkLgrfNaM>
 If option schedule is present, cron is not launched, but just scheduled immediately in magento crontab.
 
 ### Kill a running job
@@ -760,11 +765,11 @@ Dumps configured Magento database with `mysqldump`.
 
 - Requires MySQL CLI tools
 
-**Arguments**
+Arguments:
 
 - filename - Dump filename
 
-**Options**
+Options:
 
 | Option                     | Description                                                                                  |
 |----------------------------|----------------------------------------------------------------------------------------------|
@@ -815,7 +820,8 @@ development or staging environments where you may want to provision a
 restricted database.
 
 Separate each table to strip by a space. You can use wildcards like `*` and `?` in the table names to strip multiple tables.
-In addition you can specify pre-defined table groups, that start with an @<br />
+In addition, you can specify pre-defined table groups, that start with an @ sign.
+
 Example: `dataflow_batch_export unimportant_module_* @log`
 
 ```sh
@@ -855,11 +861,11 @@ Available Table Groups:
 
 - Requires MySQL CLI tools
 
-**Arguments**
+Arguments:
 
 - filename - Dump filename
 
-**Options**
+Options:
 
 | Option                                | Description                                                                        |
 |---------------------------------------|------------------------------------------------------------------------------------|
@@ -897,7 +903,7 @@ If you are using the `db:import` command to import the stripped SQL dump, then t
 n98-magerun2.phar dev:asset:clear [--theme="..."]
 ```
 
-**Options**
+Options:
 
 | Option    | Description                    |
 |-----------|--------------------------------|
@@ -980,6 +986,7 @@ n98-magerun2.phar dev:module:observer:list [--sort] <event> [<area>
 ```
 
 ### List Routes
+
 ```sh
 n98-magerun2.phar route:list [-a|--area] [-m|--module] [-f|--format]
 ```
@@ -1071,6 +1078,7 @@ Creates a ZIP archive with media folder content.
 ```sh
 n98-magerun2.phar media:dump [--strip] [filename]
 ```
+
 ---
 
 ### Integrations (Webapi Access Tokens)
@@ -1090,7 +1098,7 @@ n98-magerun2.phar integration:list
 n98-magerun2.phar integration:create [options] [--] <name> <email> <endpoint>
 ```
 
-**Options**
+Options:
 
 | Option                                      | Description                                              |
 |---------------------------------------------|----------------------------------------------------------|
@@ -1198,11 +1206,13 @@ Tab for a list.
 
 Example:
     
-    n98-magerun2 dev:console --area=adminhtml
-        // show name of category 123 in default store
-        $dh->debugCategoryById(123)['name']; 
-        // show name of product id 123
-        $dh->debugProductById(123)['name']; 
+```bash
+n98-magerun2 dev:console --area=adminhtml
+    // show name of category 123 in default store
+    $dh->debugCategoryById(123)['name']; 
+    // show name of product id 123
+    $dh->debugProductById(123)['name']; 
+```
 
 The interactive console works as
 [REPL](https://en.wikipedia.org/wiki/Read%E2%80%93eval%E2%80%93print_loop).
@@ -1306,6 +1316,7 @@ n98-magerun2.phar script -d foo=bar filename
 
 # This will register the variable ${foo} with value bar.
 ```
+
 It's possible to define multiple values by passing more than one
 option.
 
@@ -1313,7 +1324,7 @@ Environment variables can be used in a script by using the `env.` prefix.
 
 Example:
 
-```
+```bash
 !echo "My current working directory is: ${env.PWD}"
 !echo "Path: ${env.PATH}"
 ```
@@ -1335,10 +1346,11 @@ the status if no options are supplied.
 n98-magerun2.phar admin:user:change-status [user] [--activate] [--deactivate]
 ```
 
-_Note: It is possible for a user to exist with a username that matches
-the email of a different user. In this case the first matched user will be changed._
+*Note: It is possible for a user to exist with a username that matches
+the email of a different user. In this case the first matched user will be changed.*
 
 ### Add Sales Sequences for a given store
+
 Create sales sequences in the database if they are missing, this will recreate profiles to.
 
 ```sh
@@ -1347,9 +1359,10 @@ n98-magerun2.phar sales:sequence:add [store]
 
 If store is omitted, it'll run for all stores.  
 
-_Note: It is possible a sequence already exists, in this case nothing will happen, only missing tables are created._
+*Note: It is possible a sequence already exists, in this case nothing will happen, only missing tables are created.*
 
 ### Remove Sales Sequences for a given store
+
 Remove sales sequences from the database, warning, you cannot undo this, make sure you have database backups.
 
 ```sh
@@ -1359,13 +1372,13 @@ n98-magerun2.phar sales:sequence:remove [store]
 If store is omitted, it'll run for all stores. When the option `no-interaction` is given, it will run immediately without any interaction.
 Otherwise it will remind you and ask if you know what you're doing and ask for each store you are running it on.
 
-_Note: ._
+*Note: .*
 
 ### Script Repository
 
 You can organize your scripts in a repository.
-Simply place a script in folder */usr/local/share/n98-magerun2/scripts* or in your home dir
-in folder *<HOME>/.n98-magerun2/scripts*.
+Simply place a script in folder `/usr/local/share/n98-magerun2/scripts` or in your home dir
+in folder `<HOME>/.n98-magerun2/scripts`.
 
 Scripts must have the file extension *.magerun*.
 
@@ -1373,13 +1386,13 @@ After that you can list all scripts with the *script:repo:list* command.
 The first line of the script can contain a comment (line prefixed with #) which will be displayed as description.
 
 ```sh
-$ n98-magerun2.phar script:repo:list [--format[="..."]]
+n98-magerun2.phar script:repo:list [--format[="..."]]
 ```
 
 If you want to execute a script from the repository this can be done by *script:repo:run* command.
 
 ```sh
-$ n98-magerun2.phar script:repo:run [-d|--define[="..."]] [--stop-on-error] [script]
+n98-magerun2.phar script:repo:run [-d|--define[="..."]] [--stop-on-error] [script]
 ```
 
 Script argument is optional. If you don't specify any you can select one from a list.
@@ -1390,9 +1403,9 @@ If files are missing after a Magento updates it could be that new files were add
 of Magento. The `composer:redeploy-base-packages` command can fix this issue.
 
 ```sh
-$ n98-magerun2.phar composer:redeploy-base-packages
+n98-magerun2.phar composer:redeploy-base-packages
 ```
 
 ## Development
 
-https://github.com/netz98/n98-magerun2/wiki
+<https://github.com/netz98/n98-magerun2/wiki>
