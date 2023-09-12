@@ -194,6 +194,20 @@ Global config parameters:
 | `--skip-core-commands`               | Do not include Magento commands.            |
 | `--skip-magento-compatibility-check` | Do not check Magento version compatibility. |
 
+#### Call Core Magento Commands
+
+The tool can be used to run core Magento commands. We provide a internal *Proxy Command* which calls the original Magento command via `bin/magento`.
+All options and arguments are passed to the original command.
+
+If you do not want to use the proxy command you can disable it with the `--skip-core-commands` option.
+
+One of the big advantages of the proxy command is that you can run any command without having to change the working directory to the Magento root directory or to specify the path to `bin/magento` if your current working directory is inside the Magento installation.
+
+If you are outside the Magento root directory you can run any command by specifying the Magento root directory with the `--root-dir` option.
+That is very useful if you have multiple Magento installations or if it is used in some kind of automation.
+
+For core commands we filter environment variables to avoid problems with enabled xdebug extension.
+
 ### Open Shop in Browser
 
 ```sh
