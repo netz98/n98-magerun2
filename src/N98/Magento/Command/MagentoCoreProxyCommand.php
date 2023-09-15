@@ -144,7 +144,7 @@ class MagentoCoreProxyCommand extends AbstractMagentoCommand
         foreach ($options as $option) {
             // remove "--" at start
             $normalizedName = substr($option['name'], 2);
-            $normalizedShortcut = substr($option['name'], 1);
+            $normalizedShortcut = substr($option['shortcut'], 1);
 
             if (
                 in_array(
