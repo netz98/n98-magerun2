@@ -238,7 +238,7 @@ function cleanup_files_in_magento() {
       run $BIN "dev:module:detect-composer-dependencies" "${N98_MAGERUN2_TEST_MAGENTO_ROOT}/vendor/magento/module-catalog-rule"
       assert_output --partial "magento/module-catalog"
     fi
-    if [ -d $directory "${N98_MAGERUN2_TEST_MAGENTO_ROOT}/app/code/Magento/CatalogRule" ]; then
+    if [ -d "${N98_MAGERUN2_TEST_MAGENTO_ROOT}/app/code/Magento/CatalogRule" ]; then
       run $BIN "dev:module:detect-composer-dependencies" "${N98_MAGERUN2_TEST_MAGENTO_ROOT}/app/code/Magento/CatalogRule"
       assert_output --partial "magento/module-catalog"
     fi
