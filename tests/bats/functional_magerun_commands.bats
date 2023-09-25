@@ -5,8 +5,7 @@ setup() {
     load 'test_helper/bats-assert/load'
 
     declare PHP_BIN
-    PHP_BIN=$(which php)
-    if [ $? -ne 0 ]; then
+    if ! PHP_BIN=$(which php); then
       echo "Error: PHP binary not found"
       exit 1
     fi
