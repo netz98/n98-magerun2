@@ -4,6 +4,13 @@ setup() {
     load 'test_helper/bats-support/load'
     load 'test_helper/bats-assert/load'
 
+    declare PHP_BIN
+    PHP_BIN=$(which php)
+    if [ $? -ne 0 ]; then
+      echo "Error: PHP binary not found"
+      exit 1
+    fi
+
     if [ -z "$PHP_BIN" ]; then
       export PHP_BIN="$(which php)"
     fi
@@ -23,7 +30,7 @@ setup() {
 }
 
 function cleanup_files_in_magento() {
-  rm -Rf "${N98_MAGERUN2_TEST_MAGENTO_ROOT}/$1"
+  rm -Rf "${N98_MAGERUN2_TEST_MAGENTO_ROOT:?}/$1"
 }
 
 @test "Command: admin:user:list" {
