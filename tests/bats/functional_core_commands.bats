@@ -4,9 +4,13 @@ setup() {
     load 'test_helper/bats-support/load'
     load 'test_helper/bats-assert/load'
 
-    if [ -z "$PHP_BIN" ]; then
-      export PHP_BIN="$(which php)"
+    declare PHP_BIN
+    PHP_BIN=$(which php)
+    if [ $? -ne 0 ]; then
+      echo "Error: PHP binary not found"
+      exit 1
     fi
+
 
     if [ -z "$N98_MAGERUN2_BIN" ]; then
       echo "ENV variable N98_MAGERUN2_BIN is missing"

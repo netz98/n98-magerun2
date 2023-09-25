@@ -11,10 +11,6 @@ setup() {
       exit 1
     fi
 
-    if [ -z "$PHP_BIN" ]; then
-      export PHP_BIN="$(which php)"
-    fi
-
     if [ -z "$N98_MAGERUN2_BIN" ]; then
       echo "ENV variable N98_MAGERUN2_BIN is missing"
       exit 1
