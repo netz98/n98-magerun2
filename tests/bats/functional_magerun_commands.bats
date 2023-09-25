@@ -354,8 +354,13 @@ function cleanup_files_in_magento() {
 }
 
 @test "Command: index:trigger:recreate" {
+  run $BIN indexer:set-mode realtime catalog_product_price
   run $BIN "index:trigger:recreate"
-  assert_output --partial "Skipped indexer Catalog Search."
+  assert_output --partial 'Skipped indexer Product Price. Mode must be "schedule".'
+
+  run $BIN indexer:set-mode schedule catalog_product_price
+  run $BIN "index:trigger:recreate"
+  assert_output --partial "Re-created triggers of indexer Product Price"
 }
 
 @test "Command: Integration:create" {
