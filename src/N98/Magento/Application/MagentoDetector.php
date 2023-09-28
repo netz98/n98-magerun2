@@ -51,7 +51,15 @@ class MagentoDetector
         /* @var $magentoHelper MagentoHelper */
         $magentoHelper = $helperSet->get('magento');
 
-        return new DetectionResult($magentoHelper, $folder, $subFolders); // @TODO must be refactored
+        $result = new DetectionResult($magentoHelper, $folder, $subFolders);
+        if ($result->isDetected()) {
+            return $result;
+        }
+
+        // try to detect magento at the location of n98-magerun2.phar
+        $folder = $this->resolveRootDirOption(dirname($_SERVER['argv'][0]));
+
+        return new DetectionResult($magentoHelper, $folder, $subFolders);
     }
 
     /**
