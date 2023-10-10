@@ -39,8 +39,8 @@ jobs:
             exit 1
           fi
           
-          echo "pushed_version=\"$PUSHED_VERSION\"" >> "$GITHUB_ENV"
-          echo "latest_released_version=\"$LATEST_RELEASED_VERSION\"" >> "$GITHUB_ENV"    
+          echo "pushed_version=$PUSHED_VERSION" >> "$GITHUB_ENV"
+          echo "latest_released_version=$LATEST_RELEASED_VERSION" >> "$GITHUB_ENV"    
 
       - uses: jackbilestech/semver-compare@1.0.4
         if: startsWith(github.ref, 'refs/tags/')
