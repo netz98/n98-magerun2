@@ -51,7 +51,7 @@ jobs:
           #  git-repository: https://github.com/magento/magento2.git
           #  git-branch: 2.4-develop
 
-          - magento-version: mage-os-2.4.5-p1
+          - magento-version: mage-os-1.0.0
             operating-system: ubuntu-latest
             php-version: '8.1'
             mysql-version: '8.0'
@@ -60,7 +60,16 @@ jobs:
             use-git-repository: false
             git-repository: ""
 
-          - magento-version: mage-os-2.4.3-p1
+          - magento-version: mage-os-magento-mirror-2.4.5-p1
+            operating-system: ubuntu-latest
+            php-version: '8.1'
+            mysql-version: '8.0'
+            elasticsearch-version: '7.9.0'
+            composer-version: '2.2.17'
+            use-git-repository: false
+            git-repository: ""
+
+          - magento-version: mage-os-magento-mirror-2.4.3-p1
             operating-system: ubuntu-latest
             php-version: '7.4'
             mysql-version: '8.0'
