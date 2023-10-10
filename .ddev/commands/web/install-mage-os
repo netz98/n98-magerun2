@@ -1,0 +1,115 @@
+#!/bin/bash
+
+## Description: Install Mage-OS
+## Usage: install-mage-os <version> <use_elasticsearch yes|no>
+## Example: "install-mage-os 1.0.0 yes"
+
+if [ $# -ne 2 ]; then
+	echo "usage: ddev install-mage-os <version> <use_elasticsearch yes|no>"
+	exit 1
+fi
+
+if [ ! -x "$PHP_BIN" ]; then
+  PHP_BIN="php"
+fi
+
+if [ ! -x "$COMPOSER_BIN" ]; then
+  COMPOSER_BIN="/usr/local/bin/composer"
+fi
+
+if [ -z "$TZ" ]; then
+  TZ="UTC"
+fi
+
+MAGEOS_VERSION=$1
+MAGEOS_DB_NAME="mageos_${MAGEOS_VERSION//[-.]/_}"
+MAGENTO_ROOT_DIR="/opt/magento-test-environments/mageos_${MAGEOS_VERSION//[-.]/_}"
+MAGEOS_SUBDOMAIN="${MAGEOS_VERSION//[-_.]/-}"
+USE_ELASTICSEARCH=$2
+
+check_if_db_exists() {
+	echo "SHOW DATABASES" | mysql -hdb -udb -pdb | grep -qE "^$MAGEOS_DB_NAME\$"
+
+	if [ $? -eq 1 ]; then
+		echo "CREATE DATABASE ${MAGEOS_DB_NAME}" | mysql -hdb -uroot -proot
+
+		if [ $? -eq 0 ]; then
+			echo "Database ${MAGEOS_DB_NAME} created"
+		fi
+
+		echo "GRANT ALL PRIVILEGES ON *.* TO 'db'@'%'" | mysql -hdb -uroot -proot
+
+		if [ $? -eq 0 ]; then
+			echo "Database privileges updated"
+		fi
+	fi
+}
+
+install_magento() {
+	if [ -d "$MAGENTO_ROOT_DIR" ]; then
+		echo "Magento in $MAGENTO_ROOT_DIR already exists. Skip installation"
+		exit 0
+	fi
+
+	if [ ! -f "./app/etc/env.php" ]; then
+		echo -e "=========================================================="
+		echo -e "> Setup Mage-OS ${MAGEOS_VERSION} ..."
+		echo -e "=========================================================="
+
+		check_if_db_exists
+
+		if [ ! -d $MAGENTO_ROOT_DIR ]; then
+			"$PHP_BIN" $COMPOSER_BIN --no-interaction create-project --repository-url=https://repo.mage-os.org/ mage-os/project-community-edition="$MAGEOS_VERSION" "$MAGENTO_ROOT_DIR"
+		fi
+
+		if [ ! -d $MAGENTO_ROOT_DIR ]; then
+		  echo "Magento installation failed"
+      exit 1;
+    fi
+
+		cd $MAGENTO_ROOT_DIR || exit 1
+
+		if [ -d "./generated" ]; then
+			rm -Rf ./generated
+		fi
+
+		# build magento setup arguments
+		MAGENTO_SETUP_ARGS=(
+			"$PHP_BIN" "bin/magento" "setup:install"
+			"--no-interaction"
+			"--db-host=db"
+			"--db-user=db"
+			"--db-password=db"
+			"--db-name=${MAGEOS_DB_NAME}"
+			"--cleanup-database"
+			"--backend-frontname=admin"
+			"--timezone=${TZ}"
+			"--currency=EUR"
+			"--base-url=http://${MAGEOS_SUBDOMAIN}.${DDEV_PROJECT}.ddev.site/"
+			"--base-url-secure=https://${MAGEOS_SUBDOMAIN}.${DDEV_PROJECT}.ddev.site/"
+			"--use-rewrites=1"
+			"--use-secure=1"
+			"--use-secure-admin=1"
+			"--admin-user=admin"
+			"--admin-password=Password123"
+			"--admin-firstname=Armin"
+			"--admin-lastname=Admin"
+			"--admin-email=admin@example.com"
+		)
+
+		if [[ "$USE_ELASTICSEARCH" == "yes" ]]; then
+			# Configure Standard Magento Elasticsearch
+			MAGENTO_SETUP_ARGS+=(
+				"--search-engine=elasticsearch7"
+				"--elasticsearch-host=elasticsearch"
+				"--elasticsearch-port=9200"
+			)
+		fi
+
+		# Execute Magento installer based on setup arguments
+		#echo ${MAGENTO_SETUP_ARGS[*]}  # debug
+		command ${MAGENTO_SETUP_ARGS[*]}
+	fi
+}
+
+install_magento
