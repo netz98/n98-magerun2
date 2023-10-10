@@ -84,30 +84,18 @@ class CheckCompatibility implements EventSubscriberInterface, ApplicationAwareIn
             $productMetadata = $objectManager->get(\Magento\Framework\App\ProductMetadataInterface::class);
             $currentMagentoVersion = $productMetadata->getVersion();
 
-            if ($this->isStableVersion($currentMagentoVersion) && version_compare($currentMagentoVersion, '2.3.0', '<')) {
-                $output = $event->getOutput();
-                $output->writeln([
-                    '',
-                    '<error>You are running an incompatible version of n98-magerun2!</error>',
-                    '<error>Your shop version has to be >2.3.0</error>',
-                    '',
-                    '',
-                    '<comment>Current Magento Version     : ' . $currentMagentoVersion . '</comment>',
-                    '<comment>Current n98-magerun2 Version: ' . $this->application->getVersion() . '</comment>',
-                    '',
-                    '',
-                    '<info>Please download an older version of n98-magerun2.</info>',
-                    '',
-                    '<info>Visit: https://files.magerun.net/old_versions.php</info>',
-                    '',
-                    '    Magento 2.2.x => n98-magerun2 v3.2.0',
-                    '    Magento 2.1.x => n98-magerun2 v3.2.0',
-                    '    Magento 2.0.x => n98-magerun2 v2.3.3',
-                    '',
-                    '',
-                ]);
+            // We cannot check if no version is defined
+            if (!$this->isStableVersion($currentMagentoVersion)) {
+                return;
+            }
 
-                exit(1);
+            if ($productMetadata->getName() === 'Mage-OS') {
+                $this->checkMageOsDistribution($currentMagentoVersion, $event);
+                return;
+            }
+
+            if ($productMetadata->getName() === 'Magento') {
+                $this->checkMagentoDistribution($currentMagentoVersion, $event);
             }
         } catch (\Exception $e) {
             //
@@ -126,5 +114,51 @@ class CheckCompatibility implements EventSubscriberInterface, ApplicationAwareIn
     private function isStableVersion(string $currentMagentoVersion): bool
     {
         return preg_match('/^\d+\.\d+\.\d+$/', $currentMagentoVersion);
+    }
+
+    /**
+     * Check if the current Mage-OS version is compatible with the current n98-magerun2 version
+     *
+     * @param $currentMagentoVersion
+     * @param ConsoleEvent $event
+     * @return void
+     */
+    protected function checkMageOsDistribution($currentMagentoVersion, ConsoleEvent $event): void
+    {
+        // currently there is no incompatible version available
+    }
+
+    /**
+     * @param $currentMagentoVersion
+     * @param ConsoleEvent $event
+     * @return void
+     */
+    protected function checkMagentoDistribution($currentMagentoVersion, ConsoleEvent $event): void
+    {
+        if (version_compare($currentMagentoVersion, '2.3.0', '<')) {
+            $output = $event->getOutput();
+            $output->writeln([
+                '',
+                '<error>You are running an incompatible version of n98-magerun2!</error>',
+                '<error>Your shop version has to be >2.3.0</error>',
+                '',
+                '',
+                '<comment>Current Magento Version     : ' . $currentMagentoVersion . '</comment>',
+                '<comment>Current n98-magerun2 Version: ' . $this->application->getVersion() . '</comment>',
+                '',
+                '',
+                '<info>Please download an older version of n98-magerun2.</info>',
+                '',
+                '<info>Visit: https://files.magerun.net/old_versions.php</info>',
+                '',
+                '    Magento 2.2.x => n98-magerun2 v3.2.0',
+                '    Magento 2.1.x => n98-magerun2 v3.2.0',
+                '    Magento 2.0.x => n98-magerun2 v2.3.3',
+                '',
+                '',
+            ]);
+
+            exit(1);
+        }
     }
 }
