@@ -1,10 +1,24 @@
 RECENT CHANGES
 ==============
 
-7.2.0-dev (Unreleased)
+7.2.0
 ----------------------
 
+- Add: #1320: Mage-OS ddev setup (by Christian Münch)
+- Add: #1318: Mage-OS 1.0.0 for installer (by Christian Münch)
+- Add: #1282: Adding Magento 2.4.6-p2 (by Guillaume Arino)
+- Add: #1275: New command cache:remove:id (by Christian Münch)
+- Add: #1274: Clear media cache command (by Christian Münch)
+- Add: #1255: Add decrypt option to cache:view command (by Christian Münch)
+- Imp: #1292: Ask only for credentials if repo.magento.com is used (by Christian Münch)
+- Imp: #1272: Convert functional tests to bats (by Christian Münch)
+- Imp: #1262: First refactoring of route:list command (by Christian Münch)
+- Imp: #1240: Filter XDEBUG_CONFIG env param for core commands (by Christian Münch)
+- Imp: Update 3rd party dependencies (php-cs-fixer, phpstan, phpunit, requests, symfony)
+- Fix: #1296: Fix short options registration of core commands (by Christian Münch)
 - Fix: #1259: Fix not correct routes for route:list command (by Bohdan Bakalov)
+- Fix: #1287: integration:delete command doesn't delete associated oauth consumer and oauth token (by Christian Münch)
+- Fix: #1254: Add missing docs for cache:view, cache:report
 
 7.1.0
 -----
