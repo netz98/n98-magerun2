@@ -27,26 +27,26 @@ jobs:
         uses: actions/checkout@v4.1.0
 
       # Allow only newer versions
-      - name: Collect versions
-        run: |
-          # extract tag part of github.ref
-          PUSHED_VERSION=$(cut -d'/' -f3 <<< "$GITHUB_REF")
-          LATEST_RELEASED_VERSION=$(curl -s https://raw.githubusercontent.com/netz98/n98-magerun2/master/version.txt | tr -d '[:space:]')
-          
-          # Check if curl was successful
-          if [[ -z "$LATEST_RELEASED_VERSION" ]]; then
-            echo "Failed to fetch the latest released version."
-            exit 1
-          fi
-          
-          echo "pushed_version=$PUSHED_VERSION" >> "$GITHUB_ENV"
-          echo "latest_released_version=$LATEST_RELEASED_VERSION" >> "$GITHUB_ENV"    
-
-      - uses: jackbilestech/semver-compare@1.0.4
-        if: startsWith(github.ref, 'refs/tags/')
-        with:
-          head: ${{ env.pushed_version }}
-          base: ${{ env.latest_released_version }}
+#      - name: Collect versions
+#        run: |
+#          # extract tag part of github.ref
+#          PUSHED_VERSION=$(cut -d'/' -f3 <<< "$GITHUB_REF")
+#          LATEST_RELEASED_VERSION=$(curl -s https://raw.githubusercontent.com/netz98/n98-magerun2/master/version.txt | tr -d '[:space:]')
+#
+#          # Check if curl was successful
+#          if [[ -z "$LATEST_RELEASED_VERSION" ]]; then
+#            echo "Failed to fetch the latest released version."
+#            exit 1
+#          fi
+#
+#          echo "pushed_version=$PUSHED_VERSION" >> "$GITHUB_ENV"
+#          echo "latest_released_version=$LATEST_RELEASED_VERSION" >> "$GITHUB_ENV"
+#
+#      - uses: jackbilestech/semver-compare@1.0.4
+#        if: startsWith(github.ref, 'refs/tags/')
+#        with:
+#          head: ${{ env.pushed_version }}
+#          base: ${{ env.latest_released_version }}
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
