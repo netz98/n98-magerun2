@@ -51,7 +51,7 @@ jobs:
           #  git-repository: https://github.com/magento/magento2.git
           #  git-branch: 2.4-develop
 
-          - magento-version: mage-os-1.0.0
+          - magento-version: mage-os-latest
             operating-system: ubuntu-latest
             php-version: '8.1'
             mysql-version: '8.0'
