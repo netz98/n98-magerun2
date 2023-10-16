@@ -15,6 +15,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\ConsoleOutputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Process\Process;
 
@@ -86,8 +87,14 @@ class MagentoCoreProxyCommand extends AbstractMagentoCommand
             $output->writeln(sprintf('<debug>  - TTY: <comment>%b</comment></debug>', $process->isTty()));
         }
 
-        $process->run(function ($type, $buffer) use ($output) {
-            $output->write($buffer);
+        $errOutput = $output instanceof ConsoleOutputInterface ? $output->getErrorOutput() : $output;
+
+        $process->run(function ($type, $buffer) use ($output, $errOutput) {
+            if (Process::ERR === $type) {
+                $errOutput->write($buffer);
+            } else {
+                $output->write($buffer);
+            }
         });
 
         return $process->getExitCode();
