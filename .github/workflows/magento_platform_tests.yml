@@ -177,13 +177,13 @@ jobs:
           coverage: none
 
       - name: Checkout PR
-        uses: actions/checkout@v4.1.0
+        uses: actions/checkout@v4.1.1
         if: github.event_name == 'pull_request_target'
         with:
           ref: ${{ github.event.pull_request.head.sha }}
 
       - name: Checkout HEAD
-        uses: actions/checkout@v4.1.0
+        uses: actions/checkout@v4.1.1
         if: github.event_name == 'push'
 
       - name: Linux Setup
