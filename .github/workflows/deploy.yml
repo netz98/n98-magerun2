@@ -68,6 +68,7 @@ jobs:
         with:
           gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
           passphrase: ${{ secrets.GPG_PASSPHRASE }}
+          trust_level: 5
 
       - name: GPG sign phar file (detached)
         run: |
