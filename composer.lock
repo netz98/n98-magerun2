@@ -2467,16 +2467,16 @@
         },
         {
             "name": "captainhook/captainhook",
-            "version": "5.18.2",
+            "version": "5.18.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/captainhookphp/captainhook.git",
-                "reference": "61c24442f71ea216e9e172861d48d7676439dd18"
+                "reference": "b7bc503a40ccfe80ea9638e4921b4697669d725f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/captainhookphp/captainhook/zipball/61c24442f71ea216e9e172861d48d7676439dd18",
-                "reference": "61c24442f71ea216e9e172861d48d7676439dd18",
+                "url": "https://api.github.com/repos/captainhookphp/captainhook/zipball/b7bc503a40ccfe80ea9638e4921b4697669d725f",
+                "reference": "b7bc503a40ccfe80ea9638e4921b4697669d725f",
                 "shasum": ""
             },
             "require": {
@@ -2538,7 +2538,7 @@
             ],
             "support": {
                 "issues": "https://github.com/captainhookphp/captainhook/issues",
-                "source": "https://github.com/captainhookphp/captainhook/tree/5.18.2"
+                "source": "https://github.com/captainhookphp/captainhook/tree/5.18.3"
             },
             "funding": [
                 {
@@ -2546,7 +2546,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2023-10-16T15:13:42+00:00"
+            "time": "2023-11-05T13:56:19+00:00"
         },
         {
             "name": "composer/pcre",
