@@ -147,7 +147,7 @@ class DumpCommand extends AbstractDatabaseCommand
                 'keep-definer',
                 null,
                 InputOption::VALUE_NONE,
-                'Do not remove DEFINER from dump'
+                'Do not replace DEFINER in dump with CURRENT_USER'
             )
             ->setDescription('Dumps database with mysqldump cli client');
 
