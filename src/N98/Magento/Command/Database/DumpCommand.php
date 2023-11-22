@@ -143,6 +143,12 @@ class DumpCommand extends AbstractDatabaseCommand
                 InputOption::VALUE_NONE,
                 'Keeps the Column Statistics table in SQL dump'
             )
+            ->addOption(
+                'keep-definer',
+                null,
+                InputOption::VALUE_NONE,
+                'Do not remove DEFINER from dump'
+            )
             ->setDescription('Dumps database with mysqldump cli client');
 
         $help = <<<HELP
@@ -336,7 +342,7 @@ HELP;
             // dump structure for strip-tables
             $execs->add(
                 '--no-data ' . $mysqlClientToolConnectionString .
-                ' ' . implode(' ', $stripTables) . $this->postDumpPipeCommands()
+                ' ' . implode(' ', $stripTables) . $this->postDumpPipeCommands($input)
             );
         }
 
@@ -346,7 +352,12 @@ HELP;
             $ignore .= '--ignore-table=' . $this->dbSettings['dbname'] . '.' . $ignoreTable . ' ';
         }
 
-        $execs->add($ignore . $mysqlClientToolConnectionString . $postDumpGitFriendlyPipeCommands . $this->postDumpPipeCommands());
+        $execs->add(
+            $ignore
+            . $mysqlClientToolConnectionString
+            . $postDumpGitFriendlyPipeCommands
+            . $this->postDumpPipeCommands($input)
+        );
 
         return $execs;
     }
@@ -491,12 +502,15 @@ HELP;
     /**
      * Commands which filter mysql data. Piped to mysqldump command
      *
+     * @param InputInterface $input
      * @return string
      */
-    protected function postDumpPipeCommands()
+    protected function postDumpPipeCommands(InputInterface $input)
     {
-        return ' | LANG=C LC_CTYPE=C LC_ALL=C sed -E '
-            . escapeshellarg('s/DEFINER[ ]*=[ ]*`[^`]+`@`[^`]+`/DEFINER=CURRENT_USER/g');
+        return $input->getOption('keep-definer')
+            ? ''
+            : ' | LANG=C LC_CTYPE=C LC_ALL=C sed -E '
+              . escapeshellarg('s/DEFINER[ ]*=[ ]*`[^`]+`@`[^`]+`/DEFINER=CURRENT_USER/g');
     }
 
     /**
