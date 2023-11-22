@@ -783,6 +783,7 @@ Options:
 | `--git-friendly`           | Use one insert statement, but with line breaks instead of separate insert statements.      |
 | `--human-readable`         | Use a single insert with column names per row.                                             |
 | `--include`                | Tables to include entirely to the dump (default: all tables are included)                  |
+| `--keep-definer`           | Do not replace DEFINER in dump with CURRENT_USER                                           |
 | `--keep-column-statistics` | Retains `column statistics` table in `mysqldump`                                           |
 | `--no-single-transaction`  | Do not use single-transaction (not recommended, this is blocking)                          |
 | `--no-tablespaces`         | Use this option if you want to create a dump without having the PROCESS privilege.         |
