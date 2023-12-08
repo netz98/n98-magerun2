@@ -12,7 +12,7 @@ return (new PhpCsFixer\Config())
         'array_syntax' => ['syntax' => 'short'],
         'concat_space' => ['spacing' => 'one'],
         'include' => true,
-        'new_with_braces' => true,
+        'new_with_parentheses' => true,
         'no_empty_statement' => true,
         'no_extra_blank_lines' => true,
         'no_leading_import_slash' => true,
