@@ -323,11 +323,12 @@ class DeleteCommand extends AbstractCustomerCommand
      * @param OutputInterface $output
      * @return int
      */
-    protected function deleteAllCustomers($force, QuestionHelper $questionHelper, InputInterface $input, OutputInterface $output): int
-    {
-// check if force is set
-        // if not, ask for confirmation
-
+    protected function deleteAllCustomers(
+        $force,
+        QuestionHelper $questionHelper,
+        InputInterface $input,
+        OutputInterface $output
+    ): int {
         if (!$force) {
             $question = new ConfirmationQuestion(
                 '<question>WARNING: You are about to delete ALL customers. Are you sure?</question> <comment>[n]</comment>: ',
