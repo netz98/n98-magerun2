@@ -45,7 +45,7 @@ class DeleteCommand extends AbstractCustomerCommand
             ->addOption('lastname', null, InputOption::VALUE_OPTIONAL, 'Lastname')
             ->addOption('website', null, InputOption::VALUE_OPTIONAL, 'Website')
             ->addOption('force', 'f', InputOption::VALUE_NONE, 'Force delete')
-            ->addOption('all', 'a', InputOption::VALUE_NONE, 'Delete all customers')
+            ->addOption('all', 'a', InputOption::VALUE_NONE, 'Delete all customers. Ignore all filters.')
             ->addOption('range', 'r', InputOption::VALUE_NONE, 'Delete a range of customers by Id')
             ->addOption('fuzzy', null, InputOption::VALUE_NONE, 'Fuzziness')
             ->setDescription('Deletes a customer/user for shop frontend by given options by matching or fuzzy search and/or range.');
@@ -99,6 +99,16 @@ class DeleteCommand extends AbstractCustomerCommand
         $fuzzy = $input->getOption('fuzzy');
         $force = $input->getOption('force');
 
+        // do not combine all with filter range, fuzzy, id, email, firstname, lastname
+        if ($all && ($range || $fuzzy || $id || $email || $firstname || $lastname || $website)) {
+            $output->writeln('<error>Combining --all with other options is not allowed</error>');
+            return Command::FAILURE;
+        }
+
+        if ($all) {
+            return $this->deleteAllCustomers($force, $questionHelper, $input, $output);
+        }
+
         // Get args required
         // we need at least:
         //      customerId
@@ -118,33 +128,19 @@ class DeleteCommand extends AbstractCustomerCommand
             $batchDelete = $questionHelper->ask($input, $output, $question);
 
             if ($batchDelete) {
-                // Batch deletion
-                $all = $input->getOption('all');
-                if ($all) {
+                $range = $input->getOption('range');
+                if ($all === null) {
                     $question = new ConfirmationQuestion(
-                        '<question>Delete all customers?:</question> <comment>[n]</comment>: ',
+                        '<question>Delete a range of customers?</question> <comment>[n]</comment>: ',
                         false
                     );
-                    $all = $questionHelper->ask($input, $output, $question);
+                    $range = $questionHelper->ask($input, $output, $question);
+                }
 
-                    if (!$all) {
-                        return false;
-                    }
-                } else {
-                    $range = $input->getOption('range');
-                    if ($all === null) {
-                        $question = new ConfirmationQuestion(
-                            '<question>Delete a range of customers?</question> <comment>[n]</comment>: ',
-                            false
-                        );
-                        $range = $questionHelper->ask($input, $output, $question);
-                    }
-
-                    if (!$range) {
-                        // Nothing to do
-                        $output->writeln('<error>Finished nothing to do</error>');
-                        return false;
-                    }
+                if (!$range) {
+                    // Nothing to do
+                    $output->writeln('<error>Finished nothing to do</error>');
+                    return false;
                 }
             }
         }
@@ -176,7 +172,7 @@ class DeleteCommand extends AbstractCustomerCommand
                 $filterPostfix = '%';
             }
 
-            if ($website) {
+            if (strlen($website) > 0) {
                 $parameterHelper = $this->getHelper('parameter');
                 $website = $parameterHelper->askWebsite($input, $output);
                 $filterAttributes[] = ['attribute' => 'website_id', $filterType => $website->getId()];
@@ -318,5 +314,36 @@ class DeleteCommand extends AbstractCustomerCommand
         $this->registry->register('isSecureArea', $isSecure);
 
         return $count;
+    }
+
+    /**
+     * @param $force
+     * @param QuestionHelper $questionHelper
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     * @return int
+     */
+    protected function deleteAllCustomers($force, QuestionHelper $questionHelper, InputInterface $input, OutputInterface $output): int
+    {
+// check if force is set
+        // if not, ask for confirmation
+
+        if (!$force) {
+            $question = new ConfirmationQuestion(
+                '<question>WARNING: You are about to delete ALL customers. Are you sure?</question> <comment>[n]</comment>: ',
+                false
+            );
+            if (!$questionHelper->ask($input, $output, $question)) {
+                $output->writeln('<error>Operation cancelled.</error>');
+                return Command::FAILURE;
+            }
+        }
+
+        // Proceed with deletion of all customers
+        $customerCollection = $this->getCustomerCollection();
+        $count = $this->batchDelete($customerCollection);
+        $output->writeln('<info>Successfully deleted ' . $count . ' customer/s</info>');
+
+        return Command::SUCCESS;
     }
 }
