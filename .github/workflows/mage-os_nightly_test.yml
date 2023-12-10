@@ -46,7 +46,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           tools: composer:2.2.17
-          php-version: '8.1'
+          php-version: '8.2'
           extensions: mbstring, intl, zip
           coverage: none
 
