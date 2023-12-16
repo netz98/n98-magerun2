@@ -2,6 +2,7 @@
 
 namespace N98\Magento\Command\Route;
 
+use Magento\Framework\App\ActionInterface;
 use Magento\Framework\App\AreaList;
 use Magento\Framework\App\Route\Config;
 use Magento\Framework\Module\Dir\Reader;
@@ -15,22 +16,22 @@ use Symfony\Component\Console\Output\OutputInterface;
 class ListCommand extends AbstractMagentoCommand
 {
     /**
-     * @var \Magento\Framework\Module\Dir\Reader
+     * @var Reader
      */
     private $reader;
 
     /**
-     * @var \Magento\Framework\App\Route\Config
+     * @var Config
      */
     private $config;
 
     /**
-     * @var \Magento\Framework\App\AreaList
+     * @var AreaList
      */
     private $areaList;
 
     /**
-     * @var \Magento\Framework\App\Route\Config\Reader
+     * @var Config\Reader
      */
     private $configReader;
 
@@ -65,10 +66,10 @@ class ListCommand extends AbstractMagentoCommand
      * @return void
      */
     public function inject(
-        \Magento\Framework\Module\Dir\Reader $reader,
-        \Magento\Framework\App\Route\Config $config,
-        \Magento\Framework\App\AreaList $areaList,
-        \Magento\Framework\App\Route\Config\Reader $configReader
+        Reader        $reader,
+        Config        $config,
+        AreaList      $areaList,
+        Config\Reader $configReader
     ) {
         $this->reader = $reader;
         $this->config = $config;
@@ -89,6 +90,14 @@ class ListCommand extends AbstractMagentoCommand
         $actionPaths = $this->reader->getActionFiles();
 
         foreach ($actionPaths as $fullActionPath) {
+            /**
+             * Filter abstract classes and non action classes
+             * @link https://github.com/netz98/n98-magerun2/issues/1304
+             */
+            if (!is_a($fullActionPath, ActionInterface::class, true)) {
+                continue;
+            }
+
             $area = 'frontend';
 
             $actionPath = explode('\\', $fullActionPath);
