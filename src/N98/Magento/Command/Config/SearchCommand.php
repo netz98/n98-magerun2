@@ -9,10 +9,9 @@ declare(strict_types=1);
 
 namespace N98\Magento\Command\Config;
 
-use Magento\Backend\Model\Search\Config\Result\Builder;
-use Magento\Backend\Model\Search\Config as ConfigSeaerch;
 use Magento\Config\Model\Config\Structure as ConfigStructure;
 use Magento\Config\Model\Config\Structure\Data as ConfigStructureData;
+use Magento\Config\Model\Config\Structure\Element\AbstractComposite;
 use Magento\Framework\App\Area;
 use Magento\Framework\App\AreaList;
 use Magento\Framework\App\State;
@@ -28,7 +27,9 @@ class SearchCommand extends AbstractMagentoCommand
 {
     private ConfigStructure $configStructure;
     private ConfigStructureData $configStructureData;
-    private Builder $resultBuilder;
+    private array $results = [];
+
+    private $tabMap = [];
 
     protected function configure()
     {
@@ -65,58 +66,33 @@ EOT
 
         $this->setAdminArea();
 
-        $appState = $this->getObjectManager()->get(State::class);
-        $appState->emulateAreaCode('adminhtml', function () use ($input, $output) {
-            $results = $this->getObjectManager()->create(ConfigSeaerch::class)
-                ->setStart(0)
-                ->setLimit(100)
-                ->setQuery($input->getArgument('text'))
-                ->load()
-                ->getResults();
-
-            var_dump($results);
-            die;
-        });
+        // We cannot use the search objects from Magento_Backend modules because they are
+        // using the ACL resource reader which is not available in the CLI context without
+        // defining loading a admin user. So we load the data by the using the data layer below.
 
         $this->configStructure = $this->getObjectManager()->create(ConfigStructure::class);
-        $tabs = $this->configStructure->getTabs();
-
-        die;
-
-        if ($tabs instanceof \Iterator) {
-            $tabs = iterator_to_array($tabs);
-        }
-        var_dump($tabs);
-        die;
         $this->configStructureData = $this->getObjectManager()->create(ConfigStructureData::class);
-        $this->resultBuilder = $this->getObjectManager()->create(Builder::class);
 
         $configData = $this->configStructureData->get();
+
+        $this->tabMap = $configData['tabs'];
+
         if (isset($configData['sections'])) {
             $this->findInStructure(
                 $configData['sections'],
-                $input->getArgument('text')
+                $input->getArgument('text'),
+                ''
             );
         }
 
-        $results = $this->resultBuilder->getAll();
-
-        if (empty($results)) {
+        if (count($this->results) === 0) {
             $output->writeln('<info>No results found.</info>');
             return self::SUCCESS;
         }
 
-        $tableData = [];
-        foreach ($results as $result) {
-            $tableData[] = [
-                $result['name'],
-                $result['description'],
-            ];
-        }
-
         $this->getHelper('table')
-            ->setHeaders(['Name', 'Description'])
-            ->renderByFormat($output, $tableData, $input->getOption('format'));
+            ->setHeaders(array_keys($this->results[0]))
+            ->renderByFormat($output, $this->results, $input->getOption('format'));
 
         return self::SUCCESS;
     }
@@ -124,26 +100,38 @@ EOT
     /**
      * @param array $elements
      * @param string $searchTerm
+     * @param string $pathLabel
      */
-    private function findInStructure($elements, $searchTerm)
+    private function findInStructure($elements, $searchTerm, $pathLabel = '')
     {
         if (empty($searchTerm)) {
             return;
         }
 
-        foreach ($elements as $elementData) {
-            // search in label
-            if (isset($elementData['label']) && mb_stripos((string)$elementData['label'], $searchTerm) !== false) {
-                // if element has a path, add it to the result
-                if (isset($elementData['path'])) {
-                    $element = $this->configStructure->getElementByConfigPath($elementData['path']);
-                    $this->resultBuilder->add($element, $elementData['path']);
+        foreach ($elements as $structureElement) {
+
+            // Initial call contains only the sections and need to extract the tabs
+            if (is_array($structureElement)) {
+                if (isset($structureElement['tab'])) {
+                    $pathLabel =  $this->tabMap[$structureElement['tab']]['label'];
                 }
+                $structureElement = $this->configStructure->getElement($structureElement['id']);
             }
 
-            // If the element has children (like groups), recurse
-            if (isset($elementData['children'])) {
-                $this->findInStructure($elementData['children'], $searchTerm);
+            if (mb_stripos((string)$structureElement->getLabel(), $searchTerm) !== false
+                || mb_stripos((string)$structureElement->getComment(), $searchTerm) !== false
+            ) {
+                $elementData = $structureElement->getData();
+                $this->results[] = [
+                    'id' => trim($structureElement->getPath(), '/'),
+                    'type' => $elementData['_elementType'],
+                    'name' => trim($pathLabel . ' / ' . trim((string)$structureElement->getLabel()), '/'),
+                ];
+            }
+
+            $elementPathLabel = $pathLabel . ' / ' . $structureElement->getLabel();
+            if ($structureElement instanceof AbstractComposite && $structureElement->hasChildren()) {
+                $this->findInStructure($structureElement->getChildren(), $searchTerm, $elementPathLabel);
             }
         }
     }

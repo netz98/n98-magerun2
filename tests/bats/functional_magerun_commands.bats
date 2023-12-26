@@ -117,6 +117,11 @@ function cleanup_files_in_magento() {
   assert_output --partial "backend.frontName"
 }
 
+@test "Command: config:search" {
+  run $BIN "config:search" "tax"
+  assert_output --partial "Sales / Tax"
+}
+
 @test "Command: config:store:set" {
   run $BIN "config:store:set" n98/magerun/example defaultValue
   assert_output --partial "n98/magerun/example => defaultValue"
