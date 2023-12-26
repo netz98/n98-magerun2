@@ -88,6 +88,7 @@ commands:
     - N98\Magento\Command\Cache\ViewCommand
     - N98\Magento\Command\Cms\ToggleBlockCommand
     - N98\Magento\Command\Composer\RedeployBasePackagesCommand
+    - N98\Magento\Command\Config\SearchCommand
     - N98\Magento\Command\Config\Env\CreateCommand
     - N98\Magento\Command\Config\Env\ShowCommand
     - N98\Magento\Command\Config\Env\SetCommand
