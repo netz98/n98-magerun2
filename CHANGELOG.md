@@ -10,6 +10,7 @@ RECENT CHANGES
 - Add: #1275: New command cache:remove:id (by Christian Münch)
 - Add: #1274: Clear media cache command (by Christian Münch)
 - Add: #1255: Add decrypt option to cache:view command (by Christian Münch)
+- Add: #1301: Config Search Command (by Christian Münch)
 - Imp: #1292: Ask only for credentials if repo.magento.com is used (by Christian Münch)
 - Imp: #1272: Convert functional tests to bats (by Christian Münch)
 - Imp: #1262: First refactoring of route:list command (by Christian Münch)
