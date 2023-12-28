@@ -1,8 +1,19 @@
 RECENT CHANGES
 ==============
 
+7.3.0-dev
+---------
+
+
+- Imp: 1367: Filter non action classes in route:list output (by Christian Münch)
+- Imp: #1367: Filter non action classes in route:list output (by Christian Münch) 
+- Add: #1301: Config Search Command (by Christian Münch)
+- Imp: #1308: Use phar file path as fallback (by Christian Münch)
+- Fix: #1304: Remove non-routes from route:list (Fix by Bohdan Bakalov)
+- Imp: Allow to place and n98-magerun2.phar directly in a Magento installation without --root-dir option (Reported by Kostadin A.)
+
 7.2.0
-----------------------
+-----
 
 - Add: #1320: Mage-OS ddev setup (by Christian Münch)
 - Add: #1318: Mage-OS 1.0.0 for installer (by Christian Münch)
@@ -10,7 +21,6 @@ RECENT CHANGES
 - Add: #1275: New command cache:remove:id (by Christian Münch)
 - Add: #1274: Clear media cache command (by Christian Münch)
 - Add: #1255: Add decrypt option to cache:view command (by Christian Münch)
-- Add: #1301: Config Search Command (by Christian Münch)
 - Imp: #1292: Ask only for credentials if repo.magento.com is used (by Christian Münch)
 - Imp: #1272: Convert functional tests to bats (by Christian Münch)
 - Imp: #1262: First refactoring of route:list command (by Christian Münch)
