@@ -8,7 +8,6 @@ use Magento\Framework\Autoload\AutoloaderRegistry;
 use Magento\Framework\ObjectManagerInterface;
 use Magento\Store\Model\Store;
 use Magento\Store\Model\StoreManager;
-use N98\Magento\Framework\App\Magerun;
 use N98\Util\PharWrapper;
 
 /**
