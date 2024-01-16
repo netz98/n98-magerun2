@@ -275,8 +275,7 @@ class Application extends BaseApplication
         $isMagento2 = $this->detectionResult->getMajorVersion() === self::MAGENTO_MAJOR_VERSION_2;
         if ($isMagento2) {
             $magento2Initializer = new Magento2Initializer($this->getAutoloader());
-            $app = $magento2Initializer->init($this->getMagentoRootFolder());
-            $this->_objectManager = $app->getObjectManager();
+            $this->_objectManager = $magento2Initializer->init($this->getMagentoRootFolder());
         } else {
             $magento1Initializer = new Magento1Initializer($this->getHelperSet());
             $magento1Initializer->init();
