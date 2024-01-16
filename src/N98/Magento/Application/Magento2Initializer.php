@@ -5,6 +5,7 @@ namespace N98\Magento\Application;
 use Composer\Autoload\ClassLoader;
 use Magento\Framework\App\Bootstrap;
 use Magento\Framework\Autoload\AutoloaderRegistry;
+use Magento\Framework\ObjectManagerInterface;
 use Magento\Store\Model\Store;
 use Magento\Store\Model\StoreManager;
 use N98\Magento\Framework\App\Magerun;
@@ -32,7 +33,7 @@ class Magento2Initializer
 
     /**
      * @param string $magentoRootFolder
-     * @return \N98\Magento\Framework\App\Magerun
+     * @return ObjectManagerInterface
      * @throws \Exception
      */
     public function init($magentoRootFolder)
@@ -57,12 +58,9 @@ class Magento2Initializer
         $params['entryPoint'] = basename(__FILE__);
 
         $bootstrap = Bootstrap::create($magentoRootFolder, $params);
-        /** @var \Magento\Framework\App\Cron $app */
-        $app = $bootstrap->createApplication(Magerun::class, []);
-        /* @var $app \N98\Magento\Framework\App\Magerun */
-        $app->launch();
+        $objectManager = $bootstrap->getObjectManager();
 
-        return $app;
+        return $objectManager;
     }
 
     public static function loadMagentoBootstrap($magentoRootFolder)
