@@ -1,8 +1,8 @@
 RECENT CHANGES
 ==============
 
-7.3.0-dev
----------
+7.3.0
+-----
 
 - Imp: #1367: Filter non action classes in route:list output (by Christian Münch) 
 - Add: #1301: Config Search Command (by Christian Münch)
@@ -11,7 +11,7 @@ RECENT CHANGES
 - Imp: Allow to place and n98-magerun2.phar directly in a Magento installation without --root-dir option (Reported by Kostadin A.)
 - Fix: #1396: Escape shell command before processing by Symfony StringInput (Reported by
   Denis Mir)
-
+- Fix: #1389: TypeError (Reported by thecodecook14)
 
 7.2.0
 -----

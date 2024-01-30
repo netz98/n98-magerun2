@@ -585,6 +585,12 @@ commands:
         backend-frontname: admin
         admin-email: john.doe@example.com
         encryption_key:
+        use_elasticsearch: 1
+        use_opensearch: 0
+        elasticsearch-host: localhost
+        elasticsearch-port: 9200
+        opensearch-host: localhost
+        opensearch-port: 9200
 
   N98\Magento\Command\Developer\ConsoleCommand:
     commands:

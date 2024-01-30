@@ -5,6 +5,7 @@ namespace N98\Magento;
 use BadMethodCallException;
 use Composer\Autoload\ClassLoader;
 use Exception;
+use Magento\Framework\Exception\FileSystemException;
 use Magento\Framework\ObjectManagerInterface;
 use N98\Magento\Application\ApplicationAwareInterface;
 use N98\Magento\Application\Config;
@@ -29,6 +30,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
+use Throwable;
 use UnexpectedValueException;
 
 /**
@@ -45,7 +47,7 @@ class Application extends BaseApplication
     /**
      * @var string
      */
-    const APP_VERSION = '7.3.0-dev';
+    const APP_VERSION = '7.3.0';
 
     /**
      * @var int
@@ -99,7 +101,7 @@ class Application extends BaseApplication
     protected $_objectManager;
 
     /**
-     * @see \N98\Magento\Application::setConfigurationLoader()
+     * @see Application::setConfigurationLoader
      * @var ConfigurationLoader
      */
     private $configurationLoaderInjected;
@@ -240,9 +242,9 @@ class Application extends BaseApplication
      * @param OutputInterface $output An Output instance
      *
      * @return int 0 if everything went fine, or an error code
-     * @throws \Magento\Framework\Exception\FileSystemException
-     * @throws \Exception
-     * @throws \Throwable
+     * @throws FileSystemException
+     * @throws Exception
+     * @throws Throwable
      */
     public function doRun(InputInterface $input, OutputInterface $output)
     {
@@ -260,7 +262,7 @@ class Application extends BaseApplication
      * @param bool $soft
      *
      * @return bool false if magento root folder is not set, true otherwise
-     * @throws \Exception
+     * @throws Exception
      */
     public function initMagento($soft = false)
     {
@@ -328,7 +330,7 @@ class Application extends BaseApplication
      * @param OutputInterface $output [optional]
      *
      * @return int
-     * @throws \Exception
+     * @throws Exception
      */
     public function run(InputInterface $input = null, OutputInterface $output = null)
     {
@@ -384,7 +386,7 @@ class Application extends BaseApplication
      * @param OutputInterface $output [optional]
      *
      * @return void
-     * @throws \Exception
+     * @throws Exception
      */
     public function init(
         array $initConfig = [],
@@ -474,7 +476,7 @@ class Application extends BaseApplication
      * @param InputInterface $input [optional]
      * @param OutputInterface $output [optional]
      * @return void
-     * @throws \Exception
+     * @throws Exception
      */
     public function detectMagento(InputInterface $input = null, OutputInterface $output = null)
     {
@@ -503,7 +505,7 @@ class Application extends BaseApplication
     }
 
     /**
-     * @param \Symfony\Component\Console\Input\InputInterface $input
+     * @param InputInterface $input
      * @return bool
      */
     protected function _checkSkipMagento2CoreCommandsOption(InputInterface $input): bool
@@ -531,7 +533,7 @@ class Application extends BaseApplication
                 new MagentoCoreProxyCommandFactory()
             );
             $coreCommands = $provider->getCommands();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             if (OutputInterface::VERBOSITY_DEBUG <= $output->getVerbosity()) {
                 $output->writeln(
                     sprintf('<debug>Exception: %s</debug>', $e->getMessage())
@@ -636,7 +638,7 @@ class Application extends BaseApplication
      * @param array $initConfig [optional]
      * @param InputInterface $input [optional]
      * @param OutputInterface $output [optional]
-     * @throws \Exception
+     * @throws Exception
      */
     public function reinit($initConfig = [], InputInterface $input = null, OutputInterface $output = null)
     {
@@ -655,7 +657,7 @@ class Application extends BaseApplication
             $this->config->setLoader($configurationLoader);
         } else {
             /* inject loader to be used later when config is created in */
-            /* @see \N98\Magento\Application::init() */
+            /* @see Application::init */
             $this->configurationLoaderInjected = $configurationLoader;
         }
     }
