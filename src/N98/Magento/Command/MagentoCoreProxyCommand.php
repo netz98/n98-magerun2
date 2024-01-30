@@ -56,7 +56,7 @@ class MagentoCoreProxyCommand extends AbstractMagentoCommand
     {
         $config = $this->getCommandConfig();
 
-        $magentoCoreCommandInput = new FilteredStringInput($input->__toString());
+        $magentoCoreCommandInput = new FilteredStringInput(escapeshellcmd($input->__toString()));
         $envVariablesForBinMagento = $_ENV;
 
         if ($config['is_env_variables_filtering_enabled'] === true) {
