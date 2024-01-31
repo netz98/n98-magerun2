@@ -19,6 +19,8 @@ on:
       # only tags with semver format
       - '[0-9]+.[0-9]+.[0-9]+'
 
+  workflow_dispatch:
+
 jobs:
   create-signed-phar-file:
     runs-on: ubuntu-latest
