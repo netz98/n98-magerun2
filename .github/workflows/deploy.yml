@@ -153,7 +153,7 @@ jobs:
         env:
           GIT_USER_EMAIL: ${{ secrets.GIT_USER_EMAIL }}
           GIT_USER_NAME: ${{ secrets.GIT_USER_NAME }}
-        run: .github/workflows/update-dist-repo.sh
+        run: bash .github/workflows/update-dist-repo.sh
 
   create-github-release:
     runs-on: ubuntu-latest
