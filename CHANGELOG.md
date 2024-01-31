@@ -4,14 +4,14 @@ RECENT CHANGES
 7.3.0
 -----
 
-- Imp: #1367: Filter non action classes in route:list output (by Christian Münch) 
 - Add: #1301: Config Search Command (by Christian Münch)
-- Imp: #1308: Use phar file path as fallback (by Christian Münch)
-- Fix: #1304: Remove non-routes from route:list (Fix by Bohdan Bakalov)
+- Imp: #1367: Filter non action classes in route:list output (by Christian Münch) 
+- Imp: #1308: Use phar file path as fallback (by Christian Münch, Reported by Kostadin A.)
 - Imp: Allow to place and n98-magerun2.phar directly in a Magento installation without --root-dir option (Reported by Kostadin A.)
-- Fix: #1396: Escape shell command before processing by Symfony StringInput (Reported by
-  Denis Mir)
+- Imp: Update 3rd party dependencies (php-cs-fixer, captainhook, psysh, phpfaker, phpstan, phpunit, symfony, twig)
+- Fix: #1304: Remove non-routes from route:list (Fix by Bohdan Bakalov) 
 - Fix: #1389: TypeError (Reported by thecodecook14)
+- Fix: #1396: Escape shell command before processing by Symfony StringInput (Reported by Denis Mir)
 
 7.2.0
 -----
