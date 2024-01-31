@@ -11,7 +11,7 @@ from command line.
 
 ## Build Status
 
-| **Latest Release**     | ![Tests](https://github.com/netz98/n98-magerun2/actions/workflows/magento_platform_tests.yml/badge.svg?branch=master) ![https://packagist.org/packages/n98/magerun2](https://poser.pugx.org/n98/magerun2/v/stable.png) ![Maintenance Badge](https://img.shields.io/maintenance/yes/2023.svg) |
+| **Latest Release**     | ![Tests](https://github.com/netz98/n98-magerun2/actions/workflows/magento_platform_tests.yml/badge.svg?branch=master) ![https://packagist.org/packages/n98/magerun2](https://poser.pugx.org/n98/magerun2/v/stable.png) ![Maintenance Badge](https://img.shields.io/maintenance/yes/2024.svg) |
 |------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | **Development Branch** | ![Tests](https://github.com/netz98/n98-magerun2/actions/workflows/magento_platform_tests.yml/badge.svg?branch=develop)                                                                                                                                                                       |
 
