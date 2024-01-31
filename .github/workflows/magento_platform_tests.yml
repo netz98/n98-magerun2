@@ -184,7 +184,7 @@ jobs:
 
       - name: Checkout HEAD
         uses: actions/checkout@v4.1.1
-        if: github.event_name == 'push' or github.event_name == 'workflow_dispatch'
+        if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
 
       - name: Linux Setup
         run: bash .github/workflows/linux-setup.sh
