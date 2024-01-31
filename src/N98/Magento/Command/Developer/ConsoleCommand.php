@@ -97,11 +97,9 @@ class ConsoleCommand extends AbstractMagentoCommand
         error_reporting(E_ERROR | E_WARNING | E_PARSE);
         $config = new Configuration();
 
-        $php5Parser = new Parser\Php5(new Lexer\Emulative());
-        $php7Parser = new Parser\Php7(new Lexer\Emulative());
+        $php8Parser = new Parser\Php8(new Lexer\Emulative());
 
-        $parser = new Parser\Multiple([$php5Parser, $php7Parser]);
-        $cleaner = new CodeCleaner($parser);
+        $cleaner = new CodeCleaner($php8Parser);
         $config->setCodeCleaner($cleaner);
 
         $consoleOutput = new ShellOutput();

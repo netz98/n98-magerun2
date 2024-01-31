@@ -1,6 +1,11 @@
 RECENT CHANGES
 ==============
 
+7.3.1
+-----
+
+- Fix: dev:console broken after psysh update (by Christian Münch)
+
 7.3.0
 -----
 
