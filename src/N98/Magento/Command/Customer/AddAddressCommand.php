@@ -114,7 +114,8 @@ class AddAddressCommand extends AbstractCustomerCommand
         try {
             $customer = $this->customerRepository->get($email, $website->getId());
         } catch (NoSuchEntityException $e) {
-            $output->writeln("<error>Customer with email '$email' not found in website '$website'.</error>");
+            $websiteCode = $website->getCode();
+            $output->writeln("<error>Customer with email '$email' not found in website '$websiteCode'.</error>");
             return Command::FAILURE;
         }
 
