@@ -1,13 +1,14 @@
 <?php
 
-namespace AddCustomerAddress\Command;
+namespace N98\Magento\Command\Customer;
 
 use Exception;
 use Magento\Customer\Api\CustomerRepositoryInterface;
 use Magento\Customer\Api\Data\AddressInterfaceFactory;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
-use N98\Magento\Command\Customer\AbstractCustomerCommand;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -42,8 +43,8 @@ class AddAddressCommand extends AbstractCustomerCommand
             ->addOption('country', null, InputOption::VALUE_REQUIRED, 'Country ID, e.g., US')
             ->addOption('postcode', null, InputOption::VALUE_REQUIRED, 'Postcode')
             ->addOption('telephone', null, InputOption::VALUE_REQUIRED, 'Telephone number')
-            ->addOption('default_billing', null, InputOption::VALUE_OPTIONAL, 'Use as default billing address')
-            ->addOption('default_shipping', null, InputOption::VALUE_OPTIONAL, 'Use as default shipping address');
+            ->addOption('default-billing', null, InputOption::VALUE_NONE, 'Use as default billing address')
+            ->addOption('default-shipping', null, InputOption::VALUE_NONE, 'Use as default shipping address');
     }
 
     /**
@@ -63,7 +64,7 @@ class AddAddressCommand extends AbstractCustomerCommand
      * @param InputInterface $input
      * @param OutputInterface $output
      * @return mixed
-     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws LocalizedException
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -98,12 +99,12 @@ class AddAddressCommand extends AbstractCustomerCommand
             $data[$option] = $value;
         }
 
-        // Handling optional options for default billing and shipping addresses
-        $defaultOptions = ['default_billing', 'default_shipping'];
+        // Handling boolean options for default billing and shipping addresses
+        $defaultOptions = ['default-billing', 'default-shipping'];
         foreach ($defaultOptions as $option) {
             $value = $input->getOption($option);
             if (null === $value) {
-                $question = new ConfirmationQuestion("Is this address the customer's $option? (yes/no): ");
+                $question = new ConfirmationQuestion("Set address as customer's $option? (yes/no): ", false);
                 $value = $questionHelper->ask($input, $output, $question);
             }
             $data[$option] = $value;
@@ -127,8 +128,8 @@ class AddAddressCommand extends AbstractCustomerCommand
             ->setCountryId($data['country'])
             ->setPostcode($data['postcode'])
             ->setTelephone($data['telephone'])
-            ->setIsDefaultBilling($data['default_billing'])
-            ->setIsDefaultShipping($data['default_shipping']);
+            ->setIsDefaultBilling($data['default-billing'])
+            ->setIsDefaultShipping($data['default-shipping']);
 
         $mergedAddresses = array_merge($customer->getAddresses(), [$address]);
 
