@@ -6,7 +6,6 @@ use Exception;
 use Magento\Customer\Api\CustomerRepositoryInterface;
 use Magento\Customer\Api\Data\AddressInterfaceFactory;
 use Magento\Framework\Exception\NoSuchEntityException;
-use N98\Magento\Command\AbstractMagentoCommand;
 use N98\Magento\Command\Customer\AbstractCustomerCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
