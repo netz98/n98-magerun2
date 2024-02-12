@@ -72,8 +72,13 @@ class MagentoCoreProxyCommand extends AbstractMagentoCommand
             );
         }
 
+        $shellCommand = escapeshellarg(OperatingSystem::getPhpBinary())
+                      . ' '
+                      . escapeshellarg($this->magentoRootDir . '/bin/magento')
+                      . ' '
+                      . $magentoCoreCommandInput->__toString();
         $process = Process::fromShellCommandline(
-            OperatingSystem::getPhpBinary() . ' ' . $this->magentoRootDir . '/bin/magento ' . $magentoCoreCommandInput->__toString(),
+            $shellCommand,
             $this->magentoRootDir,
             $envVariablesForBinMagento
         );
