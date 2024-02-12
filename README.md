@@ -291,6 +291,20 @@ Deletes customer(s) by given id or a combination of the website id and email or 
 In addition, you can delete a range of customer ids or delete all customers.
 
 
+### Add customer address
+
+```sh
+n98-magerun2.phar customer:add-address [email] [website] [--firstname=STRING] [--lastname=STRING] [--street=STRING] [--city=STRING] [--country=STRING] [--postcode=STRING] [--telephone=STRING] [--default_billing=STRING] [--default_shipping=STRING]
+```
+
+Examples:
+
+```sh
+n98-magerun2.phar customer:add-address test@mail.de base --firstname="John" --lastname="Doe" --street="Pariser Platz" --city="Berlin" --country="DE" --postcode="10117" --telephone="1234567890"  # add addres of brandenburger tor to customer with email "test@mail.de" in website "base"
+n98-magerun2.phar customer:add-address test@mail.de base --firstname="John" --lastname="Doe" --street="Pariser Platz" --city="Berlin" --country="DE" --postcode="10117" --telephone="1234567890" --default_billing=y --default_shipping=y # add addres of brandenburger tor to customer with email "test@mail.de" in website "base" as default billing and shipping
+```
+
+Adds a customer address to given customer defined by email and website
 ---
 
 ### Magento Installer
