@@ -300,8 +300,8 @@ n98-magerun2.phar customer:add-address [email] [website] [--firstname=STRING] [-
 Examples:
 
 ```sh
-n98-magerun2.phar customer:add-address test@mail.de base --firstname="John" --lastname="Doe" --street="Pariser Platz" --city="Berlin" --country="DE" --postcode="10117" --telephone="1234567890"  # add address of brandenburger tor to customer with email "test@mail.de" in website "base"
-n98-magerun2.phar customer:add-address test@mail.de base --firstname="John" --lastname="Doe" --street="Pariser Platz" --city="Berlin" --country="DE" --postcode="10117" --telephone="1234567890" --default-billing --default-shipping # add address of brandenburger tor to customer with email "test@mail.de" in website "base" as default billing and shipping
+n98-magerun2.phar customer:add-address foo@example.com base --firstname="John" --lastname="Doe" --street="Pariser Platz" --city="Berlin" --country="DE" --postcode="10117" --telephone="1234567890"  # add address of brandenburger tor to customer with email "foo@example.com" in website "base"
+n98-magerun2.phar customer:add-address foo@example.com base --firstname="John" --lastname="Doe" --street="Pariser Platz" --city="Berlin" --country="DE" --postcode="10117" --telephone="1234567890" --default-billing --default-shipping # add address of brandenburger tor to customer with email "foo@example.com" in website "base" as default billing and shipping
 ```
 
 Adds a customer address to given customer defined by email and website

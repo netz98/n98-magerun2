@@ -185,8 +185,8 @@ function cleanup_files_in_magento() {
 }
 
 @test "Command: customer:add-address" {
-  run $BIN "customer:add-address" test@mail.de base --firstname="John" --lastname="Doe" --street="Pariser Platz" --city="Berlin" --country="DE" --postcode="10117" --telephone="1234567890" --default-billing --default-shipping
-  assert_output --partial "Address added successfully to customer test@mail.de"
+  run $BIN "customer:add-address" foo@example.com base --firstname="John" --lastname="Doe" --street="Pariser Platz" --city="Berlin" --country="DE" --postcode="10117" --telephone="1234567890" --default-billing --default-shipping
+  assert_output --partial "Address added successfully to customer foo@example.com"
 }
 
 @test "Command: db:add-default-authorization-entries" {
