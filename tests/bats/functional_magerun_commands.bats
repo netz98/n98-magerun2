@@ -179,14 +179,14 @@ function cleanup_files_in_magento() {
   assert_output --partial "Password successfully changed"
 }
 
-@test "Command: customer:delete" {
-  run $BIN "customer:delete" --fuzzy --email=foo --force
-  assert_output --partial "Successfully deleted 1 customer/s"
-}
-
 @test "Command: customer:add-address" {
   run $BIN "customer:add-address" foo@example.com base --firstname="John" --lastname="Doe" --street="Pariser Platz" --city="Berlin" --country="DE" --postcode="10117" --telephone="1234567890" --default-billing --default-shipping
   assert_output --partial "Address added successfully to customer foo@example.com"
+}
+
+@test "Command: customer:delete" {
+  run $BIN "customer:delete" --fuzzy --email=foo --force
+  assert_output --partial "Successfully deleted 1 customer/s"
 }
 
 @test "Command: db:add-default-authorization-entries" {
