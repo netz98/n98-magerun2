@@ -225,7 +225,7 @@ n98-magerun2.phar open-browser [store]
 Loads basic customer info by email address.
 
 ```sh
-n98-magerun2.phar  customer:info [email] [website]
+n98-magerun2.phar customer:info [email] [website]
 ```
 
 ### Create customer
@@ -233,7 +233,7 @@ n98-magerun2.phar  customer:info [email] [website]
 Creates a new customer/user for shop frontend.
 
 ```sh
-n98-magerun2.phar  customer:create [email] [password] [firstname] [lastname] [website]
+n98-magerun2.phar customer:create [email] [password] [firstname] [lastname] [website]
 ```
 
 Example:
@@ -255,7 +255,7 @@ overriding config). If search parameter is given the customers are
 filtered (searchs in firstname, lastname and email).
 
 ```sh
-n98-magerun2.phar  customer:list [--format[="..."]] [search]
+n98-magerun2.phar customer:list [--format[="..."]] [search]
 ```
 
 ### Change customer password
