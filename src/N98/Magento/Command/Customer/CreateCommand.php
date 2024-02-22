@@ -2,9 +2,11 @@
 
 namespace N98\Magento\Command\Customer;
 
+use Exception;
 use Magento\Customer\Api\AccountManagementInterface;
 use Magento\Framework\App\State as AppState;
 use Magento\Framework\Exception\LocalizedException;
+use Magento\Theme\Model\View\Design;
 use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\QuestionHelper;
@@ -65,7 +67,7 @@ class CreateCommand extends AbstractCustomerCommand
      * @param InputInterface $input
      * @param OutputInterface $output
      * @return int
-     * @throws \Exception
+     * @throws Exception
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -106,7 +108,7 @@ class CreateCommand extends AbstractCustomerCommand
 
         try {
             $additionalFields = $this->getAdditionalFields($input);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $output->writeln('<error>' . $e->getMessage() . '</error>');
             return 1;
         }
@@ -132,7 +134,14 @@ class CreateCommand extends AbstractCustomerCommand
             $customer->setStoreId($website->getDefaultGroup()->getDefaultStore()->getId());
 
             try {
-                $this->appState->setAreaCode('frontend');
+                try {
+                    $this->appState->setAreaCode('frontend');
+                } catch (LocalizedException $e) {
+                    if ($e->getMessage() !== 'Area code is already set') {
+                        throw $e;
+                    }
+                }
+
                 $this->appState->emulateAreaCode(
                     'frontend',
                     [$this, 'createCustomer'],
@@ -154,7 +163,7 @@ class CreateCommand extends AbstractCustomerCommand
                         $lastname,
                     ];
                 }
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 $isError = true;
                 $output->writeln('<error>' . $e->getMessage() . '</error>');
             }
@@ -174,7 +183,7 @@ class CreateCommand extends AbstractCustomerCommand
     /**
      * @param string $customer
      * @param string $password
-     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws LocalizedException
      */
     public function createCustomer($customer, $password)
     {
@@ -184,8 +193,8 @@ class CreateCommand extends AbstractCustomerCommand
             // @see \Magento\Framework\Session\SessionManager::isSessionExists Hack to prevent session problems
             @session_start();
 
-            /** @var \Magento\Theme\Model\View\Design $design */
-            $design = $this->getObjectManager()->get(\Magento\Theme\Model\View\Design::class);
+            /** @var Design $design */
+            $design = $this->getObjectManager()->get(Design::class);
             $design->setArea('frontend');
             $this->accountManagement->createAccount(
                 $customer->getDataModel(),
@@ -207,7 +216,7 @@ class CreateCommand extends AbstractCustomerCommand
         }
 
         if (count($additionalFields) % 2 !== 0) {
-            throw new \Exception('Additional fields must be formated as name1 value2 name2 value2, uneven paramater count specified');
+            throw new Exception('Additional fields must be formated as name1 value2 name2 value2, uneven paramater count specified');
         }
 
         $result = [];
