@@ -28,6 +28,24 @@ function cleanup_files_in_magento() {
   rm -Rf "${N98_MAGERUN2_TEST_MAGENTO_ROOT:?}/$1"
 }
 
+@test "Issue: 1414" {
+  tempfilename=$(mktemp)
+  # Generate random numbers for email uniqueness
+  random1=$((RANDOM % 1000))
+  random2=$((RANDOM % 1000))
+
+  # Use the random numbers to create unique email addresses
+  email1="customer${random1}@example.com"
+  email2="customer${random2}@example.com"
+
+  # Use the unique email addresses in the script command
+  printf "customer:create ${email1} Password1234# Foo Bar 1\ncustomer:create ${email2} Password1234# Foo Bar" > $tempfilename
+  run $BIN script $tempfilename
+  assert_output --partial "successfully created"
+  assert [ "$status" -eq 0 ]
+}
+
+
 @test "Command: admin:user:list" {
 	run $BIN "admin:user:list"
 	assert_output --partial "username"
