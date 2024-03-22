@@ -35,7 +35,7 @@ jobs:
 
       - name: Get Composer Cache Directory
         id: composer-cache
-        run: echo "dir=\"$(composer config cache-files-dir)\"" >> "$GITHUB_ENV"
+        run: echo "dir=\"$(composer config cache-files-dir)\"" >> "$GITHUB_OUTPUT"
         shell: bash
 
       - uses: actions/cache@v4
