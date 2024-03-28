@@ -406,6 +406,11 @@ commands:
         version: 2.4.3-p3
         options:
           repository-url: https://mirror.mage-os.org
+      - name: magento-ce-2.4.6-p4
+        package: magento/project-community-edition
+        version: 2.4.6-p4
+        options:
+          repository-url: https://repo.magento.com
       - name: magento-ce-2.4.6-p2
         package: magento/project-community-edition
         version: 2.4.6-p2
@@ -426,9 +431,19 @@ commands:
         version: 2.4.5-p1
         options:
           repository-url: https://repo.magento.com
+      - name: magento-ce-2.4.5-p6
+        package: magento/project-community-edition
+        version: 2.4.5-p6
+        options:
+          repository-url: https://repo.magento.com
       - name: magento-ce-2.4.5
         package: magento/project-community-edition
         version: 2.4.5
+        options:
+          repository-url: https://repo.magento.com
+      - name: magento-ce-2.4.4-p7
+        package: magento/project-community-edition
+        version: 2.4.4-p7
         options:
           repository-url: https://repo.magento.com
       - name: magento-ce-2.4.4-p2
