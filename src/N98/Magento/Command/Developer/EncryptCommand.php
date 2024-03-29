@@ -2,9 +2,7 @@
 
 namespace N98\Magento\Command\Developer;
 
-use Magento\Eav\Model\Config as EavConfig;
-use Magento\Eav\Setup\EavSetup;
-use Magento\Eav\Setup\EavSetupFactory;
+use Magento\Framework\Encryption\EncryptorInterface;
 use N98\Magento\Command\AbstractMagentoCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -23,8 +21,7 @@ class EncryptCommand extends AbstractMagentoCommand
     private $encryptor;
 
     /**
-     * @param EavConfig $eavConfig
-     * @param EavSetupFactory $eavSetupFactory
+     * @param EncryptorInterface $eavSetupFactory
      * @return void
      */
     public function inject(
