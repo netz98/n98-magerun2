@@ -122,6 +122,8 @@ commands:
     - N98\Magento\Command\Design\DemoNoticeCommand
     - N98\Magento\Command\Developer\Asset\ClearCommand
     - N98\Magento\Command\Developer\ConsoleCommand
+    - N98\Magento\Command\Developer\EncryptCommand
+    - N98\Magento\Command\Developer\DecryptCommand
     - N98\Magento\Command\Developer\Module\CreateCommand
     - N98\Magento\Command\Developer\Module\DetectComposerDependenciesCommand
     - N98\Magento\Command\Developer\Report\CountCommand
