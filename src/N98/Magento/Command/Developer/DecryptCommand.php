@@ -2,7 +2,7 @@
 
 namespace N98\Magento\Command\Developer;
 
-use \Magento\Framework\Encryption\EncryptorInterface;
+use Magento\Framework\Encryption\EncryptorInterface;
 use N98\Magento\Command\AbstractMagentoCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;

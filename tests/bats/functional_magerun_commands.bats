@@ -342,6 +342,12 @@ function cleanup_files_in_magento() {
   assert_output --partial "Magento/backend"
 }
 
+@test "Command: dev:encrypt & dev:decrypt" {
+  result=$(run $BIN "dev:encrypt" testValue)
+  run $BIN "dev:decrypt" $result
+  assert_output "testValue"
+}
+
 @test "Command: eav:attribute:list" {
   run $BIN "eav:attribute:list"
   assert_output --partial "sku"
