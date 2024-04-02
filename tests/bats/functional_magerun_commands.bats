@@ -343,8 +343,8 @@ function cleanup_files_in_magento() {
 }
 
 @test "Command: dev:encrypt & dev:decrypt" {
-  result=$(run $BIN "dev:encrypt" testValue)
-  run $BIN "dev:decrypt" $result
+  result=$($BIN "dev:encrypt" "testValue")
+  run $BIN "dev:decrypt" "${result}"
   assert_output "testValue"
 }
 
