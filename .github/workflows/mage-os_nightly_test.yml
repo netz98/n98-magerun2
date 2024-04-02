@@ -58,7 +58,7 @@ jobs:
           DB_HOST="127.0.0.1:${DB_PORT}"
           
           # Create project
-          composer create-project --stability alpha --repository-url=https://upstream-nightly.mage-os.org magento/project-community-edition mage-os
+          composer create-project --stability alpha --repository-url=https://repo.mage-os.org mage-os/project-community-edition mage-os
 
           # Change directory
           cd mage-os
