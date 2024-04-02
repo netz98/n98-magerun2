@@ -1009,6 +1009,20 @@ n98-magerun2.phar dev:translate:export [--store=<storecode>] <locale> <filename>
 n98-magerun2.phar dev:module:list [--vendor=VENDOR]
 ```
 
+### Encryption
+
+Encrypt the given string using Magentos crypt key
+
+```sh
+n98-magerun2.phar dev:encrypt <string>
+```
+
+Decrypt the given string using Magentos crypt key
+
+```sh
+n98-magerun2.phar dev:decrypt <encrypted string>
+```
+
 ---
 
 ### List Observers
