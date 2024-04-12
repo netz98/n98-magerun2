@@ -1141,7 +1141,7 @@ n98-magerun2.phar integration:list
 #### Create a new integration
 
 ```sh
-n98-magerun2.phar integration:create [options] [--] <name> <email> <endpoint>
+n98-magerun2.phar integration:create [options] [--] <name> [<email> [<endpoint>]]
 ```
 
 Options:
