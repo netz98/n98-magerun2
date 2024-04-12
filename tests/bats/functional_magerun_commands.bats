@@ -400,7 +400,12 @@ function cleanup_files_in_magento() {
 }
 
 @test "Command: Integration:create" {
+  # Create with all arguments
   run $BIN "integration:create" magerun-test magerun@example.com https://localhost
+  assert_output --partial "Integration ID"
+
+  # Create with minimal arguments
+  run $BIN "integration:create" magerun-test1
   assert_output --partial "Integration ID"
 }
 
