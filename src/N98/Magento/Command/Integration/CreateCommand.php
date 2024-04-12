@@ -5,9 +5,15 @@ namespace N98\Magento\Command\Integration;
 use Magento\Framework\Exception\AlreadyExistsException;
 use Magento\Framework\Exception\IntegrationException;
 use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Oauth\Exception;
+use Magento\Integration\Model\AuthorizationService;
 use Magento\Integration\Model\Integration as IntegrationAlias;
+use Magento\Integration\Model\IntegrationFactory;
+use Magento\Integration\Model\IntegrationService;
 use Magento\Integration\Model\Oauth\Consumer as ConsumerModel;
 use Magento\Integration\Model\Oauth\Token;
+use Magento\Integration\Model\Oauth\TokenFactory;
+use Magento\Integration\Model\OauthService;
 use Magento\Integration\Model\ResourceModel\Oauth\Consumer;
 use N98\Magento\Command\AbstractMagentoCommand;
 use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
@@ -27,27 +33,27 @@ class CreateCommand extends AbstractMagentoCommand
     use IntegrationDataTrait;
 
     /**
-     * @var \Magento\Integration\Model\IntegrationFactory
+     * @var IntegrationFactory
      */
     private $integrationFactory;
 
     /**
-     * @var \Magento\Integration\Model\OauthService
+     * @var OauthService
      */
     private $oauthService;
 
     /**
-     * @var \Magento\Integration\Model\AuthorizationService
+     * @var AuthorizationService
      */
     private $authorizationService;
 
     /**
-     * @var \Magento\Integration\Model\Oauth\TokenFactory
+     * @var TokenFactory
      */
     private $tokenFactory;
 
     /**
-     * @var \Magento\Integration\Model\IntegrationService
+     * @var IntegrationService
      */
     private $integrationService;
 
@@ -66,8 +72,8 @@ class CreateCommand extends AbstractMagentoCommand
         $this
             ->setName('integration:create')
             ->addArgument('name', InputArgument::REQUIRED, 'Name of the integration')
-            ->addArgument('email', InputArgument::REQUIRED, 'Email')
-            ->addArgument('endpoint', InputArgument::REQUIRED, 'Endpoint URL')
+            ->addArgument('email', InputArgument::OPTIONAL, 'Email')
+            ->addArgument('endpoint', InputArgument::OPTIONAL, 'Endpoint URL')
             ->addOption('consumer-key', '', InputOption::VALUE_REQUIRED, 'Consumer Key (length 32 chars)')
             ->addOption('consumer-secret', '', InputOption::VALUE_REQUIRED, 'Consumer Secret (length 32 chars)')
             ->addOption('access-token', '', InputOption::VALUE_REQUIRED, 'Access-Token (length 32 chars)')
@@ -98,12 +104,12 @@ HELP;
     }
 
     public function inject(
-        \Magento\Integration\Model\IntegrationFactory $integrationFactory,
-        \Magento\Integration\Model\IntegrationService $integrationService,
-        \Magento\Integration\Model\ResourceModel\Oauth\Consumer $consumerResource,
-        \Magento\Integration\Model\OauthService $oauthService,
-        \Magento\Integration\Model\AuthorizationService $authorizationService,
-        \Magento\Integration\Model\Oauth\TokenFactory $tokenFactory,
+        IntegrationFactory        $integrationFactory,
+        IntegrationService        $integrationService,
+        Consumer                                             $consumerResource,
+        OauthService                                         $oauthService,
+        AuthorizationService                                 $authorizationService,
+        TokenFactory                                         $tokenFactory,
         \Magento\Integration\Model\ResourceModel\Oauth\Token $tokenResource
     ) {
         $this->integrationFactory = $integrationFactory;
@@ -116,23 +122,31 @@ HELP;
     }
 
     /**
-     * @param \Symfony\Component\Console\Input\InputInterface $input
-     * @param \Symfony\Component\Console\Output\OutputInterface $output
+     * @param InputInterface $input
+     * @param OutputInterface $output
      * @return int
      * @throws \Exception
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $integrationName = $input->getArgument('name');
-        $integrationEmail = $this->getHelperSet()->get('parameter')->askEmail($input, $output);
+        $integrationEmail = $input->getArgument('email');
         $integrationEndpoint = $input->getArgument('endpoint');
-
         $consumerKey = $input->getOption('consumer-key');
         $consumerSecret = $input->getOption('consumer-secret');
         $accessToken = $input->getOption('access-token');
         $accessTokenSecret = $input->getOption('access-token-secret');
-
         $grantedResources = $input->getOption('resource');
+
+        // Validate email
+        if ($integrationEmail !== null && !filter_var($integrationEmail, FILTER_VALIDATE_EMAIL)) {
+            throw new RuntimeException('Invalid email address');
+        }
+
+        // Validate URL
+        if ($integrationEndpoint !== null && !filter_var($integrationEndpoint, FILTER_VALIDATE_URL)) {
+            throw new RuntimeException('Invalid endpoint URL');
+        }
 
         $integrationModel = $this->createIntegration($integrationName, $integrationEmail, $integrationEndpoint);
         $consumerModel = $this->saveConsumer($integrationModel, $consumerKey, $consumerSecret);
@@ -189,7 +203,7 @@ HELP;
      * @return ConsumerModel
      * @throws AlreadyExistsException
      * @throws LocalizedException
-     * @throws \Magento\Framework\Oauth\Exception
+     * @throws Exception
      */
     private function saveConsumer(IntegrationAlias $integrationModel, $consumerKey, $consumerSecret): ConsumerModel
     {
