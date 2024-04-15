@@ -78,7 +78,17 @@ jobs:
             use-git-repository: false
             git-repository: ""
 
-          - magento-version: magento-ce-2.4.6-p4
+          - magento-version: magento-ce-2.4.7
+            operating-system: ubuntu-latest
+            php-version: '8.3'
+            mysql-version: '8.0'
+            elasticsearch-version: 7.16.0
+            composer-version: '2.2.17'
+            use-git-repository: false
+            git-repository: ""
+            git-branch: ""
+
+          - magento-version: magento-ce-2.4.7
             operating-system: ubuntu-latest
             php-version: '8.2'
             mysql-version: '8.0'
@@ -88,7 +98,17 @@ jobs:
             git-repository: ""
             git-branch: ""
 
-          - magento-version: magento-ce-2.4.6-p4
+          - magento-version: magento-ce-2.4.6-p5
+            operating-system: ubuntu-latest
+            php-version: '8.2'
+            mysql-version: '8.0'
+            elasticsearch-version: 7.16.0
+            composer-version: '2.2.17'
+            use-git-repository: false
+            git-repository: ""
+            git-branch: ""
+
+          - magento-version: magento-ce-2.4.6-p5
             operating-system: ubuntu-latest
             php-version: '8.1'
             mysql-version: '8.0'
@@ -98,7 +118,7 @@ jobs:
             git-repository: ""
             git-branch: ""
 
-          - magento-version: magento-ce-2.4.5-p6
+          - magento-version: magento-ce-2.4.5-p7
             operating-system: ubuntu-latest
             php-version: '8.1'
             mysql-version: '8.0'
@@ -108,7 +128,7 @@ jobs:
             git-repository: ""
             git-branch: ""
 
-          - magento-version: magento-ce-2.4.4-p2
+          - magento-version: magento-ce-2.4.4-p8
             operating-system: ubuntu-latest
             php-version: '8.1'
             mysql-version: '8.0'
