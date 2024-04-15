@@ -1,6 +1,15 @@
 RECENT CHANGES
 ==============
 
+7.4.0-dev
+---------
+
+- Add: new Magento Versions 2.4.7, 2.4.6-p5, 2.4.5-p7, 2.4.4-p8 (by Christian Münch)
+- Add: New encrypt and decrypt commands (by Indy Koning)
+- Add: customer:add-address command (by Christian Walter)
+- Imp: Update 3rd party dependencies (phpunit, symfony, php-cs-fixer, phpstan, psysh)
+- Fix: #1406: Quotes all arguments used by MagentoCoreProxyCommand (by Christian Münch)
+
 7.3.1
 -----
 
@@ -10,11 +19,11 @@ RECENT CHANGES
 -----
 
 - Add: #1301: Config Search Command (by Christian Münch)
-- Imp: #1367: Filter non action classes in route:list output (by Christian Münch) 
+- Imp: #1367: Filter non action classes in route:list output (by Christian Münch)
 - Imp: #1308: Use phar file path as fallback (by Christian Münch, Reported by Kostadin A.)
 - Imp: Allow to place and n98-magerun2.phar directly in a Magento installation without --root-dir option (Reported by Kostadin A.)
 - Imp: Update 3rd party dependencies (php-cs-fixer, captainhook, psysh, phpfaker, phpstan, phpunit, symfony, twig)
-- Fix: #1304: Remove non-routes from route:list (Fix by Bohdan Bakalov) 
+- Fix: #1304: Remove non-routes from route:list (Fix by Bohdan Bakalov)
 - Fix: #1389: TypeError (Reported by thecodecook14)
 - Fix: #1396: Escape shell command before processing by Symfony StringInput (Reported by Denis Mir)
 
@@ -78,7 +87,7 @@ RECENT CHANGES
 - Add: #1041: New command config:data:indexer (by Christian Münch) 
 - Add: #1042: New command config:data:mview (by Christian Münch)
 - Add: #1126: Add CONTRIBUTING.md and CODE_OF_CONDUCT.md (by Christian Münch)
-- Imp: #1123: Make detection debug output more helpful (by Alexander Menk) 
+- Imp: #1123: Make detection debug output more helpful (by Alexander Menk)
 - Imp: New internal proxy command to call Magento Core Commands (by Christian Münch)
 - Imp: Disabled Magento and config initialization if self-update command runs (by Christian Münch)
 - Imp: Update 3rd party dependencies (Symfony, psysh, captainhook, php-cs-fixer, phpunit, twig)
@@ -96,7 +105,7 @@ RECENT CHANGES
 6.1.0
 -----
 
-- Add: Magento 2.4.5-p1 / 2.4.4-p2 (by Simon Sprankel) 
+- Add: Magento 2.4.5-p1 / 2.4.4-p2 (by Simon Sprankel)
 - Imp: Update 3rd party dependencies (phpstan, requests library)
 - Fix: #969: Mark cron as executed (by Pieter Hoste)
 - Del: Magento 2.3.7 in ddev test setup (by Christian Münch)
@@ -140,7 +149,7 @@ RECENT CHANGES
 - Fix: #993: Try to drop only existing databases (by Christian Münch)
 - Fix: #996: Customer Debug Functions in Dev Console Dev Helper (by Alexander Menk)
 - Fix: #998: Pass empty string as default value to getFileName (by Peter Jaap)
-- Fix: #1015: deprecated: passing null to dirname (by Alexander Menk).
+- Fix: #1015: deprecated: passing null to dirname (by Alexander Menk)
 - Fix: #1019: type error in cache-list command on php 8.1 (by Tom Klingenberg)
 - Fix: #1024: config:store:get wrong filters applied (by Alexander Dite)
 - Fix: typos and wrong infos in help text (by Christian Münch)
@@ -200,7 +209,6 @@ RECENT CHANGES
 -----
 
 - Fix: #901: dev:console command outputs "must be compatible with" error (by Mark Shust)
-
 
 4.9.0
 -----

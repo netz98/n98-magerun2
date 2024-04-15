@@ -37,6 +37,7 @@ We support the following Magento Versions:
 
 We support the following PHP Versions:
 
+- PHP 8.3
 - PHP 8.2
 - PHP 8.1
 - PHP 7.4
