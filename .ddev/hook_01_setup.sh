@@ -59,6 +59,17 @@ function setup_bats() {
     fi
 }
 
+function setup_bats() {
+    echo -e "${txtblu}=========================================================="
+    echo -e "> Development setup completed"
+    echo -e "==========================================================${txtrst}"
+
+    echo "You can now login to your dev environment by using 'ddev ssh'"
+    echo "Then you can run:"
+    echo "  bin/n98-magerun2 --root-dir=/opt/magento-test-environments/magento_<version>"
+}
+
 setup_composer
 setup_test_magento_environments
 setup_bats
+setup_success
