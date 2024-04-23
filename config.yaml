@@ -100,10 +100,10 @@ commands:
     - N98\Magento\Command\Config\Data\DiCommand
     - N98\Magento\Command\Config\Data\MViewCommand
     - N98\Magento\Command\Config\Data\IndexerCommand
-    - N98\Magento\Command\Customer\CreateCommand
     - N98\Magento\Command\Customer\AddAddressCommand
-    - N98\Magento\Command\Customer\DeleteCommand
+    - N98\Magento\Command\Customer\CreateCommand
     - N98\Magento\Command\Customer\ChangePasswordCommand
+    - N98\Magento\Command\Customer\DeleteCommand
     - N98\Magento\Command\Customer\InfoCommand
     - N98\Magento\Command\Customer\ListCommand
     - N98\Magento\Command\Customer\Token\CreateCommand
