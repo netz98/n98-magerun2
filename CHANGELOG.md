@@ -1,14 +1,16 @@
 RECENT CHANGES
 ==============
 
-7.4.0-dev
----------
+7.4.0
+-----
 
 - Add: new Magento Versions 2.4.7, 2.4.6-p5, 2.4.5-p7, 2.4.4-p8 (by Christian Münch)
 - Add: New encrypt and decrypt commands (by Indy Koning)
 - Add: customer:add-address command (by Christian Walter)
-- Imp: Update 3rd party dependencies (phpunit, symfony, php-cs-fixer, phpstan, psysh)
+- Imp: Update 3rd party dependencies (phpunit, symfony, php-cs-fixer, phpstan, psysh, twig)
 - Fix: #1406: Quotes all arguments used by MagentoCoreProxyCommand (by Christian Münch)
+- Imp: #1441: Make integration email and endpoint url optional (reported by Sergii Repin)
+- Imp: README.md - converted spaces (by Matheus Gontijo)
 
 7.3.1
 -----
