@@ -2,6 +2,9 @@
 
 namespace N98\Magento\Command\Developer\Module;
 
+use Magento\Framework\Filter\Input;
+use Magento\Framework\Module\FullModuleList;
+use Magento\Framework\Module\Manager;
 use N98\Magento\Command\AbstractMagentoCommand;
 use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
 use Symfony\Component\Console\Command\Command;
@@ -21,21 +24,31 @@ class ListCommand extends AbstractMagentoCommand
     protected $moduleList;
 
     /**
-     * @var \Magento\Framework\Module\ModuleListInterface
+     * @var \Magento\Framework\Module\FullModuleList
      */
     protected $moduleListObject;
 
+    /**
+     * @var Manager
+     */
+    protected $moduleManager;
+
+    /**
+     * @return array
+     */
     public function getModuleList()
     {
         return $this->moduleList;
     }
 
     /**
-     * @param \Magento\Framework\Module\ModuleListInterface $moduleList
+     * @param FullModuleList $moduleList
+     * @param Manager $moduleManager
      */
-    public function inject(\Magento\Framework\Module\ModuleListInterface $moduleList)
+    public function inject(\Magento\Framework\Module\FullModuleList $moduleList, Manager $moduleManager)
     {
         $this->moduleListObject = $moduleList;
+        $this->moduleManager = $moduleManager;
     }
 
     protected function configure()
@@ -49,6 +62,8 @@ class ListCommand extends AbstractMagentoCommand
                 'Show modules of a specific vendor (case insensitive)'
             )
             ->setDescription('List all installed modules')
+            ->addOption('only-enabled', 'e', InputOption::VALUE_NONE, 'Show only enabled modules')
+            ->addOption('only-disabled', 'd', InputOption::VALUE_NONE, 'Show only disabled modules')
             ->addOption(
                 'format',
                 null,
@@ -65,6 +80,10 @@ class ListCommand extends AbstractMagentoCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        if ($input->getOption('only-disabled') && $input->getOption('only-enabled')) {
+            throw new \Exception('You can only use one of the options --only-enabled or --only-disabled');
+        }
+
         $this->detectMagento($output, true);
 
         if ($input->getOption('format') == null) {
@@ -72,20 +91,29 @@ class ListCommand extends AbstractMagentoCommand
         }
 
         $this->initMagento();
-        $this->prepareModuleList($input->getOption('vendor'));
+        $this->prepareModuleList($input);
 
         $this->getHelper('table')
-            ->setHeaders(['Name', '(Schema) Version'])
+            ->setHeaders(['Name', '(Schema) Version', 'Status'])
             ->renderByFormat($output, $this->moduleList, $input->getOption('format'));
 
         return Command::SUCCESS;
     }
 
-    protected function prepareModuleList($vendor)
+    /**
+     * @param string $vendor
+     * @return void
+     */
+    protected function prepareModuleList(InputInterface  $input)
     {
         $this->moduleList = [];
 
-        foreach ($this->moduleListObject->getAll() as $moduleName => $info) {
+        $vendor = $input->getOption('vendor');
+
+        foreach ($this->moduleListObject->getNames() as $moduleName) {
+
+            $info = $this->moduleListObject->getOne($moduleName);
+
             // First index is (probably always) vendor
             $moduleNameData = explode('_', $moduleName);
 
@@ -93,7 +121,21 @@ class ListCommand extends AbstractMagentoCommand
                 continue;
             }
 
-            $this->moduleList[] = [$info['name'], $info['setup_version']];
+            $isEnabled = $this->moduleManager->isEnabled($moduleName);
+
+            if ($isEnabled && $input->getOption('only-disabled')) {
+                continue;
+            }
+
+            if (!$isEnabled && $input->getOption('only-enabled')) {
+                continue;
+            }
+
+            $this->moduleList[] = [
+                $info['name'],
+                $info['setup_version'],
+                $isEnabled ? 'enabled' : 'disabled',
+            ];
         }
     }
 }
