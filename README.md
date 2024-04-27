@@ -1007,8 +1007,13 @@ n98-magerun2.phar dev:translate:export [--store=<storecode>] <locale> <filename>
 ### List modules
 
 ```sh
-n98-magerun2.phar dev:module:list [--vendor=VENDOR]
+n98-magerun2.phar dev:module:list [--vendor [VENDOR]] [-e|--only-enabled] [-d|--only-disabled] [--format [FORMAT]]
 ```
+
+Lists all installed modules. If `--vendor` option is set, only modules of the given vendor are listed.
+If `--only-enabled` option is set, only enabled modules are listed.
+If `--only-disabled` option is set, only disabled modules are listed.
+Format can be `csv`, `json`, `xml` or `yaml`.
 
 ### Encryption
 
