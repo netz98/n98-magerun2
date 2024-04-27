@@ -439,6 +439,18 @@ function cleanup_files_in_magento() {
   assert_output --partial "Compress"
 }
 
+@test "Command: route:list -m Magento_Backend -a adminhtml" {
+  run $BIN "route:list" -m Magento_Backend -a adminhtml
+  assert_output --partial "admin/dashboard/index"
+  assert_output --partial "GET,POST"
+}
+
+@test "Command: route:list -m Magento_Multishipping -a frontend" {
+  run $BIN "route:list" -m Magento_Multishipping -a frontend
+  assert_output --partial "multishipping/checkout_address/editaddress"
+  assert_output --partial "GET,POST"
+}
+
 @test "Command: script:repo:list" {
   run $BIN "script:repo:list"
   assert_output --partial "Script"

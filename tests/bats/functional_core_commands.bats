@@ -278,12 +278,3 @@ setup() {
   assert_output --partial "vcl 4.0"
 }
 
-@test "Command: route:list -m Magento_Backend -a adminhtml" {
-  run $BIN "route:list" -m Magento_Backend -a adminhtml
-  assert_output --partial "admin/dashboard/index"
-}
-
-@test "Command: route:list -m Magento_Multishipping -a frontend" {
-  run $BIN "route:list" -m Magento_Multishipping -a frontend
-  assert_output --partial "multishipping/checkout_address/editaddress"
-}

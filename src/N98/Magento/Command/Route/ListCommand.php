@@ -2,6 +2,15 @@
 
 namespace N98\Magento\Command\Route;
 
+use Magento\Framework\App\Action\HttpConnectActionInterface;
+use Magento\Framework\App\Action\HttpDeleteActionInterface;
+use Magento\Framework\App\Action\HttpGetActionInterface;
+use Magento\Framework\App\Action\HttpOptionsActionInterface;
+use Magento\Framework\App\Action\HttpPatchActionInterface;
+use Magento\Framework\App\Action\HttpPostActionInterface;
+use Magento\Framework\App\Action\HttpPropfindActionInterface;
+use Magento\Framework\App\Action\HttpPutActionInterface;
+use Magento\Framework\App\Action\HttpTraceActionInterface;
 use Magento\Framework\App\ActionInterface;
 use Magento\Framework\App\AreaList;
 use Magento\Framework\App\Route\Config;
@@ -125,7 +134,10 @@ class ListCommand extends AbstractMagentoCommand
                 $actionClass = substr($actionClass, 0, -6);
             }
 
-            $moduleActions[$moduleName][$area][] = strtolower(implode('/', $actionPath) . '/' . $actionClass);
+            $moduleActions[$moduleName][$area][] = [
+                'file' => strtolower(implode('/', $actionPath) . '/' . $actionClass),
+                'class' => $fullActionPath,
+            ];
         }
 
         $areas = $input->getOption('area') ? [$input->getOption('area')] : $this->areaList->getCodes();
@@ -142,6 +154,7 @@ class ListCommand extends AbstractMagentoCommand
                     'Frontname',
                     'Module',
                     'Route',
+                    'Methods'
                 ]
             )
             ->renderByFormat($output, $table, $input->getOption('format'))
@@ -195,12 +208,66 @@ class ListCommand extends AbstractMagentoCommand
             if (isset($moduleActions[$module][$area])) {
                 foreach ($moduleActions[$module][$area] as $action) {
                     $moduleRouteAction = $moduleRoute;
-                    $moduleRouteAction[] = $route['frontName'] . '/' . ActionPathFormatter::format($action);
+                    $moduleRouteAction[] = $route['frontName'] . '/' . ActionPathFormatter::format($action['file']);
+                    $moduleRouteAction[] = implode(',', $this->getSupportedHttpVerbs($action['class']));
 
                     $table[] = $moduleRouteAction;
                 }
             }
         }
         return $table;
+    }
+
+    /**
+     * Returns the HTTP verb of route by class of action
+     *
+     * @param string $actionClass
+     * @return string[]
+     */
+    private function getSupportedHttpVerbs(string $actionClass): array
+    {
+        $verbs = [];
+
+        if (is_a($actionClass, HttpConnectActionInterface::class, true)) {
+            $verbs[] = 'CONNECT';
+        }
+
+        if (is_a($actionClass, HttpDeleteActionInterface::class, true)) {
+            $verbs[] = 'DELETE';
+        }
+
+        if (is_a($actionClass, HttpGetActionInterface::class, true)) {
+            $verbs[] = 'GET';
+        }
+
+        if (is_a($actionClass, HttpOptionsActionInterface::class, true)) {
+            $verbs[] = 'OPTIONS';
+        }
+
+        if (is_a($actionClass, HttpPatchActionInterface::class, true)) {
+            $verbs[] = 'PATCH';
+        }
+
+        if (is_a($actionClass, HttpPostActionInterface::class, true)) {
+            $verbs[] = 'POST';
+        }
+
+        if (is_a($actionClass, HttpPropfindActionInterface::class, true)) {
+            $verbs[] = 'PROPFIND';
+        }
+
+        if (is_a($actionClass, HttpPutActionInterface::class, true)) {
+            $verbs[] = 'PUT';
+        }
+
+        if (is_a($actionClass, HttpTraceActionInterface::class, true)) {
+            $verbs[] = 'TRACE';
+        }
+
+        if (count($verbs) === 0) {
+            return ['GET', 'POST'];
+        }
+
+        return $verbs;
     }
 }
