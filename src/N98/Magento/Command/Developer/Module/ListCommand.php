@@ -2,7 +2,6 @@
 
 namespace N98\Magento\Command\Developer\Module;
 
-use Magento\Framework\Filter\Input;
 use Magento\Framework\Module\FullModuleList;
 use Magento\Framework\Module\Manager;
 use N98\Magento\Command\AbstractMagentoCommand;
