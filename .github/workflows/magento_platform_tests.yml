@@ -242,9 +242,6 @@ jobs:
         # everything from scratch for every new branch.
         run: composer install --no-interaction --prefer-dist --no-progress --no-suggest
 
-      - name: Run php-cs-fixer
-        run: vendor/bin/php-cs-fixer fix --diff --dry-run
-
       - name: Setup Magento Open Source Repository Credentials
         run: |
           composer global config http-basic.repo.magento.com "${MAGENTO_MARKETPLACE_USERNAME}" "${MAGENTO_MARKETPLACE_PASSWORD}";

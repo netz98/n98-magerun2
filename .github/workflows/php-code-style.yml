@@ -1,0 +1,40 @@
+---
+name: Code Style
+on:
+  push:
+    paths:
+      - "src/**"
+  pull_request:
+    paths:
+      - "src/**"
+
+jobs:
+  php-cs-fixer:
+    name: PHP CS Fixer
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout PR
+        uses: actions/checkout@v4.1.4
+        if: github.event_name == 'pull_request'
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - name: Checkout HEAD
+        uses: actions/checkout@v4.1.4
+        if: github.event_name == 'push'
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          tools: composer:2.2.17, cs2pr
+          php-version: 8.2
+          extensions: mcrypt, mbstring, intl
+          coverage: none
+      - name: Install dependencies
+        # If we have a very broad restore-keys in the previous caching action,
+        # we might pull outdated dependencies from a parent branch for new branches.
+        # Over time, just running composer all the time to give it a chance
+        # to fix the outdated dependencies should be faster than having to pull
+        # everything from scratch for every new branch.
+        run: composer install --no-interaction --prefer-dist --no-progress --no-suggest
+
+      - name: Run php-cs-fixer
+        run: vendor/bin/php-cs-fixer fix --diff --dry-run
