@@ -357,6 +357,13 @@ class DetectComposerDependenciesCommand extends AbstractMagentoCommand
         $output = '"require": { ' . "\n";
 
         foreach ($dependencies as $name => $version) {
+
+            /**
+             * remove patch level (e.g. -p5) from version
+             * @link https://github.com/netz98/n98-magerun2/issues/1358
+             */
+            $version = preg_replace('/-p[0-9]+$/', '', $version);
+
             if ($name === self::COMPOSER_FILE_NOT_FOUND) {
                 $composerFileNotFound .= 'file: ' . $version;
             }
