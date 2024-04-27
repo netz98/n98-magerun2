@@ -1,5 +1,5 @@
 ---
-name: Code Style
+name: PHP Code Style
 on:
   push:
     paths:
