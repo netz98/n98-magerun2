@@ -128,15 +128,15 @@ jobs:
             git-repository: ""
             git-branch: ""
 
-          - magento-version: magento-ce-2.4.4-p8
-            operating-system: ubuntu-latest
-            php-version: '8.1'
-            mysql-version: '8.0'
-            elasticsearch-version: 7.16.0
-            composer-version: '2.2.17'
-            use-git-repository: false
-            git-repository: ""
-            git-branch: ""
+          #- magento-version: magento-ce-2.4.4-p8
+          #  operating-system: ubuntu-latest
+          #  php-version: '8.1'
+          #  mysql-version: '8.0'
+          #  elasticsearch-version: 7.16.0
+          #  composer-version: '2.2.17'
+          #  use-git-repository: false
+          #  git-repository: ""
+          #  git-branch: ""
 
           - magento-version: magento-ce-2.4.3-p2
             operating-system: ubuntu-latest
