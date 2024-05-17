@@ -290,6 +290,11 @@ jobs:
           --baseUrl="http://github.magerun.test/";
         if: matrix.use-git-repository == false
 
+      # @link https://github.com/magento/magento2/issues/38728
+      - name: Temporary downgrade credis to 1.5 for Magento 2.4.6/2.4.7
+        run: composer require colinmollenhour/php-redis-session-abstract:1.5.5
+        if: matrix.magento-version == 'magento-ce-2.4.6-p5' || matrix.magento-version == 'magento-ce-2.4.7'
+
       - name: Configure matchers
         uses: mheap/phpunit-matcher-action@main
 
