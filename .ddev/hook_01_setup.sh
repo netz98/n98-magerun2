@@ -69,6 +69,10 @@ function setup_bats() {
     echo "  bin/n98-magerun2 --root-dir=/opt/magento-test-environments/magento_<version>"
 }
 
+function setup_success() {
+    echo -e "${txtgrn}${check_mark} Setup completed ${txtrst}"
+}
+
 setup_composer
 setup_test_magento_environments
 setup_bats
