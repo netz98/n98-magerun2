@@ -294,7 +294,7 @@ jobs:
       - name: Temporary downgrade credis to 1.5 for Magento 2.4.6/2.4.7
         run: composer require colinmollenhour/php-redis-session-abstract:1.5.5
         working-directory: ./magento
-        if: matrix.magento-version == 'magento-ce-2.4.6-p5' || matrix.magento-version == 'magento-ce-2.4.7'
+        if: matrix.magento-version == 'magento-ce-2.4.6-p5' || matrix.magento-version == 'magento-ce-2.4.7' || matrix.magento-version == 'mage-os-latest'
 
       - name: Configure matchers
         uses: mheap/phpunit-matcher-action@main
