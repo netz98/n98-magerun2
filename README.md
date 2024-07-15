@@ -95,7 +95,7 @@ The base-installation is now complete and you can verify it:
 The command should execute successfully and show you the version number
 of N98-Magerun like:
 
-`n98-magerun2 version 4.8.0 by netz98 GmbH`
+`n98-magerun2 version 4.8.0 by valantic CEC`
 
 You now have successfully installed Magerun! You can tailor the
 installation further like installing it system-wide and enable

@@ -183,7 +183,7 @@ class Application extends BaseApplication
 
     public function getLongVersion()
     {
-        return parent::getLongVersion() . ' (commit: @git_commit_short@) by <info>netz98 GmbH</info>';
+        return parent::getLongVersion() . ' (commit: @git_commit_short@) by <info>valantic CEC</info>';
     }
 
     /**
