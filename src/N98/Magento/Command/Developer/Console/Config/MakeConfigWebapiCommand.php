@@ -1,18 +1,4 @@
 <?php
-/**
- * netz98 magento module
- *
- * LICENSE
- *
- * This source file is subject of netz98.
- * You may be not allowed to change the sources
- * without authorization of netz98 new media GmbH.
- *
- * @copyright  Copyright (c) 1999-2016 netz98 new media GmbH (http://www.netz98.de)
- * @author netz98 new media GmbH <info@netz98.de>
- * @category N98
- * @package N98\Magento\Command\Developer\Console
- */
 
 namespace N98\Magento\Command\Developer\Console\Config;
 
