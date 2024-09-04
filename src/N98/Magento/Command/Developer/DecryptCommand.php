@@ -13,7 +13,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  * Class DecryptCommand
  * @package N98\Magento\Command\Developer
  */
-class decryptCommand extends AbstractMagentoCommand
+class DecryptCommand extends AbstractMagentoCommand
 {
     /**
      * @var \Magento\Framework\Encryption\EncryptorInterface
