@@ -1,4 +1,3 @@
-version: '3.6'
 services:
 
   # see: https://github.com/drud/ddev-contrib/blob/master/docker-compose-services/elasticsearch/docker-compose.elasticsearch.yaml
