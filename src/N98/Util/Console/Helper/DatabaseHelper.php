@@ -3,6 +3,8 @@
 namespace N98\Util\Console\Helper;
 
 use InvalidArgumentException;
+use Magento\Framework\Exception\FileSystemException;
+use N98\Util\Exec;
 use PDO;
 use PDOException;
 use PDOStatement;
@@ -57,7 +59,7 @@ class DatabaseHelper extends AbstractHelper
      * @param OutputInterface|null $output
      *
      * @throws RuntimeException
-     * @throws \Magento\Framework\Exception\FileSystemException
+     * @throws FileSystemException
      * @return void
      */
     public function detectDbSettings(OutputInterface $output)
@@ -113,7 +115,7 @@ class DatabaseHelper extends AbstractHelper
      * @param bool $reconnect = false
      * @return PDO
      * @throws RuntimeException pdo mysql extension is not installed
-     * @throws \Magento\Framework\Exception\FileSystemException
+     * @throws FileSystemException
      */
     public function getConnection(OutputInterface $output = null, bool $reconnect = false)
     {
@@ -160,7 +162,7 @@ class DatabaseHelper extends AbstractHelper
             $this->dbSettings['password'],
             $connectionOptions
         );
-        $this->_connection->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+        $this->_connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
         /** @link http://bugs.mysql.com/bug.php?id=18551 */
         $this->_connection->query("SET SQL_MODE=''");
@@ -201,7 +203,7 @@ class DatabaseHelper extends AbstractHelper
      *
      * @see Zend_Db_Adapter_Pdo_Abstract
      * @return string
-     * @throws \Magento\Framework\Exception\FileSystemException
+     * @throws FileSystemException
      */
     public function dsn()
     {
@@ -240,7 +242,7 @@ class DatabaseHelper extends AbstractHelper
      * @param string $privilege
      *
      * @return bool
-     * @throws \Magento\Framework\Exception\FileSystemException
+     * @throws FileSystemException
      */
     public function mysqlUserHasPrivilege($privilege)
     {
@@ -259,8 +261,30 @@ class DatabaseHelper extends AbstractHelper
     }
 
     /**
+     * Check if the toolstack is using mariadb
+     *
+     * @return bool
+     */
+    public function isMariaDbClientToolUsed(): bool
+    {
+        Exec::run('mysqldump --help', $output, $exitCode);
+        return strpos($output, 'MariaDB') !== false;
+    }
+
+    /**
+     * Some versions of mysqldump shipped by MariaDB are not able to handle the --ssl-mode option
+     *
+     * @return bool
+     */
+    public function isSslModeOptionSupported(): bool
+    {
+        Exec::run('mysqldump --help', $output, $exitCode);
+        return strpos($output, '--ssl-mode') !== false;
+    }
+
+    /**
      * @return string
-     * @throws \Magento\Framework\Exception\FileSystemException
+     * @throws FileSystemException
      */
     public function getMysqlClientToolConnectionString()
     {
@@ -303,15 +327,15 @@ class DatabaseHelper extends AbstractHelper
             }
         }
 
+        $isSslModeSupported = $this->isSslModeOptionSupported();
+
         // see https://dev.mysql.com/doc/refman/8.0/en/connection-options.html#option_general_ssl-mode
-        if (array_key_exists(PDO::MYSQL_ATTR_SSL_CA, $connectionOptions)) {
-            if (!array_key_exists(PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT, $connectionOptions)
-                || $connectionOptions[PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT]
-            ) {
-                $sslOptions[] = '--ssl-mode=VERIFY_CA';
-            } else {
-                $sslOptions[] = '--ssl-mode=REQUIRED';
-            }
+        // see https://dev.mysql.com/doc/refman/8.0/en/connection-options.html#option_general_ssl-mode
+        if ($isSslModeSupported && array_key_exists(PDO::MYSQL_ATTR_SSL_CA, $connectionOptions)) {
+            $sslOptions[] = !array_key_exists(PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT, $connectionOptions)
+            || $connectionOptions[PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT]
+                ? '--ssl-mode=VERIFY_CA'
+                : '--ssl-mode=REQUIRED';
         }
 
         $string .= ' ' . implode(' ', $sslOptions)
@@ -333,7 +357,7 @@ class DatabaseHelper extends AbstractHelper
      * @param string $variable
      *
      * @return bool|array returns array on success, false on failure
-     * @throws \Magento\Framework\Exception\FileSystemException
+     * @throws FileSystemException
      */
     public function getMysqlVariableValue($variable)
     {
@@ -363,7 +387,7 @@ class DatabaseHelper extends AbstractHelper
      * @return string variable value, null if variable was not defined
      * @throws RuntimeException in case a system variable is unknown (SQLSTATE[HY000]: 1193: Unknown system variable
      * 'nonexistent')
-     * @throws \Magento\Framework\Exception\FileSystemException
+     * @throws FileSystemException
      */
     public function getMysqlVariable($name, $type = null)
     {
@@ -455,7 +479,7 @@ class DatabaseHelper extends AbstractHelper
      *
      * @return array
      * @throws RuntimeException
-     * @throws \Magento\Framework\Exception\FileSystemException
+     * @throws FileSystemException
      */
     public function resolveTables(array $list, array $definitions = [], array $resolved = [])
     {
@@ -566,7 +590,7 @@ class DatabaseHelper extends AbstractHelper
      *
      * @return array
      * @throws RuntimeException
-     * @throws \Magento\Framework\Exception\FileSystemException
+     * @throws FileSystemException
      */
     public function getTables($withoutPrefix = null)
     {
@@ -658,7 +682,7 @@ class DatabaseHelper extends AbstractHelper
      * @param bool $withoutPrefix
      *
      * @return array
-     * @throws \Magento\Framework\Exception\FileSystemException
+     * @throws FileSystemException
      */
     public function getTablesStatus($withoutPrefix = false)
     {
@@ -719,7 +743,7 @@ class DatabaseHelper extends AbstractHelper
 
     /**
      * @param OutputInterface $output
-     * @throws \Magento\Framework\Exception\FileSystemException
+     * @throws FileSystemException
      */
     public function dropDatabase(OutputInterface $output)
     {
@@ -731,7 +755,7 @@ class DatabaseHelper extends AbstractHelper
 
     /**
      * @param OutputInterface $output
-     * @throws \Magento\Framework\Exception\FileSystemException
+     * @throws FileSystemException
      */
     public function dropTables(OutputInterface $output)
     {
@@ -749,7 +773,7 @@ class DatabaseHelper extends AbstractHelper
 
     /**
      * @param OutputInterface $output
-     * @throws \Magento\Framework\Exception\FileSystemException
+     * @throws FileSystemException
      */
     public function createDatabase(OutputInterface $output)
     {
@@ -764,7 +788,7 @@ class DatabaseHelper extends AbstractHelper
      * @param string|null $variable [optional]
      *
      * @return array
-     * @throws \Magento\Framework\Exception\FileSystemException
+     * @throws FileSystemException
      */
     private function runShowCommand($command, $variable = null)
     {
@@ -800,7 +824,7 @@ class DatabaseHelper extends AbstractHelper
      * @param string|null $variable [optional]
      *
      * @return array
-     * @throws \Magento\Framework\Exception\FileSystemException
+     * @throws FileSystemException
      */
     public function getGlobalVariables($variable = null)
     {
@@ -811,7 +835,7 @@ class DatabaseHelper extends AbstractHelper
      * @param string|null $variable [optional]
      *
      * @return array
-     * @throws \Magento\Framework\Exception\FileSystemException
+     * @throws FileSystemException
      */
     public function getGlobalStatus($variable = null)
     {
