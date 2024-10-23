@@ -3,6 +3,7 @@
 namespace N98\Magento\Command\Database;
 
 use InvalidArgumentException;
+use Magento\Framework\Exception\FileSystemException;
 use N98\Magento\Command\Database\Compressor\Compressor;
 use N98\Util\Console\Enabler;
 use N98\Util\Console\Helper\DatabaseHelper;
@@ -207,7 +208,7 @@ HELP;
 
  Separate each table to strip by a space.
  You can use wildcards like * and ? in the table names to strip multiple
- tables. In addition you can specify pre-defined table groups, that start
+ tables. In addition, you can specify pre-defined table groups, that start
  with an @ symbol.
 
  Example: "dataflow_batch_export unimportant_module_* @log"
@@ -263,7 +264,7 @@ HELP;
      * @param OutputInterface $output
      *
      * @return int
-     * @throws \Magento\Framework\Exception\FileSystemException
+     * @throws FileSystemException
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -290,7 +291,7 @@ HELP;
      * @param InputInterface $input
      * @param OutputInterface $output
      * @return Execs
-     * @throws \Magento\Framework\Exception\FileSystemException
+     * @throws FileSystemException
      */
     private function createExecs(InputInterface $input, OutputInterface $output)
     {
@@ -432,7 +433,7 @@ HELP;
      * @param InputInterface $input
      * @param OutputInterface $output
      * @return array
-     * @throws \Magento\Framework\Exception\FileSystemException
+     * @throws FileSystemException
      */
     private function stripTables(InputInterface $input, OutputInterface $output)
     {
@@ -455,7 +456,7 @@ HELP;
      * @param InputInterface $input
      * @param OutputInterface $output
      * @return array
-     * @throws \Magento\Framework\Exception\FileSystemException
+     * @throws FileSystemException
      */
     private function excludeTables(InputInterface $input, OutputInterface $output)
     {
@@ -487,7 +488,7 @@ HELP;
     /**
      * @param string $list space separated list of tables
      * @return array
-     * @throws \Magento\Framework\Exception\FileSystemException
+     * @throws FileSystemException
      */
     private function resolveDatabaseTables($list)
     {
