@@ -101,9 +101,9 @@ abstract class AbstractDatabaseCommand extends AbstractMagentoCommand
      * @return Compressor
      * @deprecated Since 1.1.12; use AbstractCompressor::create() instead
      */
-    protected function getCompressor($type)
+    protected function getCompressor($type, InputInterface $input)
     {
-        return AbstractCompressor::create($type);
+        return AbstractCompressor::create($type, $input);
     }
 
     /**

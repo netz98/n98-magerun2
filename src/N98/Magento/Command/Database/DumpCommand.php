@@ -39,6 +39,8 @@ class DumpCommand extends AbstractDatabaseCommand
         $this
             ->setName('db:dump')
             ->addArgument('filename', InputArgument::OPTIONAL, 'Dump filename')
+            ->addOption('zstd-level', null, InputOption::VALUE_OPTIONAL, '', 10)
+            ->addOption('zstd-extra-args', null, InputOption::VALUE_OPTIONAL, '', '')
             ->addOption(
                 'add-time',
                 't',
@@ -296,7 +298,7 @@ HELP;
     private function createExecs(InputInterface $input, OutputInterface $output)
     {
         $execs = new Execs('mysqldump');
-        $execs->setCompression($input->getOption('compression'));
+        $execs->setCompression($input->getOption('compression'), $input);
         $execs->setFileName($this->getFileName($input, $output, $execs->getCompressor()));
 
         if (!$input->getOption('no-single-transaction')) {
