@@ -4,6 +4,7 @@ namespace N98\Magento\Command\Database\Compressor;
 
 use InvalidArgumentException;
 use N98\Util\OperatingSystem;
+use Symfony\Component\Console\Input\InputInterface;
 
 /**
  * Class AbstractCompressor
@@ -12,23 +13,61 @@ use N98\Util\OperatingSystem;
 abstract class AbstractCompressor implements Compressor
 {
     /**
+     * @param InputInterface|null $input
+     */
+    public function __construct(InputInterface $input = null)
+    {
+    }
+
+    /**
      * @param string $type
+     * @param InputInterface $input
      * @return AbstractCompressor
      * @throws InvalidArgumentException
      */
-    public static function create($type)
+    public static function create($type, InputInterface $input = null)
     {
         switch ($type) {
             case null:
             case 'none':
-                return new Uncompressed();
+                return new Uncompressed($input);
 
             case 'gz':
             case 'gzip':
-                return new Gzip();
+                return new Gzip($input);
+
+            case 'zstd':
+                return new Zstandard($input);
+
+            case 'lz4':
+                return new LZ4($input);
 
             default:
                 throw new InvalidArgumentException("Compression type '{$type}' is not supported.");
+        }
+    }
+
+    /**
+     * @param string $filename
+     * @return string|null
+     */
+    public static function tryGetCompressionType(string $filename)
+    {
+        switch (true) {
+            case str_ends_with($filename, '.sql'):
+                return 'none';
+            case str_ends_with($filename, '.sql.zstd'):
+            case str_ends_with($filename, '.tar.zstd'):
+                return 'zstd';
+            case str_ends_with($filename, '.sql.lz4'):
+            case str_ends_with($filename, '.tar.lz4'):
+                return 'lz4';
+            case str_ends_with($filename, '.sql.gz'):
+            case str_ends_with($filename, '.tgz'):
+            case str_ends_with($filename, '.gz'):
+                return 'gzip';
+            default:
+                return null;
         }
     }
 

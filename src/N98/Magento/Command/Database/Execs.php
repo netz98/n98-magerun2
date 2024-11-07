@@ -6,6 +6,7 @@
 namespace N98\Magento\Command\Database;
 
 use N98\Magento\Command\Database\Compressor\AbstractCompressor;
+use Symfony\Component\Console\Input\InputInterface;
 
 /**
  * One or multiple commands to execute, with support for Compressors
@@ -47,9 +48,9 @@ class Execs
     /**
      * @param string $type of compression: "gz" | "gzip" | "none" | null
      */
-    public function setCompression($type)
+    public function setCompression($type, InputInterface $input = null)
     {
-        $this->compressor = AbstractCompressor::create($type);
+        $this->compressor = AbstractCompressor::create($type, $input);
     }
 
     /**

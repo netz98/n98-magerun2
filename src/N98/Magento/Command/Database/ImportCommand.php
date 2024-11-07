@@ -24,7 +24,9 @@ class ImportCommand extends AbstractDatabaseCommand
         $this
             ->setName('db:import')
             ->addArgument('filename', InputArgument::OPTIONAL, 'Dump filename')
-            ->addOption('compression', 'c', InputOption::VALUE_REQUIRED, 'The compression of the specified file')
+            ->addOption('compression', 'c', InputOption::VALUE_OPTIONAL, 'The compression of the specified file')
+            ->addOption('zstd-level', null, InputOption::VALUE_OPTIONAL, '', 10)
+            ->addOption('zstd-extra-args', null, InputOption::VALUE_OPTIONAL, '', '')
             ->addOption('only-command', null, InputOption::VALUE_NONE, 'Print only mysql command. Do not execute')
             ->addOption('only-if-empty', null, InputOption::VALUE_NONE, 'Imports only if database is empty')
             ->addOption(
@@ -126,7 +128,17 @@ HELP;
 
         $fileName = $this->checkFilename($input);
 
-        $compressor = AbstractCompressor::create($input->getOption('compression'));
+        if ($input->getOption('compression')) {
+            $compression = $input->getOption('compression');
+        } else {
+            $compression = AbstractCompressor::tryGetCompressionType($fileName);
+
+            if ($compression == null) {
+                throw new \RuntimeException("Could not guess compression type or the file is in a format that is not supported.");
+            }
+        }
+
+        $compressor = AbstractCompressor::create($compression, $input);
 
         $exec = 'mysql ';
         if ($input->getOption('force')) {
