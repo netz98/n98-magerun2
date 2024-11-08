@@ -39,8 +39,8 @@ class DumpCommand extends AbstractDatabaseCommand
         $this
             ->setName('db:dump')
             ->addArgument('filename', InputArgument::OPTIONAL, 'Dump filename')
-            ->addOption('zstd-level', null, InputOption::VALUE_OPTIONAL, '', 10)
-            ->addOption('zstd-extra-args', null, InputOption::VALUE_OPTIONAL, '', '')
+            ->addOption('zstd-level', null, InputOption::VALUE_OPTIONAL, 'Set the level of compression the higher the smaller the result', 10)
+            ->addOption('zstd-extra-args', null, InputOption::VALUE_OPTIONAL, 'Set custom extra options that zstd supports', '')
             ->addOption(
                 'add-time',
                 't',
