@@ -3,6 +3,7 @@
 namespace N98\Magento\Command\Database\Compressor;
 
 use InvalidArgumentException;
+use N98\Util\BinaryString;
 use N98\Util\OperatingSystem;
 use Symfony\Component\Console\Input\InputInterface;
 
@@ -54,17 +55,17 @@ abstract class AbstractCompressor implements Compressor
     public static function tryGetCompressionType(string $filename)
     {
         switch (true) {
-            case str_ends_with($filename, '.sql'):
+            case BinaryString::endsWith($filename, '.sql'):
                 return 'none';
-            case str_ends_with($filename, '.sql.zstd'):
-            case str_ends_with($filename, '.tar.zstd'):
+            case BinaryString::endsWith($filename, '.sql.zstd'):
+            case BinaryString::endsWith($filename, '.tar.zstd'):
                 return 'zstd';
-            case str_ends_with($filename, '.sql.lz4'):
-            case str_ends_with($filename, '.tar.lz4'):
+            case BinaryString::endsWith($filename, '.sql.lz4'):
+            case BinaryString::endsWith($filename, '.tar.lz4'):
                 return 'lz4';
-            case str_ends_with($filename, '.sql.gz'):
-            case str_ends_with($filename, '.tgz'):
-            case str_ends_with($filename, '.gz'):
+            case BinaryString::endsWith($filename, '.sql.gz'):
+            case BinaryString::endsWith($filename, '.tgz'):
+            case BinaryString::endsWith($filename, '.gz'):
                 return 'gzip';
             default:
                 return null;
