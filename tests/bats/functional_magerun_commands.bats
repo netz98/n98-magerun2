@@ -225,6 +225,38 @@ function cleanup_files_in_magento() {
   run $BIN "db:dump" --print-only-filename db.sql
   assert_output --partial "db.sql"
 
+  run $BIN "db:dump" --print-only-filename -c gz db.sql
+  assert_output --partial "db.sql.gz"
+  assert [ "$status" -eq 0 ]
+
+  run $BIN "db:dump" --print-only-filename -c gzip db.sql
+  assert_output --partial "db.sql.gz"
+  assert [ "$status" -eq 0 ]
+
+  run $BIN "db:dump" --print-only-filename --compression gzip db.sql
+  assert_output --partial "db.sql.gz"
+  assert [ "$status" -eq 0 ]
+
+  run $BIN "db:dump" --print-only-filename --compression gz db.sql
+  assert_output --partial "db.sql.gz"
+  assert [ "$status" -eq 0 ]
+
+  run $BIN "db:dump" --print-only-filename -c lz4 db.sql
+  assert_output --partial "db.sql.lz4"
+  assert [ "$status" -eq 0 ]
+
+  run $BIN "db:dump" --print-only-filename --compression lz4 db.sql
+  assert_output --partial "db.sql.lz4"
+  assert [ "$status" -eq 0 ]
+
+  run $BIN "db:dump" --print-only-filename -c zstd db.sql
+  assert_output --partial "db.sql.zstd"
+  assert [ "$status" -eq 0 ]
+
+  run $BIN "db:dump" --print-only-filename --compression zstd db.sql
+  assert_output --partial "db.sql.zstd"
+  assert [ "$status" -eq 0 ]
+
   run $BIN "db:dump" --only-command db.sql
   assert_output --partial "mysqldump"
 }
