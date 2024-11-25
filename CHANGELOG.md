@@ -1,6 +1,19 @@
 RECENT CHANGES
 ==============
 
+7.5.0
+-----
+
+- Add: #1538: zstd and lz4 compression support and auto compression detection on DB import (by ResuBaka).
+- Imp: Update dev system to Magento 2.4.7-p2 (by Christian Münch).
+- Imp: Update 3rd party dependencies (phpstan, fakerphp, symfony/process, symfony/validator, twig) to their latest versions (by Christian Münch)
+- Imp: Streamline Elasticsearch configuration (by Christian Münch)
+- Imp: Enhance CI pipelines for dependency updates (by Christian Münch)
+- Fix: Minor typo corrections (by Christian Münch)
+- Fix: #1519: Fixed casing of DecryptCommand class (by Pieter Hoste)
+- Fix: Address issues with MariaDB client tools not supporting `--ssl-mode` (by Christian Münch, reported by Max Fickers)
+- Fix: Use the correct function to support PHP 7.4 for file ending checks (by ResuBaka)
+
 7.4.0
 -----
 
