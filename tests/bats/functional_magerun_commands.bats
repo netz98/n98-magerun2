@@ -295,6 +295,14 @@ function cleanup_files_in_magento() {
   cleanup_files_in_magento "app/code/N98/Magerun123"
 }
 
+@test "Command: dev:di:preference:list" {
+  run $BIN "dev:di:preference:list" global
+  assert_output --partial "Magento\Store\Api\Data\StoreInterface"
+
+  run $BIN "dev:di:preference:list" crontab
+  assert_output --partial "Magento\Backend\App\ConfigInterface"
+}
+
 @test "Command: dev:module:detect-composer-dependencies" {
     if [ -d "${N98_MAGERUN2_TEST_MAGENTO_ROOT}/vendor/magento/module-catalog-rule" ]; then
       run $BIN "dev:module:detect-composer-dependencies" "${N98_MAGERUN2_TEST_MAGENTO_ROOT}/vendor/magento/module-catalog-rule"

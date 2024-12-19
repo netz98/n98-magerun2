@@ -122,10 +122,13 @@ commands:
     - N98\Magento\Command\Design\DemoNoticeCommand
     - N98\Magento\Command\Developer\Asset\ClearCommand
     - N98\Magento\Command\Developer\ConsoleCommand
+    - N98\Magento\Command\Developer\Di\Preference\ListCommand
     - N98\Magento\Command\Developer\EncryptCommand
     - N98\Magento\Command\Developer\DecryptCommand
     - N98\Magento\Command\Developer\Module\CreateCommand
     - N98\Magento\Command\Developer\Module\DetectComposerDependenciesCommand
+    - N98\Magento\Command\Developer\Module\ListCommand
+    - N98\Magento\Command\Developer\Module\Observer\ListCommand
     - N98\Magento\Command\Developer\Report\CountCommand
     - N98\Magento\Command\Developer\SymlinksCommand
     - N98\Magento\Command\Developer\TemplateHintsBlocksCommand
@@ -171,8 +174,6 @@ commands:
     - N98\Magento\Command\Integration\ListCommand
     - N98\Magento\Command\Integration\ShowCommand
     - N98\Magento\Command\Installer\InstallCommand
-    - N98\Magento\Command\Developer\Module\ListCommand
-    - N98\Magento\Command\Developer\Module\Observer\ListCommand
     - N98\Magento\Command\ScriptCommand
     - N98\Magento\Command\SelfUpdateCommand
     - N98\Magento\Command\Route\ListCommand
