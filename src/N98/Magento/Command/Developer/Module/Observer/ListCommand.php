@@ -2,6 +2,8 @@
 
 namespace N98\Magento\Command\Developer\Module\Observer;
 
+use Exception;
+use InvalidArgumentException;
 use N98\Magento\Command\AbstractMagentoCommand;
 use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
 use Symfony\Component\Console\Input\InputArgument;
@@ -25,6 +27,7 @@ class ListCommand extends AbstractMagentoCommand
         'crontab',
         'webapi_rest',
         'webapi_soap',
+        'graphql',
         'doc',
 
         // 'admin' has been declared deprecated since 5448233
@@ -63,7 +66,7 @@ class ListCommand extends AbstractMagentoCommand
 
     /**
      * {@inheritdoc}
-     * @throws \Exception
+     * @throws Exception
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -82,7 +85,7 @@ class ListCommand extends AbstractMagentoCommand
             $question = new ChoiceQuestion('<question>Please select an area:</question>', $choices);
             $question->setValidator(function ($areaIndex) {
                 if (!in_array($areaIndex - 1, range(0, count($this->areas) - 1), true)) {
-                    throw new \InvalidArgumentException('Invalid selection.' . $areaIndex);
+                    throw new InvalidArgumentException('Invalid selection.' . $areaIndex);
                 }
 
                 return $this->areas[$areaIndex - 1];
