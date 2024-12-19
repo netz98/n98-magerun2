@@ -970,6 +970,8 @@ Creates an empty module and registers it in current Magento shop.
 n98-magerun2.phar dev:module:create [-m|--minimal] [--add-blocks] [--add-helpers] [--add-models] [--add-setup] [--add-all] [-e|--enable] [--modman] [--add-readme] [--add-composer] [--add-strict-types] [--author-name [AUTHOR-NAME]] [--author-email [AUTHOR-EMAIL]] [--description [DESCRIPTION]] [-h|--help] [-q|--quiet] [-v|vv|vvv|--verbose] [-V|--version] [--ansi] [--no-ansi] [-n|--no-interaction] [--root-dir [ROOT-DIR]] [--skip-config] [--skip-root-check] [--skip-core-commands [SKIP-CORE-COMMANDS]] [--skip-magento-compatibility-check] [--] <command> <vendorNamespace> <moduleName>
 ```
 
+---
+
 ### Detect Composer Dependencies in Module
 
 The source code of one or more modules can be scanned for dependencies.
@@ -977,6 +979,10 @@ The source code of one or more modules can be scanned for dependencies.
 ```sh
 n98-magerun2.phar dev:module:detect-composer-dependencies [--only-missing] <directory>
 ```
+
+---
+
+### Translations
 
 The `--only-missing` option will filter the output so that only the missing dependencies are listed.
 
@@ -1003,6 +1009,22 @@ Export inline translations
 ```sh
 n98-magerun2.phar dev:translate:export [--store=<storecode>] <locale> <filename>
 ```
+
+---
+
+### DI
+
+List Preferences:
+
+```sh
+n98-magerun2.phar dev:di:preferece:list [--format [FORMAT]] [<area>]
+```
+
+`area` is one of [global, adminhtml, frontend, crontab, webapi_rest, webapi_soap, graphql, doc, admin] 
+
+Format can be `csv`, `json`, `xml` or `yaml`.
+
+---
 
 ### List modules
 
