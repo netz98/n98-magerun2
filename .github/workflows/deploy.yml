@@ -53,7 +53,7 @@ jobs:
 
       - name: Sign PHAR file using Cosign
         run: |
-          cosign sign-blob --output-signature n98-magerun2.phar.sig n98-magerun2.phar
+          cosign sign-blob --yes --output-signature n98-magerun2.phar.sig n98-magerun2.phar
 
       - name: Import GPG key
         uses: crazy-max/ghaction-import-gpg@v6
