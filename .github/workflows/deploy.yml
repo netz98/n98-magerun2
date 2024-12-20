@@ -24,6 +24,11 @@ on:
 jobs:
   create-signed-phar-file:
     runs-on: ubuntu-latest
+
+    permissions:
+      id-token: write  # Required for GitHub OIDC
+      contents: read   # Access repository contents
+
     steps:
       - name: Checkout HEAD
         uses: actions/checkout@v4.2.2
@@ -42,6 +47,13 @@ jobs:
 
       - name: Run phar file
         run: php n98-magerun2.phar --version
+
+      - name: Install Cosign
+        uses: sigstore/cosign-installer@v3.7.0
+
+      - name: Sign PHAR file using Cosign
+        run: |
+          cosign sign-blob --output-signature n98-magerun2.phar.sig n98-magerun2.phar
 
       - name: Import GPG key
         uses: crazy-max/ghaction-import-gpg@v6
@@ -68,6 +80,7 @@ jobs:
           path: |
             n98-magerun2.phar
             n98-magerun2.phar.asc
+            n98-magerun2.phar.sig
 
   update-files-magerun-net:
     runs-on: ubuntu-latest
@@ -84,6 +97,7 @@ jobs:
         run: |
           mv n98-magerun2.phar n98-magerun2-dev.phar
           mv n98-magerun2.phar.asc n98-magerun2-dev.phar.asc
+          mv n98-magerun2.phar.sig n98-magerun2-dev.phar.sig
           ls -l
 
       - name: rename phar file (tag)
@@ -102,8 +116,10 @@ jobs:
           # Rename files
           cp "n98-magerun2.phar" "n98-magerun2-${TAG}.phar"
           cp "n98-magerun2.phar.asc" "n98-magerun2-${TAG}.phar.asc"
+          cp "n98-magerun2.phar.sig" "n98-magerun2-${TAG}.phar.sig"
           mv "n98-magerun2.phar" "n98-magerun2-latest.phar"
           mv "n98-magerun2.phar.asc" "n98-magerun2-latest.phar.asc"
+          mv "n98-magerun2.phar.sig" "n98-magerun2-latest.phar.sig"
 
           # List files to verify
           ls -l
@@ -115,7 +131,7 @@ jobs:
           username: ${{ secrets.SSH_DEPLOY_USERNAME }}
           key: ${{ secrets.SSH_DEPLOY_PRIVATE_KEY }}
           passphrase: ${{ secrets.SSH_DEPLOY_PASSPHRASE }}
-          source: '*.phar,*.phar.asc'
+          source: '*.phar,*.phar.asc,*.phar.sig'
           target: ${{ secrets.SSH_DEPLOY_TARGET }}
           rm: false
           overwrite: true
@@ -185,3 +201,4 @@ jobs:
           files: |
             n98-magerun2.phar
             n98-magerun2.phar.asc
+            n98-magerun2.phar.sig
