@@ -53,7 +53,7 @@ jobs:
 
       - name: Sign PHAR file using Cosign
         run: |
-          INDEX=$(cosign sign-blob --yes --output-signature n98-magerun2.phar.sig n98-magerun2.phar | grep "tlog entry created with index:" | awk -F': ' '{print $2}')
+          INDEX=$(cosign sign-blob --yes --output-signature n98-magerun2.phar.sig n98-magerun2.phar | grep -oP "tlog entry created with index: \K[0-9]+")
           if [ -z "$INDEX" ]; then
             echo "Error: Transparency Log Entry Index not found!" >&2
             exit 1
