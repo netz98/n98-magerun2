@@ -59,11 +59,11 @@ jobs:
 
       - name: Display Rekor Transparency Log URL
         run: |
-          echo "Rekor Transparency Log Entry: https://rekor.sigstore.dev/api/v1/log/entries/${REKOR_ENTRY_INDEX}"
+          echo "Rekor Transparency Log Entry: https://rekor.sigstore.dev/api/v1/log/entries/${{ env.REKOR_ENTRY_INDEX }}"
 
       - name: Create Rekor Annotation
         run: |
-          echo "::notice file=n98-magerun2.phar::Rekor Transparency Log Entry: https://rekor.sigstore.dev/api/v1/log/entries/${REKOR_ENTRY_INDEX}"
+          echo "::notice file=n98-magerun2.phar::Rekor Transparency Log Entry: https://rekor.sigstore.dev/api/v1/log/entries/${{ env.REKOR_ENTRY_INDEX }}"
 
       - name: Import GPG key
         uses: crazy-max/ghaction-import-gpg@v6
