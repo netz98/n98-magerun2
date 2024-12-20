@@ -53,7 +53,17 @@ jobs:
 
       - name: Sign PHAR file using Cosign
         run: |
-          cosign sign-blob --yes --output-signature n98-magerun2.phar.sig n98-magerun2.phar
+          INDEX=$(cosign sign-blob --yes --output-signature n98-magerun2.phar.sig n98-magerun2.phar | grep "tlog entry created with index:" | awk '{print $NF}')
+          echo "Transparency Log Entry Index: $INDEX"
+          echo "REKOR_ENTRY_INDEX=$INDEX" >> $GITHUB_ENV
+
+      - name: Display Rekor Transparency Log URL
+        run: |
+          echo "Rekor Transparency Log Entry: https://rekor.sigstore.dev/api/v1/log/entries/${REKOR_ENTRY_INDEX}"
+
+      - name: Create Rekor Annotation
+        run: |
+          echo "::notice file=n98-magerun2.phar::Rekor Transparency Log Entry: https://rekor.sigstore.dev/api/v1/log/entries/${REKOR_ENTRY_INDEX}"
 
       - name: Import GPG key
         uses: crazy-max/ghaction-import-gpg@v6
