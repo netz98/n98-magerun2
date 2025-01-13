@@ -14,7 +14,12 @@ class ComposerLock implements \IteratorAggregate
     private $composerJsonData;
 
     /**
-     * @param $directoryOfComposerFile
+     * @var string
+     */
+    private $directoryOfComposerFile;
+
+    /**
+     * @param string $directoryOfComposerFile
      */
     public function __construct($directoryOfComposerFile)
     {
