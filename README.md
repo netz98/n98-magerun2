@@ -980,11 +980,11 @@ The source code of one or more modules can be scanned for dependencies.
 n98-magerun2.phar dev:module:detect-composer-dependencies [--only-missing] <directory>
 ```
 
+The `--only-missing` option will filter the output so that only the missing dependencies are listed.
+
 ---
 
 ### Translations
-
-The `--only-missing` option will filter the output so that only the missing dependencies are listed.
 
 Enable/disable inline translation feature for Magento Admin:
 
