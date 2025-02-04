@@ -1017,7 +1017,7 @@ n98-magerun2.phar dev:translate:export [--store=<storecode>] <locale> <filename>
 List Preferences:
 
 ```sh
-n98-magerun2.phar dev:di:preferece:list [--format [FORMAT]] [<area>]
+n98-magerun2.phar dev:di:preferences:list [--format [FORMAT]] [<area>]
 ```
 
 `area` is one of [global, adminhtml, frontend, crontab, webapi_rest, webapi_soap, graphql, doc, admin] 
