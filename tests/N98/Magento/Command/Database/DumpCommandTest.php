@@ -246,7 +246,7 @@ class DumpCommandTest extends TestCase
         $this->assertDisplayNotContains($input, "not_existing_table_1");
     }
 
-    public function testWithExcludeOptionMydumper() 
+    public function testWithExcludeOptionMydumper()
     {
         $input = [
             'command'        => 'db:dump',

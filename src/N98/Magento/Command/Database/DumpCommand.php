@@ -315,7 +315,7 @@ HELP;
                 return $this->createMydumperExecs($input, $output);
             }
         }
-        
+
         $execs = new Execs('mysqldump');
         $execs->setCompression($input->getOption('compression'), $input);
         $execs->setFileName($this->getFileName($input, $output, $execs->getCompressor()));
@@ -667,9 +667,9 @@ HELP;
 
     /**
      * Create mydumper execution commands
-     * 
+     *
      * @param InputInterface $input
-     * @param OutputInterface $output  
+     * @param OutputInterface $output
      * @return Execs
      */
     private function createMydumperExecs(InputInterface $input, OutputInterface $output)
