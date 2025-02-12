@@ -152,13 +152,19 @@ class DumpCommand extends AbstractDatabaseCommand
                 InputOption::VALUE_NONE,
                 'Do not replace DEFINER in dump with CURRENT_USER'
             )
+            ->addOption(
+                'mydumper',
+                null,
+                InputOption::VALUE_NONE,
+                'Use mydumper instead of mysqldump for potentially faster dumps'
+            )
             ->setDescription('Dumps database with mysqldump cli client');
 
         $help = <<<HELP
-Dumps configured magento database with `mysqldump`. You must have installed
+Dumps configured magento database with `mysqldump` or `mydumper`. You must have installed
 the MySQL client tools.
 
-On debian systems run `apt-get install mysql-client` to do that.
+On debian systems run `apt-get install mysql-client` or `apt-get install mydumper` to do that.
 
 The command reads app/etc/env.php to find the correct settings.
 
@@ -297,6 +303,10 @@ HELP;
      */
     private function createExecs(InputInterface $input, OutputInterface $output)
     {
+        if ($input->getOption('mydumper')) {
+            return $this->createMydumperExecs($input, $output);
+        }
+        
         $execs = new Execs('mysqldump');
         $execs->setCompression($input->getOption('compression'), $input);
         $execs->setFileName($this->getFileName($input, $output, $execs->getCompressor()));
@@ -644,5 +654,68 @@ HELP;
         }
 
         return false;
+    }
+
+    /**
+     * Create mydumper execution commands
+     * 
+     * @param InputInterface $input
+     * @param OutputInterface $output  
+     * @return Execs
+     */
+    private function createMydumperExecs(InputInterface $input, OutputInterface $output)
+    {
+        $execs = new Execs('mydumper');
+        $execs->setCompression($input->getOption('compression'), $input);
+        
+        // Get output directory from filename
+        $outputDir = dirname($this->getFileName($input, $output, $execs->getCompressor()));
+        $execs->addOptions('--outputdir=' . escapeshellarg($outputDir));
+        
+        // Database connection options
+        $execs->addOptions(sprintf(
+            '--host=%s --user=%s --password=%s --database=%s',
+            escapeshellarg($this->dbSettings['host']),
+            escapeshellarg($this->dbSettings['username']),
+            escapeshellarg($this->dbSettings['password']),
+            escapeshellarg($this->dbSettings['dbname'])
+        ));
+
+        if (!$input->getOption('no-single-transaction')) {
+            $execs->addOptions('--trx-consistency-only');
+        }
+
+        if ($input->getOption('human-readable')) {
+            $execs->addOptions('--rows=1');
+        }
+
+        // For git-friendly output, use statement-per-row and long-query-guard
+        if ($input->getOption('git-friendly')) {
+            $execs->addOptions('--rows=1 --long-query-guard=0 --complete-insert');
+            // Add post-processing to format output similar to mysqldump git-friendly
+            $execs->addOptions(' | sed \'s$VALUES ($VALUES\n($g\' | sed \'s$),($),\n($g\'');
+        }
+
+        if ($input->getOption('add-routines')) {
+            $execs->addOptions('--routines');
+        }
+
+        // Handle excluded and stripped tables
+        $excludeTables = $this->excludeTables($input, $output);
+        $stripTables = array_diff($this->stripTables($input, $output), $excludeTables);
+
+        if ($excludeTables) {
+            foreach ($excludeTables as $table) {
+                $execs->addOptions('--ignore-table=' . escapeshellarg($table));
+            }
+        }
+
+        if ($stripTables) {
+            foreach ($stripTables as $table) {
+                $execs->addOptions('--no-data=' . escapeshellarg($table));
+            }
+        }
+
+        return $execs;
     }
 }
