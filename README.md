@@ -792,9 +792,9 @@ n98-magerun2.phar db:console [options]
 
 ### Dump database
 
-Dumps configured Magento database with `mysqldump`.
+Dumps configured Magento database with `mysqldump` or `mydumper`.
 
-- Requires MySQL CLI tools
+- Requires MySQL CLI tools (either `mysqldump` or `mydumper`)
 
 Arguments:
 
@@ -815,11 +815,12 @@ Options:
 | `--include`                | Tables to include entirely to the dump (default: all tables are included)                  |
 | `--keep-definer`           | Do not replace DEFINER in dump with CURRENT_USER                                           |
 | `--keep-column-statistics` | Retains `column statistics` table in `mysqldump`                                           |
+| `--mydumper`               | Use mydumper instead of mysqldump for potentially faster dumps                             |
 | `--no-single-transaction`  | Do not use single-transaction (not recommended, this is blocking)                          |
 | `--no-tablespaces`         | Use this option if you want to create a dump without having the PROCESS privilege.         |
-| `--only-command`           | Print only mysqldump command. Does not execute.                                            |
+| `--only-command`           | Print only mysqldump/mydumper command. Does not execute.                                   |
 | `--print-only-filename`    | Execute and prints not output except the dump filename                                     |
-| `--set-gtid-purged-off`    | Adds --set-gtid-purged=OFF to mysqlqump                                                    |
+| `--set-gtid-purged-off`    | Adds --set-gtid-purged=OFF to mysqlqump                                                   |
 | `--stdout`                 | Dump to stdout                                                                             |
 | `--strip`                  | Tables to strip (dump only structure of those tables)                                      |
 
@@ -827,7 +828,7 @@ Options:
 n98-magerun2.phar db:dump
 ```
 
-Only the mysqldump command:
+Only the dump command:
 
 ```sh
 n98-magerun2.phar db:dump --only-command [filename]
@@ -843,6 +844,12 @@ Use compression (gzip cli tool has to be installed):
 
 ```sh
 n98-magerun2.phar db:dump --compression="gzip"
+```
+
+Use mydumper for faster dumps:
+
+```sh
+n98-magerun2.phar db:dump --mydumper
 ```
 
 #### Stripped Database Dump
@@ -1185,101 +1192,68 @@ Options:
 If no ACL resource is defined the new integration token will be created with FULL ACCESS.
 
 If you do not want that, please provide a list of ACL resources by using the `--resource` option.
-
 Example:
-
 ```sh
 n98-magerun2.phar integration:create "My new integration 10" foo@example.com https://example.com -r Magento_Catalog::catalog_inventory -r Magento_Backend::system_other_settings
 ```
-
 To see all available ACL resources, please run the command `config:data:acl`.
-
 #### Show infos about existing integration
-
 ```sh
 n98-magerun2.phar integration:show --format[=FORMAT] <name_or_id> [key]
 ```
-
 Example (print only Access Key):
-
 ```sh
 n98-magerun2.phar integration:show 1 "Access Key"
 ```
-
 #### Delete integration
-
 ```sh
 n98-magerun2.phar integration:delete <name_or_id>
 ```
-
 ---
-
 ### Github
-
 (experimental) Commands
-
 ### Pull Requests
-
 Gets infos about Github Pull Requests.
 If no Github Repository is defined by `---repository` (-r) option the default
 Magento 2 Github Repository `magento/magento2` is used.
 For the [Mage-OS](https://github.com/mage-os/mageos-magento2) repository we provide a shortcut option `--mage-os`.
-
 If the command is executed without any options it will show infos about the PR.
-
 ```sh
 # Magento 2 Open Source
 n98-magerun2.phar github:pr:patch <pr-number>
-
 # Mage-OS
 n98-magerun2.phar github:pr:patch --mage-os <pr-number>
 ```
-
 *Create a patch file from PR:*
-
 ```sh
 n98-magerun2.phar github:pr:patch --patch <pr-number>
 ```
-
 Files of the magento2-base and magento2-ee-base and b2b base packages are currently not handled by the command.
-
 **List only the raw diff:**
-
 ```sh
 n98-magerun2.phar github:pr:patch --diff <pr-number>
 ```
-
 ---
-
 ### Interactive Development Console
-
 Opens PHP interactive shell with initialized Magento Admin-Store.
-
 ```sh
 n98-magerun2.phar dev:console [--area=AREA] <arg>
 ```
-
 Optional an area code can be defined. If provided, the configuration
 (di.xml, translations) of the area are loaded.
-
 Possible area codes are:
-
 - `adminhtml`
 - `crontab`
 - `frontend`
 - `graphql`
 - `webapi_xml`
 - `webapi_rest`
-
 Variable `$di` is made available with a
 `Magento\Framework\ObjectManagerInterface` instance to allow creation of
 object instances.
-
 Variable `$dh` provides convenient debugging functions.
 Type `$dh->` and press Tab for a list.
-
 Example:
-
 ```bash
 n98-magerun2 dev:console --area=adminhtml
     // show name of category 123 in default store
@@ -1287,90 +1261,62 @@ n98-magerun2 dev:console --area=adminhtml
     // show name of product id 123
     $dh->debugProductById(123)['name']; 
 ```
-
 The interactive console works as
 [REPL](https://en.wikipedia.org/wiki/Read%E2%80%93eval%E2%80%93print_loop).
 It's possible to enter any PHP code. The code will be executed immediately.
 The interactive console also comes with a lot of embedded scommands.
-
 It's possible to add initial commands to the interactive console.
 Commands should be delimited by a semicolon. You can mix PHP-Code with
 embedded interactive console commands.
-
 **Example:**
-
 ```sh
 n98-magerun2.phar dev:console "$a = 1; call cache:flush; ls;"
 ```
-
 The interactive console comes with a extendable code generator tool to
 create i.e. modules, cli commands, controllers, blocks, helpers etc.
-
 The console can be in a module context which allows you to generate code
 for a selected module.
-
 The basic idea of the stateful console was developed by [Jacques
 Bodin-Hullin](https://github.com/jacquesbh) in this great tool
 [Installer](https://github.com/jacquesbh/installer).
-
 ### n98-magerun Script
-
 Run multiple commands from a script file.
-
 ```sh
 n98-magerun2.phar script [-d|--define[="..."]] [--stop-on-error] [filename]
 ```
-
 **Example:**
-
 ```sh
 # Set multiple config
 config:store:set "web/cookie/cookie_domain" example.com
-
 # Set with multiline values with `\n`
 config:store:set "general/store_information/address" "First line\nSecond line\nThird line"
-
 # This is a comment
 cache:flush
 ```
-
 Optionally you can work with unix pipes.
-
 ```sh
 echo "cache:flush" | n98-magerun2.phar script
 ```
-
 ```sh
 n98-magerun2.phar script < filename
 ```
-
 It is even possible to create executable scripts:
-
 Create file `test.magerun` and make it executable `chmod +x test.magerun`:
-
 ```sh
 #!/usr/bin/env n98-magerun2.phar script
-
 config:store:set "web/cookie/cookie_domain" example.com
 cache:flush
-
 # Run a shell script with "!" as first char
 ! ls -l
-
 # Register your own variable (only key = value currently supported)
 ${my.var}=bar
-
 # Let magerun ask for variable value - add a question mark
 ${my.var}=?
-
 ! echo ${my.var}
-
 # Use resolved variables from n98-magerun in shell commands
 ! ls -l ${magento.root}/code/local
 ```
-
 **Pre-defined variables:**
-
 | Variable             | Description                                |
 |----------------------|--------------------------------------------|
 | `${magento.root}`    | Magento Root-Folder                        |
@@ -1380,107 +1326,69 @@ ${my.var}=?
 | `${php.version}`     | PHP Version                                |
 | `${script.file}`     | Current script file path                   |
 | `${script.dir}`      | Current script file dir                    |
-
 Variables can be passed to a script with "--define (-d)" option.
-
 Example:
-
 ```sh
 n98-magerun2.phar script -d foo=bar filename
-
 # This will register the variable ${foo} with value bar.
 ```
-
 It's possible to define multiple values by passing more than one
 option.
-
 Environment variables can be used in a script by using the `env.` prefix.
-
 Example:
-
 ```bash
 !echo "My current working directory is: ${env.PWD}"
 !echo "Path: ${env.PATH}"
 ```
-
 ### Toggle CMS Block status
-
 Toggles the status for a CMS block based on the given Block identifier.
-
 ```sh
 n98-magerun2.phar cms:block:toggle [blockId]
 ```
-
 ### Change Admin user status
-
 Changes the admin user based on the options, the command will toggle
 the status if no options are supplied.
-
 ```sh
 n98-magerun2.phar admin:user:change-status [user] [--activate] [--deactivate]
 ```
-
 *Note: It is possible for a user to exist with a username that matches
 the email of a different user. In this case the first matched user will be changed.*
-
 ### Add Sales Sequences for a given store
-
 Create sales sequences in the database if they are missing, this will recreate profiles to.
-
 ```sh
 n98-magerun2.phar sales:sequence:add [store] 
 ```
-
 If store is omitted, it'll run for all stores.
-
 *Note: It is possible a sequence already exists, in this case nothing will happen, only missing tables are created.*
-
 ### Remove Sales Sequences for a given store
-
 Remove sales sequences from the database, warning, you cannot undo this, make sure you have database backups.
-
 ```sh
 n98-magerun2.phar sales:sequence:remove [store] 
 ```
-
 If store is omitted, it'll run for all stores. When the option `no-interaction` is given, it will run immediately
 without any interaction.
 Otherwise it will remind you and ask if you know what you're doing and ask for each store you are running it on.
-
 *Note: .*
-
 ### Script Repository
-
 You can organize your scripts in a repository.
 Simply place a script in folder `/usr/local/share/n98-magerun2/scripts` or in your home dir
 in folder `<HOME>/.n98-magerun2/scripts`.
-
 Scripts must have the file extension *.magerun*.
-
 After that you can list all scripts with the *script:repo:list* command.
 The first line of the script can contain a comment (line prefixed with #) which will be displayed as description.
-
 ```sh
 n98-magerun2.phar script:repo:list [--format[="..."]]
 ```
-
 If you want to execute a script from the repository this can be done by *script:repo:run* command.
-
 ```sh
 n98-magerun2.phar script:repo:run [-d|--define[="..."]] [--stop-on-error] [script]
 ```
-
 Script argument is optional. If you don't specify any you can select one from a list.
-
 ### Composer Redeploy Base Packages
-
 If files are missing after a Magento updates it could be that new files were added to the files map in the base packages
 of Magento. The `composer:redeploy-base-packages` command can fix this issue.
-
 ```sh
 n98-magerun2.phar composer:redeploy-base-packages
 ```
-
 ## Development
-
 <https://github.com/netz98/n98-magerun2/wiki>
