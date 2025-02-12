@@ -303,13 +303,12 @@ HELP;
      */
     private function createExecs(InputInterface $input, OutputInterface $output)
     {
-        if ($input->getOption('mydumper')) {
+        if ($input->getOption('mydumper') !== false) {
             // Check if mydumper is installed
             exec('which mydumper 2>/dev/null', $cmdOutput, $returnVal);
             if ($returnVal !== 0) {
                 $output->writeln(
-                    '<warning>mydumper not found. Falling back to mysqldump. To use mydumper, install it first. ' .
-                    'On debian systems this can be done with: apt-get install mydumper</warning>'
+                    '<warning>mydumper not found. Falling back to mysqldump. To use mydumper, install it first.</warning>'
                 );
             } else {
                 return $this->createMydumperExecs($input, $output);
