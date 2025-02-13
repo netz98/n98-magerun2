@@ -133,6 +133,7 @@ commands:
     - N98\Magento\Command\Developer\SymlinksCommand
     - N98\Magento\Command\Developer\TemplateHintsBlocksCommand
     - N98\Magento\Command\Developer\TemplateHintsCommand
+    - N98\Magento\Command\Developer\Theme\BuildHyvaThemeCommand
     - N98\Magento\Command\Developer\Theme\ListCommand
     - N98\Magento\Command\Developer\Translate\InlineAdminCommand
     - N98\Magento\Command\Developer\Translate\InlineShopCommand
