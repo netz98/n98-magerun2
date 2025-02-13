@@ -960,6 +960,12 @@ n98-magerun2.phar dev:asset:clear --theme=Magento/luma
 n98-magerun2.phar dev:theme:list
 ```
 
+### Build Hyva Theme CSS
+
+```sh
+n98-magerun2.phar dev:theme:build-hyva --theme=Hyva/default
+```
+
 ---
 
 ### Create Module Skeleton
