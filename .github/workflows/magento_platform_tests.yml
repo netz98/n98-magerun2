@@ -285,7 +285,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           tools: composer:2
-          php-version: "8.1"
+          php-version: "8.2"
 
       - name: Build phar file
         run: |
