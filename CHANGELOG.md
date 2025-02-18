@@ -1,6 +1,12 @@
 RECENT CHANGES
 ==============
 
+8.0.0
+-----
+
+- Major: Drop PHP 7 support (by Christian Münch)
+- Imp: #1577: Support Mage-OS 1.0.6
+
 7.5.0
 -----
 
