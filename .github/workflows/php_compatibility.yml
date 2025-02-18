@@ -9,7 +9,7 @@ on:
       - "src/**"
 
 env:
-  MIN_PHP_VERSION: 7.4
+  MIN_PHP_VERSION: 8.0
 
 jobs:
   php-compatibility:
