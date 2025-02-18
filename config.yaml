@@ -361,7 +361,7 @@ commands:
     magento-packages:
       - name: mage-os-latest
         package: mage-os/project-community-edition
-        version: 1.0.3
+        version: 1.0.6
         options:
           repository-url: https://repo.mage-os.org
       - name: mage-os-1.0.0
