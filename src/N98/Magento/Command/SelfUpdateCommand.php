@@ -191,8 +191,6 @@ EOT
                     '  <comment>php n98-magerun2.phar self-update --version=%s</comment>',
                     $previousVersion
                 ));
-
-
             } else {
                 $output->writeln("<info>You are using the latest n98-magerun2 stable version.</info>");
             }
