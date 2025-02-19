@@ -128,11 +128,14 @@ There is a `self-update` command available. This works only
 for phar-distribution.
 
 ```sh
-./n98-magerun2.phar self-update [--dry-run]
+./n98-magerun2.phar self-update [--dry-run] <version>
 ```
 
 With `--dry-run` option it is possible to download and test
 the phar file without replacing the old one.
+
+The version argument is optional and can be used to rollback to a specific
+version of n98-magerun2. The version was introduced with v8.0.0. Older versions do not have the version argument.
 
 ## Autocompletion
 
