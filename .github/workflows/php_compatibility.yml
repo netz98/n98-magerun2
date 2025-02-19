@@ -35,11 +35,11 @@ jobs:
           uses: pantheon-systems/phpcompatibility-action@v1
           with:
             skip-php-setup: true
-            test-versions: ${{ env.MIN_PHP_VERSION }}-
+            test-versions: ${{ env.MIN_PHP_VERSION }}
             paths: ${{ github.workspace }}/src
         - name: Test tests directory
           uses: pantheon-systems/phpcompatibility-action@v1
           with:
             skip-php-setup: true
-            test-versions: ${{ env.MIN_PHP_VERSION }}-
+            test-versions: ${{ env.MIN_PHP_VERSION }}
             paths: ${{ github.workspace }}/tests
