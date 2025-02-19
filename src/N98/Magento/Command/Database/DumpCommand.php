@@ -675,11 +675,11 @@ HELP;
     {
         $execs = new Execs('mydumper');
         $execs->setCompression($input->getOption('compression'), $input);
-        
+
         // Get output directory from filename
         $outputDir = dirname($this->getFileName($input, $output, $execs->getCompressor()));
         $execs->addOptions('--outputdir=' . escapeshellarg($outputDir));
-        
+
         // Database connection options
         $execs->addOptions(sprintf(
             '--host=%s --user=%s --password=%s --database=%s',
