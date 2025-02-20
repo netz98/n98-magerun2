@@ -2,10 +2,15 @@
 
 namespace N98\Magento\Application\Console\EventSubscriber;
 
+use Exception;
+use Magento\Framework\App\DistributionMetadataInterface;
+use Magento\Framework\App\ProductMetadataInterface;
 use N98\Magento\Application;
 use N98\Magento\Application\ApplicationAwareInterface;
 use N98\Magento\Application\Console\Events;
+use N98\Magento\Command\Installer\InstallCommand;
 use N98\Magento\Command\MagentoCoreProxyCommand;
+use N98\Magento\Command\SelfUpdateCommand;
 use Symfony\Component\Console\Event\ConsoleEvent;
 use Symfony\Component\Console\Exception\CommandNotFoundException;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -64,12 +69,12 @@ class CheckCompatibility implements EventSubscriberInterface, ApplicationAwareIn
             return;
         }
 
-        if ($command instanceof \N98\Magento\Command\Installer\InstallCommand) {
+        if ($command instanceof InstallCommand) {
             // We do not check the installer command
             return;
         }
 
-        if ($command instanceof \N98\Magento\Command\SelfUpdateCommand) {
+        if ($command instanceof SelfUpdateCommand) {
             // We do not check the update command
             return;
         }
@@ -81,7 +86,7 @@ class CheckCompatibility implements EventSubscriberInterface, ApplicationAwareIn
                 return;
             }
 
-            $productMetadata = $objectManager->get(\Magento\Framework\App\ProductMetadataInterface::class);
+            $productMetadata = $objectManager->get(ProductMetadataInterface::class);
             $currentMagentoVersion = $productMetadata->getVersion();
 
             // We cannot check if no version is defined
@@ -89,15 +94,16 @@ class CheckCompatibility implements EventSubscriberInterface, ApplicationAwareIn
                 return;
             }
 
-            if ($productMetadata->getName() === 'Mage-OS') {
+            if ($productMetadata instanceof DistributionMetadataInterface
+                && $productMetadata->getDistributionName() === 'Mage-OS'
+            ) {
                 $this->checkMageOsDistribution($currentMagentoVersion, $event);
-                return;
             }
 
             if ($productMetadata->getName() === 'Magento') {
                 $this->checkMagentoDistribution($currentMagentoVersion, $event);
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             //
         }
     }

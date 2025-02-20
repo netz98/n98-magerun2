@@ -9,7 +9,7 @@ on:
       - "src/**"
 
 env:
-  MIN_PHP_VERSION: 7.4
+  MIN_PHP_VERSION: "8.0"
 
 jobs:
   php-compatibility:
@@ -32,13 +32,13 @@ jobs:
             extensions: mcrypt, mbstring, intl
             coverage: none
         - name: Test src directory
-          uses: pantheon-systems/phpcompatibility-action@v1
+          uses: pantheon-systems/phpcompatibility-action@dev
           with:
             skip-php-setup: true
             test-versions: ${{ env.MIN_PHP_VERSION }}-
             paths: ${{ github.workspace }}/src
         - name: Test tests directory
-          uses: pantheon-systems/phpcompatibility-action@v1
+          uses: pantheon-systems/phpcompatibility-action@dev
           with:
             skip-php-setup: true
             test-versions: ${{ env.MIN_PHP_VERSION }}-

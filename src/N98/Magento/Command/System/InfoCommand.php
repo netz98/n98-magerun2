@@ -2,7 +2,19 @@
 
 namespace N98\Magento\Command\System;
 
+use InvalidArgumentException;
+use Magento\Catalog\Model\CategoryFactory;
+use Magento\Catalog\Model\ProductFactory;
+use Magento\Customer\Model\CustomerFactory;
+use Magento\Eav\Model\Entity\AttributeFactory;
+use Magento\Framework\App\Cache\Type\FrontendPool;
+use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Framework\App\DeploymentConfig;
+use Magento\Framework\App\DistributionMetadataInterface;
+use Magento\Framework\App\ProductMetadataInterface;
 use Magento\Framework\App\State as AppState;
+use Magento\Framework\Module\ModuleListInterface;
+use Magento\User\Model\ResourceModel\User\CollectionFactory;
 use N98\Magento\Command\AbstractMagentoCommand;
 use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
 use N98\Util\ProjectComposer;
@@ -105,16 +117,16 @@ class InfoCommand extends AbstractMagentoCommand
      * @param \Magento\User\Model\ResourceModel\User\CollectionFactory $userCollectionFactory
      */
     public function inject(
-        \Magento\Framework\App\ProductMetadataInterface $productMetadata,
-        \Magento\Customer\Model\CustomerFactory $customerFactory,
-        \Magento\Catalog\Model\ProductFactory $productFactory,
-        \Magento\Catalog\Model\CategoryFactory $categoryFactory,
-        \Magento\Eav\Model\Entity\AttributeFactory $attributeFactory,
-        \Magento\Framework\App\Cache\Type\FrontendPool $frontendPool,
-        \Magento\Framework\App\DeploymentConfig $deploymentConfig,
-        \Magento\Framework\Module\ModuleListInterface $moduleList,
-        \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
-        \Magento\User\Model\ResourceModel\User\CollectionFactory $userCollectionFactory
+        ProductMetadataInterface $productMetadata,
+        CustomerFactory $customerFactory,
+        ProductFactory $productFactory,
+        CategoryFactory $categoryFactory,
+        AttributeFactory $attributeFactory,
+        FrontendPool $frontendPool,
+        DeploymentConfig $deploymentConfig,
+        ModuleListInterface $moduleList,
+        ScopeConfigInterface $scopeConfig,
+        CollectionFactory $userCollectionFactory
     ) {
         $this->productMetadata = $productMetadata;
         $this->customerFactory = $customerFactory;
@@ -179,7 +191,7 @@ class InfoCommand extends AbstractMagentoCommand
             $settingArgument = strtolower($settingArgument);
             $this->infos = array_change_key_case($this->infos, CASE_LOWER);
             if (!isset($this->infos[$settingArgument])) {
-                throw new \InvalidArgumentException('Unknown key: ' . $settingArgument);
+                throw new InvalidArgumentException('Unknown key: ' . $settingArgument);
             }
             $output->writeln((string)$this->infos[$settingArgument]);
         } else {
@@ -301,6 +313,13 @@ class InfoCommand extends AbstractMagentoCommand
         $this->infos['Name'] = $this->productMetadata->getName();
         $this->infos['Version'] = $this->productMetadata->getVersion();
         $this->infos['Edition'] = $this->productMetadata->getEdition();
+        $this->infos['Distribution'] = 'n/a';
+
+        if ($this->productMetadata instanceof DistributionMetadataInterface) {
+            $this->infos['Distribution'] = $this->productMetadata->getDistributionName();
+            $this->infos['Distribution Version'] = $this->productMetadata->getDistributionVersion();
+        }
+
         $this->infos['Root'] = $this->_magentoRootFolder;
     }
 

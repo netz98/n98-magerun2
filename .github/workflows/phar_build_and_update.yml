@@ -33,7 +33,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           tools: composer:2
-          php-version: '7.4'
+          php-version: '8.2'
 
       - name: Checkout PR
         uses: actions/checkout@v4.2.2
@@ -68,7 +68,13 @@ jobs:
         run: composer install --prefer-dist --no-progress --no-suggest
 
       - name: Create phar
-        run: bash ./build.sh
+        run: bash ./build.sh && php ./n98-magerun2.phar --version && mv ./n98-magerun2.phar ./n98-magerun2.phar.original
 
-      - name: Test self-update command
-        run: php ./n98-magerun2.phar self-update --unstable
+      - name: Update to the unstable version
+        run: cp ./n98-magerun2.phar.original ./n98-magerun2.phar && php ./n98-magerun2.phar self-update --unstable && ./n98-magerun2.phar --version
+
+      - name: Update to the latest version
+        run: cp ./n98-magerun2.phar.original ./n98-magerun2.phar && ./n98-magerun2.phar self-update && ./n98-magerun2.phar --version
+
+      - name: Rollback phar to a specific version
+        run: cp ./n98-magerun2.phar.original ./n98-magerun2.phar && ./n98-magerun2.phar self-update 7.5.0 && ./n98-magerun2.phar --version

@@ -211,4 +211,54 @@ class DumpCommandTest extends TestCase
         // dump should be larger than quarter a megabyte
         $this->assertGreaterThan(250000, $dumpFile->getSize());
     }
+
+    public function testExecuteWithMydumper()
+    {
+        $input = [
+            'command'        => 'db:dump',
+            '--add-time'     => true,
+            '--only-command' => true,
+            '--force'        => true,
+            '--compression'  => 'gz',
+            '--mydumper'     => true,
+        ];
+
+        $this->assertDisplayContains($input, 'mydumper');
+        $this->assertDisplayContains($input, '--outputdir=');
+        $this->assertDisplayContains($input, '--database=');
+    }
+
+    public function testWithStripOptionMydumper()
+    {
+        $input = [
+            'command'        => 'db:dump',
+            '--add-time'     => true,
+            '--only-command' => true,
+            '--force'        => true,
+            '--strip'        => '@development not_existing_table_1',
+            '--compression'  => 'gzip',
+            '--mydumper'     => true,
+        ];
+
+        $this->assertDisplayContains($input, '--no-data=customer_entity');
+        $this->assertDisplayContains($input, '--no-data=customer_address_entity');
+        $this->assertDisplayContains($input, '--no-data=sales_order');
+        $this->assertDisplayNotContains($input, "not_existing_table_1");
+    }
+
+    public function testWithExcludeOptionMydumper()
+    {
+        $input = [
+            'command'        => 'db:dump',
+            '--add-time'     => true,
+            '--only-command' => true,
+            '--force'        => true,
+            '--exclude'      => 'core_config_data',
+            '--compression'  => 'gzip',
+            '--mydumper'     => true,
+        ];
+
+        $this->assertDisplayContains($input, '--ignore-table=core_config_data');
+        $this->assertDisplayNotContains($input, "not_existing_table_1");
+    }
 }

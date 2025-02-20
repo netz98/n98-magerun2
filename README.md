@@ -128,11 +128,14 @@ There is a `self-update` command available. This works only
 for phar-distribution.
 
 ```sh
-./n98-magerun2.phar self-update [--dry-run]
+./n98-magerun2.phar self-update [--dry-run] <version>
 ```
 
 With `--dry-run` option it is possible to download and test
 the phar file without replacing the old one.
+
+The version argument is optional and can be used to rollback to a specific
+version of n98-magerun2. The version was introduced with v8.0.0. Older versions do not have the version argument.
 
 ## Autocompletion
 
@@ -792,9 +795,9 @@ n98-magerun2.phar db:console [options]
 
 ### Dump database
 
-Dumps configured Magento database with `mysqldump`.
+Dumps configured Magento database with `mysqldump` or `mydumper`.
 
-- Requires MySQL CLI tools
+- Requires MySQL CLI tools (either `mysqldump` or `mydumper`)
 
 Arguments:
 
@@ -815,9 +818,10 @@ Options:
 | `--include`                | Tables to include entirely to the dump (default: all tables are included)                  |
 | `--keep-definer`           | Do not replace DEFINER in dump with CURRENT_USER                                           |
 | `--keep-column-statistics` | Retains `column statistics` table in `mysqldump`                                           |
+| `--mydumper`               | Use mydumper instead of mysqldump for potentially faster dumps                             |
 | `--no-single-transaction`  | Do not use single-transaction (not recommended, this is blocking)                          |
 | `--no-tablespaces`         | Use this option if you want to create a dump without having the PROCESS privilege.         |
-| `--only-command`           | Print only mysqldump command. Does not execute.                                            |
+| `--only-command`           | Print only mysqldump/mydumper command. Does not execute.                                   |
 | `--print-only-filename`    | Execute and prints not output except the dump filename                                     |
 | `--set-gtid-purged-off`    | Adds --set-gtid-purged=OFF to mysqlqump                                                    |
 | `--stdout`                 | Dump to stdout                                                                             |
@@ -827,7 +831,7 @@ Options:
 n98-magerun2.phar db:dump
 ```
 
-Only the mysqldump command:
+Only the dump command:
 
 ```sh
 n98-magerun2.phar db:dump --only-command [filename]
@@ -843,6 +847,11 @@ Use compression (gzip cli tool has to be installed):
 
 ```sh
 n98-magerun2.phar db:dump --compression="gzip"
+```
+
+Use mydumper for faster dumps:
+```sh
+n98-magerun2.phar db:dump --mydumper
 ```
 
 #### Stripped Database Dump

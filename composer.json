@@ -16,7 +16,7 @@
         "use-include-path": false,
         "preferred-install": "dist",
         "platform": {
-            "php": "7.4.0"
+            "php": "8.0.0"
         },
         "sort-packages": true,
         "allow-plugins": {
@@ -24,7 +24,7 @@
         }
     },
     "require": {
-        "php": "^7.4||^8.0",
+        "php": "^8.0",
         "ext-PDO": "*",
         "ext-SimpleXML": "*",
         "ext-dom": "*",
@@ -38,6 +38,7 @@
         "n98/junit-xml": "~1.0",
         "pbergman/tree-helper": "^1.0",
         "psr/container": "~1.1.2",
+        "psr/log": "^2.0",
         "psy/psysh": "~0.7",
         "rmccue/requests": "^2.0",
         "symfony/console": "^5.4",
