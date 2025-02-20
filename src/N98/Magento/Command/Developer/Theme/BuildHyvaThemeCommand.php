@@ -78,7 +78,7 @@ class BuildHyvaThemeCommand extends AbstractMagentoCommand
         }
 
         $output->writeln(sprintf('<info>Building CSS for theme "%s"...</info>', $themePath));
-        
+
         if (!$isProduction) {
             $output->writeln(sprintf('<info>Watching for changes. Press Ctrl+C to stop.</info>'));
         }
