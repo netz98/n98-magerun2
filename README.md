@@ -972,7 +972,7 @@ n98-magerun2.phar dev:theme:list
 ### Build Hyva Theme CSS
 
 ```sh
-n98-magerun2.phar dev:theme:build-hyva --theme=Hyva/default
+n98-magerun2.phar dev:theme:build-hyva --theme="Hyva/default"
 ```
 
 ---
