@@ -25,16 +25,10 @@ class BuildHyvaThemeCommand extends AbstractMagentoCommand
             ->setName('dev:theme:build-hyva')
             ->setDescription('Build Hyvä theme CSS')
             ->addOption(
-                'watch',
-                'w',
-                InputOption::VALUE_NONE,
-                'Watch for changes and rebuild automatically'
-            )
-            ->addOption(
                 'production',
                 'p',
                 InputOption::VALUE_NONE,
-                'Build for production (minified)'
+                'Build for production (minified) instead of watch mode'
             )
             ->addOption(
                 'theme',
@@ -75,29 +69,26 @@ class BuildHyvaThemeCommand extends AbstractMagentoCommand
             throw new \InvalidArgumentException(sprintf('Theme directory "%s" not found.', $themeDir));
         }
 
-        $isWatch = $input->getOption('watch');
         $isProduction = $input->getOption('production');
 
-        $command = 'cd ' . $themeDir . ' && ';
+        $command = 'cd ' . $themeDir . ' && npm run watch'; // Default is watch mode
 
-        if ($isWatch) {
-            $command .= 'npm run watch';
-            $output->writeln(sprintf('<info>Building CSS for theme "%s"...</info>', $themePath));
-            $output->writeln(sprintf('<info>Watching for changes. Press Ctrl+C to stop.</info>'));
-
-            $process = proc_open($command, [
-                0 => STDIN,
-                1 => STDOUT,
-                2 => STDERR,
-            ], $pipes);
-    
-            return proc_close($process);
-        }
-        
         if ($isProduction) {
-            $command .= 'npm run build-prod';
-            $output->writeln(sprintf('<info>Building CSS for theme "%s"...</info>', $themePath));
-            return Command::SUCCESS;
+            $command = 'cd ' . $themeDir . ' && npm run build-prod';
         }
+
+        $output->writeln(sprintf('<info>Building CSS for theme "%s"...</info>', $themePath));
+        
+        if (!$isProduction) {
+            $output->writeln(sprintf('<info>Watching for changes. Press Ctrl+C to stop.</info>'));
+        }
+
+        $process = proc_open($command, [
+            0 => STDIN,
+            1 => STDOUT,
+            2 => STDERR,
+        ], $pipes);
+
+        return proc_close($process);
     }
 }
