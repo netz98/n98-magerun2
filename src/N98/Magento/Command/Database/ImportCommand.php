@@ -3,6 +3,7 @@
 namespace N98\Magento\Command\Database;
 
 use Exception;
+use InvalidArgumentException;
 use N98\Magento\Command\Database\Compressor\AbstractCompressor;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -133,8 +134,12 @@ HELP;
         } else {
             $compression = AbstractCompressor::tryGetCompressionType($fileName);
 
-            if ($compression == null) {
-                throw new \RuntimeException("Could not guess compression type or the file is in a format that is not supported.");
+            if ($compression === null) {
+                $output->writeln(
+                    '<comment>No compression detected. Using default compression: <info>none</info></comment>',
+                );
+
+                $compression = 'none';
             }
         }
 
@@ -150,13 +155,15 @@ HELP;
             $exec . $dbHelper->getMysqlClientToolConnectionString(),
             $fileName
         );
+
         if ($input->getOption('only-command')) {
             $output->writeln($exec);
 
             return Command::SUCCESS;
-        } elseif ($input->getOption('only-if-empty')
-            && count($dbHelper->getTables()) > 0
-        ) {
+        }
+
+        if ($input->getOption('only-if-empty')
+            && count($dbHelper->getTables()) > 0) {
             $output->writeln('<comment>Skip import. Database is not empty</comment>');
 
             return Command::SUCCESS;
@@ -174,6 +181,7 @@ HELP;
             $dbHelper->dropDatabase($output);
             $dbHelper->createDatabase($output);
         }
+
         if ($input->getOption('drop-tables')) {
             $dbHelper->dropTables($output);
         }
@@ -202,11 +210,11 @@ HELP;
         $fileName = $input->getArgument('filename');
 
         if ($fileName === null) {
-            throw new \InvalidArgumentException('Please provide a file name');
+            throw new InvalidArgumentException('Please provide a file name');
         }
 
         if (!file_exists($fileName)) {
-            throw new \InvalidArgumentException('File does not exist');
+            throw new InvalidArgumentException('File does not exist');
         }
 
         return $fileName;
