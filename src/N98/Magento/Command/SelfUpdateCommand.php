@@ -220,21 +220,33 @@ EOT
         string $forcedVersion = null
     ) {
         try {
+            $changelog = '';
             $this->downloadNewPhar($output, $remotePharDownloadUrl, $tempFilename);
             $this->checkNewPharFile($tempFilename, $localFilename);
-
-            $changelog = $this->getChangelog($output, $loadUnstable, $forcedVersion);
 
             if (!$isDryRun) {
                 $this->replaceExistingPharFile($tempFilename, $localFilename);
             }
 
-            $output->writeln('');
-            $output->writeln('');
-            $output->writeln($changelog);
-            $output->writeln('<info>---------------------------------</info>');
-            $output->writeln('<info>Successfully updated n98-magerun2</info>');
-            $output->writeln('<info>---------------------------------</info>');
+            if ($forcedVersion) {
+                $output->writeln('<info>---------------------------------</info>');
+                $output->writeln(
+                    sprintf(
+                        '<info>Successfully updated n98-magerun2 to version <comment>%s</comment></info>',
+                        $forcedVersion
+                    )
+                );
+            }
+
+            if (!$forcedVersion) {
+                $changelog = $this->getChangelog($output, $loadUnstable, $forcedVersion);
+                $output->writeln('');
+                $output->writeln('');
+                $output->writeln($changelog);
+                $output->writeln('<info>---------------------------------</info>');
+                $output->writeln('<info>Successfully updated n98-magerun2</info>');
+                $output->writeln('<info>---------------------------------</info>');
+            }
 
             $this->_exit(0);
         } catch (Exception $e) {
