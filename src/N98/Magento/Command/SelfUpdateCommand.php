@@ -220,9 +220,10 @@ EOT
         string $forcedVersion = null
     ) {
         try {
-            $changelog = '';
             $this->downloadNewPhar($output, $remotePharDownloadUrl, $tempFilename);
             $this->checkNewPharFile($tempFilename, $localFilename);
+
+            class_exists(VersionFilePrinter::class); // Ensure the class is loaded to prevent errors after phar file replacement
 
             if (!$isDryRun) {
                 $this->replaceExistingPharFile($tempFilename, $localFilename);
