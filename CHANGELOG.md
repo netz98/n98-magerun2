@@ -15,6 +15,7 @@ RECENT CHANGES
 - Fix: #1569: Fix typo in README (by Nolwennig-Jeulin)
 - Fix: #1560: deprecation warning (by Christian Münch)
 - Fix: #1563: description of command detect-composer-dependencies (by sir1ke)
+- Fix: #1572: Import without compression no longer compatible with STDIN (reported by Indy Koning)
 
 7.5.0
 -----
@@ -26,7 +27,6 @@ RECENT CHANGES
 - Imp: Enhance CI pipelines for dependency updates (by Christian Münch)
 - Fix: Minor typo corrections (by Christian Münch)
 - Fix: #1519: Fixed casing of DecryptCommand class (by Pieter Hoste)
-- Fix: #1572: Import without compression no longer compatible with STDIN (reported by Indy Koning)
 - Fix: Address issues with MariaDB client tools not supporting `--ssl-mode` (by Christian Münch, reported by Max Fickers)
 - Fix: Use the correct function to support PHP 7.4 for file ending checks (by ResuBaka)
 
