@@ -64,7 +64,7 @@ class BuildHyvaThemeCommand extends AbstractMagentoCommand
             throw new \InvalidArgumentException(sprintf('Theme "%s" not found.', $themePath));
         }
 
-        $themeDir = BP . '/app/design/frontend/' . $themePath;
+        $themeDir = BP . '/app/design/frontend/' . $themePath . '/web/tailwind';
         if (!is_dir($themeDir)) {
             throw new \InvalidArgumentException(sprintf('Theme directory "%s" not found.', $themeDir));
         }
