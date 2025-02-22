@@ -188,7 +188,7 @@ EOT
                     $previousVersion
                 ));
                 $output->writeln(sprintf(
-                    '  <comment>php n98-magerun2.phar self-update --version=%s</comment>',
+                    '  <comment>php n98-magerun2.phar self-update %s</comment>',
                     $previousVersion
                 ));
             } else {
