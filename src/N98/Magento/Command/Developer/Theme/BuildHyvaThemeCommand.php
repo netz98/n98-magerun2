@@ -65,13 +65,11 @@ class BuildHyvaThemeCommand extends AbstractMagentoCommand
         ThemeCollection $themeCollection,
         State $state,
         ComponentRegistrarInterface $componentRegistrar
-    )
-    {
+    ) {
         $this->themeCollection = $themeCollection;
         $this->state = $state;
         $this->componentRegistrar = $componentRegistrar;
     }
-
 
     protected function interact(InputInterface $input, OutputInterface $output)
     {
