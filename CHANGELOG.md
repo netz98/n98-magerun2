@@ -4,8 +4,15 @@ RECENT CHANGES
 8.0.0
 -----
 
-- Major: Drop PHP 7 support (by Christian Münch)
-- Imp: #1577: Support Mage-OS 1.0.6
+- Major: Drop PHP 7 support
+- Add: #1584: New dev:hyva:build-hyva command (by Torben Höhn)
+- Add: #1574: New Add mydumper feature to DumpCommand (by Peter Jaap Blaakmeer) 
+- Add: #1553: New dev:di:preferences:list command (by Christian Münch)
+- Imp: #1577: Support Mage-OS 1.0.6 (by Christian Münch) (reported by Fabrizio Balliano)
+- Imp: Update 3rd party dependencies (phpstan, php-cs-fixer, rmccue/requests, Appleboy SSH Action, Sigstore Cosign Installer, CaptainHook, psr/logger, psysh, fakerphp) to their latest versions
+- Fix: #1569: Fix typo in README (by Nolwennig-Jeulin)
+- Fix: #1560: deprecation warning (by Christian Münch)
+- Fix: #1563: description of command detect-composer-dependencies (by sir1ke)
 
 7.5.0
 -----
@@ -169,7 +176,7 @@ RECENT CHANGES
 - Imp: Update 3rd party dependencies (Symfony, psysh, vfsstream, captainhook, requests lib, faker lib, phpunit, twig)
 - Fix: #993: Try to drop only existing databases (by Christian Münch)
 - Fix: #996: Customer Debug Functions in Dev Console Dev Helper (by Alexander Menk)
-- Fix: #998: Pass empty string as default value to getFileName (by Peter Jaap)
+- Fix: #998: Pass empty string as default value to getFileName (by Peter Jaap Blaakmeer)
 - Fix: #1015: deprecated: passing null to dirname (by Alexander Menk)
 - Fix: #1019: type error in cache-list command on php 8.1 (by Tom Klingenberg)
 - Fix: #1024: config:store:get wrong filters applied (by Alexander Dite)
@@ -436,7 +443,7 @@ RECENT CHANGES
 3.0.9
 -----
 
-- Fix: #439: Add 2fa tables (by Peter Jaap)
+- Fix: #439: Add 2fa tables (by Peter Jaap Blaakmeer)
 - Fix: #453: Fix completely exclude tables with --exclude command (by Arnoud Beekman)
 - Fix: #459: Update readme - Script command documentation fix (by Hardy Johnson)
 - Fix: #460: Typo: unkown -> unknown (by Alexander Menk)
@@ -512,7 +519,7 @@ RECENT CHANGES
 2.3.1
 -----
 
-- --stdout broken in 2.3.0 (by Peter Jaap / Christian Münch)
+- --stdout broken in 2.3.0 (by Peter Jaap Blaakmeer / Christian Münch)
 
 2.3.0
 -----
@@ -622,7 +629,7 @@ RECENT CHANGES
 -----
 
 * Fix: sys:cron:schedule 'area code is not set' exception. (by Pieter Hoste, #277)
-* Fix: Allow -1 as value for infinite max nesting level for xdebug (by Peter Jaap, #278)
+* Fix: Allow -1 as value for infinite max nesting level for xdebug (by Peter Jaap Blaakmeer, #278)
 * Fix: Generate a shorter version of registration.php (by Alexander Turiak #280)
 * New: Command eav:attribute:list (by Jürgen Thelen, #99)
 * New: Command dev:asset:clear (by Jürgen Thelen, #141)
