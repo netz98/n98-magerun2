@@ -5,16 +5,16 @@ RECENT CHANGES
 -----
 
 - Major: Drop PHP 7 support
-- Add: #1584: New dev:hyva:build-hyva command (by Torben Höhn)
-- Add: #1574: New Add mydumper feature to DumpCommand (by Peter Jaap Blaakmeer) 
 - Add: #1553: New dev:di:preferences:list command (by Christian Münch)
+- Add: #1574: New Add mydumper feature to DumpCommand (by Peter Jaap Blaakmeer) 
+- Add: #1584: New dev:hyva:build-hyva command (by Torben Höhn)
 - Imp: #1577: Support Mage-OS 1.0.6 (by Christian Münch) (reported by Fabrizio Balliano)
 - Imp: Updated ddev setup to PHP 8.3 and used newer box.phar for phar build (by Christian Münch)
 - Imp: Add rollback logic to self-update command (by Christian Münch)
 - Imp: Update 3rd party dependencies (phpstan, php-cs-fixer, rmccue/requests, Appleboy SSH Action, Sigstore Cosign Installer, CaptainHook, psr/logger, psysh, fakerphp) to their latest versions
-- Fix: #1569: Fix typo in README (by Nolwennig-Jeulin)
 - Fix: #1560: deprecation warning (by Christian Münch)
 - Fix: #1563: description of command detect-composer-dependencies (by sir1ke)
+- Fix: #1569: Fix typo in README (by Nolwennig-Jeulin)
 - Fix: #1572: Import without compression no longer compatible with STDIN (reported by Indy Koning)
 
 7.5.0
