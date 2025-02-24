@@ -7,7 +7,7 @@ RECENT CHANGES
 - Major: Drop PHP 7 support
 - Add: #1553: New dev:di:preferences:list command (by Christian Münch)
 - Add: #1574: New Add mydumper feature to DumpCommand (by Peter Jaap Blaakmeer) 
-- Add: #1584: New dev:hyva:build-hyva command (by Torben Höhn)
+- Add: #1584: New dev:theme:build-hyva command (by Torben Höhn)
 - Imp: #1577: Support Mage-OS 1.0.6 (by Christian Münch) (reported by Fabrizio Balliano)
 - Imp: Updated ddev setup to PHP 8.3 and used newer box.phar for phar build (by Christian Münch)
 - Imp: Add rollback logic to self-update command (by Christian Münch)
