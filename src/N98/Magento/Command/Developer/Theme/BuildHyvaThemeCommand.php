@@ -126,8 +126,6 @@ class BuildHyvaThemeCommand extends AbstractMagentoCommand
             throw new InvalidArgumentException('Theme path is required. Add theme as first argument.');
         }
 
-        var_dump($themePath);
-
         // prefix the theme path with (=frontend|adminhtml) to get the full path then we prepend "frontend/"
         if (!str_starts_with($themePath, 'frontend/') && !str_starts_with($themePath, 'adminhtml/')) {
             $themePath = 'frontend/' . $themePath;
