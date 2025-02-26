@@ -7,19 +7,17 @@ from command line.
 
 > The swiss army knife for Magento developers, sysadmins and devops
 
-[![Gitter](https://badges.gitter.im/netz98/magerun.svg)](https://gitter.im/netz98/magerun)
-
 ## Build Status
 
-| **Latest Release**     | ![Tests](https://github.com/netz98/n98-magerun2/actions/workflows/magento_platform_tests.yml/badge.svg?branch=master) ![https://packagist.org/packages/n98/magerun2](https://poser.pugx.org/n98/magerun2/v/stable.png) ![Maintenance Badge](https://img.shields.io/maintenance/yes/2024.svg) |
-|------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **Development Branch** | ![Tests](https://github.com/netz98/n98-magerun2/actions/workflows/magento_platform_tests.yml/badge.svg?branch=develop)                                                                                                                                                                       |
+| **Latest Release**     | ![Tests](https://github.com/netz98/n98-magerun2/actions/workflows/magento_platform_tests.yml/badge.svg?branch=master) ![Maintenance Badge](https://img.shields.io/maintenance/yes/2025.svg) |
+|------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **Development Branch** | ![Tests](https://github.com/netz98/n98-magerun2/actions/workflows/magento_platform_tests.yml/badge.svg?branch=develop)                                                                                                                                                                      |
 
 Development is done in **develop** branch.
 
 This software is only running with Magento 2.
 
-If you use Magento 1 please use another stable version
+If you use Magento 1 (EOL) or OpenMage please use another software in a different repository
 (<https://github.com/netz98/n98-magerun>).
 
 ## Compatibility
@@ -31,7 +29,11 @@ or `install` are excluded).
 
 We support the following Magento Versions:
 
-- 2.4.x Open Source/Commerce
+- Mage-OS 1.0.x
+- 2.4.7 Open Source/Commerce
+- 2.4.6 Open Source/Commerce
+- 2.4.5 Open Source/Commerce
+- 2.4.4 Open Source/Commerce (last compatible n98-magerun2 version is v7.5.0)
 - 2.3.x Open Source/Commerce (last compatible n98-magerun2 version is v5.2.0)
 - 2.2.x Open Source/Commerce (last compatible n98-magerun2 version is v3.2.0)
 
@@ -40,7 +42,7 @@ We support the following PHP Versions:
 - PHP 8.3
 - PHP 8.2
 - PHP 8.1
-- PHP 7.4
+- PHP 7.4 (last compatible version is v7.5.0)
 - PHP 7.3 (last compatible version is v6.1.1)
 - PHP 7.2 (last compatible version is v4.7.0)
 
