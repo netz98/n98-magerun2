@@ -974,8 +974,16 @@ n98-magerun2.phar dev:theme:list
 ### Build Hyva Theme CSS
 
 ```sh
-n98-magerun2.phar dev:theme:build-hyva --theme="Hyva/default"
+n98-magerun2.phar dev:theme:build-hyva [--production] <theme-name>
 ```
+
+Example: `n98-magerun2.phar dev:theme:build-hyva "Hyva/default"`
+
+The command starts in watch mode by default, as it is primarily designed for developers.
+
+If no theme is specified, an interactive mode allows you to select a theme from a list.
+
+If the `--production` flag is set, the command does not run in watch mode and will stop after the theme is built.
 
 ---
 
@@ -1029,7 +1037,7 @@ n98-magerun2.phar dev:translate:export [--store=<storecode>] <locale> <filename>
 
 ---
 
-### DI
+### DI (Dependency Injection)
 
 List Preferences:
 
