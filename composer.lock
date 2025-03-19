@@ -2502,16 +2502,16 @@
         },
         {
             "name": "captainhook/captainhook",
-            "version": "5.25.0",
+            "version": "5.25.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/captainhookphp/captainhook.git",
-                "reference": "4c5bd310bf08f4d96f9bd4f680f894233f9836fc"
+                "reference": "e2a35b23daf9ed317b5faca1c667cb048b30cd60"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/captainhookphp/captainhook/zipball/4c5bd310bf08f4d96f9bd4f680f894233f9836fc",
-                "reference": "4c5bd310bf08f4d96f9bd4f680f894233f9836fc",
+                "url": "https://api.github.com/repos/captainhookphp/captainhook/zipball/e2a35b23daf9ed317b5faca1c667cb048b30cd60",
+                "reference": "e2a35b23daf9ed317b5faca1c667cb048b30cd60",
                 "shasum": ""
             },
             "require": {
@@ -2574,7 +2574,7 @@
             ],
             "support": {
                 "issues": "https://github.com/captainhookphp/captainhook/issues",
-                "source": "https://github.com/captainhookphp/captainhook/tree/5.25.0"
+                "source": "https://github.com/captainhookphp/captainhook/tree/5.25.1"
             },
             "funding": [
                 {
@@ -2582,7 +2582,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-02-11T20:42:11+00:00"
+            "time": "2025-03-19T16:42:49+00:00"
         },
         {
             "name": "captainhook/secrets",
