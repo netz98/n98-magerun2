@@ -294,7 +294,7 @@ class MagentoHelper extends AbstractHelper implements DetectionResultInterface
 
             $hasMageFile = false;
             foreach ($files as $file) {
-                if ($file->getFilename() == 'Mage.php') {
+                if ($file->getFilename() === 'Mage.php') {
                     $hasMageFile = true;
                     $this->writeDebug('Mage.php found');
                 }
