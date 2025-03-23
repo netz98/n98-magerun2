@@ -9,7 +9,6 @@ declare(strict_types=1);
 
 namespace N98\Magento\Command\Magerun;
 
-use N98\Magento\Application\Config;
 use N98\Magento\Application\ConfigInfo;
 use N98\Magento\Command\AbstractMagentoCommand;
 use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
