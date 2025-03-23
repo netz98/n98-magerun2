@@ -663,6 +663,18 @@ class Application extends BaseApplication
     }
 
     /**
+     * @return ConfigurationLoader
+     */
+    public function getConfigurationLoader(): ConfigurationLoader
+    {
+        if ($this->configurationLoaderInjected) {
+            return $this->configurationLoaderInjected;
+        }
+
+        return $this->config->getLoader();
+    }
+
+    /**
      * @return ObjectManagerInterface
      */
     public function getObjectManager()
