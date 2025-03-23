@@ -50,7 +50,6 @@ class ConfigInfoCommand extends AbstractMagentoCommand
             ->setHeaders(['type', 'path', 'note'])
             ->renderByFormat($output, $table, $input->getOption('format'));
 
-
         return Command::SUCCESS;
     }
 
