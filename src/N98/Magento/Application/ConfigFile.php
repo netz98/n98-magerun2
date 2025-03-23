@@ -105,4 +105,9 @@ final class ConfigFile
 
         return ArrayFunctions::mergeArrays($array, $result);
     }
+
+    public function getPath(): string
+    {
+        return $this->path;
+    }
 }
