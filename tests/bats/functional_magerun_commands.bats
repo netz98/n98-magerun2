@@ -408,14 +408,15 @@ function cleanup_files_in_magento() {
   run $BIN "github:pr" --diff 21787
   assert_output --partial "setXForwardedFor"
 
-  run $BIN "github:pr" --mage-os 1
-  assert_output --partial "automatically"
+  # 2025-03-23 PRs are gone in Github -> issue at Github
+  #run $BIN "github:pr" --mage-os 1
+  #assert_output --partial "automatically"
 
-  run $BIN "github:pr" --mage-os --patch 1
-  assert_output --partial "PR-1-mage-os-mageos-magento2.patch"
+  #run $BIN "github:pr" --mage-os --patch 1
+  #assert_output --partial "PR-1-mage-os-mageos-magento2.patch"
 
-  run $BIN "github:pr" --mage-os --diff 1
-  assert_output --partial "server_url"
+  #run $BIN "github:pr" --mage-os --diff 1
+  #assert_output --partial "server_url"
 }
 
 @test "Command: generation:flush" {
