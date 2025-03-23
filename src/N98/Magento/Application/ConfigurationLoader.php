@@ -73,6 +73,11 @@ class ConfigurationLoader
     protected $projectConfig = [];
 
     /**
+     * @var array
+     */
+    protected $loadedConfigFileInfo = [];
+
+    /**
      * @var string
      */
     protected $customConfigFilename = 'n98-magerun2.yaml';
@@ -160,6 +165,7 @@ class ConfigurationLoader
         if (empty($this->distConfig)) {
             $distConfigFilePath = __DIR__ . '/../../../../config.yaml';
             $this->distConfig = ConfigFile::createFromFile($distConfigFilePath)->toArray();
+            $this->loadedConfigFileInfo[] = new ConfigInfo(ConfigInfo::TYPE_DIST, $distConfigFilePath);
         }
         $this->logDebug('Load dist config');
 
@@ -185,6 +191,7 @@ class ConfigurationLoader
             if ($systemWideConfigFile && file_exists($systemWideConfigFile)) {
                 $this->logDebug('Load system config <comment>' . $systemWideConfigFile . '</comment>');
                 $this->systemConfig = (array) Yaml::parse(\file_get_contents($systemWideConfigFile));
+                $this->loadedConfigFileInfo[] = new ConfigInfo(ConfigInfo::TYPE_SYSTEM, $systemWideConfigFile);
             } else {
                 $this->systemConfig = [];
             }
@@ -297,6 +304,7 @@ class ConfigurationLoader
             $locator = new ConfigLocator($this->customConfigFilename, $magentoRootFolder);
             if ($userConfigFile = $locator->getUserConfigFile()) {
                 $this->userConfig = $userConfigFile->toArray();
+                $this->loadedConfigFileInfo[] = new ConfigInfo(ConfigInfo::TYPE_USER, $userConfigFile->getPath());
             }
         }
 
@@ -326,10 +334,18 @@ class ConfigurationLoader
 
         if ($projectConfigFile = $locator->getProjectConfigFile()) {
             $this->projectConfig = $projectConfigFile->toArray();
+            $this->loadedConfigFileInfo[] = new ConfigInfo(
+                ConfigInfo::TYPE_PROJECT,
+                $projectConfigFile->getPath()
+            );
         }
 
         if ($stopFileConfigFile = $locator->getStopFileConfigFile($magerunStopFileFolder)) {
             $this->projectConfig = $stopFileConfigFile->mergeArray($this->projectConfig);
+            $this->loadedConfigFileInfo[] = new ConfigInfo(
+                ConfigInfo::TYPE_PROJECT,
+                $stopFileConfigFile->getPath()
+            );
         }
 
         return ArrayFunctions::mergeArrays($config, $this->projectConfig);
@@ -363,6 +379,7 @@ class ConfigurationLoader
         $localPluginConfigFile = ConfigFile::createFromFile($path);
         $localPluginConfigFile->applyVariables($magentoRootFolder, $file);
         $this->pluginConfig = $localPluginConfigFile->mergeArray($this->pluginConfig);
+        $this->loadedConfigFileInfo[] = new ConfigInfo(ConfigInfo::TYPE_PLUGIN, $file);
     }
 
     /**
@@ -391,6 +408,29 @@ class ConfigurationLoader
     public function getConfigurationLoaderDir()
     {
         return __DIR__;
+    }
+
+    public function getDistConfig(): array
+    {
+        return $this->distConfig;
+    }
+
+    public function getPluginConfig(): array
+    {
+        return $this->pluginConfig;
+    }
+
+    public function getProjectConfig(): array
+    {
+        return $this->projectConfig;
+    }
+
+    /**
+     * @return ConfigInfo[]
+     */
+    public function getLoadedConfigFiles(): array
+    {
+        return $this->loadedConfigFileInfo ?? [];
     }
 
     /**
