@@ -474,6 +474,18 @@ function cleanup_files_in_magento() {
   assert_output --partial "Successfully deleted integration"
 }
 
+@test "Command: magerun:config:dump" {
+  run $BIN "magerun:config:dump" --only-dist
+  assert_output --partial "commands:"
+  assert_output --partial "check-root-user:"
+}
+
+@test "Command: magerun:config:info" {
+  run $BIN "magerun:config:info"
+  assert_output --partial "type"
+  assert_output --partial "dist"
+}
+
 @test "Command: media:dump" {
   run $BIN "media:dump"
   assert_output --partial "Compress"
