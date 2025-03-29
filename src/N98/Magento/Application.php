@@ -16,6 +16,7 @@ use N98\Magento\Application\Magento1Initializer;
 use N98\Magento\Application\Magento2Initializer;
 use N98\Magento\Application\MagentoCoreCommandProvider;
 use N98\Magento\Application\MagentoDetector;
+use N98\Magento\Command\CommandAware;
 use N98\Magento\Command\DummyCommand;
 use N98\Magento\Command\MagentoCoreProxyCommandFactory;
 use N98\Util\Console\Helper\TwigHelper;
@@ -176,7 +177,7 @@ class Application extends BaseApplication
     /**
      * @return string
      */
-    public function getHelp()
+    public function getHelp(): string
     {
         return self::$logo . parent::getHelp();
     }
@@ -332,7 +333,7 @@ class Application extends BaseApplication
      * @return int
      * @throws Exception
      */
-    public function run(InputInterface $input = null, OutputInterface $output = null)
+    public function run(InputInterface $input = null, OutputInterface $output = null): int
     {
         if (null === $input) {
             $input = new ArgvInput();
