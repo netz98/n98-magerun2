@@ -46,7 +46,7 @@ abstract class AbstractDatabaseCommand extends AbstractMagentoCommand
      * @param InputInterface $input
      * @param OutputInterface $output
      */
-    protected function initialize(InputInterface $input, OutputInterface $output)
+    protected function initialize(InputInterface $input, OutputInterface $output): void
     {
         parent::initialize($input, $output);
         $dbHelper = $this->getDatabaseHelper();

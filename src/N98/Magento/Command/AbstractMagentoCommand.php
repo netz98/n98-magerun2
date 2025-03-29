@@ -12,6 +12,7 @@ use N98\Util\Console\Helper\InjectionHelper;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\RuntimeException;
 use Symfony\Component\Console\Helper\FormatterHelper;
+use Symfony\Component\Console\Helper\HelperSet;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -71,9 +72,10 @@ abstract class AbstractMagentoCommand extends Command
      * where some things need to be initialized based on the input arguments and options.
      *
      * @param InputInterface $input An InputInterface instance
+     * @param InputInterface $input An InputInterface instance
      * @param OutputInterface $output An OutputInterface instance
      */
-    protected function initialize(InputInterface $input, OutputInterface $output)
+    protected function initialize(InputInterface $input, OutputInterface $output): void
     {
         $this->checkDeprecatedAliases($input, $output);
     }
@@ -81,7 +83,7 @@ abstract class AbstractMagentoCommand extends Command
     /**
      * @return ObjectManagerInterface
      */
-    protected function getObjectManager()
+    protected function getObjectManager(): ObjectManagerInterface
     {
         return $this->getApplication()->getObjectManager();
     }
@@ -90,7 +92,7 @@ abstract class AbstractMagentoCommand extends Command
      * @param string|null $commandClass
      * @return array
      */
-    protected function getCommandConfig($commandClass = null)
+    protected function getCommandConfig($commandClass = null): array
     {
         if ($commandClass === null) {
             $commandClass = get_class($this);
@@ -108,7 +110,7 @@ abstract class AbstractMagentoCommand extends Command
      * @param string $text
      * @param string $style
      */
-    protected function writeSection(OutputInterface $output, $text, $style = 'bg=blue;fg=white')
+    protected function writeSection(OutputInterface $output, $text, $style = 'bg=blue;fg=white'): void
     {
         /** @var $formatter FormatterHelper */
         $formatter = $this->getHelper('formatter');
@@ -126,7 +128,7 @@ abstract class AbstractMagentoCommand extends Command
      * @return bool
      * @throws \Exception
      */
-    protected function initMagento()
+    protected function initMagento(): bool
     {
         $init = $this->getApplication()->initMagento();
         if ($init) {
@@ -144,7 +146,7 @@ abstract class AbstractMagentoCommand extends Command
      * @throws \RuntimeException
      * @throws \Exception
      */
-    public function detectMagento(OutputInterface $output, $silent = true)
+    public function detectMagento(OutputInterface $output, $silent = true): bool
     {
         $this->getApplication()->detectMagento();
 
@@ -171,7 +173,7 @@ abstract class AbstractMagentoCommand extends Command
      *
      * @return bool
      */
-    public function isSourceTypeRepository($type)
+    public function isSourceTypeRepository($type): bool
     {
         return in_array($type, ['git', 'hg']);
     }
@@ -181,7 +183,7 @@ abstract class AbstractMagentoCommand extends Command
      * @param string $message
      * @return AbstractMagentoCommand
      */
-    protected function addDeprecatedAlias($alias, $message)
+    protected function addDeprecatedAlias($alias, $message): static
     {
         $this->_deprecatedAlias[$alias] = $message;
 
@@ -192,7 +194,7 @@ abstract class AbstractMagentoCommand extends Command
      * @param InputInterface $input
      * @param OutputInterface $output
      */
-    protected function checkDeprecatedAliases(InputInterface $input, OutputInterface $output)
+    protected function checkDeprecatedAliases(InputInterface $input, OutputInterface $output): void
     {
         if (isset($this->_deprecatedAlias[$input->getArgument('command')])) {
             $output->writeln(
@@ -206,7 +208,7 @@ abstract class AbstractMagentoCommand extends Command
      * @param string $value
      * @return bool
      */
-    protected function _parseBoolOption($value)
+    protected function _parseBoolOption($value): bool
     {
         return in_array(strtolower($value), ['y', 'yes', 1, 'true']);
     }
@@ -215,7 +217,7 @@ abstract class AbstractMagentoCommand extends Command
      * @param string $value
      * @return bool
      */
-    public function parseBoolOption($value)
+    public function parseBoolOption($value): bool
     {
         return $this->_parseBoolOption($value);
     }
@@ -224,7 +226,7 @@ abstract class AbstractMagentoCommand extends Command
      * @param string $value
      * @return string
      */
-    public function formatActive($value)
+    public function formatActive($value): string
     {
         if (in_array($value, [1, 'true'])) {
             return 'active';
@@ -240,7 +242,7 @@ abstract class AbstractMagentoCommand extends Command
      * @return int
      * @throws \Exception
      */
-    public function run(InputInterface $input, OutputInterface $output)
+    public function run(InputInterface $input, OutputInterface $output): int
     {
         $this->getHelperSet()->setCommand($this);
 
@@ -254,7 +256,7 @@ abstract class AbstractMagentoCommand extends Command
      * @throws \ReflectionException
      * @throws \Exception
      */
-    public function injectObjects(OutputInterface $output)
+    public function injectObjects(OutputInterface $output): void
     {
         /* @var $injectionHelper InjectionHelper */
         if (method_exists($this, 'inject')) {
@@ -282,7 +284,8 @@ abstract class AbstractMagentoCommand extends Command
         InputInterface $input,
         OutputInterface $output,
         $baseNamespace = ''
-    ) {
+    ): SubCommandFactory
+    {
         $configBag = new ConfigBag();
 
         $commandConfig = $this->getCommandConfig();
@@ -308,7 +311,8 @@ abstract class AbstractMagentoCommand extends Command
     public function runsInProductionMode(
         InputInterface $input,
         OutputInterface $output
-    ) {
+    ): bool
+    {
         $mode = $this->getObjectManager()->create(
             Mode::class,
             [

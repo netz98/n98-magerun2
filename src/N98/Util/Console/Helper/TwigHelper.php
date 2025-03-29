@@ -3,8 +3,10 @@
 namespace N98\Util\Console\Helper;
 
 use Exception;
+use N98\Magento\Command\CommandAware;
 use N98\Util\Template\Twig;
 use RuntimeException;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Helper;
 
 /**

@@ -16,7 +16,7 @@
         "use-include-path": false,
         "preferred-install": "dist",
         "platform": {
-            "php": "8.0.0"
+            "php": "8.1.0"
         },
         "sort-packages": true,
         "allow-plugins": {
@@ -41,12 +41,12 @@
         "psr/log": "^2.0",
         "psy/psysh": "~0.7",
         "rmccue/requests": "^2.0",
-        "symfony/console": "^5.4",
-        "symfony/event-dispatcher": "^5.4",
-        "symfony/finder": "^5.4",
-        "symfony/process": "^5.4",
-        "symfony/validator": "^5.4",
-        "symfony/yaml": "^5.4",
+        "symfony/console": "^6.4",
+        "symfony/event-dispatcher": "^6.4",
+        "symfony/finder": "^6.4",
+        "symfony/process": "^6.4",
+        "symfony/validator": "^6.4",
+        "symfony/yaml": "^6.4",
         "twig/twig": "~3.4"
     },
     "require-dev": {

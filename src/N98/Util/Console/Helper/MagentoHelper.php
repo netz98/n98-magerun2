@@ -7,6 +7,7 @@ use CallbackFilterIterator;
 use Magento\Framework\App\Filesystem\DirectoryList;
 use N98\Magento\Application;
 use N98\Magento\Application\DetectionResultInterface;
+use N98\Magento\Command\CommandAware;
 use RuntimeException;
 use Symfony\Component\Console\Helper\Helper as AbstractHelper;
 use Symfony\Component\Console\Input\ArgvInput;
@@ -21,8 +22,10 @@ use UnexpectedValueException;
  *
  * @package N98\Util\Console\Helper
  */
-class MagentoHelper extends AbstractHelper implements DetectionResultInterface
+class MagentoHelper extends AbstractHelper implements DetectionResultInterface, CommandAware
 {
+    use CommandTrait;
+
     /**
      * @var string
      */
@@ -422,7 +425,7 @@ class MagentoHelper extends AbstractHelper implements DetectionResultInterface
      */
     private function getApplication()
     {
-        $command = $this->getHelperSet()->getCommand();
+        $command = $this->getCommand();
 
         $application = $command ? $command->getApplication() : new Application();
 

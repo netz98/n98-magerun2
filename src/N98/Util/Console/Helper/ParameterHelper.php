@@ -4,6 +4,7 @@ namespace N98\Util\Console\Helper;
 
 use Exception;
 use InvalidArgumentException;
+use N98\Magento\Command\CommandAware;
 use N98\Util\Validator\FakeMetadataFactory;
 use RuntimeException;
 use Symfony\Component\Console\Helper\Helper as AbstractHelper;
@@ -20,8 +21,10 @@ use Symfony\Component\Validator\ConstraintValidatorFactory;
  *
  * @package N98\Util\Console\Helper
  */
-class ParameterHelper extends AbstractHelper
+class ParameterHelper extends AbstractHelper implements CommandAware
 {
+    use CommandTrait;
+
     /**
      * @var \Symfony\Component\Validator\Validator\ValidatorInterface
      */
@@ -57,8 +60,7 @@ class ParameterHelper extends AbstractHelper
         $withDefaultStore = false
     ) {
         /* @var $storeManager \Magento\Store\Model\StoreManagerInterface */
-        $storeManager = $this->getHelperSet()
-            ->getCommand()
+        $storeManager = $this->getCommand()
             ->getApplication()
             ->getObjectManager()
             ->get('Magento\Store\Model\StoreManagerInterface');
