@@ -6,6 +6,7 @@ use Magento\Deploy\Model\Mode;
 use Magento\Framework\App\State;
 use Magento\Framework\ObjectManager\ObjectManager;
 use Magento\Framework\ObjectManagerInterface;
+use N98\Magento\Application;
 use N98\Magento\Command\SubCommand\ConfigBag;
 use N98\Magento\Command\SubCommand\SubCommandFactory;
 use N98\Util\Console\Helper\InjectionHelper;
@@ -21,7 +22,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  *
  * @package N98\Magento\Command
  *
- * @method \N98\Magento\Application getApplication() getApplication()
+ * @method Application getApplication() getApplication()
  */
 abstract class AbstractMagentoCommand extends Command
 {
@@ -244,8 +245,7 @@ abstract class AbstractMagentoCommand extends Command
      */
     public function run(InputInterface $input, OutputInterface $output): int
     {
-        $this->getHelperSet()->setCommand($this);
-
+        $this->injectCommandToHelpers();
         $this->injectObjects($output);
 
         return parent::run($input, $output);
@@ -322,5 +322,17 @@ abstract class AbstractMagentoCommand extends Command
         );
 
         return $mode->getMode() === State::MODE_PRODUCTION;
+    }
+
+    /**
+     * @return void
+     */
+    protected function injectCommandToHelpers(): void
+    {
+        foreach ($this->getHelperSet() as $helper) {
+            if ($helper instanceof CommandAware) {
+                $helper->setCommand($this);
+            }
+        }
     }
 }
