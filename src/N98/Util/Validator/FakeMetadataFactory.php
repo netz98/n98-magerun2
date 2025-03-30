@@ -25,7 +25,7 @@ class FakeMetadataFactory implements MetadataFactoryInterface
      *
      * @return bool Whether metadata can be returned for that value
      */
-    public function getMetadataFor(mixed $value)
+    public function getMetadataFor(mixed $value): MetadataInterface
     {
         if (is_object($value)) {
             $value = get_class($value);
