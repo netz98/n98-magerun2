@@ -13,7 +13,6 @@ use N98\Util\Console\Helper\InjectionHelper;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\RuntimeException;
 use Symfony\Component\Console\Helper\FormatterHelper;
-use Symfony\Component\Console\Helper\HelperSet;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -284,8 +283,7 @@ abstract class AbstractMagentoCommand extends Command
         InputInterface $input,
         OutputInterface $output,
         $baseNamespace = ''
-    ): SubCommandFactory
-    {
+    ): SubCommandFactory {
         $configBag = new ConfigBag();
 
         $commandConfig = $this->getCommandConfig();
@@ -311,8 +309,7 @@ abstract class AbstractMagentoCommand extends Command
     public function runsInProductionMode(
         InputInterface $input,
         OutputInterface $output
-    ): bool
-    {
+    ): bool {
         $mode = $this->getObjectManager()->create(
             Mode::class,
             [

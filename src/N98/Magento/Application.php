@@ -16,7 +16,6 @@ use N98\Magento\Application\Magento1Initializer;
 use N98\Magento\Application\Magento2Initializer;
 use N98\Magento\Application\MagentoCoreCommandProvider;
 use N98\Magento\Application\MagentoDetector;
-use N98\Magento\Command\CommandAware;
 use N98\Magento\Command\DummyCommand;
 use N98\Magento\Command\MagentoCoreProxyCommandFactory;
 use N98\Util\Console\Helper\TwigHelper;
