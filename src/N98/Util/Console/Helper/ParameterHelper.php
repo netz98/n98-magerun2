@@ -15,6 +15,7 @@ use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Validator\Constraints;
 use Symfony\Component\Validator\ConstraintValidatorFactory;
+use Symfony\Component\Validator\Validation;
 
 /**
  * Helper to init some parameters
@@ -125,8 +126,7 @@ class ParameterHelper extends AbstractHelper implements CommandAware
     public function askWebsite(InputInterface $input, OutputInterface $output, $argumentName = 'website')
     {
         /* @var $storeManager \Magento\Store\Model\StoreManagerInterface */
-        $storeManager = $this->getHelperSet()
-            ->getCommand()
+        $storeManager = $this->getCommand()
             ->getApplication()
             ->getObjectManager()
             ->get('Magento\Store\Model\StoreManagerInterface');
@@ -272,7 +272,7 @@ class ParameterHelper extends AbstractHelper implements CommandAware
     protected function initValidator()
     {
         if (null === $this->validator) {
-            $this->validator = \Symfony\Component\Validator\Validation::createValidatorBuilder()
+            $this->validator = Validation::createValidatorBuilder()
                 ->setConstraintValidatorFactory(new ConstraintValidatorFactory())
                 ->setMetadataFactory(new FakeMetadataFactory())
                 ->getValidator();
