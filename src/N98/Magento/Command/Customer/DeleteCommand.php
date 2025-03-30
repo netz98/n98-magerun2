@@ -5,6 +5,7 @@ namespace N98\Magento\Command\Customer;
 use Exception;
 use Magento\Customer\Api\CustomerRepositoryInterface;
 use Magento\Customer\Api\Data\CustomerInterface as Customer;
+use Magento\Customer\Model\ResourceModel\Customer\Collection;
 use Magento\Framework\Registry;
 use N98\Util\Console\Helper\ParameterHelper;
 use RuntimeException;
@@ -172,7 +173,7 @@ class DeleteCommand extends AbstractCustomerCommand
                 $filterPostfix = '%';
             }
 
-            if (strlen($website) > 0) {
+            if ($website !== null && strlen($website) > 0) {
                 $parameterHelper = $this->getHelper('parameter');
                 $website = $parameterHelper->askWebsite($input, $output);
                 $filterAttributes[] = ['attribute' => 'website_id', $filterType => $website->getId()];
@@ -298,7 +299,7 @@ class DeleteCommand extends AbstractCustomerCommand
      * @throws \Magento\Framework\Exception\LocalizedException
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    protected function batchDelete(\Magento\Customer\Model\ResourceModel\Customer\Collection $customerCollection): int
+    protected function batchDelete(Collection $customerCollection): int
     {
         $count = 0;
         $this->registry->unregister('isSecureArea');
