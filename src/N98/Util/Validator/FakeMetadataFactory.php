@@ -5,6 +5,7 @@ namespace N98\Util\Validator;
 use Symfony\Component\Validator\Exception\NoSuchMetadataException;
 use Symfony\Component\Validator\Mapping\ClassMetadata;
 use Symfony\Component\Validator\Mapping\Factory\MetadataFactoryInterface;
+use Symfony\Component\Validator\Mapping\MetadataInterface;
 
 /**
  * Class FakeMetadataFactory
@@ -24,7 +25,7 @@ class FakeMetadataFactory implements MetadataFactoryInterface
      *
      * @return bool Whether metadata can be returned for that value
      */
-    public function getMetadataFor($value): bool
+    public function getMetadataFor(mixed $value): bool
     {
         if (is_object($value)) {
             $value = get_class($value);
