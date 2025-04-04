@@ -96,6 +96,9 @@ class BuildHyvaThemeCommand extends AbstractMagentoCommand
                 return true;
             });
 
+            // start index with 0
+            $themePaths = array_values($themePaths);
+
             if (empty($themePaths)) {
                 return;
             }
