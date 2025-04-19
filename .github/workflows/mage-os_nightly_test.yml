@@ -28,28 +28,22 @@ jobs:
           --health-timeout=5s
           --health-retries=10
 
-      mariadb:
-        image: mariadb:11.4
-        ports:
-          - 3306
-        env:
-          MYSQL_DATABASE: magento
-          MYSQL_ROOT_PASSWORD: root
-        options: --health-cmd="mysqladmin ping" --health-interval=5s --health-timeout=2s --health-retries=3
-
     steps:
       - name: Checkout develop branch
         uses: actions/checkout@v4.2.2
         with:
           ref: develop
 
-      - name: Verify MariaDB connection
-        env:
-          PORT: ${{ job.services.mariadb.ports[3306] }}
-        run: |
-          while ! mysqladmin ping -h"127.0.0.1" -P"$PORT" --silent; do
-            sleep 1
-          done          
+      - uses: shogo82148/actions-setup-mysql@v1
+        with:
+          mysql-version: "mariadb-11.4"
+          root-password: "root"
+
+      - name: Check MariaDB version
+        run: "mysql -uroot -proot -e 'SELECT version();'"
+
+      - name: Create Mageneto database
+        run: "mysql -uroot -proot -e 'CREATE DATABASE magento;'"
 
       - name: Linux Setup
         run: ./.github/workflows/linux-setup.sh
