@@ -15,13 +15,13 @@ jobs:
       opensearch:
         image: opensearchproject/opensearch:2.19.1
         ports:
-          - 9200:9200
-          - 9600:9600
+          - 9200
+          - 9600
         options: >-
           --env discovery.type=single-node
           --env plugins.security.disabled=true
           --env bootstrap.memory_lock=true
-          --env OPENSEARCH_JAVA_OPTS=-Xms512m -Xmx512m
+          --env OPENSEARCH_JAVA_OPTS="-Xms512m -Xmx512m"
           --env OPENSEARCH_INITIAL_ADMIN_PASSWORD=admin123Secure!
           --health-cmd="curl -fsSL http://localhost:9200 || exit 1"
           --health-interval=10s
