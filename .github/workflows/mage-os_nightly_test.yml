@@ -1,5 +1,6 @@
 ---
-name: Mage-OS Nightly Compatibilty Test
+name: Mage-OS Nightly Compatibility Test
+
 on:
   schedule:
     - cron: '0 6 * * *' # run at 6 AM UTC
@@ -11,23 +12,36 @@ jobs:
     runs-on: ubuntu-22.04
 
     services:
-      elaticsearch:
-        image: docker.elastic.co/elasticsearch/elasticsearch:7.9.0
-        # we bind the port to the host because the n98-magerun2 install command does not support to pass
-        # ES variables. So we cannot pass the random port via GitHub Action template variable.
+      opensearch:
+        image: opensearchproject/opensearch:2.19.1
         ports:
           - 9200:9200
-          - 9300:9300
-        options: -e="discovery.type=single-node" --health-cmd="curl http://localhost:9200/_cluster/health" --health-interval=10s --health-timeout=5s --health-retries=10
-
-      mysql:
-        image: mysql:8.0
+          - 9600:9600
         env:
-          MYSQL_ROOT_PASSWORD: root
-          MYSQL_DATABASE: magento
+          discovery.type: single-node
+          plugins.security.disabled: "true"
+          bootstrap.memory_lock: "true"
+          OPENSEARCH_JAVA_OPTS: "-Xms512m -Xmx512m"
+        options: >-
+          --health-cmd="curl -fsSL http://localhost:9200 || exit 1"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
+
+      mariadb:
+        image: mariadb:11.4
+        env:
+          MARIADB_ROOT_PASSWORD: root
+          MARIADB_DATABASE: magento
         ports:
           - 3306
-        options: --tmpfs /tmp:rw --tmpfs /var/lib/mysql:rw --health-cmd="mysqladmin ping"
+        options: >-
+          --tmpfs /tmp:rw
+          --tmpfs /var/lib/mysql:rw
+          --health-cmd="mysqladmin ping -h 127.0.0.1 --silent"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
 
     steps:
       - name: Checkout develop branch
@@ -43,29 +57,24 @@ jobs:
         env:
           GITHUB_CONTEXT: ${{ toJSON(github) }}
 
-      # https://github.com/marketplace/actions/setup-php-action#matrix-setup
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          tools: composer:2.5
-          php-version: '8.2'
+          tools: composer:2.8.8
+          php-version: '8.3'
           extensions: mbstring, intl, zip
           coverage: none
 
       - name: Install Mage-OS Nightly
         run: |
-          # Define variables
-          DB_PORT="${{ job.services.mysql.ports['3306'] }}"
-          ES_PORT="${{ job.services.elasticsearch.ports['9200'] }}"
+          DB_PORT="${{ job.services.mariadb.ports['3306'] }}"
+          OS_PORT="${{ job.services.opensearch.ports['9200'] }}"
           DB_HOST="127.0.0.1:${DB_PORT}"
-          
-          # Create project
+
           composer create-project --stability alpha --repository-url=https://repo.mage-os.org mage-os/project-community-edition mage-os
 
-          # Change directory
           cd mage-os
 
-          # Magento setup
           bin/magento setup:install \
             --db-host="$DB_HOST" \
             --db-user=root \
@@ -85,15 +94,17 @@ jobs:
             --admin-firstname=Armin \
             --admin-lastname=Admin \
             --admin-email="admin@example.com" \
-            --search-engine="elasticsearch7" \
-            --elasticsearch-host="127.0.0.1" \
-            --elasticsearch-port="$ES_PORT"
+            --search-engine="opensearch" \
+            --opensearch-host="127.0.0.1" \
+            --opensearch-port="$OS_PORT" \
+            --opensearch-index-prefix="magento2" \
+            --opensearch-timeout=15
 
       - name: Build phar file
         run: |
-          composer --version;
-          bash ./build.sh;
-          composer self-update --rollback &> /dev/null || true;
+          composer --version
+          bash ./build.sh
+          composer self-update --rollback &> /dev/null || true
 
       - name: Phar functional tests (Magerun)
         run: bats tests/bats/functional_magerun_commands.bats
