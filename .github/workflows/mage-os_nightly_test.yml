@@ -17,12 +17,12 @@ jobs:
         ports:
           - 9200:9200
           - 9600:9600
-        env:
-          discovery.type: single-node
-          plugins.security.disabled: "true"
-          bootstrap.memory_lock: "true"
-          OPENSEARCH_JAVA_OPTS: "-Xms512m -Xmx512m"
         options: >-
+          --env discovery.type=single-node
+          --env plugins.security.disabled=true
+          --env bootstrap.memory_lock=true
+          --env OPENSEARCH_JAVA_OPTS=-Xms512m -Xmx512m
+          --env OPENSEARCH_INITIAL_ADMIN_PASSWORD=admin123Secure!
           --health-cmd="curl -fsSL http://localhost:9200 || exit 1"
           --health-interval=10s
           --health-timeout=5s
@@ -30,18 +30,15 @@ jobs:
 
       mariadb:
         image: mariadb:11.4
-        env:
-          MARIADB_ROOT_PASSWORD: root
-          MARIADB_DATABASE: magento
         ports:
           - 3306
         options: >-
-          --tmpfs /tmp:rw
-          --tmpfs /var/lib/mysql:rw
-          --health-cmd="mysqladmin ping -h 127.0.0.1 --silent"
+          --env MARIADB_ROOT_PASSWORD=root
+          --env MARIADB_DATABASE=magento
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -uroot -proot"
           --health-interval=10s
           --health-timeout=5s
-          --health-retries=5
+          --health-retries=20
 
     steps:
       - name: Checkout develop branch
