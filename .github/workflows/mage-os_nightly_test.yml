@@ -40,10 +40,10 @@ jobs:
           root-password: "root"
 
       - name: Check MariaDB version
-        run: "mysql -uroot -proot -e 'SELECT version();'"
+        run: "mariadb -uroot -proot -e 'SELECT version();'"
 
       - name: Create Mageneto database
-        run: "mysql -uroot -proot -e 'CREATE DATABASE magento;'"
+        run: "mariadb -uroot -proot -e 'CREATE DATABASE magento;'"
 
       - name: Linux Setup
         run: ./.github/workflows/linux-setup.sh
