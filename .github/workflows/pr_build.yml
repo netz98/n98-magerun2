@@ -33,6 +33,12 @@ jobs:
       - run: "git describe --tags --always --dirty"
       - run: "(git log --oneline | head -5) || true"
 
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          tools: composer:2
+          php-version: '8.3'
+
       - name: Get Composer Cache Directory
         id: composer-cache
         run: echo "dir=\"$(composer config cache-files-dir)\"" >> "$GITHUB_OUTPUT"
