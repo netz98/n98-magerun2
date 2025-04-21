@@ -570,6 +570,16 @@ function cleanup_files_in_magento() {
 @test "Command: sys:store:config:base-url:list" {
   run $BIN "sys:store:config:base-url:list"
   assert_output --partial "unsecure_baseurl"
+
+  run $BIN "sys:store:config:base-url:list --with-admin-store"
+  assert_output --partial "admin"
+
+  run $BIN "sys:store:config:base-url:list --with-admin-admin-login-url"
+  assert_output --partial "admin"
+
+  # Check if validation works
+  run $BIN "sys:store:config:base-url:list --with-admin-store --with-admin-admin-login-url"
+  assert [ "$status" -eq 0 ]
 }
 
 @test "Command: sys:store:list" {
