@@ -1278,6 +1278,16 @@ n98-magerun2.phar github:pr:patch --mage-os <pr-number>
 n98-magerun2.phar github:pr:patch --patch <pr-number>
 ```
 
+*Directly apply the patch:*
+
+```sh
+# Magento 2 Open Source
+n98-magerun2.phar github:pr:patch --patch --apply <pr-number>
+
+# for Mage-OS
+n98-magerun2.phar github:pr:patch --mage-os --patch --apply <pr-number>
+```
+
 Files of the magento2-base and magento2-ee-base and b2b base packages are currently not handled by the command.
 
 **List only the raw diff:**
