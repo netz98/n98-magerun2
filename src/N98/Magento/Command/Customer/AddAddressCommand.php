@@ -63,8 +63,7 @@ class AddAddressCommand extends AbstractCustomerCommand
     public function inject(
         CustomerRepositoryInterface $customerRepository,
         State $state,
-    )
-    {
+    ) {
         $this->customerRepository = $customerRepository;
         $this->state = $state;
     }
