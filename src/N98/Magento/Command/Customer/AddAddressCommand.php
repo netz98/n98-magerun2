@@ -5,6 +5,8 @@ namespace N98\Magento\Command\Customer;
 use Exception;
 use Magento\Customer\Api\CustomerRepositoryInterface;
 use Magento\Customer\Api\Data\AddressInterfaceFactory;
+use Magento\Framework\App\Area;
+use Magento\Framework\App\State;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Symfony\Component\Console\Command\Command;
@@ -23,6 +25,11 @@ class AddAddressCommand extends AbstractCustomerCommand
 {
     /** @var CustomerRepositoryInterface */
     private CustomerRepositoryInterface $customerRepository;
+
+    /**
+     * @var \Magento\Framework\App\State
+     */
+    private State $state;
 
     /**
      * Method: configure
@@ -53,9 +60,13 @@ class AddAddressCommand extends AbstractCustomerCommand
      * @param CustomerRepositoryInterface $customerRepository
      * @return void
      */
-    public function inject(CustomerRepositoryInterface $customerRepository)
+    public function inject(
+        CustomerRepositoryInterface $customerRepository,
+        State $state,
+    )
     {
         $this->customerRepository = $customerRepository;
+        $this->state = $state;
     }
 
     /**
@@ -119,6 +130,33 @@ class AddAddressCommand extends AbstractCustomerCommand
             return Command::FAILURE;
         }
 
+        try {
+            $createAddress = function () use ($data, $customer, $output, $email) {
+                return $this->createAddress($data, $customer, $output, $email);
+            };
+
+            $this->state->setAreaCode(Area::AREA_FRONTEND);
+            $isError = $this->state->emulateAreaCode(Area::AREA_FRONTEND, $createAddress);
+        } catch (Exception $e) {
+            $output->writeln('<error>' . $e->getMessage() . '</error>');
+            return Command::FAILURE;
+        }
+
+        return $isError ? Command::FAILURE : Command::SUCCESS;
+    }
+
+    /**
+     * @param array $data
+     * @param $customer
+     * @param \Symfony\Component\Console\Output\OutputInterface $output
+     * @param mixed $email
+     * @param bool $isError
+     * @return bool
+     */
+    protected function createAddress(array $data, $customer, OutputInterface $output, mixed $email): bool
+    {
+        $isError = false;
+
         /** @var AddressInterfaceFactory $addressFactory */
         $addressFactory = $this->getObjectManager()->get(AddressInterfaceFactory::class);
         $address = $addressFactory->create();
@@ -144,6 +182,6 @@ class AddAddressCommand extends AbstractCustomerCommand
             $output->writeln('<error>Error adding address: ' . $e->getMessage() . '</error>');
         }
 
-        return $isError ? Command::FAILURE : Command::SUCCESS;
+        return $isError;
     }
 }
