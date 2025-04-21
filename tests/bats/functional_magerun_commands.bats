@@ -579,7 +579,7 @@ function cleanup_files_in_magento() {
 
   # Check if validation works
   run $BIN "sys:store:config:base-url:list --with-admin-store --with-admin-admin-login-url"
-  assert [ "$status" -eq 0 ]
+  assert [ "$status" -eq 1 ]
 }
 
 @test "Command: sys:store:list" {
