@@ -22,6 +22,6 @@ class LibProcessorTest extends TestCase
 
         $processor = new I18nProcessor();
 
-        $this->assertEquals($expectedResult, $processor->process($diffContent));
+        $this->assertEquals($expectedResult, $processor->process($diffContent, 'magento'));
     }
 }

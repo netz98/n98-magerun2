@@ -17,7 +17,7 @@ class AppDesignProcessorTest extends TestCase
 
         $this->assertSame(
             $expectedResult,
-            $processor->process($diffContent)
+            $processor->process($diffContent, 'magento'),
         );
     }
 }

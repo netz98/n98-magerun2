@@ -15,6 +15,6 @@ class AppCodeProcessorTest extends TestCase
 
         $processor = new AppCodeProcessor();
 
-        $this->assertEquals($expectedResult, $processor->process($diffContent));
+        $this->assertEquals($expectedResult, $processor->process($diffContent, 'magento'));
     }
 }
