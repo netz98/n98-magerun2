@@ -15,19 +15,19 @@ class Creator
      * @param string $diffContent
      * @return string
      */
-    public static function create(string $diffContent): string
+    public static function create(string $diffContent, string $replaceVendor): string
     {
         $appDesignProcessor = new AppDesignProcessor();
-        $diffContent = $appDesignProcessor->process($diffContent);
+        $diffContent = $appDesignProcessor->process($diffContent, $replaceVendor);
 
         $appCodeProcessor = new AppCodeProcessor();
-        $diffContent = $appCodeProcessor->process($diffContent);
+        $diffContent = $appCodeProcessor->process($diffContent, $replaceVendor);
 
         $i18nProcessor = new I18nProcessor();
-        $diffContent = $i18nProcessor->process($diffContent);
+        $diffContent = $i18nProcessor->process($diffContent, $replaceVendor);
 
         $libProcessor = new LibProcessor();
-        $diffContent = $libProcessor->process($diffContent);
+        $diffContent = $libProcessor->process($diffContent, $replaceVendor);
 
         return $diffContent;
     }

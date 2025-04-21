@@ -6,5 +6,5 @@ namespace N98\Magento\Command\Github\PatchFileContent\Processor;
 
 interface ProcessorInterface
 {
-    public function process(string $diffContent): string;
+    public function process(string $diffContent, string $replaceVendor): string;
 }
