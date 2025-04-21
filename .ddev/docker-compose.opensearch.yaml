@@ -1,0 +1,62 @@
+#ddev-generated
+services:
+  opensearch:
+    container_name: ddev-${DDEV_SITENAME}-opensearch
+    build:
+      dockerfile_inline: |
+        ARG OPENSEARCH_TAG="latest"
+        FROM opensearchproject/opensearch:$${OPENSEARCH_TAG}
+        ARG OPENSEARCH_PLUGINS="analysis-icu analysis-phonetic"
+        RUN for plugin in $${OPENSEARCH_PLUGINS}; do opensearch-plugin install $$plugin; done
+      args:
+        OPENSEARCH_TAG: ${OPENSEARCH_TAG:-latest}
+        OPENSEARCH_PLUGINS: ${OPENSEARCH_PLUGINS-analysis-icu analysis-phonetic}
+    expose:
+      - 9200
+    environment:
+      # see https://opensearch.org/docs/latest/install-and-configure/install-opensearch/docker/ for available options
+      # disables installation of demo data
+      - "DISABLE_INSTALL_DEMO_CONFIG=true"
+      # disables security plugin
+      - "DISABLE_SECURITY_PLUGIN=true"
+      - cluster.name=opensearch-cluster
+      - node.name=opensearch-node
+      - discovery.type=single-node
+      - bootstrap.memory_lock=true
+      - "OPENSEARCH_JAVA_OPTS=-Xms512m -Xmx512m"
+      - VIRTUAL_HOST=$DDEV_HOSTNAME
+      - HTTP_EXPOSE=9200:9200
+      - HTTPS_EXPOSE=9201:9200
+    labels:
+      com.ddev.site-name: ${DDEV_SITENAME}
+      com.ddev.approot: ${DDEV_APPROOT}
+    volumes:
+      - opensearch:/usr/share/opensearch/data
+      - ".:/mnt/ddev_config"
+      - "ddev-global-cache:/mnt/ddev-global-cache"
+    healthcheck:
+      test: ["CMD-SHELL", "curl --fail -s localhost:9200"]
+
+  opensearch-dashboards:
+    image: opensearchproject/opensearch-dashboards:${OPENSEARCH_DASHBOARDS_TAG:-latest}
+    container_name: 'ddev-${DDEV_SITENAME}-opensearch-dashboards'
+    environment:
+      - VIRTUAL_HOST=$DDEV_HOSTNAME
+      - OPENSEARCH_HOSTS=http://ddev-${DDEV_PROJECT}-opensearch:9200
+      - "DISABLE_SECURITY_DASHBOARDS_PLUGIN=true" # disables security plugin
+      - HTTP_EXPOSE=5601:5601
+      - HTTPS_EXPOSE=5602:5601
+    expose:
+      - 5601
+    labels:
+      com.ddev.site-name: ${DDEV_SITENAME}
+      com.ddev.approot: $DDEV_APPROOT
+    depends_on:
+      - opensearch
+
+  web:
+    depends_on:
+      - opensearch
+
+volumes:
+  opensearch:

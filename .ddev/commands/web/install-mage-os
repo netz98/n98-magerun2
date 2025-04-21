@@ -1,11 +1,11 @@
 #!/bin/bash
 
 ## Description: Install Mage-OS
-## Usage: install-mage-os <version> <use_elasticsearch yes|no>
+## Usage: install-mage-os <version> <use_opensearch yes|no>
 ## Example: "install-mage-os 1.0.0 yes"
 
 if [ $# -ne 2 ]; then
-	echo "usage: ddev install-mage-os <version> <use_elasticsearch yes|no>"
+	echo "usage: ddev install-mage-os <version> <use_opensearch yes|no>"
 	exit 1
 fi
 
@@ -25,7 +25,7 @@ MAGEOS_VERSION=$1
 MAGEOS_DB_NAME="mageos_${MAGEOS_VERSION//[-.]/_}"
 MAGENTO_ROOT_DIR="/opt/magento-test-environments/mageos_${MAGEOS_VERSION//[-.]/_}"
 MAGEOS_SUBDOMAIN="${MAGEOS_VERSION//[-_.]/-}"
-USE_ELASTICSEARCH=$2
+USE_OPENSEARCH=$2
 
 check_if_db_exists() {
 	echo "SHOW DATABASES" | mysql -hdb -udb -pdb | grep -qE "^$MAGEOS_DB_NAME\$"
@@ -97,12 +97,12 @@ install_magento() {
 			"--admin-email=admin@example.com"
 		)
 
-		if [[ "$USE_ELASTICSEARCH" == "yes" ]]; then
+		if [[ "$USE_OPENSEARCH" == "yes" ]]; then
 			# Configure Standard Magento Elasticsearch
 			MAGENTO_SETUP_ARGS+=(
-				"--search-engine=elasticsearch7"
-				"--elasticsearch-host=elasticsearch"
-				"--elasticsearch-port=9200"
+				"--search-engine=opensearch"
+				"--opensearch-host=opensearch"
+				"--opensearch-port=9200"
 			)
 		fi
 
