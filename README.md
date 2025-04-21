@@ -578,6 +578,7 @@ n98-magerun2.phar config:store:delete [--scope[="..."]] [--scope-id[="..."]] [--
 | `--scope-id` | The config value's scope ID                          |
 | `--all`      | Delete all entries by path                           |
 
+
 ### Display ACL Tree
 
 ```sh
@@ -1166,6 +1167,17 @@ between module version changes.
 
 ```sh
 n98-magerun2.phar sys:setup:downgrade-versions
+```
+
+### List all configured store URLs
+
+The default behavior is to show the base URL of all stores except the admin store.
+If you want to show the base URL of the admin store as well, use the `--with-admin-store` option.
+If you want to show the admin login URL as well, use the `--with-admin-login-url` option.
+The options `--with-admin-store` and `--with-admin-login-url` cannot be combined, because both print a url for the same store.
+
+```sh
+n98-magerun2.phar sys:store:config:base-url:list [--with-admin-store] [--with-admin-login-url] [--format[="..."]]
 ```
 
 ---
