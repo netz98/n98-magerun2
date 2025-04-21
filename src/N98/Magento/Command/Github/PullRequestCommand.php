@@ -5,12 +5,15 @@ namespace N98\Magento\Command\Github;
 use N98\Magento\Command\AbstractMagentoCommand;
 use N98\Magento\Command\Github\PatchFileContent\Creator as PatchFileContentCreator;
 use N98\Util\OperatingSystem;
+use RuntimeException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Process\Process;
 use WpOrg\Requests\Requests;
+use WpOrg\Requests\Response;
 
 class PullRequestCommand extends AbstractMagentoCommand
 {
@@ -29,6 +32,7 @@ class PullRequestCommand extends AbstractMagentoCommand
             ->addOption('repository', 'r', InputOption::VALUE_OPTIONAL, 'Repository to fetch from', 'magento/magento2')
             ->addOption('mage-os', null, InputOption::VALUE_NONE, 'Shortcut option to use the mage-os/mageos-magento2 repository.')
             ->addOption('patch', 'd', InputOption::VALUE_NONE, 'Download patch and prepare it for applying')
+            ->addOption('apply', 'a', InputOption::VALUE_NONE, 'Apply patch to current working directory')
             ->addOption('diff', null, InputOption::VALUE_NONE, 'Raw diff download')
             ->addOption('json', null, InputOption::VALUE_NONE, 'Show pull request data as json')
             ->setDescription('Download patch from github merge request <comment>(experimental)</comment>');
@@ -73,11 +77,21 @@ class PullRequestCommand extends AbstractMagentoCommand
         $table->render();
 
         if ($input->getOption('patch')) {
-            $this->patchFile($prData, $output);
+            $replaceVendor = 'magento';
+            if ($input->getOption('mage-os')) {
+                $replaceVendor = 'mage-os';
+            }
+
+            $patchFilename = $this->patchFile($prData, $replaceVendor, $output);
+
+            if ($input->getOption('apply')) {
+                $this->applyPatch($output, $patchFilename);
+            }
         }
 
         if (!$input->getOption('patch') && !$input->getOption('diff')) {
             $output->writeln('Use <comment>--patch</comment> to download the patch as ready to apply patch file');
+            $output->writeln('Use <comment>--patch --apply</comment> to download the patch and directly apply it');
             $output->writeln('Use <comment>--diff</comment> to see the raw diff');
         }
 
@@ -100,13 +114,15 @@ class PullRequestCommand extends AbstractMagentoCommand
 
     /**
      * @param array $prData
+     * @param string $replaceVendor
      * @param OutputInterface $output
-     * @return void
+     * @return string Patch file name
      */
-    protected function patchFile(array $prData, OutputInterface $output): void
+    protected function patchFile(array $prData, string $replaceVendor, OutputInterface $output): string
     {
         $patchFileContent = PatchFileContentCreator::create(
-            $this->fetchDiffContent($prData['diff_url'])
+            $this->fetchDiffContent($prData['diff_url']),
+            $replaceVendor
         );
 
         $filename = sprintf(
@@ -117,17 +133,19 @@ class PullRequestCommand extends AbstractMagentoCommand
 
         chdir(OperatingSystem::getCwd());
         if (file_put_contents($filename, $patchFileContent) === false) {
-            throw new \RuntimeException('Could not write patch file');
+            throw new RuntimeException('Could not write patch file');
         }
 
         $output->writeln(sprintf('<info>Patch file created:</info> <comment>%s</comment>', $filename));
+
+        return $filename;
     }
 
     /**
      * @param InputInterface $input
      * @return \WpOrg\Requests\Response
      */
-    protected function getPullRequestInfoByApi(InputInterface $input): \WpOrg\Requests\Response
+    protected function getPullRequestInfoByApi(InputInterface $input): Response
     {
         $pullRequestDataResponse = Requests::get(
             sprintf(
@@ -139,5 +157,24 @@ class PullRequestCommand extends AbstractMagentoCommand
             ['verify' => true]
         );
         return $pullRequestDataResponse;
+    }
+
+    /**
+     * @param \Symfony\Component\Console\Output\OutputInterface $output
+     * @param string $patchFilename
+     * @return void
+     */
+    protected function applyPatch(OutputInterface $output, string $patchFilename): void
+    {
+        $output->writeln('<info>Applying patch...</info>');
+
+        $process = new Process(['patch', '-p1']);
+        $process->setInput(file_get_contents($patchFilename));
+        $process->setTimeout(3600);
+        $process->setWorkingDirectory(OperatingSystem::getCwd());
+        $process->start();
+        $process->wait(function ($type, $buffer) use ($output) {
+            $output->write('<info>patch > </info><comment>' . $buffer . '</comment>', false);
+        });
     }
 }
