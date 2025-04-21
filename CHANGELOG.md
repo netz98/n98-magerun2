@@ -1,6 +1,29 @@
 RECENT CHANGES
 ==============
 
+8.1.0
+-----
+
+- Add: #1590: Apply GitHub patch directly (by Christian Münch)
+- Add: #1591: Admin URI added to table (by Christian Münch)
+- Add: #1592: New options to display admin store URLs (by Christian Münch)
+- Add: #1593: Describe sys:store:config:base-url:list command (by Christian Münch)
+- Imp: #1594: Replace Elasticsearch with OpenSearch in dev setup (by Christian Münch)
+- Fix: #1595: Broken unit tests after changing processor interface (by Christian Münch)
+- Fix: #1596: Wrong check in functional test (by Christian Münch)
+- Fix: #1597: PHP CS Fixer violation (by Christian Münch)
+- Fix: #1598: Remove unused import (by Christian Münch)
+- Fix: #1599: Theme choice index (by Christian Münch)
+- Fix: #1600: Run create address in an emulated frontend area (by Christian Münch)
+- Fix: #1601: Code style improvements (by Christian Münch)
+- Build: #1602: Use PHP 8.3 for PR builds (by Christian Münch)
+- Build: #1603: Use Ubuntu 22.04 in PR-build workflow (by Christian Münch)
+- Build: #1604: Update dependencies to the latest Mage-OS requirements (by Christian Münch)
+- Build: #1605: Fix Mariadb and OpenSearch services (by Christian Münch)
+- Build: #1606: Use correct OPENSEARCH_JAVA_OPTS option for OpenSearch container (by Christian Münch)
+- Build: #1607: Set up MariaDB as part of the steps (by Christian Münch)
+- Build: #1608: Update and bump dependencies (phpstan, php-cs-fixer, captainhook, webfactory/ssh-agent, psy/psysh) (by dependabot)
+
 8.0.0
 -----
 
