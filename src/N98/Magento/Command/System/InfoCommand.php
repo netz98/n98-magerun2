@@ -3,6 +3,7 @@
 namespace N98\Magento\Command\System;
 
 use InvalidArgumentException;
+use Magento\Backend\Setup\ConfigOptionsList as BackendConfigOptionsList;
 use Magento\Catalog\Model\CategoryFactory;
 use Magento\Catalog\Model\ProductFactory;
 use Magento\Customer\Model\CustomerFactory;
@@ -302,6 +303,7 @@ class InfoCommand extends AbstractMagentoCommand
 
     protected function addDeploymentInfo()
     {
+        $this->infos['Admin URI'] = $this->deploymentConfig->get(BackendConfigOptionsList::CONFIG_PATH_BACKEND_FRONTNAME);
         $this->infos['Application Mode'] = $this->deploymentConfig->get(AppState::PARAM_MODE);
         $this->infos['Session'] = $this->deploymentConfig->get('session/save');
         $this->infos['Crypt Key'] = $this->deploymentConfig->get('crypt/key');
