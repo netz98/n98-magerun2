@@ -1530,4 +1530,28 @@ n98-magerun2.phar composer:redeploy-base-packages
 
 ## Development
 
+We have more information on the wiki page:
+
 <https://github.com/netz98/n98-magerun2/wiki>
+
+### Included Commands for Plugin Developers
+
+We offer two command to debug the configuration.
+
+The `magerun:config:info` can display all loaded config files.
+
+```sh
+$> n98-magerun2.phar magerun:config:info
+
++------+----------------------------------+-------------------------------------------------+
+| type | path                             | note                                            |
++------+----------------------------------+-------------------------------------------------+
+| dist |                                  | Shipped in phar file                            |
+| user | /home/cmuench/.n98-magerun2.yaml | Configuration in home directory of current user |
++------+----------------------------------+-------------------------------------------------+
+```
+The `magerun:config:dump` command can dump the merged configuration as highlighted yaml.
+
+```sh
+$> n98-magerun2.phar magerun:config:dump
+```

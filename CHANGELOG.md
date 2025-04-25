@@ -8,6 +8,7 @@ RECENT CHANGES
 - Add: #1591: Admin URI added to table (by Christian Münch)
 - Add: #1592: New options to display admin store URLs (by Christian Münch)
 - Add: #1593: Describe sys:store:config:base-url:list command (by Christian Münch)
+- Add: #1605: magerun config commands (by Christian Münch)
 - Imp: #1594: Replace Elasticsearch with OpenSearch in dev setup (by Christian Münch)
 - Fix: #1599: Theme choice index (by Christian Münch)
 - Fix: #1600: Run create address in an emulated frontend area (by Christian Münch)
