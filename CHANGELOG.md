@@ -1,6 +1,11 @@
 RECENT CHANGES
 ==============
 
+8.1.1
+-----
+
+- Fix: phar of v8.1.0 was corrupt (by Christian Münch)
+
 8.1.0
 -----
 
