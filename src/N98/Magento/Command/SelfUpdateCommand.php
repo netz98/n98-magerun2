@@ -277,11 +277,6 @@ EOT
         }
 
         $filesize = $response->headers['content-length'];
-
-        $hooks->register('curl.after_request', function (&$headers, &$info) use (&$filesize) {
-            $filesize = $info['size_download'];
-        });
-
         $progressBar->setMaxSteps($filesize);
 
         $hooks->register(
@@ -292,9 +287,11 @@ EOT
         );
 
         $response = Requests::get($remoteUrl, [], [
-            'blocking' => true,
-            'hooks'    => $hooks,
-            'verify'   => true
+            'blocking'        => true,
+            'hooks'           => $hooks,
+            'verify'          => true,
+            'timeout'         => 30,
+            'connect_timeout' => 30,
         ]);
 
         if (!$response->success) {
