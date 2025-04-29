@@ -225,7 +225,9 @@ setup() {
 
 @test "Command: maintenance:status" {
   run $BIN "maintenance:status"
-  assert_output --partial "Status: maintenance mode is not active"
+  # we have different output in different versions
+  #  "not active" vs. "disabled"
+  assert_output --partial "Status: maintenance mode is"
 }
 
 @test "Command: setup:upgrade" {
