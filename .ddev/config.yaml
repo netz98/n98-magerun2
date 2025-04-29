@@ -17,7 +17,7 @@ webimage_extra_packages: [lz4, zstd]
 use_dns_when_possible: true
 composer_version: 2.2.17
 web_environment:
-    - MAGERUN_SETUP_TEST_DEFAULT_MAGENTO_VERSION=2.4.7-p2
+    - MAGERUN_SETUP_TEST_DEFAULT_MAGENTO_VERSION=2.4.7-p4
     - N98_MAGERUN2_BIN=/var/www/html/bin/n98-magerun2
 nodejs_version: "16"
 corepack_enable: false
