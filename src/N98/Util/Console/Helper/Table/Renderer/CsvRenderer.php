@@ -4,6 +4,7 @@ namespace N98\Util\Console\Helper\Table\Renderer;
 
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Output\StreamOutput;
+use const STDOUT;
 
 /**
  * Class CsvRenderer
@@ -20,15 +21,15 @@ class CsvRenderer implements RendererInterface
         if ($output instanceof StreamOutput) {
             $stream = $output->getStream();
         } else {
-            $stream = \STDOUT;
+            $stream = STDOUT;
         }
 
         $i = 0;
         foreach ($rows as $row) {
             if ($i++ == 0) {
-                fputcsv($stream, array_keys($row));
+                fputcsv($stream, array_keys($row), escape: '"');
             }
-            fputcsv($stream, $row);
+            fputcsv($stream, $row, escape: '"');
         }
     }
 }

@@ -26,7 +26,7 @@ abstract class AbstractCompressor implements Compressor
      * @return AbstractCompressor
      * @throws InvalidArgumentException
      */
-    public static function create($type, InputInterface $input = null)
+    public static function create($type, ?InputInterface $input = null)
     {
         switch ($type) {
             case null:

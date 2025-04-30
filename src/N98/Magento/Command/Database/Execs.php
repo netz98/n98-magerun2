@@ -48,7 +48,7 @@ class Execs
     /**
      * @param string $type of compression: "gz" | "gzip" | "none" | null
      */
-    public function setCompression($type, InputInterface $input = null)
+    public function setCompression($type, ?InputInterface $input = null)
     {
         $this->compressor = AbstractCompressor::create($type, $input);
     }
