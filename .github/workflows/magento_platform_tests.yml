@@ -136,19 +136,6 @@ jobs:
 
 
     services:
-      opensearch:
-        image: opensearchproject/opensearch:${{ matrix.opensearch-version }}
-        ports:
-          - 9200:9200
-          - 9600:9600
-        options: >-
-          -e="discovery.type=single-node"
-          -e="OPENSEARCH_JAVA_OPTS=-Xms1g -Xmx1g"
-          --health-cmd="curl -f http://localhost:9200/_cluster/health || exit 1"
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=10
-
       mariadb:
         image: mariadb:${{ matrix.mariadb-version }} # Use MariaDB image and matrix variable
         env:
@@ -177,6 +164,12 @@ jobs:
         run: echo "Register Github context"
         env:
           GITHUB_CONTEXT: ${{ toJSON(github) }}
+
+      - uses: ankane/setup-opensearch@v1
+        with:
+          opensearch-version: ${{ matrix.opensearch-version }}
+          config: |
+            http.port: 9200
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
