@@ -192,7 +192,9 @@ jobs:
 
     steps:
       - name: Dump GitHub context
-        run: echo "Workflow triggered by event: ${{ github.event_name }}"
+        run: echo "Register Github context"
+        env:
+          GITHUB_CONTEXT: ${{ toJSON(github) }}
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
