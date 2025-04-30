@@ -44,7 +44,9 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - magento-version: mage-os-latest
+          # Mage-OS versions
+          - magento-version: 1.1.1
+            composer-repository-url: "https://repo.mage-os.org/"
             operating-system: ubuntu-latest
             php-version: '8.4'
             mariadb-version: '10.6'
@@ -53,7 +55,8 @@ jobs:
             use-git-repository: false
             git-repository: ""
 
-          - magento-version: mage-os-latest
+          - magento-version: 1.1.1
+            composer-repository-url: "https://repo.mage-os.org/"
             operating-system: ubuntu-latest
             php-version: '8.3'
             mariadb-version: '10.6'
@@ -62,16 +65,9 @@ jobs:
             use-git-repository: false
             git-repository: ""
 
-          - magento-version: mage-os-magento-mirror-2.4.5-p1
-            operating-system: ubuntu-latest
-            php-version: '8.1'
-            mariadb-version: '10.6'
-            opensearch-version: '2'
-            composer-version: '2.2.17'
-            use-git-repository: false
-            git-repository: ""
-
-          - magento-version: magento-ce-2.4.8
+          # Magento versions
+          - magento-version: 2.4.8
+            composer-repository-url: "https://repo.magento.com/"
             operating-system: ubuntu-latest
             php-version: '8.4'
             mariadb-version: '10.6'
@@ -81,7 +77,8 @@ jobs:
             git-repository: ""
             git-branch: ""
 
-          - magento-version: magento-ce-2.4.8
+          - magento-version: 2.4.8
+            composer-repository-url: "https://repo.magento.com/"
             operating-system: ubuntu-latest
             php-version: '8.3'
             mariadb-version: '10.6'
@@ -91,7 +88,8 @@ jobs:
             git-repository: ""
             git-branch: ""
 
-          - magento-version: magento-ce-2.4.7
+          - magento-version: 2.4.7-p5
+            composer-repository-url: "https://repo.magento.com/"
             operating-system: ubuntu-latest
             php-version: '8.3'
             mariadb-version: '10.6'
@@ -101,7 +99,8 @@ jobs:
             git-repository: ""
             git-branch: ""
 
-          - magento-version: magento-ce-2.4.6-p5
+          - magento-version: 2.4.6-p10
+            composer-repository-url: "https://repo.magento.com/"
             operating-system: ubuntu-latest
             php-version: '8.2'
             mariadb-version: '10.6'
@@ -110,29 +109,6 @@ jobs:
             use-git-repository: false
             git-repository: ""
             git-branch: ""
-
-          # --- OpenSearch Example (Using MariaDB) ---
-          # - magento-version: magento-ce-2.4.7 # Or a version compatible with OpenSearch
-          #   operating-system: ubuntu-latest
-          #   php-version: '8.2' # Or '8.3'
-          #   mariadb-version: '10.6' # Changed from mysql-version
-          #   opensearch-version: '2.5.0'
-          #   composer-version: '2.2.17'
-          #   use-git-repository: false
-          #   git-repository: ""
-          #   git-branch: ""
-
-          # --- Git Repository Example (Using MariaDB) ---
-          # - magento-version: magento-ce-2.4-develop
-          #   operating-system: ubuntu-latest
-          #   php-version: '8.1'
-          #   mariadb-version: '10.6' # Changed from mysql-version
-          #   opensearch-version: '2'
-          #   composer-version: v2
-          #   use-git-repository: true
-          #   git-repository: https://github.com/magento/magento2.git
-          #   git-branch: 2.4-develop
-
 
     services:
       mariadb:
@@ -250,28 +226,22 @@ jobs:
             $SEARCH_HOST_PARAM \
             $SEARCH_PORT_PARAM
 
-      # --- Installation Method: Composer Create-Project (replaces n98-magerun2 install) ---
       - name: Install Magento via Composer
         if: matrix.use-git-repository == false
         run: |
-          echo "Creating Magento project ${{ matrix.magento-version }}"
-          # --- !!! IMPORTANT !!! ---
-          # You MUST adjust the logic below to correctly map matrix.magento-version
-          # to the right composer package name and version constraint.
-          MAGENTO_VERSION_CONSTRAINT=$(echo "${{ matrix.magento-version }}" | sed -E 's/^(magento-ce-|mage-os-magento-mirror-|mage-os-)//' | sed 's/-p/./') # Basic attempt
-
-          if [[ "${{ matrix.magento-version }}" == mage-os-* ]]; then
-            PACKAGE_NAME="mage-os/project-community-edition" # Verify this package name
-            echo "Using package $PACKAGE_NAME version $MAGENTO_VERSION_CONSTRAINT (adjust if needed)"
-          elif [[ "${{ matrix.magento-version }}" == magento-ce-* ]]; then
-             PACKAGE_NAME="magento/project-community-edition"
-             echo "Using package $PACKAGE_NAME version $MAGENTO_VERSION_CONSTRAINT (adjust if needed)"
+          echo "Creating Magento project version ${{ matrix.magento-version }} from ${{ matrix.composer-repository-url }}"
+      
+          if [[ "${{ matrix.composer-repository-url }}" == *"mage-os.org"* ]]; then
+            PACKAGE_NAME="mage-os/project-community-edition"
+          elif [[ "${{ matrix.composer-repository-url }}" == *"magento.com"* ]]; then
+            PACKAGE_NAME="magento/project-community-edition"
           else
-             echo "Error: Cannot determine package name for ${{ matrix.magento-version }}"
-             exit 1
+            echo "Error: Unknown composer repository URL: ${{ matrix.composer-repository-url }}"
+            exit 1
           fi
+      
+          composer create-project --repository-url="${{ matrix.composer-repository-url }}" $PACKAGE_NAME ./magento "${{ matrix.magento-version }}" --no-interaction --no-progress
 
-          composer create-project --repository-url=https://repo.magento.com/ $PACKAGE_NAME ./magento $MAGENTO_VERSION_CONSTRAINT --no-interaction --no-progress
 
 
       - name: Install Magento Database & Config (Non-Git)
