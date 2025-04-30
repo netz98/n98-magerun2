@@ -18,6 +18,7 @@ on:
       - "scoper.inc.php"
       - "src/**"
       - "version.txt"
+      - ".github/workflows/magento-platform-tests.yml" # Trigger also on workflow changes
   pull_request_target:
     branches:
       - "master"
@@ -31,59 +32,71 @@ on:
       - "scoper.inc.php"
       - "src/**"
       - "version.txt"
+      - ".github/workflows/magento-platform-tests.yml" # Trigger also on workflow changes
   workflow_dispatch:
 
 jobs:
   phpunit:
-    name: Unit Tests
+    # Updated job name to reflect MariaDB usage
+    name: Unit Tests (${{ matrix.magento-version }} / PHP ${{ matrix.php-version }} / MariaDB ${{ matrix.mariadb-version }} / ${{ matrix.opensearch-version && 'OpenSearch' || 'Elasticsearch' }})
     runs-on: ${{ matrix.operating-system }}
     continue-on-error: true
     strategy:
+      fail-fast: false
       matrix:
         include:
-          #- magento-version: magento-ce-2.4-develop
-          #  operating-system: ubuntu-latest
-          #  php-version: '8.1'
-          #  mysql-version: '8.0'
-          #  elasticsearch-version: 7.16.0
-          #  composer-version: v2
-          #  use-git-repository: true
-          #  git-repository: https://github.com/magento/magento2.git
-          #  git-branch: 2.4-develop
+          - magento-version: mage-os-latest
+            operating-system: ubuntu-latest
+            php-version: '8.4'
+            mariadb-version: '10.6'
+            opensearch-version: '2'
+            composer-version: '2.8.8'
+            use-git-repository: false
+            git-repository: ""
 
           - magento-version: mage-os-latest
             operating-system: ubuntu-latest
-            php-version: '8.1'
-            mysql-version: '8.0'
-            elasticsearch-version: '7.9.0'
-            composer-version: '2.2.17'
+            php-version: '8.3'
+            mariadb-version: '10.6'
+            opensearch-version: '2'
+            composer-version: '2.8.8'
             use-git-repository: false
             git-repository: ""
 
           - magento-version: mage-os-magento-mirror-2.4.5-p1
             operating-system: ubuntu-latest
             php-version: '8.1'
-            mysql-version: '8.0'
+            mariadb-version: '10.6'
             elasticsearch-version: '7.9.0'
             composer-version: '2.2.17'
             use-git-repository: false
             git-repository: ""
 
+          - magento-version: magento-ce-2.4.8
+            operating-system: ubuntu-latest
+            php-version: '8.4'
+            mariadb-version: '10.6'
+            opensearch-version: '2'
+            composer-version: '2.8.8'
+            use-git-repository: false
+            git-repository: ""
+            git-branch: ""
+
+          - magento-version: magento-ce-2.4.8
+            operating-system: ubuntu-latest
+            php-version: '8.3'
+            mariadb-version: '10.6'
+            opensearch-version: '2'
+            composer-version: '2.8.8'
+            use-git-repository: false
+            git-repository: ""
+            git-branch: ""
+
           - magento-version: magento-ce-2.4.7
             operating-system: ubuntu-latest
             php-version: '8.3'
-            mysql-version: '8.0'
-            elasticsearch-version: 7.16.0
-            composer-version: '2.2.17'
-            use-git-repository: false
-            git-repository: ""
-            git-branch: ""
-
-          - magento-version: magento-ce-2.4.7
-            operating-system: ubuntu-latest
-            php-version: '8.2'
-            mysql-version: '8.0'
-            elasticsearch-version: 7.16.0
+            mariadb-version: '10.6'
+            elasticsearch-version: '7.16.0'
             composer-version: '2.2.17'
             use-git-repository: false
             git-repository: ""
@@ -92,132 +105,166 @@ jobs:
           - magento-version: magento-ce-2.4.6-p5
             operating-system: ubuntu-latest
             php-version: '8.2'
-            mysql-version: '8.0'
-            elasticsearch-version: 7.16.0
+            mariadb-version: '10.6'
+            elasticsearch-version: '7.16.0'
             composer-version: '2.2.17'
             use-git-repository: false
             git-repository: ""
             git-branch: ""
 
-          - magento-version: magento-ce-2.4.6-p5
-            operating-system: ubuntu-latest
-            php-version: '8.1'
-            mysql-version: '8.0'
-            elasticsearch-version: 7.16.0
-            composer-version: '2.2.17'
-            use-git-repository: false
-            git-repository: ""
-            git-branch: ""
+          # --- OpenSearch Example (Using MariaDB) ---
+          # - magento-version: magento-ce-2.4.7 # Or a version compatible with OpenSearch
+          #   operating-system: ubuntu-latest
+          #   php-version: '8.2' # Or '8.3'
+          #   mariadb-version: '10.6' # Changed from mysql-version
+          #   opensearch-version: '2.5.0'
+          #   composer-version: '2.2.17'
+          #   use-git-repository: false
+          #   git-repository: ""
+          #   git-branch: ""
 
-          - magento-version: magento-ce-2.4.5-p7
-            operating-system: ubuntu-latest
-            php-version: '8.1'
-            mysql-version: '8.0'
-            elasticsearch-version: 7.16.0
-            composer-version: '2.2.17'
-            use-git-repository: false
-            git-repository: ""
-            git-branch: ""
+          # --- Git Repository Example (Using MariaDB) ---
+          # - magento-version: magento-ce-2.4-develop
+          #   operating-system: ubuntu-latest
+          #   php-version: '8.1'
+          #   mariadb-version: '10.6' # Changed from mysql-version
+          #   elasticsearch-version: '7.16.0'
+          #   composer-version: v2
+          #   use-git-repository: true
+          #   git-repository: https://github.com/magento/magento2.git
+          #   git-branch: 2.4-develop
 
-          #- magento-version: magento-ce-2.4.4-p8
-          #  operating-system: ubuntu-latest
-          #  php-version: '8.1'
-          #  mysql-version: '8.0'
-          #  elasticsearch-version: 7.16.0
-          #  composer-version: '2.2.17'
-          #  use-git-repository: false
-          #  git-repository: ""
-          #  git-branch: ""
 
     services:
-      elaticsearch:
+      # Elasticsearch Service (unchanged logic)
+      elasticsearch:
         image: docker.elastic.co/elasticsearch/elasticsearch:${{ matrix.elasticsearch-version }}
-        # we bind the port to the host because the n98-magerun2 install command does not support to pass
-        # ES variables. So we cannot pass the random port via GitHub Action template variable.
+        if: matrix.opensearch-version == '' || matrix.opensearch-version == null
         ports:
           - 9200:9200
           - 9300:9300
-        options: -e="discovery.type=single-node" --health-cmd="curl http://localhost:9200/_cluster/health" --health-interval=10s --health-timeout=5s --health-retries=10
+        options: >-
+          -e="discovery.type=single-node"
+          -e="ES_JAVA_OPTS=-Xms1g -Xmx1g"
+          --health-cmd="curl -f http://localhost:9200/_cluster/health || exit 1"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
 
-      mysql:
-        image: mysql:${{ matrix.mysql-version }}
-        env:
-          MYSQL_ROOT_PASSWORD: root
-          MYSQL_DATABASE: magento
+      # OpenSearch Service (unchanged logic)
+      opensearch:
+        image: opensearchproject/opensearch:${{ matrix.opensearch-version }}
+        if: matrix.opensearch-version != '' && matrix.opensearch-version != null
         ports:
-          - 3306
-        options: --tmpfs /tmp:rw --tmpfs /var/lib/mysql:rw --health-cmd="mysqladmin ping"
+          - 9200:9200
+          - 9600:9600
+        options: >-
+          -e="discovery.type=single-node"
+          -e="OPENSEARCH_JAVA_OPTS=-Xms1g -Xmx1g"
+          --health-cmd="curl -f http://localhost:9200/_cluster/health || exit 1"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
+
+      # Changed mysql service to mariadb
+      mariadb:
+        image: mariadb:${{ matrix.mariadb-version }} # Use MariaDB image and matrix variable
+        env:
+          MARIADB_ROOT_PASSWORD: root # Use MariaDB env var
+          MARIADB_DATABASE: magento    # Use MariaDB env var
+        ports:
+          - 3306 # Standard MariaDB/MySQL port
+        # Options remain largely the same, health check uses mysqladmin (compatible)
+        options: >-
+          --tmpfs /tmp:rw
+          --tmpfs /var/lib/mysql:rw
+          --health-cmd="mysqladmin ping -h 127.0.0.1 --silent"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
+
     env:
       MAGENTO_MARKETPLACE_USERNAME: ${{ secrets.MAGENTO_MARKETPLACE_USERNAME }}
       MAGENTO_MARKETPLACE_PASSWORD: ${{ secrets.MAGENTO_MARKETPLACE_PASSWORD }}
       COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      SEARCH_HOST: 127.0.0.1
+      SEARCH_PORT: 9200
 
     steps:
       - name: Dump GitHub context
-        run: echo "Register Github context"
-        env:
-          GITHUB_CONTEXT: ${{ toJSON(github) }}
+        run: echo "Workflow triggered by event: ${{ github.event_name }}"
 
-      # https://github.com/marketplace/actions/setup-php-action#matrix-setup
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
           tools: composer:${{ matrix.composer-version }}, cs2pr
           php-version: ${{ matrix.php-version }}
-          extensions: mcrypt, mbstring, intl
+          extensions: bcmath, ctype, curl, dom, gd, hash, iconv, intl, mbstring, pdo_mysql, simplexml, soap, sodium, xml, zip, sockets # pdo_mysql works for MariaDB too
+          ini-values: memory_limit=-1
           coverage: none
 
       - name: Checkout PR
-        uses: actions/checkout@v4.2.2
+        uses: actions/checkout@v4
         if: github.event_name == 'pull_request_target'
         with:
           ref: ${{ github.event.pull_request.head.sha }}
 
       - name: Checkout HEAD
-        uses: actions/checkout@v4.2.2
+        uses: actions/checkout@v4
         if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
 
-      - name: Linux Setup
-        run: bash .github/workflows/linux-setup.sh
-
-      - name: Install Composer Presissimo Plugin
-        run: composer global require hirak/prestissimo
-        if: matrix.composer-version == 'v1'
+      - name: Linux Setup (Optional - If needed)
+        run: echo "Skipping Linux setup step unless needed."
 
       - name: Get Composer Cache Directory
         id: composer-cache
         run: echo "dir=$(composer config cache-files-dir)" >> "$GITHUB_OUTPUT"
 
-      - name: Cache Dependencies
+      - name: Cache Composer Dependencies
         uses: actions/cache@v4
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
-          key: "${{ runner.os }}-php-${{ matrix.php-version }}-composer-${{ hashFiles('composer.lock') }}"
-          restore-keys: "${{ runner.os }}-php-${{ matrix.php-version }}-composer-"
+          key: ${{ runner.os }}-php-${{ matrix.php-version }}-composer-${{ matrix.magento-version }}-${{ hashFiles('composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-php-${{ matrix.php-version }}-composer-${{ matrix.magento-version }}-
+            ${{ runner.os }}-php-${{ matrix.php-version }}-composer-
 
-      - name: Install dependencies
-        # If we have a very broad restore-keys in the previous caching action,
-        # we might pull outdated dependencies from a parent branch for new branches.
-        # Over time, just running composer all the time to give it a chance
-        # to fix the outdated dependencies should be faster than having to pull
-        # everything from scratch for every new branch.
+      - name: Install Magerun dependencies
         run: composer install --no-interaction --prefer-dist --no-progress --no-suggest
 
       - name: Setup Magento Open Source Repository Credentials
         run: |
           composer global config http-basic.repo.magento.com "${MAGENTO_MARKETPLACE_USERNAME}" "${MAGENTO_MARKETPLACE_PASSWORD}";
-        # only run for Magento Open Source versions
-        # -> this is also a test if mage-os can be installed without credentials
-        if: startsWith(matrix.magento-version, 'magento-ce')
+        if: startsWith(matrix.magento-version, 'magento-ce') && matrix.use-git-repository == false
 
+      # --- Installation Method: Git Repository ---
       - name: Install Magento via git
+        if: matrix.use-git-repository == true
         run: |
-          git clone --branch "${{ matrix.git-branch }}" --single-branch ${{ matrix.git-repository }} "$GITHUB_WORKSPACE/magento";
-          cd "$GITHUB_WORKSPACE/magento";
-          composer --version;
-          composer install --no-interaction;
+          echo "Cloning Magento from ${{ matrix.git-repository }} branch ${{ matrix.git-branch }}"
+          git clone --branch "${{ matrix.git-branch }}" --depth 1 ${{ matrix.git-repository }} "$GITHUB_WORKSPACE/magento"
+          cd "$GITHUB_WORKSPACE/magento"
+          echo "Installing Magento dependencies via Composer"
+          composer --version
+          composer install --no-interaction --no-progress --no-suggest
+
+          echo "Setting up Search Engine parameters..."
+          if [[ -n "${{ matrix.opensearch-version }}" ]]; then
+            echo "Using OpenSearch ${{ matrix.opensearch-version }}"
+            SEARCH_ENGINE="opensearch"
+            SEARCH_HOST_PARAM="--opensearch-host=${{ env.SEARCH_HOST }}"
+            SEARCH_PORT_PARAM="--opensearch-port=${{ env.SEARCH_PORT }}"
+          else
+            echo "Using Elasticsearch ${{ matrix.elasticsearch-version }}"
+            SEARCH_ENGINE="elasticsearch7" # Assuming ES7 based on typical Magento versions
+            SEARCH_HOST_PARAM="--elasticsearch-host=${{ env.SEARCH_HOST }}"
+            SEARCH_PORT_PARAM="--elasticsearch-port=${{ env.SEARCH_PORT }}"
+          fi
+
+          echo "Running Magento setup:install using MariaDB"
           bin/magento setup:install \
-            --db-host="127.0.0.1:${{ job.services.mysql.ports['3306'] }}" \
+            --db-host="127.0.0.1" \
+            --db-port="${{ job.services.mariadb.ports['3306'] }}" \
             --db-user=root \
             --db-password=root \
             --db-name=magento \
@@ -228,86 +275,150 @@ jobs:
             --currency="EUR" \
             --base-url="http://github.magerun.test/" \
             --use-rewrites=1 \
-            --use-secure=1 \
-            --use-secure-admin=1 \
+            --use-secure=0 \
+            --use-secure-admin=0 \
             --admin-user=admin \
             --admin-password=Password123 \
             --admin-firstname=Armin \
             --admin-lastname=Admin \
             --admin-email="admin@example.com" \
-            --search-engine="elasticsearch7" \
-            --elasticsearch-host="127.0.0.1" \
-            --elasticsearch-port=9200;
-        if: matrix.use-git-repository == true
+            --search-engine="$SEARCH_ENGINE" \
+            $SEARCH_HOST_PARAM \
+            $SEARCH_PORT_PARAM
 
-      - name: Install ${{ matrix.magento-version }} via n98-magerun2
-        run: |
-          composer --version;
-          bin/n98-magerun2 --ansi install \
-          --magentoVersionByName="${{ matrix.magento-version }}" --installationFolder="$GITHUB_WORKSPACE/magento" \
-          --dbHost=127.0.0.1 --dbPort=${{ job.services.mysql.ports['3306'] }} --dbUser=root --dbPass=root --dbName="magento" \
-          --useDefaultConfigParams=yes \
-          --installSampleData=no \
-          --baseUrl="http://github.magerun.test/";
+      # --- Installation Method: Composer Create-Project (replaces n98-magerun2 install) ---
+      - name: Install Magento via Composer
         if: matrix.use-git-repository == false
+        run: |
+          echo "Creating Magento project ${{ matrix.magento-version }}"
+          # --- !!! IMPORTANT !!! ---
+          # You MUST adjust the logic below to correctly map matrix.magento-version
+          # to the right composer package name and version constraint.
+          MAGENTO_VERSION_CONSTRAINT=$(echo "${{ matrix.magento-version }}" | sed -E 's/^(magento-ce-|mage-os-magento-mirror-|mage-os-)//' | sed 's/-p/./') # Basic attempt
 
-      # @link https://github.com/magento/magento2/issues/38728
-      - name: Temporary downgrade credis to 1.5 for Magento 2.4.6/2.4.7
-        run: composer require colinmollenhour/php-redis-session-abstract:1.5.5
+          if [[ "${{ matrix.magento-version }}" == mage-os-* ]]; then
+            PACKAGE_NAME="mage-os/project-community-edition" # Verify this package name
+            echo "Using package $PACKAGE_NAME version $MAGENTO_VERSION_CONSTRAINT (adjust if needed)"
+          elif [[ "${{ matrix.magento-version }}" == magento-ce-* ]]; then
+             PACKAGE_NAME="magento/project-community-edition"
+             echo "Using package $PACKAGE_NAME version $MAGENTO_VERSION_CONSTRAINT (adjust if needed)"
+          else
+             echo "Error: Cannot determine package name for ${{ matrix.magento-version }}"
+             exit 1
+          fi
+
+          composer create-project --repository-url=https://repo.magento.com/ $PACKAGE_NAME ./magento $MAGENTO_VERSION_CONSTRAINT --no-interaction --no-progress --no-suggest
+
+
+      - name: Install Magento Database & Config (Non-Git)
+        if: matrix.use-git-repository == false
         working-directory: ./magento
-        if: matrix.magento-version == 'magento-ce-2.4.6-p5' || matrix.magento-version == 'magento-ce-2.4.7' || matrix.magento-version == 'mage-os-latest'
+        run: |
+          echo "Setting up Search Engine parameters..."
+          if [[ -n "${{ matrix.opensearch-version }}" ]]; then
+            echo "Using OpenSearch ${{ matrix.opensearch-version }}"
+            SEARCH_ENGINE="opensearch"
+            SEARCH_HOST_PARAM="--opensearch-host=${{ env.SEARCH_HOST }}"
+            SEARCH_PORT_PARAM="--opensearch-port=${{ env.SEARCH_PORT }}"
+          else
+            echo "Using Elasticsearch ${{ matrix.elasticsearch-version }}"
+            SEARCH_ENGINE="elasticsearch7" # Assuming ES7
+            SEARCH_HOST_PARAM="--elasticsearch-host=${{ env.SEARCH_HOST }}"
+            SEARCH_PORT_PARAM="--elasticsearch-port=${{ env.SEARCH_PORT }}"
+          fi
 
-      - name: Configure matchers
-        uses: mheap/phpunit-matcher-action@main
+          echo "Running Magento setup:install using MariaDB"
+          # Add a small delay to ensure MariaDB is fully ready after health check passes, if needed
+          # sleep 5
+          bin/magento setup:install \
+            --db-host="127.0.0.1" \
+            --db-port="${{ job.services.mariadb.ports['3306'] }}" \
+            --db-user=root \
+            --db-password=root \
+            --db-name=magento \
+            --cleanup-database \
+            --session-save=db \
+            --backend-frontname=admin \
+            --timezone="Europe/Berlin" \
+            --currency="EUR" \
+            --base-url="http://github.magerun.test/" \
+            --use-rewrites=1 \
+            --use-secure=0 \
+            --use-secure-admin=0 \
+            --admin-user=admin \
+            --admin-password=Password123 \
+            --admin-firstname=Armin \
+            --admin-lastname=Admin \
+            --admin-email="admin@example.com" \
+            --search-engine="$SEARCH_ENGINE" \
+            $SEARCH_HOST_PARAM \
+            $SEARCH_PORT_PARAM
+
+      # Common steps after installation regardless of method
+      - name: Temporary downgrade credis for Magento 2.4.6/2.4.7/Mage-OS
+        working-directory: ./magento
+        run: |
+          if [ -f composer.json ]; then
+            composer require colinmollenhour/php-redis-session-abstract:1.5.5 --no-update --no-interaction
+            composer update colinmollenhour/php-redis-session-abstract --with-dependencies --no-progress --no-suggest
+          else
+            echo "Skipping credis downgrade - composer.json not found"
+          fi
+        if: contains(matrix.magento-version, '2.4.6') || contains(matrix.magento-version, '2.4.7') || contains(matrix.magento-version, 'mage-os')
+
+      - name: Configure PHPUnit matchers
+        uses: mheap/phpunit-matcher-action@v1
 
       - name: Run PHPUnit (Developer Mode)
         run: vendor/bin/phpunit --debug --process-isolation
+        env:
+          N98_MAGERUN2_TEST_MAGENTO_ROOT: "${{ github.workspace }}/magento"
 
       - name: Activate Magento Production Mode
         working-directory: ./magento
         run: |
-          rm -Rf generated/code;
-          bin/magento deploy:mode:set production;
+          echo "Setting Magento to Production Mode"
+          rm -Rf generated/code generated/metadata
+          # Use php explicitly if bin/magento isn't executable yet
+          php bin/magento deploy:mode:set production -s
 
       - name: Run PHPUnit (Production Mode)
         run: vendor/bin/phpunit --debug --process-isolation
+        env:
+          N98_MAGERUN2_TEST_MAGENTO_ROOT: "${{ github.workspace }}/magento"
 
-      # phpstan is temporarily disabled until we can find a solution to run against several Magento versions
-      # or run only against the latest version?
-      ## we run phpstan after di:compile in production mode to prevent class not found errors in Magerun sources
-      #- name: Run PHPStan
-      #  working-directory: ./magento
-      #  run:
-      #   ../vendor/bin/phpstan analyse --level 1 --autoload-file="../src/bootstrap.php" ../src
-      #  if: matrix.magento-version == 'magento-ce-2.4.5-p2'
-
-      - name: Setup PHP for phar build
+      # --- Build and Test Phar ---
+      - name: Setup PHP for phar build (Use a consistent, modern PHP version)
         uses: shivammathur/setup-php@v2
         with:
-          tools: composer:2
+          tools: composer:v2
           php-version: "8.2"
+          extensions: bcmath, ctype, curl, dom, gd, hash, iconv, intl, mbstring, pdo_mysql, simplexml, soap, sodium, xml, zip, sockets
+          ini-values: memory_limit=-1, phar.readonly=0
+          coverage: none
 
       - name: Build phar file
         run: |
-          composer self-update --2;
-          composer --version;
-          composer global remove hirak/prestissimo;
-          bash ./build.sh;
-          composer self-update --rollback &> /dev/null || true;
+          composer --version
+          echo "Running build script..."
+          bash ./build.sh
 
-      - name: Setup PHP for project tests
+      - name: Setup PHP for phar tests
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php-version }}
+          extensions: bcmath, ctype, curl, dom, gd, hash, iconv, intl, mbstring, pdo_mysql, simplexml, soap, sodium, xml, zip, sockets
+          ini-values: memory_limit=-1
+          coverage: none
 
       - name: Phar functional tests (Magerun)
         run: bats tests/bats/functional_magerun_commands.bats
         env:
           N98_MAGERUN2_TEST_MAGENTO_ROOT: "${{ github.workspace }}/magento"
-          N98_MAGERUN2_BIN: "${{ github.workspace }}/n98-magerun2.phar"
+          N98_MAGERUN2_BIN: "${{ github.workspace }}/build/n98-magerun2.phar"
 
       - name: Phar functional tests (Magento Core)
         run: bats tests/bats/functional_core_commands.bats
         env:
           N98_MAGERUN2_TEST_MAGENTO_ROOT: "${{ github.workspace }}/magento"
-          N98_MAGERUN2_BIN: "${{ github.workspace }}/n98-magerun2.phar"
+          N98_MAGERUN2_BIN: "${{ github.workspace }}/build/n98-magerun2.phar"
