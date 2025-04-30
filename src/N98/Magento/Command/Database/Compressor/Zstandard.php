@@ -17,7 +17,7 @@ class Zstandard extends AbstractCompressor
     /**
      * @param InputInterface|null $input
      */
-    public function __construct(InputInterface $input = null)
+    public function __construct(?InputInterface $input = null)
     {
         $this->compressionLevel = $input ? (int)$input->getOption('zstd-level') : 10;
         $this->extraArgs = $input ? (string)$input->getOption('zstd-extra-args') : '';

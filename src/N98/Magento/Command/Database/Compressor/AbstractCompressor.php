@@ -14,10 +14,16 @@ use Symfony\Component\Console\Input\InputInterface;
 abstract class AbstractCompressor implements Compressor
 {
     /**
+     * @var \Symfony\Component\Console\Input\InputInterface|null
+     */
+    protected ?InputInterface $input;
+
+    /**
      * @param InputInterface|null $input
      */
-    public function __construct(InputInterface $input = null)
+    public function __construct(?InputInterface $input = null)
     {
+        $this->input = $input;
     }
 
     /**
