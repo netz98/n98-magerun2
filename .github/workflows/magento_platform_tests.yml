@@ -271,7 +271,7 @@ jobs:
              exit 1
           fi
 
-          composer create-project --repository-url=https://repo.magento.com/ $PACKAGE_NAME ./magento $MAGENTO_VERSION_CONSTRAINT --no-interaction --no-progress --no-suggest
+          composer create-project --repository-url=https://repo.magento.com/ $PACKAGE_NAME ./magento $MAGENTO_VERSION_CONSTRAINT --no-interaction --no-progress
 
 
       - name: Install Magento Database & Config (Non-Git)
@@ -312,7 +312,7 @@ jobs:
         run: |
           if [ -f composer.json ]; then
             composer require colinmollenhour/php-redis-session-abstract:1.5.5 --no-update --no-interaction
-            composer update colinmollenhour/php-redis-session-abstract --with-dependencies --no-progress --no-suggest
+            composer update colinmollenhour/php-redis-session-abstract --with-dependencies --no-progress
           else
             echo "Skipping credis downgrade - composer.json not found"
           fi
