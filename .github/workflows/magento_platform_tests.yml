@@ -112,7 +112,7 @@ jobs:
 
     services:
       opensearch:
-        image: opensearch:${{ matrix.opensearch-version || '' }}
+        image: opensearchproject/opensearch:${{ matrix.opensearch-version || '' }}
         env:
           # By default, ElasticSearch refuses to spawn in single node configuration, as it expects redundancy.
           # This is a dev environment, so redundancy is just wasteful.
