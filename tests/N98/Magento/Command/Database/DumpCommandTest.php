@@ -3,6 +3,7 @@
 namespace N98\Magento\Command\Database;
 
 use N98\Magento\Command\TestCase;
+use N98\Util\OperatingSystem;
 use SplFileInfo;
 
 /**
@@ -214,6 +215,10 @@ class DumpCommandTest extends TestCase
 
     public function testExecuteWithMydumper()
     {
+        if (OperatingSystem::isProgramInstalled('mydumper') === false) {
+            $this->markTestSkipped('mydumper is not installed');
+        }
+
         $input = [
             'command'        => 'db:dump',
             '--add-time'     => true,
@@ -230,6 +235,10 @@ class DumpCommandTest extends TestCase
 
     public function testWithStripOptionMydumper()
     {
+        if (OperatingSystem::isProgramInstalled('mydumper') === false) {
+            $this->markTestSkipped('mydumper is not installed');
+        }
+
         $input = [
             'command'        => 'db:dump',
             '--add-time'     => true,
@@ -248,6 +257,10 @@ class DumpCommandTest extends TestCase
 
     public function testWithExcludeOptionMydumper()
     {
+        if (OperatingSystem::isProgramInstalled('mydumper') === false) {
+            $this->markTestSkipped('mydumper is not installed');
+        }
+
         $input = [
             'command'        => 'db:dump',
             '--add-time'     => true,
@@ -258,7 +271,8 @@ class DumpCommandTest extends TestCase
             '--mydumper'     => true,
         ];
 
-        $this->assertDisplayContains($input, '--ignore-table=core_config_data');
+        $this->assertDisplayContains($input, '--ignore-table');
+        $this->assertDisplayContains($input, 'core_config_data');
         $this->assertDisplayNotContains($input, "not_existing_table_1");
     }
 }

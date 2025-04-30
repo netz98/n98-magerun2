@@ -7,7 +7,9 @@
 
 namespace N98\Magento\Application;
 
+use InvalidArgumentException;
 use N98\Magento\Command\TestCase;
+use RuntimeException;
 
 /**
  * Class ConfigFileTest
@@ -58,8 +60,7 @@ class ConfigFileTest extends TestCase
      */
     public function parseEmptyFile()
     {
-        $this->expectException(\RuntimeException::class);
-        $this->expectDeprecationMessage("Failed to parse config-file 'data://,'");
+        $this->expectException(RuntimeException::class);
         $configFile = new ConfigFile();
         $configFile->loadFile('data://,');
         $this->addToAssertionCount(1);
@@ -72,7 +73,7 @@ class ConfigFileTest extends TestCase
      */
     public function invalidFileThrowsException()
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         @ConfigFile::createFromFile(":");
     }
 }

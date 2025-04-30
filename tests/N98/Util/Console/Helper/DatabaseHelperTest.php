@@ -3,6 +3,7 @@
 namespace N98\Util\Console\Helper;
 
 use InvalidArgumentException;
+use N98\Magento\Command\CommandAware;
 use N98\Magento\Command\TestCase;
 use RuntimeException;
 
@@ -19,9 +20,13 @@ class DatabaseHelperTest extends TestCase
     protected function getHelper()
     {
         $command = $this->getApplication()->find('db:info');
-        $command->getHelperSet()->setCommand($command);
 
-        return $command->getHelper('database');
+        $helper = $command->getHelper('database');
+        if ($helper instanceof CommandAware) {
+            $helper->setCommand($command);
+        }
+
+        return $helper;
     }
 
     /**

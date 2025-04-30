@@ -10,6 +10,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use UnexpectedValueException;
 
 class GetCommand extends AbstractConfigCommand
 {
@@ -62,7 +63,7 @@ EOT
             ->addOption(
                 'format',
                 null,
-                InputOption::VALUE_REQUIRED,
+                InputOption::VALUE_OPTIONAL,
                 'Output Format. One of [' . implode(',', RendererFactory::getFormats()) . ']'
             );
 
@@ -187,7 +188,7 @@ HELP;
 
     private function renderTableValue($value, $format)
     {
-        if ($value === null) {
+        if ($value === null || $value === 'NULL') {
             switch ($format) {
                 case null:
                     $value = self::DISPLAY_NULL_UNKNOWN_VALUE;
@@ -199,7 +200,7 @@ HELP;
                     $value = 'NULL';
                     break;
                 default:
-                    throw new \UnexpectedValueException(
+                    throw new UnexpectedValueException(
                         sprintf('Unhandled format %s', var_export($value, true))
                     );
             }

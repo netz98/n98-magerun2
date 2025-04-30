@@ -2,6 +2,7 @@
 
 namespace N98\Magento\Command\Database;
 
+use N98\Magento\Command\CommandAware;
 use N98\Magento\Command\TestCase;
 use N98\Util\Console\Helper\DatabaseHelper;
 
@@ -48,8 +49,12 @@ class AddDefaultAuthorizationEntriesCommandTest extends TestCase
     private function getDatabaseHelper()
     {
         $command = $this->getApplication()->find('db:add-default-authorization-entries');
-        $command->getHelperSet()->setCommand($command);
 
-        return $command->getHelper('database');
+        $helper = $command->getHelper('database');
+        if ($helper instanceof CommandAware) {
+            $helper->setCommand($command);
+        }
+
+        return $helper;
     }
 }

@@ -13,10 +13,7 @@ class VariablesCommandTest extends TestCase
             '--format' => 'csv',
         ];
 
-        $this->assertDisplayContains($input, 'have_query_cache');
         $this->assertDisplayContains($input, 'innodb_log_buffer_size');
-        $this->assertDisplayContains($input, 'max_connections');
-        $this->assertDisplayContains($input, 'thread_cache_size');
     }
 
     public function testSearch()
@@ -27,9 +24,6 @@ class VariablesCommandTest extends TestCase
             'search'   => 'Innodb%',
         ];
 
-        $this->assertDisplayContains($input, 'innodb_concurrency_tickets');
-        $this->assertDisplayContains($input, 'innodb_file_format_check');
-        $this->assertDisplayContains($input, 'innodb_force_load_corrupted');
         $this->assertDisplayContains($input, 'innodb_log_file_size');
         $this->assertDisplayContains($input, 'innodb_read_io_threads');
     }

@@ -2,6 +2,7 @@
 
 namespace N98\Magento\Command\Eav\Attribute;
 
+use InvalidArgumentException;
 use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -52,7 +53,7 @@ class ViewCommand extends AbstractAttributeCommand
         $attributeCode = $input->getArgument('attributeCode');
         $attribute = $this->getAttribute($entityType, $attributeCode);
         if (!$attribute->getId()) {
-            throw new \InvalidArgumentException('Attribute was not found.');
+            throw new InvalidArgumentException('Attribute was not found.');
         }
 
         $table = $this->getTable($attribute);
@@ -145,7 +146,7 @@ class ViewCommand extends AbstractAttributeCommand
                 $value = '';
             }
 
-            $table[] = [$label, trim($value)];
+            $table[] = [$label, trim($value ?? '')];
         }
 
         return $table;

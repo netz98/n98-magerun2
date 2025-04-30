@@ -129,6 +129,9 @@ class ListCommand extends AbstractMagentoCommand
             }
 
             foreach ($observers as $observerName => $observerData) {
+                if (!isset($observerData['instance'])) {
+                    continue;
+                }
                 if ($firstObserver) {
                     $firstObserver = !$firstObserver;
                     $table[] = [$eventName, $observerName, $observerData['instance'] . '::' . $observerData['name']];
