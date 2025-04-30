@@ -165,6 +165,11 @@ jobs:
           ini-values: memory_limit=-1
           coverage: none
 
+      - name: Install required tools used by test workflow
+        run: | 
+          sudo apt-get update
+          sudo apt-get install -y mydumper
+
       - name: Checkout PR
         uses: actions/checkout@v4
         if: github.event_name == 'pull_request_target'
@@ -248,8 +253,6 @@ jobs:
           fi
       
           composer create-project --repository-url="${{ matrix.composer-repository-url }}" $PACKAGE_NAME ./magento "${{ matrix.magento-version }}" --no-interaction --no-progress
-
-
 
       - name: Install Magento Database & Config (Non-Git)
         if: matrix.use-git-repository == false
