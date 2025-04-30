@@ -185,9 +185,9 @@ jobs:
         run: composer install --no-interaction --prefer-dist --no-progress
 
       - name: Setup Magento Open Source Repository Credentials
+        if: matrix.composer-repository-url == 'https://repo.magento.com/' && matrix.use-git-repository == false
         run: |
-          composer global config http-basic.repo.magento.com "${MAGENTO_MARKETPLACE_USERNAME}" "${MAGENTO_MARKETPLACE_PASSWORD}";
-        if: startsWith(matrix.magento-version, 'magento-ce') && matrix.use-git-repository == false
+          composer global config http-basic.repo.magento.com "${MAGENTO_MARKETPLACE_USERNAME}" "${MAGENTO_MARKETPLACE_PASSWORD}"
 
       # --- Installation Method: Git Repository ---
       - name: Install Magento via git
