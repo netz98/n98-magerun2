@@ -67,7 +67,7 @@ jobs:
             operating-system: ubuntu-latest
             php-version: '8.1'
             mariadb-version: '10.6'
-            elasticsearch-version: '7.9.0'
+            opensearch-version: '2'
             composer-version: '2.2.17'
             use-git-repository: false
             git-repository: ""
@@ -96,7 +96,7 @@ jobs:
             operating-system: ubuntu-latest
             php-version: '8.3'
             mariadb-version: '10.6'
-            elasticsearch-version: '7.16.0'
+            opensearch-version: '2'
             composer-version: '2.2.17'
             use-git-repository: false
             git-repository: ""
@@ -106,7 +106,7 @@ jobs:
             operating-system: ubuntu-latest
             php-version: '8.2'
             mariadb-version: '10.6'
-            elasticsearch-version: '7.16.0'
+            opensearch-version: '2'
             composer-version: '2.2.17'
             use-git-repository: false
             git-repository: ""
@@ -128,7 +128,7 @@ jobs:
           #   operating-system: ubuntu-latest
           #   php-version: '8.1'
           #   mariadb-version: '10.6' # Changed from mysql-version
-          #   elasticsearch-version: '7.16.0'
+          #   opensearch-version: '2'
           #   composer-version: v2
           #   use-git-repository: true
           #   git-repository: https://github.com/magento/magento2.git
@@ -136,25 +136,8 @@ jobs:
 
 
     services:
-      # Elasticsearch Service (unchanged logic)
-      elasticsearch:
-        image: docker.elastic.co/elasticsearch/elasticsearch:${{ matrix.elasticsearch-version }}
-        if: matrix.opensearch-version == '' || matrix.opensearch-version == null
-        ports:
-          - 9200:9200
-          - 9300:9300
-        options: >-
-          -e="discovery.type=single-node"
-          -e="ES_JAVA_OPTS=-Xms1g -Xmx1g"
-          --health-cmd="curl -f http://localhost:9200/_cluster/health || exit 1"
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=10
-
-      # OpenSearch Service (unchanged logic)
       opensearch:
         image: opensearchproject/opensearch:${{ matrix.opensearch-version }}
-        if: matrix.opensearch-version != '' && matrix.opensearch-version != null
         ports:
           - 9200:9200
           - 9600:9600
@@ -166,7 +149,6 @@ jobs:
           --health-timeout=5s
           --health-retries=10
 
-      # Changed mysql service to mariadb
       mariadb:
         image: mariadb:${{ matrix.mariadb-version }} # Use MariaDB image and matrix variable
         env:
@@ -250,20 +232,6 @@ jobs:
           composer --version
           composer install --no-interaction --no-progress --no-suggest
 
-          echo "Setting up Search Engine parameters..."
-          if [[ -n "${{ matrix.opensearch-version }}" ]]; then
-            echo "Using OpenSearch ${{ matrix.opensearch-version }}"
-            SEARCH_ENGINE="opensearch"
-            SEARCH_HOST_PARAM="--opensearch-host=${{ env.SEARCH_HOST }}"
-            SEARCH_PORT_PARAM="--opensearch-port=${{ env.SEARCH_PORT }}"
-          else
-            echo "Using Elasticsearch ${{ matrix.elasticsearch-version }}"
-            SEARCH_ENGINE="elasticsearch7" # Assuming ES7 based on typical Magento versions
-            SEARCH_HOST_PARAM="--elasticsearch-host=${{ env.SEARCH_HOST }}"
-            SEARCH_PORT_PARAM="--elasticsearch-port=${{ env.SEARCH_PORT }}"
-          fi
-
-          echo "Running Magento setup:install using MariaDB"
           bin/magento setup:install \
             --db-host="127.0.0.1" \
             --db-port="${{ job.services.mariadb.ports['3306'] }}" \
@@ -284,7 +252,9 @@ jobs:
             --admin-firstname=Armin \
             --admin-lastname=Admin \
             --admin-email="admin@example.com" \
-            --search-engine="$SEARCH_ENGINE" \
+            --search-engine="opensearch" \
+            --opensearch-host=${{ env.SEARCH_HOST }} \
+            --opensearch-port=${{ env.SEARCH_PORT }} \
             $SEARCH_HOST_PARAM \
             $SEARCH_PORT_PARAM
 
@@ -316,20 +286,6 @@ jobs:
         if: matrix.use-git-repository == false
         working-directory: ./magento
         run: |
-          echo "Setting up Search Engine parameters..."
-          if [[ -n "${{ matrix.opensearch-version }}" ]]; then
-            echo "Using OpenSearch ${{ matrix.opensearch-version }}"
-            SEARCH_ENGINE="opensearch"
-            SEARCH_HOST_PARAM="--opensearch-host=${{ env.SEARCH_HOST }}"
-            SEARCH_PORT_PARAM="--opensearch-port=${{ env.SEARCH_PORT }}"
-          else
-            echo "Using Elasticsearch ${{ matrix.elasticsearch-version }}"
-            SEARCH_ENGINE="elasticsearch7" # Assuming ES7
-            SEARCH_HOST_PARAM="--elasticsearch-host=${{ env.SEARCH_HOST }}"
-            SEARCH_PORT_PARAM="--elasticsearch-port=${{ env.SEARCH_PORT }}"
-          fi
-
-          echo "Running Magento setup:install using MariaDB"
           # Add a small delay to ensure MariaDB is fully ready after health check passes, if needed
           # sleep 5
           bin/magento setup:install \
@@ -352,7 +308,9 @@ jobs:
             --admin-firstname=Armin \
             --admin-lastname=Admin \
             --admin-email="admin@example.com" \
-            --search-engine="$SEARCH_ENGINE" \
+            --search-engine="opensearch" \
+            --opensearch-host=${{ env.SEARCH_HOST }} \
+            --opensearch-port=${{ env.SEARCH_PORT }} \
             $SEARCH_HOST_PARAM \
             $SEARCH_PORT_PARAM
 
