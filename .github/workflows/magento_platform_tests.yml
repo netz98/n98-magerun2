@@ -207,7 +207,7 @@ jobs:
             ${{ runner.os }}-php-${{ matrix.php-version }}-composer-
 
       - name: Install Magerun dependencies
-        run: composer install --no-interaction --prefer-dist --no-progress --no-suggest
+        run: composer install --no-interaction --prefer-dist --no-progress
 
       - name: Setup Magento Open Source Repository Credentials
         run: |
@@ -223,7 +223,7 @@ jobs:
           cd "$GITHUB_WORKSPACE/magento"
           echo "Installing Magento dependencies via Composer"
           composer --version
-          composer install --no-interaction --no-progress --no-suggest
+          composer install --no-interaction --no-progress
 
           bin/magento setup:install \
             --db-host="127.0.0.1" \
