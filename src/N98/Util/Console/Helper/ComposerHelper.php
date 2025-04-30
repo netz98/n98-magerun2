@@ -3,6 +3,7 @@
 namespace N98\Util\Console\Helper;
 
 use Exception;
+use function json_decode;
 use N98\Magento\Command\CommandAware;
 use N98\Util\BinaryString;
 use N98\Util\OperatingSystem;
@@ -11,7 +12,6 @@ use Symfony\Component\Console\Input\InputAwareInterface;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
-use function json_decode;
 
 /**
  * Class ComposerHelper

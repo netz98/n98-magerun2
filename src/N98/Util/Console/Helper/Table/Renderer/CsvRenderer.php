@@ -2,9 +2,9 @@
 
 namespace N98\Util\Console\Helper\Table\Renderer;
 
+use const STDOUT;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Output\StreamOutput;
-use const STDOUT;
 
 /**
  * Class CsvRenderer
