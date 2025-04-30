@@ -40,7 +40,6 @@ jobs:
     # Updated job name to reflect MariaDB usage
     name: Unit Tests (${{ matrix.magento-version }} / PHP ${{ matrix.php-version }} / MariaDB ${{ matrix.mariadb-version }} / ${{ matrix.opensearch-version && 'OpenSearch' || 'Elasticsearch' }})
     runs-on: ${{ matrix.operating-system }}
-    continue-on-error: true
     strategy:
       fail-fast: false
       matrix:
