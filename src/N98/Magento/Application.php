@@ -478,7 +478,7 @@ class Application extends BaseApplication
      * @return void
      * @throws Exception
      */
-    public function detectMagento(InputInterface $input = null, OutputInterface $output = null)
+    public function detectMagento(?InputInterface $input = null, ?OutputInterface $output = null)
     {
         if ($this->detectionResult) {
             return;

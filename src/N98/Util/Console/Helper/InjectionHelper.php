@@ -2,15 +2,21 @@
 
 namespace N98\Util\Console\Helper;
 
+use InvalidArgumentException;
 use Magento\Framework\ObjectManagerInterface;
+use N98\Magento\Command\CommandAware;
+use ReflectionClass;
+use ReflectionParameter;
 use Symfony\Component\Console\Helper\Helper as AbstractHelper;
 
 /**
  * Class InjectionHelper
  * @package N98\Util\Console\Helper
  */
-class InjectionHelper extends AbstractHelper
+class InjectionHelper extends AbstractHelper implements CommandAware
 {
+    use CommandTrait;
+
     /**
      * Returns the canonical name of this helper.
      *
@@ -49,7 +55,7 @@ class InjectionHelper extends AbstractHelper
         $parameters = $this->getMethod($class, '__construct');
         $argumentsToInject = array_map([$objectManager, 'get'], $parameters);
 
-        return (new \ReflectionClass($class))->newInstanceArgs($argumentsToInject);
+        return (new ReflectionClass($class))->newInstanceArgs($argumentsToInject);
     }
 
     /**
@@ -62,14 +68,14 @@ class InjectionHelper extends AbstractHelper
      */
     protected function getMethod($class, $methodName)
     {
-        $refl = new \ReflectionClass($class);
+        $refl = new ReflectionClass($class);
         if (!$refl->hasMethod($methodName)) {
             return [];
         }
 
         $method = $refl->getMethod($methodName);
         if (!$method) {
-            throw new \InvalidArgumentException(
+            throw new InvalidArgumentException(
                 sprintf('Unable to obtain method "%s" for class "%s"', $class, $methodName)
             );
         }
@@ -82,10 +88,10 @@ class InjectionHelper extends AbstractHelper
      * @return null|string
      * @throws \ReflectionException
      */
-    private function getParameterClass(\ReflectionParameter $parameter)
+    private function getParameterClass(ReflectionParameter $parameter)
     {
         $class = $parameter->getType() && !$parameter->getType()->isBuiltin()
-            ? (new \ReflectionClass($parameter->getType()->getName()))->getName()
+            ? (new ReflectionClass($parameter->getType()->getName()))->getName()
             : null;
 
         return $class;

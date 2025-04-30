@@ -13,14 +13,14 @@ use Symfony\Component\Console\Command\Command;
 
 trait CommandTrait
 {
-    protected Command $command;
+    protected ?Command $command = null;
 
     public function setCommand(Command $command): void
     {
         $this->command = $command;
     }
 
-    protected function getCommand(): Command
+    protected function getCommand(): ?Command
     {
         return $this->command;
     }

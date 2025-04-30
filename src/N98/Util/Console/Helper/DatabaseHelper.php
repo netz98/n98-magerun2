@@ -4,6 +4,7 @@ namespace N98\Util\Console\Helper;
 
 use InvalidArgumentException;
 use Magento\Framework\Exception\FileSystemException;
+use N98\Magento\Command\CommandAware;
 use N98\Util\Exec;
 use PDO;
 use PDOException;
@@ -18,8 +19,10 @@ use Symfony\Component\Console\Output\OutputInterface;
  *
  * @package N98\Util\Console\Helper
  */
-class DatabaseHelper extends AbstractHelper
+class DatabaseHelper extends AbstractHelper implements CommandAware
 {
+    use CommandTrait;
+
     /**
      * @var array
      */

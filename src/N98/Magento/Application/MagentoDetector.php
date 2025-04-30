@@ -25,9 +25,9 @@ class MagentoDetector
      * @return \N98\Magento\Application\DetectionResult
      */
     public function detect(
-        InputInterface $input,
-        OutputInterface $output,
-        Config $config,
+        ?InputInterface $input,
+        ?OutputInterface $output,
+        ?Config $config,
         HelperSet $helperSet,
         $magentoRootDirectory = null
     ) {

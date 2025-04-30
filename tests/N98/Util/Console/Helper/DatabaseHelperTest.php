@@ -17,16 +17,9 @@ class DatabaseHelperTest extends TestCase
     /**
      * @return DatabaseHelper
      */
-    protected function getHelper()
+    protected function getHelper(): DatabaseHelper
     {
-        $command = $this->getApplication()->find('db:info');
-
-        $helper = $command->getHelper('database');
-        if ($helper instanceof CommandAware) {
-            $helper->setCommand($command);
-        }
-
-        return $helper;
+        return $this->getApplication()->getHelperSet()->get('database');
     }
 
     /**

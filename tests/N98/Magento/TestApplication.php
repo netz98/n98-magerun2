@@ -10,6 +10,7 @@ namespace N98\Magento;
 use PHPUnit\Framework\MockObject\Generator;
 use PHPUnit\Framework\MockObject\Matcher\AnyInvokedCount;
 use PHPUnit\Framework\MockObject\Stub\ReturnStub as ReturnStubAlias;
+use PHPUnit\Framework\SkippedTestError;
 use PHPUnit_Framework_MockObject_MockObject;
 use RuntimeException;
 
@@ -144,7 +145,10 @@ class TestApplication
             $mockObjectGenerator = new Generator();
 
             /** @var Application|PHPUnit_Framework_MockObject_MockObject $application */
-            $application = $mockObjectGenerator->getMock(\N98\Magento\Application::class, ['getMagentoRootFolder']);
+            $application = $mockObjectGenerator->getMock(
+                Application::class,
+                ['getMagentoRootFolder']
+            );
 
             // Get the composer bootstraph
             if (defined('PHPUNIT_COMPOSER_INSTALL')) {
@@ -207,6 +211,6 @@ class TestApplication
      */
     public static function markTestSkipped($message = '')
     {
-        throw new \PHPUnit\Framework\SkippedTestError($message);
+        throw new SkippedTestError($message);
     }
 }

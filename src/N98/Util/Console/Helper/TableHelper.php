@@ -2,6 +2,7 @@
 
 namespace N98\Util\Console\Helper;
 
+use N98\Magento\Command\CommandAware;
 use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
 use N98\Util\Console\Helper\Table\Renderer\RendererInterface;
 use Symfony\Component\Console\Helper\Helper as AbstractHelper;
@@ -15,8 +16,10 @@ use Symfony\Component\Console\Output\OutputInterface;
  * Based on draw_text_table by Paul Maunders
  * Available at http://www.pyrosoft.co.uk/blog/2007/07/01/php-array-to-text-table-function/
  */
-class TableHelper extends AbstractHelper
+class TableHelper extends AbstractHelper implements CommandAware
 {
+    use CommandTrait;
+
     /**
      * @var string
      */

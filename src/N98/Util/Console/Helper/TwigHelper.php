@@ -3,6 +3,7 @@
 namespace N98\Util\Console\Helper;
 
 use Exception;
+use N98\Magento\Command\CommandAware;
 use N98\Util\Template\Twig;
 use RuntimeException;
 use Symfony\Component\Console\Helper\Helper;
@@ -12,8 +13,10 @@ use Symfony\Component\Console\Helper\Helper;
  *
  * @package N98\Util\Console\Helper
  */
-class TwigHelper extends Helper
+class TwigHelper extends Helper implements CommandAware
 {
+    use CommandTrait;
+
     /**
      * @var \N98\Util\Template\Twig
      */

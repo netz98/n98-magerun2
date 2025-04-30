@@ -2,6 +2,8 @@
 
 namespace N98\Util\Console\Helper;
 
+use Exception;
+use N98\Magento\Command\CommandAware;
 use N98\Util\BinaryString;
 use N98\Util\OperatingSystem;
 use Symfony\Component\Console\Helper\Helper as AbstractHelper;
@@ -9,13 +11,36 @@ use Symfony\Component\Console\Input\InputAwareInterface;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
+use function json_decode;
 
 /**
  * Class ComposerHelper
  * @package N98\Util\Console\Helper
  */
-class ComposerHelper extends AbstractHelper implements InputAwareInterface
+class ComposerHelper extends AbstractHelper implements InputAwareInterface, CommandAware
 {
+    use CommandTrait;
+
+    /**
+     * @var string
+     */
+    protected $composerBin = '';
+
+    /**
+     * @var string
+     */
+    protected $composerHome = '';
+
+    /**
+     * @var string
+     */
+    protected $composerCache = '';
+
+    /**
+     * @var string
+     */
+    protected $composerConfig = '';
+
     /**
      * @var InputInterface
      */
@@ -78,11 +103,11 @@ class ComposerHelper extends AbstractHelper implements InputAwareInterface
 
                 $jsonCode .= $line;
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $jsonCode = 'false';
         }
 
-        return \json_decode($jsonCode);
+        return json_decode($jsonCode);
     }
 
     /**

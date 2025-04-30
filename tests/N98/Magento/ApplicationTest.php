@@ -2,10 +2,14 @@
 
 namespace N98\Magento;
 
+use Composer\Autoload\ClassLoader;
 use N98\Magento\Application\ConfigurationLoader;
+use N98\Magento\Command\System\Store\ListCommand;
 use N98\Magento\Command\TestCase;
 use N98\Util\ArrayFunctions;
+use N98MagerunTest\TestDummyCommand;
 use org\bovigo\vfs\vfsStream;
+use ReflectionClass;
 use Symfony\Component\Console\Input\StringInput;
 use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Console\Tester\CommandTester;
@@ -42,13 +46,13 @@ class ApplicationTest extends TestCase
         $application = require __DIR__ . '/../../../src/bootstrap.php';
         $application->setMagentoRootFolder($this->getTestMagentoRoot());
 
-        $this->assertInstanceOf(\N98\Magento\Application::class, $application);
+        $this->assertInstanceOf(Application::class, $application);
         $loader = $application->getAutoloader();
-        $this->assertInstanceOf(\Composer\Autoload\ClassLoader::class, $loader);
+        $this->assertInstanceOf(ClassLoader::class, $loader);
 
         /* @var $loader \Composer\Autoload\ClassLoader */
-        $prefixes = $loader->getPrefixes();
-        $this->assertArrayHasKey('N98', $prefixes);
+        $prefixes = $loader->getPrefixesPsr4();
+        $this->assertArrayHasKey('N98\\', $prefixes);
 
         $distConfigArray = Yaml::parse(file_get_contents(__DIR__ . '/../../../config.yaml'));
 
@@ -82,7 +86,7 @@ class ApplicationTest extends TestCase
         $this->assertArrayHasKey('N98MagerunTest', $prefixes);
 
         $testDummyCommand = $application->find('n98mageruntest:test:dummy');
-        $this->assertInstanceOf(\N98MagerunTest\TestDummyCommand::class, $testDummyCommand);
+        $this->assertInstanceOf(TestDummyCommand::class, $testDummyCommand);
 
         $commandTester = new CommandTester($testDummyCommand);
         $commandTester->execute(
@@ -94,7 +98,7 @@ class ApplicationTest extends TestCase
         $this->assertTrue($application->getDefinition()->hasOption('root-dir'));
 
         // check alias
-        $this->assertInstanceOf(\N98\Magento\Command\System\Store\ListCommand::class, $application->find('ssl'));
+        $this->assertInstanceOf(ListCommand::class, $application->find('ssl'));
     }
 
     public function testPlugins()
@@ -174,7 +178,7 @@ CONFIG;
             ->getMock();
 
         // simulate non phar mode
-        $reflection = new \ReflectionClass($configurationLoader);
+        $reflection = new ReflectionClass($configurationLoader);
         $isPharModeReflectionProperty = $reflection->getProperty('isPharMode');
         $isPharModeReflectionProperty->setAccessible(true);
         $isPharModeReflectionProperty->setValue($configurationLoader, false);
