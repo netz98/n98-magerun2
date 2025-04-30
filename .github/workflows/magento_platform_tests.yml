@@ -201,7 +201,7 @@ jobs:
           composer install --no-interaction --no-progress
 
           bin/magento setup:install \
-            --db-host="127.0.0.1" \
+            --db-host="mariadb" \
             --db-user=root \
             --db-password=root \
             --db-name=magento \
@@ -250,7 +250,7 @@ jobs:
           # Add a small delay to ensure MariaDB is fully ready after health check passes, if needed
           # sleep 5
           bin/magento setup:install \
-            --db-host="127.0.0.1" \
+            --db-host="mariadb" \
             --db-user=root \
             --db-password=root \
             --db-name=magento \
