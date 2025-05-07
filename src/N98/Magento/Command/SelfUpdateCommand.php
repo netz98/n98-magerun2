@@ -301,6 +301,7 @@ EOT
             // Prepare cURL options: force HTTP/1.1 and resume from last byte on retries
             $curlOpts = [
                 CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_BUFFERSIZE   => 128*1024, // 128 KB chunks instead of default 16 KB
             ];
             if ($attempt > 1 && file_exists($tempFilename)) {
                 $curlOpts[CURLOPT_RESUME_FROM] = filesize($tempFilename);
