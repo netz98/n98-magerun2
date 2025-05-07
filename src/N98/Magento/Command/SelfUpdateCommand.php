@@ -354,13 +354,13 @@ EOT
                 $output->writeln('');
 
                 $msg = $e->getMessage();
-                // Recover if error 18 but file is actually complete
+
                 if (strpos($msg, 'cURL error 18') !== false
                     && $filesize > 0
                     && file_exists($tempFilename)
                     && filesize($tempFilename) === $filesize
                 ) {
-                    $output->writeln("<info>File size matches expected size despite cURL error 18. Treating as success.</info>");
+                    $output->writeln('<info>File is complete despite cURL error 18. Proceeding.</info>');
                     return;
                 }
 
