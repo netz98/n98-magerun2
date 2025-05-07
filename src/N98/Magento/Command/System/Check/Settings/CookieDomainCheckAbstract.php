@@ -78,7 +78,7 @@ abstract class CookieDomainCheckAbstract extends CheckAbstract
      */
     public function validateCookieDomainAgainstUrl($cookieDomain, $siteUrl)
     {
-        $siteDomain = strtolower(parse_url($siteUrl, PHP_URL_HOST));
+        $siteDomain = strtolower(parse_url($siteUrl, PHP_URL_HOST) ?? '');
         $siteLen = strlen($siteDomain);
 
         if (0 === $siteLen) {

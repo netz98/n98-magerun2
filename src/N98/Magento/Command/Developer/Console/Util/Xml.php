@@ -52,9 +52,9 @@ class Xml
                 $node = $node->addChild($nodeName);
             }
 
-            $attributeString = trim(array_pop($parts), ']');
+            $attributeString = trim(array_pop($parts) ?? '', ']');
 
-            if (!$attributeString) {
+            if ($attributeString === '') {
                 continue;
             }
 
