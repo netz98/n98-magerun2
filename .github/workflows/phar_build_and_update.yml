@@ -35,6 +35,8 @@ jobs:
         with:
           tools: composer:2
           php-version: '8.3'
+          extensions: bcmath, ctype, curl, dom, gd, hash, iconv, intl, mbstring, pdo_mysql, simplexml, soap, sodium, xml, zip, sockets
+          ini-values: memory_limit=-1, phar.readonly=0
 
       - name: Checkout PR
         uses: actions/checkout@v4.2.2
