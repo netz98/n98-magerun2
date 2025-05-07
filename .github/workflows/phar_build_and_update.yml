@@ -42,6 +42,13 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha }}
 
+      - name: Manually triggered checkout
+        if: github.event_name == 'workflow_dispatch'
+        uses: actions/checkout@v4.2.2
+        with:
+          ref: ${{ github.ref }}
+          fetch-depth: 0
+
       - name: Checkout HEAD
         uses: actions/checkout@v4.2.2
         if: github.event_name == 'push'
