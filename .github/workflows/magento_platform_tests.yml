@@ -47,7 +47,7 @@ jobs:
           # Mage-OS versions
           - magento-version: 1.1.1
             composer-repository-url: "https://repo.mage-os.org/"
-            operating-system: ubuntu-latest
+            operating-system: ubuntu-22.04
             php-version: '8.4'
             mariadb-version: '10.6'
             opensearch-version: '2'
@@ -57,7 +57,7 @@ jobs:
 
           - magento-version: 1.1.1
             composer-repository-url: "https://repo.mage-os.org/"
-            operating-system: ubuntu-latest
+            operating-system: ubuntu-22.04
             php-version: '8.3'
             mariadb-version: '10.6'
             opensearch-version: '2'
@@ -68,7 +68,7 @@ jobs:
           # Magento versions
           - magento-version: 2.4.8
             composer-repository-url: "https://repo.magento.com/"
-            operating-system: ubuntu-latest
+            operating-system: ubuntu-22.04
             php-version: '8.4'
             mariadb-version: '10.6'
             opensearch-version: '2'
@@ -79,7 +79,7 @@ jobs:
 
           - magento-version: 2.4.8
             composer-repository-url: "https://repo.magento.com/"
-            operating-system: ubuntu-latest
+            operating-system: ubuntu-22.04
             php-version: '8.3'
             mariadb-version: '10.6'
             opensearch-version: '2'
@@ -90,7 +90,7 @@ jobs:
 
           - magento-version: 2.4.7-p5
             composer-repository-url: "https://repo.magento.com/"
-            operating-system: ubuntu-latest
+            operating-system: ubuntu-22.04
             php-version: '8.3'
             mariadb-version: '10.6'
             opensearch-version: '2'
@@ -101,7 +101,7 @@ jobs:
 
           - magento-version: 2.4.6-p10
             composer-repository-url: "https://repo.magento.com/"
-            operating-system: ubuntu-latest
+            operating-system: ubuntu-22.04
             php-version: '8.2'
             mariadb-version: '10.6'
             opensearch-version: '2'
