@@ -35,6 +35,12 @@ class PullRequestCommand extends AbstractMagentoCommand
             ->addOption('apply', 'a', InputOption::VALUE_NONE, 'Apply patch to current working directory')
             ->addOption('diff', null, InputOption::VALUE_NONE, 'Raw diff download')
             ->addOption('json', null, InputOption::VALUE_NONE, 'Show pull request data as json')
+            ->addOption(
+                'github-token',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'Github API token to avoid rate limits (can also be set via ENV variable GITHUB_TOKEN)'
+            )
             ->setDescription('Download patch from github merge request <comment>(experimental)</comment>');
     }
 
@@ -46,7 +52,7 @@ class PullRequestCommand extends AbstractMagentoCommand
             $this->repository = 'mage-os/mageos-magento2';
         }
 
-        $pullRequestDataResponse = $this->getPullRequestInfoByApi($input);
+        $pullRequestDataResponse = $this->getPullRequestInfoByApi($input, $output);
 
         if ($input->getOption('json')) {
             $output->writeln($pullRequestDataResponse->body);
@@ -68,7 +74,7 @@ class PullRequestCommand extends AbstractMagentoCommand
          * Show only diff
          */
         if ($input->getOption('diff')) {
-            $output->write($this->fetchDiffContent($prData['diff_url']));
+            $output->write($this->fetchDiffContent($prData['diff_url'], $input));
 
             return Command::SUCCESS;
         }
@@ -82,7 +88,7 @@ class PullRequestCommand extends AbstractMagentoCommand
                 $replaceVendor = 'mage-os';
             }
 
-            $patchFilename = $this->patchFile($prData, $replaceVendor, $output);
+            $patchFilename = $this->patchFile($prData, $replaceVendor, $output, $input);
 
             if ($input->getOption('apply')) {
                 $this->applyPatch($output, $patchFilename);
@@ -100,12 +106,14 @@ class PullRequestCommand extends AbstractMagentoCommand
 
     /**
      * @param string $diffUrl
+     * @param InputInterface $input
      * @return string
      */
-    protected function fetchDiffContent($diffUrl): string
+    protected function fetchDiffContent(string $diffUrl, InputInterface $input): string
     {
         if ($this->diffContent === '') {
-            $response = Requests::get($diffUrl, [], ['verify' => true]);
+            $headers = $this->getGithubApiHeaders($input);
+            $response = Requests::get($diffUrl, $headers, ['verify' => true]);
             $this->diffContent = $response->body;
         }
 
@@ -116,12 +124,13 @@ class PullRequestCommand extends AbstractMagentoCommand
      * @param array $prData
      * @param string $replaceVendor
      * @param OutputInterface $output
+     * @param InputInterface $input
      * @return string Patch file name
      */
-    protected function patchFile(array $prData, string $replaceVendor, OutputInterface $output): string
+    protected function patchFile(array $prData, string $replaceVendor, OutputInterface $output, InputInterface $input): string
     {
         $patchFileContent = PatchFileContentCreator::create(
-            $this->fetchDiffContent($prData['diff_url']),
+            $this->fetchDiffContent($prData['diff_url'], $input),
             $replaceVendor
         );
 
@@ -141,22 +150,91 @@ class PullRequestCommand extends AbstractMagentoCommand
         return $filename;
     }
 
+    protected function getPullRequestInfoByApi(InputInterface $input, OutputInterface $output, int $maxRetries = 5, int $baseDelaySeconds = 2): Response
+    {
+        $headers = $this->getGithubApiHeaders($input);
+        $url = sprintf(
+            'https://api.github.com/repos/%s/pulls/%d',
+            $this->repository,
+            $input->getArgument('number')
+        );
+        $retryCount = 0;
+
+        while (true) {
+            try {
+                $response = Requests::get($url, $headers, ['verify' => true]);
+
+                if ($response->status_code >= 200 && $response->status_code < 300) {
+                    return $response;
+                }
+
+                if ($response->status_code === 403 && isset($response->headers['X-RateLimit-Remaining']) && $response->headers['X-RateLimit-Remaining'] === '0') {
+                    $retryCount++;
+                    if ($retryCount > $maxRetries) {
+                        throw new RuntimeException(
+                            sprintf('GitHub API rate limit exceeded (403) after %d retries. Last response: %s', $maxRetries, $response->body)
+                        );
+                    }
+                    $resetTimestamp = $response->headers['X-RateLimit-Reset'] ?? time() + $baseDelaySeconds * (2 ** ($retryCount - 1));
+                    $waitTime = (int) ($resetTimestamp - time());
+                    if ($waitTime < 1) {
+                        $waitTime = $baseDelaySeconds * (2 ** ($retryCount - 1));
+                    }
+                    $output->writeln(
+                        sprintf('<warning>GitHub API rate limit hit (403). Waiting for %d seconds before retrying...</warning>', $waitTime)
+                    );
+                    sleep($waitTime);
+                    continue;
+                }
+
+                if ($response->status_code === 429) {
+                    $retryCount++;
+                    if ($retryCount > $maxRetries) {
+                        throw new RuntimeException(
+                            sprintf('GitHub API secondary rate limit exceeded (429) after %d retries. Last response: %s', $maxRetries, $response->body)
+                        );
+                    }
+                    $retryAfter = $response->headers['Retry-After'] ?? $baseDelaySeconds * (2 ** ($retryCount - 1));
+                    $output->writeln(
+                        sprintf('<warning>GitHub API secondary rate limit hit (429). Retrying in %d seconds...</warning>', $retryAfter)
+                    );
+                    sleep((int) $retryAfter);
+                    continue;
+                }
+
+                // Other errors, don't retry immediately
+                throw new RuntimeException(
+                    sprintf('Error fetching pull request info. Status code: %d, Response: %s', $response->status_code, $response->body)
+                );
+
+            } catch (\WpOrg\Requests\Exception $e) {
+                $retryCount++;
+                if ($retryCount > $maxRetries) {
+                    throw new RuntimeException(
+                        sprintf('Network error during GitHub API request after %d retries: %s', $maxRetries, $e->getMessage())
+                    );
+                }
+                $waitTime = $baseDelaySeconds * (2 ** ($retryCount - 1));
+                $this->output->writeln(
+                    sprintf('<warning>Network error during GitHub API request. Retrying in %d seconds...</warning>', $waitTime)
+                );
+                sleep($waitTime);
+            }
+        }
+    }
+
     /**
      * @param InputInterface $input
-     * @return \WpOrg\Requests\Response
+     * @return array
      */
-    protected function getPullRequestInfoByApi(InputInterface $input): Response
+    private function getGithubApiHeaders(InputInterface $input): array
     {
-        $pullRequestDataResponse = Requests::get(
-            sprintf(
-                'https://api.github.com/repos/%s/pulls/%d.patch',
-                $this->repository,
-                $input->getArgument('number')
-            ),
-            [],
-            ['verify' => true]
-        );
-        return $pullRequestDataResponse;
+        $headers = [];
+        $token = $input->getOption('github-token') ?: getenv('GITHUB_TOKEN');
+        if ($token) {
+            $headers['Authorization'] = 'token ' . $token;
+        }
+        return $headers;
     }
 
     /**

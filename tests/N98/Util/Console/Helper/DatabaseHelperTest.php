@@ -18,7 +18,12 @@ class DatabaseHelperTest extends TestCase
      */
     protected function getHelper(): DatabaseHelper
     {
-        return $this->getApplication()->getHelperSet()->get('database');
+        $helperSet = $this->getApplication()->getHelperSet();
+
+        /** @var DatabaseHelper $dbHelper */
+        $dbHelper = $helperSet->get('database');
+
+        return $dbHelper;
     }
 
     /**

@@ -1253,8 +1253,6 @@ n98-magerun2.phar integration:delete <name_or_id>
 
 ### Github
 
-(experimental) Commands
-
 ### Pull Requests
 
 Gets infos about Github Pull Requests.
@@ -1262,30 +1260,37 @@ If no Github Repository is defined by `---repository` (-r) option the default
 Magento 2 Github Repository `magento/magento2` is used.
 For the [Mage-OS](https://github.com/mage-os/mageos-magento2) repository we provide a shortcut option `--mage-os`.
 
+The command uses the GitHub API which has a rate limits for unauthenticated users.
+If you want to avoid the rate limit, you can set a Gitkub token in your environment.
+The token can be created in your GitHub account settings.
+You can set the token as environment variable `GITHUB_TOKEN` or use the `--github-token` option.
+
+```sh
+
 If the command is executed without any options it will show infos about the PR.
 
 ```sh
 # Magento 2 Open Source
-n98-magerun2.phar github:pr:patch <pr-number>
+n98-magerun2.phar github:pr <pr-number>
 
 # Mage-OS
-n98-magerun2.phar github:pr:patch --mage-os <pr-number>
+n98-magerun2.phar github:pr --mage-os <pr-number>
 ```
 
 *Create a patch file from PR:*
 
 ```sh
-n98-magerun2.phar github:pr:patch --patch <pr-number>
+n98-magerun2.phar github:pr --patch <pr-number>
 ```
 
 *Directly apply the patch:*
 
 ```sh
 # Magento 2 Open Source
-n98-magerun2.phar github:pr:patch --patch --apply <pr-number>
+n98-magerun2.phar github:pr --patch --apply <pr-number>
 
 # for Mage-OS
-n98-magerun2.phar github:pr:patch --mage-os --patch --apply <pr-number>
+n98-magerun2.phar github:pr --mage-os --patch --apply <pr-number>
 ```
 
 Files of the magento2-base and magento2-ee-base and b2b base packages are currently not handled by the command.
@@ -1293,7 +1298,7 @@ Files of the magento2-base and magento2-ee-base and b2b base packages are curren
 **List only the raw diff:**
 
 ```sh
-n98-magerun2.phar github:pr:patch --diff <pr-number>
+n98-magerun2.phar github:pr --diff <pr-number>
 ```
 
 ---
