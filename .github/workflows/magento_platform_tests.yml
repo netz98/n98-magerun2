@@ -298,7 +298,7 @@ jobs:
         uses: mheap/phpunit-matcher-action@v1
 
       - name: Run PHPUnit (Developer Mode)
-        run: vendor/bin/phpunit --debug --process-isolation
+        run: vendor/bin/phpunit --debug
         env:
           N98_MAGERUN2_TEST_MAGENTO_ROOT: "${{ github.workspace }}/magento"
 
@@ -311,7 +311,7 @@ jobs:
           php bin/magento deploy:mode:set production -s
 
       - name: Run PHPUnit (Production Mode)
-        run: vendor/bin/phpunit --debug --process-isolation
+        run: vendor/bin/phpunit --debug
         env:
           N98_MAGERUN2_TEST_MAGENTO_ROOT: "${{ github.workspace }}/magento"
 
