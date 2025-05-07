@@ -9,7 +9,7 @@ class ListCommandTest extends TestCase
     public function testGlobalList()
     {
         $this->assertDisplayContains(
-            ['command' => 'dev:di:preference:list', 'area' => 'global'],
+            ['command' => 'dev:di:preferences:list', 'area' => 'global'],
             'Magento\Store\Api\Data\StoreInterface'
         );
     }
@@ -17,7 +17,7 @@ class ListCommandTest extends TestCase
     public function testCrontabList()
     {
         $this->assertDisplayContains(
-            ['command' => 'dev:di:preference:list', 'area' => 'crontab'],
+            ['command' => 'dev:di:preferences:list', 'area' => 'crontab'],
             'Magento\Backend\App\ConfigInterface'
         );
     }
