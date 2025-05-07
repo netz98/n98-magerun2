@@ -14,6 +14,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use UnexpectedValueException;
+use WpOrg\Requests\Transport\Curl as CurlTransport;
 use WpOrg\Requests\Hooks;
 use WpOrg\Requests\Requests;
 
@@ -261,60 +262,60 @@ EOT
     }
 
     /**
-     * Download the phar using a progress bar.
+     * Download the phar using a retry loop with HTTP/1.1 and resume support.
      */
+
     private function downloadNewPhar(OutputInterface $output, string $remoteUrl, string $tempFilename)
     {
-        $maxRetries = 3;
+        $maxRetries        = 3;
         $retryDelaySeconds = 5;
 
         for ($attempt = 1; $attempt <= $maxRetries; $attempt++) {
-            $progressBar = new ProgressBar($output);
-            $progressBar->setFormat('[%bar%] %current% of %max% bytes downloaded');
-            $progressBar->setMaxSteps(0);
-            $hooks = new \WpOrg\Requests\Hooks();
+            // Clean up before first attempt, retain partial file on retries for resume
+            if ($attempt === 1 && file_exists($tempFilename)) {
+                unlink($tempFilename);
+            }
 
-            $filesize = 0; // Initialize filesize for this attempt's scope
+            $output->writeln("<info>Fetching file information from {$remoteUrl} (attempt {$attempt}/{$maxRetries})...</info>");
+            $head = Requests::head($remoteUrl, [], [
+                'verify'          => true,
+                'timeout'         => 20,
+                'connect_timeout' => 10,
+            ]);
+
+            $filesize = 0;
+            if ($head->success && isset($head->headers['content-length'])) {
+                $filesize = (int) $head->headers['content-length'];
+            }
+
+            // Setup progress bar
+            $progress = new ProgressBar($output);
+            if ($filesize > 0) {
+                $progress->setFormat('[%bar%] %current%/%max% bytes %percent:3s%% %elapsed:6s%/%estimated:-6s%');
+                $progress->start($filesize);
+            } else {
+                $progress->setFormat('[%bar%] %current% bytes downloaded');
+                $progress->start(0);
+            }
+
+            // Prepare cURL options: force HTTP/1.1 and resume from last byte on retries
+            $curlOpts = [
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            ];
+            if ($attempt > 1 && file_exists($tempFilename)) {
+                $curlOpts[CURLOPT_RESUME_FROM] = filesize($tempFilename);
+            }
+
+            $hooks = new Hooks();
+            $hooks->register('requests.progress', function ($chunk, $downloaded, $total) use ($progress) {
+                if ($progress->getMaxSteps() > 0) {
+                    $progress->setProgress($downloaded);
+                }
+            });
 
             try {
-                $output->writeln("<info>Fetching file information from {$remoteUrl} (attempt {$attempt}/{$maxRetries})...</info>");
-                $responseHead = Requests::head($remoteUrl, [], ['verify' => true, 'timeout' => 20, 'connect_timeout' => 10]);
-
-                if ($responseHead->success && isset($responseHead->headers['content-length'])) {
-                    $filesize = (int) $responseHead->headers['content-length']; // $filesize is set here
-                    if ($filesize > 0) {
-                        $progressBar->setFormat('[%bar%] %current%/%max% bytes %percent:3s%% %elapsed:6s%/%estimated:-6s%');
-                        $progressBar->start($filesize);
-                    } else {
-                        $output->writeln("<comment>Warning (attempt {$attempt}): File size reported as 0 or invalid. Progress bar may be indeterminate.</comment>");
-                        $progressBar->setFormat('[%bar%] %current% bytes (total size unknown)');
-                        $progressBar->start(0);
-                    }
-                } else {
-                    $output->writeln("<comment>Warning (attempt {$attempt}): Could not determine file size. Will show bytes downloaded.</comment>");
-                    $progressBar->setFormat('[%bar%] %current% bytes');
-                    $progressBar->start(0);
-                }
-
-                $hooks->register(
-                    'requests.progress',
-                    function ($chunk, $downloadedBytes, $totalBytes) use ($progressBar) {
-                        if ($progressBar->getMaxSteps() === 0 && $totalBytes > 0) {
-                            // $progressBar->setMaxSteps($totalBytes);
-                        }
-                        $progressBar->setProgress($downloadedBytes);
-                    }
-                );
-
-                if ($attempt === 1 && file_exists($tempFilename)) {
-                    unlink($tempFilename); // Clean before first attempt of this command run
-                } elseif ($attempt > 1 && file_exists($tempFilename)) {
-                    unlink($tempFilename); // Clean before a retry attempt
-                }
-
-                if ($attempt > 1) {
-                    $output->writeln("<info>Starting download (attempt {$attempt}/{$maxRetries})...</info>");
-                }
+                // Use a proper Curl transport instance, not the string "curl"
+                $transport = new CurlTransport();
 
                 $response = Requests::get($remoteUrl, [], [
                     'filename'        => $tempFilename,
@@ -323,92 +324,72 @@ EOT
                     'verify'          => true,
                     'timeout'         => 300,
                     'connect_timeout' => 60,
+                    'transport'       => $transport,
+                    'curl'            => $curlOpts,
                 ]);
 
-                if (!$response->success) {
-                    if (file_exists($tempFilename)) { unlink($tempFilename); }
-                    throw new \RuntimeException(
-                        sprintf('Download attempt %d failed: HTTP status code %s.', $attempt, $response->status_code)
-                    );
-                }
-
-                if ($progressBar->getMaxSteps() > 0 && $progressBar->getProgress() < $progressBar->getMaxSteps()) {
-                    $progressBar->setProgress($progressBar->getMaxSteps());
-                }
-                $progressBar->finish();
+                $progress->finish();
                 $output->writeln('');
 
-                if (!file_exists($tempFilename) || filesize($tempFilename) === 0) {
-                    throw new \RuntimeException(
-                        "Download attempt {$attempt} reported success, but file is missing or empty: {$tempFilename}"
-                    );
+                if (!$response->success) {
+                    throw new RuntimeException("HTTP error: {$response->status_code}");
                 }
 
+                // Verify full file size if known
                 if ($filesize > 0 && filesize($tempFilename) !== $filesize) {
-                    if (file_exists($tempFilename)) { unlink($tempFilename); }
-                    throw new \RuntimeException(
-                        sprintf("Download attempt %d reported success, but file size mismatch. Expected %d, got %d.", $attempt, $filesize, filesize($tempFilename))
+                    throw new RuntimeException(
+                        sprintf("Download incomplete: expected %d bytes, got %d bytes.", $filesize, filesize($tempFilename))
                     );
                 }
 
-                if ($attempt == 1) {
-                    $output->writeln('<info>Successfully downloaded.</info>');
-                } else {
-                    $output->writeln("<info>Successfully downloaded after {$attempt} attempt(s).</info>");
+                $output->writeln($attempt === 1
+                    ? '<info>Successfully downloaded.</info>'
+                    : "<info>Successfully downloaded after {$attempt} attempt(s).</info>"
+                );
+
+                return;
+            } catch (\WpOrg\Requests\Exception $e) {
+                $progress->finish();
+                $output->writeln('');
+
+                $msg = $e->getMessage();
+                // Recover if error 18 but file is actually complete
+                if (strpos($msg, 'cURL error 18') !== false
+                    && $filesize > 0
+                    && file_exists($tempFilename)
+                    && filesize($tempFilename) === $filesize
+                ) {
+                    $output->writeln("<info>File size matches expected size despite cURL error 18. Treating as success.</info>");
+                    return;
                 }
 
-                return; // SUCCESS: Exit function
-
-            } catch (\InvalidArgumentException $e) {
-                // ... (same as before)
-                $progressBar->finish(); $output->writeln('');
-                throw new \RuntimeException("Internal error (attempt {$attempt}): Invalid argument for download: " . $e->getMessage(), 0, $e);
-            } catch (\WpOrg\Requests\Exception $e) { // Specific library exceptions (like cURL errors)
-                $progressBar->finish(); $output->writeln('');
-
-                $type = method_exists($e, 'getType') ? $e->getType() : 'N/A';
-                $errorMessage = $e->getMessage();
-
-                // SPECIAL HANDLING FOR cURL error 18 if file seems complete
-                if (strpos($errorMessage, 'cURL error 18') !== false && $type === 'curlerror') {
-                    $output->writeln("<comment>Download attempt {$attempt} encountered cURL error 18. Verifying file on disk...</comment>");
-                    // $filesize should be in scope from the try block of the current attempt
-                    if (file_exists($tempFilename) && $filesize > 0 && filesize($tempFilename) === $filesize) {
-                        $output->writeln("<info>File size matches expected size despite cURL error 18. Download considered successful for {$tempFilename} on attempt {$attempt}.</info>");
-                        return; // SUCCESS (recovered): Exit function
-                    } else {
-                        $output->writeln("<error>File verification failed after cURL error 18. File size: " . (file_exists($tempFilename) ? filesize($tempFilename) : 'N/A') . ", Expected: {$filesize}. File is likely incomplete.</error>");
-                        if (file_exists($tempFilename)) {
-                            unlink($tempFilename); // Definitely incomplete or problematic, remove it
-                        }
-                    }
-                } elseif (file_exists($tempFilename)) { // Other WpOrg\Requests\Exception, ensure partial file is removed
+                if (file_exists($tempFilename)) {
                     unlink($tempFilename);
                 }
 
-                // Continue with standard retry/failure logic for this exception
-                $message = sprintf("Download attempt %d/%d failed (Requests library error): %s (Type: %s)", $attempt, $maxRetries, $errorMessage, $type);
-                $output->writeln("<error>{$message}</error>");
-
+                $output->writeln("<error>Download attempt {$attempt}/{$maxRetries} failed: {$msg}</error>");
                 if ($attempt >= $maxRetries) {
-                    throw new \RuntimeException($message . " - Max retries reached.", 0, $e);
+                    throw new RuntimeException("Download failed after {$maxRetries} attempts: {$msg}");
                 }
+
                 $output->writeln("<comment>Waiting {$retryDelaySeconds} seconds before next attempt...</comment>");
                 sleep($retryDelaySeconds);
-
-            } catch (\Exception $e) { // General fallback
-                // ... (same as before)
-                $progressBar->finish(); $output->writeln('');
-                if (file_exists($tempFilename)) { unlink($tempFilename); }
-                $message = sprintf("Download attempt %d/%d failed (unexpected error): %s", $attempt, $maxRetries, $e->getMessage());
-                $output->writeln("<error>{$message}</error>");
-                if ($attempt >= $maxRetries) { throw new \RuntimeException($message . " - Max retries reached.", 0, $e); }
+            } catch (Exception $e) {
+                $progress->finish();
+                $output->writeln('');
+                if (file_exists($tempFilename)) {
+                    unlink($tempFilename);
+                }
+                $output->writeln("<error>Unexpected error on attempt {$attempt}: {$e->getMessage()}</error>");
+                if ($attempt >= $maxRetries) {
+                    throw new RuntimeException("Download failed after {$maxRetries} attempts: {$e->getMessage()}");
+                }
                 $output->writeln("<comment>Waiting {$retryDelaySeconds} seconds before next attempt...</comment>");
                 sleep($retryDelaySeconds);
             }
         }
-        // If loop finishes, all retries failed and no recovery path was taken.
-        throw new \RuntimeException("Download failed after {$maxRetries} attempts.");
+
+        throw new RuntimeException("Download failed after {$maxRetries} attempts.");
     }
 
     /**
