@@ -265,62 +265,103 @@ EOT
      */
     private function downloadNewPhar(OutputInterface $output, string $remoteUrl, string $tempFilename)
     {
-        $hooks = new Hooks();
+        $hooks = new \WpOrg\Requests\Hooks(); // Use the namespaced Hooks class
 
         $progressBar = new ProgressBar($output);
         $progressBar->setFormat('[%bar%] %current% of %max% bytes downloaded');
         $progressBar->setMaxSteps(0);
 
-        $responseHead = Requests::head($remoteUrl, [], ['verify' => true, 'timeout' => 20]);
-        if ($responseHead->success && isset($responseHead->headers['content-length'])) {
-            $filesize = (int) $responseHead->headers['content-length'];
-            if ($filesize > 0) {
-                $progressBar->setFormat('[%bar%] %current%/%max% bytes %percent:3s%% %elapsed:6s%/%estimated:-6s%');
-                $progressBar->start($filesize); // Start with known max
+        try {
+            $output->writeln("<info>Fetching file information from {$remoteUrl}...</info>");
+            $responseHead = Requests::head($remoteUrl, [], ['verify' => true, 'timeout' => 20, 'connect_timeout' => 10]);
+
+            if ($responseHead->success && isset($responseHead->headers['content-length'])) {
+                $filesize = (int) $responseHead->headers['content-length'];
+                if ($filesize > 0) {
+                    $progressBar->setFormat('[%bar%] %current%/%max% bytes %percent:3s%% %elapsed:6s%/%estimated:-6s%');
+                    $progressBar->start($filesize);
+                } else {
+                    $output->writeln("<comment>Warning: File size reported as 0 or invalid. Progress bar may be indeterminate.</comment>");
+                    $progressBar->setFormat('[%bar%] %current% bytes (total size unknown)');
+                    $progressBar->start(0);
+                }
             } else {
-                $progressBar->setFormat('[%bar%] %current% bytes (total size unknown)');
-                $progressBar->start(0); // Start indeterminate
+                $output->writeln("<comment>Warning: Could not determine file size for progress bar from {$remoteUrl}. Will show bytes downloaded.</comment>");
+                $progressBar->setFormat('[%bar%] %current% bytes');
+                $progressBar->start(0);
             }
-        } else {
-            $output->writeln("<comment>Warning: Could not determine file size for progress bar from {$url}. Will show bytes downloaded.</comment>");
-            $progressBar->setFormat('[%bar%] %current% bytes');
-            $progressBar->start(0); // Start indeterminate
-        }
 
-        $hooks->register(
-            'request.progress',
-            function ($dataChunk, $downloadedBytes, $responseByteLimit) use ($progressBar) {
-                $progressBar->setProgress($downloadedBytes);
-            }
-        );
-
-        $response = Requests::get($remoteUrl, [], [
-            'blocking'        => true,
-            'hooks'           => $hooks,
-            'verify'          => true,
-            'timeout'         => 30,
-            'connect_timeout' => 30,
-        ]);
-
-        if (!$response->success) {
-            throw new RuntimeException('Cannot download phar file: ' . $response->status_code);
-        }
-
-        // Ensure progress bar finishes cleanly, especially if max steps was 0 or download was interrupted
-        if ($progressBar->getMaxSteps() == 0 || $progressBar->getProgress() < $progressBar->getMaxSteps()) {
-            // If it hasn't naturally reached 100% or max bytes for an indeterminate bar
-            if ($progressBar->getMaxSteps() > 0) {
-                $progressBar->setProgress($progressBar->getMaxSteps()); // Force to 100% if determinate
-            }
-        }
-        $progressBar->finish();
-
-        file_put_contents($tempFilename, $response->body);
-
-        if (!file_exists($tempFilename)) {
-            $output->writeln(
-                '<error>The download of the new n98-magerun2 version failed for an unexpected reason</error>'
+            $hooks->register(
+                'requests.progress',
+                function ($chunk, $downloadedBytes, $totalBytes) use ($progressBar) {
+                    if ($progressBar->getMaxSteps() === 0 && $totalBytes > 0) {
+                        // Optionally update max steps if discovered during GET
+                        // $progressBar->setMaxSteps($totalBytes);
+                    }
+                    $progressBar->setProgress($downloadedBytes);
+                }
             );
+
+            $output->writeln("<info>Starting download...</info>");
+
+            $response = Requests::get($remoteUrl, [], [
+                'filename'        => $tempFilename,
+                'blocking'        => true,
+                'hooks'           => $hooks,
+                'verify'          => true,
+                'timeout'         => 300,
+                'connect_timeout' => 60,
+            ]);
+
+            if (!$response->success) {
+                if (file_exists($tempFilename)) {
+                    unlink($tempFilename);
+                }
+                // $response->reason is NOT available in the provided class definition.
+                // We will rely only on the status code here.
+                throw new \RuntimeException(
+                    sprintf(
+                        'Cannot download phar file from %s: HTTP status code %s.',
+                        $remoteUrl,
+                        $response->status_code
+                    )
+                );
+            }
+
+            if ($progressBar->getMaxSteps() > 0) {
+                $progressBar->setProgress($progressBar->getMaxSteps());
+            }
+            $progressBar->finish();
+            $output->writeln('');
+
+            if (!file_exists($tempFilename) || filesize($tempFilename) === 0) {
+                throw new \RuntimeException(
+                    'The download of the new n98-magerun2 version failed: File not found or empty after download.'
+                );
+            }
+
+            $output->writeln("<info>Successfully downloaded to {$tempFilename}</info>");
+
+        } catch (\InvalidArgumentException $e) {
+            $progressBar->finish();
+            $output->writeln('');
+            throw new \RuntimeException('Internal error: Invalid argument for download request: ' . $e->getMessage(), 0, $e);
+        } catch (\WpOrg\Requests\Exception $e) { // Catch specific exceptions from the WpOrg\Requests library
+            $progressBar->finish();
+            $output->writeln('');
+            if (file_exists($tempFilename)) {
+                unlink($tempFilename);
+            }
+            $type = method_exists($e, 'getType') ? $e->getType() : 'N/A';
+            // The exception message ($e->getMessage()) might contain a reason phrase from the library.
+            throw new \RuntimeException('Download failed (Requests library error): ' . $e->getMessage() . ' (Type: ' . $type . ')', 0, $e);
+        } catch (\Exception $e) { // General fallback
+            $progressBar->finish();
+            $output->writeln('');
+            if (file_exists($tempFilename)) {
+                unlink($tempFilename);
+            }
+            throw new \RuntimeException('Download failed (unexpected error): ' . $e->getMessage(), 0, $e);
         }
     }
 
