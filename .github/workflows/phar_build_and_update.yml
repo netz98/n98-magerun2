@@ -22,6 +22,7 @@ on:
       - "scoper.inc.php"
       - "src/**"
       - "version.txt"
+  workflow_dispatch:
 
 jobs:
   build:
