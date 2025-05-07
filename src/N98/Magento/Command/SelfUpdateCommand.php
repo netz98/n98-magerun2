@@ -265,24 +265,32 @@ EOT
      */
     private function downloadNewPhar(OutputInterface $output, string $remoteUrl, string $tempFilename)
     {
-        $progressBar = new ProgressBar($output);
-        $progressBar->setFormat('[%bar%] %current% of %max% bytes downloaded');
-
         $hooks = new Hooks();
 
-        // Check file size
-        $response = Requests::head($remoteUrl, [], ['verify' => true]);
-        if (!$response->success) {
-            throw new RuntimeException('Cannot download phar file: ' . $response->status_code);
-        }
+        $progressBar = new ProgressBar($output);
+        $progressBar->setFormat('[%bar%] %current% of %max% bytes downloaded');
+        $progressBar->setMaxSteps(0);
 
-        $filesize = $response->headers['content-length'];
-        $progressBar->setMaxSteps($filesize);
+        $responseHead = Requests::head($remoteUrl, [], ['verify' => true, 'timeout' => 20]);
+        if ($responseHead->success && isset($responseHead->headers['content-length'])) {
+            $filesize = (int) $responseHead->headers['content-length'];
+            if ($filesize > 0) {
+                $progressBar->setFormat('[%bar%] %current%/%max% bytes %percent:3s%% %elapsed:6s%/%estimated:-6s%');
+                $progressBar->start($filesize); // Start with known max
+            } else {
+                $progressBar->setFormat('[%bar%] %current% bytes (total size unknown)');
+                $progressBar->start(0); // Start indeterminate
+            }
+        } else {
+            $output->writeln("<comment>Warning: Could not determine file size for progress bar from {$url}. Will show bytes downloaded.</comment>");
+            $progressBar->setFormat('[%bar%] %current% bytes');
+            $progressBar->start(0); // Start indeterminate
+        }
 
         $hooks->register(
             'request.progress',
-            function ($data, $responseBytes, $responseByteLimit) use ($progressBar) {
-                $progressBar->setProgress($responseBytes);
+            function ($dataChunk, $downloadedBytes, $responseByteLimit) use ($progressBar) {
+                $progressBar->setProgress($downloadedBytes);
             }
         );
 
@@ -297,6 +305,15 @@ EOT
         if (!$response->success) {
             throw new RuntimeException('Cannot download phar file: ' . $response->status_code);
         }
+
+        // Ensure progress bar finishes cleanly, especially if max steps was 0 or download was interrupted
+        if ($progressBar->getMaxSteps() == 0 || $progressBar->getProgress() < $progressBar->getMaxSteps()) {
+            // If it hasn't naturally reached 100% or max bytes for an indeterminate bar
+            if ($progressBar->getMaxSteps() > 0) {
+                $progressBar->setProgress($progressBar->getMaxSteps()); // Force to 100% if determinate
+            }
+        }
+        $progressBar->finish();
 
         file_put_contents($tempFilename, $response->body);
 
