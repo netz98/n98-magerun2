@@ -22,7 +22,7 @@ class MagerunBootstrap
      * @return Magento\Application
      * @throws ErrorException
      */
-    public static function createApplication(ClassLoader $loader = null)
+    public static function createApplication(?ClassLoader $loader = null)
     {
         if (null === $loader) {
             $loader = self::getLoader();
