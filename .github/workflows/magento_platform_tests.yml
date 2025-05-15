@@ -256,9 +256,9 @@ jobs:
         run: |
           echo "Creating Magento project version ${{ matrix.magento-version }} from ${{ matrix.composer-repository-url }}"
 
-          if [[ "${{ matrix.composer-repository-url }}" == *"mage-os.org"* ]]; then
+          if [[ "${{ matrix.composer-repository-url }}" == *mage-os.org* ]]; then
             PACKAGE_NAME="mage-os/project-community-edition"
-          elif [[ "${{ matrix.composer-repository-url }}" == *"magento.com"* ]]; then
+          elif [[ "${{ matrix.composer-repository-url }}" == *magento.com* ]]; then
             PACKAGE_NAME="magento/project-community-edition"
           else
             echo "Error: Unknown composer repository URL: ${{ matrix.composer-repository-url }}"
