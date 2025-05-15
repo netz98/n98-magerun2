@@ -370,9 +370,7 @@ EOT
      */
     private function prepareRequestOptions(OutputInterface $output): array
     {
-        // Prepare options: force HTTP/1.1
         $requestOpts = [
-            'protocol_version' => 1.1,
             // Increase timeouts for large files
             'connect_timeout' => 60,
             'timeout' => 300,
