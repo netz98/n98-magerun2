@@ -14,9 +14,9 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use UnexpectedValueException;
-use WpOrg\Requests\Transport\Curl as CurlTransport;
 use WpOrg\Requests\Hooks;
 use WpOrg\Requests\Requests;
+use WpOrg\Requests\Transport\Curl as CurlTransport;
 
 /**
  * @codeCoverageIgnore
@@ -343,7 +343,8 @@ EOT
                     );
                 }
 
-                $output->writeln($attempt === 1
+                $output->writeln(
+                    $attempt === 1
                     ? '<info>Successfully downloaded.</info>'
                     : "<info>Successfully downloaded after {$attempt} attempt(s).</info>"
                 );
