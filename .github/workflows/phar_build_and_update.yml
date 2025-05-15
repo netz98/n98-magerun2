@@ -81,10 +81,19 @@ jobs:
         run: bash ./build.sh && ./n98-magerun2.phar --version && mv ./n98-magerun2.phar ./n98-magerun2.phar.original
 
       - name: Update to the unstable version
-        run: cp ./n98-magerun2.phar.original ./n98-magerun2.phar && ./n98-magerun2.phar self-update --unstable && ./n98-magerun2.phar --version
+        run: |
+          # Configure cURL to use HTTP/1.1 and increase timeouts
+          export CURL_OPTS="--http1.1 --connect-timeout 60 --max-time 300"
+          cp ./n98-magerun2.phar.original ./n98-magerun2.phar && ./n98-magerun2.phar self-update --unstable && ./n98-magerun2.phar --version
 
       - name: Update to the latest version
-        run: cp ./n98-magerun2.phar.original ./n98-magerun2.phar && ./n98-magerun2.phar self-update && ./n98-magerun2.phar --version
+        run: |
+          # Configure cURL to use HTTP/1.1 and increase timeouts
+          export CURL_OPTS="--http1.1 --connect-timeout 60 --max-time 300"
+          cp ./n98-magerun2.phar.original ./n98-magerun2.phar && ./n98-magerun2.phar self-update && ./n98-magerun2.phar --version
 
       - name: Rollback phar to a specific version
-        run: cp ./n98-magerun2.phar.original ./n98-magerun2.phar && ./n98-magerun2.phar self-update 7.5.0 && ./n98-magerun2.phar --version
+        run: |
+          # Configure cURL to use HTTP/1.1 and increase timeouts
+          export CURL_OPTS="--http1.1 --connect-timeout 60 --max-time 300"
+          cp ./n98-magerun2.phar.original ./n98-magerun2.phar && ./n98-magerun2.phar self-update 7.5.0 && ./n98-magerun2.phar --version
