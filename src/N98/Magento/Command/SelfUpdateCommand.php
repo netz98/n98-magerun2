@@ -424,8 +424,12 @@ EOT
         $requestOpts = [
             // Increase timeouts for large files
             'connect_timeout' => 60,
-            'timeout' => 300,
+            'timeout' => 600, // 10 minutes
+            // Disable timeout completely for large file downloads
+            'disable_timeout' => true,
         ];
+
+        $output->writeln('<info>Using extended timeout settings for large file download</info>');
 
         return $requestOpts;
     }
@@ -486,6 +490,16 @@ EOT
         $msg = $e->getMessage();
         $downloadedSize = 0;
         $isPartialDownload = false;
+        $isTransferClosedError = false;
+        $bytesRemaining = 0;
+
+        // Check for "transfer closed with X bytes remaining to read" error
+        if (preg_match('/transfer closed with (\d+) bytes remaining to read/', $msg, $matches)) {
+            $isTransferClosedError = true;
+            $bytesRemaining = (int)$matches[1];
+            $output->writeln("<comment>Transfer closed error detected: $bytesRemaining bytes remaining</comment>");
+            $output->writeln("<comment>This is likely due to a network interruption or server timeout.</comment>");
+        }
 
         // Check if the file exists and has content
         if (file_exists($tempFilename)) {
@@ -494,6 +508,13 @@ EOT
 
             if ($isPartialDownload) {
                 $output->writeln("<comment>Partial download detected: $downloadedSize bytes</comment>");
+
+                if ($isTransferClosedError) {
+                    $totalSize = $downloadedSize + $bytesRemaining;
+                    $percentComplete = round(($downloadedSize / $totalSize) * 100, 2);
+                    $output->writeln("<comment>Download was approximately $percentComplete% complete before interruption.</comment>");
+                    $output->writeln("<comment>Attempting to resume download from position $downloadedSize...</comment>");
+                }
             }
         }
 
@@ -524,13 +545,21 @@ EOT
 
                         try {
                             // Set a longer timeout for large files
+                            $headers = [
+                                'User-Agent: n98-magerun2',
+                                'Accept: application/octet-stream',
+                            ];
+
+                            // Add Range header if we have a partial download
+                            if ($isPartialDownload) {
+                                $headers[] = 'Range: bytes=' . $downloadedSize . '-';
+                                $output->writeln("<comment>Resuming download from byte position $downloadedSize</comment>");
+                            }
+
                             $context = stream_context_create([
                                 'http' => [
-                                    'timeout' => 300, // 5 minutes timeout
-                                    'header' => [
-                                        'User-Agent: n98-magerun2',
-                                        'Accept: application/octet-stream',
-                                    ],
+                                    'timeout' => 600, // 10 minutes timeout
+                                    'header' => $headers,
                                 ],
                                 'ssl' => [
                                     'verify_peer' => true,
@@ -538,12 +567,20 @@ EOT
                                 ],
                             ]);
 
+                            $remoteUrl = $e instanceof DownloadException ? $e->remoteUrl : '';
+                            $output->writeln("<comment>Attempting to download from $remoteUrl</comment>");
+
                             // Try to download the file using file_get_contents
-                            $fileContent = @file_get_contents($e instanceof DownloadException ? $e->remoteUrl : '', false, $context);
+                            $fileContent = @file_get_contents($remoteUrl, false, $context);
 
                             if ($fileContent !== false) {
                                 // Write the content to the temp file
-                                if (file_put_contents($tempFilename, $fileContent) !== false) {
+                                // If we're resuming a download, append to the existing file
+                                $writeMode = ($isPartialDownload && isset($headers) && in_array('Range: bytes=' . $downloadedSize . '-', $headers))
+                                    ? FILE_APPEND
+                                    : 0;
+
+                                if (file_put_contents($tempFilename, $fileContent, $writeMode) !== false) {
                                     $output->writeln("<info>Alternative download method successful.</info>");
 
                                     // Validate the downloaded file

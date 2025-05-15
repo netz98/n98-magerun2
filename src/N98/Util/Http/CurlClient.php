@@ -31,6 +31,11 @@ class CurlClient
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $options['connect_timeout'] ?? 10);
         curl_setopt($ch, CURLOPT_TIMEOUT, $options['timeout'] ?? 30);
 
+        // Disable timeout for large file downloads if specified
+        if (isset($options['disable_timeout']) && $options['disable_timeout'] === true) {
+            curl_setopt($ch, CURLOPT_TIMEOUT, 0); // 0 = no timeout
+        }
+
         // Force HTTP/1.1 to avoid potential issues with HTTP/2
         curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
 
@@ -63,12 +68,20 @@ class CurlClient
             curl_setopt($ch, CURLOPT_FILE, $fp);
 
             // Set additional options for file downloads
-            curl_setopt($ch, CURLOPT_BUFFERSIZE, 128 * 1024); // 128KB buffer size
+            curl_setopt($ch, CURLOPT_BUFFERSIZE, 1024 * 1024); // 1MB buffer size for better performance with large files
             curl_setopt($ch, CURLOPT_BINARYTRANSFER, true); // Binary transfer mode
 
             // Resume download if file exists and has content
             if (filesize($options['filename']) > 0) {
-                curl_setopt($ch, CURLOPT_RESUME_FROM, filesize($options['filename']));
+                $resumeFrom = filesize($options['filename']);
+                curl_setopt($ch, CURLOPT_RESUME_FROM, $resumeFrom);
+
+                // Add Range header for better compatibility with some servers
+                if (!isset($headers['Range'])) {
+                    $headers['Range'] = 'bytes=' . $resumeFrom . '-';
+                    $formattedHeaders[] = 'Range: bytes=' . $resumeFrom . '-';
+                    curl_setopt($ch, CURLOPT_HTTPHEADER, $formattedHeaders);
+                }
             }
         }
 
