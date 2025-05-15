@@ -399,7 +399,6 @@ EOT
             'filename' => $tempFilename,
             'hooks' => $hooks,
             'verify' => true,
-            'transport' => 'curl',
         ]);
 
         try {
