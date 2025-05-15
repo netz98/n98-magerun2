@@ -7,6 +7,7 @@ use N98\Util\Markdown\VersionFilePrinter;
 use Phar;
 use PharException;
 use RuntimeException;
+use stdClass;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputArgument;
@@ -14,9 +15,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use UnexpectedValueException;
-use WpOrg\Requests\Hooks;
 use WpOrg\Requests\Requests;
-use WpOrg\Requests\Transport\Curl as CurlTransport;
 
 /**
  * @codeCoverageIgnore
@@ -405,26 +404,66 @@ EOT
      */
     private function performDownload(string $remoteUrl, string $tempFilename, ProgressBar $progress, array $curlOpts)
     {
-        $hooks = new Hooks();
-        $hooks->register('requests.progress', function ($chunk, $downloaded, $total) use ($progress) {
-            if ($progress->getMaxSteps() > 0) {
+        // Initialize cURL session
+        $ch = curl_init($remoteUrl);
+
+        // Set cURL options
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
+
+        // Apply all custom cURL options
+        foreach ($curlOpts as $option => $value) {
+            curl_setopt($ch, $option, $value);
+        }
+
+        // Open file for writing
+        $fp = fopen($tempFilename, 'w+');
+        if (!$fp) {
+            throw new RuntimeException("Could not open file for writing: $tempFilename");
+        }
+
+        // Set file handle for direct writing
+        curl_setopt($ch, CURLOPT_FILE, $fp);
+
+        // Set up progress callback
+        curl_setopt($ch, CURLOPT_NOPROGRESS, false);
+        curl_setopt($ch, CURLOPT_PROGRESSFUNCTION, function ($resource, $downloadSize, $downloaded, $uploadSize, $uploaded) use ($progress) {
+            if ($downloadSize > 0) {
+                $progress->setMaxSteps($downloadSize);
                 $progress->setProgress($downloaded);
             }
+            return 0; // Return 0 to continue the transfer
         });
 
-        // Use a proper Curl transport instance
-        $transport = new CurlTransport();
+        // Execute the request
+        $success = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $error = curl_error($ch);
+        $errno = curl_errno($ch);
 
-        return Requests::get($remoteUrl, [], [
-            'filename'        => $tempFilename,
-            'blocking'        => true,
-            'hooks'           => $hooks,
-            'verify'          => true,
-            'timeout'         => 300,
-            'connect_timeout' => 60,
-            'transport'       => $transport,
-            'curl'            => $curlOpts,
-        ]);
+        // Close the file handle
+        fclose($fp);
+
+        // Close cURL session
+        curl_close($ch);
+
+        // Create a response-like object to maintain compatibility
+        $response = new stdClass();
+        $response->success = $success !== false && $httpCode >= 200 && $httpCode < 300;
+        $response->status_code = $httpCode;
+
+        // If there was an error, throw an exception
+        if (!$response->success) {
+            if ($errno) {
+                throw new RuntimeException("cURL error $errno: $error");
+            } else {
+                throw new RuntimeException("HTTP error: $httpCode");
+            }
+        }
+
+        return $response;
     }
 
     /**
@@ -443,29 +482,67 @@ EOT
         $output->writeln('');
 
         $msg = $e->getMessage();
+        $downloadedSize = 0;
+        $isPartialDownload = false;
 
-        // Special handling for cURL error 18 (transfer closed with bytes remaining to read)
-        if (strpos($msg, 'cURL error 18') !== false && file_exists($tempFilename)) {
+        // Check if the file exists and has content
+        if (file_exists($tempFilename)) {
             $downloadedSize = filesize($tempFilename);
+            $isPartialDownload = $downloadedSize > 0;
 
-            // If we have a file with some content, it might be usable
-            if ($downloadedSize > 0) {
+            if ($isPartialDownload) {
+                $output->writeln("<comment>Partial download detected: $downloadedSize bytes</comment>");
+            }
+        }
+
+        // Special handling for cURL errors, particularly error 18 (transfer closed with bytes remaining to read)
+        if ((strpos($msg, 'cURL error 18') !== false || strpos($msg, 'cURL error 56') !== false) && $isPartialDownload) {
+            try {
+                // Try to validate the file as a valid PHAR
+                error_reporting(E_ALL); // show all errors
+                @chmod($tempFilename, 0777 & ~umask());
+
+                // Test the phar validity by opening it and checking its signature
                 try {
-                    // Try to validate the file as a valid PHAR
-                    error_reporting(E_ALL); // show all errors
-                    @chmod($tempFilename, 0777 & ~umask());
-
-                    // Test the phar validity
+                    // First try with normal Phar opening
                     $phar = new Phar($tempFilename);
                     unset($phar);
 
                     // If we get here, the PHAR is valid despite the cURL error
-                    $output->writeln("<info>File appears to be a valid PHAR despite cURL error 18. Proceeding.</info>");
+                    $output->writeln("<info>File appears to be a valid PHAR despite cURL error. Proceeding.</info>");
                     return;
-                } catch (Exception $pharException) {
+                } catch (UnexpectedValueException $pharException) {
+                    // If it fails with UnexpectedValueException, it's likely a corrupted PHAR
                     $output->writeln("<comment>Downloaded file is not a valid PHAR: {$pharException->getMessage()}</comment>");
-                    // Continue with normal error handling
+
+                    // Try to repair the PHAR by truncating it to a valid size
+                    // This is a last resort attempt and may not work in all cases
+                    if ($attempt >= $maxRetries) {
+                        $output->writeln("<comment>Attempting to repair the downloaded PHAR file...</comment>");
+
+                        // Read the file to find the PHAR signature
+                        $fileContent = file_get_contents($tempFilename);
+                        $sigPos = strpos($fileContent, 'GBMB'); // PHAR signature marker
+
+                        if ($sigPos !== false) {
+                            // Found a potential PHAR signature, truncate the file
+                            $output->writeln("<comment>Found potential PHAR signature at position $sigPos</comment>");
+                            file_put_contents($tempFilename, substr($fileContent, 0, $sigPos + 4));
+
+                            // Try to validate again
+                            try {
+                                $phar = new Phar($tempFilename);
+                                unset($phar);
+                                $output->writeln("<info>Successfully repaired PHAR file. Proceeding.</info>");
+                                return;
+                            } catch (Exception $e2) {
+                                $output->writeln("<comment>Repair attempt failed: {$e2->getMessage()}</comment>");
+                            }
+                        }
+                    }
                 }
+            } catch (Exception $e) {
+                $output->writeln("<comment>Error validating PHAR: {$e->getMessage()}</comment>");
             }
         }
 
