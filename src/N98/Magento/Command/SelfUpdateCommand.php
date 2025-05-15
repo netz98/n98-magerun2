@@ -299,7 +299,9 @@ EOT
                 $output->writeln('');
 
                 if (!$response->success) {
-                    throw new RuntimeException("HTTP error: {$response->status_code}");
+                    throw new RuntimeException(
+                        "Download failed despite HTTP {$response->status_code} error: {$response->error}"
+                    );
                 }
 
                 // Verify full file size if known
@@ -363,6 +365,14 @@ EOT
                 $this->handleDownloadException($output, $exception, $attempt, $maxRetries, $retryDelaySeconds, $tempFilename, $progress);
 
                 if ($attempt >= $maxRetries) {
+                    // Extract HTTP status code from error message if present
+                    if (preg_match('/HTTP (\d+)/', $e->getMessage(), $matches)) {
+                        $statusCode = (int)$matches[1];
+                        // For HTTP 200-299 range, provide a clearer error message
+                        if ($statusCode >= 200 && $statusCode < 300) {
+                            throw new RuntimeException("Download failed after {$maxRetries} attempts despite receiving HTTP {$statusCode} (OK) responses. Check network connectivity and file integrity.");
+                        }
+                    }
                     throw new RuntimeException("Download failed after {$maxRetries} attempts: {$e->getMessage()}");
                 }
             }
@@ -451,9 +461,7 @@ EOT
 
         try {
             // Perform the request
-            $response = CurlClient::curlGet($remoteUrl, $headers, $options);
-
-            return $response;
+            return CurlClient::curlGet($remoteUrl, $headers, $options);
         } catch (Exception $e) {
             // Convert exceptions to RuntimeException for compatibility
             throw new RuntimeException($e->getMessage());
