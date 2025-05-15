@@ -314,6 +314,19 @@ class Application extends BaseApplication
      */
     public function getAutoloader()
     {
+        if ($this->autoloader === null) {
+            // Try to find the Composer autoloader
+            if (defined('PHPUNIT_COMPOSER_INSTALL')) {
+                $this->autoloader = require PHPUNIT_COMPOSER_INSTALL;
+            } elseif (file_exists(__DIR__ . '/../../../../vendor/autoload.php')) {
+                // Installed via composer, already in vendor
+                $this->autoloader = require __DIR__ . '/../../../../vendor/autoload.php';
+            } elseif (file_exists(__DIR__ . '/../../../vendor/autoload.php')) {
+                // Check if testing root package without PHPUnit
+                $this->autoloader = require __DIR__ . '/../../../vendor/autoload.php';
+            }
+        }
+
         return $this->autoloader;
     }
 

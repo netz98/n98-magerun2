@@ -37,6 +37,14 @@ class MagentoDetector
         $folder = OperatingSystem::getCwd();
         $subFolders = [];
 
+        // Check for phpunit mode - if N98_MAGERUN2_TEST_MAGENTO_ROOT is set and magentoRootDirectory is null, use it
+        if ($magentoRootDirectory === null) {
+            $testMagentoRoot = getenv('N98_MAGERUN2_TEST_MAGENTO_ROOT');
+            if ($testMagentoRoot && is_dir($testMagentoRoot)) {
+                $magentoRootDirectory = $testMagentoRoot;
+            }
+        }
+
         $directRootDirectory = $this->getDirectRootDirectory($input);
 
         if (is_string($directRootDirectory)) {
@@ -44,7 +52,7 @@ class MagentoDetector
         } elseif ($magentoRootDirectory !== null) {
             $subFolders = [$magentoRootDirectory];
         } else {
-            $subFolders = $config->getDetectSubFolders();
+            $subFolders = $config !== null ? $config->getDetectSubFolders() : [];
         }
 
         $helperSet->set(new MagentoHelper($input, $output), 'magento');

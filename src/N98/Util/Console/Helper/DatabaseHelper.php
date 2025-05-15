@@ -413,6 +413,10 @@ class DatabaseHelper extends AbstractHelper implements CommandAware
         $statement = $connection->query($query, PDO::FETCH_COLUMN, 0);
         if ($statement instanceof PDOStatement) {
             $result = $statement->fetchColumn(0);
+            // Convert result to string to ensure consistent return type
+            if ($result !== null) {
+                $result = (string) $result;
+            }
         } else {
             $reason = $connection->errorInfo()
                 ? vsprintf('SQLSTATE[%s]: %s: %s', $connection->errorInfo())
