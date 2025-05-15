@@ -253,18 +253,20 @@ jobs:
         if: matrix.use-git-repository == false
         run: |
           echo "Creating Magento project version ${{ matrix.magento-version }} from ${{ matrix.composer-repository-url }}"
-
-          if [[ "${{ matrix.composer-repository-url }}" == *"mage-os.org"* ]]; then
+          
+          COMPOSER_REPO_URL="${{ matrix.composer-repository-url }}"
+          
+          if [[ "$COMPOSER_REPO_URL" == *"mage-os.org"* ]]; then
             PACKAGE_NAME="mage-os/project-community-edition"
-          elif [[ "${{ matrix.composer-repository-url }}" == *"magento.com"* ]]; then
+          elif [[ "$COMPOSER_REPO_URL" == *"magento.com"* ]]; then
             PACKAGE_NAME="magento/project-community-edition"
           else
-            echo "Error: Unknown composer repository URL: ${{ matrix.composer-repository-url }}"
+            echo "Error: Unknown composer repository URL: $COMPOSER_REPO_URL"
             exit 1
           fi
-
-          composer create-project --repository-url="${{ matrix.composer-repository-url }}" \
-            $PACKAGE_NAME ./magento "${{ matrix.magento-version }}" --no-interaction --no-progress
+          
+          composer create-project --repository-url="$COMPOSER_REPO_URL" \
+            "$PACKAGE_NAME" ./magento "${{ matrix.magento-version }}" --no-interaction --no-progress
 
       - name: Install Magento Database & Config (Non-Git)
         if: matrix.use-git-repository == false
