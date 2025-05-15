@@ -444,6 +444,31 @@ EOT
 
         $msg = $e->getMessage();
 
+        // Special handling for cURL error 18 (transfer closed with bytes remaining to read)
+        if (strpos($msg, 'cURL error 18') !== false && file_exists($tempFilename)) {
+            $downloadedSize = filesize($tempFilename);
+
+            // If we have a file with some content, it might be usable
+            if ($downloadedSize > 0) {
+                try {
+                    // Try to validate the file as a valid PHAR
+                    error_reporting(E_ALL); // show all errors
+                    @chmod($tempFilename, 0777 & ~umask());
+
+                    // Test the phar validity
+                    $phar = new Phar($tempFilename);
+                    unset($phar);
+
+                    // If we get here, the PHAR is valid despite the cURL error
+                    $output->writeln("<info>File appears to be a valid PHAR despite cURL error 18. Proceeding.</info>");
+                    return;
+                } catch (Exception $pharException) {
+                    $output->writeln("<comment>Downloaded file is not a valid PHAR: {$pharException->getMessage()}</comment>");
+                    // Continue with normal error handling
+                }
+            }
+        }
+
         // Clean up the temp file if it exists
         if (file_exists($tempFilename)) {
             unlink($tempFilename);
