@@ -3,11 +3,12 @@
 namespace N98\Magento\Command;
 
 use Exception;
+use N98\Util\Http\CurlClient;
+use N98\Util\Http\DownloadException;
 use N98\Util\Markdown\VersionFilePrinter;
 use Phar;
 use PharException;
 use RuntimeException;
-use stdClass;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputArgument;
@@ -107,7 +108,7 @@ EOT
             $remotePharDownloadUrl = self::MAGERUN_DOWNLOAD_URL_UNSTABLE;
 
             // We directly fetch the latest “unstable” version from version.txt
-            $response = $this->curlGet($versionTxtUrl);
+            $response = CurlClient::curlGet($versionTxtUrl);
             if (!$response->success) {
                 throw new RuntimeException('Cannot get version: ' . $response->status_code);
             }
@@ -142,7 +143,7 @@ EOT
             );
 
             // Check if the requested file exists via HEAD
-            $existsCheck = $this->curlHead($remotePharDownloadUrl);
+            $existsCheck =  CurlClient::curlHead($remotePharDownloadUrl);
             if (!$existsCheck->success) {
                 throw new RuntimeException(
                     sprintf('Requested version "%s" could not be found at %s', $requestedVersion, $remotePharDownloadUrl)
@@ -168,7 +169,7 @@ EOT
             $versionTxtUrl         = self::VERSION_TXT_URL_STABLE;
             $remotePharDownloadUrl = self::MAGERUN_DOWNLOAD_URL_STABLE;
 
-            $response = $this->curlGet($versionTxtUrl);
+            $response = CurlClient::curlGet($versionTxtUrl);
             if (!$response->success) {
                 throw new RuntimeException('Cannot get version: ' . $response->status_code);
             }
@@ -302,10 +303,50 @@ EOT
                 }
 
                 // Verify full file size if known
-                if ($filesize > 0 && filesize($tempFilename) !== $filesize) {
-                    throw new RuntimeException(
-                        sprintf("Download incomplete: expected %d bytes, got %d bytes.", $filesize, filesize($tempFilename))
-                    );
+                $actualFileSize = filesize($tempFilename);
+                if ($filesize > 0 && $actualFileSize !== $filesize) {
+                    // Log detailed information about the partial download
+                    $output->writeln(sprintf(
+                        "<error>Download incomplete: expected %d bytes, got %d bytes.</error>",
+                        $filesize,
+                        $actualFileSize
+                    ));
+
+                    // If we have detailed curl info, log it for debugging
+                    if (isset($response->curl_info)) {
+                        $output->writeln("<comment>Download details:</comment>");
+                        $output->writeln(sprintf(
+                            "  - HTTP Status: %d",
+                            $response->status_code
+                        ));
+                        $output->writeln(sprintf(
+                            "  - Content-Length: %d",
+                            $response->content_length ?? 'unknown'
+                        ));
+                        $output->writeln(sprintf(
+                            "  - Size downloaded: %d",
+                            $response->size_download ?? 'unknown'
+                        ));
+                        if (isset($response->curl_errno) && $response->curl_errno !== 0) {
+                            $output->writeln(sprintf(
+                                "  - Curl error: %d - %s",
+                                $response->curl_errno,
+                                $response->error ?? 'unknown'
+                            ));
+                        }
+                    }
+
+                    throw new RuntimeException("Download incomplete: partial file received");
+                }
+
+                // Validate the downloaded file is a valid PHAR
+                try {
+                    // Try to open the PHAR file to validate it
+                    $phar = new Phar($tempFilename);
+                    unset($phar); // Close the PHAR
+                } catch (UnexpectedValueException $e) {
+                    $output->writeln("<error>Downloaded file is not a valid PHAR: {$e->getMessage()}</error>");
+                    throw new RuntimeException("Invalid PHAR file downloaded");
                 }
 
                 $output->writeln(
@@ -316,7 +357,10 @@ EOT
 
                 return;
             } catch (Exception $e) {
-                $this->handleDownloadException($output, $e, $attempt, $maxRetries, $retryDelaySeconds, $tempFilename, $progress);
+                // Create a custom exception with the remote URL for the alternative download method
+                $exception = new DownloadException($e->getMessage(), $remoteUrl, $e->getCode(), $e);
+
+                $this->handleDownloadException($output, $exception, $attempt, $maxRetries, $retryDelaySeconds, $tempFilename, $progress);
 
                 if ($attempt >= $maxRetries) {
                     throw new RuntimeException("Download failed after {$maxRetries} attempts: {$e->getMessage()}");
@@ -332,7 +376,7 @@ EOT
      */
     private function getRemoteFileSize(OutputInterface $output, string $remoteUrl): int
     {
-        $head = $this->curlHead($remoteUrl, [], [
+        $head =  CurlClient::curlHead($remoteUrl, [], [
             'timeout'         => 20,
             'connect_timeout' => 10,
         ]);
@@ -407,7 +451,7 @@ EOT
 
         try {
             // Perform the request
-            $response = $this->curlGet($remoteUrl, $headers, $options);
+            $response = CurlClient::curlGet($remoteUrl, $headers, $options);
 
             return $response;
         } catch (Exception $e) {
@@ -463,11 +507,53 @@ EOT
                     return;
                 } catch (UnexpectedValueException $pharException) {
                     // If it fails with UnexpectedValueException, it's likely a corrupted PHAR
-                    $output->writeln("<comment>Downloaded file is not a valid PHAR: {$pharException->getMessage()}</comment>");
+                    $output->writeln("<error>Downloaded file is not a valid PHAR: {$pharException->getMessage()}</error>");
 
-                    // Try to repair the PHAR by truncating it to a valid size
-                    // This is a last resort attempt and may not work in all cases
+                    // Try more aggressive approaches on the last retry
                     if ($attempt >= $maxRetries) {
+                        // First, try a completely different approach - use file_get_contents instead of curl
+                        $output->writeln("<comment>Attempting alternative download method...</comment>");
+
+                        try {
+                            // Set a longer timeout for large files
+                            $context = stream_context_create([
+                                'http' => [
+                                    'timeout' => 300, // 5 minutes timeout
+                                    'header' => [
+                                        'User-Agent: n98-magerun2',
+                                        'Accept: application/octet-stream',
+                                    ],
+                                ],
+                                'ssl' => [
+                                    'verify_peer' => true,
+                                    'verify_peer_name' => true,
+                                ],
+                            ]);
+
+                            // Try to download the file using file_get_contents
+                            $fileContent = @file_get_contents($e instanceof DownloadException ? $e->remoteUrl : '', false, $context);
+
+                            if ($fileContent !== false) {
+                                // Write the content to the temp file
+                                if (file_put_contents($tempFilename, $fileContent) !== false) {
+                                    $output->writeln("<info>Alternative download method successful.</info>");
+
+                                    // Validate the downloaded file
+                                    try {
+                                        $phar = new Phar($tempFilename);
+                                        unset($phar);
+                                        $output->writeln("<info>Downloaded file is a valid PHAR. Proceeding.</info>");
+                                        return;
+                                    } catch (Exception $e2) {
+                                        $output->writeln("<error>Downloaded file is not a valid PHAR: {$e2->getMessage()}</error>");
+                                    }
+                                }
+                            }
+                        } catch (Exception $e2) {
+                            $output->writeln("<error>Alternative download method failed: {$e2->getMessage()}</error>");
+                        }
+
+                        // If alternative method failed, try to repair the existing partial download
                         $output->writeln("<comment>Attempting to repair the downloaded PHAR file...</comment>");
 
                         // Read the file to find the PHAR signature
@@ -486,13 +572,13 @@ EOT
                                 $output->writeln("<info>Successfully repaired PHAR file. Proceeding.</info>");
                                 return;
                             } catch (Exception $e2) {
-                                $output->writeln("<comment>Repair attempt failed: {$e2->getMessage()}</comment>");
+                                $output->writeln("<error>Repair attempt failed: {$e2->getMessage()}</error>");
                             }
                         }
                     }
                 }
             } catch (Exception $e) {
-                $output->writeln("<comment>Error validating PHAR: {$e->getMessage()}</comment>");
+                $output->writeln("<error>Error validating PHAR: {$e->getMessage()}</error>");
             }
         }
 
@@ -504,8 +590,10 @@ EOT
         $output->writeln("<error>Download attempt {$attempt}/{$maxRetries} failed: {$msg}</error>");
 
         if ($attempt < $maxRetries) {
-            $output->writeln("<comment>Waiting {$retryDelaySeconds} seconds before next attempt...</comment>");
-            sleep($retryDelaySeconds);
+            // Increase the delay for each retry attempt
+            $currentDelay = $retryDelaySeconds * $attempt;
+            $output->writeln("<comment>Waiting {$currentDelay} seconds before next attempt...</comment>");
+            sleep($currentDelay);
         }
     }
 
@@ -553,7 +641,7 @@ EOT
             ? self::CHANGELOG_DOWNLOAD_URL_UNSTABLE
             : self::CHANGELOG_DOWNLOAD_URL_STABLE;
 
-        $response = $this->curlGet($changeLogUrl);
+        $response = CurlClient::curlGet($changeLogUrl);
         if (!$response->success) {
             throw new RuntimeException('Cannot download changelog: ' . $response->status_code);
         }
@@ -593,74 +681,6 @@ UNSTABLE_FOOTER;
     }
 
     /**
-     * Make a GET request using curl.
-     *
-     * @param string $url The URL to request
-     * @param array $headers Optional headers to send with the request
-     * @param array $options Optional curl options
-     * @return object Response object with success, status_code, and body properties
-     */
-    private function curlGet(string $url, array $headers = [], array $options = []): object
-    {
-        $response = new stdClass();
-        $ch = curl_init();
-
-        // Set default options
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $options['connect_timeout'] ?? 10);
-        curl_setopt($ch, CURLOPT_TIMEOUT, $options['timeout'] ?? 30);
-
-        // Set headers
-        if (!empty($headers)) {
-            $formattedHeaders = [];
-            foreach ($headers as $key => $value) {
-                $formattedHeaders[] = $key . ': ' . $value;
-            }
-            curl_setopt($ch, CURLOPT_HTTPHEADER, $formattedHeaders);
-        }
-
-        // Set output file if specified
-        if (isset($options['filename'])) {
-            $fp = fopen($options['filename'], 'w+');
-            curl_setopt($ch, CURLOPT_FILE, $fp);
-        }
-
-        // Set progress callback if specified
-        if (isset($options['progress_callback'])) {
-            curl_setopt($ch, CURLOPT_NOPROGRESS, false);
-            curl_setopt($ch, CURLOPT_PROGRESSFUNCTION, $options['progress_callback']);
-        }
-
-        // Execute request
-        $body = curl_exec($ch);
-        $statusCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        $error = curl_error($ch);
-        $success = $statusCode >= 200 && $statusCode < 300 && !$error;
-
-        // Close file handle if opened
-        if (isset($fp)) {
-            fclose($fp);
-        }
-
-        // Set response properties
-        $response->success = $success;
-        $response->status_code = $statusCode;
-        if (!isset($options['filename'])) {
-            $response->body = $body;
-        }
-        if ($error) {
-            $response->error = $error;
-        }
-
-        curl_close($ch);
-        return $response;
-    }
-
-    /**
      * Make a HEAD request using curl.
      *
      * @param string $url The URL to request
@@ -670,56 +690,6 @@ UNSTABLE_FOOTER;
      */
     private function curlHead(string $url, array $headers = [], array $options = []): object
     {
-        $response = new stdClass();
-        $ch = curl_init();
-
-        // Set default options
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-        curl_setopt($ch, CURLOPT_NOBODY, true); // HEAD request
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $options['connect_timeout'] ?? 10);
-        curl_setopt($ch, CURLOPT_TIMEOUT, $options['timeout'] ?? 30);
-        curl_setopt($ch, CURLOPT_HEADER, true);
-
-        // Set headers
-        if (!empty($headers)) {
-            $formattedHeaders = [];
-            foreach ($headers as $key => $value) {
-                $formattedHeaders[] = $key . ': ' . $value;
-            }
-            curl_setopt($ch, CURLOPT_HTTPHEADER, $formattedHeaders);
-        }
-
-        // Execute request
-        $rawHeaders = curl_exec($ch);
-        $statusCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        $error = curl_error($ch);
-        $success = $statusCode >= 200 && $statusCode < 300 && !$error;
-
-        // Parse headers
-        $headerLines = explode("\r\n", $rawHeaders);
-        $parsedHeaders = [];
-        foreach ($headerLines as $line) {
-            $parts = explode(':', $line, 2);
-            if (count($parts) === 2) {
-                $key = strtolower(trim($parts[0]));
-                $value = trim($parts[1]);
-                $parsedHeaders[$key] = $value;
-            }
-        }
-
-        // Set response properties
-        $response->success = $success;
-        $response->status_code = $statusCode;
-        $response->headers = $parsedHeaders;
-        if ($error) {
-            $response->error = $error;
-        }
-
-        curl_close($ch);
-        return $response;
+        return CurlClient::curlHead($url, $headers, $options);
     }
 }
