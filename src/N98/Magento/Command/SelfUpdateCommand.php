@@ -15,8 +15,6 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use UnexpectedValueException;
-use WpOrg\Requests\Hooks;
-use WpOrg\Requests\Requests;
 
 /**
  * @codeCoverageIgnore
@@ -75,6 +73,12 @@ EOT
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        // Check if curl extension is available
+        if (!extension_loaded('curl')) {
+            $output->writeln('<error>The curl extension is not available. Please install or enable it.</error>');
+            return Command::FAILURE;
+        }
+
         $isDryRun      = $input->getOption('dry-run');
         $loadUnstable  = $input->getOption('unstable');
         $requestedVersion = $input->getArgument('version');
@@ -103,7 +107,7 @@ EOT
             $remotePharDownloadUrl = self::MAGERUN_DOWNLOAD_URL_UNSTABLE;
 
             // We directly fetch the latest “unstable” version from version.txt
-            $response = Requests::get($versionTxtUrl, [], ['verify' => true]);
+            $response = $this->curlGet($versionTxtUrl);
             if (!$response->success) {
                 throw new RuntimeException('Cannot get version: ' . $response->status_code);
             }
@@ -138,7 +142,7 @@ EOT
             );
 
             // Check if the requested file exists via HEAD
-            $existsCheck = Requests::head($remotePharDownloadUrl, [], ['verify' => true]);
+            $existsCheck = $this->curlHead($remotePharDownloadUrl);
             if (!$existsCheck->success) {
                 throw new RuntimeException(
                     sprintf('Requested version "%s" could not be found at %s', $requestedVersion, $remotePharDownloadUrl)
@@ -164,7 +168,7 @@ EOT
             $versionTxtUrl         = self::VERSION_TXT_URL_STABLE;
             $remotePharDownloadUrl = self::MAGERUN_DOWNLOAD_URL_STABLE;
 
-            $response = Requests::get($versionTxtUrl, [], ['verify' => true]);
+            $response = $this->curlGet($versionTxtUrl);
             if (!$response->success) {
                 throw new RuntimeException('Cannot get version: ' . $response->status_code);
             }
@@ -311,12 +315,6 @@ EOT
                 );
 
                 return;
-            } catch (\WpOrg\Requests\Exception $e) {
-                $this->handleDownloadException($output, $e, $attempt, $maxRetries, $retryDelaySeconds, $tempFilename, $progress);
-
-                if ($attempt >= $maxRetries) {
-                    throw new RuntimeException("Download failed after {$maxRetries} attempts: {$e->getMessage()}");
-                }
             } catch (Exception $e) {
                 $this->handleDownloadException($output, $e, $attempt, $maxRetries, $retryDelaySeconds, $tempFilename, $progress);
 
@@ -334,8 +332,7 @@ EOT
      */
     private function getRemoteFileSize(OutputInterface $output, string $remoteUrl): int
     {
-        $head = Requests::head($remoteUrl, [], [
-            'verify'          => true,
+        $head = $this->curlHead($remoteUrl, [], [
             'timeout'         => 20,
             'connect_timeout' => 10,
         ]);
@@ -384,40 +381,37 @@ EOT
      */
     private function performDownload(string $remoteUrl, string $tempFilename, ProgressBar $progress, array $requestOpts)
     {
-        // Create a hooks instance for progress reporting
-        $hooks = new Hooks();
-
-        // Register a progress callback
-        $hooks->register('request.progress', function($data, $bytes_so_far, $bytes_limit) use ($progress) {
-            if ($progress->getMaxSteps() > 0) {
-                $progress->setProgress($bytes_so_far);
+        // Create a progress callback for curl
+        $progressCallback = function($curlResource, $downloadSize, $downloaded, $uploadSize, $uploaded) use ($progress) {
+            if ($downloadSize > 0 && $progress->getMaxSteps() > 0) {
+                $progress->setProgress($downloaded);
+            } elseif ($downloaded > 0) {
+                // If we don't know the total size, just update with current downloaded bytes
+                $progress->setProgress($downloaded);
             }
-        });
+            return 0; // Return 0 to continue the transfer
+        };
+
+        // Prepare headers for the request
+        $headers = [
+            'User-Agent' => 'n98-magerun2',
+            'Accept'     => 'application/octet-stream',
+            'Accept-Encoding' => 'gzip, deflate',
+        ];
 
         // Prepare options for the request
         $options = array_merge($requestOpts, [
             'filename' => $tempFilename,
-            'hooks' => $hooks,
-            'verify' => true,
-            'headers' => [
-                'User-Agent' => 'n98-magerun2',
-                'Accept'     => 'application/octet-stream',
-                'Accept-Encoding' => 'gzip, deflate',
-            ],
+            'progress_callback' => $progressCallback,
         ]);
 
         try {
             // Perform the request
-            $response = Requests::get($remoteUrl, [], $options);
+            $response = $this->curlGet($remoteUrl, $headers, $options);
 
-            // Create a response-like object to maintain compatibility with the rest of the code
-            $responseObj = new stdClass();
-            $responseObj->success = $response->success;
-            $responseObj->status_code = $response->status_code;
-
-            return $responseObj;
-        } catch (\WpOrg\Requests\Exception $e) {
-            // Convert Requests exceptions to RuntimeException for compatibility
+            return $response;
+        } catch (Exception $e) {
+            // Convert exceptions to RuntimeException for compatibility
             throw new RuntimeException($e->getMessage());
         }
     }
@@ -559,7 +553,7 @@ EOT
             ? self::CHANGELOG_DOWNLOAD_URL_UNSTABLE
             : self::CHANGELOG_DOWNLOAD_URL_STABLE;
 
-        $response = Requests::get($changeLogUrl, [], ['verify' => true]);
+        $response = $this->curlGet($changeLogUrl);
         if (!$response->success) {
             throw new RuntimeException('Cannot download changelog: ' . $response->status_code);
         }
@@ -596,5 +590,136 @@ UNSTABLE_FOOTER;
     {
         // The check remains simple: if local != remote or we specifically want an unstable.
         return $this->getApplication()->getVersion() !== $latest || $loadUnstable;
+    }
+
+    /**
+     * Make a GET request using curl.
+     *
+     * @param string $url The URL to request
+     * @param array $headers Optional headers to send with the request
+     * @param array $options Optional curl options
+     * @return object Response object with success, status_code, and body properties
+     */
+    private function curlGet(string $url, array $headers = [], array $options = []): object
+    {
+        $response = new stdClass();
+        $ch = curl_init();
+
+        // Set default options
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $options['connect_timeout'] ?? 10);
+        curl_setopt($ch, CURLOPT_TIMEOUT, $options['timeout'] ?? 30);
+
+        // Set headers
+        if (!empty($headers)) {
+            $formattedHeaders = [];
+            foreach ($headers as $key => $value) {
+                $formattedHeaders[] = $key . ': ' . $value;
+            }
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $formattedHeaders);
+        }
+
+        // Set output file if specified
+        if (isset($options['filename'])) {
+            $fp = fopen($options['filename'], 'w+');
+            curl_setopt($ch, CURLOPT_FILE, $fp);
+        }
+
+        // Set progress callback if specified
+        if (isset($options['progress_callback'])) {
+            curl_setopt($ch, CURLOPT_NOPROGRESS, false);
+            curl_setopt($ch, CURLOPT_PROGRESSFUNCTION, $options['progress_callback']);
+        }
+
+        // Execute request
+        $body = curl_exec($ch);
+        $statusCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $error = curl_error($ch);
+        $success = $statusCode >= 200 && $statusCode < 300 && !$error;
+
+        // Close file handle if opened
+        if (isset($fp)) {
+            fclose($fp);
+        }
+
+        // Set response properties
+        $response->success = $success;
+        $response->status_code = $statusCode;
+        if (!isset($options['filename'])) {
+            $response->body = $body;
+        }
+        if ($error) {
+            $response->error = $error;
+        }
+
+        curl_close($ch);
+        return $response;
+    }
+
+    /**
+     * Make a HEAD request using curl.
+     *
+     * @param string $url The URL to request
+     * @param array $headers Optional headers to send with the request
+     * @param array $options Optional curl options
+     * @return object Response object with success, status_code, and headers properties
+     */
+    private function curlHead(string $url, array $headers = [], array $options = []): object
+    {
+        $response = new stdClass();
+        $ch = curl_init();
+
+        // Set default options
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($ch, CURLOPT_NOBODY, true); // HEAD request
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $options['connect_timeout'] ?? 10);
+        curl_setopt($ch, CURLOPT_TIMEOUT, $options['timeout'] ?? 30);
+        curl_setopt($ch, CURLOPT_HEADER, true);
+
+        // Set headers
+        if (!empty($headers)) {
+            $formattedHeaders = [];
+            foreach ($headers as $key => $value) {
+                $formattedHeaders[] = $key . ': ' . $value;
+            }
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $formattedHeaders);
+        }
+
+        // Execute request
+        $rawHeaders = curl_exec($ch);
+        $statusCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $error = curl_error($ch);
+        $success = $statusCode >= 200 && $statusCode < 300 && !$error;
+
+        // Parse headers
+        $headerLines = explode("\r\n", $rawHeaders);
+        $parsedHeaders = [];
+        foreach ($headerLines as $line) {
+            $parts = explode(':', $line, 2);
+            if (count($parts) === 2) {
+                $key = strtolower(trim($parts[0]));
+                $value = trim($parts[1]);
+                $parsedHeaders[$key] = $value;
+            }
+        }
+
+        // Set response properties
+        $response->success = $success;
+        $response->status_code = $statusCode;
+        $response->headers = $parsedHeaders;
+        if ($error) {
+            $response->error = $error;
+        }
+
+        curl_close($ch);
+        return $response;
     }
 }
