@@ -376,24 +376,6 @@ EOT
             'timeout' => 300,
         ];
 
-        // Check for CURL_OPTS environment variable and apply those options (keeping for backward compatibility)
-        $optsEnv = getenv('CURL_OPTS');
-        if ($optsEnv) {
-            $output->writeln("<info>Using request options from environment: {$optsEnv}</info>");
-
-            // Parse the options string (format: --http1.1 --connect-timeout 60 --max-time 300)
-            $options = explode(' ', $optsEnv);
-            foreach ($options as $i => $option) {
-                if (strpos($option, '--http1.1') === 0) {
-                    $requestOpts['protocol_version'] = 1.1;
-                } elseif (strpos($option, '--connect-timeout') === 0 && isset($options[$i+1]) && is_numeric($options[$i+1])) {
-                    $requestOpts['connect_timeout'] = (int) $options[$i+1];
-                } elseif (strpos($option, '--max-time') === 0 && isset($options[$i+1]) && is_numeric($options[$i+1])) {
-                    $requestOpts['timeout'] = (int) $options[$i+1];
-                }
-            }
-        }
-
         return $requestOpts;
     }
 
