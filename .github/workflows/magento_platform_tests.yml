@@ -136,8 +136,7 @@ jobs:
           - 9200:9200
 
       mariadb:
-        image: >-
-          mariadb:${{ matrix.mariadb-version }} # Use MariaDB image and matrix variable
+        image: mariadb:${{ matrix.mariadb-version }}
         env:
           MARIADB_ROOT_PASSWORD: root # Use MariaDB env var
           MARIADB_DATABASE: magento    # Use MariaDB env var
@@ -201,8 +200,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
-          key: >-
-            ${{ runner.os }}-php-${{ matrix.php-version }}-composer-${{ matrix.magento-version }}-${{ hashFiles('composer.lock') }}
+          key: ${{ runner.os }}-php-${{ matrix.php-version }}-composer-${{ matrix.magento-version }}-${{ hashFiles('composer.lock') }}
           restore-keys: |
             ${{ runner.os }}-php-${{ matrix.php-version }}-composer-${{ matrix.magento-version }}-
             ${{ runner.os }}-php-${{ matrix.php-version }}-composer-
