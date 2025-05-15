@@ -15,6 +15,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use UnexpectedValueException;
+use WpOrg\Requests\Hooks;
 use WpOrg\Requests\Requests;
 
 /**
@@ -282,12 +283,12 @@ EOT
             // Setup progress bar
             $progress = $this->createProgressBar($output, $filesize);
 
-            // Prepare cURL options
-            $curlOpts = $this->prepareCurlOptions($output);
+            // Prepare request options
+            $requestOpts = $this->prepareRequestOptions($output);
 
             try {
                 // Perform the download
-                $response = $this->performDownload($remoteUrl, $tempFilename, $progress, $curlOpts);
+                $response = $this->performDownload($remoteUrl, $tempFilename, $progress, $requestOpts);
 
                 $progress->finish();
                 $output->writeln('');
@@ -365,105 +366,75 @@ EOT
     }
 
     /**
-     * Prepare cURL options for the download.
+     * Prepare request options for the download.
      */
-    private function prepareCurlOptions(OutputInterface $output): array
+    private function prepareRequestOptions(OutputInterface $output): array
     {
-        // Prepare cURL options: force HTTP/1.1
-        $curlOpts = [
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_BUFFERSIZE   => 128*1024, // 128 KB chunks instead of default 16 KB
+        // Prepare options: force HTTP/1.1
+        $requestOpts = [
+            'protocol_version' => 1.1,
             // Increase timeouts for large files
-            CURLOPT_CONNECTTIMEOUT => 60,
-            CURLOPT_TIMEOUT => 300,
+            'connect_timeout' => 60,
+            'timeout' => 300,
         ];
 
-        // Check for CURL_OPTS environment variable and apply those options
-        $curlOptsEnv = getenv('CURL_OPTS');
-        if ($curlOptsEnv) {
-            $output->writeln("<info>Using cURL options from environment: {$curlOptsEnv}</info>");
+        // Check for CURL_OPTS environment variable and apply those options (keeping for backward compatibility)
+        $optsEnv = getenv('CURL_OPTS');
+        if ($optsEnv) {
+            $output->writeln("<info>Using request options from environment: {$optsEnv}</info>");
 
             // Parse the options string (format: --http1.1 --connect-timeout 60 --max-time 300)
-            $options = explode(' ', $curlOptsEnv);
+            $options = explode(' ', $optsEnv);
             foreach ($options as $i => $option) {
                 if (strpos($option, '--http1.1') === 0) {
-                    $curlOpts[CURLOPT_HTTP_VERSION] = CURL_HTTP_VERSION_1_1;
+                    $requestOpts['protocol_version'] = 1.1;
                 } elseif (strpos($option, '--connect-timeout') === 0 && isset($options[$i+1]) && is_numeric($options[$i+1])) {
-                    $curlOpts[CURLOPT_CONNECTTIMEOUT] = (int) $options[$i+1];
+                    $requestOpts['connect_timeout'] = (int) $options[$i+1];
                 } elseif (strpos($option, '--max-time') === 0 && isset($options[$i+1]) && is_numeric($options[$i+1])) {
-                    $curlOpts[CURLOPT_TIMEOUT] = (int) $options[$i+1];
+                    $requestOpts['timeout'] = (int) $options[$i+1];
                 }
             }
         }
 
-        return $curlOpts;
+        return $requestOpts;
     }
 
     /**
      * Perform the download using the prepared options.
      */
-    private function performDownload(string $remoteUrl, string $tempFilename, ProgressBar $progress, array $curlOpts)
+    private function performDownload(string $remoteUrl, string $tempFilename, ProgressBar $progress, array $requestOpts)
     {
-        // Initialize cURL session
-        $ch = curl_init($remoteUrl);
+        // Create a hooks instance for progress reporting
+        $hooks = new Hooks();
 
-        // Set cURL options
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
-
-        // Apply all custom cURL options
-        foreach ($curlOpts as $option => $value) {
-            curl_setopt($ch, $option, $value);
-        }
-
-        // Open file for writing
-        $fp = fopen($tempFilename, 'w+');
-        if (!$fp) {
-            throw new RuntimeException("Could not open file for writing: $tempFilename");
-        }
-
-        // Set file handle for direct writing
-        curl_setopt($ch, CURLOPT_FILE, $fp);
-
-        // Set up progress callback
-        curl_setopt($ch, CURLOPT_NOPROGRESS, false);
-        curl_setopt($ch, CURLOPT_PROGRESSFUNCTION, function ($resource, $downloadSize, $downloaded, $uploadSize, $uploaded) use ($progress) {
-            if ($downloadSize > 0) {
-                $progress->setMaxSteps($downloadSize);
-                $progress->setProgress($downloaded);
+        // Register a progress callback
+        $hooks->register('request.progress', function($data, $bytes_so_far, $bytes_limit) use ($progress) {
+            if ($progress->getMaxSteps() > 0) {
+                $progress->setProgress($bytes_so_far);
             }
-            return 0; // Return 0 to continue the transfer
         });
 
-        // Execute the request
-        $success = curl_exec($ch);
-        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        $error = curl_error($ch);
-        $errno = curl_errno($ch);
+        // Prepare options for the request
+        $options = array_merge($requestOpts, [
+            'filename' => $tempFilename,
+            'hooks' => $hooks,
+            'verify' => true,
+        ]);
 
-        // Close the file handle
-        fclose($fp);
+        try {
+            // Perform the request
+            $response = Requests::get($remoteUrl, [], $options);
 
-        // Close cURL session
-        curl_close($ch);
+            // Create a response-like object to maintain compatibility with the rest of the code
+            $responseObj = new stdClass();
+            $responseObj->success = $response->success;
+            $responseObj->status_code = $response->status_code;
 
-        // Create a response-like object to maintain compatibility
-        $response = new stdClass();
-        $response->success = $success !== false && $httpCode >= 200 && $httpCode < 300;
-        $response->status_code = $httpCode;
-
-        // If there was an error, throw an exception
-        if (!$response->success) {
-            if ($errno) {
-                throw new RuntimeException("cURL error $errno: $error");
-            } else {
-                throw new RuntimeException("HTTP error: $httpCode");
-            }
+            return $responseObj;
+        } catch (\WpOrg\Requests\Exception $e) {
+            // Convert Requests exceptions to RuntimeException for compatibility
+            throw new RuntimeException($e->getMessage());
         }
-
-        return $response;
     }
 
     /**
@@ -495,8 +466,8 @@ EOT
             }
         }
 
-        // Special handling for cURL errors, particularly error 18 (transfer closed with bytes remaining to read)
-        if ((strpos($msg, 'cURL error 18') !== false || strpos($msg, 'cURL error 56') !== false) && $isPartialDownload) {
+        // Special handling for transfer errors with partial downloads
+        if ($isPartialDownload) {
             try {
                 // Try to validate the file as a valid PHAR
                 error_reporting(E_ALL); // show all errors
@@ -508,8 +479,8 @@ EOT
                     $phar = new Phar($tempFilename);
                     unset($phar);
 
-                    // If we get here, the PHAR is valid despite the cURL error
-                    $output->writeln("<info>File appears to be a valid PHAR despite cURL error. Proceeding.</info>");
+                    // If we get here, the PHAR is valid despite the download error
+                    $output->writeln("<info>File appears to be a valid PHAR despite download error. Proceeding.</info>");
                     return;
                 } catch (UnexpectedValueException $pharException) {
                     // If it fails with UnexpectedValueException, it's likely a corrupted PHAR
