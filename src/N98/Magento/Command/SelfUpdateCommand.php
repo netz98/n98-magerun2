@@ -388,17 +388,22 @@ EOT
         $hooks = new Hooks();
 
         // Register a progress callback
-        /*$hooks->register('request.progress', function($data, $bytes_so_far, $bytes_limit) use ($progress) {
+        $hooks->register('request.progress', function($data, $bytes_so_far, $bytes_limit) use ($progress) {
             if ($progress->getMaxSteps() > 0) {
                 $progress->setProgress($bytes_so_far);
             }
-        });*/
+        });
 
         // Prepare options for the request
         $options = array_merge($requestOpts, [
             'filename' => $tempFilename,
             'hooks' => $hooks,
             'verify' => true,
+            'headers' => [
+                'User-Agent' => 'n98-magerun2',
+                'Accept'     => 'application/octet-stream',
+                'Accept-Encoding' => 'gzip, deflate',
+            ],
         ]);
 
         try {
