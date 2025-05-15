@@ -426,7 +426,7 @@ EOT
     private function performDownload(string $remoteUrl, string $tempFilename, ProgressBar $progress, array $requestOpts)
     {
         // Create a progress callback for curl
-        $progressCallback = function($curlResource, $downloadSize, $downloaded, $uploadSize, $uploaded) use ($progress) {
+        $progressCallback = function ($curlResource, $downloadSize, $downloaded, $uploadSize, $uploaded) use ($progress) {
             if ($downloadSize > 0 && $progress->getMaxSteps() > 0) {
                 $progress->setProgress($downloaded);
             } elseif ($downloaded > 0) {
