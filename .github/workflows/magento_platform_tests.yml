@@ -18,7 +18,8 @@ on:
       - "scoper.inc.php"
       - "src/**"
       - "version.txt"
-      - ".github/workflows/magento-platform-tests.yml" # Trigger also on workflow changes
+      - ".github/workflows/magento-platform-tests.yml"
+      # Trigger also on workflow changes
   pull_request_target:
     branches:
       - "master"
@@ -32,13 +33,17 @@ on:
       - "scoper.inc.php"
       - "src/**"
       - "version.txt"
-      - ".github/workflows/magento-platform-tests.yml" # Trigger also on workflow changes
+      - ".github/workflows/magento-platform-tests.yml"
+      # Trigger also on workflow changes
   workflow_dispatch:
 
 jobs:
   phpunit:
     # Updated job name to reflect MariaDB usage
-    name: Unit Tests (${{ matrix.magento-version }} / PHP ${{ matrix.php-version }} / MariaDB ${{ matrix.mariadb-version }} / ${{ matrix.opensearch-version && 'OpenSearch' || 'Elasticsearch' }})
+    name: >-
+      Unit Tests (${{ matrix.magento-version }} / PHP ${{ matrix.php-version }} / 
+      MariaDB ${{ matrix.mariadb-version }} / 
+      ${{ matrix.opensearch-version && 'OpenSearch' || 'Elasticsearch' }})
     runs-on: ${{ matrix.operating-system }}
     strategy:
       fail-fast: false
@@ -112,10 +117,11 @@ jobs:
 
     services:
       opensearch:
-        image: opensearchproject/opensearch:${{ matrix.opensearch-version || '' }}
+        image: >-
+          opensearchproject/opensearch:${{ matrix.opensearch-version || '' }}
         env:
-          # By default, ElasticSearch refuses to spawn in single node configuration, as it expects redundancy.
-          # This is a dev environment, so redundancy is just wasteful.
+          # By default, ElasticSearch refuses to spawn in single node configuration,
+          # as it expects redundancy. This is a dev environment, so redundancy is just wasteful.
           discovery.type: single-node
           # Disable HTTPS and password authentication
           DISABLE_INSTALL_DEMO_CONFIG: true
@@ -130,7 +136,8 @@ jobs:
           - 9200:9200
 
       mariadb:
-        image: mariadb:${{ matrix.mariadb-version }} # Use MariaDB image and matrix variable
+        image: >-
+          mariadb:${{ matrix.mariadb-version }} # Use MariaDB image and matrix variable
         env:
           MARIADB_ROOT_PASSWORD: root # Use MariaDB env var
           MARIADB_DATABASE: magento    # Use MariaDB env var
@@ -161,7 +168,10 @@ jobs:
         with:
           tools: composer:${{ matrix.composer-version }}, cs2pr
           php-version: ${{ matrix.php-version }}
-          extensions: bcmath, ctype, curl, dom, gd, hash, iconv, intl, mbstring, pdo_mysql, simplexml, soap, sodium, xml, zip, sockets # pdo_mysql works for MariaDB too
+          extensions: >-
+            bcmath, ctype, curl, dom, gd, hash, iconv, intl, mbstring, pdo_mysql, 
+            simplexml, soap, sodium, xml, zip, sockets 
+            # pdo_mysql works for MariaDB too
           ini-values: memory_limit=-1
           coverage: none
 
@@ -191,7 +201,8 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ runner.os }}-php-${{ matrix.php-version }}-composer-${{ matrix.magento-version }}-${{ hashFiles('composer.lock') }}
+          key: >-
+            ${{ runner.os }}-php-${{ matrix.php-version }}-composer-${{ matrix.magento-version }}-${{ hashFiles('composer.lock') }}
           restore-keys: |
             ${{ runner.os }}-php-${{ matrix.php-version }}-composer-${{ matrix.magento-version }}-
             ${{ runner.os }}-php-${{ matrix.php-version }}-composer-
@@ -202,14 +213,16 @@ jobs:
       - name: Setup Magento Open Source Repository Credentials
         if: matrix.composer-repository-url == 'https://repo.magento.com/' && matrix.use-git-repository == false
         run: |
-          composer global config http-basic.repo.magento.com "${MAGENTO_MARKETPLACE_USERNAME}" "${MAGENTO_MARKETPLACE_PASSWORD}"
+          composer global config http-basic.repo.magento.com \
+            "${MAGENTO_MARKETPLACE_USERNAME}" "${MAGENTO_MARKETPLACE_PASSWORD}"
 
       # --- Installation Method: Git Repository ---
       - name: Install Magento via git
         if: matrix.use-git-repository == true
         run: |
           echo "Cloning Magento from ${{ matrix.git-repository }} branch ${{ matrix.git-branch }}"
-          git clone --branch "${{ matrix.git-branch }}" --depth 1 ${{ matrix.git-repository }} "$GITHUB_WORKSPACE/magento"
+          git clone --branch "${{ matrix.git-branch }}" --depth 1 \
+            ${{ matrix.git-repository }} "$GITHUB_WORKSPACE/magento"
           cd "$GITHUB_WORKSPACE/magento"
           echo "Installing Magento dependencies via Composer"
           composer --version
@@ -242,7 +255,7 @@ jobs:
         if: matrix.use-git-repository == false
         run: |
           echo "Creating Magento project version ${{ matrix.magento-version }} from ${{ matrix.composer-repository-url }}"
-      
+
           if [[ "${{ matrix.composer-repository-url }}" == *"mage-os.org"* ]]; then
             PACKAGE_NAME="mage-os/project-community-edition"
           elif [[ "${{ matrix.composer-repository-url }}" == *"magento.com"* ]]; then
@@ -251,8 +264,9 @@ jobs:
             echo "Error: Unknown composer repository URL: ${{ matrix.composer-repository-url }}"
             exit 1
           fi
-      
-          composer create-project --repository-url="${{ matrix.composer-repository-url }}" $PACKAGE_NAME ./magento "${{ matrix.magento-version }}" --no-interaction --no-progress
+
+          composer create-project --repository-url="${{ matrix.composer-repository-url }}" \
+            $PACKAGE_NAME ./magento "${{ matrix.magento-version }}" --no-interaction --no-progress
 
       - name: Install Magento Database & Config (Non-Git)
         if: matrix.use-git-repository == false
@@ -287,12 +301,17 @@ jobs:
         working-directory: ./magento
         run: |
           if [ -f composer.json ]; then
-            composer require colinmollenhour/php-redis-session-abstract:1.5.5 --no-update --no-interaction
-            composer update colinmollenhour/php-redis-session-abstract --with-dependencies --no-progress
+            composer require colinmollenhour/php-redis-session-abstract:1.5.5 \
+              --no-update --no-interaction
+            composer update colinmollenhour/php-redis-session-abstract \
+              --with-dependencies --no-progress
           else
             echo "Skipping credis downgrade - composer.json not found"
           fi
-        if: contains(matrix.magento-version, '2.4.6') || contains(matrix.magento-version, '2.4.7') || contains(matrix.magento-version, 'mage-os')
+        if: >-
+          contains(matrix.magento-version, '2.4.6') || 
+          contains(matrix.magento-version, '2.4.7') || 
+          contains(matrix.magento-version, 'mage-os')
 
       - name: Configure PHPUnit matchers
         uses: mheap/phpunit-matcher-action@v1
@@ -321,7 +340,9 @@ jobs:
         with:
           tools: composer:v2
           php-version: "8.2"
-          extensions: bcmath, ctype, curl, dom, gd, hash, iconv, intl, mbstring, pdo_mysql, simplexml, soap, sodium, xml, zip, sockets
+          extensions: >-
+            bcmath, ctype, curl, dom, gd, hash, iconv, intl, mbstring, pdo_mysql, 
+            simplexml, soap, sodium, xml, zip, sockets
           ini-values: memory_limit=-1, phar.readonly=0
           coverage: none
 
@@ -335,7 +356,9 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php-version }}
-          extensions: bcmath, ctype, curl, dom, gd, hash, iconv, intl, mbstring, pdo_mysql, simplexml, soap, sodium, xml, zip, sockets
+          extensions: >-
+            bcmath, ctype, curl, dom, gd, hash, iconv, intl, mbstring, pdo_mysql, 
+            simplexml, soap, sodium, xml, zip, sockets
           ini-values: memory_limit=-1
           coverage: none
 
@@ -343,10 +366,12 @@ jobs:
         run: bats tests/bats/functional_magerun_commands.bats
         env:
           N98_MAGERUN2_TEST_MAGENTO_ROOT: "${{ github.workspace }}/magento"
-          N98_MAGERUN2_BIN: "${{ github.workspace }}/build/n98-magerun2.phar"
+          N98_MAGERUN2_BIN: >-
+            "${{ github.workspace }}/build/n98-magerun2.phar"
 
       - name: Phar functional tests (Magento Core)
         run: bats tests/bats/functional_core_commands.bats
         env:
           N98_MAGERUN2_TEST_MAGENTO_ROOT: "${{ github.workspace }}/magento"
-          N98_MAGERUN2_BIN: "${{ github.workspace }}/build/n98-magerun2.phar"
+          N98_MAGERUN2_BIN: >-
+            "${{ github.workspace }}/build/n98-magerun2.phar"
