@@ -31,14 +31,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Setup PHP
-        uses: shivammathur/setup-php@cf4cade2721270509d5b1c766ab3549210a39a2a # 2.33.0
-        with:
-          tools: composer:2
-          php-version: '8.3'
-          extensions: bcmath, ctype, curl, dom, gd, hash, iconv, intl, mbstring, pdo_mysql, simplexml, soap, sodium, xml, zip, sockets
-          ini-values: memory_limit=-1, phar.readonly=0
-
       - name: Checkout PR
         uses: actions/checkout@v4.2.2
         if: github.event_name == 'pull_request'
@@ -51,6 +43,14 @@ jobs:
         with:
           ref: ${{ github.ref }}
           fetch-depth: 0
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@cf4cade2721270509d5b1c766ab3549210a39a2a # 2.33.0
+        with:
+          tools: 'composer:2'
+          php-version: '8.2'
+          extensions: 'intl'
+          ini-values: 'memory_limit=-1, phar.readonly=0'
 
       - name: Checkout HEAD
         uses: actions/checkout@v4.2.2
