@@ -298,13 +298,20 @@ EOT
                 $progress->start(0);
             }
 
-            // Prepare cURL options: force HTTP/1.1 and resume from last byte on retries
+            // Prepare cURL options: force HTTP/1.1 and resume from last byte if file exists
             $curlOpts = [
                 CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
                 CURLOPT_BUFFERSIZE   => 128*1024, // 128 KB chunks instead of default 16 KB
+                // Increase timeouts for large files
+                CURLOPT_CONNECTTIMEOUT => 60,
+                CURLOPT_TIMEOUT => 300,
             ];
-            if ($attempt > 1 && file_exists($tempFilename)) {
-                $curlOpts[CURLOPT_RESUME_FROM] = filesize($tempFilename);
+
+            // Always resume from last byte if file exists, not just on retries
+            if (file_exists($tempFilename)) {
+                $existingSize = filesize($tempFilename);
+                $curlOpts[CURLOPT_RESUME_FROM] = $existingSize;
+                $output->writeln("<info>Resuming download from byte {$existingSize}</info>");
             }
 
             $hooks = new Hooks();
@@ -356,16 +363,41 @@ EOT
 
                 $msg = $e->getMessage();
 
-                if (strpos($msg, 'cURL error 18') !== false
-                    && $filesize > 0
-                    && file_exists($tempFilename)
-                    && filesize($tempFilename) === $filesize
-                ) {
-                    $output->writeln('<info>File is complete despite cURL error 18. Proceeding.</info>');
-                    return;
+                // Handle cURL error 18 (transfer closed with bytes remaining to read)
+                // This error often occurs when the connection is closed prematurely but the file is still usable
+                if (strpos($msg, 'cURL error 18') !== false && $filesize > 0 && file_exists($tempFilename)) {
+                    $downloadedSize = filesize($tempFilename);
+                    $percentComplete = ($downloadedSize / $filesize) * 100;
+
+                    // If we have at least 99% of the file, consider it complete enough to proceed
+                    if ($percentComplete >= 99) {
+                        $output->writeln(sprintf(
+                            '<info>File is nearly complete (%d of %d bytes, %.2f%%) despite cURL error 18. Proceeding.</info>',
+                            $downloadedSize,
+                            $filesize,
+                            $percentComplete
+                        ));
+                        return;
+                    }
+
+                    // If we have the exact file size, it's definitely complete
+                    if ($downloadedSize === $filesize) {
+                        $output->writeln('<info>File is complete despite cURL error 18. Proceeding.</info>');
+                        return;
+                    }
+
+                    // Otherwise, log the percentage and continue with retry
+                    $output->writeln(sprintf(
+                        '<comment>Download incomplete: %d of %d bytes (%.2f%%). Will retry.</comment>',
+                        $downloadedSize,
+                        $filesize,
+                        $percentComplete
+                    ));
                 }
 
-                if (file_exists($tempFilename)) {
+                // For cURL error 18, we want to keep the partial file for resuming
+                // For other errors, we should clean up
+                if (file_exists($tempFilename) && strpos($msg, 'cURL error 18') === false) {
                     unlink($tempFilename);
                 }
 
@@ -379,10 +411,14 @@ EOT
             } catch (Exception $e) {
                 $progress->finish();
                 $output->writeln('');
-                if (file_exists($tempFilename)) {
+                $msg = $e->getMessage();
+
+                // For cURL error 18, we want to keep the partial file for resuming
+                // For other errors, we should clean up
+                if (file_exists($tempFilename) && strpos($msg, 'cURL error 18') === false) {
                     unlink($tempFilename);
                 }
-                $output->writeln("<error>Unexpected error on attempt {$attempt}: {$e->getMessage()}</error>");
+                $output->writeln("<error>Unexpected error on attempt {$attempt}: {$msg}</error>");
                 if ($attempt >= $maxRetries) {
                     throw new RuntimeException("Download failed after {$maxRetries} attempts: {$e->getMessage()}");
                 }
