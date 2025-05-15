@@ -262,79 +262,33 @@ EOT
     }
 
     /**
-     * Download the phar using a retry loop with HTTP/1.1 and resume support.
+     * Download the phar using a retry loop with HTTP/1.1.
      */
-
     private function downloadNewPhar(OutputInterface $output, string $remoteUrl, string $tempFilename)
     {
-        $maxRetries        = 3;
+        $maxRetries = 3;
         $retryDelaySeconds = 5;
 
         for ($attempt = 1; $attempt <= $maxRetries; $attempt++) {
-            // Clean up before first attempt, retain partial file on retries for resume
-            if ($attempt === 1 && file_exists($tempFilename)) {
+            // Clean up any existing file before each attempt
+            if (file_exists($tempFilename)) {
                 unlink($tempFilename);
             }
 
             $output->writeln("<info>Fetching file information from {$remoteUrl} (attempt {$attempt}/{$maxRetries})...</info>");
-            $head = Requests::head($remoteUrl, [], [
-                'verify'          => true,
-                'timeout'         => 20,
-                'connect_timeout' => 10,
-            ]);
 
-            $filesize = 0;
-            if ($head->success && isset($head->headers['content-length'])) {
-                $filesize = (int) $head->headers['content-length'];
-            }
+            // Get file information
+            $filesize = $this->getRemoteFileSize($output, $remoteUrl);
 
             // Setup progress bar
-            $progress = new ProgressBar($output);
-            if ($filesize > 0) {
-                $progress->setFormat('[%bar%] %current%/%max% bytes %percent:3s%% %elapsed:6s%/%estimated:-6s%');
-                $progress->start($filesize);
-            } else {
-                $progress->setFormat('[%bar%] %current% bytes downloaded');
-                $progress->start(0);
-            }
+            $progress = $this->createProgressBar($output, $filesize);
 
-            // Prepare cURL options: force HTTP/1.1 and resume from last byte if file exists
-            $curlOpts = [
-                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                CURLOPT_BUFFERSIZE   => 128*1024, // 128 KB chunks instead of default 16 KB
-                // Increase timeouts for large files
-                CURLOPT_CONNECTTIMEOUT => 60,
-                CURLOPT_TIMEOUT => 300,
-            ];
-
-            // Always resume from last byte if file exists, not just on retries
-            if (file_exists($tempFilename)) {
-                $existingSize = filesize($tempFilename);
-                $curlOpts[CURLOPT_RESUME_FROM] = $existingSize;
-                $output->writeln("<info>Resuming download from byte {$existingSize}</info>");
-            }
-
-            $hooks = new Hooks();
-            $hooks->register('requests.progress', function ($chunk, $downloaded, $total) use ($progress) {
-                if ($progress->getMaxSteps() > 0) {
-                    $progress->setProgress($downloaded);
-                }
-            });
+            // Prepare cURL options
+            $curlOpts = $this->prepareCurlOptions($output);
 
             try {
-                // Use a proper Curl transport instance, not the string "curl"
-                $transport = new CurlTransport();
-
-                $response = Requests::get($remoteUrl, [], [
-                    'filename'        => $tempFilename,
-                    'blocking'        => true,
-                    'hooks'           => $hooks,
-                    'verify'          => true,
-                    'timeout'         => 300,
-                    'connect_timeout' => 60,
-                    'transport'       => $transport,
-                    'curl'            => $curlOpts,
-                ]);
+                // Perform the download
+                $response = $this->performDownload($remoteUrl, $tempFilename, $progress, $curlOpts);
 
                 $progress->finish();
                 $output->writeln('');
@@ -358,76 +312,149 @@ EOT
 
                 return;
             } catch (\WpOrg\Requests\Exception $e) {
-                $progress->finish();
-                $output->writeln('');
+                $this->handleDownloadException($output, $e, $attempt, $maxRetries, $retryDelaySeconds, $tempFilename, $progress);
 
-                $msg = $e->getMessage();
-
-                // Handle cURL error 18 (transfer closed with bytes remaining to read)
-                // This error often occurs when the connection is closed prematurely but the file is still usable
-                if (strpos($msg, 'cURL error 18') !== false && $filesize > 0 && file_exists($tempFilename)) {
-                    $downloadedSize = filesize($tempFilename);
-                    $percentComplete = ($downloadedSize / $filesize) * 100;
-
-                    // If we have at least 99% of the file, consider it complete enough to proceed
-                    if ($percentComplete >= 99) {
-                        $output->writeln(sprintf(
-                            '<info>File is nearly complete (%d of %d bytes, %.2f%%) despite cURL error 18. Proceeding.</info>',
-                            $downloadedSize,
-                            $filesize,
-                            $percentComplete
-                        ));
-                        return;
-                    }
-
-                    // If we have the exact file size, it's definitely complete
-                    if ($downloadedSize === $filesize) {
-                        $output->writeln('<info>File is complete despite cURL error 18. Proceeding.</info>');
-                        return;
-                    }
-
-                    // Otherwise, log the percentage and continue with retry
-                    $output->writeln(sprintf(
-                        '<comment>Download incomplete: %d of %d bytes (%.2f%%). Will retry.</comment>',
-                        $downloadedSize,
-                        $filesize,
-                        $percentComplete
-                    ));
-                }
-
-                // For cURL error 18, we want to keep the partial file for resuming
-                // For other errors, we should clean up
-                if (file_exists($tempFilename) && strpos($msg, 'cURL error 18') === false) {
-                    unlink($tempFilename);
-                }
-
-                $output->writeln("<error>Download attempt {$attempt}/{$maxRetries} failed: {$msg}</error>");
-                if ($attempt >= $maxRetries) {
-                    throw new RuntimeException("Download failed after {$maxRetries} attempts: {$msg}");
-                }
-
-                $output->writeln("<comment>Waiting {$retryDelaySeconds} seconds before next attempt...</comment>");
-                sleep($retryDelaySeconds);
-            } catch (Exception $e) {
-                $progress->finish();
-                $output->writeln('');
-                $msg = $e->getMessage();
-
-                // For cURL error 18, we want to keep the partial file for resuming
-                // For other errors, we should clean up
-                if (file_exists($tempFilename) && strpos($msg, 'cURL error 18') === false) {
-                    unlink($tempFilename);
-                }
-                $output->writeln("<error>Unexpected error on attempt {$attempt}: {$msg}</error>");
                 if ($attempt >= $maxRetries) {
                     throw new RuntimeException("Download failed after {$maxRetries} attempts: {$e->getMessage()}");
                 }
-                $output->writeln("<comment>Waiting {$retryDelaySeconds} seconds before next attempt...</comment>");
-                sleep($retryDelaySeconds);
+            } catch (Exception $e) {
+                $this->handleDownloadException($output, $e, $attempt, $maxRetries, $retryDelaySeconds, $tempFilename, $progress);
+
+                if ($attempt >= $maxRetries) {
+                    throw new RuntimeException("Download failed after {$maxRetries} attempts: {$e->getMessage()}");
+                }
             }
         }
 
         throw new RuntimeException("Download failed after {$maxRetries} attempts.");
+    }
+
+    /**
+     * Get the size of the remote file.
+     */
+    private function getRemoteFileSize(OutputInterface $output, string $remoteUrl): int
+    {
+        $head = Requests::head($remoteUrl, [], [
+            'verify'          => true,
+            'timeout'         => 20,
+            'connect_timeout' => 10,
+        ]);
+
+        $filesize = 0;
+        if ($head->success && isset($head->headers['content-length'])) {
+            $filesize = (int) $head->headers['content-length'];
+        }
+
+        return $filesize;
+    }
+
+    /**
+     * Create a progress bar for the download.
+     */
+    private function createProgressBar(OutputInterface $output, int $filesize): ProgressBar
+    {
+        $progress = new ProgressBar($output);
+        if ($filesize > 0) {
+            $progress->setFormat('[%bar%] %current%/%max% bytes %percent:3s%% %elapsed:6s%/%estimated:-6s%');
+            $progress->start($filesize);
+        } else {
+            $progress->setFormat('[%bar%] %current% bytes downloaded');
+            $progress->start(0);
+        }
+
+        return $progress;
+    }
+
+    /**
+     * Prepare cURL options for the download.
+     */
+    private function prepareCurlOptions(OutputInterface $output): array
+    {
+        // Prepare cURL options: force HTTP/1.1
+        $curlOpts = [
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_BUFFERSIZE   => 128*1024, // 128 KB chunks instead of default 16 KB
+            // Increase timeouts for large files
+            CURLOPT_CONNECTTIMEOUT => 60,
+            CURLOPT_TIMEOUT => 300,
+        ];
+
+        // Check for CURL_OPTS environment variable and apply those options
+        $curlOptsEnv = getenv('CURL_OPTS');
+        if ($curlOptsEnv) {
+            $output->writeln("<info>Using cURL options from environment: {$curlOptsEnv}</info>");
+
+            // Parse the options string (format: --http1.1 --connect-timeout 60 --max-time 300)
+            $options = explode(' ', $curlOptsEnv);
+            foreach ($options as $i => $option) {
+                if (strpos($option, '--http1.1') === 0) {
+                    $curlOpts[CURLOPT_HTTP_VERSION] = CURL_HTTP_VERSION_1_1;
+                } elseif (strpos($option, '--connect-timeout') === 0 && isset($options[$i+1]) && is_numeric($options[$i+1])) {
+                    $curlOpts[CURLOPT_CONNECTTIMEOUT] = (int) $options[$i+1];
+                } elseif (strpos($option, '--max-time') === 0 && isset($options[$i+1]) && is_numeric($options[$i+1])) {
+                    $curlOpts[CURLOPT_TIMEOUT] = (int) $options[$i+1];
+                }
+            }
+        }
+
+        return $curlOpts;
+    }
+
+    /**
+     * Perform the download using the prepared options.
+     */
+    private function performDownload(string $remoteUrl, string $tempFilename, ProgressBar $progress, array $curlOpts)
+    {
+        $hooks = new Hooks();
+        $hooks->register('requests.progress', function ($chunk, $downloaded, $total) use ($progress) {
+            if ($progress->getMaxSteps() > 0) {
+                $progress->setProgress($downloaded);
+            }
+        });
+
+        // Use a proper Curl transport instance
+        $transport = new CurlTransport();
+
+        return Requests::get($remoteUrl, [], [
+            'filename'        => $tempFilename,
+            'blocking'        => true,
+            'hooks'           => $hooks,
+            'verify'          => true,
+            'timeout'         => 300,
+            'connect_timeout' => 60,
+            'transport'       => $transport,
+            'curl'            => $curlOpts,
+        ]);
+    }
+
+    /**
+     * Handle download exceptions.
+     */
+    private function handleDownloadException(
+        OutputInterface $output,
+        Exception $e,
+        int $attempt,
+        int $maxRetries,
+        int $retryDelaySeconds,
+        string $tempFilename,
+        ProgressBar $progress
+    ) {
+        $progress->finish();
+        $output->writeln('');
+
+        $msg = $e->getMessage();
+
+        // Clean up the temp file if it exists
+        if (file_exists($tempFilename)) {
+            unlink($tempFilename);
+        }
+
+        $output->writeln("<error>Download attempt {$attempt}/{$maxRetries} failed: {$msg}</error>");
+
+        if ($attempt < $maxRetries) {
+            $output->writeln("<comment>Waiting {$retryDelaySeconds} seconds before next attempt...</comment>");
+            sleep($retryDelaySeconds);
+        }
     }
 
     /**
