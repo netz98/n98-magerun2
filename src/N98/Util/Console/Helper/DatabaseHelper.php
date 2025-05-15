@@ -198,7 +198,8 @@ class DatabaseHelper extends AbstractHelper implements CommandAware
      */
     public function getTableName($tableName)
     {
-        return $this->dbSettings['prefix'] . $tableName;
+        $prefix = isset($this->dbSettings['prefix']) ? $this->dbSettings['prefix'] : '';
+        return $prefix . $tableName;
     }
 
     /**

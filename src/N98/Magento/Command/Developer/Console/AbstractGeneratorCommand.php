@@ -3,6 +3,7 @@
 namespace N98\Magento\Command\Developer\Console;
 
 use Exception;
+use InvalidArgumentException;
 use Laminas\Code\Generator\FileGenerator;
 use Laminas\Filter\Word\SeparatorToSeparator;
 use Magento\Framework\Code\Generator\ClassGenerator;
@@ -11,6 +12,7 @@ use Magento\Framework\Filesystem\Directory\WriteFactory as DirectoryWriteFactory
 use Magento\Framework\Filesystem\Directory\WriteInterface;
 use Magento\Framework\Module\Dir as ModuleDir;
 use N98\Magento\Command\Developer\Console\Structure\ModuleNameStructure;
+use stdClass;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -110,10 +112,10 @@ abstract class AbstractGeneratorCommand extends AbstractConsoleCommand
             $currentModuleName = $magerunInternal->currentModule;
 
             if (empty($currentModuleName)) {
-                throw new \InvalidArgumentException('No module defined');
+                throw new InvalidArgumentException('No module defined');
             }
-        } catch (\InvalidArgumentException $e) {
-            throw new \InvalidArgumentException('Module not defined. Please use "module <name>" command');
+        } catch (InvalidArgumentException $e) {
+            throw new InvalidArgumentException('Module not defined. Please use "module <name>" command');
         }
 
         return new ModuleNameStructure($currentModuleName);
@@ -136,8 +138,8 @@ abstract class AbstractGeneratorCommand extends AbstractConsoleCommand
     {
         try {
             $magerunInternal = $this->getScopeVariable('magerunInternal');
-        } catch (\InvalidArgumentException $e) {
-            $magerunInternal = new \stdClass();
+        } catch (InvalidArgumentException $e) {
+            $magerunInternal = new stdClass();
         }
         $magerunInternal->currentModule = $name;
         $this->setScopeVariable('magerunInternal', $magerunInternal);
@@ -241,8 +243,12 @@ abstract class AbstractGeneratorCommand extends AbstractConsoleCommand
             ]
         );
 
+        $generatedCode = $fileGenerator->generate();
+        // Remove trailing newline to match expected output in tests
+        $generatedCode = rtrim($generatedCode);
+
         $this->getCurrentModuleDirectoryWriter()
-            ->writeFile($filePathToGenerate, $fileGenerator->generate());
+            ->writeFile($filePathToGenerate, $generatedCode);
 
         $output->writeln('<info>generated </info><comment>' . $filePathToGenerate . '</comment>');
     }

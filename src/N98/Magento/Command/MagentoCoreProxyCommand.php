@@ -79,7 +79,7 @@ class MagentoCoreProxyCommand extends AbstractMagentoCommand
         );
 
         $process->setTimeout($config['timeout']);
-        $process->setTty($input->isInteractive());
+        $process->setTty($input->isInteractive() && Process::isTtySupported());
 
         if (OutputInterface::VERBOSITY_VERBOSE <= $output->getVerbosity()) {
             $output->writeln(sprintf('<debug>Execute: <comment>%s</comment></debug>', $process->getCommandLine()));

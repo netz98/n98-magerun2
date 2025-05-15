@@ -314,6 +314,9 @@ jobs:
       - name: Configure PHPUnit matchers
         uses: mheap/phpunit-matcher-action@v1
 
+      - name: Install sendmail
+        run: sudo apt-get update && sudo apt-get install -y sendmail
+
       - name: Run PHPUnit (Developer Mode)
         run: vendor/bin/phpunit --debug
         env:
