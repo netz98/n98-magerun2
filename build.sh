@@ -55,17 +55,6 @@ function download_box() {
   fi
 }
 
-function download_composer() {
-  if command -v composer &>/dev/null; then
-    true; # do nothing
-  else
-    echo "Composer was not found. Try to install it ..."
-    # install composer
-    $PHP_BIN -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
-    $PHP_BIN composer-setup.php --install-dir=/usr/local/bin --filename=composer
-  fi
-}
-
 function find_commit_timestamp() {
   LAST_COMMIT_TIMESTAMP="$(git log --format=format:%ct HEAD -1)" # reproducible build
 }
@@ -111,7 +100,6 @@ function print_info_before_build() {
 check_dependencies
 system_setup
 download_box
-download_composer
 find_commit_timestamp
 print_info_before_build
 create_new_phar
