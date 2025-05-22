@@ -36,7 +36,6 @@
         "fakerphp/faker": "~1.16",
         "laminas/laminas-filter": "^2.12",
         "n98/junit-xml": "~1.0",
-        "pbergman/tree-helper": "^1.0",
         "psr/container": "~1.1.2",
         "psr/log": "^2.0",
         "psy/psysh": "~0.7",

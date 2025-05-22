@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "fd0ffb163b8a4548bc77092ebb1113ec",
+    "content-hash": "ac3013fb809a020a2a506fdfd9fc7c42",
     "packages": [
         {
             "name": "dflydev/dot-access-data",
@@ -469,54 +469,6 @@
                 "source": "https://github.com/nikic/PHP-Parser/tree/v5.4.0"
             },
             "time": "2024-12-30T11:07:19+00:00"
-        },
-        {
-            "name": "pbergman/tree-helper",
-            "version": "1.0.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/pbergman/tree-printer.git",
-                "reference": "38ef106ebd8d0f0e807f47a15eb193b579c9dfdb"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/pbergman/tree-printer/zipball/38ef106ebd8d0f0e807f47a15eb193b579c9dfdb",
-                "reference": "38ef106ebd8d0f0e807f47a15eb193b579c9dfdb",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.4.0",
-                "symfony/console": ">=2.6"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "PBergman": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Philip Bergman",
-                    "email": "pbergman@live.nl"
-                }
-            ],
-            "description": "A symfony console helper to print a tree",
-            "keywords": [
-                "array",
-                "builder",
-                "console",
-                "symfony",
-                "tree"
-            ],
-            "support": {
-                "issues": "https://github.com/pbergman/tree-printer/issues",
-                "source": "https://github.com/pbergman/tree-printer/tree/1.0.2"
-            },
-            "time": "2022-02-08T08:28:24+00:00"
         },
         {
             "name": "psr/container",
@@ -6788,9 +6740,9 @@
         "ext-posix": "*",
         "ext-zip": "*"
     },
-    "platform-dev": [],
+    "platform-dev": {},
     "platform-overrides": {
         "php": "8.1.0"
     },
-    "plugin-api-version": "2.2.0"
+    "plugin-api-version": "2.6.0"
 }
