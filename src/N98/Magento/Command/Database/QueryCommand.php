@@ -87,6 +87,22 @@ HELP;
             $returnValue = 0;
         } else {
             exec($exec, $commandOutput, $returnValue);
+
+            // Filter out MySQL password warnings
+            $filteredCmdOutput = [];
+            if (is_array($commandOutput)) {
+                foreach ($commandOutput as $line) {
+                    if (strpos($line, "Using a password on the command line interface can be insecure") === false) {
+                        $filteredCmdOutput[] = $line;
+                    }
+                }
+                $commandOutput = $filteredCmdOutput;
+            } elseif (is_string($commandOutput)) { // Should be array based on exec behavior, but handle just in case
+                if (strpos($commandOutput, "Using a password on the command line interface can be insecure") !== false) {
+                    $commandOutput = ""; // Or filter more precisely if it's a single string with newlines
+                }
+            }
+
             $output->writeln($commandOutput);
             if ($returnValue > 0) {
                 $output->writeln('<error>' . implode(PHP_EOL, $commandOutput) . '</error>');

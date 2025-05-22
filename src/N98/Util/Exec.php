@@ -45,6 +45,16 @@ class Exec
         $command .= self::REDIRECT_STDERR_TO_STDOUT;
 
         exec($command, $outputArray, $returnCode);
+
+        // Filter out MySQL password warnings
+        $filteredOutputArray = [];
+        foreach ((array) $outputArray as $line) {
+            if (strpos($line, "Using a password on the command line interface can be insecure") === false) {
+                $filteredOutputArray[] = $line;
+            }
+        }
+        $outputArray = $filteredOutputArray;
+
         $output = self::parseCommandOutput((array) $outputArray);
 
         if ($returnCode !== self::CODE_CLEAN_EXIT) {

@@ -245,7 +245,8 @@ abstract class AbstractGeneratorCommand extends AbstractConsoleCommand
 
         $generatedCode = $fileGenerator->generate();
         // Remove trailing newline to match expected output in tests
-        $generatedCode = rtrim($generatedCode);
+        $generatedCode = str_replace("\r\n", "\n", $generatedCode); // Normalize newlines to LF
+        $generatedCode = rtrim($generatedCode, "\n");              // Remove trailing LF
 
         $this->getCurrentModuleDirectoryWriter()
             ->writeFile($filePathToGenerate, $generatedCode);

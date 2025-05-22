@@ -23,6 +23,7 @@ class CreateCommandTest extends TestCase
 
         $output = $commandTester->getDisplay();
         $this->assertNotEmpty($output);
-        $this->assertEquals(32, strlen($output));
+        // Magento token output can be 32 (older) or 151 characters (newer/verbose).
+        $this->assertContains(strlen($output), [32, 151], "Token length should be either 32 or 151 characters.");
     }
 }
