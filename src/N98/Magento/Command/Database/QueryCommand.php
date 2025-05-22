@@ -86,7 +86,13 @@ HELP;
             $output->writeln($exec);
             $returnValue = 0;
         } else {
+            // Temporarily suppress E_WARNING for exec, as MySQL might output password warnings to stderr
+            $oldErrorReporting = error_reporting();
+            error_reporting($oldErrorReporting & ~E_WARNING);
+
             exec($exec, $commandOutput, $returnValue);
+
+            error_reporting($oldErrorReporting);
 
             // Filter out MySQL password warnings
             $filteredCmdOutput = [];

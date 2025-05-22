@@ -44,7 +44,13 @@ class Exec
 
         $command .= self::REDIRECT_STDERR_TO_STDOUT;
 
+        // Temporarily suppress E_WARNING for exec, as MySQL might output password warnings to stderr
+        $oldErrorReporting = error_reporting();
+        error_reporting($oldErrorReporting & ~E_WARNING);
+
         exec($command, $outputArray, $returnCode);
+
+        error_reporting($oldErrorReporting);
 
         // Filter out MySQL password warnings
         $filteredOutputArray = [];
@@ -90,7 +96,13 @@ class Exec
      */
     private static function isPipefailOptionAvailable()
     {
+        // Temporarily suppress E_WARNING for exec
+        $oldErrorReporting = error_reporting();
+        error_reporting($oldErrorReporting & ~E_WARNING);
+
         exec('set -o | grep pipefail 2>&1', $output, $returnCode);
+
+        error_reporting($oldErrorReporting);
 
         return $returnCode == self::CODE_CLEAN_EXIT;
     }
