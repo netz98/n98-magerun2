@@ -341,8 +341,8 @@ jobs:
       - name: Setup PHP for phar build (Use a consistent, modern PHP version)
         uses: shivammathur/setup-php@v2
         with:
-          tools: composer:v2
-          php-version: "8.2"
+          tools: composer:${{ matrix.composer-version }}
+          php-version: ${{ matrix.php-version }}
           extensions: >-
             bcmath, ctype, curl, dom, gd, hash, iconv, intl, mbstring, pdo_mysql, 
             simplexml, soap, sodium, xml, zip, sockets
