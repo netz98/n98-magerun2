@@ -86,7 +86,29 @@ HELP;
             $output->writeln($exec);
             $returnValue = 0;
         } else {
+            // Temporarily suppress E_WARNING for exec, as MySQL might output password warnings to stderr
+            $oldErrorReporting = error_reporting();
+            error_reporting($oldErrorReporting & ~E_WARNING);
+
             exec($exec, $commandOutput, $returnValue);
+
+            error_reporting($oldErrorReporting);
+
+            // Filter out MySQL password warnings
+            $filteredCmdOutput = [];
+            if (is_array($commandOutput)) {
+                foreach ($commandOutput as $line) {
+                    if (strpos($line, "Using a password on the command line interface can be insecure") === false) {
+                        $filteredCmdOutput[] = $line;
+                    }
+                }
+                $commandOutput = $filteredCmdOutput;
+            } elseif (is_string($commandOutput)) { // Should be array based on exec behavior, but handle just in case
+                if (strpos($commandOutput, "Using a password on the command line interface can be insecure") !== false) {
+                    $commandOutput = ""; // Or filter more precisely if it's a single string with newlines
+                }
+            }
+
             $output->writeln($commandOutput);
             if ($returnValue > 0) {
                 $output->writeln('<error>' . implode(PHP_EOL, $commandOutput) . '</error>');

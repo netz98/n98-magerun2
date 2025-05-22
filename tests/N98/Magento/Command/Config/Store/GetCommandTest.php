@@ -53,7 +53,7 @@ class GetCommandTest extends TestCase
                 '--magerun-script' => true, # needed to not use the previous output cache
                 'path'             => 'n98_magerun/foo/bar',
             ],
-            'config:store:set --scope-id=0 --scope=default -- \'n98_magerun/foo/bar\' NULL'
+            "config:store:set --no-null --scope-id=0 --scope=default -- 'n98_magerun/foo/bar' 'NULL'\n "
         );
     }
 
@@ -141,7 +141,7 @@ class GetCommandTest extends TestCase
             '--format' => 'csv',
         ];
         // normalize quotes for test
-        $this->assertDisplayContains(str_replace('"', '', $input), 'Path,Scope,Scope-ID,Value,Updated At');
+        $this->assertDisplayContains(str_replace('"', '', $input), 'Path,Scope,Scope-ID,Value,"Updated At"');
         $this->assertDisplayContains($input, 'n98_magerun/foo/bar,default,0,1234');
 
         /**
