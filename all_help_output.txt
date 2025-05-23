@@ -1,0 +1,3184 @@
+Description:
+  Dump the shell completion script
+
+Usage:
+  completion [options] [--] [<shell>]
+
+Arguments:
+  shell                                   The shell type (e.g. "bash"), the value of the "$SHELL" env var will be used if this is not given
+
+Options:
+      --debug                             Tail the completion debug log
+  -h, --help                              Display help for the given command. When no command is given display help for the list command
+  -q, --quiet                             Do not output any message
+  -V, --version                           Display this application version
+      --ansi|--no-ansi                    Force (or disable --no-ansi) ANSI output
+  -n, --no-interaction                    Do not ask any interactive question
+      --root-dir[=ROOT-DIR]               Force magento root dir. No auto detection
+      --skip-config                       Do not load any custom config.
+      --skip-root-check                   Do not check if n98-magerun runs as root
+      --skip-core-commands                Do not include Magento 2 core commands
+      --skip-magento-compatibility-check  Do not check for Magento version compatibility
+  -v|vv|vvv, --verbose                    Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+Help:
+  The completion command dumps the shell completion script required
+  to use shell autocompletion (currently, bash, fish, zsh completion are supported).
+  
+  Static installation
+  -------------------
+  
+  Dump the script to a global completion file and restart your shell:
+  
+      bin/n98-magerun2 completion bash | sudo tee /etc/bash_completion.d/n98-magerun2
+  
+  Or dump the script to a local file and source it:
+  
+      bin/n98-magerun2 completion bash > completion.sh
+  
+      # source the file whenever you use the project
+      source completion.sh
+  
+      # or add this line at the end of your "~/.bashrc" file:
+      source /path/to/completion.sh
+  
+  Dynamic installation
+  --------------------
+  
+  Add this to the end of your shell configuration file (e.g. "~/.bashrc"):
+  
+      eval "$(bin/n98-magerun2 completion bash)"
+
+---------------------------------------
+
+Description:
+  Display help for a command
+
+Usage:
+  help [options] [--] [<command_name>]
+
+Arguments:
+  command_name                            The command name [default: "help"]
+
+Options:
+      --format=FORMAT                     The output format (txt, xml, json, or md) [default: "txt"]
+      --raw                               To output raw command help
+  -h, --help                              Display help for the given command. When no command is given display help for the list command
+  -q, --quiet                             Do not output any message
+  -V, --version                           Display this application version
+      --ansi|--no-ansi                    Force (or disable --no-ansi) ANSI output
+  -n, --no-interaction                    Do not ask any interactive question
+      --root-dir[=ROOT-DIR]               Force magento root dir. No auto detection
+      --skip-config                       Do not load any custom config.
+      --skip-root-check                   Do not check if n98-magerun runs as root
+      --skip-core-commands                Do not include Magento 2 core commands
+      --skip-magento-compatibility-check  Do not check for Magento version compatibility
+  -v|vv|vvv, --verbose                    Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+Help:
+  The help command displays help for a given command:
+  
+    bin/n98-magerun2 help list
+  
+  You can also output the help in other formats by using the --format option:
+  
+    bin/n98-magerun2 help --format=xml list
+  
+  To display the list of available commands, please use the list command.
+
+---------------------------------------
+
+Description:
+  Install magento
+
+Usage:
+  install [options]
+
+Options:
+      --magentoVersion[=MAGENTOVERSION]                  Magento version
+      --magentoVersionByName[=MAGENTOVERSIONBYNAME]      Magento version name instead of order number
+      --installationFolder[=INSTALLATIONFOLDER]          Installation folder
+      --dbHost[=DBHOST]                                  Database host
+      --dbUser[=DBUSER]                                  Database user
+      --dbPass[=DBPASS]                                  Database password
+      --dbName[=DBNAME]                                  Database name
+      --dbPort[=DBPORT]                                  Database port [default: 3306]
+      --installSampleData[=INSTALLSAMPLEDATA]            Install sample data
+      --useDefaultConfigParams[=USEDEFAULTCONFIGPARAMS]  Use default installation parameters defined in the yaml file
+      --baseUrl[=BASEURL]                                Installation base url
+      --replaceHtaccessFile[=REPLACEHTACCESSFILE]        Generate htaccess file (for non vhost environment)
+      --noDownload                                       If set skips download step. Used when installationFolder is already a Magento installation that has to be installed on the given database.
+      --only-download                                    Downloads (and extracts) source code
+      --forceUseDb                                       If --forceUseDb passed, force to use given database if it already exists.
+      --composer-use-same-php-binary                     If --composer-use-same-php-binary passed, will invoke composer with the same PHP binary
+  -h, --help                                             Display help for the given command. When no command is given display help for the list command
+  -q, --quiet                                            Do not output any message
+  -V, --version                                          Display this application version
+      --ansi|--no-ansi                                   Force (or disable --no-ansi) ANSI output
+  -n, --no-interaction                                   Do not ask any interactive question
+      --root-dir[=ROOT-DIR]                              Force magento root dir. No auto detection
+      --skip-config                                      Do not load any custom config.
+      --skip-root-check                                  Do not check if n98-magerun runs as root
+      --skip-core-commands                               Do not include Magento 2 core commands
+      --skip-magento-compatibility-check                 Do not check for Magento version compatibility
+  -v|vv|vvv, --verbose                                   Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+Help:
+  * Download Magento by a list of git repos and zip files (mageplus, 
+    magelte, official community packages).
+  * Try to create database if it does not exist.
+  * Installs Magento sample data if available (since version 1.2.0).
+  * Starts Magento installer
+  * Sets rewrite base in .htaccess file
+  
+  Example of an unattended Magento CE 2.0.0 installation:
+  
+     $ n98-magerun2.phar install --dbHost="localhost" --dbUser="mydbuser" \
+       --dbPass="mysecret" --dbName="magentodb" --installSampleData=yes \
+       --useDefaultConfigParams=yes \
+       --magentoVersionByName="magento-ce-2.0.0" \
+       --installationFolder="magento" --baseUrl="http://magento.localdomain/"
+  
+  Additionally, with --noDownload option you can install Magento working 
+  copy already stored in --installationFolder on the given database.
+  
+  See it in action: http://youtu.be/WU-CbJ86eQc
+  
+
+---------------------------------------
+
+Description:
+  List commands
+
+Usage:
+  list [options] [--] [<namespace>]
+
+Arguments:
+  namespace                               The namespace name
+
+Options:
+      --raw                               To output raw command list
+      --format=FORMAT                     The output format (txt, xml, json, or md) [default: "txt"]
+      --short                             To skip describing commands' arguments
+  -h, --help                              Display help for the given command. When no command is given display help for the list command
+  -q, --quiet                             Do not output any message
+  -V, --version                           Display this application version
+      --ansi|--no-ansi                    Force (or disable --no-ansi) ANSI output
+  -n, --no-interaction                    Do not ask any interactive question
+      --root-dir[=ROOT-DIR]               Force magento root dir. No auto detection
+      --skip-config                       Do not load any custom config.
+      --skip-root-check                   Do not check if n98-magerun runs as root
+      --skip-core-commands                Do not include Magento 2 core commands
+      --skip-magento-compatibility-check  Do not check for Magento version compatibility
+  -v|vv|vvv, --verbose                    Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+Help:
+  The list command lists all commands:
+  
+    bin/n98-magerun2 list
+  
+  You can also display the commands for a specific namespace:
+  
+    bin/n98-magerun2 list test
+  
+  You can also output the information in other formats by using the --format option:
+  
+    bin/n98-magerun2 list --format=xml
+  
+  It's also possible to get raw list of commands (useful for embedding command runner):
+  
+    bin/n98-magerun2 list --raw
+
+---------------------------------------
+
+Description:
+  Open current project in browser
+
+Usage:
+  open-browser [<store>]
+
+Arguments:
+  store                                   Store code or ID
+
+Options:
+  -h, --help                              Display help for the given command. When no command is given display help for the list command
+  -q, --quiet                             Do not output any message
+  -V, --version                           Display this application version
+      --ansi|--no-ansi                    Force (or disable --no-ansi) ANSI output
+  -n, --no-interaction                    Do not ask any interactive question
+      --root-dir[=ROOT-DIR]               Force magento root dir. No auto detection
+      --skip-config                       Do not load any custom config.
+      --skip-root-check                   Do not check if n98-magerun runs as root
+      --skip-core-commands                Do not include Magento 2 core commands
+      --skip-magento-compatibility-check  Do not check for Magento version compatibility
+  -v|vv|vvv, --verbose                    Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+---------------------------------------
+
+Description:
+  Runs multiple n98-magerun commands
+
+Usage:
+  script [options] [--] [<filename>]
+
+Arguments:
+  filename                                Script file
+
+Options:
+  -d, --define[=DEFINE]                   Defines a variable (multiple values allowed)
+      --stop-on-error                     Stops execution of script on error
+  -h, --help                              Display help for the given command. When no command is given display help for the list command
+  -q, --quiet                             Do not output any message
+  -V, --version                           Display this application version
+      --ansi|--no-ansi                    Force (or disable --no-ansi) ANSI output
+  -n, --no-interaction                    Do not ask any interactive question
+      --root-dir[=ROOT-DIR]               Force magento root dir. No auto detection
+      --skip-config                       Do not load any custom config.
+      --skip-root-check                   Do not check if n98-magerun runs as root
+      --skip-core-commands                Do not include Magento 2 core commands
+      --skip-magento-compatibility-check  Do not check for Magento version compatibility
+  -v|vv|vvv, --verbose                    Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+Help:
+  Example:
+  
+     # Set multiple config
+     config:store:set "web/cookie/cookie_domain" example.com
+  
+     # Set with multiline values with "
+"
+     config:store:set "general/store_information/address" "First line
+Second line
+Third line"
+  
+     # This is a comment
+     cache:flush
+  
+  
+  Optionally you can work with unix pipes.
+  
+     $ echo "cache:flush" | n98-magerun-dev script
+  
+     $ n98-magerun2.phar script < filename
+  
+  It is even possible to create executable scripts:
+  
+  Create file `test.magerun` and make it executable (`chmod +x test.magerun`):
+  
+     #!/usr/bin/env n98-magerun2.phar script
+  
+     config:store:set "web/cookie/cookie_domain" example.com
+     cache:flush
+  
+     # Run a shell script with "!" as first char
+     ! ls -l
+  
+     # Register your own variable (only key = value currently supported)
+     ${my.var}=bar
+  
+     # Let magerun ask for variable value - add a question mark
+     ${my.var}=?
+  
+     ! echo ${my.var}
+  
+     # Use resolved variables from n98-magerun in shell commands
+     ! ls -l ${magento.root}/code/local
+  
+  Pre-defined variables:
+  
+  * ${magento.root}    -> Magento Root-Folder
+  * ${magento.version} -> Magento Version i.e. 1.7.0.2
+  * ${magento.edition} -> Magento Edition -> Community or Enterprise
+  * ${magerun.version} -> Magerun version i.e. 1.66.0
+  * ${php.version}     -> PHP Version
+  * ${script.file}     -> Current script file path
+  * ${script.dir}      -> Current script file dir
+  
+  Variables can be passed to a script with "--define (-d)" option.
+  
+  Example:
+  
+     $ n98-magerun2.phar script -d foo=bar filename
+  
+     # This will register the variable ${foo} with value bar.
+  
+  It's possible to define multiple values by passing more than one option.
+
+---------------------------------------
+
+Description:
+  Build Hyvä theme CSS
+
+Usage:
+  BuildHyvaThemeCommandTestdev:theme:build-hyva [options] [--] [<theme>]
+
+Arguments:
+  theme                                   Hyvä Theme to build (e.g. Hyva/default)
+
+Options:
+  -p, --production                        Build for production (minified) instead of watch mode
+  -h, --help                              Display help for the given command. When no command is given display help for the list command
+  -q, --quiet                             Do not output any message
+  -V, --version                           Display this application version
+      --ansi|--no-ansi                    Force (or disable --no-ansi) ANSI output
+  -n, --no-interaction                    Do not ask any interactive question
+      --root-dir[=ROOT-DIR]               Force magento root dir. No auto detection
+      --skip-config                       Do not load any custom config.
+      --skip-root-check                   Do not check if n98-magerun runs as root
+      --skip-core-commands                Do not include Magento 2 core commands
+      --skip-magento-compatibility-check  Do not check for Magento version compatibility
+  -v|vv|vvv, --verbose                    Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+---------------------------------------
+
+Description:
+  Toggles admin notifications
+
+Usage:
+  admin:notifications [options]
+
+Options:
+      --on                                Switch on
+      --off                               Switch off
+  -h, --help                              Display help for the given command. When no command is given display help for the list command
+  -q, --quiet                             Do not output any message
+  -V, --version                           Display this application version
+      --ansi|--no-ansi                    Force (or disable --no-ansi) ANSI output
+  -n, --no-interaction                    Do not ask any interactive question
+      --root-dir[=ROOT-DIR]               Force magento root dir. No auto detection
+      --skip-config                       Do not load any custom config.
+      --skip-root-check                   Do not check if n98-magerun runs as root
+      --skip-core-commands                Do not include Magento 2 core commands
+      --skip-magento-compatibility-check  Do not check for Magento version compatibility
+  -v|vv|vvv, --verbose                    Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+---------------------------------------
+
+Description:
+  Create a new token for an admin user.
+
+Usage:
+  admin:token:create [options] [--] [<username>]
+
+Arguments:
+  username                                Username
+
+Options:
+      --no-newline                        do not output the trailing newline
+  -h, --help                              Display help for the given command. When no command is given display help for the list command
+  -q, --quiet                             Do not output any message
+  -V, --version                           Display this application version
+      --ansi|--no-ansi                    Force (or disable --no-ansi) ANSI output
+  -n, --no-interaction                    Do not ask any interactive question
+      --root-dir[=ROOT-DIR]               Force magento root dir. No auto detection
+      --skip-config                       Do not load any custom config.
+      --skip-root-check                   Do not check if n98-magerun runs as root
+      --skip-core-commands                Do not include Magento 2 core commands
+      --skip-magento-compatibility-check  Do not check for Magento version compatibility
+  -v|vv|vvv, --verbose                    Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+---------------------------------------
+
+Description:
+  Changes the password of a adminhtml user.
+
+Usage:
+  admin:user:change-password [<username> [<password>]]
+
+Arguments:
+  username                                Username
+  password                                Password
+
+Options:
+  -h, --help                              Display help for the given command. When no command is given display help for the list command
+  -q, --quiet                             Do not output any message
+  -V, --version                           Display this application version
+      --ansi|--no-ansi                    Force (or disable --no-ansi) ANSI output
+  -n, --no-interaction                    Do not ask any interactive question
+      --root-dir[=ROOT-DIR]               Force magento root dir. No auto detection
+      --skip-config                       Do not load any custom config.
+      --skip-root-check                   Do not check if n98-magerun runs as root
+      --skip-core-commands                Do not include Magento 2 core commands
+      --skip-magento-compatibility-check  Do not check for Magento version compatibility
+  -v|vv|vvv, --verbose                    Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+---------------------------------------
+
+Description:
+  Set the status of an admin user, if no status is given the status will be toggled. 
+                Note: the first found user is edited (since it is possible to use someone else's email as your 
+                username, although you should try to avoid this scenario).
+
+Usage:
+  admin:user:change-status [options] [--] <user>
+
+Arguments:
+  user                                    Username or email for the admin user
+
+Options:
+      --activate                          Activate the user
+      --deactivate                        Deactivate the user
+  -h, --help                              Display help for the given command. When no command is given display help for the list command
+  -q, --quiet                             Do not output any message
+  -V, --version                           Display this application version
+      --ansi|--no-ansi                    Force (or disable --no-ansi) ANSI output
+  -n, --no-interaction                    Do not ask any interactive question
+      --root-dir[=ROOT-DIR]               Force magento root dir. No auto detection
+      --skip-config                       Do not load any custom config.
+      --skip-root-check                   Do not check if n98-magerun runs as root
+      --skip-core-commands                Do not include Magento 2 core commands
+      --skip-magento-compatibility-check  Do not check for Magento version compatibility
+  -v|vv|vvv, --verbose                    Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+---------------------------------------
+
+Description:
+  Delete the account of a adminhtml user.
+
+Usage:
+  admin:user:delete [options] [--] [<id>]
+
+Arguments:
+  id                                      Username or Email
+
+Options:
+  -f, --force                             Force
+  -h, --help                              Display help for the given command. When no command is given display help for the list command
+  -q, --quiet                             Do not output any message
+  -V, --version                           Display this application version
+      --ansi|--no-ansi                    Force (or disable --no-ansi) ANSI output
+  -n, --no-interaction                    Do not ask any interactive question
+      --root-dir[=ROOT-DIR]               Force magento root dir. No auto detection
+      --skip-config                       Do not load any custom config.
+      --skip-root-check                   Do not check if n98-magerun runs as root
+      --skip-core-commands                Do not include Magento 2 core commands
+      --skip-magento-compatibility-check  Do not check for Magento version compatibility
+  -v|vv|vvv, --verbose                    Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+---------------------------------------
+
+Description:
+  List admin users.
+
+Usage:
+  admin:user:list [options]
+
+Options:
+      --format[=FORMAT]                   Output Format. One of [csv,json,json_array,yaml,xml]
+  -h, --help                              Display help for the given command. When no command is given display help for the list command
+  -q, --quiet                             Do not output any message
+  -V, --version                           Display this application version
+      --ansi|--no-ansi                    Force (or disable --no-ansi) ANSI output
+  -n, --no-interaction                    Do not ask any interactive question
+      --root-dir[=ROOT-DIR]               Force magento root dir. No auto detection
+      --skip-config                       Do not load any custom config.
+      --skip-root-check                   Do not check if n98-magerun runs as root
+      --skip-core-commands                Do not include Magento 2 core commands
+      --skip-magento-compatibility-check  Do not check for Magento version compatibility
+  -v|vv|vvv, --verbose                    Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+---------------------------------------
+
+Description:
+  Flush catalog image cache
+
+Usage:
+  cache:catalog:image:flush [options]
+
+Options:
+      --suppress-event                    Suppress clean_catalog_images_cache_after event dispatching
+  -h, --help                              Display help for the given command. When no command is given display help for the list command
+  -q, --quiet                             Do not output any message
+  -V, --version                           Display this application version
+      --ansi|--no-ansi                    Force (or disable --no-ansi) ANSI output
+  -n, --no-interaction                    Do not ask any interactive question
+      --root-dir[=ROOT-DIR]               Force magento root dir. No auto detection
+      --skip-config                       Do not load any custom config.
+      --skip-root-check                   Do not check if n98-magerun runs as root
+      --skip-core-commands                Do not include Magento 2 core commands
+      --skip-magento-compatibility-check  Do not check for Magento version compatibility
+  -v|vv|vvv, --verbose                    Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+---------------------------------------
+
+Description:
+  Clean magento cache
+
+Usage:
+  cache:clean [<type>...]
+
+Arguments:
+  type                                    Cache type code like "config"
+
+Options:
+  -h, --help                              Display help for the given command. When no command is given display help for the list command
+  -q, --quiet                             Do not output any message
+  -V, --version                           Display this application version
+      --ansi|--no-ansi                    Force (or disable --no-ansi) ANSI output
+  -n, --no-interaction                    Do not ask any interactive question
+      --root-dir[=ROOT-DIR]               Force magento root dir. No auto detection
+      --skip-config                       Do not load any custom config.
+      --skip-root-check                   Do not check if n98-magerun runs as root
+      --skip-core-commands                Do not include Magento 2 core commands
+      --skip-magento-compatibility-check  Do not check for Magento version compatibility
+  -v|vv|vvv, --verbose                    Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+Help:
+  Cleans expired cache entries.
+  
+  If you would like to clean only one cache type use like:
+  
+     $ n98-magerun2.phar cache:clean full_page
+  
+  If you would like to clean multiple cache types at once use like:
+  
+     $ n98-magerun2.phar cache:clean full_page block_html
+  
+  If you would like to remove all cache entries use `cache:flush`
+  
+
+---------------------------------------
+
+Description:
+  Disables Magento caches
+
+Usage:
+  cache:disable [options] [--] [<type>...]
+
+Arguments:
+  type                                    Type of cache to disable (separate multiple types with a space)
+
+Options:
+      --format[=FORMAT]                   Output Format. One of [csv,json,json_array,yaml,xml]
+  -h, --help                              Display help for the given command. When no command is given display help for the list command
+  -q, --quiet                             Do not output any message
+  -V, --version                           Display this application version
+      --ansi|--no-ansi                    Force (or disable --no-ansi) ANSI output
+  -n, --no-interaction                    Do not ask any interactive question
+      --root-dir[=ROOT-DIR]               Force magento root dir. No auto detection
+      --skip-config                       Do not load any custom config.
+      --skip-root-check                   Do not check if n98-magerun runs as root
+      --skip-core-commands                Do not include Magento 2 core commands
+      --skip-magento-compatibility-check  Do not check for Magento version compatibility
+  -v|vv|vvv, --verbose                    Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+---------------------------------------
+
+Description:
+  Enables Magento caches
+
+Usage:
+  cache:enable [options] [--] [<type>...]
+
+Arguments:
+  type                                    Type of cache to enable (separate multiple types with a space)
+
+Options:
+      --format[=FORMAT]                   Output Format. One of [csv,json,json_array,yaml,xml]
+  -h, --help                              Display help for the given command. When no command is given display help for the list command
+  -q, --quiet                             Do not output any message
+  -V, --version                           Display this application version
+      --ansi|--no-ansi                    Force (or disable --no-ansi) ANSI output
+  -n, --no-interaction                    Do not ask any interactive question
+      --root-dir[=ROOT-DIR]               Force magento root dir. No auto detection
+      --skip-config                       Do not load any custom config.
+      --skip-root-check                   Do not check if n98-magerun runs as root
+      --skip-core-commands                Do not include Magento 2 core commands
+      --skip-magento-compatibility-check  Do not check for Magento version compatibility
+  -v|vv|vvv, --verbose                    Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+---------------------------------------
+
+Description:
+  Flush magento cache storage
+
+Usage:
+  cache:flush [<type>...]
+
+Arguments:
+  type                                    Cache type code like "config"
+
+Options:
+  -h, --help                              Display help for the given command. When no command is given display help for the list command
+  -q, --quiet                             Do not output any message
+  -V, --version                           Display this application version
+      --ansi|--no-ansi                    Force (or disable --no-ansi) ANSI output
+  -n, --no-interaction                    Do not ask any interactive question
+      --root-dir[=ROOT-DIR]               Force magento root dir. No auto detection
+      --skip-config                       Do not load any custom config.
+      --skip-root-check                   Do not check if n98-magerun runs as root
+      --skip-core-commands                Do not include Magento 2 core commands
+      --skip-magento-compatibility-check  Do not check for Magento version compatibility
+  -v|vv|vvv, --verbose                    Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+---------------------------------------
+
+Description:
+  Lists all magento caches
+
+Usage:
+  cache:list [options]
+
+Options:
+      --enabled[=ENABLED]                 Filter the list to display only enabled [1] or disabled [0] cache types
+      --format[=FORMAT]                   Output Format. One of [csv,json,json_array,yaml,xml]
+  -h, --help                              Display help for the given command. When no command is given display help for the list command
+  -q, --quiet                             Do not output any message
+  -V, --version                           Display this application version
+      --ansi|--no-ansi                    Force (or disable --no-ansi) ANSI output
+  -n, --no-interaction                    Do not ask any interactive question
+      --root-dir[=ROOT-DIR]               Force magento root dir. No auto detection
+      --skip-config                       Do not load any custom config.
+      --skip-root-check                   Do not check if n98-magerun runs as root
+      --skip-core-commands                Do not include Magento 2 core commands
+      --skip-magento-compatibility-check  Do not check for Magento version compatibility
+  -v|vv|vvv, --verbose                    Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+---------------------------------------
+
+Description:
+  Remove cache entry by id
+
+Usage:
+  cache:remove:id [options] [--] <id>
+
+Arguments:
+  id                                      Cache id
+
+Options:
+      --strict                            Use strict mode (remove only if cache id exists)
+  -h, --help                              Display help for the given command. When no command is given display help for the list command
+  -q, --quiet                             Do not output any message
+  -V, --version                           Display this application version
+      --ansi|--no-ansi                    Force (or disable --no-ansi) ANSI output
+  -n, --no-interaction                    Do not ask any interactive question
+      --root-dir[=ROOT-DIR]               Force magento root dir. No auto detection
+      --skip-config                       Do not load any custom config.
+      --skip-root-check                   Do not check if n98-magerun runs as root
+      --skip-core-commands                Do not include Magento 2 core commands
+      --skip-magento-compatibility-check  Do not check for Magento version compatibility
+  -v|vv|vvv, --verbose                    Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+Help:
+  Cache IDs can be listed by using the cache:report command.
+  The command is not checking if the cache id exists. If you want to check if the cache id exists
+  use the cache:remove:id command with the --strict option.
+  
+  Example:
+    - Clear controller action file list:
+      n98-magerun2.phar cache:remove:id app_action_list
+
+---------------------------------------
+
+Description:
+  View inside the cache
+
+Usage:
+  cache:report [options]
+
+Options:
+      --fpc                               Use full page cache instead of core cache
+  -t, --tags                              Output tags
+  -m, --mtime                             Output last modification time
+      --filter-id[=FILTER-ID]             Filter output by ID (substring)
+      --filter-tag[=FILTER-TAG]           Filter output by TAG (separate multiple tags by comma)
+      --format[=FORMAT]                   Output Format. One of [csv, json, json_array, yaml, xml]
+  -h, --help                              Display help for the given command. When no command is given display help for the list command
+  -q, --quiet                             Do not output any message
+  -V, --version                           Display this application version
+      --ansi|--no-ansi                    Force (or disable --no-ansi) ANSI output
+  -n, --no-interaction                    Do not ask any interactive question
+      --root-dir[=ROOT-DIR]               Force magento root dir. No auto detection
+      --skip-config                       Do not load any custom config.
+      --skip-root-check                   Do not check if n98-magerun runs as root
+      --skip-core-commands                Do not include Magento 2 core commands
+      --skip-magento-compatibility-check  Do not check for Magento version compatibility
+  -v|vv|vvv, --verbose                    Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+---------------------------------------
+
+Description:
+  Prints a cache entry
+
+Usage:
+  cache:view [options] [--] <id>
+
+Arguments:
+  id                                      Cache-ID
+
+Options:
+      --fpc                               Use full page cache instead of core cache
+      --unserialize                       Unserialize output
+      --decrypt                           Decrypt output with encryption key
+  -h, --help                              Display help for the given command. When no command is given display help for the list command
+  -q, --quiet                             Do not output any message
+  -V, --version                           Display this application version
+      --ansi|--no-ansi                    Force (or disable --no-ansi) ANSI output
+  -n, --no-interaction                    Do not ask any interactive question
+      --root-dir[=ROOT-DIR]               Force magento root dir. No auto detection
+      --skip-config                       Do not load any custom config.
+      --skip-root-check                   Do not check if n98-magerun runs as root
+      --skip-core-commands                Do not include Magento 2 core commands
+      --skip-magento-compatibility-check  Do not check for Magento version compatibility
+  -v|vv|vvv, --verbose                    Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+---------------------------------------
+
+Description:
+  Toggle Cms Block status
+
+Usage:
+  cms:block:toggle <blockId>
+
+Arguments:
+  blockId                                 Block identifier
+
+Options:
+  -h, --help                              Display help for the given command. When no command is given display help for the list command
+  -q, --quiet                             Do not output any message
+  -V, --version                           Display this application version
+      --ansi|--no-ansi                    Force (or disable --no-ansi) ANSI output
+  -n, --no-interaction                    Do not ask any interactive question
+      --root-dir[=ROOT-DIR]               Force magento root dir. No auto detection
+      --skip-config                       Do not load any custom config.
+      --skip-root-check                   Do not check if n98-magerun runs as root
+      --skip-core-commands                Do not include Magento 2 core commands
+      --skip-magento-compatibility-check  Do not check for Magento version compatibility
+  -v|vv|vvv, --verbose                    Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+---------------------------------------
+
+Usage:
+  composer:redeploy-base-packages
+
+Options:
+  -h, --help                              Display help for the given command. When no command is given display help for the list command
+  -q, --quiet                             Do not output any message
+  -V, --version                           Display this application version
+      --ansi|--no-ansi                    Force (or disable --no-ansi) ANSI output
+  -n, --no-interaction                    Do not ask any interactive question
+      --root-dir[=ROOT-DIR]               Force magento root dir. No auto detection
+      --skip-config                       Do not load any custom config.
+      --skip-root-check                   Do not check if n98-magerun runs as root
+      --skip-core-commands                Do not include Magento 2 core commands
+      --skip-magento-compatibility-check  Do not check for Magento version compatibility
+  -v|vv|vvv, --verbose                    Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+---------------------------------------
+
+Description:
+  Prints acl.xml data as table
+
+Usage:
+  config:data:acl
+
+Options:
+  -h, --help                              Display help for the given command. When no command is given display help for the list command
+  -q, --quiet                             Do not output any message
+  -V, --version                           Display this application version
+      --ansi|--no-ansi                    Force (or disable --no-ansi) ANSI output
+  -n, --no-interaction                    Do not ask any interactive question
+      --root-dir[=ROOT-DIR]               Force magento root dir. No auto detection
+      --skip-config                       Do not load any custom config.
+      --skip-root-check                   Do not check if n98-magerun runs as root
+      --skip-core-commands                Do not include Magento 2 core commands
+      --skip-magento-compatibility-check  Do not check for Magento version compatibility
+  -v|vv|vvv, --verbose                    Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+---------------------------------------
+
+Description:
+  Dump dependency injection config
+
+Usage:
+  config:data:di [options] [--] [<type>]
+
+Arguments:
+  type                                    Type (class)
+
+Options:
+  -s, --scope[=SCOPE]                     Config scope (global, adminhtml, frontend, graphql, webapi_rest, webapi_soap, ...) [default: "global"]
+  -h, --help                              Display help for the given command. When no command is given display help for the list command
+  -q, --quiet                             Do not output any message
+  -V, --version                           Display this application version
+      --ansi|--no-ansi                    Force (or disable --no-ansi) ANSI output
+  -n, --no-interaction                    Do not ask any interactive question
+      --root-dir[=ROOT-DIR]               Force magento root dir. No auto detection
+      --skip-config                       Do not load any custom config.
+      --skip-root-check                   Do not check if n98-magerun runs as root
+      --skip-core-commands                Do not include Magento 2 core commands
+      --skip-magento-compatibility-check  Do not check for Magento version compatibility
+  -v|vv|vvv, --verbose                    Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+---------------------------------------
+
+Description:
+  Dump merged data of indexer.xml files
+
+Usage:
+  config:data:indexer [options]
+
+Options:
+  -s, --scope[=SCOPE]                     Config scope (global, adminhtml, frontend, graphql, webapi_rest, webapi_soap, ...) [default: "global"]
+  -t, --tree                              Show data as tree
+      --format[=FORMAT]                   Output Format. One of [csv,json,json_array,yaml,xml]
+  -h, --help                              Display help for the given command. When no command is given display help for the list command
+  -q, --quiet                             Do not output any message
+  -V, --version                           Display this application version
+      --ansi|--no-ansi                    Force (or disable --no-ansi) ANSI output
+  -n, --no-interaction                    Do not ask any interactive question
+      --root-dir[=ROOT-DIR]               Force magento root dir. No auto detection
+      --skip-config                       Do not load any custom config.
+      --skip-root-check                   Do not check if n98-magerun runs as root
+      --skip-core-commands                Do not include Magento 2 core commands
+      --skip-magento-compatibility-check  Do not check for Magento version compatibility
+  -v|vv|vvv, --verbose                    Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+---------------------------------------
+
+Description:
+  Dump merged data of mview.xml files
+
+Usage:
+  config:data:mview [options]
+
+Options:
+  -s, --scope[=SCOPE]                     Config scope (global, adminhtml, frontend, graphql, webapi_rest, webapi_soap, ...) [default: "global"]
+  -t, --tree                              Show data as tree
+      --format[=FORMAT]                   Output Format. One of [csv,json,json_array,yaml,xml]
+  -h, --help                              Display help for the given command. When no command is given display help for the list command
+  -q, --quiet                             Do not output any message
+  -V, --version                           Display this application version
+      --ansi|--no-ansi                    Force (or disable --no-ansi) ANSI output
+  -n, --no-interaction                    Do not ask any interactive question
+      --root-dir[=ROOT-DIR]               Force magento root dir. No auto detection
+      --skip-config                       Do not load any custom config.
+      --skip-root-check                   Do not check if n98-magerun runs as root
+      --skip-core-commands                Do not include Magento 2 core commands
+      --skip-magento-compatibility-check  Do not check for Magento version compatibility
+  -v|vv|vvv, --verbose                    Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+---------------------------------------
+
+Description:
+  Create env file interactively
+
+Usage:
+  config:env:create
+
+Options:
+  -h, --help                              Display help for the given command. When no command is given display help for the list command
+  -q, --quiet                             Do not output any message
+  -V, --version                           Display this application version
+      --ansi|--no-ansi                    Force (or disable --no-ansi) ANSI output
+  -n, --no-interaction                    Do not ask any interactive question
+      --root-dir[=ROOT-DIR]               Force magento root dir. No auto detection
+      --skip-config                       Do not load any custom config.
+      --skip-root-check                   Do not check if n98-magerun runs as root
+      --skip-core-commands                Do not include Magento 2 core commands
+      --skip-magento-compatibility-check  Do not check for Magento version compatibility
+  -v|vv|vvv, --verbose                    Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+Help:
+  Creates or modifies existing env.php file.
+
+---------------------------------------
+
+Description:
+  Delete entry from env.php
+
+Usage:
+  config:env:delete <key>
+
+Arguments:
+  key                                     config key
+
+Options:
+  -h, --help                              Display help for the given command. When no command is given display help for the list command
+  -q, --quiet                             Do not output any message
+  -V, --version                           Display this application version
+      --ansi|--no-ansi                    Force (or disable --no-ansi) ANSI output
+  -n, --no-interaction                    Do not ask any interactive question
+      --root-dir[=ROOT-DIR]               Force magento root dir. No auto detection
+      --skip-config                       Do not load any custom config.
+      --skip-root-check                   Do not check if n98-magerun runs as root
+      --skip-core-commands                Do not include Magento 2 core commands
+      --skip-magento-compatibility-check  Do not check for Magento version compatibility
+  -v|vv|vvv, --verbose                    Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+Help:
+  Removes a specific config from the env.php file. Use config:env:show command to see the existing values.
+
+---------------------------------------
+
+Description:
+  Set value in env.php
+
+Usage:
+  config:env:set [options] [--] <key> [<value>]
+
+Arguments:
+  key                                     config key
+  value                                   config value [default: ""]
+
+Options:
+      --input-format=INPUT-FORMAT         Input Format. One of [plain,json] [default: "plain"]
+  -h, --help                              Display help for the given command. When no command is given display help for the list command
+  -q, --quiet                             Do not output any message
+  -V, --version                           Display this application version
+      --ansi|--no-ansi                    Force (or disable --no-ansi) ANSI output
+  -n, --no-interaction                    Do not ask any interactive question
+      --root-dir[=ROOT-DIR]               Force magento root dir. No auto detection
+      --skip-config                       Do not load any custom config.
+      --skip-root-check                   Do not check if n98-magerun runs as root
+      --skip-core-commands                Do not include Magento 2 core commands
+      --skip-magento-compatibility-check  Do not check for Magento version compatibility
+  -v|vv|vvv, --verbose                    Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+Help:
+  Modify config in env.php file. Use config:env:show command to see the existing values.
+
+---------------------------------------
+
+Description:
+  List env.php file
+
+Usage:
+  config:env:show [options] [--] [<key>]
+
+Arguments:
+  key                                     Key to show.
+
+Options:
+      --format[=FORMAT]                   Output Format. One of [csv,json,json_array,yaml,xml]
+  -h, --help                              Display help for the given command. When no command is given display help for the list command
+  -q, --quiet                             Do not output any message
+  -V, --version                           Display this application version
+      --ansi|--no-ansi                    Force (or disable --no-ansi) ANSI output
+  -n, --no-interaction                    Do not ask any interactive question
+      --root-dir[=ROOT-DIR]               Force magento root dir. No auto detection
+      --skip-config                       Do not load any custom config.
+      --skip-root-check                   Do not check if n98-magerun runs as root
+      --skip-core-commands                Do not include Magento 2 core commands
+      --skip-magento-compatibility-check  Do not check for Magento version compatibility
+  -v|vv|vvv, --verbose                    Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+---------------------------------------
+
+Description:
+  Search system configuration descriptions.
+
+Usage:
+  config:search [options] [--] <text>
+
+Arguments:
+  text                                    The text to search for
+
+Options:
+      --format[=FORMAT]                   Output Format. One of [csv,json,json_array,yaml,xml]
+  -h, --help                              Display help for the given command. When no command is given display help for the list command
+  -q, --quiet                             Do not output any message
+  -V, --version                           Display this application version
+      --ansi|--no-ansi                    Force (or disable --no-ansi) ANSI output
+  -n, --no-interaction                    Do not ask any interactive question
+      --root-dir[=ROOT-DIR]               Force magento root dir. No auto detection
+      --skip-config                       Do not load any custom config.
+      --skip-root-check                   Do not check if n98-magerun runs as root
+      --skip-core-commands                Do not include Magento 2 core commands
+      --skip-magento-compatibility-check  Do not check for Magento version compatibility
+  -v|vv|vvv, --verbose                    Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+Help:
+                  Searches the merged system.xml configuration tree <labels/> and <comments/> for the indicated text.
+
+---------------------------------------
+
+Description:
+  Deletes a store config item
+
+Usage:
+  config:store:delete [options] [--] <path>
+
+Arguments:
+  path                                    The config path
+
+Options:
+      --scope[=SCOPE]                     The config value's scope (default, websites, stores) [default: "default"]
+      --scope-id[=SCOPE-ID]               The config value's scope ID
+      --all                               Delete all entries by path
+  -h, --help                              Display help for the given command. When no command is given display help for the list command
+  -q, --quiet                             Do not output any message
+  -V, --version                           Display this application version
+      --ansi|--no-ansi                    Force (or disable --no-ansi) ANSI output
+  -n, --no-interaction                    Do not ask any interactive question
+      --root-dir[=ROOT-DIR]               Force magento root dir. No auto detection
+      --skip-config                       Do not load any custom config.
+      --skip-root-check                   Do not check if n98-magerun runs as root
+      --skip-core-commands                Do not include Magento 2 core commands
+      --skip-magento-compatibility-check  Do not check for Magento version compatibility
+  -v|vv|vvv, --verbose                    Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+Help:
+  To delete all entries of a path you can set the option --all.
+
+---------------------------------------
+
+Description:
+  Get a store config item
+
+Usage:
+  config:store:get [options] [--] [<path>]
+
+Arguments:
+  path                                    The config path
+
+Options:
+      --scope=SCOPE                       The config value's scope (default, websites, stores)
+      --scope-id=SCOPE-ID                 The config value's scope ID or scope code.
+      --decrypt                           Decrypt the config value using env.php's crypt key
+      --update-script                     Output as update script lines
+      --magerun-script                    Output for usage with config:store:set
+      --format[=FORMAT]                   Output Format. One of [csv,json,json_array,yaml,xml]
+  -h, --help                              Display help for the given command. When no command is given display help for the list command
+  -q, --quiet                             Do not output any message
+  -V, --version                           Display this application version
+      --ansi|--no-ansi                    Force (or disable --no-ansi) ANSI output
+  -n, --no-interaction                    Do not ask any interactive question
+      --root-dir[=ROOT-DIR]               Force magento root dir. No auto detection
+      --skip-config                       Do not load any custom config.
+      --skip-root-check                   Do not check if n98-magerun runs as root
+      --skip-core-commands                Do not include Magento 2 core commands
+      --skip-magento-compatibility-check  Do not check for Magento version compatibility
+  -v|vv|vvv, --verbose                    Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+Help:
+  If path is not set, all available config items will be listed. path may contain wildcards (*)
+
+---------------------------------------
+
+Description:
+  Set a store config item
+
+Usage:
+  config:store:set [options] [--] <path> <value>
+
+Arguments:
+  path                                    The store config path like "general/local/code"
+  value                                   The config value
+
+Options:
+      --scope[=SCOPE]                     The config value's scope (default, websites, stores) [default: "default"]
+      --scope-id[=SCOPE-ID]               The config value's scope ID [default: "0"]
+      --encrypt                           The config value should be encrypted using env.php's crypt key
+      --no-null                           Do not treat value NULL as NULL (NULL/"unknown" value) value
+  -h, --help                              Display help for the given command. When no command is given display help for the list command
+  -q, --quiet                             Do not output any message
+  -V, --version                           Display this application version
+      --ansi|--no-ansi                    Force (or disable --no-ansi) ANSI output
+  -n, --no-interaction                    Do not ask any interactive question
+      --root-dir[=ROOT-DIR]               Force magento root dir. No auto detection
+      --skip-config                       Do not load any custom config.
+      --skip-root-check                   Do not check if n98-magerun runs as root
+      --skip-core-commands                Do not include Magento 2 core commands
+      --skip-magento-compatibility-check  Do not check for Magento version compatibility
+  -v|vv|vvv, --verbose                    Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+Help:
+  Set a store config value by path.
+  To set a value of a specify store view you must set the "scope" and "scope-id" option.
+  
+
+---------------------------------------
+
+Description:
+  Adds an address to a customer
+
+Usage:
+  customer:add-address [options] [--] <email> <website>
+
+Arguments:
+  email                                   Customer email
+  website                                 Customer website
+
+Options:
+      --firstname=FIRSTNAME               First name
+      --lastname=LASTNAME                 Last name
+      --street=STREET                     Street address
+      --city=CITY                         City
+      --country=COUNTRY                   Country ID, e.g., US
+      --postcode=POSTCODE                 Postcode
+      --telephone=TELEPHONE               Telephone number
+      --default-billing                   Use as default billing address
+      --default-shipping                  Use as default shipping address
+  -h, --help                              Display help for the given command. When no command is given display help for the list command
+  -q, --quiet                             Do not output any message
+  -V, --version                           Display this application version
+      --ansi|--no-ansi                    Force (or disable --no-ansi) ANSI output
+  -n, --no-interaction                    Do not ask any interactive question
+      --root-dir[=ROOT-DIR]               Force magento root dir. No auto detection
+      --skip-config                       Do not load any custom config.
+      --skip-root-check                   Do not check if n98-magerun runs as root
+      --skip-core-commands                Do not include Magento 2 core commands
+      --skip-magento-compatibility-check  Do not check for Magento version compatibility
+  -v|vv|vvv, --verbose                    Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+---------------------------------------
+
+Description:
+  Changes the password of a customer.
+
+Usage:
+  customer:change-password [<email> [<password> [<website>]]]
+
+Arguments:
+  email                                   Email
+  password                                Password
+  website                                 Website of the customer
+
+Options:
+  -h, --help                              Display help for the given command. When no command is given display help for the list command
+  -q, --quiet                             Do not output any message
+  -V, --version                           Display this application version
+      --ansi|--no-ansi                    Force (or disable --no-ansi) ANSI output
+  -n, --no-interaction                    Do not ask any interactive question
+      --root-dir[=ROOT-DIR]               Force magento root dir. No auto detection
+      --skip-config                       Do not load any custom config.
+      --skip-root-check                   Do not check if n98-magerun runs as root
+      --skip-core-commands                Do not include Magento 2 core commands
+      --skip-magento-compatibility-check  Do not check for Magento version compatibility
+  -v|vv|vvv, --verbose                    Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+Help:
+  - Website parameter must only be given if more than one websites are available.
+
+---------------------------------------
+
+Description:
+  Creates a new customer/user for shop frontend.
+
+Usage:
+  customer:create [options] [--] [<email> [<password> [<firstname> [<lastname> [<website> [<additionalFields>...]]]]]]
+
+Arguments:
+  email                                   Email
+  password                                Password
+  firstname                               Firstname
+  lastname                                Lastname
+  website                                 Website
+  additionalFields                        Additional fields, specifiy as field_name1 value2 field_name2 value2
+
+Options:
+      --format[=FORMAT]                   Output Format. One of [csv,json,json_array,yaml,xml]
+  -h, --help                              Display help for the given command. When no command is given display help for the list command
+  -q, --quiet                             Do not output any message
+  -V, --version                           Display this application version
+      --ansi|--no-ansi                    Force (or disable --no-ansi) ANSI output
+  -n, --no-interaction                    Do not ask any interactive question
+      --root-dir[=ROOT-DIR]               Force magento root dir. No auto detection
+      --skip-config                       Do not load any custom config.
+      --skip-root-check                   Do not check if n98-magerun runs as root
+      --skip-core-commands                Do not include Magento 2 core commands
+      --skip-magento-compatibility-check  Do not check for Magento version compatibility
+  -v|vv|vvv, --verbose                    Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+---------------------------------------
+
+Description:
+  Deletes a customer/user for shop frontend by given options by matching or fuzzy search and/or range.
+
+Usage:
+  customer:delete [options]
+
+Options:
+      --id[=ID]                           Customer Id or email
+      --email[=EMAIL]                     Email
+      --firstname[=FIRSTNAME]             Firstname
+      --lastname[=LASTNAME]               Lastname
+      --website[=WEBSITE]                 Website
+  -f, --force                             Force delete
+  -a, --all                               Delete all customers. Ignore all filters.
+  -r, --range                             Delete a range of customers by Id
+      --fuzzy                             Fuzziness
+  -h, --help                              Display help for the given command. When no command is given display help for the list command
+  -q, --quiet                             Do not output any message
+  -V, --version                           Display this application version
+      --ansi|--no-ansi                    Force (or disable --no-ansi) ANSI output
+  -n, --no-interaction                    Do not ask any interactive question
+      --root-dir[=ROOT-DIR]               Force magento root dir. No auto detection
+      --skip-config                       Do not load any custom config.
+      --skip-root-check                   Do not check if n98-magerun runs as root
+      --skip-core-commands                Do not include Magento 2 core commands
+      --skip-magento-compatibility-check  Do not check for Magento version compatibility
+  -v|vv|vvv, --verbose                    Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+---------------------------------------
+
+Description:
+  Loads basic customer info by email address.
+
+Usage:
+  customer:info [<email> [<website>]]
+
+Arguments:
+  email                                   Email
+  website                                 Website of the customer
+
+Options:
+  -h, --help                              Display help for the given command. When no command is given display help for the list command
+  -q, --quiet                             Do not output any message
+  -V, --version                           Display this application version
+      --ansi|--no-ansi                    Force (or disable --no-ansi) ANSI output
+  -n, --no-interaction                    Do not ask any interactive question
+      --root-dir[=ROOT-DIR]               Force magento root dir. No auto detection
+      --skip-config                       Do not load any custom config.
+      --skip-root-check                   Do not check if n98-magerun runs as root
+      --skip-core-commands                Do not include Magento 2 core commands
+      --skip-magento-compatibility-check  Do not check for Magento version compatibility
+  -v|vv|vvv, --verbose                    Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+---------------------------------------
+
+Description:
+  Lists all magento customers
+
+Usage:
+  customer:list [options] [--] [<search>]
+
+Arguments:
+  search                                  Search query
+
+Options:
+      --format[=FORMAT]                   Output Format. One of [csv,json,json_array,yaml,xml]
+  -h, --help                              Display help for the given command. When no command is given display help for the list command
+  -q, --quiet                             Do not output any message
+  -V, --version                           Display this application version
+      --ansi|--no-ansi                    Force (or disable --no-ansi) ANSI output
+  -n, --no-interaction                    Do not ask any interactive question
+      --root-dir[=ROOT-DIR]               Force magento root dir. No auto detection
+      --skip-config                       Do not load any custom config.
+      --skip-root-check                   Do not check if n98-magerun runs as root
+      --skip-core-commands                Do not include Magento 2 core commands
+      --skip-magento-compatibility-check  Do not check for Magento version compatibility
+  -v|vv|vvv, --verbose                    Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+Help:
+  Lists all Magento Customers of current installation.
+
+---------------------------------------
+
+Description:
+  Create a new token for a customer.
+
+Usage:
+  customer:token:create [options] [--] [<email> [<website>]]
+
+Arguments:
+  email                                   Email
+  website                                 Website of the customer
+
+Options:
+      --no-newline                        do not output the trailing newline
+  -h, --help                              Display help for the given command. When no command is given display help for the list command
+  -q, --quiet                             Do not output any message
+  -V, --version                           Display this application version
+      --ansi|--no-ansi                    Force (or disable --no-ansi) ANSI output
+  -n, --no-interaction                    Do not ask any interactive question
+      --root-dir[=ROOT-DIR]               Force magento root dir. No auto detection
+      --skip-config                       Do not load any custom config.
+      --skip-root-check                   Do not check if n98-magerun runs as root
+      --skip-core-commands                Do not include Magento 2 core commands
+      --skip-magento-compatibility-check  Do not check for Magento version compatibility
+  -v|vv|vvv, --verbose                    Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+---------------------------------------
+
+Description:
+  Add default entry to authorization_role and authorization_rule tables.
+
+Usage:
+  db:add-default-authorization-entries [options]
+
+Options:
+      --connection=CONNECTION             Select DB connection type for Magento configurations with several databases [default: "default"]
+  -h, --help                              Display help for the given command. When no command is given display help for the list command
+  -q, --quiet                             Do not output any message
+  -V, --version                           Display this application version
+      --ansi|--no-ansi                    Force (or disable --no-ansi) ANSI output
+  -n, --no-interaction                    Do not ask any interactive question
+      --root-dir[=ROOT-DIR]               Force magento root dir. No auto detection
+      --skip-config                       Do not load any custom config.
+      --skip-root-check                   Do not check if n98-magerun runs as root
+      --skip-core-commands                Do not include Magento 2 core commands
+      --skip-magento-compatibility-check  Do not check for Magento version compatibility
+  -v|vv|vvv, --verbose                    Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+Help:
+  See https://github.com/netz98/n98-magerun2/issues/351
+
+---------------------------------------
+
+Description:
+  Opens mysql client by database config from env.php
+
+Usage:
+  db:console [options]
+  mysql-client
+
+Options:
+      --use-mycli-instead-of-mysql        Use `mycli` as the MySQL client instead of `mysql`
+      --no-auto-rehash                    Same as `-A` option to MySQL client to turn off auto-complete (avoids long initial connection time).
+      --connection=CONNECTION             Select DB connection type for Magento configurations with several databases [default: "default"]
+  -h, --help                              Display help for the given command. When no command is given display help for the list command
+  -q, --quiet                             Do not output any message
+  -V, --version                           Display this application version
+      --ansi|--no-ansi                    Force (or disable --no-ansi) ANSI output
+  -n, --no-interaction                    Do not ask any interactive question
+      --root-dir[=ROOT-DIR]               Force magento root dir. No auto detection
+      --skip-config                       Do not load any custom config.
+      --skip-root-check                   Do not check if n98-magerun runs as root
+      --skip-core-commands                Do not include Magento 2 core commands
+      --skip-magento-compatibility-check  Do not check for Magento version compatibility
+  -v|vv|vvv, --verbose                    Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+---------------------------------------
+
+Description:
+  Create currently configured database
+
+Usage:
+  db:create [options]
+
+Options:
+      --connection=CONNECTION             Select DB connection type for Magento configurations with several databases [default: "default"]
+  -h, --help                              Display help for the given command. When no command is given display help for the list command
+  -q, --quiet                             Do not output any message
+  -V, --version                           Display this application version
+      --ansi|--no-ansi                    Force (or disable --no-ansi) ANSI output
+  -n, --no-interaction                    Do not ask any interactive question
+      --root-dir[=ROOT-DIR]               Force magento root dir. No auto detection
+      --skip-config                       Do not load any custom config.
+      --skip-root-check                   Do not check if n98-magerun runs as root
+      --skip-core-commands                Do not include Magento 2 core commands
+      --skip-magento-compatibility-check  Do not check for Magento version compatibility
+  -v|vv|vvv, --verbose                    Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+Help:
+  The command tries to create the configured database according to your
+  settings in app/etc/env.php.
+  The configured user must have "CREATE DATABASE" privileges on MySQL Server.
+
+---------------------------------------
+
+Description:
+  Drop current database
+
+Usage:
+  db:drop [options]
+
+Options:
+      --connection=CONNECTION             Select DB connection type for Magento configurations with several databases [default: "default"]
+  -t, --tables                            Drop all tables instead of dropping the database
+  -f, --force                             Force
+  -h, --help                              Display help for the given command. When no command is given display help for the list command
+  -q, --quiet                             Do not output any message
+  -V, --version                           Display this application version
+      --ansi|--no-ansi                    Force (or disable --no-ansi) ANSI output
+  -n, --no-interaction                    Do not ask any interactive question
+      --root-dir[=ROOT-DIR]               Force magento root dir. No auto detection
+      --skip-config                       Do not load any custom config.
+      --skip-root-check                   Do not check if n98-magerun runs as root
+      --skip-core-commands                Do not include Magento 2 core commands
+      --skip-magento-compatibility-check  Do not check for Magento version compatibility
+  -v|vv|vvv, --verbose                    Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+Help:
+  The command prompts before dropping the database. If --force option is specified it
+  directly drops the database.
+  The configured user in app/etc/env.php must have "DROP" privileges.
+
+---------------------------------------
+
+Description:
+  Dumps database with mysqldump cli client
+
+Usage:
+  db:dump [options] [--] [<filename>]
+
+Arguments:
+  filename                                 Dump filename
+
+Options:
+      --connection=CONNECTION              Select DB connection type for Magento configurations with several databases [default: "default"]
+      --zstd-level[=ZSTD-LEVEL]            Set the level of compression the higher the smaller the result [default: 10]
+      --zstd-extra-args[=ZSTD-EXTRA-ARGS]  Set custom extra options that zstd supports [default: ""]
+  -t, --add-time[=ADD-TIME]                Append or prepend a timestamp to filename if a filename is provided. Possible values are "suffix", "prefix" or "no". [default: "no"]
+  -c, --compression=COMPRESSION            Compress the dump file using one of the supported algorithms
+      --only-command                       Print only mysqldump command. Do not execute
+      --print-only-filename                Execute and prints no output except the dump filename
+      --dry-run                            Do everything but the actual dump
+      --set-gtid-purged-off                add --set-gtid-purged=OFF
+      --no-single-transaction              Do not use single-transaction (not recommended, this is blocking)
+      --human-readable                     Use a single insert with column names per row. Useful to track database differences. Use db:import --optimize for speeding up the import.
+      --git-friendly                       Use one insert statement, but with line breaks instead of separate insert statements. Similar to --human-readable, but you wont need to use --optimize to speed up the import.
+      --add-routines                       Include stored routines in dump (procedures & functions)
+      --no-tablespaces                     Use this option if you want to create a dump without having the PROCESS privilege
+      --stdout                             Dump to stdout
+  -s, --strip[=STRIP]                      Tables to strip (dump only structure of those tables)
+  -e, --exclude[=EXCLUDE]                  Tables to exclude entirely from the dump (including structure)
+  -i, --include[=INCLUDE]                  Tables to include entirely in the dump (including structure)
+  -f, --force                              Do not prompt if all options are defined
+      --keep-column-statistics             Keeps the Column Statistics table in SQL dump
+      --keep-definer                       Do not replace DEFINER in dump with CURRENT_USER
+      --mydumper                           Use mydumper instead of mysqldump for potentially faster dumps
+  -h, --help                               Display help for the given command. When no command is given display help for the list command
+  -q, --quiet                              Do not output any message
+  -V, --version                            Display this application version
+      --ansi|--no-ansi                     Force (or disable --no-ansi) ANSI output
+  -n, --no-interaction                     Do not ask any interactive question
+      --root-dir[=ROOT-DIR]                Force magento root dir. No auto detection
+      --skip-config                        Do not load any custom config.
+      --skip-root-check                    Do not check if n98-magerun runs as root
+      --skip-core-commands                 Do not include Magento 2 core commands
+      --skip-magento-compatibility-check   Do not check for Magento version compatibility
+  -v|vv|vvv, --verbose                     Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+Help:
+  Dumps configured magento database with `mysqldump` or `mydumper`. You must have installed
+  the MySQL client tools.
+  
+  On debian systems run `apt-get install mysql-client` or `apt-get install mydumper` to do that.
+  
+  The command reads app/etc/env.php to find the correct settings.
+  
+  See it in action: http://youtu.be/ttjZHY6vThs
+  
+  - If you like to prepend a timestamp to the dump name the --add-time option
+    can be used.
+  
+  - The command comes with a compression function. Add i.e. `--compression=gz`
+    to dump directly in gzip compressed file.
+  
+  
+  Compression option
+   Supported compression: gzip, lz4, zstd
+   The gzip/lz4/zstd cli tool has to be installed.
+   Additionally, for data-to-csv option tar cli tool has to be installed too.
+  
+  Strip option
+   If you like to skip data of some tables you can use the --strip option.
+   The strip option creates only the structure of the defined tables and
+   forces `mysqldump` to skip the data.
+  
+   Separate each table to strip by a space.
+   You can use wildcards like * and ? in the table names to strip multiple
+   tables. In addition, you can specify pre-defined table groups, that start
+   with an @ symbol.
+  
+   Example: "dataflow_batch_export unimportant_module_* @log"
+  
+      $ n98-magerun2.phar db:dump --strip="@stripped"
+  
+  Available Table Groups
+   @admin               Admin tables.
+   @oauth               OAuth tables.
+   @log                 Log tables.
+   @sessions            Database session tables.
+   @stripped            Standard definition for a stripped dump (logs, sessions,
+                        dotmailer).
+   @sales               Sales data (orders, invoices, creditmemos etc).
+   @quotes              Cart (quote) data.
+   @customers           Customer data - Should not be used without @sales.
+   @trade               Current trade data (customers and orders). You usally do
+                        not want those in developer systems..
+   @development         Removes logs and trade data so developers do not have to
+                        work with real customer data.
+   @ee_changelog        Changelog tables of new indexer since EE 1.13.
+   @search              Search related tables.
+   @idx                 Tables with _idx suffix.
+   @dotmailer           Dotmailer tables.
+   @2fa                 Two Factor Auth tables.
+   @newrelic_reporting  New Relic reporting tables.
+   @aggregated          Aggregated tables.
+   @replica             Replica tables.
+   @klarna              Klarna tables.
+   @temp                Temporary indexer tables.
+   @mailchimp           Mailchimp tables.
+  
+  Extended: https://github.com/netz98/n98-magerun/wiki/Stripped-Database-Dumps
+
+---------------------------------------
+
+Description:
+  Imports database with mysql cli client according to database defined in env.php
+
+Usage:
+  db:import [options] [--] [<filename>]
+
+Arguments:
+  filename                                 Dump filename
+
+Options:
+      --connection=CONNECTION              Select DB connection type for Magento configurations with several databases [default: "default"]
+  -c, --compression[=COMPRESSION]          The compression of the specified file
+      --zstd-level[=ZSTD-LEVEL]             [default: 10]
+      --zstd-extra-args[=ZSTD-EXTRA-ARGS]   [default: ""]
+      --only-command                       Print only mysql command. Do not execute
+      --only-if-empty                      Imports only if database is empty
+      --optimize                           Convert verbose INSERTs to short ones before import (not working with compression)
+      --drop                               Drop and recreate database before import
+      --drop-tables                        Drop tables before import
+      --force                              Continue even if an SQL error occurs
+      --skip-authorization-entry-creation  Do not create authorization rule/role entries if they are missing
+  -h, --help                               Display help for the given command. When no command is given display help for the list command
+  -q, --quiet                              Do not output any message
+  -V, --version                            Display this application version
+      --ansi|--no-ansi                     Force (or disable --no-ansi) ANSI output
+  -n, --no-interaction                     Do not ask any interactive question
+      --root-dir[=ROOT-DIR]                Force magento root dir. No auto detection
+      --skip-config                        Do not load any custom config.
+      --skip-root-check                    Do not check if n98-magerun runs as root
+      --skip-core-commands                 Do not include Magento 2 core commands
+      --skip-magento-compatibility-check   Do not check for Magento version compatibility
+  -v|vv|vvv, --verbose                     Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+Help:
+  Imports an SQL file with mysql cli client into current configured database.
+  
+  You need to have MySQL client tools installed on your system.
+  
+  Compression option
+   Supported compression: gzip, lz4, zstd
+   The gzip/lz4/zstd cli tool has to be installed.
+   Additionally, for data-to-csv option tar cli tool has to be installed too.
+
+---------------------------------------
+
+Description:
+  Dumps database informations
+
+Usage:
+  db:info [options] [--] [<setting>]
+
+Arguments:
+  setting                                 Only output value of named setting
+
+Options:
+      --connection=CONNECTION             Select DB connection type for Magento configurations with several databases [default: "default"]
+      --format[=FORMAT]                   Output Format. One of [csv,json,json_array,yaml,xml]
+  -h, --help                              Display help for the given command. When no command is given display help for the list command
+  -q, --quiet                             Do not output any message
+  -V, --version                           Display this application version
+      --ansi|--no-ansi                    Force (or disable --no-ansi) ANSI output
+  -n, --no-interaction                    Do not ask any interactive question
+      --root-dir[=ROOT-DIR]               Force magento root dir. No auto detection
+      --skip-config                       Do not load any custom config.
+      --skip-root-check                   Do not check if n98-magerun runs as root
+      --skip-core-commands                Do not include Magento 2 core commands
+      --skip-magento-compatibility-check  Do not check for Magento version compatibility
+  -v|vv|vvv, --verbose                    Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+Help:
+  This command is useful to print all informations about the current configured database in app/etc/env.php.
+  It can print connection string for JDBC, PDO connections.
+
+---------------------------------------
+
+Description:
+  Check database tables
+
+Usage:
+  db:maintain:check-tables [options]
+
+Options:
+      --type[=TYPE]                       Check type (one of QUICK, FAST, MEDIUM, EXTENDED, CHANGED) [default: "MEDIUM"]
+      --repair                            Repair tables (only MyISAM)
+      --table[=TABLE]                     Process only given table (wildcards are supported)
+      --format[=FORMAT]                   Output Format. One of [csv,json,json_array,yaml,xml]
+  -h, --help                              Display help for the given command. When no command is given display help for the list command
+  -q, --quiet                             Do not output any message
+  -V, --version                           Display this application version
+      --ansi|--no-ansi                    Force (or disable --no-ansi) ANSI output
+  -n, --no-interaction                    Do not ask any interactive question
+      --root-dir[=ROOT-DIR]               Force magento root dir. No auto detection
+      --skip-config                       Do not load any custom config.
+      --skip-root-check                   Do not check if n98-magerun runs as root
+      --skip-core-commands                Do not include Magento 2 core commands
+      --skip-magento-compatibility-check  Do not check for Magento version compatibility
+  -v|vv|vvv, --verbose                    Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+Help:
+  TYPE OPTIONS
+  
+  QUICK
+              Do not scan the rows to check for incorrect links.
+              Applies to InnoDB and MyISAM tables and views.
+  FAST
+              Check only tables that have not been closed properly.
+              Applies only to MyISAM tables and views; ignored for InnoDB.
+  CHANGED
+              Check only tables that have been changed since the last check or that
+              have not been closed properly. Applies only to MyISAM tables and views;
+              ignored for InnoDB.
+  MEDIUM
+              Scan rows to verify that deleted links are valid.
+              This also calculates a key checksum for the rows and verifies this with a
+              calculated checksum for the keys. Applies only to MyISAM tables and views;
+              ignored for InnoDB.
+  EXTENDED
+              Do a full key lookup for all keys for each row. This ensures that the table
+              is 100% consistent, but takes a long time.
+              Applies only to MyISAM tables and views; ignored for InnoDB.
+  
+  InnoDB
+              InnoDB tables will be optimized with the ALTER TABLE ... ENGINE=InnoDB statement.
+              The options above do not apply to them.
+
+---------------------------------------
+
+Description:
+  Executes an SQL query on the database defined in env.php
+
+Usage:
+  db:query [options] [--] [<query>]
+
+Arguments:
+  query                                   SQL query
+
+Options:
+      --connection=CONNECTION             Select DB connection type for Magento configurations with several databases [default: "default"]
+      --only-command                      Print only mysql command. Do not execute
+  -h, --help                              Display help for the given command. When no command is given display help for the list command
+  -q, --quiet                             Do not output any message
+  -V, --version                           Display this application version
+      --ansi|--no-ansi                    Force (or disable --no-ansi) ANSI output
+  -n, --no-interaction                    Do not ask any interactive question
+      --root-dir[=ROOT-DIR]               Force magento root dir. No auto detection
+      --skip-config                       Do not load any custom config.
+      --skip-root-check                   Do not check if n98-magerun runs as root
+      --skip-core-commands                Do not include Magento 2 core commands
+      --skip-magento-compatibility-check  Do not check for Magento version compatibility
+  -v|vv|vvv, --verbose                    Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+Help:
+  Executes an SQL query on the current configured database. Wrap your SQL in
+  single or double quotes.
+  
+  If your query produces a result (e.g. a SELECT statement), the output of the
+  mysql cli tool will be returned.
+  
+  * Requires MySQL CLI tools installed on your system.
+  
+
+---------------------------------------
+
+Description:
+  Shows important server status information or custom selected status values
+
+Usage:
+  db:status [options] [--] [<search>]
+
+Arguments:
+  search                                  Only output variables of specified name. The wildcard % is supported!
+
+Options:
+      --connection=CONNECTION             Select DB connection type for Magento configurations with several databases [default: "default"]
+      --format[=FORMAT]                   Output Format. One of [csv,json,json_array,yaml,xml]
+      --rounding[=ROUNDING]               Amount of decimals to display. If -1 then disabled [default: 0]
+      --no-description                    Disable description
+  -h, --help                              Display help for the given command. When no command is given display help for the list command
+  -q, --quiet                             Do not output any message
+  -V, --version                           Display this application version
+      --ansi|--no-ansi                    Force (or disable --no-ansi) ANSI output
+  -n, --no-interaction                    Do not ask any interactive question
+      --root-dir[=ROOT-DIR]               Force magento root dir. No auto detection
+      --skip-config                       Do not load any custom config.
+      --skip-root-check                   Do not check if n98-magerun runs as root
+      --skip-core-commands                Do not include Magento 2 core commands
+      --skip-magento-compatibility-check  Do not check for Magento version compatibility
+  -v|vv|vvv, --verbose                    Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+Help:
+  This command is useful to print important server status information about the current database.
+
+---------------------------------------
+
+Description:
+  Shows important variables or custom selected
+
+Usage:
+  db:variables [options] [--] [<search>]
+
+Arguments:
+  search                                  Only output variables of specified name. The wildcard % is supported!
+
+Options:
+      --connection=CONNECTION             Select DB connection type for Magento configurations with several databases [default: "default"]
+      --format[=FORMAT]                   Output Format. One of [csv,json,json_array,yaml,xml]
+      --rounding[=ROUNDING]               Amount of decimals to display. If -1 then disabled [default: 0]
+      --no-description                    Disable description
+  -h, --help                              Display help for the given command. When no command is given display help for the list command
+  -q, --quiet                             Do not output any message
+  -V, --version                           Display this application version
+      --ansi|--no-ansi                    Force (or disable --no-ansi) ANSI output
+  -n, --no-interaction                    Do not ask any interactive question
+      --root-dir[=ROOT-DIR]               Force magento root dir. No auto detection
+      --skip-config                       Do not load any custom config.
+      --skip-root-check                   Do not check if n98-magerun runs as root
+      --skip-core-commands                Do not include Magento 2 core commands
+      --skip-magento-compatibility-check  Do not check for Magento version compatibility
+  -v|vv|vvv, --verbose                    Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+Help:
+  This command is useful to print all important variables about the current database.
+
+---------------------------------------
+
+Description:
+  Toggles demo store notice for a store view
+
+Usage:
+  design:demo-notice [options] [--] [<store>]
+
+Arguments:
+  store                                   Store code or ID
+
+Options:
+      --on                                Switch on
+      --off                               Switch off
+      --global                            Set value on default scope
+  -h, --help                              Display help for the given command. When no command is given display help for the list command
+  -q, --quiet                             Do not output any message
+  -V, --version                           Display this application version
+      --ansi|--no-ansi                    Force (or disable --no-ansi) ANSI output
+  -n, --no-interaction                    Do not ask any interactive question
+      --root-dir[=ROOT-DIR]               Force magento root dir. No auto detection
+      --skip-config                       Do not load any custom config.
+      --skip-root-check                   Do not check if n98-magerun runs as root
+      --skip-core-commands                Do not include Magento 2 core commands
+      --skip-magento-compatibility-check  Do not check for Magento version compatibility
+  -v|vv|vvv, --verbose                    Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+---------------------------------------
+
+Description:
+  Clear static assets
+
+Usage:
+  dev:asset:clear [options]
+
+Options:
+  -t, --theme=THEME                       Clear assets for specific theme(s) only (multiple values allowed)
+  -h, --help                              Display help for the given command. When no command is given display help for the list command
+  -q, --quiet                             Do not output any message
+  -V, --version                           Display this application version
+      --ansi|--no-ansi                    Force (or disable --no-ansi) ANSI output
+  -n, --no-interaction                    Do not ask any interactive question
+      --root-dir[=ROOT-DIR]               Force magento root dir. No auto detection
+      --skip-config                       Do not load any custom config.
+      --skip-root-check                   Do not check if n98-magerun runs as root
+      --skip-core-commands                Do not include Magento 2 core commands
+      --skip-magento-compatibility-check  Do not check for Magento version compatibility
+  -v|vv|vvv, --verbose                    Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+Help:
+  Clears static view files.
+  
+  To clear assets for all themes:
+  
+     $ n98-magerun2.phar dev:asset:clear
+  
+  To clear assets for specific theme(s) only:
+  
+     $ n98-magerun2.phar dev:asset:clear --theme=Magento/luma
+  
+
+---------------------------------------
+
+Description:
+  Opens PHP interactive shell with a initialized Magento application
+
+Usage:
+  dev:console [options] [--] [<cmd>]
+
+Arguments:
+  cmd                                     Direct code to run [default: ""]
+
+Options:
+  -a, --area=AREA                         Area to initialize
+  -e, --auto-exit                         Automatic exit after cmd
+  -h, --help                              Display help for the given command. When no command is given display help for the list command
+  -q, --quiet                             Do not output any message
+  -V, --version                           Display this application version
+      --ansi|--no-ansi                    Force (or disable --no-ansi) ANSI output
+  -n, --no-interaction                    Do not ask any interactive question
+      --root-dir[=ROOT-DIR]               Force magento root dir. No auto detection
+      --skip-config                       Do not load any custom config.
+      --skip-root-check                   Do not check if n98-magerun runs as root
+      --skip-core-commands                Do not include Magento 2 core commands
+      --skip-magento-compatibility-check  Do not check for Magento version compatibility
+  -v|vv|vvv, --verbose                    Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+---------------------------------------
+
+Description:
+  Decrypt the given value using magento's crypt key
+
+Usage:
+  dev:decrypt <value>
+
+Arguments:
+  value                                   Value you wish to decrypt
+
+Options:
+  -h, --help                              Display help for the given command. When no command is given display help for the list command
+  -q, --quiet                             Do not output any message
+  -V, --version                           Display this application version
+      --ansi|--no-ansi                    Force (or disable --no-ansi) ANSI output
+  -n, --no-interaction                    Do not ask any interactive question
+      --root-dir[=ROOT-DIR]               Force magento root dir. No auto detection
+      --skip-config                       Do not load any custom config.
+      --skip-root-check                   Do not check if n98-magerun runs as root
+      --skip-core-commands                Do not include Magento 2 core commands
+      --skip-magento-compatibility-check  Do not check for Magento version compatibility
+  -v|vv|vvv, --verbose                    Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+---------------------------------------
+
+Description:
+  Encrypt the given value using magento's crypt key
+
+Usage:
+  dev:encrypt <value>
+
+Arguments:
+  value                                   Value you wish to encrypt
+
+Options:
+  -h, --help                              Display help for the given command. When no command is given display help for the list command
+  -q, --quiet                             Do not output any message
+  -V, --version                           Display this application version
+      --ansi|--no-ansi                    Force (or disable --no-ansi) ANSI output
+  -n, --no-interaction                    Do not ask any interactive question
+      --root-dir[=ROOT-DIR]               Force magento root dir. No auto detection
+      --skip-config                       Do not load any custom config.
+      --skip-root-check                   Do not check if n98-magerun runs as root
+      --skip-core-commands                Do not include Magento 2 core commands
+      --skip-magento-compatibility-check  Do not check for Magento version compatibility
+  -v|vv|vvv, --verbose                    Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+---------------------------------------
+
+Description:
+  Create and register a new magento module.
+
+Usage:
+  dev:module:create [options] [--] <vendorNamespace> <moduleName>
+
+Arguments:
+  vendorNamespace                         Namespace (your company prefix)
+  moduleName                              Name of your module.
+
+Options:
+  -m, --minimal                           Create only module file
+      --add-blocks                        Adds blocks
+      --add-helpers                       Adds helpers
+      --add-models                        Adds models
+      --add-setup                         Adds SQL setup
+      --add-all                           Adds blocks, helpers and models
+  -e, --enable                            Enable module after creation
+      --modman                            Create all files in folder with a modman file.
+      --add-readme                        Adds a readme.md file to generated module
+      --add-composer                      Adds a composer.json file to generated module
+      --add-strict-types                  Add strict_types declaration to generated PHP files
+      --author-name[=AUTHOR-NAME]         Author for readme.md or composer.json
+      --author-email[=AUTHOR-EMAIL]       Author for readme.md or composer.json
+      --description[=DESCRIPTION]         Description for readme.md or composer.json
+  -h, --help                              Display help for the given command. When no command is given display help for the list command
+  -q, --quiet                             Do not output any message
+  -V, --version                           Display this application version
+      --ansi|--no-ansi                    Force (or disable --no-ansi) ANSI output
+  -n, --no-interaction                    Do not ask any interactive question
+      --root-dir[=ROOT-DIR]               Force magento root dir. No auto detection
+      --skip-config                       Do not load any custom config.
+      --skip-root-check                   Do not check if n98-magerun runs as root
+      --skip-core-commands                Do not include Magento 2 core commands
+      --skip-magento-compatibility-check  Do not check for Magento version compatibility
+  -v|vv|vvv, --verbose                    Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+---------------------------------------
+
+Description:
+  This command will search for any soft and hard dependencies for the Magento 2 modules in the given paths and will generate a list of recommended composer dependencies for all found modules.
+
+Usage:
+  dev:module:detect-composer-dependencies [options] [--] <path>...
+
+Arguments:
+  path                                    Path to modules
+
+Options:
+      --only-missing                      Print only missing dependencies.
+  -h, --help                              Display help for the given command. When no command is given display help for the list command
+  -q, --quiet                             Do not output any message
+  -V, --version                           Display this application version
+      --ansi|--no-ansi                    Force (or disable --no-ansi) ANSI output
+  -n, --no-interaction                    Do not ask any interactive question
+      --root-dir[=ROOT-DIR]               Force magento root dir. No auto detection
+      --skip-config                       Do not load any custom config.
+      --skip-root-check                   Do not check if n98-magerun runs as root
+      --skip-core-commands                Do not include Magento 2 core commands
+      --skip-magento-compatibility-check  Do not check for Magento version compatibility
+  -v|vv|vvv, --verbose                    Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+---------------------------------------
+
+Description:
+  List all installed modules
+
+Usage:
+  dev:module:list [options]
+
+Options:
+      --vendor[=VENDOR]                   Show modules of a specific vendor (case insensitive)
+  -e, --only-enabled                      Show only enabled modules
+  -d, --only-disabled                     Show only disabled modules
+      --format[=FORMAT]                   Output Format. One of [csv,json,json_array,yaml,xml]
+  -h, --help                              Display help for the given command. When no command is given display help for the list command
+  -q, --quiet                             Do not output any message
+  -V, --version                           Display this application version
+      --ansi|--no-ansi                    Force (or disable --no-ansi) ANSI output
+  -n, --no-interaction                    Do not ask any interactive question
+      --root-dir[=ROOT-DIR]               Force magento root dir. No auto detection
+      --skip-config                       Do not load any custom config.
+      --skip-root-check                   Do not check if n98-magerun runs as root
+      --skip-core-commands                Do not include Magento 2 core commands
+      --skip-magento-compatibility-check  Do not check for Magento version compatibility
+  -v|vv|vvv, --verbose                    Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+---------------------------------------
+
+Description:
+  Lists all registered observers
+
+Usage:
+  dev:module:observer:list [options] [--] [<event> [<area>]]
+
+Arguments:
+  event                                   Filter observers for specific event.
+  area                                    Filter observers in specific area. One of [global,adminhtml,frontend,crontab,webapi_rest,webapi_soap,graphql,doc,admin]
+
+Options:
+      --format[=FORMAT]                   Output Format. One of [csv,json,json_array,yaml,xml]
+      --sort                              Sort output ascending by event name
+  -h, --help                              Display help for the given command. When no command is given display help for the list command
+  -q, --quiet                             Do not output any message
+  -V, --version                           Display this application version
+      --ansi|--no-ansi                    Force (or disable --no-ansi) ANSI output
+  -n, --no-interaction                    Do not ask any interactive question
+      --root-dir[=ROOT-DIR]               Force magento root dir. No auto detection
+      --skip-config                       Do not load any custom config.
+      --skip-root-check                   Do not check if n98-magerun runs as root
+      --skip-core-commands                Do not include Magento 2 core commands
+      --skip-magento-compatibility-check  Do not check for Magento version compatibility
+  -v|vv|vvv, --verbose                    Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+---------------------------------------
+
+Description:
+  Get count of report files
+
+Usage:
+  dev:report:count
+
+Options:
+  -h, --help                              Display help for the given command. When no command is given display help for the list command
+  -q, --quiet                             Do not output any message
+  -V, --version                           Display this application version
+      --ansi|--no-ansi                    Force (or disable --no-ansi) ANSI output
+  -n, --no-interaction                    Do not ask any interactive question
+      --root-dir[=ROOT-DIR]               Force magento root dir. No auto detection
+      --skip-config                       Do not load any custom config.
+      --skip-root-check                   Do not check if n98-magerun runs as root
+      --skip-core-commands                Do not include Magento 2 core commands
+      --skip-magento-compatibility-check  Do not check for Magento version compatibility
+  -v|vv|vvv, --verbose                    Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+---------------------------------------
+
+Description:
+  Toggle allow symlinks setting
+
+Usage:
+  dev:symlinks [options] [--] [<store>]
+
+Arguments:
+  store                                   Store code or ID
+
+Options:
+      --on                                Switch on
+      --off                               Switch off
+      --global                            Set value on default scope
+  -h, --help                              Display help for the given command. When no command is given display help for the list command
+  -q, --quiet                             Do not output any message
+  -V, --version                           Display this application version
+      --ansi|--no-ansi                    Force (or disable --no-ansi) ANSI output
+  -n, --no-interaction                    Do not ask any interactive question
+      --root-dir[=ROOT-DIR]               Force magento root dir. No auto detection
+      --skip-config                       Do not load any custom config.
+      --skip-root-check                   Do not check if n98-magerun runs as root
+      --skip-core-commands                Do not include Magento 2 core commands
+      --skip-magento-compatibility-check  Do not check for Magento version compatibility
+  -v|vv|vvv, --verbose                    Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+---------------------------------------
+
+Description:
+  Toggles template hints
+
+Usage:
+  dev:template-hints [options] [--] [<store>]
+
+Arguments:
+  store                                   Store code or ID
+
+Options:
+      --on                                Switch on
+      --off                               Switch off
+  -h, --help                              Display help for the given command. When no command is given display help for the list command
+  -q, --quiet                             Do not output any message
+  -V, --version                           Display this application version
+      --ansi|--no-ansi                    Force (or disable --no-ansi) ANSI output
+  -n, --no-interaction                    Do not ask any interactive question
+      --root-dir[=ROOT-DIR]               Force magento root dir. No auto detection
+      --skip-config                       Do not load any custom config.
+      --skip-root-check                   Do not check if n98-magerun runs as root
+      --skip-core-commands                Do not include Magento 2 core commands
+      --skip-magento-compatibility-check  Do not check for Magento version compatibility
+  -v|vv|vvv, --verbose                    Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+---------------------------------------
+
+Description:
+  Toggles template hints block names
+
+Usage:
+  dev:template-hints-blocks [options] [--] [<store>]
+
+Arguments:
+  store                                   Store code or ID
+
+Options:
+      --on                                Switch on
+      --off                               Switch off
+  -h, --help                              Display help for the given command. When no command is given display help for the list command
+  -q, --quiet                             Do not output any message
+  -V, --version                           Display this application version
+      --ansi|--no-ansi                    Force (or disable --no-ansi) ANSI output
+  -n, --no-interaction                    Do not ask any interactive question
+      --root-dir[=ROOT-DIR]               Force magento root dir. No auto detection
+      --skip-config                       Do not load any custom config.
+      --skip-root-check                   Do not check if n98-magerun runs as root
+      --skip-core-commands                Do not include Magento 2 core commands
+      --skip-magento-compatibility-check  Do not check for Magento version compatibility
+  -v|vv|vvv, --verbose                    Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+---------------------------------------
+
+Description:
+  Lists all available themes
+
+Usage:
+  dev:theme:list [options]
+
+Options:
+      --format[=FORMAT]                   Output Format. One of [csv,json,json_array,yaml,xml]
+  -h, --help                              Display help for the given command. When no command is given display help for the list command
+  -q, --quiet                             Do not output any message
+  -V, --version                           Display this application version
+      --ansi|--no-ansi                    Force (or disable --no-ansi) ANSI output
+  -n, --no-interaction                    Do not ask any interactive question
+      --root-dir[=ROOT-DIR]               Force magento root dir. No auto detection
+      --skip-config                       Do not load any custom config.
+      --skip-root-check                   Do not check if n98-magerun runs as root
+      --skip-core-commands                Do not include Magento 2 core commands
+      --skip-magento-compatibility-check  Do not check for Magento version compatibility
+  -v|vv|vvv, --verbose                    Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+---------------------------------------
+
+Description:
+  Toggle inline translation tool for admin
+
+Usage:
+  dev:translate:admin [options]
+
+Options:
+      --on                                Switch on
+      --off                               Switch off
+  -h, --help                              Display help for the given command. When no command is given display help for the list command
+  -q, --quiet                             Do not output any message
+  -V, --version                           Display this application version
+      --ansi|--no-ansi                    Force (or disable --no-ansi) ANSI output
+  -n, --no-interaction                    Do not ask any interactive question
+      --root-dir[=ROOT-DIR]               Force magento root dir. No auto detection
+      --skip-config                       Do not load any custom config.
+      --skip-root-check                   Do not check if n98-magerun runs as root
+      --skip-core-commands                Do not include Magento 2 core commands
+      --skip-magento-compatibility-check  Do not check for Magento version compatibility
+  -v|vv|vvv, --verbose                    Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+---------------------------------------
+
+Description:
+  Export inline translations
+
+Usage:
+  dev:translate:export [options] [--] <locale> [<filename>]
+
+Arguments:
+  locale                                  Locale
+  filename                                Export filename
+
+Options:
+      --store[=STORE]                     Limit to a special store
+  -h, --help                              Display help for the given command. When no command is given display help for the list command
+  -q, --quiet                             Do not output any message
+  -V, --version                           Display this application version
+      --ansi|--no-ansi                    Force (or disable --no-ansi) ANSI output
+  -n, --no-interaction                    Do not ask any interactive question
+      --root-dir[=ROOT-DIR]               Force magento root dir. No auto detection
+      --skip-config                       Do not load any custom config.
+      --skip-root-check                   Do not check if n98-magerun runs as root
+      --skip-core-commands                Do not include Magento 2 core commands
+      --skip-magento-compatibility-check  Do not check for Magento version compatibility
+  -v|vv|vvv, --verbose                    Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+---------------------------------------
+
+Description:
+  Adds a translation to core_translate table. Globally for locale
+
+Usage:
+  dev:translate:set <string> <translate> [<store>]
+
+Arguments:
+  string                                  String to translate
+  translate                               Translated string
+  store                                   
+
+Options:
+  -h, --help                              Display help for the given command. When no command is given display help for the list command
+  -q, --quiet                             Do not output any message
+  -V, --version                           Display this application version
+      --ansi|--no-ansi                    Force (or disable --no-ansi) ANSI output
+  -n, --no-interaction                    Do not ask any interactive question
+      --root-dir[=ROOT-DIR]               Force magento root dir. No auto detection
+      --skip-config                       Do not load any custom config.
+      --skip-root-check                   Do not check if n98-magerun runs as root
+      --skip-core-commands                Do not include Magento 2 core commands
+      --skip-magento-compatibility-check  Do not check for Magento version compatibility
+  -v|vv|vvv, --verbose                    Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+---------------------------------------
+
+Description:
+  Toggle inline translation tool for shop
+
+Usage:
+  dev:translate:shop [options] [--] [<store>]
+
+Arguments:
+  store                                   Store code or ID
+
+Options:
+      --on                                Switch on
+      --off                               Switch off
+  -h, --help                              Display help for the given command. When no command is given display help for the list command
+  -q, --quiet                             Do not output any message
+  -V, --version                           Display this application version
+      --ansi|--no-ansi                    Force (or disable --no-ansi) ANSI output
+  -n, --no-interaction                    Do not ask any interactive question
+      --root-dir[=ROOT-DIR]               Force magento root dir. No auto detection
+      --skip-config                       Do not load any custom config.
+      --skip-root-check                   Do not check if n98-magerun runs as root
+      --skip-core-commands                Do not include Magento 2 core commands
+      --skip-magento-compatibility-check  Do not check for Magento version compatibility
+  -v|vv|vvv, --verbose                    Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+---------------------------------------
+
+Description:
+  List EAV attributes
+
+Usage:
+  eav:attribute:list [options]
+
+Options:
+      --add-source                        Add source models to list
+      --add-backend                       Add backend type to list
+      --filter-type[=FILTER-TYPE]         Filter attributes by entity type
+      --format[=FORMAT]                   Output Format. One of [csv,json,json_array,yaml,xml]
+  -h, --help                              Display help for the given command. When no command is given display help for the list command
+  -q, --quiet                             Do not output any message
+  -V, --version                           Display this application version
+      --ansi|--no-ansi                    Force (or disable --no-ansi) ANSI output
+  -n, --no-interaction                    Do not ask any interactive question
+      --root-dir[=ROOT-DIR]               Force magento root dir. No auto detection
+      --skip-config                       Do not load any custom config.
+      --skip-root-check                   Do not check if n98-magerun runs as root
+      --skip-core-commands                Do not include Magento 2 core commands
+      --skip-magento-compatibility-check  Do not check for Magento version compatibility
+  -v|vv|vvv, --verbose                    Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+---------------------------------------
+
+Description:
+  Remove attribute for a given attribute code
+
+Usage:
+  eav:attribute:remove <entityType> <attributeCode>...
+
+Arguments:
+  entityType                              Entity Type Code, e.g. catalog_product
+  attributeCode                           Attribute Code
+
+Options:
+  -h, --help                              Display help for the given command. When no command is given display help for the list command
+  -q, --quiet                             Do not output any message
+  -V, --version                           Display this application version
+      --ansi|--no-ansi                    Force (or disable --no-ansi) ANSI output
+  -n, --no-interaction                    Do not ask any interactive question
+      --root-dir[=ROOT-DIR]               Force magento root dir. No auto detection
+      --skip-config                       Do not load any custom config.
+      --skip-root-check                   Do not check if n98-magerun runs as root
+      --skip-core-commands                Do not include Magento 2 core commands
+      --skip-magento-compatibility-check  Do not check for Magento version compatibility
+  -v|vv|vvv, --verbose                    Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+---------------------------------------
+
+Description:
+  View information about an EAV attribute
+
+Usage:
+  eav:attribute:view [options] [--] <entityType> <attributeCode>
+
+Arguments:
+  entityType                              Entity Type Code like catalog_product
+  attributeCode                           Attribute Code
+
+Options:
+      --format[=FORMAT]                   Output Format. One of [csv,json,json_array,yaml,xml]
+  -h, --help                              Display help for the given command. When no command is given display help for the list command
+  -q, --quiet                             Do not output any message
+  -V, --version                           Display this application version
+      --ansi|--no-ansi                    Force (or disable --no-ansi) ANSI output
+  -n, --no-interaction                    Do not ask any interactive question
+      --root-dir[=ROOT-DIR]               Force magento root dir. No auto detection
+      --skip-config                       Do not load any custom config.
+      --skip-root-check                   Do not check if n98-magerun runs as root
+      --skip-core-commands                Do not include Magento 2 core commands
+      --skip-magento-compatibility-check  Do not check for Magento version compatibility
+  -v|vv|vvv, --verbose                    Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+Help:
+  Enter an entity type code and an attribute code to see information about an EAV attribute.
+
+---------------------------------------
+
+Description:
+  Flushs generated code like factories and proxies
+
+Usage:
+  generation:flush [<vendorName>]
+
+Arguments:
+  vendorName                              Vendor to remove like "Magento"
+
+Options:
+  -h, --help                              Display help for the given command. When no command is given display help for the list command
+  -q, --quiet                             Do not output any message
+  -V, --version                           Display this application version
+      --ansi|--no-ansi                    Force (or disable --no-ansi) ANSI output
+  -n, --no-interaction                    Do not ask any interactive question
+      --root-dir[=ROOT-DIR]               Force magento root dir. No auto detection
+      --skip-config                       Do not load any custom config.
+      --skip-root-check                   Do not check if n98-magerun runs as root
+      --skip-core-commands                Do not include Magento 2 core commands
+      --skip-magento-compatibility-check  Do not check for Magento version compatibility
+  -v|vv|vvv, --verbose                    Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+---------------------------------------
+
+Description:
+  Download patch from github merge request (experimental)
+
+Usage:
+  github:pr [options] [--] <number>
+
+Arguments:
+  number                                  Pull Request Number
+
+Options:
+  -r, --repository[=REPOSITORY]           Repository to fetch from [default: "magento/magento2"]
+      --mage-os                           Shortcut option to use the mage-os/mageos-magento2 repository.
+  -d, --patch                             Download patch and prepare it for applying
+  -a, --apply                             Apply patch to current working directory
+      --diff                              Raw diff download
+      --json                              Show pull request data as json
+      --github-token[=GITHUB-TOKEN]       Github API token to avoid rate limits (can also be set via ENV variable GITHUB_TOKEN)
+  -h, --help                              Display help for the given command. When no command is given display help for the list command
+  -q, --quiet                             Do not output any message
+  -V, --version                           Display this application version
+      --ansi|--no-ansi                    Force (or disable --no-ansi) ANSI output
+  -n, --no-interaction                    Do not ask any interactive question
+      --root-dir[=ROOT-DIR]               Force magento root dir. No auto detection
+      --skip-config                       Do not load any custom config.
+      --skip-root-check                   Do not check if n98-magerun runs as root
+      --skip-core-commands                Do not include Magento 2 core commands
+      --skip-magento-compatibility-check  Do not check for Magento version compatibility
+  -v|vv|vvv, --verbose                    Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+---------------------------------------
+
+Description:
+  Lists all magento indexes
+
+Usage:
+  index:list [options]
+
+Options:
+      --format[=FORMAT]                   Output Format. One of [csv,json,json_array,yaml,xml]
+  -h, --help                              Display help for the given command. When no command is given display help for the list command
+  -q, --quiet                             Do not output any message
+  -V, --version                           Display this application version
+      --ansi|--no-ansi                    Force (or disable --no-ansi) ANSI output
+  -n, --no-interaction                    Do not ask any interactive question
+      --root-dir[=ROOT-DIR]               Force magento root dir. No auto detection
+      --skip-config                       Do not load any custom config.
+      --skip-root-check                   Do not check if n98-magerun runs as root
+      --skip-core-commands                Do not include Magento 2 core commands
+      --skip-magento-compatibility-check  Do not check for Magento version compatibility
+  -v|vv|vvv, --verbose                    Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+Help:
+  Lists all Magento indexers of current installation.
+
+---------------------------------------
+
+Description:
+  ReCreate all triggers
+
+Usage:
+  index:trigger:recreate
+
+Options:
+  -h, --help                              Display help for the given command. When no command is given display help for the list command
+  -q, --quiet                             Do not output any message
+  -V, --version                           Display this application version
+      --ansi|--no-ansi                    Force (or disable --no-ansi) ANSI output
+  -n, --no-interaction                    Do not ask any interactive question
+      --root-dir[=ROOT-DIR]               Force magento root dir. No auto detection
+      --skip-config                       Do not load any custom config.
+      --skip-root-check                   Do not check if n98-magerun runs as root
+      --skip-core-commands                Do not include Magento 2 core commands
+      --skip-magento-compatibility-check  Do not check for Magento version compatibility
+  -v|vv|vvv, --verbose                    Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+---------------------------------------
+
+Description:
+  Create a new integration
+
+Usage:
+  integration:create [options] [--] <name> [<email> [<endpoint>]]
+
+Arguments:
+  name                                           Name of the integration
+  email                                          Email
+  endpoint                                       Endpoint URL
+
+Options:
+      --consumer-key=CONSUMER-KEY                Consumer Key (length 32 chars)
+      --consumer-secret=CONSUMER-SECRET          Consumer Secret (length 32 chars)
+      --access-token=ACCESS-TOKEN                Access-Token (length 32 chars)
+      --access-token-secret=ACCESS-TOKEN-SECRET  Access-Token Secret (length 32 chars)
+  -r, --resource=RESOURCE                        Defines a granted ACL resource (multiple values allowed)
+      --format[=FORMAT]                          Output Format. One of [csv,json,json_array,yaml,xml]
+  -h, --help                                     Display help for the given command. When no command is given display help for the list command
+  -q, --quiet                                    Do not output any message
+  -V, --version                                  Display this application version
+      --ansi|--no-ansi                           Force (or disable --no-ansi) ANSI output
+  -n, --no-interaction                           Do not ask any interactive question
+      --root-dir[=ROOT-DIR]                      Force magento root dir. No auto detection
+      --skip-config                              Do not load any custom config.
+      --skip-root-check                          Do not check if n98-magerun runs as root
+      --skip-core-commands                       Do not include Magento 2 core commands
+      --skip-magento-compatibility-check         Do not check for Magento version compatibility
+  -v|vv|vvv, --verbose                           Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+Help:
+  Creates a new integration e.g. for 3rd party applications.
+  
+  Keys and Secets
+  Keys and secrets are generated by Magento if not defined by specify options.
+  If key or a secret is defined manually, you must guarantee that this key or secret is at least 32 characters long
+  and unique in the system.
+  
+  Permissions
+  If you do not specify ACL resources by resource option, the new integration will get ALL permissions.
+  To see a list of all available ACL resources you can run the config:data:acl command.
+  
+
+---------------------------------------
+
+Description:
+  Delete an existing integration.
+
+Usage:
+  integration:delete <name>
+
+Arguments:
+  name                                    Name or ID of the integration
+
+Options:
+  -h, --help                              Display help for the given command. When no command is given display help for the list command
+  -q, --quiet                             Do not output any message
+  -V, --version                           Display this application version
+      --ansi|--no-ansi                    Force (or disable --no-ansi) ANSI output
+  -n, --no-interaction                    Do not ask any interactive question
+      --root-dir[=ROOT-DIR]               Force magento root dir. No auto detection
+      --skip-config                       Do not load any custom config.
+      --skip-root-check                   Do not check if n98-magerun runs as root
+      --skip-core-commands                Do not include Magento 2 core commands
+      --skip-magento-compatibility-check  Do not check for Magento version compatibility
+  -v|vv|vvv, --verbose                    Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+---------------------------------------
+
+Description:
+  List all existing integrations.
+
+Usage:
+  integration:list [options]
+
+Options:
+      --format[=FORMAT]                   Output Format. One of [csv,json,json_array,yaml,xml]
+  -h, --help                              Display help for the given command. When no command is given display help for the list command
+  -q, --quiet                             Do not output any message
+  -V, --version                           Display this application version
+      --ansi|--no-ansi                    Force (or disable --no-ansi) ANSI output
+  -n, --no-interaction                    Do not ask any interactive question
+      --root-dir[=ROOT-DIR]               Force magento root dir. No auto detection
+      --skip-config                       Do not load any custom config.
+      --skip-root-check                   Do not check if n98-magerun runs as root
+      --skip-core-commands                Do not include Magento 2 core commands
+      --skip-magento-compatibility-check  Do not check for Magento version compatibility
+  -v|vv|vvv, --verbose                    Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+---------------------------------------
+
+Description:
+  Show details of an existing integration.
+
+Usage:
+  integration:show [options] [--] <name> [<key>]
+
+Arguments:
+  name                                    Name or ID of the integration
+  key                                     Only output value of named param like "Access Token". Key is case insensitive.
+
+Options:
+      --format[=FORMAT]                   Output Format. One of [csv,json,json_array,yaml,xml]
+  -h, --help                              Display help for the given command. When no command is given display help for the list command
+  -q, --quiet                             Do not output any message
+  -V, --version                           Display this application version
+      --ansi|--no-ansi                    Force (or disable --no-ansi) ANSI output
+  -n, --no-interaction                    Do not ask any interactive question
+      --root-dir[=ROOT-DIR]               Force magento root dir. No auto detection
+      --skip-config                       Do not load any custom config.
+      --skip-root-check                   Do not check if n98-magerun runs as root
+      --skip-core-commands                Do not include Magento 2 core commands
+      --skip-magento-compatibility-check  Do not check for Magento version compatibility
+  -v|vv|vvv, --verbose                    Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+---------------------------------------
+
+Description:
+  Dumps the merged YAML config of the magerun config files.
+
+Usage:
+  magerun:config:dump [options]
+
+Options:
+      --only-dist                         Only dump the dist config
+  -r, --raw                               Dump the raw config without formatting
+  -i, --indent[=INDENT]                   Indentation level [default: 4]
+  -h, --help                              Display help for the given command. When no command is given display help for the list command
+  -q, --quiet                             Do not output any message
+  -V, --version                           Display this application version
+      --ansi|--no-ansi                    Force (or disable --no-ansi) ANSI output
+  -n, --no-interaction                    Do not ask any interactive question
+      --root-dir[=ROOT-DIR]               Force magento root dir. No auto detection
+      --skip-config                       Do not load any custom config.
+      --skip-root-check                   Do not check if n98-magerun runs as root
+      --skip-core-commands                Do not include Magento 2 core commands
+      --skip-magento-compatibility-check  Do not check for Magento version compatibility
+  -v|vv|vvv, --verbose                    Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+---------------------------------------
+
+Description:
+  Prints infos about the loaded config files
+
+Usage:
+  magerun:config:info [options]
+
+Options:
+      --format[=FORMAT]                   Output Format. One of [csv,json,json_array,yaml,xml]
+  -h, --help                              Display help for the given command. When no command is given display help for the list command
+  -q, --quiet                             Do not output any message
+  -V, --version                           Display this application version
+      --ansi|--no-ansi                    Force (or disable --no-ansi) ANSI output
+  -n, --no-interaction                    Do not ask any interactive question
+      --root-dir[=ROOT-DIR]               Force magento root dir. No auto detection
+      --skip-config                       Do not load any custom config.
+      --skip-root-check                   Do not check if n98-magerun runs as root
+      --skip-core-commands                Do not include Magento 2 core commands
+      --skip-magento-compatibility-check  Do not check for Magento version compatibility
+  -v|vv|vvv, --verbose                    Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+---------------------------------------
+
+Description:
+  Creates an archive with content of media folder.
+
+Usage:
+  media:dump [options] [--] [<filename>]
+
+Arguments:
+  filename                                Dump filename
+
+Options:
+      --strip                             Excludes image cache
+  -h, --help                              Display help for the given command. When no command is given display help for the list command
+  -q, --quiet                             Do not output any message
+  -V, --version                           Display this application version
+      --ansi|--no-ansi                    Force (or disable --no-ansi) ANSI output
+  -n, --no-interaction                    Do not ask any interactive question
+      --root-dir[=ROOT-DIR]               Force magento root dir. No auto detection
+      --skip-config                       Do not load any custom config.
+      --skip-root-check                   Do not check if n98-magerun runs as root
+      --skip-core-commands                Do not include Magento 2 core commands
+      --skip-magento-compatibility-check  Do not check for Magento version compatibility
+  -v|vv|vvv, --verbose                    Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+---------------------------------------
+
+Description:
+  Lists all registered routes
+
+Usage:
+  route:list [options]
+
+Options:
+  -a, --area[=AREA]                       Route area code. One of [frontend,adminhtml]
+  -m, --module[=MODULE]                   Show registered routes of a module
+      --format[=FORMAT]                   Output Format. One of [csv,json,json_array,yaml,xml]
+  -h, --help                              Display help for the given command. When no command is given display help for the list command
+  -q, --quiet                             Do not output any message
+  -V, --version                           Display this application version
+      --ansi|--no-ansi                    Force (or disable --no-ansi) ANSI output
+  -n, --no-interaction                    Do not ask any interactive question
+      --root-dir[=ROOT-DIR]               Force magento root dir. No auto detection
+      --skip-config                       Do not load any custom config.
+      --skip-root-check                   Do not check if n98-magerun runs as root
+      --skip-core-commands                Do not include Magento 2 core commands
+      --skip-magento-compatibility-check  Do not check for Magento version compatibility
+  -v|vv|vvv, --verbose                    Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+---------------------------------------
+
+Description:
+  Add the sequence tables and metadata for given store or all stores
+
+Usage:
+  sales:sequence:add [<store>]
+
+Arguments:
+  store                                   The store code or ID
+
+Options:
+  -h, --help                              Display help for the given command. When no command is given display help for the list command
+  -q, --quiet                             Do not output any message
+  -V, --version                           Display this application version
+      --ansi|--no-ansi                    Force (or disable --no-ansi) ANSI output
+  -n, --no-interaction                    Do not ask any interactive question
+      --root-dir[=ROOT-DIR]               Force magento root dir. No auto detection
+      --skip-config                       Do not load any custom config.
+      --skip-root-check                   Do not check if n98-magerun runs as root
+      --skip-core-commands                Do not include Magento 2 core commands
+      --skip-magento-compatibility-check  Do not check for Magento version compatibility
+  -v|vv|vvv, --verbose                    Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+Help:
+  The 'sales:sequence:add' command adds sequence tables and metadata 
+  for a specified store or for all stores if no store is specifically mentioned.
+  The store argument refers to the specific store for which the sequence tables 
+  and metadata are to be added. This can be specified by either the store code or the store ID. 
+  If no store is specified, the command will apply to all stores.
+  
+  Examples:
+  
+  - Adds sequence tables and metadata for the store with ID 5.
+    sales:sequence:add 5         
+  
+  - Adds sequence tables and metadata for the store with code 'store_en'. 
+    sales:sequence:add 'store_en'
+
+---------------------------------------
+
+Description:
+  Remove sequence tables and metadata for given store or all stores
+
+Usage:
+  sales:sequence:remove [<store>]
+
+Arguments:
+  store                                   The store code or ID
+
+Options:
+  -h, --help                              Display help for the given command. When no command is given display help for the list command
+  -q, --quiet                             Do not output any message
+  -V, --version                           Display this application version
+      --ansi|--no-ansi                    Force (or disable --no-ansi) ANSI output
+  -n, --no-interaction                    Do not ask any interactive question
+      --root-dir[=ROOT-DIR]               Force magento root dir. No auto detection
+      --skip-config                       Do not load any custom config.
+      --skip-root-check                   Do not check if n98-magerun runs as root
+      --skip-core-commands                Do not include Magento 2 core commands
+      --skip-magento-compatibility-check  Do not check for Magento version compatibility
+  -v|vv|vvv, --verbose                    Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+Help:
+  The 'sales:sequence:remove' command removes sequence tables and metadata 
+  for a specified store or for all stores if no store is specifically mentioned.
+  The store argument refers to the specific store for which the sequence tables 
+  and metadata are to be removed. This can be specified by either the store code or the store ID. 
+  If no store is specified, the command will apply to all stores.
+  
+  Examples:
+  
+  - Removes sequence tables and metadata for the store with ID 5.
+    sales:sequence:remove 5         
+  
+  - Removes sequence tables and metadata for the store with code 'store_en'. 
+    sales:sequence:remove 'store_en'
+
+---------------------------------------
+
+Description:
+  Lists all scripts in repository
+
+Usage:
+  script:repo:list [options]
+
+Options:
+      --format[=FORMAT]                   Output Format. One of [csv,json,json_array,yaml,xml]
+  -h, --help                              Display help for the given command. When no command is given display help for the list command
+  -q, --quiet                             Do not output any message
+  -V, --version                           Display this application version
+      --ansi|--no-ansi                    Force (or disable --no-ansi) ANSI output
+  -n, --no-interaction                    Do not ask any interactive question
+      --root-dir[=ROOT-DIR]               Force magento root dir. No auto detection
+      --skip-config                       Do not load any custom config.
+      --skip-root-check                   Do not check if n98-magerun runs as root
+      --skip-core-commands                Do not include Magento 2 core commands
+      --skip-magento-compatibility-check  Do not check for Magento version compatibility
+  -v|vv|vvv, --verbose                    Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+Help:
+  You can organize your scripts in a repository.
+  Simply place a script in folder */usr/local/share/n98-magerun/scripts* or in your home dir
+  in folder *<HOME>/.n98-magerun/scripts*.
+  
+  Scripts must have the file extension *.magerun*.
+  
+  After that you can list all scripts with the *script:repo:list* command.
+  The first line of the script can contain a comment (line prefixed with #) which will be displayed as description.
+  
+     $ n98-magerun2.phar script:repo:list
+
+---------------------------------------
+
+Description:
+  Run script from repository
+
+Usage:
+  script:repo:run [options] [--] [<script>]
+
+Arguments:
+  script                                  Name of script in repository
+
+Options:
+  -d, --define[=DEFINE]                   Defines a variable (multiple values allowed)
+      --stop-on-error                     Stops execution of script on error
+  -h, --help                              Display help for the given command. When no command is given display help for the list command
+  -q, --quiet                             Do not output any message
+  -V, --version                           Display this application version
+      --ansi|--no-ansi                    Force (or disable --no-ansi) ANSI output
+  -n, --no-interaction                    Do not ask any interactive question
+      --root-dir[=ROOT-DIR]               Force magento root dir. No auto detection
+      --skip-config                       Do not load any custom config.
+      --skip-root-check                   Do not check if n98-magerun runs as root
+      --skip-core-commands                Do not include Magento 2 core commands
+      --skip-magento-compatibility-check  Do not check for Magento version compatibility
+  -v|vv|vvv, --verbose                    Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+Help:
+  Please note that the script repo command runs only scripts which are stored
+  in a defined script folder.
+  
+  Script folders can defined by config.
+  
+  Example:
+  
+  script:
+    folders:
+      - /my/script_folder
+  
+  
+  There are some pre defined script folders:
+  
+  - /usr/local/share/n98-magerun2/scripts
+  - ~/.n98-magerun2/scripts
+  
+  If you like to run a standalone script you can also use the "script" command.
+  
+  See: n98-magerun2.phar script <filename.magerun>
+  
+
+---------------------------------------
+
+Description:
+  Lists all registered search engines
+
+Usage:
+  search:engine:list [options]
+
+Options:
+      --format[=FORMAT]                   Output Format. One of [csv,json,json_array,yaml,xml]
+  -h, --help                              Display help for the given command. When no command is given display help for the list command
+  -q, --quiet                             Do not output any message
+  -V, --version                           Display this application version
+      --ansi|--no-ansi                    Force (or disable --no-ansi) ANSI output
+  -n, --no-interaction                    Do not ask any interactive question
+      --root-dir[=ROOT-DIR]               Force magento root dir. No auto detection
+      --skip-config                       Do not load any custom config.
+      --skip-root-check                   Do not check if n98-magerun runs as root
+      --skip-core-commands                Do not include Magento 2 core commands
+      --skip-magento-compatibility-check  Do not check for Magento version compatibility
+  -v|vv|vvv, --verbose                    Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+---------------------------------------
+
+Description:
+  Checks Magento System
+
+Usage:
+  sys:check [options]
+
+Options:
+      --format[=FORMAT]                   Output Format. One of [csv,json,json_array,yaml,xml]
+  -h, --help                              Display help for the given command. When no command is given display help for the list command
+  -q, --quiet                             Do not output any message
+  -V, --version                           Display this application version
+      --ansi|--no-ansi                    Force (or disable --no-ansi) ANSI output
+  -n, --no-interaction                    Do not ask any interactive question
+      --root-dir[=ROOT-DIR]               Force magento root dir. No auto detection
+      --skip-config                       Do not load any custom config.
+      --skip-root-check                   Do not check if n98-magerun runs as root
+      --skip-core-commands                Do not include Magento 2 core commands
+      --skip-magento-compatibility-check  Do not check for Magento version compatibility
+  -v|vv|vvv, --verbose                    Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+Help:
+  - Checks missing files and folders
+  - Security
+  - PHP Extensions (Required and Bytecode Cache)
+  - MySQL InnoDB Engine
+
+---------------------------------------
+
+Description:
+  Last executed cronjobs with status.
+
+Usage:
+  sys:cron:history [options]
+
+Options:
+      --timezone[=TIMEZONE]               Timezone to show finished at in
+      --format[=FORMAT]                   Output Format. One of [csv,json,json_array,yaml,xml]
+  -h, --help                              Display help for the given command. When no command is given display help for the list command
+  -q, --quiet                             Do not output any message
+  -V, --version                           Display this application version
+      --ansi|--no-ansi                    Force (or disable --no-ansi) ANSI output
+  -n, --no-interaction                    Do not ask any interactive question
+      --root-dir[=ROOT-DIR]               Force magento root dir. No auto detection
+      --skip-config                       Do not load any custom config.
+      --skip-root-check                   Do not check if n98-magerun runs as root
+      --skip-core-commands                Do not include Magento 2 core commands
+      --skip-magento-compatibility-check  Do not check for Magento version compatibility
+  -v|vv|vvv, --verbose                    Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+---------------------------------------
+
+Description:
+  Kill cron jobs by code
+
+Usage:
+  sys:cron:kill [options] [--] [<job_code>]
+
+Arguments:
+  job_code                                Job code input
+
+Options:
+  -t, --timeout[=TIMEOUT]                 Timeout in seconds [default: 5]
+  -h, --help                              Display help for the given command. When no command is given display help for the list command
+  -q, --quiet                             Do not output any message
+  -V, --version                           Display this application version
+      --ansi|--no-ansi                    Force (or disable --no-ansi) ANSI output
+  -n, --no-interaction                    Do not ask any interactive question
+      --root-dir[=ROOT-DIR]               Force magento root dir. No auto detection
+      --skip-config                       Do not load any custom config.
+      --skip-root-check                   Do not check if n98-magerun runs as root
+      --skip-core-commands                Do not include Magento 2 core commands
+      --skip-magento-compatibility-check  Do not check for Magento version compatibility
+  -v|vv|vvv, --verbose                    Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+Help:
+  This command requires a job code as an argument. 
+  It will then kill the process for that job code.
+  
+  Please note that any job which should be killed has to run
+  on the same machine as n98-magerun2.
+
+---------------------------------------
+
+Description:
+  Lists all cronjobs
+
+Usage:
+  sys:cron:list [options]
+
+Options:
+      --format[=FORMAT]                   Output Format. One of [csv,json,json_array,yaml,xml]
+  -h, --help                              Display help for the given command. When no command is given display help for the list command
+  -q, --quiet                             Do not output any message
+  -V, --version                           Display this application version
+      --ansi|--no-ansi                    Force (or disable --no-ansi) ANSI output
+  -n, --no-interaction                    Do not ask any interactive question
+      --root-dir[=ROOT-DIR]               Force magento root dir. No auto detection
+      --skip-config                       Do not load any custom config.
+      --skip-root-check                   Do not check if n98-magerun runs as root
+      --skip-core-commands                Do not include Magento 2 core commands
+      --skip-magento-compatibility-check  Do not check for Magento version compatibility
+  -v|vv|vvv, --verbose                    Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+---------------------------------------
+
+Description:
+  Runs a cronjob by job code
+
+Usage:
+  sys:cron:run [<job>]
+
+Arguments:
+  job                                     Job code
+
+Options:
+  -h, --help                              Display help for the given command. When no command is given display help for the list command
+  -q, --quiet                             Do not output any message
+  -V, --version                           Display this application version
+      --ansi|--no-ansi                    Force (or disable --no-ansi) ANSI output
+  -n, --no-interaction                    Do not ask any interactive question
+      --root-dir[=ROOT-DIR]               Force magento root dir. No auto detection
+      --skip-config                       Do not load any custom config.
+      --skip-root-check                   Do not check if n98-magerun runs as root
+      --skip-core-commands                Do not include Magento 2 core commands
+      --skip-magento-compatibility-check  Do not check for Magento version compatibility
+  -v|vv|vvv, --verbose                    Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+Help:
+  If no `job` argument is passed you can select a job from a list.
+  See it in action: https://www.youtube.com/watch?v=QkzkLgrfNaM
+
+---------------------------------------
+
+Description:
+  Schedule a cronjob for execution right now, by job code
+
+Usage:
+  sys:cron:schedule [<job>]
+
+Arguments:
+  job                                     Job code
+
+Options:
+  -h, --help                              Display help for the given command. When no command is given display help for the list command
+  -q, --quiet                             Do not output any message
+  -V, --version                           Display this application version
+      --ansi|--no-ansi                    Force (or disable --no-ansi) ANSI output
+  -n, --no-interaction                    Do not ask any interactive question
+      --root-dir[=ROOT-DIR]               Force magento root dir. No auto detection
+      --skip-config                       Do not load any custom config.
+      --skip-root-check                   Do not check if n98-magerun runs as root
+      --skip-core-commands                Do not include Magento 2 core commands
+      --skip-magento-compatibility-check  Do not check for Magento version compatibility
+  -v|vv|vvv, --verbose                    Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+Help:
+  If no `job` argument is passed you can select a job from a list.
+
+---------------------------------------
+
+Description:
+  Prints infos about the current magento system.
+
+Usage:
+  sys:info [options] [--] [<key>]
+
+Arguments:
+  key                                     Only output value of named param like "version". Key is case insensitive.
+
+Options:
+      --sort                              Sort by name
+      --format[=FORMAT]                   Output Format. One of [csv,json,json_array,yaml,xml]
+  -h, --help                              Display help for the given command. When no command is given display help for the list command
+  -q, --quiet                             Do not output any message
+  -V, --version                           Display this application version
+      --ansi|--no-ansi                    Force (or disable --no-ansi) ANSI output
+  -n, --no-interaction                    Do not ask any interactive question
+      --root-dir[=ROOT-DIR]               Force magento root dir. No auto detection
+      --skip-config                       Do not load any custom config.
+      --skip-root-check                   Do not check if n98-magerun runs as root
+      --skip-core-commands                Do not include Magento 2 core commands
+      --skip-magento-compatibility-check  Do not check for Magento version compatibility
+  -v|vv|vvv, --verbose                    Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+---------------------------------------
+
+Description:
+  Toggles maintenance mode if --on or --off preferences are not set
+
+Usage:
+  sys:maintenance [options]
+
+Options:
+      --on                                Set to [1] to enable maintenance mode. Optionally supply a comma separated list of IP addresses to exclude from being affected
+      --off                               Set to [1] to disable maintenance mode. Set to [d] to also delete the list with excluded IP addresses.
+  -h, --help                              Display help for the given command. When no command is given display help for the list command
+  -q, --quiet                             Do not output any message
+  -V, --version                           Display this application version
+      --ansi|--no-ansi                    Force (or disable --no-ansi) ANSI output
+  -n, --no-interaction                    Do not ask any interactive question
+      --root-dir[=ROOT-DIR]               Force magento root dir. No auto detection
+      --skip-config                       Do not load any custom config.
+      --skip-root-check                   Do not check if n98-magerun runs as root
+      --skip-core-commands                Do not include Magento 2 core commands
+      --skip-magento-compatibility-check  Do not check for Magento version compatibility
+  -v|vv|vvv, --verbose                    Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+---------------------------------------
+
+Description:
+  Change module resource version
+
+Usage:
+  sys:setup:change-version <module> <version>
+
+Arguments:
+  module                                  Module name
+  version                                 New version value
+
+Options:
+  -h, --help                              Display help for the given command. When no command is given display help for the list command
+  -q, --quiet                             Do not output any message
+  -V, --version                           Display this application version
+      --ansi|--no-ansi                    Force (or disable --no-ansi) ANSI output
+  -n, --no-interaction                    Do not ask any interactive question
+      --root-dir[=ROOT-DIR]               Force magento root dir. No auto detection
+      --skip-config                       Do not load any custom config.
+      --skip-root-check                   Do not check if n98-magerun runs as root
+      --skip-core-commands                Do not include Magento 2 core commands
+      --skip-magento-compatibility-check  Do not check for Magento version compatibility
+  -v|vv|vvv, --verbose                    Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+Help:
+  Change a module's resource version
+
+---------------------------------------
+
+Description:
+  Compare module version with setup_module table.
+
+Usage:
+  sys:setup:compare-versions [options]
+
+Options:
+      --ignore-data                       Ignore data updates
+      --log-junit=LOG-JUNIT               Log output to a JUnit xml file.
+      --format[=FORMAT]                   Output Format. One of [csv,json,json_array,yaml,xml]
+  -h, --help                              Display help for the given command. When no command is given display help for the list command
+  -q, --quiet                             Do not output any message
+  -V, --version                           Display this application version
+      --ansi|--no-ansi                    Force (or disable --no-ansi) ANSI output
+  -n, --no-interaction                    Do not ask any interactive question
+      --root-dir[=ROOT-DIR]               Force magento root dir. No auto detection
+      --skip-config                       Do not load any custom config.
+      --skip-root-check                   Do not check if n98-magerun runs as root
+      --skip-core-commands                Do not include Magento 2 core commands
+      --skip-magento-compatibility-check  Do not check for Magento version compatibility
+  -v|vv|vvv, --verbose                    Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+Help:
+  Compares module version with saved setup version in `setup_module` table and displays version mismatch.
+
+---------------------------------------
+
+Description:
+  Automatically downgrade schema and module versions
+
+Usage:
+  sys:setup:downgrade-versions [options]
+
+Options:
+      --dry-run                           Write what to change but do not do any changes
+  -h, --help                              Display help for the given command. When no command is given display help for the list command
+  -q, --quiet                             Do not output any message
+  -V, --version                           Display this application version
+      --ansi|--no-ansi                    Force (or disable --no-ansi) ANSI output
+  -n, --no-interaction                    Do not ask any interactive question
+      --root-dir[=ROOT-DIR]               Force magento root dir. No auto detection
+      --skip-config                       Do not load any custom config.
+      --skip-root-check                   Do not check if n98-magerun runs as root
+      --skip-core-commands                Do not include Magento 2 core commands
+      --skip-magento-compatibility-check  Do not check for Magento version compatibility
+  -v|vv|vvv, --verbose                    Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+Help:
+  If version numbers are too high - normally happens while developing - this command will lower them to the expected ones.
+
+---------------------------------------
+
+Description:
+  Lists all base urls
+
+Usage:
+  sys:store:config:base-url:list [options]
+
+Options:
+      --with-admin-store                  Include admin store
+      --with-admin-login-url              Include admin login url
+      --format[=FORMAT]                   Output Format. One of [csv,json,json_array,yaml,xml]
+  -h, --help                              Display help for the given command. When no command is given display help for the list command
+  -q, --quiet                             Do not output any message
+  -V, --version                           Display this application version
+      --ansi|--no-ansi                    Force (or disable --no-ansi) ANSI output
+  -n, --no-interaction                    Do not ask any interactive question
+      --root-dir[=ROOT-DIR]               Force magento root dir. No auto detection
+      --skip-config                       Do not load any custom config.
+      --skip-root-check                   Do not check if n98-magerun runs as root
+      --skip-core-commands                Do not include Magento 2 core commands
+      --skip-magento-compatibility-check  Do not check for Magento version compatibility
+  -v|vv|vvv, --verbose                    Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+---------------------------------------
+
+Description:
+  Lists all installed store-views
+
+Usage:
+  sys:store:list [options]
+
+Options:
+      --format[=FORMAT]                   Output Format. One of [csv,json,json_array,yaml,xml]
+  -h, --help                              Display help for the given command. When no command is given display help for the list command
+  -q, --quiet                             Do not output any message
+  -V, --version                           Display this application version
+      --ansi|--no-ansi                    Force (or disable --no-ansi) ANSI output
+  -n, --no-interaction                    Do not ask any interactive question
+      --root-dir[=ROOT-DIR]               Force magento root dir. No auto detection
+      --skip-config                       Do not load any custom config.
+      --skip-root-check                   Do not check if n98-magerun runs as root
+      --skip-core-commands                Do not include Magento 2 core commands
+      --skip-magento-compatibility-check  Do not check for Magento version compatibility
+  -v|vv|vvv, --verbose                    Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+---------------------------------------
+
+Description:
+  Get all urls.
+
+Usage:
+  sys:url:list [options] [--] [<stores> [<linetemplate>]]
+
+Arguments:
+  stores                                  Stores (comma-separated list of store ids)
+  linetemplate                            Line template [default: "{url}"]
+
+Options:
+      --add-categories                    Adds categories
+      --add-products                      Adds products
+      --add-cmspages                      Adds cms pages
+      --add-all                           Adds categories, products and cms pages
+  -h, --help                              Display help for the given command. When no command is given display help for the list command
+  -q, --quiet                             Do not output any message
+  -V, --version                           Display this application version
+      --ansi|--no-ansi                    Force (or disable --no-ansi) ANSI output
+  -n, --no-interaction                    Do not ask any interactive question
+      --root-dir[=ROOT-DIR]               Force magento root dir. No auto detection
+      --skip-config                       Do not load any custom config.
+      --skip-root-check                   Do not check if n98-magerun runs as root
+      --skip-core-commands                Do not include Magento 2 core commands
+      --skip-magento-compatibility-check  Do not check for Magento version compatibility
+  -v|vv|vvv, --verbose                    Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+Help:
+  Examples:
+  
+  - Create a list of product urls only:
+  
+     $ n98-magerun2.phar sys:url:list --add-products 4
+  
+  - Create a list of all products, categories and cms pages of store 4 
+    and 5 separating host and path (e.g. to feed a jmeter csv sampler):
+  
+     $ n98-magerun2.phar sys:url:list --add-all 4,5 '{host},{path}' > urls.csv
+  
+  - The "linetemplate" can contain all parts "parse_url" return wrapped 
+    in '{}'. '{url}' always maps the complete url and is set by default
+
+---------------------------------------
+
+Description:
+  Lists all websites
+
+Usage:
+  sys:website:list [options]
+
+Options:
+      --format[=FORMAT]                   Output Format. One of [csv,json,json_array,yaml,xml]
+  -h, --help                              Display help for the given command. When no command is given display help for the list command
+  -q, --quiet                             Do not output any message
+  -V, --version                           Display this application version
+      --ansi|--no-ansi                    Force (or disable --no-ansi) ANSI output
+  -n, --no-interaction                    Do not ask any interactive question
+      --root-dir[=ROOT-DIR]               Force magento root dir. No auto detection
+      --skip-config                       Do not load any custom config.
+      --skip-root-check                   Do not check if n98-magerun runs as root
+      --skip-core-commands                Do not include Magento 2 core commands
+      --skip-magento-compatibility-check  Do not check for Magento version compatibility
+  -v|vv|vvv, --verbose                    Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+---------------------------------------

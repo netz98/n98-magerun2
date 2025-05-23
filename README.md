@@ -171,7 +171,7 @@ Detailed information is available in the bash-completions FAQ:
 
 ## Usage / Commands
 
-> **NOTE** There are more commands available as documented here. Please use the list command to see all.
+> **NOTE** There are more commands available as documented here. Please use the list command (`n98-magerun2.phar list`) and `n98-magerun2.phar help <command>` to see all options for a specific command.
 
 All commands try to detect the current Magento root directory. If you
 have multiple Magento installations you must change your working
@@ -192,13 +192,19 @@ php n98-magerun2.phar list
 
 Global config parameters:
 
-| Parameter                            | Description                                 |
-|--------------------------------------|---------------------------------------------|
-| `--root-dir`                         | Force Magento root dir. No auto detection.  |
-| `--skip-config`                      | Do not load any custom config.              |
-| `--skip-root-check`                  | Do not check if n98-magerun2 runs as root.  |
-| `--skip-core-commands`               | Do not include Magento commands.            |
-| `--skip-magento-compatibility-check` | Do not check Magento version compatibility. |
+| Parameter                            | Description                                                                 |
+|--------------------------------------|-----------------------------------------------------------------------------|
+| `-h, --help`                         | Display help for the given command.                                         |
+| `-q, --quiet`                        | Do not output any message.                                                  |
+| `-V, --version`                      | Display this application version.                                           |
+| `--ansi` / `--no-ansi`               | Force (or disable) ANSI output.                                             |
+| `-n, --no-interaction`               | Do not ask any interactive question.                                        |
+| `--root-dir[=ROOT-DIR]`              | Force Magento root dir. No auto detection.                                  |
+| `--skip-config`                      | Do not load any custom config.                                              |
+| `--skip-root-check`                  | Do not check if n98-magerun2 runs as root.                                  |
+| `--skip-core-commands`               | Do not include proxied Magento core commands.                               |
+| `--skip-magento-compatibility-check` | Do not check Magento version compatibility for n98-magerun2 commands.       |
+| `-v|vv|vvv, --verbose`               | Increase the verbosity of messages (1 for normal, 2 for verbose, 3 for debug).|
 
 ### Call Core Magento Commands
 
@@ -239,7 +245,7 @@ n98-magerun2.phar customer:info [email] [website]
 Creates a new customer/user for shop frontend.
 
 ```sh
-n98-magerun2.phar customer:create [email] [password] [firstname] [lastname] [website]
+n98-magerun2.phar customer:create [email] [password] [firstname] [lastname] [website] [--format[="..."]] [additionalFields...]
 ```
 
 Example:
@@ -253,6 +259,12 @@ You can add additional any number of custom fields, example:
 ```sh
 n98-magerun2.phar customer:create foo@example.com passworD123 John Doe base taxvat DE12345678 prefix Mrs.
 ```
+**Options:**
+
+| Option             | Description                                          |
+|--------------------|------------------------------------------------------|
+| `--format[=FORMAT]` | Output Format. One of [csv,json,json_array,yaml,xml] |
+
 
 ### List Customers
 
@@ -275,14 +287,33 @@ n98-magerun2.phar customer:change-password [email] [password] [website]
 ### Create Customer Token for Webapi
 
 ```sh
-n98-magerun2.phar customer:token:create <email>
+n98-magerun2.phar customer:token:create <email> [--no-newline] [<website>]
 ```
+**Options:**
+
+| Option             | Description                        |
+|--------------------|------------------------------------|
+| `--no-newline`     | Do not output the trailing newline |
 
 ### Delete customer
 
 ```sh
-n98-magerun2.phar customer:delete [-f|--force] [-a|--all] [-r|--range] [--fuzzy] [--id=ID] [--website=ID] [--email=EMAIL] [--firstname=STRING] [--lastname=STRING]
+n98-magerun2.phar customer:delete [options]
 ```
+**Options:**
+
+| Option                | Description                             |
+|-----------------------|-----------------------------------------|
+| `--id[=ID]`           | Customer Id or email                    |
+| `--email[=EMAIL]`     | Email                                   |
+| `--firstname[=FIRSTNAME]` | Firstname                             |
+| `--lastname[=LASTNAME]` | Lastname                              |
+| `--website[=WEBSITE]` | Website                                 |
+| `-f, --force`         | Force delete                            |
+| `-a, --all`           | Delete all customers. Ignore all filters. |
+| `-r, --range`         | Delete a range of customers by Id       |
+| `--fuzzy`             | Fuzziness                               |
+
 
 Examples:
 
@@ -300,8 +331,29 @@ In addition, you can delete a range of customer ids or delete all customers.
 ### Add customer address
 
 ```sh
-n98-magerun2.phar customer:add-address [email] [website] [--firstname=STRING] [--lastname=STRING] [--street=STRING] [--city=STRING] [--country=STRING] [--postcode=STRING] [--telephone=STRING] [--default-billing] [--default-shipping]
+n98-magerun2.phar customer:add-address <email> <website> [options]
 ```
+**Arguments:**
+
+| Argument   | Description     |
+|------------|-----------------|
+| `email`    | Customer email  |
+| `website`  | Customer website|
+
+**Options:**
+
+| Option                | Description                     |
+|-----------------------|---------------------------------|
+| `--firstname=FIRSTNAME` | First name                      |
+| `--lastname=LASTNAME`   | Last name                       |
+| `--street=STREET`       | Street address                  |
+| `--city=CITY`           | City                            |
+| `--country=COUNTRY`     | Country ID, e.g., US            |
+| `--postcode=POSTCODE`   | Postcode                        |
+| `--telephone=TELEPHONE` | Telephone number                |
+| `--default-billing`   | Use as default billing address  |
+| `--default-shipping`  | Use as default shipping address |
+
 
 Examples:
 
@@ -331,8 +383,28 @@ n98-magerun2.phar install
 Unattended installation:
 
 ```sh
-n98-magerun2.phar install [--magentoVersion[="..."]] [--magentoVersionByName[="..."]] [--installationFolder[="..."]] [--dbHost[="..."]] [--dbUser[="..."]] [--dbPass[="..."]] [--dbName[="..."]] [--installSampleData[="..."]] [--useDefaultConfigParams[="..."]] [--baseUrl[="..."]] [--replaceHtaccessFile[="..."]]
+n98-magerun2.phar install [options]
 ```
+**Options (selected):**
+| Option                                   | Description                                                                 |
+|------------------------------------------|-----------------------------------------------------------------------------|
+| `--magentoVersion[=MAGENTOVERSION]`      | Magento version                                                             |
+| `--magentoVersionByName[=MAGENTOVERSIONBYNAME]` | Magento version name instead of order number                            |
+| `--installationFolder[=INSTALLATIONFOLDER]`| Installation folder                                                         |
+| `--dbHost[=DBHOST]`                      | Database host                                                               |
+| `--dbUser[=DBUSER]`                      | Database user                                                               |
+| `--dbPass[=DBPASS]`                      | Database password                                                           |
+| `--dbName[=DBNAME]`                      | Database name                                                               |
+| `--dbPort[=DBPORT]`                      | Database port [default: 3306]                                               |
+| `--installSampleData[=INSTALLSAMPLEDATA]`| Install sample data                                                         |
+| `--useDefaultConfigParams[=USEDEFAULTCONFIGPARAMS]` | Use default installation parameters defined in the yaml file          |
+| `--baseUrl[=BASEURL]`                    | Installation base url                                                       |
+| `--replaceHtaccessFile[=REPLACEHTACCESSFILE]` | Generate htaccess file (for non vhost environment)                        |
+| `--noDownload`                           | If set skips download step.                                                 |
+| `--only-download`                        | Downloads (and extracts) source code                                        |
+| `--forceUseDb`                           | If passed, force to use given database if it already exists.                |
+| `--composer-use-same-php-binary`         | If passed, will invoke composer with the same PHP binary                    |
+
 
 Example of an unattended Magento CE 2.0.0.0 dev beta 1 installation:
 
@@ -351,14 +423,20 @@ Provides infos like the edition, version or the configured cache
 backends, amount of data or installed packages.
 
 ```sh
-n98-magerun2.phar sys:info
+n98-magerun2.phar sys:info [options] [<key>]
 ```
+**Arguments:**
+| Argument | Description                                                            |
+|----------|------------------------------------------------------------------------|
+| `key`    | Only output value of named param like "version". Key is case insensitive. |
 
 **Options:**
 
-| Option   | Description        |
-|----------|--------------------|
-| `--sort` | Sort table by name |
+| Option             | Description                                          |
+|--------------------|------------------------------------------------------|
+| `--sort`           | Sort table by name                                   |
+| `--format[=FORMAT]` | Output Format. One of [csv,json,json_array,yaml,xml] |
+
 
 ---
 
@@ -418,6 +496,25 @@ Last executed cronjobs with status.
 ```sh
 n98-magerun2.phar sys:cron:history [--format[="..."]] [--timezone[="..."]]
 ```
+**Options:**
+
+| Option                | Description                                          |
+|-----------------------|------------------------------------------------------|
+| `--timezone[=TIMEZONE]`| Timezone to show finished at in                      |
+| `--format[=FORMAT]`   | Output Format. One of [csv,json,json_array,yaml,xml] |
+
+### sys:cron:schedule
+Schedule a cronjob for execution right now, by job code.
+```sh
+n98-magerun2.phar sys:cron:schedule [<job>]
+```
+**Arguments:**
+| Argument | Description |
+|----------|-------------|
+| `job`    | Job code    |
+**Help:**
+If no `job` argument is passed you can select a job from a list.
+---
 
 ---
 
@@ -439,8 +536,13 @@ The command will save an empty string as default value if no value is set.
 Sub-arrays in config.php can be specified by adding a "." character to every array.
 
 ```sh
-n98-magerun2.phar config:env:set <key> [<value>]
+n98-magerun2.phar config:env:set <key> [<value>] [--input-format=INPUT-FORMAT]
 ```
+**Options:**
+| Option                          | Description                                   |
+|---------------------------------|-----------------------------------------------|
+| `--input-format=INPUT-FORMAT`   | Input Format. One of [plain,json] [default: "plain"] |
+
 
 You can also choose to provide a json text argument as value, by using the optional `--input-format=json` flag.
 This will allow you to add values that aren't a string but also other scalar types.
@@ -514,41 +616,50 @@ n98-magerun2.phar config:search [--format[="..."]] <search>
 ### Set Store Config
 
 ```sh
-n98-magerun2.phar config:store:set [--scope[="..."]] [--scope-id[="..."]] [--encrypt] path value
+n98-magerun2.phar config:store:set [--scope[="..."]] [--scope-id[="..."]] [--encrypt] [--no-null] <path> <value>
 ```
 
 **Arguments:**
 
-- path - The config path value The config value
+| Argument | Description                                      |
+|----------|--------------------------------------------------|
+| `path`   | The store config path like "general/local/code"  |
+| `value`  | The config value                                 |
+
 
 **Options:**
 
-| Option       | Description                                                                            |
-|--------------|----------------------------------------------------------------------------------------|
-| `--scope`    | The config value's scope (default: `default`). Can be `default`, `websites`, `stores`) |
-| `--scope-id` | The config value's scope ID (default: `0`)                                             |
-| `--encrypt`  | Encrypt the config value using crypt key                                               |
+| Option             | Description                                                                            |
+|--------------------|----------------------------------------------------------------------------------------|
+| `--scope`          | The config value's scope (default: `default`). Can be `default`, `websites`, `stores`) |
+| `--scope-id`       | The config value's scope ID (default: `0`)                                             |
+| `--encrypt`        | Encrypt the config value using crypt key                                               |
+| `--no-null`        | Do not treat value NULL as NULL (NULL/"unknown" value) value                           |
+
 
 ### Get Store Config
 
 ```sh
-n98-magerun2.phar config:store:get [--scope="..."] [--scope-id="..."] [--decrypt] [--format[="..."]] [path]
+n98-magerun2.phar config:store:get [--scope="..."] [--scope-id="..."] [--decrypt] [--update-script] [--magerun-script] [--format[="..."]] [path]
 ```
 
 **Arguments:**
 
-- path - The config path
+| Argument | Description        |
+|----------|--------------------|
+| `path`   | The config path. Wildcards (`*`) are supported. If not set, all items are listed. |
 
 **Options:**
 
-| Option             | Description                                                   |
-|--------------------|---------------------------------------------------------------|
-| `--scope`          | The config value's scope (`default`, `websites`, `stores`)    |
-| `--scope-id`       | The config value's scope ID or scope code                     |
-| `--decrypt`        | Decrypt the config value using crypt key defined in `env.php` |
-| `--update-script`  | Output as update script lines                                 |
-| `--magerun-script` | Output for usage with `config:store:set`                      |
-| `--format`         | Output as `json`, `xml` or `csv`                              |
+| Option             | Description                                                                  |
+|--------------------|------------------------------------------------------------------------------|
+| `--scope=SCOPE`    | The config value's scope (`default`, `websites`, `stores`). Default: `default`. |
+| `--scope-id=SCOPE-ID`| The config value's scope ID or scope code.                                   |
+| `--decrypt`        | Decrypt the config value using crypt key defined in `env.php`.               |
+| `--update-script`  | Output as update script lines.                                               |
+| `--magerun-script` | Output for usage with `config:store:set`.                                    |
+| `--format[=FORMAT]`| Output Format. One of [csv,json,json_array,yaml,xml].                        |
+
 
 **Help:**
 
@@ -563,20 +674,22 @@ n98-magerun2.phar config:store:get web/* --magerun-script
 ### Delete Store Config
 
 ```sh
-n98-magerun2.phar config:store:delete [--scope[="..."]] [--scope-id[="..."]] [--all] path
+n98-magerun2.phar config:store:delete [--scope[="..."]] [--scope-id[="..."]] [--all] <path>
 ```
 
 **Arguments:**
 
-- path - The config path
+| Argument | Description        |
+|----------|--------------------|
+| `path`   | The config path    |
 
 **Options:**
 
-| Option       | Description                                          |
-|--------------|------------------------------------------------------|
-| `--scope`    | The config value's scope (default, websites, stores) |
-| `--scope-id` | The config value's scope ID                          |
-| `--all`      | Delete all entries by path                           |
+| Option             | Description                                                                            |
+|--------------------|----------------------------------------------------------------------------------------|
+| `--scope`          | The config value's scope (default: `default`). Can be `default`, `websites`, `stores`) |
+| `--scope-id`       | The config value's scope ID                                                            |
+| `--all`            | Delete all entries by path                                                             |
 
 
 ### Display ACL Tree
@@ -592,12 +705,15 @@ Prints acl.xml data as table
 ### Print Dependency Injection Config Data
 
 ```sh
-n98-magerun2.phar config:data:di <type>
+n98-magerun2.phar config:data:di [--scope=SCOPE] [<type>]
 ```
 
 **Arguments:**
 
-- type - Type (class)
+| Argument | Description  |
+|----------|--------------|
+| `type`   | Type (class) |
+
 
 **Options:**
 
@@ -615,11 +731,12 @@ n98-magerun2.phar config:data:mview [options]
 
 **Options:**
 
-| Option         | Description                                                                                             |
-|----------------|---------------------------------------------------------------------------------------------------------|
-| `--scope` `-s` | Config scope (`global`, `adminhtml`, `frontend`, `webapi_rest`, `webapi_soap`, ...) (default: `global`) |
-| `--tree` `-t`  | Print data as tree                                                                                      |
-| `--format`     | Output as `json`, `xml` or `csv`                                                                        |
+| Option              | Description                                                                                             |
+|---------------------|---------------------------------------------------------------------------------------------------------|
+| `--scope` `-s`      | Config scope (`global`, `adminhtml`, `frontend`, `webapi_rest`, `webapi_soap`, ...) (default: `global`) |
+| `--tree` `-t`       | Print data as tree                                                                                      |
+| `--format[=FORMAT]` | Output Format. One of [csv,json,json_array,yaml,xml]                                                    |
+
 
 ### Print Indexer Config
 
@@ -631,19 +748,26 @@ n98-magerun2.phar config:data:indexer [options]
 
 **Options:**
 
-| Option         | Description                                                                                             |
-|----------------|---------------------------------------------------------------------------------------------------------|
-| `--scope` `-s` | Config scope (`global`, `adminhtml`, `frontend`, `webapi_rest`, `webapi_soap`, ...) (default: `global`) |
-| `--tree` `-t`  | Print data as tree                                                                                      |
-| `--format`     | Output as `json`, `xml` or `csv`                                                                        |
+| Option              | Description                                                                                             |
+|---------------------|---------------------------------------------------------------------------------------------------------|
+| `--scope` `-s`      | Config scope (`global`, `adminhtml`, `frontend`, `webapi_rest`, `webapi_soap`, ...) (default: `global`) |
+| `--tree` `-t`       | Print data as tree                                                                                      |
+| `--format[=FORMAT]` | Output Format. One of [csv,json,json_array,yaml,xml]                                                    |
 
 ---
 
 ### List Magento cache status
 
 ```sh
-n98-magerun2.phar cache:list
+n98-magerun2.phar cache:list [--enabled[=ENABLED]] [--format[=FORMAT]]
 ```
+**Options:**
+
+| Option                | Description                                                                 |
+|-----------------------|-----------------------------------------------------------------------------|
+| `--enabled[=ENABLED]` | Filter the list to display only enabled [1] or disabled [0] cache types     |
+| `--format[=FORMAT]`   | Output Format. One of [csv,json,json_array,yaml,xml]                        |
+
 
 ### Clean Magento cache
 
@@ -652,13 +776,13 @@ Cleans expired cache entries.
 If you would like to clean only one cache type:
 
 ```sh
-n98-magerun2.phar cache:clean [code]
+n98-magerun2.phar cache:clean [type...]
 ```
 
 If you would like to clean multiple cache types at once:
 
 ```sh
-n98-magerun2.phar cache:clean [code] [code] ...
+n98-magerun2.phar cache:clean [type] [type] ...
 ```
 
 If you would like to remove all cache entries use `cache:flush`
@@ -668,7 +792,7 @@ Run `cache:list` command to see all codes.
 ### Remove all cache entries
 
 ```sh
-n98-magerun2.phar cache:flush [code]
+n98-magerun2.phar cache:flush [type...]
 ```
 
 Keep in mind that `cache:flush` cleares the cache backend,
@@ -680,20 +804,26 @@ The command is not checking if the cache id exists. If you want to check if the 
 use the `cache:remove:id` command with the `--strict` option.
 
 ```sh
-n98-magerun2.phar cache:remove:id [options[--strict] <id>
+n98-magerun2.phar cache:remove:id [--strict] <id>
 ```
+**Options:**
+| Option     | Description                                        |
+|------------|----------------------------------------------------|
+| `--strict` | Use strict mode (remove only if cache id exists) |
+
 
 ### List Magento caches
-
-```sh
-n98-magerun2.phar cache:list [--format[="..."]]
-```
+(This is a duplicate of "List Magento cache status" - keeping the more detailed one above)
 
 ### Disable Magento cache
 
 ```sh
-n98-magerun2.phar cache:disable [code]
+n98-magerun2.phar cache:disable [--format[=FORMAT]] [type...]
 ```
+**Options:**
+| Option             | Description                                          |
+|--------------------|------------------------------------------------------|
+| `--format[=FORMAT]` | Output Format. One of [csv,json,json_array,yaml,xml] |
 
 If no code is specified, all cache types will be disabled. Run
 `cache:list` command to see all codes.
@@ -701,29 +831,45 @@ If no code is specified, all cache types will be disabled. Run
 ### Enable Magento cache
 
 ```sh
-n98-magerun2.phar cache:enable [code]
+n98-magerun2.phar cache:enable [--format[=FORMAT]] [type...]
 ```
+**Options:**
+| Option             | Description                                          |
+|--------------------|------------------------------------------------------|
+| `--format[=FORMAT]` | Output Format. One of [csv,json,json_array,yaml,xml] |
 
 ### Cache Report
 
 This command let you investigate what's stored inside your cache. It prints out a table with cache IDs.
 
 ```sh
-n98-magerun2.phar cache:report [-t|--tags] [-m|--mtime] [--filter-id[="..."]] [--filter-tag[="..."]] [--fpc]
+n98-magerun2.phar cache:report [options]
 ```
+**Options:**
+| Option                   | Description                                                     |
+|--------------------------|-----------------------------------------------------------------|
+| `--fpc`                  | Use full page cache instead of core cache                       |
+| `-t, --tags`             | Output tags                                                     |
+| `-m, --mtime`            | Output last modification time                                   |
+| `--filter-id[=FILTER-ID]`| Filter output by ID (substring)                                 |
+| `--filter-tag[=FILTER-TAG]`| Filter output by TAG (separate multiple tags by comma)          |
+| `--format[=FORMAT]`      | Output Format. One of [csv, json, json_array, yaml, xml]        |
+
 
 ### Cache View
 
 Prints stored cache entry by ID.
 
 ```sh
-n98-magerun2.phar cache:view [--unserialize] [--decrypt] [--fpc] id
+n98-magerun2.phar cache:view [options] <id>
 ```
+**Options:**
+| Option         | Description                              |
+|----------------|------------------------------------------|
+| `--fpc`        | Use full page cache instead of core cache|
+| `--unserialize`| Unserialize output                       |
+| `--decrypt`    | Decrypt output with encryption key       |
 
-If value is serialized you can force a pretty output with `--unserialize` option.
-Some entries are encrypted and can be decrypted with `--decrypt` option.
-The command uses the core cache by default.
-If the FPC cache should be used, the `--fpc` option can be used.
 
 ### Flush Catalog Images Cache
 
@@ -731,8 +877,12 @@ Removes pre-generated catalog images and triggers `clean_catalog_images_cache_af
 should invalidate the full page cache.
 
 ```sh
-n98-magerun2.phar cache:catalog:image:flush
+n98-magerun2.phar cache:catalog:image:flush [--suppress-event]
 ```
+**Options:**
+| Option             | Description                                               |
+|--------------------|-----------------------------------------------------------|
+| `--suppress-event` | Suppress clean_catalog_images_cache_after event dispatching |
 
 ---
 
@@ -744,6 +894,12 @@ If no code is specified, all cache types will be enabled. Run
 ```sh
 n98-magerun2.phar admin:user:list [--format[="..."]]
 ```
+**Options:**
+
+| Option             | Description                                          |
+|--------------------|------------------------------------------------------|
+| `--format[=FORMAT]` | Output Format. One of [csv,json,json_array,yaml,xml] |
+
 
 ### Change admin user password
 
@@ -754,8 +910,18 @@ n98-magerun2.phar admin:user:change-password [username] [password]
 ### Delete admin user
 
 ```sh
-n98-magerun2.phar admin:user:delete [email|username] [-f]
+n98-magerun2.phar admin:user:delete [-f|--force] [<id>]
 ```
+**Arguments:**
+| Argument | Description        |
+|----------|--------------------|
+| `id`     | Username or Email  |
+
+**Options:**
+| Option     | Description |
+|------------|-------------|
+| `-f, --force` | Force       |
+
 
 ID can be e-mail or username. The command will attempt to find the user
 by username first and if it cannot be found it will attempt to find the
@@ -765,16 +931,43 @@ force parameter `-f` is omitted you will be prompted for confirmation.
 ### Create Admin Token for Webapi
 
 ```sh
-n98-magerun2.phar admin:token:create <username>
+n98-magerun2.phar admin:token:create <username> [--no-newline]
 ```
+**Options:**
+| Option         | Description                        |
+|----------------|------------------------------------|
+| `--no-newline` | Do not output the trailing newline |
+
+### admin:notifications
+Toggles admin notifications.
+```sh
+n98-magerun2.phar admin:notifications [options]
+```
+**Options:**
+| Option | Description |
+|--------|-------------|
+| `--on` | Switch on   |
+| `--off`| Switch off  |
+---
 
 ---
 
 ### Run a raw DB query
 
 ```sh
-n98-magerun2.phar db:query <sql-query>
+n98-magerun2.phar db:query [--connection=CONNECTION] [--only-command] [<query>]
 ```
+**Arguments:**
+| Argument | Description |
+|----------|-------------|
+| `query`  | SQL query   |
+
+**Options:**
+| Option                   | Description                                                                 |
+|--------------------------|-----------------------------------------------------------------------------|
+| `--connection=CONNECTION`| Select DB connection type for Magento configurations with several databases |
+| `--only-command`         | Print only mysql command. Do not execute                                    |
+
 
 **Example:**
 
@@ -802,37 +995,45 @@ Dumps configured Magento database with `mysqldump` or `mydumper`.
 
 - Requires MySQL CLI tools (either `mysqldump` or `mydumper`)
 
-Arguments:
-
-- filename - Dump filename
-
-Options:
-
-| Option                     | Description                                                                                |
-|----------------------------|--------------------------------------------------------------------------------------------|
-| `--add-routines`           | Include stored routines in dump (procedures & functions).                                  |
-| `--add-time suffix`        | Adds time to filename (only if filename was provided). Requires value [suffix, prefix, no] |
-| `--compression` `-c`       | Compress the dump file using one of the supported algorithms                               |
-| `--dry-run`                | Do everything but the actual dump. Useful to test.                                         |
-| `--exclude`                | Tables to exclude entirely from the dump (including structure)                             |
-| `--force` `-f`             | Do not prompt if all options are defined                                                   |
-| `--git-friendly`           | Use one insert statement, but with line breaks instead of separate insert statements.      |
-| `--human-readable`         | Use a single insert with column names per row.                                             |
-| `--include`                | Tables to include entirely to the dump (default: all tables are included)                  |
-| `--keep-definer`           | Do not replace DEFINER in dump with CURRENT_USER                                           |
-| `--keep-column-statistics` | Retains `column statistics` table in `mysqldump`                                           |
-| `--mydumper`               | Use mydumper instead of mysqldump for potentially faster dumps                             |
-| `--no-single-transaction`  | Do not use single-transaction (not recommended, this is blocking)                          |
-| `--no-tablespaces`         | Use this option if you want to create a dump without having the PROCESS privilege.         |
-| `--only-command`           | Print only mysqldump/mydumper command. Does not execute.                                   |
-| `--print-only-filename`    | Execute and prints not output except the dump filename                                     |
-| `--set-gtid-purged-off`    | Adds --set-gtid-purged=OFF to mysqlqump                                                    |
-| `--stdout`                 | Dump to stdout                                                                             |
-| `--strip`                  | Tables to strip (dump only structure of those tables)                                      |
-
 ```sh
-n98-magerun2.phar db:dump
+n98-magerun2.phar db:dump [options] [--] [<filename>]
 ```
+
+**Arguments:**
+
+| Argument   | Description    |
+|------------|----------------|
+| `filename` | Dump filename. |
+
+**Options (selected):**
+
+| Option                              | Description                                                                                                                          |
+|-------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------|
+| `--connection=CONNECTION`           | Select DB connection type for Magento configurations with several databases (default: `default`)                                       |
+| `--add-routines`                    | Include stored routines in dump (procedures & functions).                                                                            |
+| `--add-time[=ADD-TIME]`             | Append or prepend a timestamp to filename. Values: `suffix`, `prefix`, `no`. (default: `no`)                                          |
+| `-c, --compression=COMPRESSION`     | Compress the dump file using one of the supported algorithms (e.g., `gzip`, `lz4`, `zstd`).                                            |
+| `--dry-run`                         | Do everything but the actual dump. Useful to test.                                                                                   |
+| `-e, --exclude=EXCLUDE`             | Tables to exclude entirely from the dump (including structure). Multiple values allowed.                                               |
+| `-f, --force`                       | Do not prompt if all options are defined.                                                                                            |
+| `--git-friendly`                    | Use one insert statement, but with line breaks instead of separate insert statements.                                                |
+| `--human-readable`                  | Use a single insert with column names per row. Use `db:import --optimize` for faster import.                                         |
+| `-i, --include=INCLUDE`             | Tables to include entirely in the dump (default: all tables are included). Multiple values allowed.                                  |
+| `--keep-definer`                    | Do not replace DEFINER in dump with CURRENT_USER.                                                                                    |
+| `--keep-column-statistics`          | Retains `column statistics` table in `mysqldump`.                                                                                    |
+| `--mydumper`                        | Use mydumper instead of mysqldump for potentially faster dumps.                                                                      |
+| `--no-single-transaction`           | Do not use single-transaction (not recommended, this is blocking).                                                                   |
+| `--no-tablespaces`                  | Use this option if you want to create a dump without having the PROCESS privilege.                                                   |
+| `--only-command`                    | Print only mysqldump/mydumper command. Does not execute.                                                                             |
+| `--print-only-filename`             | Execute and prints no output except the dump filename.                                                                               |
+| `--set-gtid-purged-off`             | Adds --set-gtid-purged=OFF to mysqldump.                                                                                             |
+| `--stdout`                          | Dump to stdout.                                                                                                                      |
+| `-s, --strip=STRIP`                 | Tables to strip (dump only structure of those tables). Multiple values and table groups (e.g. `@log`) allowed.                        |
+| `--zstd-level[=ZSTD-LEVEL]`         | ZSTD compression level. (default: `10`)                                                                                              |
+| `--zstd-extra-args[=ZSTD-EXTRA-ARGS]` | Custom extra options for zstd.                                                                                                       |
+
+(For a full list of strip table groups and other options, use `n98-magerun2.phar help db:dump`)
+
 
 Only the dump command:
 
@@ -915,17 +1116,20 @@ Options:
 | Option                                | Description                                                                        |
 |---------------------------------------|------------------------------------------------------------------------------------|
 | `--connection=CONNECTION`             | Select DB connection type for Magento configurations with several databases        |
-| `-c`, `--compression=COMPRESSION`     | The compression of the specified file                                              |
+| `-c`, `--compression=COMPRESSION`     | The compression of the specified file (e.g. `gzip`, `lz4`, `zstd`)                 |
+| `--zstd-level[=ZSTD-LEVEL]`           | ZSTD compression level [default: 10]                                               |
+| `--zstd-extra-args[=ZSTD-EXTRA-ARGS]` | Custom extra options for zstd                                                      |
 | `--drop`                              | Drop and recreate database before import                                           |
 | `--drop-tables`                       | Drop tables before import                                                          |
 | `--force`                             | Continue even if an SQL error occurs                                               |
 | `--only-command`                      | Print only mysql command. Do not execute                                           |
 | `--only-if-empty`                     | Imports only if database is empty                                                  |
 | `--optimize`                          | Convert verbose INSERTs to short ones before import (not working with compression) |
-| `--skip-authorization-entry-creation` | Add default entry to authorization_role and authorization_rule tables.             |
+| `--skip-authorization-entry-creation` | Do not create authorization rule/role entries if they are missing.                 |
+
 
 ```sh
-n98-magerun2.phar db:import
+n98-magerun2.phar db:import [options] [<filename>]
 ```
 
 ### Fix empty authorization tables
@@ -937,10 +1141,106 @@ This blocks the creation of admin users.
 You can re-create the default entries by running the command:
 
 ```sh
-n98-magerun2.phar db:add-default-authorization-entries
+n98-magerun2.phar db:add-default-authorization-entries [--connection=CONNECTION]
 ```
 
-If you are using the `db:import` command to import the stripped SQL dump, then this command will be implicitly called.
+If you are using the `db:import` command to import the stripped SQL dump, then this command will be implicitly called unless `--skip-authorization-entry-creation` is used.
+
+### db:create
+Create currently configured database.
+```sh
+n98-magerun2.phar db:create [--connection=CONNECTION]
+```
+**Options:**
+| Option                   | Description                                                                 |
+|--------------------------|-----------------------------------------------------------------------------|
+| `--connection=CONNECTION`| Select DB connection type for Magento configurations with several databases |
+**Help:**
+The command tries to create the configured database according to your
+settings in app/etc/env.php.
+The configured user must have "CREATE DATABASE" privileges on MySQL Server.
+---
+### db:drop
+Drop current database.
+```sh
+n98-magerun2.phar db:drop [options]
+```
+**Options:**
+| Option                   | Description                                                                 |
+|--------------------------|-----------------------------------------------------------------------------|
+| `--connection=CONNECTION`| Select DB connection type for Magento configurations with several databases |
+| `-t, --tables`           | Drop all tables instead of dropping the database                            |
+| `-f, --force`            | Force                                                                       |
+**Help:**
+The command prompts before dropping the database. If --force option is specified it
+directly drops the database.
+The configured user in app/etc/env.php must have "DROP" privileges.
+---
+### db:info
+Dumps database informations.
+```sh
+n98-magerun2.phar db:info [options] [--] [<setting>]
+```
+**Arguments:**
+| Argument  | Description                        |
+|-----------|------------------------------------|
+| `setting` | Only output value of named setting |
+**Options:**
+| Option                   | Description                                                                 |
+|--------------------------|-----------------------------------------------------------------------------|
+| `--connection=CONNECTION`| Select DB connection type for Magento configurations with several databases |
+| `--format[=FORMAT]`      | Output Format. One of [csv,json,json_array,yaml,xml]                        |
+**Help:**
+This command is useful to print all informations about the current configured database in app/etc/env.php.
+It can print connection string for JDBC, PDO connections.
+---
+### db:maintain:check-tables
+Check database tables.
+```sh
+n98-magerun2.phar db:maintain:check-tables [options]
+```
+**Options:**
+| Option             | Description                                                                 |
+|--------------------|-----------------------------------------------------------------------------|
+| `--type[=TYPE]`    | Check type (one of QUICK, FAST, MEDIUM, EXTENDED, CHANGED) [default: "MEDIUM"] |
+| `--repair`         | Repair tables (only MyISAM)                                                 |
+| `--table[=TABLE]`  | Process only given table (wildcards are supported)                          |
+| `--format[=FORMAT]`| Output Format. One of [csv,json,json_array,yaml,xml]                        |
+---
+### db:status
+Shows important server status information or custom selected status values.
+```sh
+n98-magerun2.phar db:status [options] [--] [<search>]
+```
+**Arguments:**
+| Argument | Description                                                              |
+|----------|--------------------------------------------------------------------------|
+| `search` | Only output variables of specified name. The wildcard % is supported!    |
+**Options:**
+| Option                   | Description                                                                 |
+|--------------------------|-----------------------------------------------------------------------------|
+| `--connection=CONNECTION`| Select DB connection type for Magento configurations with several databases |
+| `--format[=FORMAT]`      | Output Format. One of [csv,json,json_array,yaml,xml]                        |
+| `--rounding[=ROUNDING]`  | Amount of decimals to display. If -1 then disabled [default: 0]             |
+| `--no-description`       | Disable description                                                         |
+---
+### db:variables
+Shows important variables or custom selected.
+```sh
+n98-magerun2.phar db:variables [options] [--] [<search>]
+```
+**Arguments:**
+| Argument | Description                                                              |
+|----------|--------------------------------------------------------------------------|
+| `search` | Only output variables of specified name. The wildcard % is supported!    |
+**Options:**
+| Option                   | Description                                                                 |
+|--------------------------|-----------------------------------------------------------------------------|
+| `--connection=CONNECTION`| Select DB connection type for Magento configurations with several databases |
+| `--format[=FORMAT]`      | Output Format. One of [csv,json,json_array,yaml,xml]                        |
+| `--rounding[=ROUNDING]`  | Amount of decimals to display. If -1 then disabled [default: 0]             |
+| `--no-description`       | Disable description                                                         |
+---
 
 ### Clear static view files
 
@@ -950,9 +1250,10 @@ n98-magerun2.phar dev:asset:clear [--theme="..."]
 
 Options:
 
-| Option    | Description                    |
-|-----------|--------------------------------|
-| `--theme` | The specific theme(s) to clear |
+| Option                  | Description                                                        |
+|-------------------------|--------------------------------------------------------------------|
+| `-t, --theme=THEME`     | Clear assets for specific theme(s) only (multiple values allowed). |
+
 
 To clear assets for all themes:
 
@@ -969,14 +1270,28 @@ n98-magerun2.phar dev:asset:clear --theme=Magento/luma
 ### List Themes
 
 ```sh
-n98-magerun2.phar dev:theme:list
+n98-magerun2.phar dev:theme:list [--format[=FORMAT]]
 ```
+**Options:**
+| Option             | Description                                          |
+|--------------------|------------------------------------------------------|
+| `--format[=FORMAT]` | Output Format. One of [csv,json,json_array,yaml,xml] |
+
 
 ### Build Hyva Theme CSS
 
 ```sh
-n98-magerun2.phar dev:theme:build-hyva [--production] <theme-name>
+n98-magerun2.phar dev:theme:build-hyva [--production] [<theme-name>]
 ```
+**Arguments:**
+| Argument     | Description                                |
+|--------------|--------------------------------------------|
+| `theme-name` | Hyvä Theme to build (e.g. Hyva/default)    |
+**Options:**
+| Option           | Description                                           |
+|------------------|-------------------------------------------------------|
+| `-p, --production`| Build for production (minified) instead of watch mode |
+
 
 Example: `n98-magerun2.phar dev:theme:build-hyva "Hyva/default"`
 
@@ -993,8 +1308,32 @@ If the `--production` flag is set, the command does not run in watch mode and wi
 Creates an empty module and registers it in current Magento shop.
 
 ```sh
-n98-magerun2.phar dev:module:create [-m|--minimal] [--add-blocks] [--add-helpers] [--add-models] [--add-setup] [--add-all] [-e|--enable] [--modman] [--add-readme] [--add-composer] [--add-strict-types] [--author-name [AUTHOR-NAME]] [--author-email [AUTHOR-EMAIL]] [--description [DESCRIPTION]] [-h|--help] [-q|--quiet] [-v|vv|vvv|--verbose] [-V|--version] [--ansi] [--no-ansi] [-n|--no-interaction] [--root-dir [ROOT-DIR]] [--skip-config] [--skip-root-check] [--skip-core-commands [SKIP-CORE-COMMANDS]] [--skip-magento-compatibility-check] [--] <command> <vendorNamespace> <moduleName>
+n98-magerun2.phar dev:module:create [options] [--] <vendorNamespace> <moduleName>
 ```
+**Arguments:**
+| Argument          | Description                     |
+|-------------------|---------------------------------|
+| `vendorNamespace` | Namespace (your company prefix) |
+| `moduleName`      | Name of your module.            |
+
+**Options (selected):**
+| Option                          | Description                                         |
+|---------------------------------|-----------------------------------------------------|
+| `-m, --minimal`                 | Create only module file                             |
+| `--add-blocks`                  | Adds blocks                                         |
+| `--add-helpers`                 | Adds helpers                                        |
+| `--add-models`                  | Adds models                                         |
+| `--add-setup`                   | Adds SQL setup                                      |
+| `--add-all`                     | Adds blocks, helpers and models                     |
+| `-e, --enable`                  | Enable module after creation                        |
+| `--modman`                      | Create all files in folder with a modman file.      |
+| `--add-readme`                  | Adds a readme.md file to generated module           |
+| `--add-composer`                | Adds a composer.json file to generated module       |
+| `--add-strict-types`            | Add strict_types declaration to generated PHP files |
+| `--author-name[=AUTHOR-NAME]`   | Author for readme.md or composer.json               |
+| `--author-email[=AUTHOR-EMAIL]` | Author for readme.md or composer.json               |
+| `--description[=DESCRIPTION]`   | Description for readme.md or composer.json          |
+
 
 ---
 
@@ -1003,10 +1342,18 @@ n98-magerun2.phar dev:module:create [-m|--minimal] [--add-blocks] [--add-helpers
 The source code of one or more modules can be scanned for dependencies.
 
 ```sh
-n98-magerun2.phar dev:module:detect-composer-dependencies [--only-missing] <directory>
+n98-magerun2.phar dev:module:detect-composer-dependencies [--only-missing] <path>...
 ```
+**Arguments:**
+| Argument | Description      |
+|----------|------------------|
+| `path`   | Path to modules  |
 
-The `--only-missing` option will filter the output so that only the missing dependencies are listed.
+**Options:**
+| Option           | Description                       |
+|------------------|-----------------------------------|
+| `--only-missing` | Print only missing dependencies.  |
+
 
 ---
 
@@ -1021,7 +1368,7 @@ n98-magerun2.phar dev:translate:admin [--on] [--off]
 Enable/disable inline translation feature for shop frontend:
 
 ```sh
-n98-magerun2.phar dev:translate:shop [--on] [--off] <store>
+n98-magerun2.phar dev:translate:shop [--on] [--off] [<store>]
 ```
 
 Set a translation (saved in translation table)
@@ -1033,7 +1380,7 @@ n98-magerun2.phar dev:translate:set <string> <translate> [<store>]
 Export inline translations
 
 ```sh
-n98-magerun2.phar dev:translate:export [--store=<storecode>] <locale> <filename>
+n98-magerun2.phar dev:translate:export [--store=<storecode>] <locale> [<filename>]
 ```
 
 ---
@@ -1055,8 +1402,16 @@ Format can be `csv`, `json`, `xml` or `yaml`.
 ### List modules
 
 ```sh
-n98-magerun2.phar dev:module:list [--vendor [VENDOR]] [-e|--only-enabled] [-d|--only-disabled] [--format [FORMAT]]
+n98-magerun2.phar dev:module:list [options]
 ```
+**Options:**
+| Option             | Description                                            |
+|--------------------|--------------------------------------------------------|
+| `--vendor[=VENDOR]` | Show modules of a specific vendor (case insensitive)   |
+| `-e, --only-enabled`| Show only enabled modules                              |
+| `-d, --only-disabled`| Show only disabled modules                             |
+| `--format[=FORMAT]` | Output Format. One of [csv,json,json_array,yaml,xml]   |
+
 
 Lists all installed modules. If `--vendor` option is set, only modules of the given vendor are listed.
 If `--only-enabled` option is set, only enabled modules are listed.
@@ -1068,13 +1423,13 @@ Format can be `csv`, `json`, `xml` or `yaml`.
 Encrypt the given string using Magentos crypt key
 
 ```sh
-n98-magerun2.phar dev:encrypt <string>
+n98-magerun2.phar dev:encrypt <value>
 ```
 
 Decrypt the given string using Magentos crypt key
 
 ```sh
-n98-magerun2.phar dev:decrypt <encrypted string>
+n98-magerun2.phar dev:decrypt <value>
 ```
 
 ---
@@ -1082,25 +1437,240 @@ n98-magerun2.phar dev:decrypt <encrypted string>
 ### List Observers
 
 ```sh
-n98-magerun2.phar dev:module:observer:list [--sort] <event> [<area>
+n98-magerun2.phar dev:module:observer:list [--sort] [--format=FORMAT] [<event> [<area>]]
 ```
+**Arguments:**
+| Argument | Description                                                                                               |
+|----------|-----------------------------------------------------------------------------------------------------------|
+| `event`  | Filter observers for specific event.                                                                      |
+| `area`   | Filter observers in specific area. One of [global,adminhtml,frontend,crontab,webapi_rest,webapi_soap,graphql,doc,admin] |
+**Options:**
+| Option             | Description                                          |
+|--------------------|------------------------------------------------------|
+| `--sort`           | Sort output ascending by event name                  |
+| `--format[=FORMAT]` | Output Format. One of [csv,json,json_array,yaml,xml] |
+
 
 ### List Routes
 
 ```sh
-n98-magerun2.phar route:list [-a|--area] [-m|--module] [-f|--format]
+n98-magerun2.phar route:list [-a|--area=AREA] [-m|--module=MODULE] [--format=FORMAT]
 ```
+**Options:**
+| Option                   | Description                                          |
+|--------------------------|------------------------------------------------------|
+| `-a, --area[=AREA]`      | Route area code. One of [frontend,adminhtml]         |
+| `-m, --module[=MODULE]`  | Show registered routes of a module                   |
+| `--format[=FORMAT]`      | Output Format. One of [csv,json,json_array,yaml,xml] |
 
+---
+### dev:report:count
+Get count of report files.
+```sh
+n98-magerun2.phar dev:report:count
+```
+---
+### dev:symlinks
+Toggle allow symlinks setting.
+```sh
+n98-magerun2.phar dev:symlinks [options] [--] [<store>]
+```
+**Arguments:**
+| Argument | Description    |
+|----------|----------------|
+| `store`  | Store code or ID |
+**Options:**
+| Option   | Description                 |
+|----------|-----------------------------|
+| `--on`   | Switch on                   |
+| `--off`  | Switch off                  |
+| `--global`| Set value on default scope  |
+---
+### dev:template-hints
+Toggles template hints.
+```sh
+n98-magerun2.phar dev:template-hints [options] [--] [<store>]
+```
+**Arguments:**
+| Argument | Description    |
+|----------|----------------|
+| `store`  | Store code or ID |
+**Options:**
+| Option | Description |
+|--------|-------------|
+| `--on` | Switch on   |
+| `--off`| Switch off  |
+---
+### dev:template-hints-blocks
+Toggles template hints block names.
+```sh
+n98-magerun2.phar dev:template-hints-blocks [options] [--] [<store>]
+```
+**Arguments:**
+| Argument | Description    |
+|----------|----------------|
+| `store`  | Store code or ID |
+**Options:**
+| Option | Description |
+|--------|-------------|
+| `--on` | Switch on   |
+| `--off`| Switch off  |
 ---
 
 ### EAV Attributes
 
+#### eav:attribute:list
+List EAV attributes.
+```sh
+n98-magerun2.phar eav:attribute:list [options]
+```
+
+**Options:**
+
+| Option                     | Description                                          |
+|----------------------------|------------------------------------------------------|
+| `--add-source`             | Add source models to list.                           |
+| `--add-backend`            | Add backend type to list.                            |
+| `--filter-type[=FILTER-TYPE]` | Filter attributes by entity type.                    |
+| `--format[=FORMAT]`        | Output Format. One of [csv,json,json_array,yaml,xml] |
+---
+
 View the data for a particular attribute:
 
 ```sh
-n98-magerun2.phar eav:attribute:view [--format[="..."]] entityType attributeCode
+n98-magerun2.phar eav:attribute:view [--format[="..."]] <entityType> <attributeCode>
 ```
+**Arguments:**
+| Argument        | Description                             |
+|-----------------|-----------------------------------------|
+| `entityType`    | Entity Type Code like catalog_product   |
+| `attributeCode` | Attribute Code                          |
 
+**Options:**
+| Option             | Description                                          |
+|--------------------|------------------------------------------------------|
+| `--format[=FORMAT]` | Output Format. One of [csv,json,json_array,yaml,xml] |
+
+#### eav:attribute:remove
+Remove attribute for a given attribute code.
+```sh
+n98-magerun2.phar eav:attribute:remove <entityType> <attributeCode>...
+```
+**Arguments:**
+| Argument        | Description                             |
+|-----------------|-----------------------------------------|
+| `entityType`    | Entity Type Code, e.g. catalog_product  |
+| `attributeCode` | Attribute Code (one or more)            |
+---
+### generation:flush
+Flushs generated code like factories and proxies.
+```sh
+n98-magerun2.phar generation:flush [<vendorName>]
+```
+**Arguments:**
+| Argument     | Description                     |
+|--------------|---------------------------------|
+| `vendorName` | Vendor to remove like "Magento" |
+---
+### index:list
+Lists all magento indexes.
+```sh
+n98-magerun2.phar index:list [--format[=FORMAT]]
+```
+**Options:**
+| Option             | Description                                          |
+|--------------------|------------------------------------------------------|
+| `--format[=FORMAT]` | Output Format. One of [csv,json,json_array,yaml,xml] |
+---
+### index:trigger:recreate
+ReCreate all triggers.
+```sh
+n98-magerun2.phar index:trigger:recreate
+```
+---
+### search:engine:list
+Lists all registered search engines.
+```sh
+n98-magerun2.phar search:engine:list [--format[=FORMAT]]
+```
+**Options:**
+| Option             | Description                                          |
+|--------------------|------------------------------------------------------|
+| `--format[=FORMAT]` | Output Format. One of [csv,json,json_array,yaml,xml] |
+---
+### sys:check
+Checks Magento System.
+```sh
+n98-magerun2.phar sys:check [options]
+```
+**Options:**
+| Option             | Description                                          |
+|--------------------|------------------------------------------------------|
+| `--format[=FORMAT]` | Output Format. One of [csv,json,json_array,yaml,xml] |
+**Help:**
+  - Checks missing files and folders
+  - Security
+  - PHP Extensions (Required and Bytecode Cache)
+  - MySQL InnoDB Engine
+---
+### sys:maintenance
+Toggles maintenance mode if --on or --off preferences are not set.
+```sh
+n98-magerun2.phar sys:maintenance [options]
+```
+**Options:**
+| Option | Description                                                                                                                      |
+|--------|----------------------------------------------------------------------------------------------------------------------------------|
+| `--on` | Set to [1] to enable maintenance mode. Optionally supply a comma separated list of IP addresses to exclude from being affected |
+| `--off`| Set to [1] to disable maintenance mode. Set to [d] to also delete the list with excluded IP addresses.                             |
+---
+### sys:url:list
+Get all urls.
+```sh
+n98-magerun2.phar sys:url:list [options] [--] [<stores> [<linetemplate>]]
+```
+**Arguments:**
+| Argument       | Description                                        |
+|----------------|----------------------------------------------------|
+| `stores`       | Stores (comma-separated list of store ids)         |
+| `linetemplate` | Line template [default: "{url}"]                   |
+**Options:**
+| Option             | Description                             |
+|--------------------|-----------------------------------------|
+| `--add-categories` | Adds categories                         |
+| `--add-products`   | Adds products                           |
+| `--add-cmspages`   | Adds cms pages                          |
+| `--add-all`        | Adds categories, products and cms pages |
+**Help:**
+  Examples:
+  
+  - Create a list of product urls only:
+  
+     `$ n98-magerun2.phar sys:url:list --add-products 4`
+  
+  - Create a list of all products, categories and cms pages of store 4 
+    and 5 separating host and path (e.g. to feed a jmeter csv sampler):
+  
+     `$ n98-magerun2.phar sys:url:list --add-all 4,5 '{host},{path}' > urls.csv`
+  
+  - The "linetemplate" can contain all parts "parse_url" return wrapped 
+    in '{}'. '{url}' always maps the complete url and is set by default
+---
+### design:demo-notice
+Toggles demo store notice for a store view.
+```sh
+n98-magerun2.phar design:demo-notice [options] [--] [<store>]
+```
+**Arguments:**
+| Argument | Description    |
+|----------|----------------|
+| `store`  | Store code or ID |
+**Options:**
+| Option   | Description                 |
+|----------|-----------------------------|
+| `--on`   | Switch on                   |
+| `--off`  | Switch off                  |
+| `--global`| Set value on default scope  |
 ---
 
 ### Generate Gift Card Pool
@@ -1144,6 +1714,13 @@ found.
 ```sh
 n98-magerun2.phar sys:setup:compare-versions [--ignore-data] [--log-junit="..."] [--format[="..."]]
 ```
+**Options:**
+| Option                 | Description                                          |
+|------------------------|------------------------------------------------------|
+| `--ignore-data`        | Ignore data updates                                  |
+| `--log-junit=LOG-JUNIT`| Log output to a JUnit xml file.                      |
+| `--format[=FORMAT]`    | Output Format. One of [csv,json,json_array,yaml,xml] |
+
 
 - If a filename with `--log-junit` option is set the tool generates an XML file and no output to *stdout*.
 
@@ -1154,8 +1731,13 @@ re-run an upgrade script again possibly for debugging. Alternatively you
 would have to alter the row in the database manually.
 
 ```sh
-n98-magerun2.phar sys:setup:change-version module version
+n98-magerun2.phar sys:setup:change-version <module> <version>
 ```
+**Arguments:**
+| Argument  | Description        |
+|-----------|--------------------|
+| `module`  | Module name        |
+| `version` | New version value  |
 
 ---
 
@@ -1166,8 +1748,13 @@ xml file if necessary. Useful while developing and switching branches
 between module version changes.
 
 ```sh
-n98-magerun2.phar sys:setup:downgrade-versions
+n98-magerun2.phar sys:setup:downgrade-versions [--dry-run]
 ```
+**Options:**
+| Option     | Description                                       |
+|------------|---------------------------------------------------|
+| `--dry-run`| Write what to change but do not do any changes    |
+
 
 ### List all configured store URLs
 
@@ -1177,8 +1764,15 @@ If you want to show the admin login URL as well, use the `--with-admin-login-url
 The options `--with-admin-store` and `--with-admin-login-url` cannot be combined, because both print a url for the same store.
 
 ```sh
-n98-magerun2.phar sys:store:config:base-url:list [--with-admin-store] [--with-admin-login-url] [--format[="..."]]
+n98-magerun2.phar sys:store:config:base-url:list [options]
 ```
+**Options:**
+| Option                      | Description                                          |
+|-----------------------------|------------------------------------------------------|
+| `--with-admin-store`        | Include admin store                                  |
+| `--with-admin-login-url`    | Include admin login url                              |
+| `--format[=FORMAT]`         | Output Format. One of [csv,json,json_array,yaml,xml] |
+
 
 ---
 
@@ -1187,8 +1781,17 @@ n98-magerun2.phar sys:store:config:base-url:list [--with-admin-store] [--with-ad
 Creates a ZIP archive with media folder content.
 
 ```sh
-n98-magerun2.phar media:dump [--strip] [filename]
+n98-magerun2.phar media:dump [--strip] [<filename>]
 ```
+**Arguments:**
+| Argument   | Description   |
+|------------|---------------|
+| `filename` | Dump filename |
+**Options:**
+| Option   | Description          |
+|----------|----------------------|
+| `--strip`| Excludes image cache |
+
 
 ---
 
@@ -1200,16 +1803,27 @@ This commands are very useful for developers.
 #### List all existing integrations
 
 ```sh
-n98-magerun2.phar integration:list
+n98-magerun2.phar integration:list [--format[=FORMAT]]
 ```
+**Options:**
+| Option             | Description                                          |
+|--------------------|------------------------------------------------------|
+| `--format[=FORMAT]` | Output Format. One of [csv,json,json_array,yaml,xml] |
+
 
 #### Create a new integration
 
 ```sh
 n98-magerun2.phar integration:create [options] [--] <name> [<email> [<endpoint>]]
 ```
+**Arguments:**
+| Argument   | Description               |
+|------------|---------------------------|
+| `name`     | Name of the integration   |
+| `email`    | Email                     |
+| `endpoint` | Endpoint URL              |
 
-Options:
+**Options:**
 
 | Option                                      | Description                                              |
 |---------------------------------------------|----------------------------------------------------------|
@@ -1218,6 +1832,8 @@ Options:
 | `--access-token=ACCESS-TOKEN`               | Access-Token (length 32 chars)                           |
 | `--access-token-secret=ACCESS-TOKEN-SECRET` | Access-Token Secret (length 32 chars)                    |
 | `--resource=RESOURCE` `-r`                  | Defines a granted ACL resource (multiple values allowed) |
+| `--format[=FORMAT]`                         | Output Format. One of [csv,json,json_array,yaml,xml]     |
+
 
 If no ACL resource is defined the new integration token will be created with FULL ACCESS.
 
@@ -1234,8 +1850,18 @@ To see all available ACL resources, please run the command `config:data:acl`.
 #### Show infos about existing integration
 
 ```sh
-n98-magerun2.phar integration:show --format[=FORMAT] <name_or_id> [key]
+n98-magerun2.phar integration:show [--format[=FORMAT]] <name_or_id> [<key>]
 ```
+**Arguments:**
+| Argument     | Description                                                                 |
+|--------------|-----------------------------------------------------------------------------|
+| `name_or_id` | Name or ID of the integration                                               |
+| `key`        | Only output value of named param like "Access Token". Key is case insensitive.|
+**Options:**
+| Option             | Description                                          |
+|--------------------|------------------------------------------------------|
+| `--format[=FORMAT]` | Output Format. One of [csv,json,json_array,yaml,xml] |
+
 
 Example (print only Access Key):
 
@@ -1248,6 +1874,11 @@ n98-magerun2.phar integration:show 1 "Access Key"
 ```sh
 n98-magerun2.phar integration:delete <name_or_id>
 ```
+**Arguments:**
+| Argument     | Description                   |
+|--------------|-------------------------------|
+| `name_or_id` | Name or ID of the integration |
+
 
 ---
 
@@ -1271,26 +1902,41 @@ If the command is executed without any options it will show infos about the PR.
 
 ```sh
 # Magento 2 Open Source
-n98-magerun2.phar github:pr <pr-number>
-
+n98-magerun2.phar github:pr <number>
 # Mage-OS
-n98-magerun2.phar github:pr --mage-os <pr-number>
+n98-magerun2.phar github:pr --mage-os <number>
 ```
+**Arguments:**
+| Argument | Description         |
+|----------|---------------------|
+| `number` | Pull Request Number |
+
+**Options:**
+| Option                         | Description                                                                 |
+|--------------------------------|-----------------------------------------------------------------------------|
+| `-r, --repository[=REPOSITORY]`| Repository to fetch from [default: "magento/magento2"]                      |
+| `--mage-os`                    | Shortcut option to use the mage-os/mageos-magento2 repository.              |
+| `-d, --patch`                  | Download patch and prepare it for applying                                  |
+| `-a, --apply`                  | Apply patch to current working directory                                    |
+| `--diff`                       | Raw diff download                                                           |
+| `--json`                       | Show pull request data as json                                              |
+| `--github-token[=GITHUB-TOKEN]`| Github API token to avoid rate limits (can also be set via ENV variable GITHUB_TOKEN) |
+
 
 *Create a patch file from PR:*
 
 ```sh
-n98-magerun2.phar github:pr --patch <pr-number>
+n98-magerun2.phar github:pr --patch <number>
 ```
 
 *Directly apply the patch:*
 
 ```sh
 # Magento 2 Open Source
-n98-magerun2.phar github:pr --patch --apply <pr-number>
+n98-magerun2.phar github:pr --patch --apply <number>
 
 # for Mage-OS
-n98-magerun2.phar github:pr --mage-os --patch --apply <pr-number>
+n98-magerun2.phar github:pr --mage-os --patch --apply <number>
 ```
 
 Files of the magento2-base and magento2-ee-base and b2b base packages are currently not handled by the command.
@@ -1298,7 +1944,7 @@ Files of the magento2-base and magento2-ee-base and b2b base packages are curren
 **List only the raw diff:**
 
 ```sh
-n98-magerun2.phar github:pr --diff <pr-number>
+n98-magerun2.phar github:pr --diff <number>
 ```
 
 ---
@@ -1308,8 +1954,18 @@ n98-magerun2.phar github:pr --diff <pr-number>
 Opens PHP interactive shell with initialized Magento Admin-Store.
 
 ```sh
-n98-magerun2.phar dev:console [--area=AREA] <arg>
+n98-magerun2.phar dev:console [options] [--] [<cmd>]
 ```
+**Arguments:**
+| Argument | Description              |
+|----------|--------------------------|
+| `cmd`    | Direct code to run [default: ""] |
+**Options:**
+| Option         | Description                |
+|----------------|----------------------------|
+| `-a, --area=AREA` | Area to initialize       |
+| `-e, --auto-exit` | Automatic exit after cmd |
+
 
 Optional an area code can be defined. If provided, the configuration
 (di.xml, translations) of the area are loaded.
@@ -1370,8 +2026,18 @@ Bodin-Hullin](https://github.com/jacquesbh) in this great tool
 Run multiple commands from a script file.
 
 ```sh
-n98-magerun2.phar script [-d|--define[="..."]] [--stop-on-error] [filename]
+n98-magerun2.phar script [options] [--] [<filename>]
 ```
+**Arguments:**
+| Argument   | Description |
+|------------|-------------|
+| `filename` | Script file |
+**Options:**
+| Option               | Description                                  |
+|----------------------|----------------------------------------------|
+| `-d, --define[=DEFINE]` | Defines a variable (multiple values allowed) |
+| `--stop-on-error`    | Stops execution of script on error           |
+
 
 **Example:**
 
@@ -1460,8 +2126,13 @@ Example:
 Toggles the status for a CMS block based on the given Block identifier.
 
 ```sh
-n98-magerun2.phar cms:block:toggle [blockId]
+n98-magerun2.phar cms:block:toggle <blockId>
 ```
+**Arguments:**
+| Argument  | Description      |
+|-----------|------------------|
+| `blockId` | Block identifier |
+
 
 ### Change Admin user status
 
@@ -1469,8 +2140,18 @@ Changes the admin user based on the options, the command will toggle
 the status if no options are supplied.
 
 ```sh
-n98-magerun2.phar admin:user:change-status [user] [--activate] [--deactivate]
+n98-magerun2.phar admin:user:change-status [options] [--] <user>
 ```
+**Arguments:**
+| Argument | Description                             |
+|----------|-----------------------------------------|
+| `user`   | Username or email for the admin user    |
+**Options:**
+| Option        | Description        |
+|---------------|--------------------|
+| `--activate`  | Activate the user  |
+| `--deactivate`| Deactivate the user|
+
 
 *Note: It is possible for a user to exist with a username that matches
 the email of a different user. In this case the first matched user will be changed.*
@@ -1480,8 +2161,13 @@ the email of a different user. In this case the first matched user will be chang
 Create sales sequences in the database if they are missing, this will recreate profiles to.
 
 ```sh
-n98-magerun2.phar sales:sequence:add [store] 
+n98-magerun2.phar sales:sequence:add [<store>] 
 ```
+**Arguments:**
+| Argument | Description        |
+|----------|--------------------|
+| `store`  | The store code or ID |
+
 
 If store is omitted, it'll run for all stores.
 
@@ -1492,8 +2178,13 @@ If store is omitted, it'll run for all stores.
 Remove sales sequences from the database, warning, you cannot undo this, make sure you have database backups.
 
 ```sh
-n98-magerun2.phar sales:sequence:remove [store] 
+n98-magerun2.phar sales:sequence:remove [<store>] 
 ```
+**Arguments:**
+| Argument | Description        |
+|----------|--------------------|
+| `store`  | The store code or ID |
+
 
 If store is omitted, it'll run for all stores. When the option `no-interaction` is given, it will run immediately
 without any interaction.
@@ -1515,12 +2206,27 @@ The first line of the script can contain a comment (line prefixed with #) which 
 ```sh
 n98-magerun2.phar script:repo:list [--format[="..."]]
 ```
+**Options:**
+| Option             | Description                                          |
+|--------------------|------------------------------------------------------|
+| `--format[=FORMAT]` | Output Format. One of [csv,json,json_array,yaml,xml] |
+
 
 If you want to execute a script from the repository this can be done by *script:repo:run* command.
 
 ```sh
-n98-magerun2.phar script:repo:run [-d|--define[="..."]] [--stop-on-error] [script]
+n98-magerun2.phar script:repo:run [-d|--define[="..."]] [--stop-on-error] [<script>]
 ```
+**Arguments:**
+| Argument | Description                |
+|----------|----------------------------|
+| `script` | Name of script in repository |
+**Options:**
+| Option                   | Description                                  |
+|--------------------------|----------------------------------------------|
+| `-d, --define[=DEFINE]`  | Defines a variable (multiple values allowed) |
+| `--stop-on-error`        | Stops execution of script on error           |
+
 
 Script argument is optional. If you don't specify any you can select one from a list.
 
@@ -1546,8 +2252,14 @@ We offer two command to debug the configuration.
 The `magerun:config:info` can display all loaded config files.
 
 ```sh
-$> n98-magerun2.phar magerun:config:info
+$> n98-magerun2.phar magerun:config:info [--format[=FORMAT]]
+```
+**Options:**
+| Option             | Description                                          |
+|--------------------|------------------------------------------------------|
+| `--format[=FORMAT]` | Output Format. One of [csv,json,json_array,yaml,xml] |
 
+```
 +------+----------------------------------+-------------------------------------------------+
 | type | path                             | note                                            |
 +------+----------------------------------+-------------------------------------------------+
@@ -1558,5 +2270,11 @@ $> n98-magerun2.phar magerun:config:info
 The `magerun:config:dump` command can dump the merged configuration as highlighted yaml.
 
 ```sh
-$> n98-magerun2.phar magerun:config:dump
+$> n98-magerun2.phar magerun:config:dump [options]
 ```
+**Options:**
+| Option             | Description                               |
+|--------------------|-------------------------------------------|
+| `--only-dist`      | Only dump the dist config                 |
+| `-r, --raw`        | Dump the raw config without formatting    |
+| `-i, --indent[=INDENT]`| Indentation level [default: 4]          |
