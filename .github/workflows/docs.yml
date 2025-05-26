@@ -1,0 +1,40 @@
+name: Deploy Documentation
+
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+  deploy-docs:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # Needed for peaceiris/actions-gh-pages to push to gh-pages branch
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18.x'
+          cache: 'npm'
+          cache-dependency-path: 'docs/package.json' # Cache npm deps based on docs/package.json
+
+      - name: Install Docusaurus dependencies
+        working-directory: ./docs
+        run: npm install
+
+      - name: Build Docusaurus site
+        working-directory: ./docs
+        run: npm run build
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs/build
+          deployment_branch: gh-pages # Branch to deploy to
+          user_name: 'github-actions[bot]'
+          user_email: 'github-actions[bot]@users.noreply.github.com'
+          commit_message: 'Deploy Docusaurus documentation to gh-pages'
