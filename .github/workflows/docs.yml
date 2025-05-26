@@ -23,7 +23,7 @@ jobs:
         with:
           node-version: 20
           cache: 'npm'
-          cache-dependency-path: package-lock.json
+          cache-dependency-path: docs/package-lock.json
       - name: Install dependencies
         run: npm ci
       - name: Build website
@@ -31,7 +31,7 @@ jobs:
       - name: Upload Build Artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: build
+          path: docs/build
 
   deploy:
     name: Deploy to GitHub Pages
