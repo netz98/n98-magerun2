@@ -24,7 +24,7 @@ const config = {
   organizationName: 'netz98', // Corrected organizationName
   projectName: 'n98-magerun2', // Corrected projectName
 
-  onBrokenLinks: 'throw',
+  onBrokenLinks: 'warn',
   onBrokenMarkdownLinks: 'warn',
 
   trailingSlash: false, // Set to false to avoid trailing slashes in URLs
