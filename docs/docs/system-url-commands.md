@@ -8,8 +8,9 @@ Lists all registered search engines.
 n98-magerun2.phar search:engine:list [--format[=FORMAT]]
 ```
 **Options:**
-| Option             | Description                                          |
-|--------------------|------------------------------------------------------|
+
+| Option              | Description                                         |
+|---------------------|-----------------------------------------------------|
 | `--format[=FORMAT]` | Output Format. One of [csv,json,json_array,yaml,xml] |
 
 ## sys:check
@@ -18,9 +19,11 @@ Checks Magento System.
 n98-magerun2.phar sys:check [options]
 ```
 **Options:**
-| Option             | Description                                          |
-|--------------------|------------------------------------------------------|
+
+| Option              | Description                                         |
+|---------------------|-----------------------------------------------------|
 | `--format[=FORMAT]` | Output Format. One of [csv,json,json_array,yaml,xml] |
+
 **Help:**
   - Checks missing files and folders
   - Security
@@ -33,10 +36,11 @@ Toggles maintenance mode if --on or --off preferences are not set.
 n98-magerun2.phar sys:maintenance [options]
 ```
 **Options:**
-| Option | Description                                                                                                                      |
-|--------|----------------------------------------------------------------------------------------------------------------------------------|
-| `--on` | Set to [1] to enable maintenance mode. Optionally supply a comma separated list of IP addresses to exclude from being affected |
-| `--off`| Set to [1] to disable maintenance mode. Set to [d] to also delete the list with excluded IP addresses.                             |
+
+| Option   | Description                                                                                                                    |
+|----------|--------------------------------------------------------------------------------------------------------------------------------|
+| `--on`   | Set to [1] to enable maintenance mode. Optionally supply a comma separated list of IP addresses to exclude from being affected |
+| `--off`  | Set to [1] to disable maintenance mode. Set to [d] to also delete the list with excluded IP addresses.                         |
 
 ## sys:url:list
 Get all urls.
@@ -44,17 +48,21 @@ Get all urls.
 n98-magerun2.phar sys:url:list [options] [--] [<stores> [<linetemplate>]]
 ```
 **Arguments:**
-| Argument       | Description                                        |
-|----------------|----------------------------------------------------|
-| `stores`       | Stores (comma-separated list of store ids)         |
-| `linetemplate` | Line template [default: "{url}"]                   |
+
+| Argument      | Description                                 |
+|---------------|---------------------------------------------|
+| `stores`      | Stores (comma-separated list of store ids)   |
+| `linetemplate`| Line template [default: "`&#123;url&#125;"]           |
+
 **Options:**
+
 | Option             | Description                             |
 |--------------------|-----------------------------------------|
 | `--add-categories` | Adds categories                         |
 | `--add-products`   | Adds products                           |
 | `--add-cmspages`   | Adds cms pages                          |
 | `--add-all`        | Adds categories, products and cms pages |
+
 **Help:**
   Examples:
   
@@ -68,7 +76,7 @@ n98-magerun2.phar sys:url:list [options] [--] [<stores> [<linetemplate>]]
      `$ n98-magerun2.phar sys:url:list --add-all 4,5 '{host},{path}' > urls.csv`
   
   - The "linetemplate" can contain all parts "parse_url" return wrapped 
-    in '{}'. '{url}' always maps the complete url and is set by default
+    in '{}'. '`&#123;url&#125;'` always maps the complete url and is set by default
 
 ## design:demo-notice
 Toggles demo store notice for a store view.
@@ -76,12 +84,15 @@ Toggles demo store notice for a store view.
 n98-magerun2.phar design:demo-notice [options] [--] [<store>]
 ```
 **Arguments:**
-| Argument | Description    |
-|----------|----------------|
+
+| Argument | Description      |
+|----------|-----------------|
 | `store`  | Store code or ID |
+
 **Options:**
-| Option   | Description                 |
-|----------|-----------------------------|
-| `--on`   | Switch on                   |
-| `--off`  | Switch off                  |
-| `--global`| Set value on default scope  |
+
+| Option    | Description                |
+|-----------|----------------------------|
+| `--on`    | Switch on                  |
+| `--off`   | Switch off                 |
+| `--global`| Set value on default scope |

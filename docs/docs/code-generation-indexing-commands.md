@@ -8,6 +8,7 @@ Flushs generated code like factories and proxies.
 n98-magerun2.phar generation:flush [<vendorName>]
 ```
 **Arguments:**
+
 | Argument     | Description                     |
 |--------------|---------------------------------|
 | `vendorName` | Vendor to remove like "Magento" |
@@ -18,8 +19,9 @@ Lists all magento indexes.
 n98-magerun2.phar index:list [--format[=FORMAT]]
 ```
 **Options:**
-| Option             | Description                                          |
-|--------------------|------------------------------------------------------|
+
+| Option              | Description                                         |
+|---------------------|-----------------------------------------------------|
 | `--format[=FORMAT]` | Output Format. One of [csv,json,json_array,yaml,xml] |
 
 ## index:trigger:recreate

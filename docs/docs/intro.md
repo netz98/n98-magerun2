@@ -11,18 +11,9 @@ from command line.
 
 > The swiss army knife for Magento developers, sysadmins and devops
 
-## Build Status
-
-| **Latest Release**     | ![Tests](https://github.com/netz98/n98-magerun2/actions/workflows/magento_platform_tests.yml/badge.svg?branch=master) ![Maintenance Badge](https://img.shields.io/maintenance/yes/2025.svg) |
-|------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **Development Branch** | ![Tests](https://github.com/netz98/n98-magerun2/actions/workflows/magento_platform_tests.yml/badge.svg?branch=develop)                                                                                                                                                                      |
-
-Development is done in **develop** branch.
-
 This software is only running with Magento 2.
 
-If you use Magento 1 (EOL) or OpenMage please use another software in a different repository
-(<https://github.com/netz98/n98-magerun>).
+If you use Magento 1 (EOL) or OpenMage please use another software in a different repository: https://github.com/netz98/n98-magerun.
 
 ## Compatibility
 
@@ -118,7 +109,7 @@ sudo cp ./n98-magerun2.phar /usr/local/bin/
 ### Install the phar via Composer
 
 We offer a special dist package to install the phar file via Composer.
-See <https://packagist.org/packages/n98/magerun2-dist> for more details.
+See (https://packagist.org/packages/n98/magerun2-dist) for more details.
 The main advantage of the dist package is that there are no package dependencies.
 
 ### Install with Composer (Source Package) - not recommended
@@ -171,4 +162,4 @@ pkg-config --variable=compatdir bash-completion
 ```
 
 Detailed information is available in the bash-completions FAQ:
-<https://github.com/scop/bash-completion#faq>
+https://github.com/scop/bash-completion#faq

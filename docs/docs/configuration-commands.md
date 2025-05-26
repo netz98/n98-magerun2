@@ -23,10 +23,10 @@ Sub-arrays in config.php can be specified by adding a "." character to every arr
 n98-magerun2.phar config:env:set <key> [<value>] [--input-format=INPUT-FORMAT]
 ```
 **Options:**
-| Option                          | Description                                   |
-|---------------------------------|-----------------------------------------------|
-| `--input-format=INPUT-FORMAT`   | Input Format. One of [plain,json] [default: "plain"] |
 
+| Option                        | Description                                         |
+|-------------------------------|-----------------------------------------------------|
+| `--input-format=INPUT-FORMAT` | Input Format. One of [plain,json] [default: "plain"] |
 
 You can also choose to provide a json text argument as value, by using the optional `--input-format=json` flag.
 This will allow you to add values that aren't a string but also other scalar types.
