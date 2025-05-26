@@ -10,11 +10,13 @@ The source code of one or more modules can be scanned for dependencies.
 n98-magerun2.phar dev:module:detect-composer-dependencies [--only-missing] <path>...
 ```
 **Arguments:**
+
 | Argument | Description      |
 |----------|------------------|
 | `path`   | Path to modules  |
 
 **Options:**
-| Option           | Description                       |
-|------------------|-----------------------------------|
+
+| Option           | Description                      |
+|------------------|----------------------------------|
 | `--only-missing` | Print only missing dependencies.  |
