@@ -158,9 +158,6 @@ jobs:
       COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
-      - name: Linux Setup
-        run: bash ./.github/workflows/linux-setup.sh
-
       - name: Dump GitHub context
         run: echo "Register Github context"
         env:
@@ -183,6 +180,9 @@ jobs:
         if: github.event_name == 'pull_request_target'
         with:
           ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Linux Setup
+        run: ./.github/workflows/linux-setup.sh
 
       - name: Checkout HEAD
         uses: actions/checkout@v4
