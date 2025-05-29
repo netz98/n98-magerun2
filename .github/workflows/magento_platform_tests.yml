@@ -347,6 +347,10 @@ jobs:
           composer --version
           echo "Running build script..."
           bash ./build.sh
+          # Verify phar location after build
+          echo "Listing workspace contents after build:"
+          ls -l ${{ github.workspace }}
+          echo "Expected phar location: ${{ github.workspace }}/n98-magerun2.phar"
 
       - name: Setup PHP for phar tests
         uses: shivammathur/setup-php@v2
