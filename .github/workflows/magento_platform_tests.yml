@@ -181,12 +181,12 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha }}
 
-      - name: Linux Setup
-        run: ./.github/workflows/linux-setup.sh
-
       - name: Checkout HEAD
         uses: actions/checkout@v4
         if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+
+      - name: Linux Setup
+        run: ./.github/workflows/linux-setup.sh
 
       - name: Get Composer Cache Directory
         id: composer-cache
