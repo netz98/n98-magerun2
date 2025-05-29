@@ -158,6 +158,9 @@ jobs:
       COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
+      - name: Linux Setup
+        run: bash ./.github/workflows/linux-setup.sh
+
       - name: Dump GitHub context
         run: echo "Register Github context"
         env:
@@ -175,9 +178,6 @@ jobs:
           ini-values: memory_limit=-1
           coverage: none
 
-      - name: Linux Setup
-        run: ./.github/workflows/linux-setup.sh
-
       - name: Checkout PR
         uses: actions/checkout@v4
         if: github.event_name == 'pull_request_target'
@@ -187,9 +187,6 @@ jobs:
       - name: Checkout HEAD
         uses: actions/checkout@v4
         if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
-
-      - name: Linux Setup (Optional - If needed)
-        run: echo "Skipping Linux setup step unless needed."
 
       - name: Get Composer Cache Directory
         id: composer-cache
