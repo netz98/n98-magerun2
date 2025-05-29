@@ -41,6 +41,7 @@ class TreeHelper
 
     /**
      * @param string $value
+     * @return $this
      */
     public function newNode($value)
     {
@@ -48,6 +49,7 @@ class TreeHelper
         $this->currentNode[] = $node;
         $this->parents[] = &$this->currentNode; // Store reference to parent
         $this->currentNode = &$this->currentNode[count($this->currentNode) - 1]['children'];
+        return $this;
     }
 
     /**

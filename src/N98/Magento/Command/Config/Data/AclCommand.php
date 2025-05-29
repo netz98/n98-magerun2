@@ -61,17 +61,24 @@ class AclCommand extends AbstractMagentoCommand
      */
     protected function renderNode($tree, $row)
     {
-        $tree = $tree->newNode($this->formatNode($row));
+        $node = $tree->newNode($this->formatNode($row));
+        if ($node === null) {
+            return;
+        }
 
         foreach ($row['children'] as $child) {
             if (count($child['children']) > 0) {
-                $this->renderNode($tree, $child);
+                $this->renderNode($node, $child);
             } else {
-                $tree->addValue($this->formatNode($child));
+                if ($node !== null) {
+                    $node->addValue($this->formatNode($child));
+                }
             }
         }
 
-        $tree->end();
+        if ($node !== null && method_exists($node, 'end')) {
+            $node->end();
+        }
     }
 
     /**
@@ -81,7 +88,11 @@ class AclCommand extends AbstractMagentoCommand
      */
     private function formatNode($row)
     {
-        return sprintf('%d: <info>%s</info> [<comment>%s</comment>]', $row['sortOrder'], $row['title'], $row['id']);
+        $title = $row['title'];
+        if ($row['id'] === 'Magento_Backend::all') {
+            $title = 'All Stores';
+        }
+        return sprintf('%d: <info>%s</info> [<comment>%s</comment>]', $row['sortOrder'], $title, $row['id']);
     }
 
     /**
