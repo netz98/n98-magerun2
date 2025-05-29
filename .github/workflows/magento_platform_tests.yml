@@ -362,12 +362,10 @@ jobs:
         run: bats tests/bats/functional_magerun_commands.bats
         env:
           N98_MAGERUN2_TEST_MAGENTO_ROOT: "${{ github.workspace }}/magento"
-          N98_MAGERUN2_BIN: >-
-            "${{ github.workspace }}/build/n98-magerun2.phar"
+          N98_MAGERUN2_BIN: "${{ github.workspace }}/n98-magerun2.phar"
 
       - name: Phar functional tests (Magento Core)
         run: bats tests/bats/functional_core_commands.bats
         env:
           N98_MAGERUN2_TEST_MAGENTO_ROOT: "${{ github.workspace }}/magento"
-          N98_MAGERUN2_BIN: >-
-            "${{ github.workspace }}/build/n98-magerun2.phar"
+          N98_MAGERUN2_BIN: "${{ github.workspace }}/n98-magerun2.phar"
