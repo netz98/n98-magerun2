@@ -17,12 +17,18 @@ class MakeCommandCommandTest extends TestCase
         );
 
         $diFileWriterMock = $this->getMockBuilder(DiFileWriter::class)
-            ->setMethods(['save'])
+            ->onlyMethods(['save', 'saveFile'])
             ->getMock();
-        $diFileWriterMock->loadXml('<config />');
+        $diFileWriterMock->loadXml('<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" />');
+        $diFileWriterMock->expects($this->any())
+            ->method('save')
+            ->willReturn(1);
+        $diFileWriterMock->expects($this->any())
+            ->method('saveFile')
+            ->willReturn(1);
 
         $command = $this->getMockBuilder(MakeCommandCommand::class)
-            ->setMethods(['createDiFileWriter'])
+            ->onlyMethods(['createDiFileWriter'])
             ->getMock();
 
         $command

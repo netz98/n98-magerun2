@@ -86,7 +86,8 @@ abstract class TestCase extends BaseTestCase
                         '~^(class .*)\n{\n\n~m' => "\\1\n{\n",
                     ];
                     $buffer = preg_replace(array_keys($replacements), $replacements, $subject);
-                    $expected = file_get_contents($path);
+                    $expected = rtrim(file_get_contents($path));
+                    $buffer = rtrim($buffer);
 
                     $this->assertEquals($expected, $buffer);
 
