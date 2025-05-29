@@ -175,10 +175,8 @@ jobs:
           ini-values: memory_limit=-1
           coverage: none
 
-      - name: Install required tools used by test workflow
-        run: | 
-          sudo apt-get update
-          sudo apt-get install -y mydumper
+      - name: Linux Setup
+        run: ./.github/workflows/linux-setup.sh
 
       - name: Checkout PR
         uses: actions/checkout@v4
@@ -316,9 +314,6 @@ jobs:
 
       - name: Configure PHPUnit matchers
         uses: mheap/phpunit-matcher-action@v1
-
-      - name: Install sendmail
-        run: sudo apt-get update && sudo apt-get install -y sendmail
 
       - name: Run PHPUnit (Developer Mode)
         run: vendor/bin/phpunit --debug
