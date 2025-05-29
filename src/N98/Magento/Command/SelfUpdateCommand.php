@@ -1,4 +1,4 @@
-<?php
+    <?php
 
 namespace N98\Magento\Command;
 
@@ -388,7 +388,7 @@ EOT
         $hooks = new Hooks();
 
         // Register a progress callback
-        $hooks->register('request.progress', function($data, $bytes_so_far, $bytes_limit) use ($progress) {
+        $hooks->register('request.progress', function ($data, $bytes_so_far, $bytes_limit) use ($progress) {
             if ($progress->getMaxSteps() > 0) {
                 $progress->setProgress($bytes_so_far);
             }

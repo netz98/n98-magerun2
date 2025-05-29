@@ -4,7 +4,6 @@ namespace N98\Magento\Command\Database;
 
 use N98\Magento\Command\TestCase;
 use N98\Util\OperatingSystem;
-use SplFileInfo;
 
 /**
  * @see \N98\Magento\Command\Database\DumpCommand
