@@ -4,7 +4,7 @@ namespace N98\Magento\Command\Config\Data;
 
 use N98\Magento\Command\AbstractMagentoCommand;
 use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
-use PBergman\Console\Helper\TreeHelper;
+use N98\Util\Console\Helper\TreeHelper;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
