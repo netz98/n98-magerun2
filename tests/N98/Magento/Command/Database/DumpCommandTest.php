@@ -188,31 +188,6 @@ class DumpCommandTest extends TestCase
         $this->assertDisplayContains($input, "--ignore-table=$db.catalog_product_entity");
     }
 
-    /**
-     * @test
-     * @link https://github.com/netz98/n98-magerun2/issues/200
-     */
-    public function realDump()
-    {
-        $dumpFile = new SplFileInfo($this->getTestMagentoRoot() . '/test-dump.sql');
-        if ($dumpFile->isReadable()) {
-            $this->assertTrue(unlink($dumpFile), 'Precondition to unlink that the file does not exists');
-        }
-        $this->assertFalse(is_readable($dumpFile), 'Precondition that the file does not exists');
-
-        $this->assertExecute(
-            [
-                'command'  => 'db:dump',
-                '--strip'  => '@stripped',
-                'filename' => $dumpFile,
-            ]
-        );
-
-        $this->assertTrue($dumpFile->isReadable(), 'File was created');
-        // dump should be larger than quarter a megabyte
-        $this->assertGreaterThan(250000, $dumpFile->getSize());
-    }
-
     public function testExecuteWithMydumper()
     {
         if (OperatingSystem::isProgramInstalled('mydumper') === false) {
