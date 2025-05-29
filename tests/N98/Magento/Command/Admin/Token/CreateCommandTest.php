@@ -23,6 +23,12 @@ class CreateCommandTest extends TestCase
 
         $output = $commandTester->getDisplay();
         $this->assertNotEmpty($output);
-        $this->assertEquals(32, strlen($output));
+
+        // can be 32 in older version or > 150 in newer versions (JWT tokens)
+        $this->assertGreaterThanOrEqual(
+            32,
+            strlen($output),
+            'Token length should be at least 32 characters'
+        );
     }
 }

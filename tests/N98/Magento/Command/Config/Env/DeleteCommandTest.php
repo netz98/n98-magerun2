@@ -27,7 +27,7 @@ class DeleteCommandTest extends TestCase
                 'command' => 'config:env:delete',
                 'key' => 'magerun.test'
             ],
-            'Config magerun.test successfully removed '
+            'Config magerun.test successfully removed'
         );
 
         // Check for idempotency

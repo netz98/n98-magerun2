@@ -102,18 +102,16 @@ HELP;
         ]);
 
         $scope = $input->getOption('scope');
-        if ($scope !== null) {
+        if ($input->hasParameterOption('--scope') && $scope !== null && $scope !== false && $scope !== '') {
             $this->_validateScopeParam($scope);
             $collection->addFieldToFilter('scope', ['eq' => $scope]);
         }
 
         $scopeId = $input->getOption('scope-id');
-
-        if ($scope !== null && $scopeId !== null) {
-            $scopeId = $this->_convertScopeIdParam($scope, $scopeId);
-        }
-
-        if ($scopeId !== null) {
+        if ($input->hasParameterOption('--scope-id') && $scopeId !== null && $scopeId !== false && $scopeId !== '') {
+            if ($scope !== null) {
+                $scopeId = $this->_convertScopeIdParam($scope, $scopeId);
+            }
             $collection->addFieldToFilter(
                 'scope_id',
                 ['eq' => $scopeId]
@@ -149,9 +147,9 @@ HELP;
 
         ksort($table);
 
-        if ($input->getOption('update-script')) {
+        if ($input->hasParameterOption('--update-script')) {
             $this->renderAsUpdateScript($output, $table);
-        } elseif ($input->getOption('magerun-script')) {
+        } elseif ($input->hasParameterOption('--magerun-script')) {
             $this->renderAsMagerunScript($output, $table);
         } else {
             $this->renderAsTable($output, $table, $input->getOption('format'));

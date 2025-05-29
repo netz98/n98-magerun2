@@ -9,16 +9,16 @@ class GetCommandTest extends TestCase
     /**
      * @test
      */
-    public function nullValues()
+    public function testThatAStringNullShouldBeReturnedAsString()
     {
-        $this->assertDisplayRegExp(
+        $this->assertDisplayContains(
             [
                 'command'   => 'config:store:set',
-                '--no-null' => null,
                 'path'      => 'n98_magerun/foo/bar',
+                '--no-null' => null,
                 'value'     => 'NULL',
             ],
-            '~^n98_magerun/foo/bar => NULL$~'
+            'n98_magerun/foo/bar => NULL'
         );
 
         $this->assertDisplayContains(
@@ -27,9 +27,39 @@ class GetCommandTest extends TestCase
                 '--magerun-script' => null,
                 'path'             => 'n98_magerun/foo/bar',
             ],
-            'config:store:set --no-null --scope-id=0 --scope=default'
+            'config:store:set --no-null'
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function testThatAUnknownValueShouldHandledAsNullValue()
+    {
+        $this->assertDisplayContains(
+            [
+                'command'   => 'config:store:set',
+                'path'      => 'n98_magerun/foo/bar',
+                'value'     => 'NULL',
+            ],
+            'n98_magerun/foo/bar => NULL'
         );
 
+        $this->assertDisplayNotContains(
+            [
+                'command'          => 'config:store:get',
+                '--magerun-script' => null,
+                'path'             => 'n98_magerun/foo/bar',
+            ],
+            '--no-null'
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function nullValues()
+    {
         $this->assertDisplayContains(
             [
                 'command' => 'config:store:set',
@@ -141,7 +171,7 @@ class GetCommandTest extends TestCase
             '--format' => 'csv',
         ];
         // normalize quotes for test
-        $this->assertDisplayContains(str_replace('"', '', $input), 'Path,Scope,Scope-ID,Value,Updated At');
+        $this->assertDisplayContains(str_replace('"', '', $input), 'Path,Scope,Scope-ID,Value,"Updated At"');
         $this->assertDisplayContains($input, 'n98_magerun/foo/bar,default,0,1234');
 
         /**

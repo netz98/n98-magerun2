@@ -41,13 +41,13 @@ class SetCommand extends AbstractConfigCommand
                 'encrypt',
                 null,
                 InputOption::VALUE_NONE,
-                'The config value should be encrypted using env.php\'s crypt key'
+                'The config value should be encrypted using env.php\'s crypt key',
             )
             ->addOption(
                 'no-null',
                 null,
                 InputOption::VALUE_NONE,
-                'Do not treat value NULL as ' . self::DISPLAY_NULL_UNKNOWN_VALUE . ' value'
+                'Do not treat value NULL as ' . self::DISPLAY_NULL_UNKNOWN_VALUE . ' value',
             );
 
         $help = <<<HELP
@@ -77,7 +77,7 @@ HELP;
 
         $valueDisplay = $value = $input->getArgument('value');
 
-        if ($value === 'NULL' && !$input->getOption('no-null')) {
+        if ($value === 'NULL' && $input->getOption('no-null') === false) {
             if ($input->getOption('encrypt')) {
                 throw new \InvalidArgumentException('Encryption is not possbile for NULL values');
             }

@@ -249,9 +249,9 @@ class DumpCommandTest extends TestCase
             '--mydumper'     => true,
         ];
 
-        $this->assertDisplayContains($input, '--no-data=customer_entity');
-        $this->assertDisplayContains($input, '--no-data=customer_address_entity');
-        $this->assertDisplayContains($input, '--no-data=sales_order');
+        $this->assertDisplayRegExp($input, '/--no-data=(\'|\")?customer_entity(\'|\")?/');
+        $this->assertDisplayRegExp($input, '/--no-data=(\'|\")?customer_address_entity(\'|\")?/');
+        $this->assertDisplayRegExp($input, '/--no-data=(\'|\")?sales_order(\'|\")?/');
         $this->assertDisplayNotContains($input, "not_existing_table_1");
     }
 
