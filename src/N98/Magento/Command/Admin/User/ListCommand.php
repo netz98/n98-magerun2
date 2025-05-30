@@ -20,6 +20,12 @@ class ListCommand extends AbstractAdminUserCommand
                 null,
                 InputOption::VALUE_OPTIONAL,
                 'Output Format. One of [' . implode(',', RendererFactory::getFormats()) . ']'
+            )
+            ->addOption(
+                'sort',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'Sort user list by a field (e.g., user_id, username, email, logdate)'
             );
     }
 
@@ -36,18 +42,28 @@ class ListCommand extends AbstractAdminUserCommand
             return Command::FAILURE;
         }
 
-        $userList = $this->userModel->getCollection();
+        $userCollection = $this->userModel->getCollection();
+        $userCollection->joinLeft(
+            ['aus' => $userCollection->getTable('admin/user_session')],
+            'main_table.user_id = aus.user_id',
+            ['logdate']
+        );
+
+        $sortField = $input->getOption('sort') ?: 'user_id';
+        $userCollection->setOrder($sortField, 'ASC');
+
         $table = [];
-        foreach ($userList as $user) {
+        foreach ($userCollection as $user) {
             $table[] = [
                 $user->getId(),
                 $user->getUsername(),
                 $user->getEmail(),
                 $user->getIsActive() ? 'active' : 'inactive',
+                $user->getLogdate(),
             ];
         }
         $this->getHelper('table')
-            ->setHeaders(['id', 'username', 'email', 'status'])
+            ->setHeaders(['id', 'username', 'email', 'status', 'logdate'])
             ->renderByFormat($output, $table, $input->getOption('format'));
 
         return Command::SUCCESS;
