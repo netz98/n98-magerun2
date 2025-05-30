@@ -892,13 +892,17 @@ If no code is specified, all cache types will be enabled. Run
 ### List admin users
 
 ```sh
-n98-magerun2.phar admin:user:list [--format[="..."]]
+n98-magerun2.phar admin:user:list [--format[="..."]] [--sort[="..."]]
 ```
 **Options:**
 
-| Option             | Description                                          |
-|--------------------|------------------------------------------------------|
-| `--format[=FORMAT]` | Output Format. One of [csv,json,json_array,yaml,xml] |
+| Option             | Description                                                                  |
+|--------------------|------------------------------------------------------------------------------|
+| `--format[=FORMAT]` | Output Format. One of [csv,json,json_array,yaml,xml]                         |
+| `--sort[=SORT]`     | Sort by field (e.g. user_id, username, email, logdate). Default: `user_id`. |
+
+The command output includes the following columns: `id`, `username`, `email`, `status`, `logdate`.
+The `logdate` column shows the last login time of the user.
 
 
 ### Change admin user password
