@@ -11,20 +11,19 @@ class ListCommandTest extends TestCase
      */
     public function testExecute()
     {
-        $commandTester = $this->getMagerunTester('admin:user:list');
-        $commandTester->execute([]); // Pass arguments if any, options are part of the input to getMagerunTester
+        $commandTester = $this->assertExecute('admin:user:list');
 
-        $this->assertStringContainsString('id', $commandTester->getDisplay());
-        $this->assertStringContainsString('username', $commandTester->getDisplay());
-        $this->assertStringContainsString('email', $commandTester->getDisplay());
-        $this->assertStringContainsString('status', $commandTester->getDisplay());
-        $this->assertStringContainsString('logdate', $commandTester->getDisplay());
+        $output = $commandTester->getDisplay();
+        $this->assertStringContainsString('id', $output);
+        $this->assertStringContainsString('username', $output);
+        $this->assertStringContainsString('email', $output);
+        $this->assertStringContainsString('status', $output);
+        $this->assertStringContainsString('logdate', $output);
     }
 
     public function testDefaultSorting()
     {
-        $commandTester = $this->getMagerunTester('admin:user:list');
-        $commandTester->execute([]);
+        $commandTester = $this->assertExecute('admin:user:list');
         $output = $commandTester->getDisplay();
         $this->assertStringContainsString('logdate', $output); // Ensure new column is there
 
@@ -39,8 +38,7 @@ class ListCommandTest extends TestCase
 
     public function testSortByUsername()
     {
-        $commandTester = $this->getMagerunTester(['command' => 'admin:user:list', '--sort'  => 'username']);
-        $commandTester->execute([]);
+        $commandTester = $this->assertExecute(['command' => 'admin:user:list', '--sort'  => 'username']);
         $output = $commandTester->getDisplay();
         $this->assertStringContainsString('logdate', $output);
         // Assuming 'admin' comes before 'testuser' alphabetically.
@@ -50,8 +48,7 @@ class ListCommandTest extends TestCase
 
     public function testSortByUserId()
     {
-        $commandTester = $this->getMagerunTester(['command' => 'admin:user:list', '--sort'  => 'user_id']);
-        $commandTester->execute([]);
+        $commandTester = $this->assertExecute(['command' => 'admin:user:list', '--sort'  => 'user_id']);
         $output = $commandTester->getDisplay();
         $this->assertStringContainsString('logdate', $output);
         // Similar to default sorting, assuming user_id 1 and 2 exist.
@@ -64,8 +61,7 @@ class ListCommandTest extends TestCase
         // This test requires specific data setup: a user who has never logged in.
         // For now, we ensure the command runs and includes the logdate column.
         // A more specific assertion would be to check for an empty logdate for a particular user.
-        $commandTester = $this->getMagerunTester('admin:user:list');
-        $commandTester->execute([]);
+        $commandTester = $this->assertExecute('admin:user:list');
         $output = $commandTester->getDisplay();
         $this->assertStringContainsString('logdate', $output);
         // Example: if a user 'nouserlog' has no logdate, output might look like:
