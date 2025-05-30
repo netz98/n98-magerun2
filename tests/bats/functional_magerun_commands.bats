@@ -47,8 +47,36 @@ function cleanup_files_in_magento() {
 
 
 @test "Command: admin:user:list" {
+	# Check for presence of columns including Logdate
 	run $BIN "admin:user:list"
+	assert_output --partial "id"
 	assert_output --partial "username"
+	assert_output --partial "email"
+	assert_output --partial "status"
+	assert_output --partial "logdate"
+	assert [ "$status" -eq 0 ]
+
+	# Check default sorting (by user_id)
+	# This assumes user 'admin' with id 1 and 'testuser' with id 2 exist
+	# and no other users interfere with this ordering.
+	# The `awk` command extracts the first two lines that contain user data (skipping header)
+	# and then `grep` checks their order.
+	run $BIN "admin:user:list"
+	output=$(echo "$output" | awk '/admin|testuser/ {print $0}' | head -n 2)
+	assert_output --regexp "1.*admin.*[[:space:]].*\n.*2.*testuser"
+
+	# Check sorting by username
+	# This assumes 'admin' comes before 'testuser' alphabetically.
+	run $BIN "admin:user:list" --sort=username
+	output=$(echo "$output" | awk '/admin|testuser/ {print $0}' | head -n 2)
+	assert_output --regexp "admin.*\n.*testuser"
+	assert [ "$status" -eq 0 ]
+
+	# Check sorting by user_id explicitly
+	run $BIN "admin:user:list" --sort=user_id
+	output=$(echo "$output" | awk '/admin|testuser/ {print $0}' | head -n 2)
+	assert_output --regexp "1.*admin.*\n.*2.*testuser"
+	assert [ "$status" -eq 0 ]
 }
 
 @test "Command: cache:catalog:image:flush" {
