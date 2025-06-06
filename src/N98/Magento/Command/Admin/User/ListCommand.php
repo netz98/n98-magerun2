@@ -43,7 +43,7 @@ class ListCommand extends AbstractAdminUserCommand
         }
 
         $userCollection = $this->userModel->getCollection();
-        $userCollection->joinLeft(
+        $userCollection->getSelect()->joinLeft(
             ['aus' => $userCollection->getTable('admin/user_session')],
             'main_table.user_id = aus.user_id',
             ['logdate']
