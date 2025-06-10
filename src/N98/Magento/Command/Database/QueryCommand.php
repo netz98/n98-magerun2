@@ -22,6 +22,12 @@ class QueryCommand extends AbstractDatabaseCommand
             ->setName('db:query')
             ->addArgument('query', InputArgument::OPTIONAL, 'SQL query')
             ->addOption('only-command', null, InputOption::VALUE_NONE, 'Print only mysql command. Do not execute')
+            ->addOption(
+                'format',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'Output format (e.g., csv)'
+            )
             ->setDescription('Executes an SQL query on the database defined in env.php');
 
         $help = <<<HELP
@@ -86,10 +92,27 @@ HELP;
             $output->writeln($exec);
             $returnValue = 0;
         } else {
-            exec($exec, $commandOutput, $returnValue);
-            $output->writeln($commandOutput);
-            if ($returnValue > 0) {
-                $output->writeln('<error>' . implode(PHP_EOL, $commandOutput) . '</error>');
+            $format = $input->getOption('format');
+            if ($format === 'csv') {
+                // Prepend -B for batch mode (tab-separated output)
+                $exec = str_replace('mysql ', 'mysql -B ', $exec);
+                exec($exec, $commandOutput, $returnValue);
+
+                if ($returnValue === 0) {
+                    foreach ($commandOutput as $line) {
+                        $parts = explode("\t", $line);
+                        $csvLine = '"' . implode('","', $parts) . '"';
+                        $output->writeln($csvLine);
+                    }
+                } else {
+                    $output->writeln('<error>' . implode(PHP_EOL, $commandOutput) . '</error>');
+                }
+            } else {
+                exec($exec, $commandOutput, $returnValue);
+                $output->writeln($commandOutput);
+                if ($returnValue > 0) {
+                    $output->writeln('<error>' . implode(PHP_EOL, $commandOutput) . '</error>');
+                }
             }
         }
 
