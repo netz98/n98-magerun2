@@ -279,7 +279,7 @@ class ConfigurationLoader
      *
      * @return string
      */
-    protected function applyVariables($rawConfig, $magentoRootFolder, SplFileInfo $file = null)
+    protected function applyVariables($rawConfig, $magentoRootFolder, ?SplFileInfo $file = null)
     {
         $replace = [
             '%module%' => $file ? $file->getPath() : '',

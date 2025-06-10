@@ -345,7 +345,7 @@ class Application extends BaseApplication
      * @return int
      * @throws Exception
      */
-    public function run(InputInterface $input = null, OutputInterface $output = null): int
+    public function run(?InputInterface $input = null, ?OutputInterface $output = null): int
     {
         if (null === $input) {
             $input = new ArgvInput();
@@ -403,8 +403,8 @@ class Application extends BaseApplication
      */
     public function init(
         array $initConfig = [],
-        InputInterface $input = null,
-        OutputInterface $output = null
+        ?InputInterface $input = null,
+        ?OutputInterface $output = null
     ) {
         if ($this->_isInitialized) {
             return;
@@ -653,7 +653,7 @@ class Application extends BaseApplication
      * @param OutputInterface $output [optional]
      * @throws Exception
      */
-    public function reinit($initConfig = [], InputInterface $input = null, OutputInterface $output = null)
+    public function reinit($initConfig = [], ?InputInterface $input = null, ?OutputInterface $output = null)
     {
         $this->_isInitialized = false;
         $this->detectionResult = null;

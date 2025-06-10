@@ -64,7 +64,7 @@ class Config
      * @param bool $isPharMode
      * @param OutputInterface $output [optional]
      */
-    public function __construct(array $initConfig = [], $isPharMode = false, OutputInterface $output = null)
+    public function __construct(array $initConfig = [], $isPharMode = false, ?OutputInterface $output = null)
     {
         $this->initConfig = $initConfig;
         $this->isPharMode = (bool) $isPharMode;
