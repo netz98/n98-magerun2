@@ -62,7 +62,7 @@ class Config
      *
      * @param array $initConfig
      * @param bool $isPharMode
-     * @param OutputInterface $output [optional]
+     * @param OutputInterface|null $output [optional]
      */
     public function __construct(array $initConfig = [], $isPharMode = false, ?OutputInterface $output = null)
     {

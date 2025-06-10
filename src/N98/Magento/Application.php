@@ -339,8 +339,8 @@ class Application extends BaseApplication
     }
 
     /**
-     * @param InputInterface $input [optional]
-     * @param OutputInterface $output [optional]
+     * @param InputInterface|null $input [optional]
+     * @param OutputInterface|null $output [optional]
      *
      * @return int
      * @throws Exception
@@ -395,8 +395,8 @@ class Application extends BaseApplication
 
     /**
      * @param array $initConfig [optional]
-     * @param InputInterface $input [optional]
-     * @param OutputInterface $output [optional]
+     * @param InputInterface|null $input [optional]
+     * @param OutputInterface|null $output [optional]
      *
      * @return void
      * @throws Exception
@@ -649,8 +649,8 @@ class Application extends BaseApplication
 
     /**
      * @param array $initConfig [optional]
-     * @param InputInterface $input [optional]
-     * @param OutputInterface $output [optional]
+     * @param InputInterface|null $input [optional]
+     * @param OutputInterface|null $output [optional]
      * @throws Exception
      */
     public function reinit($initConfig = [], ?InputInterface $input = null, ?OutputInterface $output = null)
