@@ -75,7 +75,7 @@ final class ConfigFile
      *
      * @return void
      */
-    public function applyVariables($magentoRootFolder, SplFileInfo $file = null)
+    public function applyVariables($magentoRootFolder, ?SplFileInfo $file = null)
     {
         $replace = [
             '%module%' => $file ? $file->getPath() : '',

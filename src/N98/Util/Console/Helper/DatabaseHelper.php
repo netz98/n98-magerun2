@@ -65,7 +65,7 @@ class DatabaseHelper extends AbstractHelper implements CommandAware
      * @throws FileSystemException
      * @return void
      */
-    public function detectDbSettings(OutputInterface $output)
+    public function detectDbSettings(?OutputInterface $output)
     {
         if (null !== $this->dbSettings) {
             return;
@@ -120,7 +120,7 @@ class DatabaseHelper extends AbstractHelper implements CommandAware
      * @throws RuntimeException pdo mysql extension is not installed
      * @throws FileSystemException
      */
-    public function getConnection(OutputInterface $output = null, bool $reconnect = false)
+    public function getConnection(?OutputInterface $output = null, bool $reconnect = false)
     {
         $output = $this->fallbackOutput($output);
 
@@ -573,7 +573,7 @@ class DatabaseHelper extends AbstractHelper implements CommandAware
      * @return array
      * @throws InvalidArgumentException if item is not an array or string
      */
-    private function resolveTablesArray(array $carry = null, $item = null)
+    private function resolveTablesArray(?array $carry = null, $item = null)
     {
         if (is_string($item)) {
             $item = preg_split('~\s+~', $item, -1, PREG_SPLIT_NO_EMPTY);
@@ -857,7 +857,7 @@ class DatabaseHelper extends AbstractHelper implements CommandAware
      *
      * @return OutputInterface
      */
-    private function fallbackOutput(OutputInterface $output = null)
+    private function fallbackOutput(?OutputInterface $output = null)
     {
         if (null !== $output) {
             return $output;

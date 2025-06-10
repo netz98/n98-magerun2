@@ -218,7 +218,7 @@ EOT
         string $localFilename,
         bool $isDryRun,
         bool $loadUnstable,
-        string $forcedVersion = null
+        ?string $forcedVersion = null
     ) {
         try {
             $this->downloadNewPhar($output, $remotePharDownloadUrl, $tempFilename);
@@ -550,7 +550,7 @@ EOT
     private function getChangelog(
         OutputInterface $output,
         bool $loadUnstable,
-        string $forcedVersion = null
+        ?string $forcedVersion = null
     ): string {
         $changelog = '';
 

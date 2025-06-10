@@ -75,7 +75,7 @@ class MagentoHelper extends AbstractHelper implements DetectionResultInterface, 
      * @param InputInterface $input
      * @param OutputInterface $output
      */
-    public function __construct(InputInterface $input = null, OutputInterface $output = null)
+    public function __construct(?InputInterface $input = null, ?OutputInterface $output = null)
     {
         if (null === $input) {
             $input = new ArgvInput();
