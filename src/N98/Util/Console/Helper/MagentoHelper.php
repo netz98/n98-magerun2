@@ -72,8 +72,8 @@ class MagentoHelper extends AbstractHelper implements DetectionResultInterface, 
     protected $_customConfigFilename = 'n98-magerun2.yaml';
 
     /**
-     * @param InputInterface $input
-     * @param OutputInterface $output
+     * @param InputInterface|null $input
+     * @param OutputInterface|null $output
      */
     public function __construct(?InputInterface $input = null, ?OutputInterface $output = null)
     {

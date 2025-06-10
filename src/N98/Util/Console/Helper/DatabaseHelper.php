@@ -114,7 +114,7 @@ class DatabaseHelper extends AbstractHelper implements CommandAware
     /**
      * Connects to the database without initializing magento
      *
-     * @param OutputInterface $output = null
+     * @param OutputInterface|null $output = null
      * @param bool $reconnect = false
      * @return PDO
      * @throws RuntimeException pdo mysql extension is not installed
