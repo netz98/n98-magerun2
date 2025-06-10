@@ -4,7 +4,6 @@ namespace N98\Magento\Command\Database;
 
 use N98\Magento\MagerunCommandTester;
 use N98\Util\Console\Helper\DatabaseHelper;
-use Symfony\Component\Console\Output\OutputInterface;
 
 class QueryCommandTest extends MagerunCommandTester
 {
