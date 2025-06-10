@@ -1,6 +1,0 @@
-autoloaders:
-  Acme: '%module%/src'
-
-commands:
-  customCommands:
-    - Acme\FooCommand
