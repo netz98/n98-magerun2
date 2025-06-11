@@ -45,6 +45,9 @@ class ListCommand extends AbstractAdminUserCommand
         $userCollection = $this->userModel->getCollection();
 
         $sortField = $input->getOption('sort') ?: 'user_id';
+        if ($sortField === 'status') {
+            $sortField = 'is_active';
+        }
         $userCollection->setOrder($sortField, 'ASC');
 
         $table = [];
