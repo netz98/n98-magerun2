@@ -43,11 +43,6 @@ class ListCommand extends AbstractAdminUserCommand
         }
 
         $userCollection = $this->userModel->getCollection();
-        $userCollection->getSelect()->joinLeft(
-            ['aus' => $userCollection->getResource()->getTable('admin_user_session')],
-            'main_table.user_id = aus.user_id',
-            ['logdate']
-        );
 
         $sortField = $input->getOption('sort') ?: 'user_id';
         $userCollection->setOrder($sortField, 'ASC');
