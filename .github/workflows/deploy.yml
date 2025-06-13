@@ -207,11 +207,27 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - run: echo "${{ steps.build_changelog.outputs.changelog }}"
+      - name: Set release type
+        id: release_type
+        run: |
+          # Get tag part of github.ref
+          TAG=$(cut -d'/' -f3 <<< "$GITHUB_REF")
+
+          # Check if it's a stable version (x.y.z format without alpha/beta)
+          if [[ "$TAG" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "This is a stable release."
+            echo "make_latest=true" >> $GITHUB_OUTPUT
+          else
+            echo "This is a pre-release (alpha/beta)."
+            echo "make_latest=false" >> $GITHUB_OUTPUT
+          fi
+
       - name: Release
         uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/')
         with:
           body: ${{steps.build_changelog.outputs.changelog}}
+          make_latest: ${{ steps.release_type.outputs.make_latest }}
           files: |
             n98-magerun2.phar
             n98-magerun2.phar.asc
