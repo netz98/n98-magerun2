@@ -217,9 +217,11 @@ jobs:
           if [[ "$TAG" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
             echo "This is a stable release."
             echo "make_latest=true" >> $GITHUB_OUTPUT
+            echo "prerelease=false" >> $GITHUB_OUTPUT
           else
             echo "This is a pre-release (alpha/beta)."
             echo "make_latest=false" >> $GITHUB_OUTPUT
+            echo "prerelease=true" >> $GITHUB_OUTPUT
           fi
 
       - name: Release
@@ -228,6 +230,7 @@ jobs:
         with:
           body: ${{steps.build_changelog.outputs.changelog}}
           make_latest: ${{ steps.release_type.outputs.make_latest }}
+          prerelease: ${{ steps.release_type.outputs.prerelease }}
           files: |
             n98-magerun2.phar
             n98-magerun2.phar.asc
