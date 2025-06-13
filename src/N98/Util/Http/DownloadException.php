@@ -25,7 +25,7 @@ class DownloadException extends RuntimeException
      * @param int $code The exception code
      * @param \Throwable|null $previous The previous throwable used for exception chaining
      */
-    public function __construct(string $message, string $remoteUrl, int $code = 0, Throwable $previous = null)
+    public function __construct(string $message, string $remoteUrl, int $code = 0, ?Throwable $previous = null)
     {
         parent::__construct($message, $code, $previous);
         $this->remoteUrl = $remoteUrl;

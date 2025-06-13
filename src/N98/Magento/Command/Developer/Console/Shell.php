@@ -37,7 +37,7 @@ class Shell extends PsyShell
      * @param OutputInterface|null $output
      * @return int
      */
-    public function run(InputInterface $input = null, OutputInterface $output = null): int
+    public function run(?InputInterface $input = null, ?OutputInterface $output = null): int
     {
         $this->registerHelpersFromMainApplication();
 
