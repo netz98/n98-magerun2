@@ -16,8 +16,10 @@ on:
       - "version.txt"
 
     tags:
-      # only tags with semver format
+      # semver format and alpha/beta versions
       - '[0-9]+.[0-9]+.[0-9]+'
+      - '[0-9]+.[0-9]+.[0-9]+-alpha[0-9]*'
+      - '[0-9]+.[0-9]+.[0-9]+-beta[0-9]*'
 
   workflow_dispatch:
 
@@ -113,13 +115,25 @@ jobs:
             exit 1
           fi
 
-          # Rename files
+          # Rename files - always create version-specific files
           cp "n98-magerun2.phar" "n98-magerun2-${TAG}.phar"
           cp "n98-magerun2.phar.asc" "n98-magerun2-${TAG}.phar.asc"
           cp "n98-magerun2.phar.sig" "n98-magerun2-${TAG}.phar.sig"
-          mv "n98-magerun2.phar" "n98-magerun2-latest.phar"
-          mv "n98-magerun2.phar.asc" "n98-magerun2-latest.phar.asc"
-          mv "n98-magerun2.phar.sig" "n98-magerun2-latest.phar.sig"
+
+          # Only mark as latest if it's a stable version
+          if [[ "$TAG" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "This is a stable release. Marking as latest."
+            mv "n98-magerun2.phar" "n98-magerun2-latest.phar"
+            mv "n98-magerun2.phar.asc" "n98-magerun2-latest.phar.asc"
+            mv "n98-magerun2.phar.sig" "n98-magerun2-latest.phar.sig"
+          else
+            echo "This is an alpha/beta release. Not marking as latest."
+            # Remove only the original phar file since we don't need it anymore
+            # Keep the signature files (.asc and .sig) as they're needed for verification
+            rm "n98-magerun2.phar"
+            rm "n98-magerun2.phar.asc"
+            rm "n98-magerun2.phar.sig"
+          fi
 
           # List files to verify
           ls -l
