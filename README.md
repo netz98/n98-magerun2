@@ -55,4 +55,4 @@ For full installation, usage, development, and contribution guidelines, please v
 
 ## License
 
-MIT License. See [MIT-LICENSE.txt](../MIT-LICENSE.txt).
+MIT License. See [MIT-LICENSE.txt](./MIT-LICENSE.txt).
