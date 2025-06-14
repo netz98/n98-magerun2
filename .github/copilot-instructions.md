@@ -134,6 +134,34 @@ vendor/bin/phpstan analyse
 2. Extend the `AbstractMagentoCommand` class
 3. Implement the `configure()` and `execute()` methods
 4. Add appropriate tests (Unit-Test and bats) for your command
+5. In the `docs/docs/command-reference/` directory, add an entry for your command category (e.g., `cache/index.md`) that lists the command names and links to their dedicated documentation files. Each command should have its own detailed documentation file (see below for example).
+
+#### Example: Documenting Command References in Docusaurus
+
+Suppose you are adding cache-related commands. In `docs/docs/command-reference/cache/index.md`, provide a list of commands and link each to its dedicated documentation file:
+
+```markdown
+---
+title: Cache Commands
+sidebar_label: Cache
+---
+
+# Cache Commands
+
+Commands for interacting with and managing Magento's various cache systems.
+
+## Commands
+
+- [cache:clean](../../system/cache-commands.md)
+- [cache:disable](../../system/cache-commands.md)
+- [cache:enable](../../system/cache-commands.md)
+- [cache:flush](../../system/cache-commands.md)
+- [cache:list](../../system/cache-commands.md)
+```
+
+For each command, create a separate Markdown file (e.g., `docs/docs/system/cache-commands.md`) with the full documentation for that command.
+
+This ensures the command reference remains concise, while detailed documentation is available in dedicated files for each command.
 
 ### Project Structure
 
@@ -151,41 +179,42 @@ vendor/bin/phpstan analyse
 Run unit tests with `ddev unit-test-24` command.
 Example: `ddev unit-test-24 tests/N98/Util/Console/Helper/DatabaseHelperTest.php`
 
-### Versioning
+---
 
-The project follows semantic versioning. Version information is stored in `version.txt`.
+## Docusaurus Documentation
 
-### Commit Messages
+The project uses [Docusaurus](https://docusaurus.io/) for documentation. All documentation sources are located in the `docs/` directory.
 
-Use Conventional Commits format for commit messages:
-- `feat`: A new feature
-- `fix`: A bug fix
-- `docs`: Documentation only changes
-- `style`: Changes that do not affect the meaning of the code (white-space, formatting, missing semi-colons, etc)
-- `refactor`: A code change that neither fixes a bug nor adds a feature
-- `perf`: A code change that improves performance
-- `test`: Adding missing or correcting existing tests
-- `chore`: Changes to the build process or auxiliary tools and libraries such as documentation generation
-- `ci`: Changes to our CI configuration files and scripts (example scopes: Github Actions, CircleCI)
-- `revert`: Reverts a previous commit
-- `build`: Changes that affect the build system or external dependencies
+### Structure
+- `docs/docs/` – Main documentation content (Markdown files)
+- `docs/docs/command-reference/` – Command reference documentation
+- `docs/docusaurus.config.js` – Docusaurus configuration
+- `docs/sidebars.js` – Sidebar navigation structure
+- `docs/static/` – Static assets (images, etc.)
 
-The commit contains the following structural elements, to communicate intent to the consumers of your library:
+### Editing Documentation
+- Edit or add Markdown files in the appropriate subdirectory under `docs/docs/`.
+- Follow the existing structure and naming conventions.
+- For new commands, add documentation in `docs/docs/command-reference/`.
 
-    fix: a commit of the type fix patches a bug in your codebase (this correlates with PATCH in Semantic Versioning).
-    feat: a commit of the type feat introduces a new feature to the codebase (this correlates with MINOR in Semantic Versioning).
-    BREAKING CHANGE: a commit that has a footer BREAKING CHANGE:, or appends a ! after the type/scope, introduces a breaking API change (correlating with MAJOR in Semantic Versioning). A BREAKING CHANGE can be part of commits of any type.
-    types other than fix: and feat: are allowed, for example @commitlint/config-conventional (based on the Angular convention) recommends build:, chore:, ci:, docs:, style:, refactor:, perf:, test:, and others.
-    footers other than BREAKING CHANGE: <description> may be provided and follow a convention similar to git trailer format.
+### Local Preview & Build
+To preview documentation locally:
+```bash
+devd ssh
+cd docs
+npm install
+npm run start
+```
+This will start a local server (usually at http://localhost:3000) for live preview.
 
+To build the static site:
+```bash
+npm run build
+```
+The output will be in `docs/build/`.
 
-### Release Process
-
-1. Update the CHANGELOG.md file
-2. Update version.txt with the new version number
-3. Tag the release in Git
-4. Build the PHAR file
-5. Upload the PHAR file to the file server
+### Deployment
+Documentation is deployed automatically via CI/CD on changes to the `main` branch. For manual deployment or troubleshooting, refer to the Docusaurus documentation or project-specific CI scripts.
 
 ### Debugging Tips
 
@@ -200,4 +229,3 @@ You can build the phar file "/var/www/html/n98-magerun2.phar" in the ddev Docker
 ```bash
 ddev exec ./build.sh
 ```
-

@@ -1,41 +1,9 @@
-# Website
+# n98-magerun2 Documentation
 
-This website is built using [Docusaurus](https://docusaurus.io/), a modern static website generator.
+n98-magerun2 is a powerful CLI tool for Magento 2 developers and administrators. It provides a wide range of commands to simplify and automate common Magento 2 tasks.
 
-### Installation
+## Documentation
 
-```
-$ yarn
-```
+The official documentation is available at https://netz98.github.io/n98-magerun2/
 
-### Local Development
-
-```
-$ yarn start
-```
-
-This command starts a local development server and opens up a browser window. Most changes are reflected live without having to restart the server.
-
-### Build
-
-```
-$ yarn build
-```
-
-This command generates static content into the `build` directory and can be served using any static contents hosting service.
-
-### Deployment
-
-Using SSH:
-
-```
-$ USE_SSH=true yarn deploy
-```
-
-Not using SSH:
-
-```
-$ GIT_USER=<Your GitHub username> yarn deploy
-```
-
-If you are using GitHub pages for hosting, this command is a convenient way to build the website and push to the `gh-pages` branch.
+If you want to build the documentation locally: [./build-docs-on-your-machine.md](./build-docs-on-your-machine.md)
