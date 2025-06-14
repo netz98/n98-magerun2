@@ -9,4 +9,4 @@ Commands related to Magento's code generation processes.
 
 ## Commands
 
-- [generation:flush](./generation-flush-command.md#generationflush) - Flush generated code like factories and proxies
+- [generation:flush](./generation-flush-command.md) - Flush generated code like factories and proxies
