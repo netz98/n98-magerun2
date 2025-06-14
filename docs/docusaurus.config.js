@@ -1,7 +1,7 @@
 // @ts-check
 // Note: type annotations allow type checking and IDEs autocompletion
 
-import {themes as prismThemes} from 'prism-react-renderer';
+import { themes as prismThemes } from 'prism-react-renderer'
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
@@ -15,7 +15,7 @@ const config = {
   organizationName: 'netz98',
   projectName: 'n98-magerun2',
   markdown: {
-    mermaid: true,
+    mermaid: true
   },
   themes: ['@docusaurus/theme-mermaid'],
   themeConfig: {
@@ -23,35 +23,35 @@ const config = {
       logo: {
         alt: 'n98-magerun2 Logo',
         src: 'img/logo.svg',
-        height: 64,
+        height: 64
       },
       items: [
         {
           type: 'doc',
           position: 'left',
           docId: 'intro',
-          label: 'Docs',
+          label: 'Docs'
         },
         {
           type: 'doc',
           position: 'left',
           docId: 'command-docs/index',
-          label: 'Commands',
+          label: 'Commands'
         },
         {
           label: 'GitHub',
-          href: 'https://github.com/netz98/n98-magerun2',
+          href: 'https://github.com/netz98/n98-magerun2'
         },
         {
           label: 'valantic (formerly netz98)',
-          href: 'https://netz98.de',
+          href: 'https://netz98.de'
         }
-      ],
+      ]
     },
     prism: {
       theme: prismThemes.github,
-      additionalLanguages: ['php'],
-    },
+      additionalLanguages: ['php']
+    }
   },
   presets: [
     [
@@ -62,14 +62,14 @@ const config = {
           routeBasePath: '/',
           sidebarPath: require.resolve('./sidebars.js'),
           editUrl:
-            'https://github.com/netz98/n98-magerun2/edit/main/docs/',
+            'https://github.com/netz98/n98-magerun2/edit/main/docs/'
         },
         theme: {
-          customCss: require.resolve('./src/css/custom.css'),
-        },
-      }),
-    ],
-  ],
-};
+          customCss: require.resolve('./src/css/custom.css')
+        }
+      })
+    ]
+  ]
+}
 
-module.exports = config;
+module.exports = config
