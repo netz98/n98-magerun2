@@ -53,6 +53,25 @@ You can run the PHAR file directly from the command line:
 
 For full installation, usage, development, and contribution guidelines, please visit the [official documentation](https://netz98.github.io/n98-magerun2/).
 
+
+| Category/Namespace                                                           | Description                                                                 | Example Commands                                                                            |
+|:-----------------------------------------------------------------------------| :-------------------------------------------------------------------------- |:--------------------------------------------------------------------------------------------|
+| [admin](https://netz98.github.io/n98-magerun2/command-docs/admin/)           | Commands for managing Magento admin user accounts and related settings.     | `admin:user:list`, `admin:user:create`, `admin:user:change-password`, `admin:notifications` |
+| [cache](https://netz98.github.io/n98-magerun2/command-docs/cache/)           | Commands for interacting with and managing Magento's various cache systems. | `cache:clean`, `cache:disable`, `cache:enable`, `cache:flush`, `cache:list`                 |
+| [config](https://netz98.github.io/n98-magerun2/command-docs/config/)         | Commands for managing Magento store configurations and environment settings.  | `config:store:get`, `config:store:set`, `config:env:set`, `config:search`                   |
+| [customer](https://netz98.github.io/n98-magerun2/command-docs/customer/)     | Commands for managing Magento customer accounts.                            | `customer:create`, `customer:list`, `customer:info`, `customer:change-password`             |
+| [db](https://netz98.github.io/n98-magerun2/command-docs/db/)                 | Commands for database operations such as dumps, imports, and queries.       | `db:dump`, `db:import`, `db:query`, `db:create`, `db:info`                                  |
+| [dev](https://netz98.github.io/n98-magerun2/command-docs/development/)       | Commands tailored for Magento developers, including code generation and debugging tools. | `dev:module:create`, `dev:console`, `dev:translate:admin`, `dev:theme:list`                 |
+| [eav](https://netz98.github.io/n98-magerun2/command-docs/eav/)               | Commands for managing EAV (Entity-Attribute-Value) attributes.            | `eav:attribute:list`, `eav:attribute:view`, `eav:attribute:remove`                          |
+| [giftcard](https://netz98.github.io/n98-magerun2/command-docs/giftcard/)     | Commands for managing Magento gift cards.                                    | `giftcard:pool:generate`, `giftcard:create`, `giftcard:info`, `giftcard:remove`             |
+| [generation](https://netz98.github.io/n98-magerun2/command-docs/generation/) | Commands related to Magento's code generation processes.                    | `generation:flush`                                                                          |
+| [index](https://netz98.github.io/n98-magerun2/command-docs/index/)           | Commands for managing Magento's indexers.                                   | `index:list`, `index:trigger:recreate`                                                      |
+| [install](https://netz98.github.io/n98-magerun2/command-docs/installer/)     | Command for installing Magento.                                             | `installer`                                                                                 |
+| [integration](https://netz98.github.io/n98-magerun2/command-docs/integration/) | Command for integrations to Magento.                                                     | `integration:list`, `integration:show`, `integration:delete`                                |
+| [script](https://netz98.github.io/n98-magerun2/command-docs/scripting/)      | Command for running sequences of n98-magerun2 commands from a file.       | `script`                                                                                    |
+| [sys](https://netz98.github.io/n98-magerun2/command-docs/sys/)               | Commands for system-level information, checks, and maintenance tasks.     | `sys:info`, `sys:check`, `sys:maintenance`, `sys:cron:list`, `sys:store:list`               |
+
+
 ## License
 
 MIT License. See [MIT-LICENSE.txt](./MIT-LICENSE.txt).
