@@ -163,6 +163,43 @@ For each command, create a separate Markdown file (e.g., `docs/docs/system/cache
 
 This ensures the command reference remains concise, while detailed documentation is available in dedicated files for each command.
 
+#### Admonitions
+
+Use the following admonitions in your documentation to highlight important information:
+
+```markdown
+
+:::note
+
+Some **content** with _Markdown_ `syntax`. Check [this `api`](#).
+
+:::
+
+:::tip
+
+Some **content** with _Markdown_ `syntax`. Check [this `api`](#).
+
+:::
+
+:::info
+
+Some **content** with _Markdown_ `syntax`. Check [this `api`](#).
+
+:::
+
+:::warning
+
+Some **content** with _Markdown_ `syntax`. Check [this `api`](#).
+
+:::
+
+:::danger
+
+Some **content** with _Markdown_ `syntax`. Check [this `api`](#).
+
+:::
+```
+
 ### Project Structure
 
 - `src/N98/Magento/Command/`: Contains all the commands
