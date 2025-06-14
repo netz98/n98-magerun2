@@ -9,4 +9,4 @@ Commands for managing Magento search engines.
 
 ## Commands
 
-- [search:engine:list](./search-engine-commands.md#searchenginelist) - List all registered search engines
+- [search:engine:list](./search-engine-list.md) - List all registered search engines
