@@ -14,8 +14,8 @@ Configs can be loaded on different levels:
 
 All configs will be merged in the following order: `buildin -> system -> user -> project`
 
-To verify which config is loaded, you can use the command [`magerun:config:show`](../command-docs/magerun/magerun-config-show.md).
-The commands [`magerun:config:info`](../command-docs/magerun/magerun-config-info.md) and [`magerun:config:dump`](../command-docs/magerun/magerun-config-dump.md) are also useful to debug all configuration changes.
+To verify which config is loaded, you can use the command [`magerun:config:dump`](../command-docs/magerun/magerun-config-dump.md).
+The commands [`magerun:config:info`](../command-docs/magerun/magerun-config-info.md) shows the merged config and the source of each config value.
 
 ## Example Config 
 
