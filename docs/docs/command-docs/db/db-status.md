@@ -6,6 +6,10 @@ title: db:status
 
 Shows important server status information or custom selected status values.
 
+:::info
+Use this command to monitor server health or troubleshoot issues by viewing important MySQL server status variables. You can filter results using the `search` argument.
+:::
+
 ```sh
 n98-magerun2.phar db:status [options] [--] [<search>]
 ```

@@ -5,6 +5,9 @@ title: dev:console
 We offer an interactive console based on [Psy Shell](http://psysh.org/).
 The interactive console is a REPL (Read-Eval-Print-Loop).
 
+:::info
+The interactive console allows you to run PHP code in the context of your Magento store, making it easier to debug and experiment with Magento internals.
+:::
 
 ```sh
 n98-magerun2.phar dev:console [options] [--] [<cmd>]
@@ -25,6 +28,10 @@ n98-magerun2.phar dev:console [options] [--] [<cmd>]
 
 Optional an area code can be defined. If provided, the configuration (di.xml, translations) of the area are loaded.
 
+:::tip
+Use area codes like `adminhtml` or `crontab` to load specific Magento configurations for your session.
+:::
+
 Possible area codes are:
 
 - `adminhtml`
@@ -32,8 +39,9 @@ Possible area codes are:
 
 ## Executing Code
 
-
-It's possible to enter PHP code inside the console which should be parsed and executed.
+:::note
+You can enter PHP code directly in the console. This is useful for quick calculations or inspecting objects.
+:::
 
 Example code:
 
@@ -47,6 +55,10 @@ time();
 
 We also bootstrap your current Magento store and register the Magento "Object Manager" inside the console.
 The "Object Manager" can be accessed by a registered variable `$di`.
+
+:::info
+The `$di` variable gives you direct access to Magento's dependency injection container, allowing you to fetch any service or model.
+:::
 
 ```php
 $page = $di->get('Magento\Cms\Api\PageRepositoryInterface');

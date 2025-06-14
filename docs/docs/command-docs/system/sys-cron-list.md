@@ -3,7 +3,11 @@ title: sys:cron:list
 sidebar_label: sys:cron:list
 ---
 
-Lists all cronjobs defined in crontab.xml files.
+# sys:cron:list
+
+:::info
+Lists all cronjobs defined in crontab.xml files. This is useful for auditing scheduled tasks and integrating with external tools.
+:::
 
 ```sh
 n98-magerun2.phar sys:cron:list [--format[="..."]]
@@ -21,4 +25,6 @@ The `--format` option allows you to specify the output format for the list of cr
 - yaml
 - xml
 
-This is useful for integrating the output with other tools or for easier data processing
+:::tip
+This is useful for integrating the output with other tools or for easier data processing.
+:::

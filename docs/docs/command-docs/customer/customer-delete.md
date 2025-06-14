@@ -5,6 +5,10 @@ sidebar_label: customer:delete
 
 Delete customers by various filters or in bulk.
 
+:::warning
+Using the `--all` or `--force` options can result in the deletion of many or all customers. Use these options with caution, especially in production environments.
+:::
+
 ```sh
 n98-magerun2.phar customer:delete [options]
 ```

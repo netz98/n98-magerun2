@@ -3,7 +3,7 @@ title: customer:create
 sidebar_label: customer:create
 ---
 
-Creates a new customer/user for shop frontend.
+Create a new customer/user for shop frontend.
 
 ```sh
 n98-magerun2.phar customer:create [email] [password] [firstname] [lastname] [website] [--format[="..."]] [additionalFields...]

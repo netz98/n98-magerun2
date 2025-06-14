@@ -5,7 +5,9 @@ title: Search Commands
 
 # Search Commands
 
+:::info
 Commands for managing Magento search engines.
+:::
 
 ## Commands
 

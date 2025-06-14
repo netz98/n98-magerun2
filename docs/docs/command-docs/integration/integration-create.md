@@ -5,6 +5,10 @@ sidebar_label: integration:create
 
 Create a new integration (WebAPI access token).
 
+:::tip
+Use this command to generate access credentials for third-party applications or services that need to interact with your Magento store via the WebAPI.
+:::
+
 ```sh
 n98-magerun2.phar integration:create [options] [--] <name> [<email> [<endpoint>]]
 ```
@@ -26,6 +30,6 @@ n98-magerun2.phar integration:create [options] [--] <name> [<email> [<endpoint>]
 | `--resource=RESOURCE` `-r`                  | Defines a granted ACL resource (multiple values allowed) |
 | `--format[=FORMAT]`                         | Output Format. One of [csv,json,json_array,yaml,xml]     |
 
-If no ACL resource is defined the new integration token will be created with FULL ACCESS.
-If you do not want that, please provide a list of ACL resources by using the `--resource` option.
-
+:::warning
+If no ACL resource is defined, the new integration token will be created with FULL ACCESS. To restrict access, provide a list of ACL resources using the `--resource` option.
+:::

@@ -6,6 +6,10 @@ title: db:query
 
 Run a raw DB query
 
+:::warning
+Running raw SQL queries can affect your database and should be done with caution, especially in production environments. Always review your queries before execution.
+:::
+
 ```sh
 n98-magerun2.phar db:query [--connection=CONNECTION] [--only-command] [<query>]
 ```

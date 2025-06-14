@@ -5,7 +5,9 @@ title: Generation Commands
 
 # Generation Commands
 
-Commands related to Magento's code generation processes.
+:::note
+These commands help manage Magento's code generation processes, such as cleaning up generated factories and proxies.
+:::
 
 ## Commands
 

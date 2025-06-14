@@ -7,6 +7,10 @@ title: Integration Commands
 
 Commands for managing Magento integrations (WebAPI Access Tokens).
 
+:::info
+Magento integrations allow external applications to interact securely with your Magento store via WebAPI access tokens.
+:::
+
 ## Commands
 
 - [integration:list](./integration-list.md) - List all existing integrations

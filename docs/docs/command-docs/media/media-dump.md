@@ -3,7 +3,11 @@ title: media:dump
 sidebar_label: media:dump
 ---
 
-Creates a ZIP archive with media folder content.
+:::tip
+Use this command to quickly create a portable backup of your Magento media folder, which is useful for migrations or local development.
+:::
+
+Create a ZIP archive with media folder content.
 
 ```sh
 n98-magerun2.phar media:dump [--strip] [<filename>]
@@ -18,4 +22,3 @@ n98-magerun2.phar media:dump [--strip] [<filename>]
 | Option   | Description          |
 |----------|----------------------|
 | `--strip`| Excludes image cache |
-

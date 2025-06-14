@@ -6,6 +6,10 @@ title: db:dump
 
 Dump database
 
+:::info
+Requires MySQL CLI tools (`mysqldump` or `mydumper`). Use the `--force` option with caution, as it will skip confirmation prompts. The `--strip` option can remove important data from the dump; review your table groups before using it.
+:::
+
 Dumps configured Magento database with `mysqldump` or `mydumper`.
 
 - Requires MySQL CLI tools (either `mysqldump` or `mydumper`)

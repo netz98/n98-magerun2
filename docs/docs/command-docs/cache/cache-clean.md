@@ -4,9 +4,9 @@ title: cache:clean
 
 # cache:clean
 
-Clean Magento cache
-
-Cleans expired cache entries.
+:::info
+Cleans expired cache entries in Magento. Use this command to keep your cache storage optimized and up-to-date.
+:::
 
 If you would like to clean only one cache type:
 
@@ -20,6 +20,6 @@ If you would like to clean multiple cache types at once:
 n98-magerun2.phar cache:clean [type] [type] ...
 ```
 
-If you would like to remove all cache entries use `cache:flush`.
-
-Run `cache:list` command to see all codes.
+:::tip
+To remove all cache entries, use the `cache:flush` command instead. Run `cache:list` to see all available cache codes.
+:::

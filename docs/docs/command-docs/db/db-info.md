@@ -6,6 +6,10 @@ title: db:info
 
 Dumps database information.
 
+:::info
+Use this command to quickly print all information about the current configured database in `app/etc/env.php`, including connection strings for JDBC and PDO. Helpful for debugging and environment checks.
+:::
+
 ```sh
 n98-magerun2.phar db:info [options] [--] [<setting>]
 ```

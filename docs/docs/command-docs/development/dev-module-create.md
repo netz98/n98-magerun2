@@ -4,6 +4,10 @@ title: dev:module:create
 
 ## Create Module Skeleton
 
+:::info
+This command generates a new Magento module skeleton, including registration and optional files like blocks, helpers, models, and more. It helps you quickly scaffold modules for development.
+:::
+
 Creates an empty module and registers it in current Magento shop.
 
 ```sh
@@ -33,4 +37,3 @@ n98-magerun2.phar dev:module:create [options] [--] <vendorNamespace> <moduleName
 | `--author-name[=AUTHOR-NAME]`   | Author for readme.md or composer.json               |
 | `--author-email[=AUTHOR-EMAIL]` | Author for readme.md or composer.json               |
 | `--description[=DESCRIPTION]`   | Description for readme.md or composer.json          |
-

@@ -6,9 +6,17 @@ title: github:pr
 
 Gets infos about Github Pull Requests.
 
+:::note
 If no Github Repository is defined by `---repository` (-r) option the default Magento 2 Github Repository `magento/magento2` is used. For the [Mage-OS](https://github.com/mage-os/mageos-magento2) repository, use the shortcut option `--mage-os`.
+:::
 
-The command uses the GitHub API which has rate limits for unauthenticated users. To avoid the rate limit, set a GitHub token in your environment (`GITHUB_TOKEN`) or use the `--github-token` option.
+:::warning
+The command uses the GitHub API which has rate limits for unauthenticated users.
+:::
+
+:::tip
+To avoid the rate limit, set a GitHub token in your environment (`GITHUB_TOKEN`) or use the `--github-token` option.
+:::
 
 ## Usage
 ```sh
@@ -38,4 +46,3 @@ n98-magerun2.phar github:pr --mage-os <number>
 ```sh
 n98-magerun2.phar github:pr --patch <number>
 ```
-

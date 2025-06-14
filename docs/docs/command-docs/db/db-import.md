@@ -6,6 +6,10 @@ title: db:import
 
 Import database
 
+:::warning
+Using the `--drop` or `--drop-tables` options will remove existing data before import. Make sure you have backups and understand the consequences before using these options.
+:::
+
 - Requires MySQL CLI tools
 
 ```sh

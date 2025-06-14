@@ -5,7 +5,9 @@ title: Media Commands
 
 # Media Commands
 
-Commands for managing Magento media files.
+:::info
+These commands help you manage Magento's media files, such as exporting or archiving media folders for backup or migration.
+:::
 
 ## Commands
 

@@ -3,7 +3,11 @@ title: install
 sidebar_label: install
 ---
 
-Magento installer command. Installs Magento 2 with various options.
+Magento installer command. Install Magento 2 with various options.
+
+:::info
+This command supports both interactive and unattended installation modes.
+:::
 
 Interactive installer:
 
@@ -37,11 +41,20 @@ n98-magerun2.phar install [options]
 | `--forceUseDb`                           | If passed, force to use given database if it already exists.                |
 | `--composer-use-same-php-binary`         | If passed, will invoke composer with the same PHP binary                    |
 
+:::tip
+Use the `--useDefaultConfigParams` option to quickly install Magento with default parameters defined in your YAML configuration file.
+:::
+
 Example of an unattended Magento CE 2.0.0.0 dev beta 1 installation:
+
+:::note
+You can perform a fully unattended installation by specifying all required options:
+:::
 
 ```sh
 n98-magerun2.phar install --dbHost="localhost" --dbUser="mydbuser" --dbPass="mysecret" --dbName="magentodb" --installSampleData=yes --useDefaultConfigParams=yes --magentoVersionByName="magento-ce-2.0.0.0-dev-beta1" --installationFolder="magento2" --baseUrl="http://magento2.localdomain/"
 ```
 
-Additionally, with `--noDownload` option you can install Magento working copy already stored in `--installationFolder` on the given database.
-
+:::info
+With the `--noDownload` option, you can install Magento from a working copy already stored in `--installationFolder` on the given database.
+:::

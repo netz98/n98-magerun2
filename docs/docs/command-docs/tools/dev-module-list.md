@@ -3,6 +3,10 @@ title: dev:module:list
 sidebar_label: dev:module:list
 ---
 
+:::info
+Lists all installed Magento modules. You can filter by vendor, enabled/disabled state, and output format.
+:::
+
 Lists all installed modules. If `--vendor` option is set, only modules of the given vendor are listed.
 If `--only-enabled` option is set, only enabled modules are listed.
 If `--only-disabled` option is set, only disabled modules are listed.

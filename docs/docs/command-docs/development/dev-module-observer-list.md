@@ -4,6 +4,10 @@ title: dev:module:observer:list
 
 ## List Observers
 
+:::info
+This command lists all event observers registered in your Magento installation. You can filter by event name or area to focus on specific observers.
+:::
+
 ```sh
 n98-magerun2.phar dev:module:observer:list [--sort] [--format=FORMAT] [<event> [<area>]]
 ```

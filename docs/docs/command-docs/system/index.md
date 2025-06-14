@@ -5,7 +5,9 @@ title: System Commands
 
 # System Commands
 
-Commands for system-level information, checks, and maintenance tasks.
+:::info
+Commands for system-level information, checks, and maintenance tasks in Magento. Use these to inspect, maintain, and troubleshoot your Magento installation.
+:::
 
 ## Commands
 

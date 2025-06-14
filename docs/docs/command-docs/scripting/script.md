@@ -7,6 +7,10 @@ sidebar_label: script
 
 Run multiple commands from a script file.
 
+:::tip
+Use the script command to automate complex workflows or batch operations in Magento 2 by writing them in a single file.
+:::
+
 ## Usage
 
 ```sh
@@ -26,6 +30,10 @@ n98-magerun2.phar script [options] [--] [<filename>]
 
 ## Examples
 
+:::note
+You can include comments in your script files using the `#` character at the beginning of a line.
+:::
+
 ```sh
 # Set multiple config
 config:store:set "web/cookie/cookie_domain" example.com
@@ -39,6 +47,10 @@ cache:flush
 
 Optionally you can work with unix pipes:
 
+:::tip
+You can pipe commands directly into the script command for quick, one-off executions.
+:::
+
 ```sh
 echo "cache:flush" | n98-magerun2.phar script
 ```
@@ -48,6 +60,10 @@ n98-magerun2.phar script < filename
 ```
 
 It is even possible to create executable scripts:
+
+:::info
+Make your script file executable and use the shebang line to run it directly with n98-magerun2.
+:::
 
 Create file `test.magerun` and make it executable `chmod +x test.magerun`:
 
@@ -74,6 +90,10 @@ ${my.var}=?
 
 ## Pre-defined variables
 
+:::info
+Several variables are available for use in your scripts to make them more dynamic and environment-aware.
+:::
+
 | Variable             | Description                                |
 |----------------------|--------------------------------------------|
 | `${magento.root}`    | Magento Root-Folder                        |
@@ -96,12 +116,6 @@ n98-magerun2.phar script -d foo=bar filename
 
 It's possible to define multiple values by passing more than one option.
 
-Environment variables can be used in a script by using the `env.` prefix.
-
-Example:
-
-```bash
-!echo "My current working directory is: ${env.PWD}"
-!echo "Path: ${env.PATH}"
-```
-
+:::tip
+You can use environment variables in your script by using the `env.` prefix.
+:::

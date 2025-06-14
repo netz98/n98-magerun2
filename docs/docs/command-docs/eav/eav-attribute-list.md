@@ -7,6 +7,10 @@ sidebar_position: 10
 
 List EAV attributes.
 
+:::info
+This command helps you inspect all EAV attributes in your Magento installation. Useful for debugging and development.
+:::
+
 ```sh
 n98-magerun2.phar eav:attribute:list [options]
 ```
@@ -19,4 +23,3 @@ n98-magerun2.phar eav:attribute:list [options]
 | `--add-backend`            | Add backend type to list.                            |
 | `--filter-type[=FILTER-TYPE]` | Filter attributes by entity type.                    |
 | `--format[=FORMAT]`        | Output Format. One of [csv,json,json_array,yaml,xml] |
-

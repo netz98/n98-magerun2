@@ -5,7 +5,9 @@ title: Tools Commands
 
 # Tools Commands
 
-This section contains commands for various utility tools and encryption operations.
+:::info
+This section contains documentation for utility and encryption-related commands that assist with development and debugging in Magento 2 environments.
+:::
 
 ## Commands
 

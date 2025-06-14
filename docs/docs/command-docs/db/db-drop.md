@@ -6,6 +6,10 @@ title: db:drop
 
 Drop current database.
 
+:::warning
+This command will permanently delete the current database. Use with extreme caution, especially with the `--force` option, as it will drop the database without confirmation. Ensure you have backups before proceeding.
+:::
+
 ```sh
 n98-magerun2.phar db:drop [options]
 ```

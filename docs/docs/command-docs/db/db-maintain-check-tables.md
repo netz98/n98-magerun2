@@ -6,6 +6,10 @@ title: db:maintain:check-tables
 
 Check database tables.
 
+:::tip
+Use this command for regular database health checks or before/after upgrades to ensure table integrity. The `--repair` option can help fix issues with MyISAM tables.
+:::
+
 ```sh
 n98-magerun2.phar db:maintain:check-tables [options]
 ```

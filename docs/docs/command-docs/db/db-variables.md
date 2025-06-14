@@ -6,6 +6,10 @@ title: db:variables
 
 Shows important variables or custom selected.
 
+:::tip
+Use this command to check MySQL server configuration or troubleshoot issues by viewing important server variables. You can filter results using the `search` argument.
+:::
+
 ```sh
 n98-magerun2.phar db:variables [options] [--] [<search>]
 ```
