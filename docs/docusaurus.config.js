@@ -1,6 +1,8 @@
 // @ts-check
 // Note: type annotations allow type checking and IDEs autocompletion
 
+import {themes as prismThemes} from 'prism-react-renderer';
+
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: 'n98-magerun2',
@@ -12,6 +14,16 @@ const config = {
   favicon: 'img/favicon.ico',
   organizationName: 'netz98',
   projectName: 'n98-magerun2',
+  markdown: {
+    mermaid: true,
+  },
+  themes: ['@docusaurus/theme-mermaid'],
+  themeConfig: {
+    prism: {
+      theme: prismThemes.github,
+      additionalLanguages: ['php'],
+    },
+  },
   presets: [
     [
       'classic',
