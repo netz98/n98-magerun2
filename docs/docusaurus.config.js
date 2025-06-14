@@ -19,6 +19,35 @@ const config = {
   },
   themes: ['@docusaurus/theme-mermaid'],
   themeConfig: {
+    navbar: {
+      logo: {
+        alt: 'n98-magerun2 Logo',
+        src: 'img/logo.svg',
+        height: 64,
+      },
+      items: [
+        {
+          type: 'doc',
+          position: 'left',
+          docId: 'intro',
+          label: 'Docs',
+        },
+        {
+          type: 'doc',
+          position: 'left',
+          docId: 'command-docs/index',
+          label: 'Commands',
+        },
+        {
+          label: 'GitHub',
+          href: 'https://github.com/netz98/n98-magerun2',
+        },
+        {
+          label: 'valantic (formerly netz98)',
+          href: 'https://netz98.de',
+        }
+      ],
+    },
     prism: {
       theme: prismThemes.github,
       additionalLanguages: ['php'],

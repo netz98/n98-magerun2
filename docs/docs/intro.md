@@ -7,8 +7,6 @@ slug: /
 
 # Welcome to n98-magerun2!
 
-![n98-magerun Logo](/img/magerun-logo.png)
-
 Welcome! **n98-magerun2** is the essential command-line companion for anyone working with **Adobe Commerce**, **Magento**, or **Mage-OS**. It simplifies complex tasks, automates repetitive work, and gives you powerful control over your e-commerce platform directly from the terminal.
 
 > It's famously known as **the Swiss Army knife** for Magento developers, system administrators, and DevOps professionals.
