@@ -114,3 +114,6 @@ Available Table Groups:
 | `@trade`              | Current trade data (customers, orders and quotes). You usually do not want those in developer systems.                               |
 | `@temp`               | Indexer __temp tables.                                                                                                               |
 
+---
+
+You can extend the db:dump with own table groups. Have a look here: [Extend db:dump Command](../../extending/extend-db-dump-command.md#add-your-own-groups)
