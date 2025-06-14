@@ -62,7 +62,7 @@ const config = {
           routeBasePath: '/',
           sidebarPath: require.resolve('./sidebars.js'),
           editUrl:
-            'https://github.com/netz98/n98-magerun2/edit/main/docs/'
+            'https://github.com/netz98/n98-magerun2/edit/develop/docs/'
         },
         theme: {
           customCss: require.resolve('./src/css/custom.css')
