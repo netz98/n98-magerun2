@@ -53,22 +53,6 @@ You can run the PHAR file directly from the command line:
 
 For full installation, usage, development, and contribution guidelines, please visit the [official documentation](https://netz98.github.io/n98-magerun2/).
 
-# n98-magerun2
-
-n98-magerun2 is a powerful CLI tool for Magento 2 developers and administrators. It provides a wide range of commands to simplify and automate common Magento 2 tasks.
-
-## Features
-- Manage cache, indexes, and configuration
-- Run scripts and commands
-- Manage customers, products, and more
-- Integration with Magento 2 core and extensions
-
-## Getting Started
-
-1. Download the latest PHAR release or clone the repository
-2. Run `php n98-magerun2.phar list` to see available commands
-3. See the [Development Guidelines](./DEVELOPMENT.md) for contributing
-
 ## License
 
 MIT License. See [MIT-LICENSE.txt](../MIT-LICENSE.txt).
