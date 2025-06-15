@@ -53,7 +53,7 @@ const config = {
     },
     prism: {
       theme: prismThemes.github,
-      additionalLanguages: ['php']
+      additionalLanguages: ['php', 'bash', 'sql']
     }
   },
   presets: [
