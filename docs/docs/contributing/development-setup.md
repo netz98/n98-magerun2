@@ -46,7 +46,7 @@ Run `git fetch upstream` to fetch the latest changes from the main repository.
 
 ### Testing
 
-See the [Test Setup](./testing.md) section for details on how to set up and run tests.
+See the [Test Setup](./testing/) section for details on how to set up and run tests.
 
 
 ---

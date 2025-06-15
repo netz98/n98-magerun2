@@ -7,7 +7,7 @@ This document provides essential information for developers working on the n98-m
 It covers the setup, development practices, and how to contribute effectively.
 
 - [Development Setup](./development-setup.md)
-- [Testing](./testing.md)
+- [Testing](./testing/)
 - [Documentation](./documentation.md)
 - [Software Architecture](./software-architecture.md)
 - [Add Core Commands](./add-core-commands.md)
