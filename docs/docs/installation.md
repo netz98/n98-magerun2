@@ -77,6 +77,12 @@ We offer a special dist package to install the phar file via Composer.
 See (https://packagist.org/packages/n98/magerun2-dist) for more details.
 The main advantage of the dist package is that there are no package dependencies.
 
+```bash
+composer require n98/magerun2-dist
+```
+
+For details on building the phar file yourself, see the [Development Guidelines](./intro.md#n98-magerun2-development-guidelines).
+
 ## Install with Composer (Source Package) - not recommended
 
 The installation via Composer is **not recommended**,

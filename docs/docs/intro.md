@@ -68,6 +68,18 @@ When you're ready, head over to the installation instructions to add n98-magerun
 
 ---
 
+## 🚀 Quick Start
+
+Ready to get n98-magerun2 up and running?
+
+1.  **Review Compatibility**: Check the [Compatibility Page](./compatibility.md) to ensure it works with your Magento and PHP versions.
+2.  **Install**: Follow our [Installation Guide](./installation.md) to add n98-magerun2 to your system or project.
+3.  **Explore Commands**: Once installed, run `n98-magerun2 list` to see all available commands, or browse the [Command Documentation](./command-docs/).
+
+This will get you started quickly with the most important first steps.
+
+---
+
 # n98-magerun2 Development Guidelines
 
 This document provides essential information for developers working on the n98-magerun2 project.
