@@ -1,13 +1,7 @@
 ---
 title: dev:console
 ---
-
-We offer an interactive console based on [Psy Shell](http://psysh.org/).
-The interactive console is a REPL (Read-Eval-Print-Loop).
-
-:::info
-The interactive console allows you to run PHP code in the context of your Magento store, making it easier to debug and experiment with Magento internals.
-:::
+The `dev:console` command is a powerful feature of the `n98-magerun2` command-line tool, designed to simplify common development and debugging tasks within Magento 2. It provides an interactive PHP shell, offering direct access to your Magento application's internals.
 
 ```sh
 n98-magerun2.phar dev:console [options] [--] [<cmd>]
@@ -40,7 +34,7 @@ Possible area codes are:
 ## Executing Code
 
 :::note
-You can enter PHP code directly in the console. This is useful for quick calculations or inspecting objects.
+You can enter PHP code directly in the console. This is useful for quick calculations or inspecting objects. This allows for immediate execution of any valid PHP code, making it easy to test simple logic or functions.
 :::
 
 Example code:
@@ -65,6 +59,29 @@ $page = $di->get('Magento\Cms\Api\PageRepositoryInterface');
 ```
 
 With this feature you are able to run short tests in your development or production environment.
+
+```php
+// Example: Load product information (inspired by the n98-magerun2 video)
+$productRepository = $di->get(\Magento\Catalog\Api\ProductRepositoryInterface::class);
+try {
+    $product = $productRepository->get('joust-duffel-bag');
+    echo "Product Name: " . $product->getName() . "\n";
+    echo "Price: " . $product->getPrice() . "\n";
+} catch (\Magento\Framework\Exception\NoSuchEntityException $e) {
+    echo "Product not found: joust-duffel-bag\n";
+}
+```
+
+## Benefits and Use Cases
+
+The `dev:console`, as part of `n98-magerun2`, offers several advantages for Magento developers:
+
+- **Rapid Data Retrieval:** Quickly fetch and inspect specific records or data from the database.
+- **Code Snippet Testing:** Easily test small pieces of Magento or PHP code in isolation before integrating them into larger modules.
+- **Scratchpad for Development:** Use it as a scratchpad to experiment with code ideas or debug logic step-by-step.
+- **Effective in Ephemeral Environments:** Particularly useful in environments like Magento Cloud or other containerized/ephemeral hosting solutions where direct file system access or a full IDE might be limited.
+- **Fast and Accessible:** The `n98-magerun2` tool itself is known for being fast, free, and open-source.
+- **Broad Compatibility:** It has a long history of support and maintains compatibility with a wide range of Magento and PHP versions.
 
 ## Code Generator
 
@@ -96,6 +113,13 @@ We offer some commands which can be used to create boilerplate code or even a co
 The idea is that you can create a new module with `make:module` command or switch in the context of an existing module with the `module` command.
 Inside this context it's possible to generate config files, classes, etc
 
+## Video Demonstration
+
+For a practical demonstration of the `dev:console` and its capabilities with `n98-magerun2`, check out the following video:
+
+- **Debug Magento 2 with this free, open source dev console:** [Watch on YouTube](https://youtu.be/teqHKYpz8dE?si=6_Vj-UBM2P6eYqtf)
+
+This video showcases many of the features discussed, including live examples of using the console for debugging and development tasks.
 
 ## Know Issues
 
