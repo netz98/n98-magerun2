@@ -26,6 +26,20 @@ class ListCommand extends AbstractAdminUserCommand
                 null,
                 InputOption::VALUE_OPTIONAL,
                 'Sort user list by a field (e.g., user_id, username, email, logdate)'
+            )
+            ->addOption(
+                'sort-order',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'Sort order direction (asc or desc). Default is asc',
+                'asc'
+            )
+            ->addOption(
+                'columns',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'Comma-separated list of columns to display. Available: user_id, firstname, lastname, email, username, password, created, modified, logdate, lognum, reload_acl_flag, is_active, extra, rp_token, rp_token_created_at, interface_locale, failures_num, first_failure, lock_expires',
+                null
             );
     }
 
@@ -48,20 +62,81 @@ class ListCommand extends AbstractAdminUserCommand
         if ($sortField === 'status') {
             $sortField = 'is_active';
         }
-        $userCollection->setOrder($sortField, 'ASC');
+        $sortOrder = strtolower($input->getOption('sort-order')) === 'desc' ? 'DESC' : 'ASC';
+        $userCollection->setOrder($sortField, $sortOrder);
+
+        $availableColumns = [
+            'user_id' => 'user_id',
+            'firstname' => 'firstname',
+            'lastname' => 'lastname',
+            'email' => 'email',
+            'username' => 'username',
+            'password' => 'password',
+            'created' => 'created',
+            'modified' => 'modified',
+            'logdate' => 'logdate',
+            'lognum' => 'lognum',
+            'reload_acl_flag' => 'reload_acl_flag',
+            'is_active' => 'status',
+            'extra' => 'extra',
+            'rp_token' => 'rp_token',
+            'rp_token_created_at' => 'rp_token_created_at',
+            'interface_locale' => 'interface_locale',
+            'failures_num' => 'failures_num',
+            'first_failure' => 'first_failure',
+            'lock_expires' => 'lock_expires',
+        ];
+
+        $defaultColumns = ['user_id', 'username', 'email', 'is_active', 'logdate'];
+        $columnsOpt = $input->getOption('columns');
+        $sortField = $input->getOption('sort') ?: 'user_id';
+        if ($sortField === 'status') {
+            $sortField = 'is_active';
+        }
+
+        // If columns are not defined, but sort is set and not in default columns, add it
+        if (!$columnsOpt && $sortField && !in_array($sortField, $defaultColumns, true) && isset($availableColumns[$sortField])) {
+            $defaultColumns[] = $sortField;
+        }
+
+        $columns = $columnsOpt ? array_map('trim', explode(',', $columnsOpt)) : $defaultColumns;
+        // Normalize columns to lowercase for matching
+        $columns = array_map('strtolower', $columns);
+        // Validate columns
+        $columns = array_filter($columns, function ($col) use ($availableColumns) {
+            return isset($availableColumns[$col]);
+        });
+
+        if (empty($columns)) {
+            $output->writeln('<error>No valid columns specified.</error>');
+            return Command::FAILURE;
+        }
+
+        $headers = array_map(function ($col) use ($availableColumns) {
+            return $availableColumns[$col];
+        }, $columns);
 
         $table = [];
         foreach ($userCollection as $user) {
-            $table[] = [
-                $user->getId(),
-                $user->getUsername(),
-                $user->getEmail(),
-                $user->getIsActive() ? 'active' : 'inactive',
-                $user->getLogdate(),
-            ];
+            $row = [];
+            foreach ($columns as $col) {
+                switch ($col) {
+                    case 'user_id':
+                        $row[] = $user->getId();
+                        break;
+                    case 'is_active':
+                        $row[] = $user->getIsActive() ? 'active' : 'inactive';
+                        break;
+                    default:
+                        $row[] = $user->getData($col);
+                        break;
+                }
+            }
+            $table[] = $row;
         }
+
         $this->getHelper('table')
-            ->setHeaders(['id', 'username', 'email', 'status', 'logdate'])
+            ->setHeaders($headers)
             ->renderByFormat($output, $table, $input->getOption('format'));
 
         return Command::SUCCESS;
