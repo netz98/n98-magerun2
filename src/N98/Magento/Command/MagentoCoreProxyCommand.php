@@ -79,7 +79,10 @@ class MagentoCoreProxyCommand extends AbstractMagentoCommand
         );
 
         $process->setTimeout($config['timeout']);
-        $process->setTty($input->isInteractive() && Process::isTtySupported());
+        // Enable TTY only if input is interactive and output is a terminal (not piped)
+        $isInteractive = $input->isInteractive();
+        $isOutputTerminal = function_exists('posix_isatty') && posix_isatty(STDOUT);
+        $process->setTty($isInteractive && $isOutputTerminal && Process::isTtySupported());
 
         if (OutputInterface::VERBOSITY_VERBOSE <= $output->getVerbosity()) {
             $output->writeln(sprintf('<debug>Execute: <comment>%s</comment></debug>', $process->getCommandLine()));
