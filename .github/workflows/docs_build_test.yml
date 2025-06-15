@@ -18,6 +18,7 @@ on:
     paths:
       - "docs/**"
       - ".github/workflows/docs_build_test.yml"
+  workflow_dispatch:
 
 defaults:
   run:
