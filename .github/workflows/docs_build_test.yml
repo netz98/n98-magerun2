@@ -11,13 +11,13 @@ on:
       - "release/*"
     paths:
       - "docs/**"
+      - ".github/workflows/docs_build_test.yml"
   pull_request_target:
     branches:
       - "master"
       - "develop"
     paths:
       - "docs/**"
-      - ".github/workflows/docs_build_test.yml"
   workflow_dispatch:
 
 defaults:
