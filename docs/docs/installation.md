@@ -34,9 +34,9 @@ shasum -a256 n98-magerun2.phar
 It is also possible to verify automatically:
 
 ```sh
-curl -sS -O https://files.magerun.net/n98-magerun2-latest.phar
-curl -sS -o n98-magerun2-latest.phar.sha256 https://files.magerun.net/sha256.php?file=n98-magerun2-latest.phar
-shasum -a 256 -c n98-magerun2-latest.phar.sha256
+curl -sS -O https://files.magerun.net/n98-magerun2.phar
+curl -sS -o n98-magerun2-latest.phar.sha256 https://files.magerun.net/sha256.php?file=n98-magerun2.phar
+shasum -a 256 -c n98-magerun2.phar.sha256
 ```
 
 If it shows the same checksum as on the website, you downloaded the file
@@ -75,35 +75,39 @@ sudo cp ./n98-magerun2.phar /usr/local/bin/
 
 We offer a special dist package to install the phar file via Composer.
 See (https://packagist.org/packages/n98/magerun2-dist) for more details.
-The main advantage of the dist package is that there are no package dependencies.
+The main advantage of the dist package is that there are **no package dependencies**.
+
+### Installation in a project
 
 ```bash
 composer require n98/magerun2-dist
 ```
 
-For details on building the phar file yourself, see the [Development Guidelines](./intro.md#n98-magerun2-development-guidelines).
+Run the command with `./vendor/bin/n98-magerun2.phar`
 
-## Install with Composer (Source Package) - not recommended
+### Installation globally
 
-The installation via Composer is **not recommended**,
+```bash
+composer global require n98/magerun2-dist
+````
+
+:::info
+requires ~/.composer/vendor/bin in your PATH
+:::
+
+
+## Install with Composer (Source Package)
+
+:::danger
+The installation via Composer is **not recommended** to run the tool in daily use,
 because it's impossible to be compatible with all project and Magento core dependencies.
 Please use the phar file instead of the Composer version. We are not able to provide
 compatibility to all Magento versions anymore.
+:::
 
-## Update
-
-There is a `self-update` command available. This works only
-for phar-distribution.
-
-```sh
-./n98-magerun2.phar self-update [--dry-run] <version>
+```bash
+composer require n98/n98-magerun2
 ```
-
-With `--dry-run` option it is possible to download and test
-the phar file without replacing the old one.
-
-The version argument is optional and can be used to rollback to a specific
-version of n98-magerun2. The version was introduced with v8.0.0. Older versions do not have the version argument.
 
 ## Autocompletion
 

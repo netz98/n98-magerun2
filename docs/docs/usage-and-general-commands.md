@@ -2,7 +2,7 @@
 id: usage-and-general-commands
 title: Usage and General Commands
 sidebar_label: Usage and General Commands
-sidebar_position: 3
+sidebar_position: 4
 ---
 
 # Usage and General Commands
