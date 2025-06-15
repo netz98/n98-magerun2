@@ -33,6 +33,7 @@ on:
       - "res/**"
       - "scoper.inc.php"
       - "src/**"
+      - "tests/**"
       - "version.txt"
       - ".github/workflows/magento-platform-tests.yml"
       # Trigger also on workflow changes
