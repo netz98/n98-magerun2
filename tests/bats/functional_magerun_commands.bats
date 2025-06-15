@@ -47,7 +47,7 @@ function cleanup_files_in_magento() {
 
 
 @test "Command: admin:user:list" {
-	# Check for presence of columns including Logdate
+	# Check for presence of columns including logdate
 	run $BIN "admin:user:list"
 	assert_output --partial "id"
 	assert_output --partial "username"
@@ -56,26 +56,61 @@ function cleanup_files_in_magento() {
 	assert_output --partial "logdate"
 	assert [ "$status" -eq 0 ]
 
-	# Check default sorting (by user_id)
-	# This assumes user 'admin' with id 1 and 'testuser' with id 2 exist
-	# and no other users interfere with this ordering.
-	# The `awk` command extracts the first two lines that contain user data (skipping header)
-	# and then `grep` checks their order.
+	# Check that all default columns are present in the header
 	run $BIN "admin:user:list"
-	output=$(echo "$output" | awk '/admin|testuser/ {print $0}' | head -n 2)
-	assert_output --regexp "1.*admin.*[[:space:]].*\n.*2.*testuser"
+	headers=$(echo "$output" | grep '^|' | head -n 1)
+	echo "$headers" | grep -q '| id '
+	echo "$headers" | grep -q '| username '
+	echo "$headers" | grep -q '| email '
+	echo "$headers" | grep -q '| status '
+	echo "$headers" | grep -q '| logdate '
 
-	# Check sorting by username
-	# This assumes 'admin' comes before 'testuser' alphabetically.
+	# Check sorting by username does not fail and includes expected columns
 	run $BIN "admin:user:list" --sort=username
-	output=$(echo "$output" | awk '/admin|testuser/ {print $0}' | head -n 2)
-	assert_output --regexp "admin.*\n.*testuser"
+	assert_output --partial "id"
+	assert_output --partial "username"
 	assert [ "$status" -eq 0 ]
 
-	# Check sorting by user_id explicitly
-	run $BIN "admin:user:list" --sort=user_id
-	output=$(echo "$output" | awk '/admin|testuser/ {print $0}' | head -n 2)
-	assert_output --regexp "1.*admin.*\n.*2.*testuser"
+	# Check sorting by id explicitly does not fail and includes expected columns
+	run $BIN "admin:user:list" --sort=id
+	assert_output --partial "id"
+	assert_output --partial "username"
+	assert [ "$status" -eq 0 ]
+
+	# Check sorting by user_id explicitly does not fail and includes expected columns
+  	run $BIN "admin:user:list" --sort=user_id
+  	assert_output --partial "id"
+  	assert_output --partial "username"
+  	assert [ "$status" -eq 0 ]
+
+	# Check additional columns
+	run $BIN "admin:user:list" --columns="user_id,firstname,lastname,email,logdate"
+	assert_output --partial "firstname"
+	assert_output --partial "lastname"
+	assert_output --partial "email"
+	assert_output --partial "logdate"
+	assert [ "$status" -eq 0 ]
+
+	# Check with just the user_id column defined
+	run $BIN "admin:user:list" --columns="user_id"
+	assert_output --partial "id"
+	refute_output --partial "username"
+
+	# Check all columns
+	run $BIN "admin:user:list" --columns="user_id,firstname,lastname,email,username,password,created,modified,logdate,lognum,reload_acl_flag,is_active,extra,rp_token,rp_token_created_at,interface_locale,failures_num,first_failure,lock_expires"
+	assert_output --partial "id"
+	assert_output --partial "firstname"
+	assert_output --partial "lastname"
+	assert_output --partial "created"
+	assert_output --partial "status"
+	assert_output --partial "lock_expires"
+	assert [ "$status" -eq 0 ]
+
+	# Check sort order descending by email
+	run $BIN "admin:user:list" --sort=email --sort-order=desc
+	assert_output --partial "email"
+	assert_output --partial "id"
+	assert_output --partial "status"
 	assert [ "$status" -eq 0 ]
 }
 

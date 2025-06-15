@@ -95,7 +95,7 @@ class ListCommandTest extends TestCase
                     'interface_locale', 'failures_num', 'first_failure', 'lock_expires'
                 ],
                 [
-                    'user_id', 'firstname', 'lastname', 'email', 'username', 'password', 'created', 'modified',
+                    'id', 'firstname', 'lastname', 'email', 'username', 'password', 'created', 'modified',
                     'logdate', 'lognum', 'reload_acl_flag', 'status', 'extra', 'rp_token', 'rp_token_created_at',
                     'interface_locale', 'failures_num', 'first_failure', 'lock_expires'
                 ]
