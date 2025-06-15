@@ -59,6 +59,9 @@ class ListCommand extends AbstractAdminUserCommand
         $userCollection = $this->userModel->getCollection();
 
         $sortField = $input->getOption('sort') ?: 'user_id';
+        if ($sortField === 'id') {
+            $sortField = 'user_id';
+        }
         if ($sortField === 'status') {
             $sortField = 'is_active';
         }
@@ -66,7 +69,8 @@ class ListCommand extends AbstractAdminUserCommand
         $userCollection->setOrder($sortField, $sortOrder);
 
         $availableColumns = [
-            'user_id' => 'user_id',
+            'user_id' => 'id',
+            'id' => 'id',
             'firstname' => 'firstname',
             'lastname' => 'lastname',
             'email' => 'email',
@@ -90,6 +94,9 @@ class ListCommand extends AbstractAdminUserCommand
         $defaultColumns = ['user_id', 'username', 'email', 'is_active', 'logdate'];
         $columnsOpt = $input->getOption('columns');
         $sortField = $input->getOption('sort') ?: 'user_id';
+        if ($sortField === 'id') {
+            $sortField = 'user_id';
+        }
         if ($sortField === 'status') {
             $sortField = 'is_active';
         }
@@ -122,6 +129,7 @@ class ListCommand extends AbstractAdminUserCommand
             foreach ($columns as $col) {
                 switch ($col) {
                     case 'user_id':
+                    case 'id':
                         $row[] = $user->getId();
                         break;
                     case 'is_active':

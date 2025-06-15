@@ -13,7 +13,7 @@ hooks:
     post-start:
         - composer: install
         - exec: bash .ddev/hook_01_setup.sh
-webimage_extra_packages: [lz4, zstd, mycli]
+webimage_extra_packages: [bats, lz4, zstd, mycli]
 use_dns_when_possible: true
 composer_version: 2.2.17
 web_environment:

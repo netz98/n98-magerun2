@@ -25,7 +25,7 @@ It provides options to format the output and sort the list by various user attri
 
 The following columns are available and can be selected with the `--columns` option:
 
-- `user_id`: The user ID.
+- `user_id` or `id`: The user ID. Both can be used as column names, but the output header will always be `id`.
 - `firstname`: The user's first name.
 - `lastname`: The user's last name.
 - `email`: The email address of the admin user.
@@ -36,7 +36,7 @@ The following columns are available and can be selected with the `--columns` opt
 - `logdate`: The date and time of the user's last login.
 - `lognum`: The number of logins.
 - `reload_acl_flag`: Whether ACL needs to be reloaded.
-- `is_active`: The status of the user account (e.g., `active`, `inactive`).
+- `is_active`: The status of the user account (e.g., `active`, `inactive`). The output header will be `status`.
 - `extra`: Extra data.
 - `rp_token`: Reset password token.
 - `rp_token_created_at`: When the reset password token was created.
