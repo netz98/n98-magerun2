@@ -17,6 +17,7 @@ on:
       - "develop"
     paths:
       - "docs/**"
+      - ".github/workflows/docs_build_test.yml"
 
 defaults:
   run:
