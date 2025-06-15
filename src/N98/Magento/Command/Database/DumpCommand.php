@@ -158,6 +158,18 @@ class DumpCommand extends AbstractDatabaseCommand
                 InputOption::VALUE_NONE,
                 'Use mydumper instead of mysqldump for potentially faster dumps'
             )
+            ->addOption(
+                'views',
+                null,
+                InputOption::VALUE_NONE,
+                'Explicitly include views in the dump. Views are included by default if not otherwise excluded.'
+            )
+            ->addOption(
+                'no-views',
+                null,
+                InputOption::VALUE_NONE,
+                'Exclude all views from the dump.'
+            )
             ->setDescription('Dumps database with mysqldump cli client');
 
         $help = <<<HELP
@@ -176,8 +188,31 @@ See it in action: http://youtu.be/ttjZHY6vThs
 - The command comes with a compression function. Add i.e. `--compression=gz`
   to dump directly in gzip compressed file.
 
+<comment>View Handling</comment>
+ By default, views are included in the dump.
+ --views: This option is mostly for clarity or to counteract a very broad exclusion pattern
+          if you want to ensure views are included.
+ --no-views: Use this option to exclude all views from the dump. If --no-views is used,
+             views will be excluded even if they match patterns in --include or are
+             not matched by --strip or --exclude patterns.
+
 HELP;
         $this->setHelp($help);
+    }
+
+    /**
+     * Prefixes a table/view name if it doesn't already have the prefix.
+     *
+     * @param string $name The table or view name.
+     * @param string $prefix The database prefix.
+     * @return string The prefixed name.
+     */
+    private function prefixTableIfNeeded($name, $prefix)
+    {
+        if (!empty($prefix) && strpos($name, $prefix) !== 0) {
+            return $prefix . $name;
+        }
+        return $name;
     }
 
     /**
@@ -354,28 +389,54 @@ HELP;
 
         /* @var $database DatabaseHelper */
         $database = $this->getDatabaseHelper();
+        $allViews = $database->getViews(); // Assumes getViews() returns unprefixed names
+        $allActualTables = $database->getTables(true); // Assumes getTables(true) returns unprefixed names
+        $dbPrefix = $this->dbSettings['prefix'];
+        $dbName = $this->dbSettings['dbname'];
 
         $mysqlClientToolConnectionString = $database->getMysqlClientToolConnectionString();
 
-        $excludeTables = $this->excludeTables($input, $output);
-        $stripTables = array_diff($this->stripTables($input, $output), $excludeTables);
-        if ($stripTables) {
-            // dump structure for strip-tables
+        $excludeTablesUserInput = $this->excludeTables($input, $output); // Unprefixed
+        $stripTablesUserInput = $this->stripTables($input, $output);     // Unprefixed
+
+        // Structure dump part (for stripped tables)
+        $tablesForStructureDump = $stripTablesUserInput;
+
+        if ($input->getOption('no-views')) {
+            // If --no-views, ensure only actual tables are in the structure dump of stripped tables
+            $tablesForStructureDump = array_intersect($tablesForStructureDump, $allActualTables);
+        }
+
+        $prefixedTablesForStructureDump = [];
+        foreach ($tablesForStructureDump as $table) {
+            $prefixedTablesForStructureDump[] = $this->prefixTableIfNeeded($table, $dbPrefix);
+        }
+
+        if ($prefixedTablesForStructureDump) {
             $execs->add(
                 '--no-data ' . $mysqlClientToolConnectionString .
-                ' ' . implode(' ', $stripTables) . $this->postDumpPipeCommands($input)
+                ' ' . implode(' ', $prefixedTablesForStructureDump) . $this->postDumpPipeCommands($input)
             );
         }
 
-        // dump data for all other tables
+        // Main dump part (data and remaining structures)
+        $ignoreTableList = array_merge($excludeTablesUserInput, $stripTablesUserInput);
+
+        if ($input->getOption('no-views')) {
+            // If --no-views, add all views to the ignore list for the main dump
+            $ignoreTableList = array_merge($ignoreTableList, $allViews);
+        }
+        $ignoreTableList = array_unique($ignoreTableList);
+
         $ignore = '';
-        foreach (array_merge($excludeTables, $stripTables) as $ignoreTable) {
-            $ignore .= '--ignore-table=' . $this->dbSettings['dbname'] . '.' . $ignoreTable . ' ';
+        foreach ($ignoreTableList as $ignoreItem) {
+            $prefixedIgnoreItem = $this->prefixTableIfNeeded($ignoreItem, $dbPrefix);
+            $ignore .= '--ignore-table=' . $dbName . '.' . $prefixedIgnoreItem . ' ';
         }
 
         $execs->add(
-            $ignore
-            . $mysqlClientToolConnectionString
+            rtrim($ignore) // Use rtrim to remove trailing space if any
+            . ' ' . $mysqlClientToolConnectionString
             . $postDumpGitFriendlyPipeCommands
             . $this->postDumpPipeCommands($input)
         );
@@ -673,6 +734,10 @@ HELP;
      */
     private function createMydumperExecs(InputInterface $input, OutputInterface $output)
     {
+        /* @var $database DatabaseHelper */
+        $database = $this->getDatabaseHelper(); // Ensure helper is available
+        $dbPrefix = $this->dbSettings['prefix'];
+
         $execs = new Execs('mydumper');
         $execs->setCompression($input->getOption('compression'), $input);
 
@@ -709,19 +774,43 @@ HELP;
         }
 
         // Handle excluded and stripped tables
-        $excludeTables = $this->excludeTables($input, $output);
-        $stripTables = array_diff($this->stripTables($input, $output), $excludeTables);
+        $excludeTablesUserInput = $this->excludeTables($input, $output); // Unprefixed
+        $stripTablesUserInput = array_diff($this->stripTables($input, $output), $excludeTablesUserInput); // Unprefixed
 
-        if ($excludeTables) {
-            foreach ($excludeTables as $table) {
-                $execs->addOptions('--ignore-table=' . escapeshellarg($table));
+        $ignoreOptions = [];
+        $noDataOptions = [];
+
+        foreach ($excludeTablesUserInput as $table) {
+            $ignoreOptions[] = '--ignore-table=' . escapeshellarg($this->prefixTableIfNeeded($table, $dbPrefix));
+        }
+
+        foreach ($stripTablesUserInput as $table) {
+            // For mydumper, stripping data from a table that is also a view doesn't make sense
+            // as views don't store data directly. We only care about actual tables for --no-data.
+            // However, if --no-views is active, views will be added to ignore-table list later.
+            $allActualTables = $database->getTables(true);
+            if (in_array($table, $allActualTables, true)) {
+                 $noDataOptions[] = '--no-data=' . escapeshellarg($this->prefixTableIfNeeded($table, $dbPrefix));
             }
         }
 
-        if ($stripTables) {
-            foreach ($stripTables as $table) {
-                $execs->addOptions('--no-data=' . escapeshellarg($table));
+        if ($input->getOption('no-views')) {
+            $allViews = $database->getViews(); // Unprefixed
+            foreach ($allViews as $view) {
+                // Add to ignore list, ensuring no duplicates if already excluded by other means
+                $prefixedViewName = $this->prefixTableIfNeeded($view, $dbPrefix);
+                $ignoreOption = '--ignore-table=' . escapeshellarg($prefixedViewName);
+                if (!in_array($ignoreOption, $ignoreOptions, true)) {
+                    $ignoreOptions[] = $ignoreOption;
+                }
             }
+        }
+
+        if ($ignoreOptions) {
+            $execs->addOptions(implode(' ', array_unique($ignoreOptions)));
+        }
+        if ($noDataOptions) {
+            $execs->addOptions(implode(' ', array_unique($noDataOptions)));
         }
 
         return $execs;
