@@ -14,6 +14,10 @@ const config = {
   favicon: 'img/favicon.ico',
   organizationName: 'netz98',
   projectName: 'n98-magerun2',
+  future: {
+    experimental_faster: true,
+    v4: true
+  },
   markdown: {
     mermaid: true
   },
