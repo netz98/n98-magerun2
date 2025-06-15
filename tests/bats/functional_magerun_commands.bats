@@ -45,74 +45,88 @@ function cleanup_files_in_magento() {
   assert [ "$status" -eq 0 ]
 }
 
+# ============================================
+# Command: admin:user:list
+# ============================================
 
-@test "Command: admin:user:list" {
-	# Check for presence of columns including logdate
-	run $BIN "admin:user:list"
-	assert_output --partial "id"
-	assert_output --partial "username"
-	assert_output --partial "email"
-	assert_output --partial "status"
-	assert_output --partial "logdate"
-	assert [ "$status" -eq 0 ]
-
-	# Check that all default columns are present in the header
-	run $BIN "admin:user:list"
-	headers=$(echo "$output" | grep '^|' | head -n 1)
-	echo "$headers" | grep -q '| id '
-	echo "$headers" | grep -q '| username '
-	echo "$headers" | grep -q '| email '
-	echo "$headers" | grep -q '| status '
-	echo "$headers" | grep -q '| logdate '
-
-	# Check sorting by username does not fail and includes expected columns
-	run $BIN "admin:user:list" --sort=username
-	assert_output --partial "id"
-	assert_output --partial "username"
-	assert [ "$status" -eq 0 ]
-
-	# Check sorting by id explicitly does not fail and includes expected columns
-	run $BIN "admin:user:list" --sort=id
-	assert_output --partial "id"
-	assert_output --partial "username"
-	assert [ "$status" -eq 0 ]
-
-	# Check sorting by user_id explicitly does not fail and includes expected columns
-  	run $BIN "admin:user:list" --sort=user_id
-  	assert_output --partial "id"
-  	assert_output --partial "username"
-  	assert [ "$status" -eq 0 ]
-
-	# Check additional columns
-	run $BIN "admin:user:list" --columns="user_id,firstname,lastname,email,logdate"
-	assert_output --partial "firstname"
-	assert_output --partial "lastname"
-	assert_output --partial "email"
-	assert_output --partial "logdate"
-	assert [ "$status" -eq 0 ]
-
-	# Check with just the user_id column defined
-	run $BIN "admin:user:list" --columns="user_id"
-	assert_output --partial "id"
-	refute_output --partial "username"
-
-	# Check all columns
-	run $BIN "admin:user:list" --columns="user_id,firstname,lastname,email,username,password,created,modified,logdate,lognum,reload_acl_flag,is_active,extra,rp_token,rp_token_created_at,interface_locale,failures_num,first_failure,lock_expires"
-	assert_output --partial "id"
-	assert_output --partial "firstname"
-	assert_output --partial "lastname"
-	assert_output --partial "created"
-	assert_output --partial "status"
-	assert_output --partial "lock_expires"
-	assert [ "$status" -eq 0 ]
-
-	# Check sort order descending by email
-	run $BIN "admin:user:list" --sort=email --sort-order=desc
-	assert_output --partial "email"
-	assert_output --partial "id"
-	assert_output --partial "status"
-	assert [ "$status" -eq 0 ]
+@test "Command: admin:user:list (default columns)" {
+  run $BIN "admin:user:list"
+  assert_output --partial "id"
+  assert_output --partial "username"
+  assert_output --partial "email"
+  assert_output --partial "status"
+  assert_output --partial "logdate"
+  assert [ "$status" -eq 0 ]
 }
+
+@test "Command: admin:user:list (header columns)" {
+  run $BIN "admin:user:list"
+  headers=$(echo "$output" | grep '^|' | head -n 1)
+  echo "$headers" | grep -q '| id '
+  echo "$headers" | grep -q '| username '
+  echo "$headers" | grep -q '| email '
+  echo "$headers" | grep -q '| status '
+  echo "$headers" | grep -q '| logdate '
+}
+
+@test "Command: admin:user:list (sort by username)" {
+  run $BIN "admin:user:list" --sort=username
+  assert_output --partial "id"
+  assert_output --partial "username"
+  assert [ "$status" -eq 0 ]
+}
+
+@test "Command: admin:user:list (sort by id)" {
+  run $BIN "admin:user:list" --sort=id
+  assert_output --partial "id"
+  assert_output --partial "username"
+  assert [ "$status" -eq 0 ]
+}
+
+@test "Command: admin:user:list (sort by user_id)" {
+  run $BIN "admin:user:list" --sort=user_id
+  assert_output --partial "id"
+  assert_output --partial "username"
+  assert [ "$status" -eq 0 ]
+}
+
+@test "Command: admin:user:list (additional columns)" {
+  run $BIN "admin:user:list" --columns="user_id,firstname,lastname,email,logdate"
+  assert_output --partial "firstname"
+  assert_output --partial "lastname"
+  assert_output --partial "email"
+  assert_output --partial "logdate"
+  assert [ "$status" -eq 0 ]
+}
+
+@test "Command: admin:user:list (user_id only)" {
+  run $BIN "admin:user:list" --columns="user_id"
+  assert_output --partial "id"
+  refute_output --partial "username"
+}
+
+@test "Command: admin:user:list (all columns)" {
+  run $BIN "admin:user:list" --columns="user_id,firstname,lastname,email,username,password,created,modified,logdate,lognum,reload_acl_flag,is_active,extra,rp_token,rp_token_created_at,interface_locale,failures_num,first_failure,lock_expires"
+  assert_output --partial "id"
+  assert_output --partial "firstname"
+  assert_output --partial "lastname"
+  assert_output --partial "created"
+  assert_output --partial "status"
+  assert_output --partial "lock_expires"
+  assert [ "$status" -eq 0 ]
+}
+
+@test "Command: admin:user:list (sort by email desc)" {
+  run $BIN "admin:user:list" --sort=email --sort-order=desc
+  assert_output --partial "email"
+  assert_output --partial "id"
+  assert_output --partial "status"
+  assert [ "$status" -eq 0 ]
+}
+
+# ============================================
+# Command: cache:catalog:image:flush
+# ============================================
 
 @test "Command: cache:catalog:image:flush" {
   run $BIN "cache:catalog:image:flush"
@@ -124,124 +138,218 @@ function cleanup_files_in_magento() {
   assert [ "$status" -eq 0 ]
 }
 
+# ============================================
+# Command: cache:clean
+# ============================================
+
 @test "Command: cache:clean" {
 	run $BIN "cache:clean" "layout"
 	assert_output --partial "cleaned"
 }
+
+# ============================================
+# Command: cache:disable
+# ============================================
 
 @test "Command: cache:disable" {
   run $BIN "cache:disable" "full_page"
 	assert_output --partial The "following cache types were disabled"
 }
 
+# ============================================
+# Command: cache:enable
+# ============================================
+
 @test "Command: cache:enable" {
   run $BIN "cache:enable" "full_page"
   assert_output --partial The "following cache types were enabled"
 }
+
+# ============================================
+# Command: cache:flush
+# ============================================
 
 @test "Command: cache:flush" {
   run $BIN "cache:flush"
   assert_output --partial "cache flushed"
 }
 
+# ============================================
+# Command: cache:report
+# ============================================
+
 @test "Command: cache:report" {
   run $BIN "cache:report"
   assert_output --partial "EXPIRE"
 }
 
+# ============================================
+# Command: cache:remove:id
+# ============================================
+
 @test "Command: cache:remove:id" {
   run $BIN "cache:remove:id" "app_action_list"
   assert_output --partial "Cache entry with id app_action_list was removed"
+}
 
+@test "Command: cache:remove:id --strict" {
   run $BIN "cache:remove:id" --strict "not_exiting_cache_key_12345"
   assert [ "$status" -eq 1 ]
 }
+
+# ============================================
+# Command: config:data:acl
+# ============================================
 
 @test "Command: config:data:acl" {
   run $BIN "config:data:acl"
   assert_output --partial "ACL Tree"
 }
 
+# ============================================
+# Command: config:data:di
+# ============================================
+
 @test "Command: config:data:di" {
   run $BIN "config:data:di"
   assert_output --partial "DateTimeInterface"
 }
 
+# ============================================
+# Command: config:data:mview
+# ============================================
+
 @test "Command: config:data:mview" {
   run $BIN "config:data:mview"
   assert_output --partial "catalog_category_flat"
+}
 
+@test "Command: config:data:mview with -t" {
   run $BIN "config:data:mview" -t
   assert_output --partial "MView Data Tree"
 }
 
+# ============================================
+# Command: config:data:indexer
+# ============================================
+
 @test "Command: config:data:indexer" {
   run $BIN "config:data:indexer"
   assert_output --partial "catalog_product_flat"
+}
 
+@test "Command: config:data:indexer with -t" {
   run $BIN "config:data:indexer" -t
   assert_output --partial "Indexer Data Tree"
 }
+
+# ============================================
+# Command: config:env:set
+# ============================================
 
 @test "Command: config:env:set" {
   run $BIN "config:env:set" magerun.example foo
   assert_output --partial "Config magerun.example successfully set to foo"
 }
 
+# ============================================
+# Command: config:env:delete
+# ============================================
+
 @test "Command: config:env:delete" {
   run $BIN "config:env:delete" magerun.example
   assert_output --partial "Config magerun.example successfully removed"
 }
+
+# ============================================
+# Command: config:env:show
+# ============================================
 
 @test "Command: config:env:show" {
   run $BIN "config:env:show"
   assert_output --partial "backend.frontName"
 }
 
+# ============================================
+# Command: config:search
+# ============================================
+
 @test "Command: config:search" {
   run $BIN "config:search" "tax"
   assert_output --partial "Sales / Tax"
 }
 
+# ============================================
+# Command: config:store:set
+# ============================================
+
 @test "Command: config:store:set" {
   run $BIN "config:store:set" n98/magerun/example defaultValue
   assert_output --partial "n98/magerun/example => defaultValue"
+}
 
+@test "Command: config:store:set with scope" {
   run $BIN "config:store:set" --scope=stores --scope-id=1 n98/magerun/example myStore2value
   assert_output --partial "n98/magerun/example => myStore2value"
 }
+
+# ============================================
+# Command: config:store:get
+# ============================================
 
 @test "Command: config:store:get" {
   run $BIN "config:store:get" n98/magerun/example
   assert_output --partial "n98/magerun/example"
   assert_output --partial "defaultValue"
   assert_output --partial "myStore2value"
+}
 
+@test "Command: config:store:get with scope-id=1" {
   run $BIN "config:store:get" --scope=stores --scope-id=1 n98/magerun/example
   assert_output --partial "myStore2value"
+}
 
+@test "Command: config:store:get with scope-id=default" {
   run $BIN "config:store:get" --scope=stores --scope-id=default n98/magerun/example
   assert_output --partial "myStore2value"
+}
 
+@test "Command: config:store:get with scope-id=0" {
   run $BIN "config:store:get" --scope=stores --scope-id=0 n98/magerun/example
   assert_output --partial "n98/magerun/example"
+}
 
+@test "Command: config:store:get with scope-id=admin" {
   run $BIN "config:store:get" --scope=stores --scope-id=admin n98/magerun/example
   assert_output --partial "n98/magerun/example"
+}
 
+@test "Command: config:store:get with not existing scope-id" {
   run $BIN "config:store:get" --scope=stores --scope-id=not_existing n98/magerun/example
   assert [ "$status" -eq 1 ]
 }
+
+# ============================================
+# Command: config:store:delete
+# ============================================
 
 @test "Command: config:store:delete" {
   run $BIN "config:store:delete" n98/magerun/example
   assert_output --partial "deleted path"
 }
 
+# ============================================
+# Command: customer:create
+# ============================================
+
 @test "Command: customer:create" {
   run $BIN "customer:create" "foo@example.com" "Password123" "Firstname" "Lastname"
   assert_output --partial "Customer foo@example.com successfully created"
 }
+
+# ============================================
+# Command: customer:info
+# ============================================
 
 @test "Command: customer:info" {
   run $BIN "customer:info" "foo@example.com"
@@ -250,30 +358,54 @@ function cleanup_files_in_magento() {
   assert_output --partial "Lastname"
 }
 
+# ============================================
+# Command: customer:list
+# ============================================
+
 @test "Command: customer:list" {
   run $BIN "customer:list"
   assert_output --partial "foo@example.com"
 }
+
+# ============================================
+# Command: customer:change-password
+# ============================================
 
 @test "Command: customer:change-password" {
   run $BIN "customer:change-password" "foo@example.com" "Password1234"
   assert_output --partial "Password successfully changed"
 }
 
+# ============================================
+# Command: customer:add-address
+# ============================================
+
 @test "Command: customer:add-address" {
   run $BIN "customer:add-address" foo@example.com base --firstname="John" --lastname="Doe" --street="Pariser Platz" --city="Berlin" --country="DE" --postcode="10117" --telephone="1234567890" --default-billing --default-shipping
   assert_output --partial "Address added successfully to customer foo@example.com"
 }
+
+# ============================================
+# Command: customer:delete
+# ============================================
 
 @test "Command: customer:delete" {
   run $BIN "customer:delete" --fuzzy --email=foo --force
   assert_output --partial "Successfully deleted 1 customer/s"
 }
 
+# ============================================
+# Command: db:add-default-authorization-entries
+# ============================================
+
 @test "Command: db:add-default-authorization-entries" {
   run $BIN "db:add-default-authorization-entries"
   assert_output --partial "OK"
 }
+
+# ============================================
+# Command: db:dump
+# ============================================
 
 @test "Command: db:dump --stdout" {
   run $BIN "db:dump" --stdout
@@ -335,25 +467,43 @@ function cleanup_files_in_magento() {
 #  mv $N98_MAGERUN2_TEST_MAGENTO_ROOT/app/etc/env.php.bak $N98_MAGERUN2_TEST_MAGENTO_ROOT/app/etc/env.php
 #}
 
+# ============================================
+# Command: db:info
+# ============================================
+
 @test "Command: db:info" {
   run $BIN "db:info"
   assert_output --partial "PDO-Connection-String"
 }
+
+# ============================================
+# Command: db:status
+# ============================================
 
 @test "Command: db:status" {
   run $BIN "db:status"
   assert_output --partial "InnoDB Buffer Pool hit"
 }
 
+# ============================================
+# Command: db:variables
+# ============================================
+
 @test "Command: db:variables" {
   run $BIN "db:variables"
   assert_output --partial "innodb_buffer_pool_size"
 }
 
-@test "Command: design:demo-notice" {
+# ============================================
+# Command: design:demo-notice
+# ============================================
+
+@test "Command: design:demo-notice --on" {
   run $BIN "design:demo-notice" --on
   assert_output --partial "Demo Notice enabled for store default"
+}
 
+@test "Command: design:demo-notice --off" {
   run $BIN "design:demo-notice" --off
   assert_output --partial "Demo Notice disabled for store default"
 }
@@ -363,11 +513,19 @@ function cleanup_files_in_magento() {
 #  assert_output --partial "di"
 #}
 
+# ============================================
+# Command: dev:module:create
+# ============================================
+
 @test "Command: dev:module:create" {
   run $BIN "dev:module:create" Magerun123 TestModule
   assert_output --partial "Created directory"
   cleanup_files_in_magento "app/code/N98/Magerun123"
 }
+
+# ============================================
+# Command: dev:di:preference:list
+# ============================================
 
 @test "Command: dev:di:preference:list" {
   run $BIN "dev:di:preference:list" global
@@ -376,6 +534,10 @@ function cleanup_files_in_magento() {
   run $BIN "dev:di:preference:list" crontab
   assert_output --partial "Magento\Backend\App\ConfigInterface"
 }
+
+# ============================================
+# Command: dev:module:detect-composer-dependencies
+# ============================================
 
 @test "Command: dev:module:detect-composer-dependencies" {
     if [ -d "${N98_MAGERUN2_TEST_MAGENTO_ROOT}/vendor/magento/module-catalog-rule" ]; then
@@ -388,79 +550,139 @@ function cleanup_files_in_magento() {
     fi
 }
 
+# ============================================
+# Command: dev:module:list
+# ============================================
+
 @test "Command: dev:module:list" {
   run $BIN "dev:module:list"
   assert_output --partial "Magento_Store"
 }
+
+# ============================================
+# Command: dev:module:observer:list
+# ============================================
 
 @test "Command: dev:module:observer:list" {
   run $BIN "dev:module:observer:list" sales_order_place_after global
   assert_output --partial "Observer name"
 }
 
+# ============================================
+# Command: dev:translate:set
+# ============================================
+
 @test "Command: dev:translate:set" {
   run $BIN "dev:translate:set" foo foo_translate
   assert_output --partial "Translated"
+}
 
+@test "Command: dev:translate:set with default" {
   run $BIN "dev:translate:set" foo foo_translate default
   assert_output --partial "Translated"
 }
 
-@test "Command: dev:translate:admin" {
+# ============================================
+# Command: dev:translate:admin
+# ============================================
+
+@test "Command: dev:translate:admin --on" {
   run $BIN "dev:translate:admin" --on
   assert_output --partial "enabled"
+}
 
+@test "Command: dev:translate:admin --off" {
   run $BIN "dev:translate:admin" --off
   assert_output --partial "disabled"
 }
+
+# ============================================
+# Command: dev:translate:export
+# ============================================
 
 @test "Command: dev:translate:export" {
   run $BIN "dev:translate:export" en_US
   assert_output --partial "Exporting"
 }
 
-@test "Command: dev:translate:shop" {
+# ============================================
+# Command: dev:translate:shop
+# ============================================
+
+@test "Command: dev:translate:shop --on" {
   run $BIN "dev:translate:shop" --on
   assert_output --partial "enabled"
+}
 
+@test "Command: dev:translate:shop --off" {
   run $BIN "dev:translate:shop" --off
   assert_output --partial "disabled"
 }
 
-@test "Command: dev:symlinks" {
+# ============================================
+# Command: dev:symlinks
+# ============================================
+
+@test "Command: dev:symlinks --on" {
   run $BIN "dev:symlinks" --on
   assert_output --partial "allowed"
+}
 
+@test "Command: dev:symlinks --off" {
   run $BIN "dev:symlinks" --off
   assert_output --partial "denied"
 }
 
-@test "Command: dev:template-hints" {
+# ============================================
+# Command: dev:template-hints
+# ============================================
+
+@test "Command: dev:template-hints --on" {
   run $BIN "dev:template-hints" --on
   assert_output --partial "enabled"
+}
 
+@test "Command: dev:template-hints --off" {
   run $BIN "dev:template-hints" --off
   assert_output --partial "disabled"
 }
 
-@test "Command: dev-template-hints-blocks" {
+# ============================================
+# Command: dev-template-hints-blocks
+# ============================================
+
+@test "Command: dev-template-hints-blocks --on" {
   run $BIN "dev:template-hints-blocks" --on
   assert_output --partial "enabled"
+}
 
+@test "Command: dev-template-hints-blocks --off" {
   run $BIN "dev:template-hints-blocks" --off
   assert_output --partial "disabled"
 }
+
+# ============================================
+# Command: dev:theme:list
+# ============================================
 
 @test "Command: dev:theme:list" {
   run $BIN "dev:theme:list"
   assert_output --partial "Magento/backend"
 }
 
+# ============================================
+# Command: dev:encrypt & dev:decrypt
+# ============================================
+
 @test "Command: dev:encrypt & dev:decrypt" {
   result=$($BIN "dev:encrypt" "testValue")
   run $BIN "dev:decrypt" "${result}"
   assert_output "testValue"
 }
+
+# ============================================
+# Command: eav:attribute:list
+# ============================================
 
 @test "Command: eav:attribute:list" {
   run $BIN "eav:attribute:list"
@@ -472,26 +694,43 @@ function cleanup_files_in_magento() {
   assert_output --partial "catalog_product_entity"
 }
 
-@test "Command: github:pr" {
+# ============================================
+# Command: github:pr
+# ============================================
+
+@test "Command: github:pr 21787" {
   run $BIN "github:pr" 21787
   assert_output --partial "x_forwarded_for"
+}
 
+@test "Command: github:pr --patch 21787" {
   run $BIN "github:pr" --patch 21787
   assert_output --partial "PR-21787-magento-magento2.patch"
+}
 
+@test "Command: github:pr --diff 21787" {
   run $BIN "github:pr" --diff 21787
   assert_output --partial "setXForwardedFor"
-
-  # 2025-03-23 PRs are gone in Github -> issue at Github
-  #run $BIN "github:pr" --mage-os 1
-  #assert_output --partial "automatically"
-
-  #run $BIN "github:pr" --mage-os --patch 1
-  #assert_output --partial "PR-1-mage-os-mageos-magento2.patch"
-
-  #run $BIN "github:pr" --mage-os --diff 1
-  #assert_output --partial "server_url"
 }
+
+@test "Command: github:pr --mage-os 1" {
+  run $BIN "github:pr" --mage-os 1
+  assert_output --partial "automatically"
+}
+
+@test "Command: github:pr --mage-os --patch 1" {
+  run $BIN "github:pr" --mage-os --patch 1
+  assert_output --partial "PR-1-mage-os-mageos-magento2.patch"
+}
+
+@test "Command: github:pr --mage-os --diff 1" {
+  run $BIN "github:pr" --mage-os --diff 1
+  assert_output --partial "server_url"
+}
+
+# ============================================
+# Command: generation:flush
+# ============================================
 
 @test "Command: generation:flush" {
   run $BIN "generation:flush" Symfony
@@ -499,20 +738,34 @@ function cleanup_files_in_magento() {
   assert_output --partial "Symfony"
 }
 
+# ============================================
+# Command: index:list
+# ============================================
+
 @test "Command: index:list" {
   run $BIN "index:list"
   assert_output --partial "catalogsearch_fulltext"
 }
 
-@test "Command: index:trigger:recreate" {
+# ============================================
+# Command: index:trigger:recreate
+# ============================================
+
+@test "Command: index:trigger:recreate realtime" {
   run $BIN indexer:set-mode realtime catalog_product_price
   run $BIN "index:trigger:recreate"
   assert_output --partial 'Skipped indexer Product Price. Mode must be "schedule".'
+}
 
+@test "Command: index:trigger:recreate schedule" {
   run $BIN indexer:set-mode schedule catalog_product_price
   run $BIN "index:trigger:recreate"
   assert_output --partial "Re-created triggers of indexer Product Price"
 }
+
+# ============================================
+# Command: Integration:create
+# ============================================
 
 @test "Command: Integration:create" {
   # Create with all arguments
@@ -524,10 +777,18 @@ function cleanup_files_in_magento() {
   assert_output --partial "Integration ID"
 }
 
+# ============================================
+# Command: integration:list
+# ============================================
+
 @test "Command: integration:list" {
   run $BIN "integration:list"
   assert_output --partial "magerun-test"
 }
+
+# ============================================
+# Command: integration:show
+# ============================================
 
 @test "Command: integration:show" {
   run $BIN "integration:show" magerun-test
@@ -544,10 +805,18 @@ function cleanup_files_in_magento() {
   assert_output --partial "Consumer Key"
 }
 
+# ============================================
+# Command: integration:delete
+# ============================================
+
 @test "Command: integration:delete" {
   run $BIN "integration:delete" magerun-test
   assert_output --partial "Successfully deleted integration"
 }
+
+# ============================================
+# Command: magerun:config:dump
+# ============================================
 
 @test "Command: magerun:config:dump" {
   run $BIN "magerun:config:dump" --only-dist
@@ -555,16 +824,28 @@ function cleanup_files_in_magento() {
   assert_output --partial "check-root-user:"
 }
 
+# ============================================
+# Command: magerun:config:info
+# ============================================
+
 @test "Command: magerun:config:info" {
   run $BIN "magerun:config:info"
   assert_output --partial "type"
   assert_output --partial "dist"
 }
 
+# ============================================
+# Command: media:dump
+# ============================================
+
 @test "Command: media:dump" {
   run $BIN "media:dump"
   assert_output --partial "Compress"
 }
+
+# ============================================
+# Command: route:list
+# ============================================
 
 @test "Command: route:list -m Magento_Backend -a adminhtml" {
   run $BIN "route:list" -m Magento_Backend -a adminhtml
@@ -578,25 +859,45 @@ function cleanup_files_in_magento() {
   assert_output --partial "GET,POST"
 }
 
+# ============================================
+# Command: script:repo:list
+# ============================================
+
 @test "Command: script:repo:list" {
   run $BIN "script:repo:list"
   assert_output --partial "Script"
 }
+
+# ============================================
+# Command: search:engine:list
+# ============================================
 
 @test "Command: search:engine:list" {
   run $BIN "search:engine:list"
   assert_output --partial "label"
 }
 
+# ============================================
+# Command: sys:check
+# ============================================
+
 @test "Command: sys:check" {
   run $BIN "sys:check"
   assert_output --partial "Env"
 }
 
+# ============================================
+# Command: sys:cron:kill
+# ============================================
+
 @test "Command: sys:cron:kill" {
   run $BIN "sys:cron:kill" "not_exiting_job_code"
   assert_output --partial "No process found to kill"
 }
+
+# ============================================
+# Command: sys:cron:list
+# ============================================
 
 @test "Command: sys:cron:list" {
   run $BIN "sys:cron:list"
@@ -641,17 +942,22 @@ function cleanup_files_in_magento() {
   assert [ "$status" -eq 0 ]
 }
 
-@test "Command: sys:store:config:base-url:list" {
+@test "Command: sys:store:config:base-url:list default" {
   run $BIN "sys:store:config:base-url:list"
   assert_output --partial "unsecure_baseurl"
+}
 
+@test "Command: sys:store:config:base-url:list --with-admin-store" {
   run $BIN "sys:store:config:base-url:list --with-admin-store"
   assert_output --partial "admin"
+}
 
+@test "Command: sys:store:config:base-url:list --with-admin-admin-login-url" {
   run $BIN "sys:store:config:base-url:list --with-admin-admin-login-url"
   assert_output --partial "admin"
+}
 
-  # Check if validation works
+@test "Command: sys:store:config:base-url:list validation error" {
   run $BIN "sys:store:config:base-url:list --with-admin-store --with-admin-admin-login-url"
   assert [ "$status" -eq 1 ]
 }
