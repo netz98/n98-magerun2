@@ -48,6 +48,9 @@ const config = {
         }
       ]
     },
+    mermaid: {
+      theme: {light: 'neutral', dark: 'forest'},
+    },
     prism: {
       theme: prismThemes.github,
       additionalLanguages: ['php']
