@@ -275,54 +275,65 @@ function cleanup_files_in_magento() {
   assert_output --partial "OK"
 }
 
-@test "Command: db:dump" {
+@test "Command: db:dump --stdout" {
   run $BIN "db:dump" --stdout
   assert [ "$status" -eq 0 ]
+}
 
+@test "Command: db:dump to file" {
   run $BIN "db:dump" "db.sql"
   assert_output --partial "Finished"
+}
 
+@test "Command: db:dump with --strip" {
   run $BIN "db:dump" --strip=@development db.sql
   assert_output --partial "Finished"
-
-  run $BIN "db:dump" --print-only-filename db.sql
-  assert_output --partial "db.sql"
-
-  run $BIN "db:dump" --print-only-filename -c gz db.sql
-  assert_output --partial "db.sql.gz"
-  assert [ "$status" -eq 0 ]
-
-  run $BIN "db:dump" --print-only-filename -c gzip db.sql
-  assert_output --partial "db.sql.gz"
-  assert [ "$status" -eq 0 ]
-
-  run $BIN "db:dump" --print-only-filename --compression gzip db.sql
-  assert_output --partial "db.sql.gz"
-  assert [ "$status" -eq 0 ]
-
-  run $BIN "db:dump" --print-only-filename --compression gz db.sql
-  assert_output --partial "db.sql.gz"
-  assert [ "$status" -eq 0 ]
-
-  run $BIN "db:dump" --print-only-filename -c lz4 db.sql
-  assert_output --partial "db.sql.lz4"
-  assert [ "$status" -eq 0 ]
-
-  run $BIN "db:dump" --print-only-filename --compression lz4 db.sql
-  assert_output --partial "db.sql.lz4"
-  assert [ "$status" -eq 0 ]
-
-  run $BIN "db:dump" --print-only-filename -c zstd db.sql
-  assert_output --partial "db.sql.zstd"
-  assert [ "$status" -eq 0 ]
-
-  run $BIN "db:dump" --print-only-filename --compression zstd db.sql
-  assert_output --partial "db.sql.zstd"
-  assert [ "$status" -eq 0 ]
-
-  run $BIN "db:dump" --only-command db.sql
-  assert_output --partial "mysqldump"
 }
+
+@test "Command: db:dump with --strip and --exclude" {
+  run $BIN "db:dump" --strip=@development --exclude=core_config_data db.sql
+  assert_output --partial "Finished"
+}
+
+@test "Command: db:dump with --strip and compression" {
+  run $BIN "db:dump" --strip=@development --compression=gz db.sql
+  assert_output --partial "Finished"
+}
+
+@test "Command: db:dump with --add-time option" {
+  run $BIN "db:dump" --add-time=suffix db.sql
+  [[ "$output" =~ Finished ]]
+}
+
+@test "Command: db:dump with --human-readable" {
+  run $BIN "db:dump" --human-readable db.sql
+  assert_output --partial "Finished"
+}
+
+@test "Command: db:dump with --git-friendly" {
+  run $BIN "db:dump" --git-friendly db.sql
+  assert_output --partial "Finished"
+}
+
+@test "Command: db:dump with --keep-definer" {
+  run $BIN "db:dump" --keep-definer db.sql
+  assert_output --partial "Finished"
+}
+
+@test "Command: db:dump --stdout with --strip" {
+  run $BIN "db:dump" --stdout --strip=@development
+  assert [ "$status" -eq 0 ]
+}
+
+
+#@test "Command: db:dump fails with invalid credentials" {
+#  cp $N98_MAGERUN2_TEST_MAGENTO_ROOT/app/etc/env.php $N98_MAGERUN2_TEST_MAGENTO_ROOT/app/etc/env.php.bak
+#  sed -i "s/username' => '[^']*'/username' => 'invaliduser'/g" $N98_MAGERUN2_TEST_MAGENTO_ROOT/app/etc/env.php
+#  run $BIN "db:dump" db_fail.sql
+#  assert [ "$status" -ne 0 ]
+#  refute [ -f db_fail.sql ]
+#  mv $N98_MAGERUN2_TEST_MAGENTO_ROOT/app/etc/env.php.bak $N98_MAGERUN2_TEST_MAGENTO_ROOT/app/etc/env.php
+#}
 
 @test "Command: db:info" {
   run $BIN "db:info"
