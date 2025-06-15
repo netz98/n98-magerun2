@@ -245,6 +245,20 @@ setup() {
   assert_output --partial "List of enabled modules"
 }
 
+@test "Command: module:status - #1422" {
+  # Issue: 1422 - cannot be grepped without -n option
+
+  # With non interactive shell
+  run bash -c "$BIN 'module:status' --no-interaction | grep 'Magento_Catalog'"
+  assert_success
+  assert_output --partial "Magento_Catalog"
+
+  # With interactive shell
+  run bash -c "$BIN 'module:status' | grep 'Magento_Catalog'"
+  assert_success
+  assert_output --partial "Magento_Catalog"
+}
+
 @test "Command: queue:consumers:list" {
   run $BIN "queue:consumers:list"
   assert_output --partial "async.operations.all"
