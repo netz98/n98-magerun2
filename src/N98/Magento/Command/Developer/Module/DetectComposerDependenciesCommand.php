@@ -360,7 +360,7 @@ class DetectComposerDependenciesCommand extends AbstractMagentoCommand
 
             /**
              * remove patch level (e.g. -p5) from version
-             * @link https://github.com/netz98/n98-magerun2/issues/1358
+             * @link https://github.com/netz98/n98-magerun2/issues/1357
              */
             $version = preg_replace('/-p[0-9]+$/', '', $version);
 
