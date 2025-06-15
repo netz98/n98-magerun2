@@ -1,0 +1,40 @@
+---
+name: Docs Build Test
+
+on:
+  push:
+    branches:
+      - "master"
+      - "develop"
+      - "bugfix/*"
+      - "feature/*"
+      - "release/*"
+    paths:
+      - "docs/**"
+  pull_request_target:
+    branches:
+      - "master"
+      - "develop"
+    paths:
+      - "docs/**"
+
+jobs:
+  build-docs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        working-directory: docs
+        run: npm install
+
+      - name: Build documentation
+        working-directory: docs
+        run: npm run build
+
