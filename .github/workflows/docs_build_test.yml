@@ -18,6 +18,11 @@ on:
     paths:
       - "docs/**"
 
+defaults:
+  run:
+    shell: bash
+    working-directory: ./docs
+
 jobs:
   build-docs:
     runs-on: ubuntu-latest
