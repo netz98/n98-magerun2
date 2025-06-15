@@ -32,8 +32,8 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           START_DATE: ${{ env.START_DATE }}
           END_DATE: ${{ env.END_DATE }}
-          ORGANIZATION: ddev
-          SPONSOR_INFO: "true"
+          ORGANIZATION: "netz98"
+          REPOSITORY: "n98-magerun2"
 
       - name: Create issue
         uses: peter-evans/create-issue-from-file@v5
