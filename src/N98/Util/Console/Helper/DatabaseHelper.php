@@ -59,6 +59,61 @@ class DatabaseHelper extends AbstractHelper implements CommandAware
     }
 
     /**
+     * @return array
+     * @throws FileSystemException
+     */
+    public function getViews()
+    {
+        $db = $this->getConnection();
+        $dbname = $this->dbSettings['dbname'];
+
+        $query = 'SELECT table_name FROM information_schema.VIEWS WHERE table_schema = :dbname';
+        $statement = $db->prepare($query);
+        $statement->bindParam(':dbname', $dbname);
+        $statement->execute();
+
+        $views = $statement->fetchAll(PDO::FETCH_COLUMN);
+
+        return $views ?: [];
+    }
+
+    /**
+     * @param OutputInterface $output
+     * @throws FileSystemException
+     */
+    public function dropViews(OutputInterface $output)
+    {
+        $views = $this->getViews();
+
+        if (empty($views)) {
+            $output->writeln('<comment>No views found to drop.</comment>');
+            return;
+        }
+
+        $output->writeln('<info>Dropping views...</info>');
+
+        $db = $this->getConnection();
+
+        try {
+            $db->exec('SET FOREIGN_KEY_CHECKS = 0;');
+
+            $droppedCount = 0;
+            foreach ($views as $viewName) {
+                $db->exec("DROP VIEW IF EXISTS `{$viewName}`;");
+                $output->writeln("<comment>Dropped view:</comment> {$viewName}");
+                $droppedCount++;
+            }
+
+            $db->exec('SET FOREIGN_KEY_CHECKS = 1;');
+            $output->writeln("<info>Dropped {$droppedCount} views.</info>");
+        } catch (PDOException $e) {
+            // Re-enable foreign key checks in case of an error during drop
+            $db->exec('SET FOREIGN_KEY_CHECKS = 1;');
+            throw new RuntimeException('Error dropping views: ' . $e->getMessage(), 0, $e);
+        }
+    }
+
+    /**
      * @param OutputInterface|null $output
      *
      * @throws RuntimeException
