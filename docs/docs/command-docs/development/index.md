@@ -35,5 +35,3 @@ Commands tailored for Magento developers, including code generation and debuggin
 - [dev:encrypt](./dev-encrypt.md) - Encrypt a string using Magento's crypt key
 - [dev:decrypt](./dev-decrypt.md) - Decrypt a string using Magento's crypt key
 
-### Route Management
-- [route:list](./route-list.md) - List Routes

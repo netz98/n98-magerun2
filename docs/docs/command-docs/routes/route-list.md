@@ -1,5 +1,6 @@
 ---
 title: route:list
+sidebar_label: route:list
 ---
 
 List Routes
