@@ -121,7 +121,9 @@ For a practical demonstration of the `dev:console` and its capabilities with `n9
 
 This video showcases many of the features discussed, including live examples of using the console for debugging and development tasks.
 
-## Know Issues
+**Video by Mark Shust.**
+
+## Known Issues
 
 We also work on support for switching the app area. Currently only the "global" area is loaded.
 In some cases (errors) we loose the context of the module.
