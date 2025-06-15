@@ -18,6 +18,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\Question;
 
 /**
  * Class MakeModuleCommand
@@ -39,14 +40,20 @@ class MakeModuleCommand extends AbstractGeneratorCommand
 
     protected function configure()
     {
+        $magerunConfig = $this->getMagerunApplication()->getConfig();
+        $defaultModulesBaseDir = $magerunConfig['commands'][__CLASS__]['defaultModulesBaseDir'];
+
         $this
             ->setName('make:module')
-            ->addArgument('modulename', InputArgument::REQUIRED)
+            ->addArgument('modulename', InputArgument::OPTIONAL)
             ->addOption(
                 'modules-base-dir',
                 'd',
                 InputOption::VALUE_OPTIONAL,
-                'Directory where module should be created. Default is app/code if not reconfigured'
+                sprintf(
+                    'Directory where module should be created. Default is %s if not reconfigured',
+                    $defaultModulesBaseDir
+                )
             )
             ->setDescription('Creates a new module');
     }
@@ -65,7 +72,21 @@ class MakeModuleCommand extends AbstractGeneratorCommand
             $this->getMagerunApplication()->getMagentoRootFolder()
         );
 
-        $moduleName = new ModuleNameStructure($input->getArgument('modulename'));
+        $moduleNameArgument = $input->getArgument('modulename');
+        if (!$moduleNameArgument) {
+            $questionHelper = $this->getHelper('question');
+            $question = new Question('<question>Please enter the name of the module (e.g., Vendor_Module):</question> ');
+            $question->setValidator(function ($answer) {
+                if (empty($answer)) {
+                    throw new \RuntimeException('The module name cannot be empty.');
+                }
+                // You could add more sophisticated validation here if needed (e.g., regex for Vendor_Module format)
+                return $answer;
+            });
+            $moduleNameArgument = $questionHelper->ask($input, $output, $question);
+        }
+
+        $moduleName = new ModuleNameStructure($moduleNameArgument);
 
         $this->modulesBaseDir = $input->getOption('modules-base-dir');
 
