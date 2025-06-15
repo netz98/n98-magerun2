@@ -48,12 +48,36 @@ n98-magerun2.phar db:dump [options] [--] [<filename>]
 | `--set-gtid-purged-off`             | Adds --set-gtid-purged=OFF to mysqldump.                                                                                             |
 | `--stdout`                          | Dump to stdout.                                                                                                                      |
 | `-s, --strip=STRIP`                 | Tables to strip (dump only structure of those tables). Multiple values and table groups (e.g. `@log`) allowed.                        |
+| `--views`                           | Explicitly include views in the dump. Views are included by default if not otherwise excluded by name or by `--no-views`.              |
+| `--no-views`                        | Exclude all views from the dump. This overrides any other view inclusion.                                                            |
 | `--zstd-level[=ZSTD-LEVEL]`         | ZSTD compression level. (default: `10`)                                                                                              |
 | `--zstd-extra-args[=ZSTD-EXTRA-ARGS]` | Custom extra options for zstd.                                                                                                       |
 
 (For a full list of strip table groups and other options, use `n98-magerun2.phar help db:dump`)
 
+**View Handling in Dumps:**
+
+By default, `db:dump` includes views if their underlying tables are dumped or if the entire database is dumped. The following options provide more control:
+
+*   `--views`: This option can be used to explicitly state that views should be included. Since views are generally included by default if not otherwise excluded (e.g., by a specific table exclusion pattern that happens to match a view name, or by `--no-views`), this option is mainly for clarity or to ensure views are included if a very broad exclusion pattern might accidentally exclude them.
+*   `--no-views`: This option ensures that **no views** are included in the dump. Their definitions will not be present in the SQL file. This option takes precedence over any other rules that might otherwise include a view (e.g., if a view name matches an `--include` pattern or is part of a table list provided for the dump).
+
 **Examples:**
+
+Dump database without any views:
+```sh
+n98-magerun2.phar db:dump --no-views dump_without_views.sql
+```
+
+Explicitly include views (usually default behavior):
+```sh
+n98-magerun2.phar db:dump --views dump_with_views.sql
+```
+
+If `my_view_name` is a view, and you want to ensure its definition is not dumped, even if it was part of a `--strip` pattern that would normally dump structure:
+```sh
+n98-magerun2.phar db:dump --strip="my_view_name" --no-views dump_stripped_no_view_def.sql
+```
 
 Only the dump command:
 
