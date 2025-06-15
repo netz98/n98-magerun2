@@ -14,20 +14,36 @@ It provides options to format the output and sort the list by various user attri
 
 ## Options
 
-| Option   | Description                                                                  |
-|----------|------------------------------------------------------------------------------|
-| `format` | Output Format. One of `csv`, `json`, `json_array`, `yaml`, `xml`.              |
-| `sort`   | Sort by field (e.g. `user_id`, `username`, `email`, `logdate`). Default: `user_id`. |
+| Option      | Description                                                                  |
+|-------------|------------------------------------------------------------------------------|
+| `format`    | Output Format. One of `csv`, `json`, `json_array`, `yaml`, `xml`.              |
+| `sort`      | Sort by field (e.g. `user_id`, `username`, `email`, `logdate`). Default: `user_id`. |
+| `sort-order`| Sort order direction (`asc` or `desc`). Default: `asc`.                        |
+| `columns`    | Comma-separated list of columns to display. See below for available columns. |
 
 ## Output Columns
 
-The command output includes the following columns:
+The following columns are available and can be selected with the `--columns` option:
 
-- `id`: The user ID.
-- `username`: The username of the admin user.
+- `user_id`: The user ID.
+- `firstname`: The user's first name.
+- `lastname`: The user's last name.
 - `email`: The email address of the admin user.
-- `status`: The status of the user account (e.g., `active`, `inactive`).
-- `logdate`: The date and time of the user's last login. This column might be empty if the user has never logged in.
+- `username`: The username of the admin user.
+- `password`: The password hash (for security, use with caution).
+- `created`: The date and time the user was created.
+- `modified`: The date and time the user was last modified.
+- `logdate`: The date and time of the user's last login.
+- `lognum`: The number of logins.
+- `reload_acl_flag`: Whether ACL needs to be reloaded.
+- `is_active`: The status of the user account (e.g., `active`, `inactive`).
+- `extra`: Extra data.
+- `rp_token`: Reset password token.
+- `rp_token_created_at`: When the reset password token was created.
+- `interface_locale`: The user's interface locale.
+- `failures_num`: Number of failed login attempts.
+- `first_failure`: Timestamp of the first failed login attempt.
+- `lock_expires`: When the account lock expires.
 
 ## Examples
 
@@ -68,6 +84,24 @@ Output:
 ```
 (Note: The example data shows `admin`, `editor`, `newuser`. If sorted by username alphabetically, this order is correct.)
 
+### List admin users sorted by email in descending order
+
+```bash
+n98-magerun2.phar admin:user:list --sort=email --sort-order=desc
+```
+
+Output:
+
+```
++----+----------+----------------------+--------+---------------------+
+| id | username | email                | status | logdate             |
++----+----------+----------------------+--------+---------------------+
+| 3  | newuser  | newuser@example.com  | active |                     |
+| 2  | editor   | editor@example.com   | active | 2023-10-26 15:30:00 |
+| 1  | admin    | admin@example.com    | active | 2023-10-27 10:00:00 |
++----+----------+----------------------+--------+---------------------+
+```
+
 ### List admin users in JSON format
 
 ```bash
@@ -100,4 +134,22 @@ Output:
         "logdate": null
     }
 ]
+```
+
+### List admin users with additional columns
+
+```bash
+n98-magerun2.phar admin:user:list --columns="user_id,firstname,lastname,email,logdate"
+```
+
+Output:
+
+```
++----+-----------+----------+----------------------+---------------------+
+| id | firstname | lastname | email                | logdate             |
++----+-----------+----------+----------------------+---------------------+
+| 1  | John      | Doe      | admin@example.com    | 2023-10-27 10:00:00 |
+| 2  | Jane      | Smith    | editor@example.com   | 2023-10-26 15:30:00 |
+| 3  | Alice     | Brown    | newuser@example.com  |                     |
++----+-----------+----------+----------------------+---------------------+
 ```
