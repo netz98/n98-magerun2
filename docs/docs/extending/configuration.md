@@ -66,8 +66,8 @@ The .n98-magerun2.yaml file will only be loaded if “stop file” .n98-magerun2
 Example:
 
 ```
-.                        &lt;-- Project root folder
-├── .n98-magerun2        &lt;-- "Stop file"
-├── .n98-magerun2.yaml   &lt;-- Alternative project config
-└── www                  &lt;-- Magento root folder
+.                        -- Project root folder
+├── .n98-magerun2        -- "Stop file"
+├── .n98-magerun2.yaml   -- Alternative project config
+└── www                  -- Magento root folder
 ```
