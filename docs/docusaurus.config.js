@@ -57,6 +57,7 @@ const config = {
     },
     prism: {
       theme: prismThemes.github,
+      darkTheme: prismThemes.vsDark,
       additionalLanguages: ['php', 'bash', 'sql']
     }
   },
