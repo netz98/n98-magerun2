@@ -3,6 +3,10 @@ title: install
 sidebar_label: install
 ---
 
+:::warning
+**Deprecated:** This command is deprecated and will be removed in v10.0.0. A new install command will be available in that version.
+:::
+
 Magento installer command. Install Magento 2 with various options.
 
 :::info
