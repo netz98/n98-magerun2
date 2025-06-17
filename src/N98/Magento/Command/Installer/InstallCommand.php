@@ -12,6 +12,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * Class InstallCommand
  *
+ * @deprecated Deprecated since version 9.0.0, will be removed in v10.0.0. A new install command will be available in v10.0.0.
  * @codeCoverageIgnore  - Travis server uses installer to create a new shop. If it not works complete build fails.
  * @package N98\Magento\Command\Installer
  */
@@ -90,10 +91,12 @@ class InstallCommand extends AbstractMagentoCommand
                 InputOption::VALUE_NONE,
                 'If --composer-use-same-php-binary passed, will invoke composer with the same PHP binary'
             )
-            ->setDescription('Install magento');
+            ->setDescription('[DEPRECATED] This command will be removed in v10.0.0. Install magento');
 
         $help = <<<HELP
-* Download Magento by a list of git repos and zip files (mageplus, 
+<warning>WARNING: This command is deprecated and will be removed in v10.0.0. A new install command will be available in that version.</warning>
+
+* Download Magento by a list of git repos and zip files (mageplus,
   magelte, official community packages).
 * Try to create database if it does not exist.
 * Installs Magento sample data if available (since version 1.2.0).
@@ -133,6 +136,7 @@ HELP;
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $output->writeln('<warning>WARNING: The \'install\' command is deprecated and will be removed in v10.0.0. A new install command will be available in that version.</warning>');
         $this->commandConfig = $this->getCommandConfig();
         $this->writeSection($output, 'Magento 2 Installation');
 
