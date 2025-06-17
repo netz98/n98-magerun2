@@ -1,0 +1,6 @@
+commands:
+  customCommands:
+    - MyCompany\TestModule\Command\MyTestHelloCommand
+
+autoloaders_psr4:
+  MyCompany\TestModule\: src/
