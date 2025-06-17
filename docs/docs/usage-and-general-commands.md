@@ -40,6 +40,8 @@ php n98-magerun2.phar <command> --help
 ## Common Options
 
 - `--root-dir`: Specify Magento root directory
+- `--skip-config`: Skip loading of custom config files
+- `--skip-root-check`: Suppress warning if n98-magerun2 is run as root user
 - `--help`: Show help for a command
 - `--version`: Show version information
 
