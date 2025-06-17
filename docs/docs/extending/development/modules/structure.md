@@ -8,6 +8,12 @@ A module is a folder with at least a config file with the name `n98-magerun2.yam
 Inside your config you can define a command by using the same structure as defining a single custom command.
 See [[Add-custom-commands]].
 
+:::tip
+
+You can find a complete example module at [https://github.com/netz98/n98-magerun2-example-module](https://github.com/netz98/n98-magerun2-example-module).
+
+:::
+
 Example n98-magerun2.yaml:
 
 ```yaml
