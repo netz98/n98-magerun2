@@ -53,7 +53,7 @@ const config = {
       ]
     },
     mermaid: {
-      theme: {light: 'neutral', dark: 'forest'},
+      theme: { light: 'neutral', dark: 'forest' }
     },
     prism: {
       theme: prismThemes.github,
