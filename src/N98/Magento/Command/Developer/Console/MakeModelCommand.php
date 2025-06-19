@@ -40,21 +40,12 @@ class MakeModelCommand extends AbstractGeneratorCommand
         $classGenerator = $this->create(ClassGenerator::class);
 
         /** @var $classGenerator ClassGenerator */
-        $classGenerator->addUse('Magento\Framework\Model\AbstractModel');
-
-        if (version_compare($this->getMagentoVersion()->getVersion(), '2.2.0', '<')) {
-            $classGenerator->setExtendedClass('AbstractModel');
-        } else {
-            $classGenerator->setExtendedClass('Magento\Framework\Model\AbstractModel');
-        }
-
+        $classGenerator->addUse('Magento\\Framework\\Model\\AbstractModel');
+        $classGenerator->setExtendedClass('Magento\\Framework\\Model\\AbstractModel');
         $classGenerator->setName($classNameToGenerate);
 
-        $modelFileGenerator = FileGenerator::fromArray(
-            [
-                'classes' => [$classGenerator],
-            ]
-        );
+        $modelFileGenerator = new FileGenerator();
+        $modelFileGenerator->setClass($classGenerator);
 
         $directoryWriter = $this->getCurrentModuleDirectoryWriter();
         $directoryWriter->writeFile($filePathToGenerate, $modelFileGenerator->generate());
