@@ -3,7 +3,10 @@
 namespace N98\Magento\Command;
 
 use Exception;
+use function file_get_contents;
 use InvalidArgumentException;
+use Magento\Framework\App\DistributionMetadataInterface;
+use Magento\Framework\App\ProductMetadataInterface;
 use N98\Util\BinaryString;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\RuntimeException;
@@ -15,9 +18,6 @@ use Symfony\Component\Console\Input\StringInput;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Question\Question;
-use Magento\Framework\App\ProductMetadataInterface;
-use Magento\Framework\App\DistributionMetadataInterface;
-use function file_get_contents;
 
 /**
  * Class ScriptCommand
