@@ -790,7 +790,7 @@ HELP;
             // However, if --no-views is active, views will be added to ignore-table list later.
             $allActualTables = $database->getTables(true);
             if (in_array($table, $allActualTables, true)) {
-                 $noDataOptions[] = '--no-data=' . escapeshellarg($this->prefixTableIfNeeded($table, $dbPrefix));
+                $noDataOptions[] = '--no-data=' . escapeshellarg($this->prefixTableIfNeeded($table, $dbPrefix));
             }
         }
 

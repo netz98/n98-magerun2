@@ -4,7 +4,12 @@ namespace N98\Util\Console\Helper;
 
 use InvalidArgumentException;
 use N98\Magento\Command\TestCase;
+use PDO;
+use PDOException;
+use PDOStatement;
+use ReflectionProperty;
 use RuntimeException;
+use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Class DatabaseHelperTest
@@ -177,17 +182,17 @@ class DatabaseHelperTest extends TestCase
      */
     public function testGetViewsNoViewsFound()
     {
-        $statementMock = $this->getMockBuilder(\PDOStatement::class)
+        $statementMock = $this->getMockBuilder(PDOStatement::class)
             ->disableOriginalConstructor()
             ->getMock();
         $statementMock->expects($this->once())
             ->method('execute');
         $statementMock->expects($this->once())
             ->method('fetchAll')
-            ->with(\PDO::FETCH_COLUMN)
+            ->with(PDO::FETCH_COLUMN)
             ->willReturn([]);
 
-        $pdoMock = $this->getMockBuilder(\PDO::class)
+        $pdoMock = $this->getMockBuilder(PDO::class)
             ->disableOriginalConstructor()
             ->getMock();
         $pdoMock->expects($this->once())
@@ -203,7 +208,7 @@ class DatabaseHelperTest extends TestCase
             ->willReturn($pdoMock);
 
         // Manually set dbSettings as it's used directly
-        $reflection = new \ReflectionProperty(DatabaseHelper::class, 'dbSettings');
+        $reflection = new ReflectionProperty(DatabaseHelper::class, 'dbSettings');
         $reflection->setAccessible(true);
         $reflection->setValue($helper, ['dbname' => 'test_db']);
 
@@ -216,16 +221,16 @@ class DatabaseHelperTest extends TestCase
     public function testGetViewsSingleViewFound()
     {
         $expectedViews = ['my_single_view'];
-        $statementMock = $this->getMockBuilder(\PDOStatement::class)
+        $statementMock = $this->getMockBuilder(PDOStatement::class)
             ->disableOriginalConstructor()
             ->getMock();
         $statementMock->expects($this->once())->method('execute');
         $statementMock->expects($this->once())
             ->method('fetchAll')
-            ->with(\PDO::FETCH_COLUMN)
+            ->with(PDO::FETCH_COLUMN)
             ->willReturn($expectedViews);
 
-        $pdoMock = $this->getMockBuilder(\PDO::class)
+        $pdoMock = $this->getMockBuilder(PDO::class)
             ->disableOriginalConstructor()
             ->getMock();
         $pdoMock->expects($this->once())
@@ -238,11 +243,9 @@ class DatabaseHelperTest extends TestCase
         $helper->expects($this->once())
             ->method('getConnection')
             ->willReturn($pdoMock);
-        $reflection = new \ReflectionProperty(DatabaseHelper::class, 'dbSettings');
+        $reflection = new ReflectionProperty(DatabaseHelper::class, 'dbSettings');
         $reflection->setAccessible(true);
         $reflection->setValue($helper, ['dbname' => 'test_db']);
-
-
         $this->assertEquals($expectedViews, $helper->getViews());
     }
 
@@ -252,16 +255,16 @@ class DatabaseHelperTest extends TestCase
     public function testGetViewsMultipleViewsFound()
     {
         $expectedViews = ['view_one', 'view_two', 'view_three'];
-        $statementMock = $this->getMockBuilder(\PDOStatement::class)
+        $statementMock = $this->getMockBuilder(PDOStatement::class)
             ->disableOriginalConstructor()
             ->getMock();
         $statementMock->expects($this->once())->method('execute');
         $statementMock->expects($this->once())
             ->method('fetchAll')
-            ->with(\PDO::FETCH_COLUMN)
+            ->with(PDO::FETCH_COLUMN)
             ->willReturn($expectedViews);
 
-        $pdoMock = $this->getMockBuilder(\PDO::class)
+        $pdoMock = $this->getMockBuilder(PDO::class)
             ->disableOriginalConstructor()
             ->getMock();
         $pdoMock->expects($this->once())
@@ -274,10 +277,9 @@ class DatabaseHelperTest extends TestCase
         $helper->expects($this->once())
             ->method('getConnection')
             ->willReturn($pdoMock);
-        $reflection = new \ReflectionProperty(DatabaseHelper::class, 'dbSettings');
+        $reflection = new ReflectionProperty(DatabaseHelper::class, 'dbSettings');
         $reflection->setAccessible(true);
         $reflection->setValue($helper, ['dbname' => 'test_db']);
-
         $this->assertEquals($expectedViews, $helper->getViews());
     }
 
@@ -286,7 +288,7 @@ class DatabaseHelperTest extends TestCase
      */
     public function testDropViewsNoViews()
     {
-        $outputMock = $this->getMockBuilder(\Symfony\Component\Console\Output\OutputInterface::class)
+        $outputMock = $this->getMockBuilder(OutputInterface::class)
             ->getMock();
         $outputMock->expects($this->once())
             ->method('writeln')
@@ -312,7 +314,7 @@ class DatabaseHelperTest extends TestCase
         $viewsToDrop = ['view_alpha', 'view_beta'];
         $outputMessages = [];
 
-        $outputMock = $this->getMockBuilder(\Symfony\Component\Console\Output\OutputInterface::class)
+        $outputMock = $this->getMockBuilder(OutputInterface::class)
             ->getMock();
         $outputMock->expects($this->any())
             ->method('writeln')
@@ -320,7 +322,7 @@ class DatabaseHelperTest extends TestCase
                 $outputMessages[] = $message;
             }));
 
-        $pdoMock = $this->getMockBuilder(\PDO::class)
+        $pdoMock = $this->getMockBuilder(PDO::class)
             ->disableOriginalConstructor()
             ->getMock();
         $pdoMock->expects($this->exactly(4)) // SET FOREIGN_KEY_CHECKS=0, DROP VIEW 1, DROP VIEW 2, SET FOREIGN_KEY_CHECKS=1
@@ -358,11 +360,11 @@ class DatabaseHelperTest extends TestCase
     {
         $viewsToDrop = ['problem_view'];
 
-        $outputMock = $this->getMockBuilder(\Symfony\Component\Console\Output\OutputInterface::class)
+        $outputMock = $this->getMockBuilder(OutputInterface::class)
             ->getMock();
         // We don't care about specific messages here, just that it might write something
 
-        $pdoMock = $this->getMockBuilder(\PDO::class)
+        $pdoMock = $this->getMockBuilder(PDO::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -378,10 +380,9 @@ class DatabaseHelperTest extends TestCase
             )
             ->willReturnOnConsecutiveCalls(
                 $this->returnValue(1),                            // SET FOREIGN_KEY_CHECKS = 0;
-                $this->throwException(new \PDOException('Drop failed')), // DROP VIEW problem_view
+                $this->throwException(new PDOException('Drop failed')), // DROP VIEW problem_view
                 $this->returnValue(1)                             // SET FOREIGN_KEY_CHECKS = 1;
             );
-
 
         $helper = $this->getMockBuilder(DatabaseHelper::class)
             ->onlyMethods(['getViews', 'getConnection'])
@@ -393,7 +394,7 @@ class DatabaseHelperTest extends TestCase
             ->method('getConnection')
             ->willReturn($pdoMock);
 
-        $this->expectException(\RuntimeException::class);
+        $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('Error dropping views: Drop failed');
 
         $helper->dropViews($outputMock);

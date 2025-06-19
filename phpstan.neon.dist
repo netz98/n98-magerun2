@@ -1,7 +1,6 @@
 parameters:
     level: 1
     inferPrivatePropertyTypeFromConstructor: true
-    checkMissingIterableValueType: false
     fileExtensions:
         - php
     paths:
