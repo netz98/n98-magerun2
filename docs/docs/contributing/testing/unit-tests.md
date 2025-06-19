@@ -66,3 +66,30 @@ class YourCommandTest extends TestCase
     }
 }
 ```
+
+## Testing `dev:console` Commands
+
+Commands executed inside the interactive `dev:console` use their own base test
+case. Instead of extending `N98\\Magento\\Command\\TestCase`, these tests must
+extend `N98\\Magento\\Command\\Developer\\Console\\TestCase` which prepares
+the REPL context.
+
+```php
+<?php
+namespace N98\Magento\Command\Developer\Console;
+
+class MakeCommandCommandTest extends TestCase
+{
+    public function testExecute()
+    {
+        $command = new MakeCommandCommand();
+        $tester = $this->createCommandTester($command);
+
+        $tester->execute(['classpath' => 'foo.bar.baz']);
+        // add assertions here
+    }
+}
+```
+
+See the files in `tests/N98/Magento/Command/Developer/Console/` for more
+examples of testing commands that run within the `dev:console` environment.
