@@ -70,13 +70,15 @@ class YourCommandTest extends TestCase
 ## Testing `dev:console` Commands
 
 Commands executed inside the interactive `dev:console` use their own base test
-case. Instead of extending `N98\\Magento\\Command\\TestCase`, these tests must
-extend `N98\\Magento\\Command\\Developer\\Console\\TestCase` which prepares
+case. Instead of extending `N98\Magento\Command\TestCase`, these tests must
+extend `N98\Magento\Command\Developer\Console\TestCase` which prepares
 the REPL context.
 
 ```php
 <?php
 namespace N98\Magento\Command\Developer\Console;
+
+use N98\Magento\Command\Developer\Console\TestCase;
 
 class MakeCommandCommandTest extends TestCase
 {
