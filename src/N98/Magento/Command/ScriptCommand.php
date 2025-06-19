@@ -342,8 +342,10 @@ HELP;
         $this->getApplication()->initMagento();
         if ($rootFolder !== null) {
             $this->scriptVars['${magento.root}'] = $rootFolder;
-            $this->scriptVars['${magento.version}'] = $this->productMetadata ? $this->productMetadata->getVersion() : '';
-            $this->scriptVars['${magento.edition}'] = $this->productMetadata ? $this->productMetadata->getEdition() : '';
+            $this->scriptVars['${magento.version}'] = $this->productMetadata ? $this->productMetadata->getVersion() : 'UNKNOWN';
+            $this->scriptVars['${magento.edition}'] = $this->productMetadata ? $this->productMetadata->getEdition() : 'UNKNOWN';
+            $this->scriptVars['${magento.distribution}'] = 'UNKNOWN';
+            $this->scriptVars['${magento.distribution_version}'] = 'UNKNOWN';
             if ($this->distributionMetadata) {
                 $this->scriptVars['${magento.distribution}'] = $this->distributionMetadata->getDistributionName();
                 $this->scriptVars['${magento.distribution_version}'] = $this->distributionMetadata->getDistributionVersion();

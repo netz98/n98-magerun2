@@ -19,6 +19,7 @@ class ScriptCommandTest extends TestCase
         $this->assertDisplayRegExp($input, '~^\Qmagento.root: \E/.+\R$~m');
         $this->assertDisplayRegExp($input, '~^\Qmagento.edition: \E(Community|Enterprise)\R$~m');
         $this->assertDisplayRegExp($input, '~^magento.version: (\\d\\.\\d+\\.\\d+.*|UNKNOWN)\\R$~m');
+        $this->assertDisplayRegExp($input, '~^magento.distribution_version: (\\d\\.\\d+\\.\\d+.*|UNKNOWN)\\R$~m');
 
         // Test ENV vars
         $this->assertDisplayRegExp($input, '~^\QPath ENV Variable: \E.*\R$~m');
