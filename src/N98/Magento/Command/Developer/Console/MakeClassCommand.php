@@ -45,9 +45,8 @@ class MakeClassCommand extends AbstractGeneratorCommand
         $classGenerator = $this->create(ClassGenerator::class);
         $classGenerator->setName($classNameToGenerate);
 
-        $fileGenerator = FileGenerator::fromArray([
-            'classes' => [$classGenerator],
-        ]);
+        $fileGenerator = new FileGenerator();
+        $fileGenerator->setClass($classGenerator);
 
         $directoryWriter = $this->getCurrentModuleDirectoryWriter();
         $directoryWriter->writeFile($filePathToGenerate, $fileGenerator->generate());

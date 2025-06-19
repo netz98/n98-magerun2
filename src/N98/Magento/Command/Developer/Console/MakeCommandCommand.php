@@ -59,12 +59,7 @@ class MakeCommandCommand extends AbstractGeneratorCommand
         $classGenerator->addUse('Symfony\Component\Console\Command\Command');
         $classGenerator->addUse('Symfony\Component\Console\Input\InputInterface');
         $classGenerator->addUse('Symfony\Component\Console\Output\OutputInterface');
-
-        if (version_compare($this->getMagentoVersion()->getVersion(), '2.2.0', '<')) {
-            $classGenerator->setExtendedClass('Command');
-        } else {
-            $classGenerator->setExtendedClass('Symfony\Component\Console\Command\Command');
-        }
+        $classGenerator->setExtendedClass('Symfony\Component\Console\Command\Command');
 
         $commandName = $this->prepareCommandName($input);
 

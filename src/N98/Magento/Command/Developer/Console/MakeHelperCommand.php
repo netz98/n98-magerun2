@@ -41,12 +41,7 @@ class MakeHelperCommand extends AbstractGeneratorCommand
 
         /** @var $classGenerator ClassGenerator */
         $classGenerator->addUse('Magento\Framework\App\Helper\AbstractHelper');
-
-        if (version_compare($this->getMagentoVersion()->getVersion(), '2.2.0', '<')) {
-            $classGenerator->setExtendedClass('AbstractHelper');
-        } else {
-            $classGenerator->setExtendedClass('Magento\Framework\App\Helper\AbstractHelper');
-        }
+        $classGenerator->setExtendedClass('Magento\Framework\App\Helper\AbstractHelper');
 
         $classGenerator->setName($classNameToGenerate);
 

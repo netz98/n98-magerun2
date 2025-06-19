@@ -51,20 +51,11 @@ class MakeBlockCommand extends AbstractGeneratorCommand
 
         /** @var $classGenerator ClassGenerator */
         $classGenerator->addUse('Magento\Framework\View\Element\Template');
-
-        if (version_compare($this->getMagentoVersion()->getVersion(), '2.2.0', '<')) {
-            $classGenerator->setExtendedClass('Template');
-        } else {
-            $classGenerator->setExtendedClass('Magento\Framework\View\Element\Template');
-        }
-
+        $classGenerator->setExtendedClass('Magento\Framework\View\Element\Template');
         $classGenerator->setName($classNameToGenerate);
 
-        $fileGenerator = FileGenerator::fromArray(
-            [
-                'classes' => [$classGenerator],
-            ]
-        );
+        $fileGenerator = new FileGenerator();
+        $fileGenerator->setClass($classGenerator);
 
         $directoryWriter = $this->getCurrentModuleDirectoryWriter();
         $directoryWriter->writeFile($filePathToGenerate, $fileGenerator->generate());
