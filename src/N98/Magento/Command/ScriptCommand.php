@@ -2,6 +2,8 @@
 
 namespace N98\Magento\Command;
 
+use Exception;
+use InvalidArgumentException;
 use N98\Util\BinaryString;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\RuntimeException;
@@ -13,6 +15,9 @@ use Symfony\Component\Console\Input\StringInput;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Question\Question;
+use Magento\Framework\App\ProductMetadataInterface;
+use Magento\Framework\App\DistributionMetadataInterface;
+use function file_get_contents;
 
 /**
  * Class ScriptCommand
@@ -36,9 +41,26 @@ class ScriptCommand extends AbstractMagentoCommand
     protected $_stopOnError = false;
 
     /**
-     * @var null|\Magento\Framework\App\ProductMetadata
+     * @var ProductMetadataInterface
      */
-    protected $productMetadata = null;
+    private $productMetadata;
+
+    /**
+     * @var DistributionMetadataInterface|null
+     */
+    private $distributionMetadata;
+
+    /**
+     * Dependency injection for metadata interfaces
+     */
+    public function inject(
+        ProductMetadataInterface $productMetadata
+    ) {
+        $this->productMetadata = $productMetadata;
+        if ($productMetadata instanceof DistributionMetadataInterface) {
+            $this->distributionMetadata = $productMetadata;
+        }
+    }
 
     protected function configure()
     {
@@ -142,7 +164,7 @@ HELP;
             if (empty($commandString)) {
                 continue;
             }
-            $firstChar = substr($commandString, 0, 1);
+            $firstChar = $commandString[0];
 
             switch ($firstChar) {
                 case '#':
@@ -175,7 +197,7 @@ HELP;
 
         foreach ($defines as $define) {
             if (!strstr($define, '=')) {
-                throw new \InvalidArgumentException('Invalid define');
+                throw new InvalidArgumentException('Invalid define');
             }
             $parts = BinaryString::trimExplodeEmpty('=', $define);
             list($variable, $value) = $parts + [1 => null];
@@ -194,7 +216,7 @@ HELP;
         if ($filename === '-' || empty($filename)) {
             $filename = 'php://stdin';
         }
-        $script = @\file_get_contents($filename);
+        $script = @file_get_contents($filename);
 
         if (!$script) {
             throw new RuntimeException('Script file was not found');
@@ -250,7 +272,7 @@ HELP;
                     $question->setMaxAttempts(20);
                     $question->setValidator(function ($value) {
                         if (empty($value)) {
-                            throw new \Exception('Please enter a value');
+                            throw new Exception('Please enter a value');
                         }
 
                         return $value;
@@ -317,10 +339,15 @@ HELP;
     protected function initScriptVars()
     {
         $rootFolder = $this->getApplication()->getMagentoRootFolder();
+        $this->getApplication()->initMagento();
         if ($rootFolder !== null) {
             $this->scriptVars['${magento.root}'] = $rootFolder;
-            $this->scriptVars['${magento.version}'] = $this->getMagentoVersion();
-            $this->scriptVars['${magento.edition}'] = $this->getMagentoEdition();
+            $this->scriptVars['${magento.version}'] = $this->productMetadata ? $this->productMetadata->getVersion() : '';
+            $this->scriptVars['${magento.edition}'] = $this->productMetadata ? $this->productMetadata->getEdition() : '';
+            if ($this->distributionMetadata) {
+                $this->scriptVars['${magento.distribution}'] = $this->distributionMetadata->getDistributionName();
+                $this->scriptVars['${magento.distribution_version}'] = $this->distributionMetadata->getDistributionVersion();
+            }
         }
 
         $this->scriptVars['${php.version}'] = substr(phpversion(), 0, strpos(phpversion(), '-'));
@@ -357,38 +384,5 @@ HELP;
         $commandString = str_replace(array_keys($this->scriptVars), $this->scriptVars, $commandString);
 
         return $commandString;
-    }
-
-    /**
-     * @return string
-     * @throws \Exception
-     */
-    private function getMagentoVersion()
-    {
-        return $this->getProductMetadata()->getVersion();
-    }
-
-    /**
-     * @return string
-     * @throws \Exception
-     */
-    private function getMagentoEdition()
-    {
-        return $this->getProductMetadata()->getEdition();
-    }
-
-    /**
-     * @return \Magento\Framework\App\ProductMetadata
-     * @throws \Exception
-     */
-    private function getProductMetadata()
-    {
-        if ($this->productMetadata === null) {
-            $this->initMagento(); // obtaining the object-manager requires init Magento
-            $objectManager = $this->getApplication()->getObjectManager();
-            $this->productMetadata = $objectManager->get('\Magento\Framework\App\ProductMetadata');
-        }
-
-        return $this->productMetadata;
     }
 }
