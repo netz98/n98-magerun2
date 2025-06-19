@@ -11,6 +11,7 @@ ${bar}=${foo}.gz
 ! echo "magento.root: ${magento.root}"
 ! echo "magento.edition: ${magento.edition}"
 ! echo "magento.version: ${magento.version}"
+! echo "magento_distribution_version: ${magento.distribution_version}"
 ! echo "php.version: ${php.version}"
 ! echo "magerun.version: ${magerun.version}"
 ! echo "Path ENV Variable: ${env.PATH}"
