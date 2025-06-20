@@ -8,64 +8,67 @@ use Symfony\Component\Console\Tester\ApplicationTester;
 class AddModuleDirArgumentTest extends \PHPUnit\Framework\TestCase
 {
     /**
-     * @var TestApplication
+     * @var array|null
      */
-    private $application;
-
-    /**
-     * @var ApplicationTester
-     */
-    private $tester;
+    private $originalArgv;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->application = new TestApplication();
-        $app = $this->application->getApplication();
+        $this->originalArgv = $_SERVER['argv'] ?? null;
+    }
+
+    protected function tearDown(): void
+    {
+        if ($this->originalArgv === null) {
+            unset($_SERVER['argv']);
+        } else {
+            $_SERVER['argv'] = $this->originalArgv;
+        }
+
+        parent::tearDown();
+    }
+
+    private function createTester(array $argv): ApplicationTester
+    {
+        $_SERVER['argv'] = $argv;
+
+        $application = new TestApplication();
+        $app = $application->getApplication();
         $app->setAutoExit(false);
 
-        // Use the wrapped Symfony application for the tester
-        $this->tester = new ApplicationTester($app);
+        return new ApplicationTester($app);
     }
 
     public function testCommandAndAutoloadingFromAddedModuleDir()
     {
-        // Path to the test module created in the previous step
-        // Adjust if path is different, ensure it's relative to project root
         $modulePath = 'tests/_files/custom_module_test_add_dir';
 
-        // First, check if the command is listed
-        $this->tester->run(
-            [
-                '--add-module-dir' => $modulePath,
-                'command' => 'list',
-                //'--skip-magento-compatibility-check' => true, // May be needed if Magento isn't fully bootstrapped
-                //'--skip-config' => true, // Avoid loading other configs that might interfere
-            ],
-            ['decorated' => false] // No decoration for easier string matching
-        );
+        $tester = $this->createTester([
+            'n98-magerun2',
+            '--add-module-dir=' . $modulePath,
+        ]);
 
-        $listOutput = $this->tester->getDisplay();
+        $tester->run([
+            '--add-module-dir' => $modulePath,
+            'command' => 'list',
+        ], ['decorated' => false]);
+
+        $listOutput = $tester->getDisplay();
         $this->assertStringContainsString('mytest:hello', $listOutput, 'The command mytest:hello should be listed.');
 
-        // Now, execute the command itself
-        $this->tester->run(
-            [
-                '--add-module-dir' => $modulePath,
-                'command' => 'mytest:hello',
-                //'--skip-magento-compatibility-check' => true,
-                //'--skip-config' => true,
-            ],
-            ['decorated' => false]
-        );
+        $tester->run([
+            '--add-module-dir' => $modulePath,
+            'command' => 'mytest:hello',
+        ], ['decorated' => false]);
 
-        $commandOutput = $this->tester->getDisplay();
+        $commandOutput = $tester->getDisplay();
         $this->assertStringContainsString(
             'Hello from MyTestHelloCommand! Autoloaded: AutoloadTestClass says hi!',
             $commandOutput,
             'The output from mytest:hello command is not as expected.'
         );
-        $this->assertSame(0, $this->tester->getStatusCode(), 'Command execution should be successful.');
+        $this->assertSame(0, $tester->getStatusCode(), 'Command execution should be successful.');
     }
 
     public function testCommandFromMultipleAddedModuleDirs()
@@ -78,41 +81,44 @@ class AddModuleDirArgumentTest extends \PHPUnit\Framework\TestCase
         // The underlying code supports multiple paths, so this at least tests the option parsing.
 
         $modulePath1 = 'tests/_files/custom_module_test_add_dir';
-        // $modulePath2 = 'tests/_files/custom_module_test_add_dir_2'; // if we had a second one
 
-        $this->tester->run(
-            [
-                '--add-module-dir' => [$modulePath1, $modulePath1], // Pass as an array for multiple options
-                'command' => 'mytest:hello',
-            ],
-            ['decorated' => false]
-        );
+        $tester = $this->createTester([
+            'n98-magerun2',
+            '--add-module-dir=' . $modulePath1,
+            '--add-module-dir=' . $modulePath1,
+        ]);
 
-        $commandOutput = $this->tester->getDisplay();
+        $tester->run([
+            '--add-module-dir' => [$modulePath1, $modulePath1],
+            'command' => 'mytest:hello',
+        ], ['decorated' => false]);
+
+        $commandOutput = $tester->getDisplay();
         $this->assertStringContainsString(
             'Hello from MyTestHelloCommand! Autoloaded: AutoloadTestClass says hi!',
             $commandOutput,
             'The output from mytest:hello command with multiple --add-module-dir options is not as expected.'
         );
-        $this->assertSame(0, $this->tester->getStatusCode(), 'Command execution should be successful with multiple --add-module-dir options.');
+        $this->assertSame(0, $tester->getStatusCode(), 'Command execution should be successful with multiple --add-module-dir options.');
     }
 
     public function testNonExistentModuleDir()
     {
         $nonExistentPath = 'tests/_files/non_existent_module_dir_for_test';
 
-        // We expect the application to run without error, but our command should not be available.
-        // The ConfigurationLoader should log a warning (if verbose) but not crash.
-        $this->tester->run(
-            [
-                '--add-module-dir' => $nonExistentPath,
-                'command' => 'list',
-                '-v' => true, // Enable verbosity to check for warnings (optional for this assertion)
-            ],
-            ['decorated' => false]
-        );
+        $tester = $this->createTester([
+            'n98-magerun2',
+            '--add-module-dir=' . $nonExistentPath,
+            'list',
+        ]);
 
-        $listOutput = $this->tester->getDisplay();
+        $tester->run([
+            '--add-module-dir' => $nonExistentPath,
+            'command' => 'list',
+            '-v' => true,
+        ], ['decorated' => false]);
+
+        $listOutput = $tester->getDisplay();
         // Check that the command is NOT listed
         $this->assertStringNotContainsString('mytest:hello', $listOutput, 'The command mytest:hello should NOT be listed when path is invalid.');
 
@@ -123,6 +129,6 @@ class AddModuleDirArgumentTest extends \PHPUnit\Framework\TestCase
         // $this->assertStringContainsString("Provided additional module path is not a valid directory: ".realpath($nonExistentPath), $listOutput);
         // For now, just ensuring the command isn't loaded is the primary goal.
 
-        $this->assertSame(0, $this->tester->getStatusCode(), 'Listing commands should be successful even with an invalid module path.');
+        $this->assertSame(0, $tester->getStatusCode(), 'Listing commands should be successful even with an invalid module path.');
     }
 }
