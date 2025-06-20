@@ -101,7 +101,7 @@ commands:
   N98\Magento\Command\System\CheckCommand:
     checks:
       my-check-group:
-        - N98\\Magento\\Command\\System\\Check\\Custom\\MemoryLimitCheck
+        - N98\Magento\Command\System\Check\Custom\MemoryLimitCheck
 ```
 
 - Checks are registered under the sys:check command (`N98\Magento\Command\System\CheckCommand`).
