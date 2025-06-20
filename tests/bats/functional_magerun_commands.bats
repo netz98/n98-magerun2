@@ -1014,3 +1014,16 @@ function cleanup_files_in_magento() {
   run $BIN "sys:website:list" --format=csv
   assert_output --partial "1,base"
 }
+
+# ============================================
+# Issue: 499 - keep calm command
+# ============================================
+
+@test "Command: keep:calm" {
+  run $BIN "keep:calm"
+  assert_output --partial "cache:clean"
+  assert_output --partial "indexer:reindex"
+  assert_output --partial "setup:upgrade"
+  assert_output --partial "setup:di:compile"
+  assert_output --partial "setup:static-content:deploy"
+}
