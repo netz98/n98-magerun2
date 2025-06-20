@@ -793,7 +793,7 @@ class Application extends BaseApplication
         $addModuleDirOption = new InputOption(
             '--add-module-dir',
             null,
-            InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY,
+            InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY,
             'Adds an additional module directory path. Use absolute paths or paths relative to the magerun execution.'
         );
         $inputDefinition->addOption($addModuleDirOption);
