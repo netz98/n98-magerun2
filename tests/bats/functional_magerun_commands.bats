@@ -21,7 +21,7 @@ setup() {
     fi
 
     export BIN="${PHP_BIN} -f ${N98_MAGERUN2_BIN} -- --no-interaction --root-dir=${N98_MAGERUN2_TEST_MAGENTO_ROOT} --skip-core-commands"
-    export MAGERUN_SRC_ROOT="$(dirname "$(dirname "$(realpath "$N98_MAGERUN2_BIN"))")")"
+    export MAGERUN_SRC_ROOT="$(dirname "$(dirname "$(realpath "${BATS_TEST_DIRNAME}")")")"
     export BIN_INTERACTION="${PHP_BIN} -f ${N98_MAGERUN2_BIN} -- --root-dir=${N98_MAGERUN2_TEST_MAGENTO_ROOT}"
 }
 
