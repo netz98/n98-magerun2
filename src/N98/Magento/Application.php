@@ -426,6 +426,20 @@ class Application extends BaseApplication
 
         $this->checkSelfUpdate();
 
+        $initialCwd = \N98\Util\OperatingSystem::getCwd();
+
+        $additionalModuleDirs = [];
+        if ($input instanceof \Symfony\Component\Console\Input\ArrayInput) {
+            try {
+                $input->bind($this->getDefinition());
+                $additionalModuleDirs = (array) $input->getOption('add-module-dir');
+            } catch (\Exception $e) {
+                // ignore binding issues, option will simply not be available
+            }
+        } elseif (isset($_SERVER['argv']) && is_array($_SERVER['argv'])) {
+            $additionalModuleDirs = $this->extractAdditionalModuleDirsFromArgv($_SERVER['argv']);
+        }
+
         $loadExternalConfig = !$this->_checkSkipConfigOption($input) && !$this->isSelfUpdate;
 
         $this->config = new Config($initConfig, $this->isPharMode(), $output);
@@ -440,17 +454,6 @@ class Application extends BaseApplication
         }
 
         // START: Add logic for --add-module-dir
-        $additionalModuleDirs = [];
-        if ($input instanceof \Symfony\Component\Console\Input\ArrayInput) {
-            try {
-                $input->bind($this->getDefinition());
-                $additionalModuleDirs = (array) $input->getOption('add-module-dir');
-            } catch (\Exception $e) {
-                // ignore binding issues, option will simply not be available
-            }
-        } elseif (isset($_SERVER['argv']) && is_array($_SERVER['argv'])) {
-            $additionalModuleDirs = $this->extractAdditionalModuleDirsFromArgv($_SERVER['argv']);
-        }
 
         if (!empty($additionalModuleDirs)) {
             $currentConfigLoader = $this->config->getLoader();
@@ -461,6 +464,10 @@ class Application extends BaseApplication
                          $output->writeln('<comment>Warning: Invalid data type or empty path for --add-module-dir. Skipping.</comment>');
                     }
                     continue;
+                }
+
+                if ($dirPath[0] !== '/' && !preg_match('#^[A-Za-z]:[\\/]#', $dirPath)) {
+                    $dirPath = $initialCwd . DIRECTORY_SEPARATOR . $dirPath;
                 }
 
                 $pathForLoader = $dirPath;
