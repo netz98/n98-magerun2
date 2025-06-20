@@ -21,13 +21,11 @@ class AddModuleDirArgumentTest extends \PHPUnit\Framework\TestCase
     {
         parent::setUp();
         $this->application = new TestApplication();
-        $this->application->getApplication()->setAutoExit(false);
-        // It's important to use a real autoloader instance for this test
-        // The TestApplication might mock or simplify this, ensure it's suitable.
-        // If TestApplication::getAutoloader() doesn't provide a real one, we might need to adjust.
-        // For now, assume TestApplication handles autoloader setup sufficiently for plugins.
+        $app = $this->application->getApplication();
+        $app->setAutoExit(false);
 
-        $this->tester = new ApplicationTester($this->application);
+        // Use the wrapped Symfony application for the tester
+        $this->tester = new ApplicationTester($app);
     }
 
     public function testCommandAndAutoloadingFromAddedModuleDir()
