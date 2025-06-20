@@ -73,6 +73,11 @@ class ConfigurationLoader
     protected $projectConfig = [];
 
     /**
+     * @var string[]
+     */
+    protected $additionalModulePaths = [];
+
+    /**
      * @var array
      */
     protected $loadedConfigFileInfo = [];
@@ -105,6 +110,20 @@ class ConfigurationLoader
         $this->initialConfig = $config;
         $this->isPharMode = $isPharMode;
         $this->output = $output;
+    }
+
+    /**
+     * @param string $path
+     * @return void
+     */
+    public function addAdditionalModulePath($path)
+    {
+        if (is_dir($path)) {
+            $this->additionalModulePaths[] = rtrim($path, '/\\');
+        } else {
+            // Optionally log a warning if the path is not a directory
+            $this->logDebug(sprintf('<warning>Provided additional module path is not a valid directory: %s</warning>', $path));
+        }
     }
 
     /**
@@ -263,6 +282,20 @@ class ConfigurationLoader
                 foreach ($finder as $file) {
                     /* @var $file SplFileInfo */
                     $this->registerPluginConfigFile($magentoRootFolder, $file);
+                }
+            }
+
+            // Process explicitly added module paths
+            foreach ($this->additionalModulePaths as $modulePath) {
+                $configFile = $modulePath . '/' . $this->customConfigFilename;
+                if (file_exists($configFile) && is_readable($configFile)) {
+                    // We need to create an SplFileInfo object to pass to registerPluginConfigFile
+                    // or refactor registerPluginConfigFile. For now, let's create SplFileInfo.
+                    $fileInfo = new \Symfony\Component\Finder\SplFileInfo($configFile, $modulePath, $modulePath . '/' . $this->customConfigFilename);
+                    $this->registerPluginConfigFile($magentoRootFolder, $fileInfo);
+                    $this->logDebug('Load additional module config <comment>' . $configFile . '</comment>');
+                } else {
+                    $this->logDebug(sprintf('No %s found in additional module path: %s', $this->customConfigFilename, $modulePath));
                 }
             }
         }
