@@ -3,6 +3,7 @@
 namespace N98\Magento\Application;
 
 use ErrorException;
+use function file_get_contents;
 use N98\Util\ArrayFunctions;
 use N98\Util\BinaryString;
 use N98\Util\OperatingSystem;
@@ -11,7 +12,6 @@ use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\Yaml\Yaml;
 use UnexpectedValueException;
-use function file_get_contents;
 
 /**
  * Config consists of several parts which are merged.

@@ -441,7 +441,7 @@ class Application extends BaseApplication
         }
 
         // Use AddModuleDirOptionParser for --add-module-dir logic
-        $addModuleDirOptionParser = new AddModuleDirOptionParser($_SERVER['argv'] ?? []);
+        $addModuleDirOptionParser = new AddModuleDirOptionParser();
         $additionalModuleDirs = $addModuleDirOptionParser->parse($input, $output);
 
         if (!empty($additionalModuleDirs)) {

@@ -10,16 +10,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 class AddModuleDirOptionParser
 {
     /**
-     * @var array
-     */
-    private array $args;
-
-    public function __construct(array $args = [])
-    {
-        $this->args = $args;
-    }
-
-    /**
      * Extracts and validates additional module directory paths from input or argv.
      *
      * @param \Symfony\Component\Console\Input\InputInterface $input
@@ -29,7 +19,7 @@ class AddModuleDirOptionParser
     public function parse(InputInterface $input, OutputInterface $output): array
     {
         $dirs = $input->getParameterOption('--add-module-dir', null, true);
-        
+
         if ($dirs === null) {
             return [];
         }
