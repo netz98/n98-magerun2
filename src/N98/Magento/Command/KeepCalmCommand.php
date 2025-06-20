@@ -14,7 +14,7 @@ class KeepCalmCommand extends AbstractMagentoCommand
         $this
             ->setName('keep:calm')
             ->setDescription(
-                'Run cache clean, reindex, setup upgrade, di compile and static content deploy'
+                'Run cache clean, reindex, setup upgrade, di compile and static content deploy (experimental)'
             );
     }
 

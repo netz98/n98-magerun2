@@ -3,7 +3,7 @@ title: keep:calm
 sidebar_label: keep:calm
 ---
 
-Runs a sequence of maintenance commands:
+Runs a sequence of maintenance commands _(experimental)_: 
 
 1. `cache:clean`
 2. `indexer:reindex`
