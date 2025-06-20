@@ -15,13 +15,16 @@ There are three ways to install the tools:
 Download the latest stable n98-magerun phar-file from the [file-server](https://files.magerun.net/):
 
 ```sh
-wget https://files.magerun.net/n98-magerun2.phar
+curl -O https://files.magerun.net/n98-magerun2.phar
 ```
 
-or if you prefer to use Curl:
+All historic versions including their GPG signatures are also stored on this server. You can
+browse [all available versions](https://files.magerun.net/old_versions.php).
+To download a specific release replace `<version>` in the file name. Example for version `7.0.3`:
 
 ```sh
-curl -O https://files.magerun.net/n98-magerun2.phar
+curl -O https://files.magerun.net/n98-magerun2-7.0.3.phar
+curl -O https://files.magerun.net/n98-magerun2-7.0.3.phar.asc
 ```
 
 Verify the download by comparing the SHA256 checksum with the one on the

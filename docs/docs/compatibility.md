@@ -9,6 +9,8 @@ or `install` are excluded).
 
 We support the following Magento Versions:
 
+- Use the **latest version** of n98-magerun2 for Adobe Commerce / Magento Open Source 2.4.7, 2.4.6, 2.4.5 and Mage-OS 1.0.6
+
 - Mage-OS 1.2.x
 - Mage-OS 1.1.x
 - Mage-OS 1.0.x
@@ -18,6 +20,8 @@ We support the following Magento Versions:
 - 2.4.4 Open Source/Commerce (last compatible n98-magerun2 version is v7.5.0)
 - 2.3.x Open Source/Commerce (last compatible n98-magerun2 version is v5.2.0)
 - 2.2.x Open Source/Commerce (last compatible n98-magerun2 version is v3.2.0)
+- 2.1.x Open Source/Commerce (last compatible n98-magerun2 version is v3.2.0)
+- 2.0.x Open Source/Commerce (last compatible n98-magerun2 version is v2.2.3)
 
 We support the following PHP Versions:
 
@@ -27,3 +31,6 @@ We support the following PHP Versions:
 - PHP 7.4 (last compatible version is v7.5.0)
 - PHP 7.3 (last compatible version is v6.1.1)
 - PHP 7.2 (last compatible version is v4.7.0)
+- PHP < 7.2 (use n98-magerun1 v1.103.2)
+
+For details on downloading historical releases, see the [installation guide](./installation.md).
