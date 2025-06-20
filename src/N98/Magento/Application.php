@@ -439,6 +439,36 @@ class Application extends BaseApplication
             $this->detectMagento($input, $output);
         }
 
+        // START: Add logic for --add-module-dir
+        $additionalModuleDirs = $input->getOption('add-module-dir');
+        if (!empty($additionalModuleDirs) && is_array($additionalModuleDirs)) {
+            $currentConfigLoader = $this->config->getLoader();
+            foreach ($additionalModuleDirs as $dirPath) {
+                if (empty($dirPath) || !is_string($dirPath)) {
+                    if ($output && $output->isVerbose() && isset($dirPath)) {
+                         // Simpler sprintf for the subtask
+                         $output->writeln('<comment>Warning: Invalid data type or empty path for --add-module-dir. Skipping.</comment>');
+                    }
+                    continue;
+                }
+
+                $pathForLoader = $dirPath;
+                $realDirPath = realpath($dirPath);
+
+                if ($realDirPath !== false) {
+                    $pathForLoader = $realDirPath;
+                    if ($output && $output->isVerbose()) {
+                        $output->writeln(sprintf('<info>--add-module-dir: Resolved path "%s" to "%s". It will be processed by ConfigurationLoader.</info>', $dirPath, $realDirPath));
+                    }
+                } else {
+                    if ($output && $output->isVerbose()) {
+                        $output->writeln(sprintf('<comment>Warning: --add-module-dir: Could not resolve path "%s" using realpath (it may be invalid or inaccessible). Using original path for ConfigurationLoader.</comment>', $dirPath));
+                    }
+                }
+                $currentConfigLoader->addAdditionalModulePath($pathForLoader);
+            }
+        }
+        // END: Add logic for --add-module-dir
         $configLoader = $this->config->getLoader();
         $configLoader->loadStageTwo(
             $this->detectionResult ? $this->getMagentoRootFolder(true) : '',
@@ -756,6 +786,17 @@ class Application extends BaseApplication
             'Do not check for Magento version compatibility'
         );
         $inputDefinition->addOption($skipMagentoCompatibilityCheck);
+
+        /**
+         * Add module directory
+         */
+        $addModuleDirOption = new InputOption(
+            '--add-module-dir',
+            null,
+            InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY,
+            'Adds an additional module directory path. Use absolute paths or paths relative to the magerun execution.'
+        );
+        $inputDefinition->addOption($addModuleDirOption);
 
         return $inputDefinition;
     }
