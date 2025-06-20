@@ -8,6 +8,7 @@ use Exception;
 use Magento\Framework\Exception\FileSystemException;
 use Magento\Framework\ObjectManagerInterface;
 use N98\Magento\Application\ApplicationAwareInterface;
+use N98\Magento\Application\ArgsParser\AddModuleDirOptionParser;
 use N98\Magento\Application\Config;
 use N98\Magento\Application\ConfigurationLoader;
 use N98\Magento\Application\Console\Events;
@@ -426,20 +427,6 @@ class Application extends BaseApplication
 
         $this->checkSelfUpdate();
 
-        $initialCwd = \N98\Util\OperatingSystem::getCwd();
-
-        $additionalModuleDirs = [];
-        if ($input instanceof \Symfony\Component\Console\Input\ArrayInput) {
-            try {
-                $input->bind($this->getDefinition());
-                $additionalModuleDirs = (array) $input->getOption('add-module-dir');
-            } catch (\Exception $e) {
-                // ignore binding issues, option will simply not be available
-            }
-        } elseif (isset($_SERVER['argv']) && is_array($_SERVER['argv'])) {
-            $additionalModuleDirs = $this->extractAdditionalModuleDirsFromArgv($_SERVER['argv']);
-        }
-
         $loadExternalConfig = !$this->_checkSkipConfigOption($input) && !$this->isSelfUpdate;
 
         $this->config = new Config($initConfig, $this->isPharMode(), $output);
@@ -453,36 +440,13 @@ class Application extends BaseApplication
             $this->detectMagento($input, $output);
         }
 
-        // START: Add logic for --add-module-dir
+        // Use AddModuleDirOptionParser for --add-module-dir logic
+        $addModuleDirOptionParser = new AddModuleDirOptionParser($_SERVER['argv'] ?? []);
+        $additionalModuleDirs = $addModuleDirOptionParser->parse($input, $output);
 
         if (!empty($additionalModuleDirs)) {
             $currentConfigLoader = $this->config->getLoader();
-            foreach ($additionalModuleDirs as $dirPath) {
-                if (empty($dirPath) || !is_string($dirPath)) {
-                    if ($output && $output->isVerbose() && isset($dirPath)) {
-                         // Simpler sprintf for the subtask
-                         $output->writeln('<comment>Warning: Invalid data type or empty path for --add-module-dir. Skipping.</comment>');
-                    }
-                    continue;
-                }
-
-                if ($dirPath[0] !== '/' && !preg_match('#^[A-Za-z]:[\\/]#', $dirPath)) {
-                    $dirPath = $initialCwd . DIRECTORY_SEPARATOR . $dirPath;
-                }
-
-                $pathForLoader = $dirPath;
-                $realDirPath = realpath($dirPath);
-
-                if ($realDirPath !== false) {
-                    $pathForLoader = $realDirPath;
-                    if ($output && $output->isVerbose()) {
-                        $output->writeln(sprintf('<info>--add-module-dir: Resolved path "%s" to "%s". It will be processed by ConfigurationLoader.</info>', $dirPath, $realDirPath));
-                    }
-                } else {
-                    if ($output && $output->isVerbose()) {
-                        $output->writeln(sprintf('<comment>Warning: --add-module-dir: Could not resolve path "%s" using realpath (it may be invalid or inaccessible). Using original path for ConfigurationLoader.</comment>', $dirPath));
-                    }
-                }
+            foreach ($additionalModuleDirs as $pathForLoader) {
                 $currentConfigLoader->addAdditionalModulePath($pathForLoader);
             }
         }
@@ -754,7 +718,7 @@ class Application extends BaseApplication
          * Root dir
          */
         $rootDirOption = new InputOption(
-            '--root-dir',
+            'root-dir',
             '',
             InputOption::VALUE_OPTIONAL,
             'Force magento root dir. No auto detection'
@@ -765,7 +729,7 @@ class Application extends BaseApplication
          * Skip config
          */
         $skipExternalConfig = new InputOption(
-            '--skip-config',
+            'skip-config',
             '',
             InputOption::VALUE_NONE,
             'Do not load any custom config.'
@@ -776,7 +740,7 @@ class Application extends BaseApplication
          * Skip root check
          */
         $skipExternalConfig = new InputOption(
-            '--skip-root-check',
+            'skip-root-check',
             '',
             InputOption::VALUE_NONE,
             'Do not check if n98-magerun runs as root'
@@ -787,7 +751,7 @@ class Application extends BaseApplication
          * Skip core commands
          */
         $skipMagento2CoreCommands = new InputOption(
-            '--skip-core-commands',
+            'skip-core-commands',
             '',
             InputOption::VALUE_NONE,
             'Do not include Magento 2 core commands'
@@ -798,7 +762,7 @@ class Application extends BaseApplication
          * Skip Magento compatibility check
          */
         $skipMagentoCompatibilityCheck = new InputOption(
-            '--skip-magento-compatibility-check',
+            'skip-magento-compatibility-check',
             '',
             InputOption::VALUE_NONE,
             'Do not check for Magento version compatibility'
@@ -809,7 +773,7 @@ class Application extends BaseApplication
          * Add module directory
          */
         $addModuleDirOption = new InputOption(
-            '--add-module-dir',
+            'add-module-dir',
             null,
             InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY,
             'Adds an additional module directory path. Use absolute paths or paths relative to the magerun execution.'
@@ -837,30 +801,5 @@ class Application extends BaseApplication
         if (isset($_SERVER['argv'][1]) && $_SERVER['argv'][1] === 'self-update') {
             $this->isSelfUpdate = true;
         }
-    }
-
-    /**
-     * Parses additional module directory options from raw argv tokens.
-     *
-     * @param array $argv
-     * @return string[]
-     */
-    private function extractAdditionalModuleDirsFromArgv(array $argv): array
-    {
-        $dirs = [];
-        $count = count($argv);
-        for ($i = 1; $i < $count; $i++) {
-            $arg = $argv[$i];
-            if (strpos($arg, '--add-module-dir=') === 0) {
-                $dirs[] = substr($arg, 17);
-                continue;
-            }
-            if ($arg === '--add-module-dir' && isset($argv[$i + 1])) {
-                $dirs[] = $argv[$i + 1];
-                $i++;
-            }
-        }
-
-        return $dirs;
     }
 }

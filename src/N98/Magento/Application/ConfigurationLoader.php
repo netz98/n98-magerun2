@@ -2,6 +2,7 @@
 
 namespace N98\Magento\Application;
 
+use ErrorException;
 use N98\Util\ArrayFunctions;
 use N98\Util\BinaryString;
 use N98\Util\OperatingSystem;
@@ -9,6 +10,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\Yaml\Yaml;
+use UnexpectedValueException;
+use function file_get_contents;
 
 /**
  * Config consists of several parts which are merged.
@@ -118,11 +121,12 @@ class ConfigurationLoader
      */
     public function addAdditionalModulePath($path)
     {
-        if (is_dir($path)) {
-            $this->additionalModulePaths[] = rtrim($path, '/\\');
-        } else {
-            // Optionally log a warning if the path is not a directory
-            $this->logDebug(sprintf('<warning>Provided additional module path is not a valid directory: %s</warning>', $path));
+        $this->additionalModulePaths[] = rtrim($path, '/\\');
+
+        if (!is_dir($path)) {
+            $this->logDebug(
+                sprintf('<warning>Provided an additional module path is not a valid directory: %s</warning>', $path)
+            );
         }
     }
 
@@ -168,7 +172,7 @@ class ConfigurationLoader
     public function toArray()
     {
         if (empty($this->configArray)) {
-            throw new \ErrorException('Configuration not yet fully loaded');
+            throw new ErrorException('Configuration not yet fully loaded');
         }
 
         return $this->configArray;
@@ -209,7 +213,7 @@ class ConfigurationLoader
 
             if ($systemWideConfigFile && file_exists($systemWideConfigFile)) {
                 $this->logDebug('Load system config <comment>' . $systemWideConfigFile . '</comment>');
-                $this->systemConfig = (array) Yaml::parse(\file_get_contents($systemWideConfigFile));
+                $this->systemConfig = (array) Yaml::parse(file_get_contents($systemWideConfigFile));
                 $this->loadedConfigFileInfo[] = new ConfigInfo(ConfigInfo::TYPE_SYSTEM, $systemWideConfigFile);
             } else {
                 $this->systemConfig = [];
@@ -291,7 +295,7 @@ class ConfigurationLoader
                 if (file_exists($configFile) && is_readable($configFile)) {
                     // We need to create an SplFileInfo object to pass to registerPluginConfigFile
                     // or refactor registerPluginConfigFile. For now, let's create SplFileInfo.
-                    $fileInfo = new \Symfony\Component\Finder\SplFileInfo($configFile, $modulePath, $modulePath . '/' . $this->customConfigFilename);
+                    $fileInfo = new SplFileInfo($configFile, $modulePath, $modulePath . '/' . $this->customConfigFilename);
                     $this->registerPluginConfigFile($magentoRootFolder, $fileInfo);
                     $this->logDebug('Load additional module config <comment>' . $configFile . '</comment>');
                 } else {
@@ -398,7 +402,7 @@ class ConfigurationLoader
             $path = $file->getRealPath();
 
             if ($path === '') {
-                throw new \UnexpectedValueException(sprintf("Realpath for '%s' did return an empty string.", $file));
+                throw new UnexpectedValueException(sprintf("Realpath for '%s' did return an empty string.", $file));
             }
 
             if ($path === false) {

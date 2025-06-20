@@ -20,7 +20,8 @@ setup() {
       exit 1
     fi
 
-    export BIN="${PHP_BIN} -f ${N98_MAGERUN2_BIN} -- --no-interaction --root-dir=${N98_MAGERUN2_TEST_MAGENTO_ROOT}"
+    export BIN="${PHP_BIN} -f ${N98_MAGERUN2_BIN} -- --no-interaction --root-dir=${N98_MAGERUN2_TEST_MAGENTO_ROOT} --skip-core-commands"
+    export MAGERUN_SRC_ROOT="$(dirname "$(dirname "$(realpath "$N98_MAGERUN2_BIN"))")")"
     export BIN_INTERACTION="${PHP_BIN} -f ${N98_MAGERUN2_BIN} -- --root-dir=${N98_MAGERUN2_TEST_MAGENTO_ROOT}"
 }
 
@@ -43,6 +44,40 @@ function cleanup_files_in_magento() {
   run $BIN script $tempfilename
   assert_output --partial "successfully created"
   assert [ "$status" -eq 0 ]
+}
+
+# ============================================
+# Test Application
+# ============================================
+
+@test "Test Application - list" {
+  run $BIN "list"
+  assert_output --partial "n98-magerun2"
+}
+
+@test "Test Application - help" {
+  run $BIN "list"
+  assert_output --partial "Display help for a command"
+}
+
+@test "Test Application - help sys:info" {
+  run $BIN "help" "sys:info"
+  assert_output --partial "sys:info [options] [--] [<key>]"
+}
+
+@test "Test Application --add-module-dir" {
+  # Call the test command in the example module in the tests/_files/example-module directory
+  run $BIN -vvv --add-module-dir=${MAGERUN_SRC_ROOT}/tests/_files/example-module "magerun:example-module:test"
+  assert_output --partial "Load additional module config"
+  assert_output --partial "Successfully executed example module command!"
+  assert [ "$status" -eq 0 ]
+}
+
+@test "Test Application --skip-config" {
+  run $BIN -vvv --add-module-dir=${MAGERUN_SRC_ROOT}/tests/_files/example-module --skip-config
+
+  # no module should be loaded -> --skip-config means no module config should be loaded
+  refute_output "Load additional module config"
 }
 
 # ============================================

@@ -5,33 +5,18 @@ declare(strict_types=1);
 namespace N98MagerunExampleModule;
 
 use N98\Magento\Command\AbstractMagentoCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class TestCommand extends AbstractMagentoCommand
 {
-    /**
-     * @var \Magento\Framework\Pricing\PriceCurrencyInterface
-     */
-    private $priceCurrency;
-
     protected function configure()
     {
         $this
             ->setName('magerun:example-module:test')
             ->setDescription('Test command for functional testing')
         ;
-    }
-
-    /**
-     * Inject some stuff of Magento to test injection
-     *
-     * @param \Magento\Framework\Pricing\PriceCurrencyInterface $priceCurrency
-     * @return void
-     */
-    public function inject(\Magento\Framework\Pricing\PriceCurrencyInterface $priceCurrency)
-    {
-        $this->priceCurrency = $priceCurrency;
     }
 
     /**
@@ -43,9 +28,8 @@ class TestCommand extends AbstractMagentoCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->detectMagento($output);
-        if ($this->initMagento()) {
-            $output->writeln($this->priceCurrency->format(98, false));
-        }
+        $output->writeln('Successfully executed example module command!');
+
+        return Command::SUCCESS;
     }
 }
