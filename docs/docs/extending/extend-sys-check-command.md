@@ -4,13 +4,15 @@ title: Extend sys:check Command
 
 The `sys:check` command in n98-magerun is a powerful tool for verifying the health of a Magento installation. It features a modular architecture that allows developers to add their own custom checks. This guide explains how to create and register your own checks.
 
-#ä Core Concept: Modular Checks
+# Core Concept: Modular Checks
 
-The sys:check command discovers available checks through configuration. Checks are organized into groups, and these groups are registered in a config.yaml file. This allows you to define new checks on a per-project basis or create a distributable n98-magerun module.
-Creating a Custom Check
+The sys:check command discovers available checks through configuration. Checks are organized into groups, and these groups are registered in a YAML config file. This allows you to define new checks on a per-project basis or create a distributable n98-magerun module.
+
+## Creating a Custom Check
 
 A check is a PHP class that implements a specific interface. The results of the check are then added to a ResultCollection.
-Check Interfaces
+
+### Check Interfaces
 
 There are three main interfaces you can implement:
 
@@ -73,10 +75,10 @@ class MemoryLimitCheck implements SimpleCheck
 
 **Key Points**:
 
-- The check() method receives a Result\Collection object.
-- You create a new Result object using $results->createResult().
-    - Set a descriptive message with setMessage().
-    - Set the outcome with setStatus(). Possible values are:
+- The `check()` method receives a Result\Collection object.
+- You create a new Result object using `$results->createResult()`.
+    - Set a descriptive message with `setMessage()`.
+    - Set the outcome with `setStatus()`. Possible values are:
         - `\N98\Magento\Command\System\Check\Result::STATUS_OK`
         - `\N98\Magento\Command\System\Check\Result::STATUS_WARNING`
         - `\N98\Magento\Command\System\Check\Result::STATUS_ERROR`
@@ -86,37 +88,65 @@ class MemoryLimitCheck implements SimpleCheck
 Sometimes a check needs more context, like access to the command's configuration or the command object itself.
 
 - `\N98\Magento\Command\CommandConfigAware`: Implement this interface to get the command's configuration injected. Your class will need a `setCommandConfig(array $config)` method.
-- `\N98\Magento\Command\CommandAware`: Implement this interface to get the command object itself injected. Your class will need a
-  `setCommand(Command $command)` method.
+- `\N98\Magento\Command\CommandAware`: Implement this interface to get the command object itself injected. Your class will need a `setCommand(Command $command)` method.
 
 ## Registering Your Check
 
-After creating your check class, you must register it in a yaml config file so that n98-magerun2 can find it.
+After creating your check class, you must register it in a YAML config file so that n98-magerun2 can find it.
 
-Create a YAML file (n98-magerun2.yaml) in your project (app/etc) or module and add the following configuration:
+Create a YAML file (`n98-magerun2.yaml`) in your project (`app/etc`) or module and add the following configuration:
 
 ```yaml
-# n98-magerun2.yaml
 commands:
   N98\Magento\Command\System\CheckCommand:
     checks:
       my-check-group:
-        -
-          id: my-memory-check
-          class: 'MemoryLimitCheck'
-          description: 'Checks PHP memory_limit'
+        - N98\\Magento\\Command\\System\\Check\\Custom\\MemoryLimitCheck
 ```
 
-- Checks are registered under the sys:check command (N98\Magento\Command\System\CheckCommand).
-- You can define your own check groups (e.g., my-check-group).
-- Each check within a group needs a unique id, the fully qualified class name, and a description.
+- Checks are registered under the sys:check command (`N98\Magento\Command\System\CheckCommand`).
+- You can define your own check groups (e.g., `my-check-group`).
+- Each check within a group is a fully qualified class name (FQCN).
 
-Now, when you run n98-magerun.phar sys:check, your custom check group and the checks within it will be available. You can run all checks or just your group:
+**Example from the default configuration:**
 
+```yaml
+commands:
+  N98\Magento\Command\System\CheckCommand:
+    checks:
+      settings:
+        - N98\Magento\Command\System\Check\Settings\SecureBaseUrlCheck
+        - N98\Magento\Command\System\Check\Settings\UnsecureBaseUrlCheck
+        - N98\Magento\Command\System\Check\Settings\SecureCookieDomainCheck
+        - N98\Magento\Command\System\Check\Settings\UnsecureCookieDomainCheck
+      filesystem:
+        - N98\Magento\Command\System\Check\Filesystem\FoldersCheck
+        - N98\Magento\Command\System\Check\Filesystem\FilesCheck
+      php:
+        - N98\Magento\Command\System\Check\PHP\ExtensionsCheck
+        - N98\Magento\Command\System\Check\PHP\BytecodeCacheExtensionsCheck
+      mysql:
+        - N98\Magento\Command\System\Check\MySQL\VersionCheck
+        - N98\Magento\Command\System\Check\MySQL\EnginesCheck
+      env:
+        - N98\Magento\Command\System\Check\Env\ExistsCheck
+        - N98\Magento\Command\System\Check\Env\KeyExistsCheck
+        - N98\Magento\Command\System\Check\Env\CacheTypesCheck
+      hyva:
+        - N98\Magento\Command\System\Check\Hyva\InstallationBasicComposerPackagesCheck
+        - N98\Magento\Command\System\Check\Hyva\MissingGraphQLPackagesCheck
+        - N98\Magento\Command\System\Check\Hyva\IsCaptchaEnabledCheck
+        - N98\Magento\Command\System\Check\Hyva\IncompatibleBundledModulesCheck
+```
+
+Now, when you run `n98-magerun2.phar sys:check`, your custom check group and the checks within it will be available. You can run all checks or just your group:
+
+```bash
 # Run all checks, including yours
-`n98-magerun2.phar sys:check`
+n98-magerun2.phar sys:check
 
 # Run only the checks in your custom group
-`n98-magerun2.phar sys:check --group=my-check-group`
+n98-magerun2.phar sys:check --group=my-check-group
+```
 
 By following these steps, you can extend the sys:check command with custom validations tailored to your project's specific needs.
