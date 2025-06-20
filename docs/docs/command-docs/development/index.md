@@ -27,6 +27,7 @@ Commands tailored for Magento developers, including code generation and debuggin
 - [dev:translate:export](./dev-translate-export.md) - Export inline translations
 
 ### Development Utilities
+- [dev:console](./dev-console.md) - Run the interactive PHP console
 - [dev:report:count](./dev-report-count.md) - Get count of report files
 - [dev:symlinks](./dev-symlinks.md) - Toggle allow symlinks setting
 - [dev:template-hints](./dev-template-hints.md) - Toggle template hints
