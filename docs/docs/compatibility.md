@@ -9,6 +9,8 @@ or `install` are excluded).
 
 We support the following Magento Versions:
 
+- Mage-OS 1.2.x
+- Mage-OS 1.1.x
 - Mage-OS 1.0.x
 - 2.4.7 Open Source/Commerce
 - 2.4.6 Open Source/Commerce
