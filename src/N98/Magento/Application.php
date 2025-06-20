@@ -440,8 +440,19 @@ class Application extends BaseApplication
         }
 
         // START: Add logic for --add-module-dir
-        $additionalModuleDirs = $input->getOption('add-module-dir');
-        if (!empty($additionalModuleDirs) && is_array($additionalModuleDirs)) {
+        $additionalModuleDirs = [];
+        if ($input instanceof \Symfony\Component\Console\Input\ArrayInput) {
+            try {
+                $input->bind($this->getDefinition());
+                $additionalModuleDirs = (array) $input->getOption('add-module-dir');
+            } catch (\Exception $e) {
+                // ignore binding issues, option will simply not be available
+            }
+        } elseif (isset($_SERVER['argv']) && is_array($_SERVER['argv'])) {
+            $additionalModuleDirs = $this->extractAdditionalModuleDirsFromArgv($_SERVER['argv']);
+        }
+
+        if (!empty($additionalModuleDirs)) {
             $currentConfigLoader = $this->config->getLoader();
             foreach ($additionalModuleDirs as $dirPath) {
                 if (empty($dirPath) || !is_string($dirPath)) {
@@ -819,5 +830,30 @@ class Application extends BaseApplication
         if (isset($_SERVER['argv'][1]) && $_SERVER['argv'][1] === 'self-update') {
             $this->isSelfUpdate = true;
         }
+    }
+
+    /**
+     * Parses additional module directory options from raw argv tokens.
+     *
+     * @param array $argv
+     * @return string[]
+     */
+    private function extractAdditionalModuleDirsFromArgv(array $argv): array
+    {
+        $dirs = [];
+        $count = count($argv);
+        for ($i = 1; $i < $count; $i++) {
+            $arg = $argv[$i];
+            if (strpos($arg, '--add-module-dir=') === 0) {
+                $dirs[] = substr($arg, 17);
+                continue;
+            }
+            if ($arg === '--add-module-dir' && isset($argv[$i + 1])) {
+                $dirs[] = $argv[$i + 1];
+                $i++;
+            }
+        }
+
+        return $dirs;
     }
 }
