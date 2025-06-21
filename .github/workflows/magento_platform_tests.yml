@@ -142,7 +142,7 @@ jobs:
         image: >-
           opensearchproject/opensearch:${{ matrix.opensearch-version || '' }}
         env:
-          # By default, ElasticSearch refuses to spawn in single node configuration,
+          # By default, ElasticSearch refuses to spawn in a single node configuration,
           # as it expects redundancy. This is a dev environment, so redundancy is just wasteful.
           discovery.type: single-node
           # Disable HTTPS and password authentication
@@ -230,6 +230,11 @@ jobs:
         run: |
           composer global config http-basic.repo.magento.com \
             "${MAGENTO_MARKETPLACE_USERNAME}" "${MAGENTO_MARKETPLACE_PASSWORD}"
+
+      - name: Apply patch for Mage-OS PHP 8.4 compatibility
+        run: patch -p1 < .github/patches/mage-os-admin-analytics-nullable-type.patch
+        working-directory: ./magento
+        if: contains(matrix.magento-version, 'mage-os') && matrix.php-version == '8.4' && matrix.use-git-repository == false
 
       # --- Installation Method: Git Repository ---
       - name: Install Magento via git
