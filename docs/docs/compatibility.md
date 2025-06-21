@@ -2,35 +2,37 @@
 title: Compatibility
 ---
 
-The tools will automatically be tested for multiple PHP versions. It's
-currently running in various Linux distributions and Mac OS X. Microsoft
-Windows is not fully supported (some Commands like `db:dump`
-or `install` are excluded).
+Our tools are automatically tested against multiple PHP versions and run on various Linux distributions and macOS. Please note that Microsoft Windows is not fully supported, and some commands (e.g., `db:dump`, `install`) are unavailable on that platform.
 
-We support the following Magento Versions:
+### Platform Compatibility
 
-- Use the **latest version** of n98-magerun2 for Adobe Commerce / Magento Open Source 2.4.7, 2.4.6, 2.4.5 and Mage-OS 1.0.6
+We recommend using the **latest version** of n98-magerun2 for the best support and most recent features.
 
-- Mage-OS 1.2.x
-- Mage-OS 1.1.x
-- Mage-OS 1.0.x
-- 2.4.7 Open Source/Commerce
-- 2.4.6 Open Source/Commerce
-- 2.4.5 Open Source/Commerce
-- 2.4.4 Open Source/Commerce (last compatible n98-magerun2 version is v7.5.0)
-- 2.3.x Open Source/Commerce (last compatible n98-magerun2 version is v5.2.0)
-- 2.2.x Open Source/Commerce (last compatible n98-magerun2 version is v3.2.0)
-- 2.1.x Open Source/Commerce (last compatible n98-magerun2 version is v3.2.0)
-- 2.0.x Open Source/Commerce (last compatible n98-magerun2 version is v2.2.3)
+| Platform & Version                        | Recommended n98-magerun2 Version |
+| ----------------------------------------- |----------------------------------|
+| Adobe Commerce / Magento OS 2.4.8+        | `v9.0.0` or later                |
+| Mage-OS 1.2.x+                            | `v9.0.0` or later                |
+| Adobe Commerce / Magento OS 2.4.5 - 2.4.7 | `v8.0.0` or later                |
+| Mage-OS 1.0.x - 1.1.x                     | `v8.0.0` or later                |
+| Adobe Commerce / Magento OS 2.4.4         | `v7.5.0` (last compatible)       |
+| Adobe Commerce / Magento OS 2.3.x         | `v5.2.0` (last compatible)       |
+| Adobe Commerce / Magento OS 2.2.x         | `v3.2.0` (last compatible)       |
+| Adobe Commerce / Magento OS 2.1.x         | `v3.2.0` (last compatible)       |
+| Adobe Commerce / Magento OS 2.0.x         | `v2.2.3` (last compatible)       |
 
-We support the following PHP Versions:
+### PHP Version Compatibility
 
-- PHP 8.3
-- PHP 8.2
-- PHP 8.1
-- PHP 7.4 (last compatible version is v7.5.0)
-- PHP 7.3 (last compatible version is v6.1.1)
-- PHP 7.2 (last compatible version is v4.7.0)
-- PHP < 7.2 (use n98-magerun1 v1.103.2)
+| PHP Version | Required n98-magerun2 Version |
+| ----------- |-------------------------------|
+| PHP 8.4     | `v9.0.0` or later             |
+| PHP 8.3     | `v8.0.0` or later             |
+| PHP 8.2     | `v8.0.0` or later             |
+| PHP 8.1     | `v8.0.0` or later             |
+| PHP 7.4     | `v7.5.0` (last compatible)    |
+| PHP 7.3     | `v6.1.1` (last compatible)    |
+| PHP 7.2     | `v4.7.0` (last compatible)    |
+| PHP < 7.2   | Use n98-magerun1 `v1.103.2`   |
 
-For details on downloading historical releases, see the [installation guide](./installation.md).
+---
+
+For details on downloading specific historical releases, please see the [installation guide](./installation.md).
