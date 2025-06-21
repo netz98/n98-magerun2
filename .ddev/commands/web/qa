@@ -6,19 +6,24 @@
 
 PROJECT_DIR="/var/www/html";
 
+# Determine which Magento version variable is set
+if [ -n "$MAGERUN_SETUP_TEST_DEFAULT_MAGENTO_VERSION" ]; then
+    MAGERUN_VERSION="$MAGERUN_SETUP_TEST_DEFAULT_MAGENTO_VERSION"
+elif [ -n "$MAGERUN_SETUP_TEST_DEFAULT_MAGEOS_VERSION" ]; then
+    MAGERUN_VERSION="$MAGERUN_SETUP_TEST_DEFAULT_MAGEOS_VERSION"
+else
+    echo "Please add MAGERUN_SETUP_TEST_DEFAULT_MAGENTO_VERSION or MAGERUN_SETUP_TEST_DEFAULT_MAGEOS_VERSION as web_environment variable in your .ddev/config.yaml."
+    echo "See: https://github.com/netz98/n98-magerun2/blob/develop/.ddev/config.yaml"
+    exit 1;
+fi
+
+MAGENTO_ROOT_DIR="/opt/magento-test-environments/magento_${MAGERUN_VERSION//[-.]/_}"
+
 echo "---------------------------------------------------------";
 echo "RUN php-cs-fixer"
 echo "---------------------------------------------------------";
 
 vendor/bin/php-cs-fixer fix --verbose --dry-run --diff;
-
-if [ -z "$MAGERUN_SETUP_TEST_DEFAULT_MAGENTO_VERSION" ]; then
-		echo "Please add MAGERUN_SETUP_TEST_DEFAULT_MAGENTO_VERSION as web_environment variable in your .ddev/config.yaml."
-		echo "See: https://github.com/netz98/n98-magerun2/blob/develop/.ddev/config.yaml"
-		exit 1;
-fi
-
-MAGENTO_ROOT_DIR="/opt/magento-test-environments/magento_${MAGERUN_SETUP_TEST_DEFAULT_MAGENTO_VERSION//[-.]/_}"
 
 # phpstan is temporary disabled until we find a good way to mock all the Magento dependencies
 
