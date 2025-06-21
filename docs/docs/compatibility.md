@@ -31,7 +31,6 @@ We recommend using the **latest version** of n98-magerun2 for the best support a
 | PHP 7.4     | `v7.5.0` (last compatible)    |
 | PHP 7.3     | `v6.1.1` (last compatible)    |
 | PHP 7.2     | `v4.7.0` (last compatible)    |
-| PHP < 7.2   | Use n98-magerun1 `v1.103.2`   |
 
 ---
 
