@@ -330,7 +330,7 @@ jobs:
           contains(matrix.magento-version, '2.4.7') 
 
       - name: Apply patch for Mage-OS PHP 8.4 compatibility
-        run: patch -p1 < .github/patches/mage-os-admin-analytics-nullable-type.patch
+        run: patch -p1 < ${{ github.workspace }}/.github/patches/mage-os-admin-analytics-nullable-type.patch
         working-directory: ./magento
         if: >-
           contains(matrix.composer-repository-url, 'mage-os.org') &&
