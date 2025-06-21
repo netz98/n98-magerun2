@@ -4,7 +4,18 @@ RECENT CHANGES
 9.0.0
 -----
 
-TBD
++- Add: keep calm command for maintenance workflow (PR #1692, issue #499, by Christian Münch)
++- Add: extend admin:user:list with --sort option and logdate column (PR #1647, issue #1646, by google-labs-jules)
++- Add: support view handling in db:dump and db:drop commands (PR #1672, issue #602, by google-labs-jules)
++- Add: enable github tokens in github:pr command (issue #1633, by Christian Münch)
++- Add: --add-module-dir option to load external modules (PR #1687, issue #1677, by Christian Münch)
++- Add: CSV export option in db:query command (PR #1653, issue #1651, by google-labs-jules)
++- Add: Docusaurus documentation and deployment workflow (PR #1643, issue #1643, by google-labs-jules)
++- Imp: update to Symfony 6.4 (PR #1608, issue #1608, by Christian Münch)
++- Imp: optimize development setup and Magento version detection (by Christian Münch)
++- Fix: better TTY handling in proxy command (PR #1667, issue #1422, by Christian Münch)
++- Fix: PHP 8.4 compatibility updates (PR #1655, issue #1654, by Christian Münch)
++- Build: CI release workflow enhancements (PR #1657, issue #1657, by Christian Münch)
 
 8.1.1
 -----
