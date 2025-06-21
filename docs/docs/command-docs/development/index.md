@@ -35,4 +35,5 @@ Commands tailored for Magento developers, including code generation and debuggin
 - [dev:di:preferences:list](./dev-di-preference-list.md) - List DI Preferences
 - [dev:encrypt](./dev-encrypt.md) - Encrypt a string using Magento's crypt key
 - [dev:decrypt](./dev-decrypt.md) - Decrypt a string using Magento's crypt key
+- [dev:keep-calm](./dev-keep-calm.md) - Run common maintenance commands
 
