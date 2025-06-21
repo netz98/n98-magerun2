@@ -84,6 +84,7 @@ class KeepCalmCommand extends AbstractMagentoCommand
                     : new StringInput('setup:static-content:deploy');
             }
 
+            $this->getApplication()->setAutoExit(false);
             $command = $this->getApplication()->find($commandName);
             $exitCode = $command->run($commandInput, $output);
 
@@ -98,6 +99,8 @@ class KeepCalmCommand extends AbstractMagentoCommand
                 return $exitCode;
             }
         }
+
+        $output->writeln(['', '<info>Okay, panic over. For now. 😎</info>', '']);
 
         return Command::SUCCESS;
     }
