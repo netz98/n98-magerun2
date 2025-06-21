@@ -1022,5 +1022,6 @@ function cleanup_files_in_magento() {
 
 @test "Command: dev:keep-calm" {
   run $BIN "dev:keep-calm"
+  assert_output --partial "panic over"
   assert [ "$status" -eq 0 ]
 }
