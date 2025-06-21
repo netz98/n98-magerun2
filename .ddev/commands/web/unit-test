@@ -4,5 +4,4 @@
 ## Usage: unit-test <command> [options] [args]
 ## Example: "unit-test"
 
-export N98_MAGERUN2_TEST_MAGENTO_ROOT="/opt/magento-test-environments/magento_${MAGERUN_SETUP_TEST_DEFAULT_MAGENTO_VERSION//[-.]/_}";
 vendor/bin/phpunit $@

@@ -4,4 +4,4 @@
 ## Usage: mr2-dev <options> <arguments>
 ## Example: "mr2-dev sys:info"
 
-bin/n98-magerun2 --root-dir="/opt/magento-test-environments/magento_${MAGERUN_SETUP_TEST_DEFAULT_MAGENTO_VERSION//[-.]/_}" $@
+bin/n98-magerun2 $@
