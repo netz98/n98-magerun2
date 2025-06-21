@@ -25,6 +25,10 @@ export N98_MAGERUN2_TEST_MAGENTO_ROOT=/path/to/your/magento/installation
 export N98_MAGERUN2_BIN=/path/to/n98-magerun2.phar
 ```
 
+:::note
+In the ddev environment, the variable `N98_MAGERUN2_TEST_MAGENTO_ROOT` is automtically defined in the `.ddev/config.yaml`.
+:::
+
 ## Running Functional Tests
 
 To run all functional tests:
@@ -40,6 +44,15 @@ You can also run only specific tests by using the `--filter` option. For example
 ```bash
 bats --filter "admin:user:list" tests/bats/functional_magerun_commands.bats
 ```
+
+:::tip
+ddev users can run the `ddev bats-magerun` command, which is a shortcut for running all BATS tests.
+
+Example:
+```bash
+ddev bats-magerun --filter "admin:user:list"
+```
+:::
 
 ## Structure of Functional Tests
 

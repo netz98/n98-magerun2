@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ## Description: Run magerun in Magento 2.4
-## Usage: mr2-dev-24 <options> <arguments>
-## Example: "mr2-dev-24 sys:info"
+## Usage: mr2-dev <options> <arguments>
+## Example: "mr2-dev sys:info"
 
 bin/n98-magerun2 --root-dir="/opt/magento-test-environments/magento_${MAGERUN_SETUP_TEST_DEFAULT_MAGENTO_VERSION//[-.]/_}" $@

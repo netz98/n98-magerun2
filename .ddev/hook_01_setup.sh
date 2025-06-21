@@ -6,6 +6,7 @@ set -e
 CURRENT_DIR=$(dirname "$0")
 source "${CURRENT_DIR}/bash/helpers/colors.sh"
 INSTALL_MAGENTO_CE_CMD="${CURRENT_DIR}/commands/web/install-magento-ce"
+INSTALL_MAGE_OS_CMD="${CURRENT_DIR}/commands/web/install-mage-os"
 
 function configure_composer_help() {
     echo -e "${txtred}=========================="
@@ -44,7 +45,13 @@ function setup_test_magento_environments() {
     #$INSTALL_MAGENTO_CE_CMD "2.3.7-p3" no
 
     # Change version in .ddev/config.yaml
-    $INSTALL_MAGENTO_CE_CMD "$MAGERUN_SETUP_TEST_DEFAULT_MAGENTO_VERSION" yes
+    if [ -n "$MAGERUN_SETUP_TEST_DEFAULT_MAGENTO_VERSION" ]; then
+      $INSTALL_MAGENTO_CE_CMD "$MAGERUN_SETUP_TEST_DEFAULT_MAGENTO_VERSION" yes
+    fi
+
+    if [ -n "$MAGERUN_SETUP_TEST_DEFAULT_MAGEOS_VERSION" ]; then
+      $INSTALL_MAGE_OS_CMD "$MAGERUN_SETUP_TEST_DEFAULT_MAGEOS_VERSION" yes
+    fi
 }
 
 function setup_bats() {

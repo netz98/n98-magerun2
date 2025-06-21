@@ -1,0 +1,7 @@
+#!/bin/bash
+
+## Description: Run bats tests suite for n98-magerun2
+## Usage: bats-magerun <command> [options] [args]
+## Example: "bats-magerun --filter "admin:user:list"
+
+bats $@ tests/bats/functional_magerun_commands.bats
