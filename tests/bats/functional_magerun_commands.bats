@@ -1015,11 +1015,12 @@ function cleanup_files_in_magento() {
   assert_output --partial "1,base"
 }
 
+
 # ============================================
-# Issue: 499 - keep calm command
+# Command: dev: keep-calm
 # ============================================
 
-@test "Command: keep:calm" {
-  run $BIN "keep:calm"
+@test "Command: dev:keep-calm" {
+  run $BIN "dev:keep-calm"
   assert [ "$status" -eq 0 ]
 }

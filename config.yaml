@@ -123,8 +123,9 @@ commands:
     - N98\Magento\Command\Developer\Asset\ClearCommand
     - N98\Magento\Command\Developer\ConsoleCommand
     - N98\Magento\Command\Developer\Di\Preference\ListCommand
-    - N98\Magento\Command\Developer\EncryptCommand
     - N98\Magento\Command\Developer\DecryptCommand
+    - N98\Magento\Command\Developer\EncryptCommand
+    - N98\Magento\Command\Developer\KeepCalmCommand
     - N98\Magento\Command\Developer\Module\CreateCommand
     - N98\Magento\Command\Developer\Module\DetectComposerDependenciesCommand
     - N98\Magento\Command\Developer\Module\ListCommand
@@ -179,7 +180,6 @@ commands:
     - N98\Magento\Command\Installer\InstallCommand
     - N98\Magento\Command\ScriptCommand
     - N98\Magento\Command\SelfUpdateCommand
-    - N98\Magento\Command\KeepCalmCommand
     - N98\Magento\Command\Route\ListCommand
     - N98\Magento\Command\Sales\SequenceAddCommand
     - N98\Magento\Command\Sales\SequenceRemoveCommand
