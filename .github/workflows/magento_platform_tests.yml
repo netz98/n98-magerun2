@@ -231,14 +231,6 @@ jobs:
           composer global config http-basic.repo.magento.com \
             "${MAGENTO_MARKETPLACE_USERNAME}" "${MAGENTO_MARKETPLACE_PASSWORD}"
 
-      - name: Apply patch for Mage-OS PHP 8.4 compatibility
-        run: patch -p1 < .github/patches/mage-os-admin-analytics-nullable-type.patch
-        working-directory: ${{ github.workspace }}/magento
-        if: >-
-          contains(matrix.composer-repository-url, 'mage-os.org') &&
-          matrix.php-version == '8.4' &&
-          matrix.use-git-repository == false
-
       # --- Installation Method: Git Repository ---
       - name: Install Magento via git
         if: matrix.use-git-repository == true
@@ -336,6 +328,14 @@ jobs:
         if: >-
           contains(matrix.magento-version, '2.4.6') || 
           contains(matrix.magento-version, '2.4.7') 
+
+      - name: Apply patch for Mage-OS PHP 8.4 compatibility
+        run: patch -p1 < .github/patches/mage-os-admin-analytics-nullable-type.patch
+        working-directory: ./magento
+        if: >-
+          contains(matrix.composer-repository-url, 'mage-os.org') &&
+          matrix.php-version == '8.4' &&
+          matrix.use-git-repository == false
 
       - name: Configure PHPUnit matchers
         uses: mheap/phpunit-matcher-action@v1
