@@ -38,8 +38,8 @@ vendor/bin/phpunit tests/N98/Util/Console/Helper/DatabaseHelperTest.php
 ```
 
 :::tip
-ddev users can run the `ddev unit-test-24` command.
-`ddev unit-test-24 tests/N98/Util/Console/Helper/DatabaseHelperTest.php`
+ddev users can run the `ddev unit-test` command.
+`ddev unit-test tests/N98/Util/Console/Helper/DatabaseHelperTest.php`
 :::
 
 ## Adding New Unit/Integration Tests

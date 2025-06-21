@@ -1,0 +1,7 @@
+#!/bin/bash
+
+## Description: Run bats tests suite for Magento/Mage-OS core commands
+## Usage: bats-magento-core <command> [options] [args]
+## Example: "bats-magento-core"
+
+bats $@ tests/bats/functional_core_commands.bats

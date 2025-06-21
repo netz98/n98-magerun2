@@ -41,11 +41,15 @@ All configuration files are located in the `.ddev` directory.
      ```
    - Run unit tests:  
      ```bash
-     ddev unit-test-24
+     ddev unit-test
      ```
    - Build the PHAR file:  
      ```bash
      ddev exec ./build.sh
+     
+   - Run bats tests:
+     ```bash
+       ddev bats-magerun
      ```
 
 ### Customization
@@ -105,16 +109,16 @@ The project provides several custom DDEV commands to simplify development and te
 
   The instance is installed in `/opt/magento-test-environments/<version>`.
 
-- **mr2-dev-23** / **mr2-dev-24**  
+- **mr2-dev-23** / **mr2-dev**  
   Set up development environments for specific Magento 2.x versions.
 
 - **qa**  
   Runs all important quality assurance checks.
   Usage: `ddev qa`
 
-- **unit-test-23** / **unit-test-24**  
+- **unit-test-23** / **unit-test**  
   Run the test suite against Magento 2.3 or 2.4 test environments, respectively.
-  We will drop support for Magento 2.3 in the future, so please use `unit-test-24` for new tests.
+  We will drop support for Magento 2.3 in the future, so please use `unit-test` for new tests.
 
 #### Host, DB, and Solr Commands
 

@@ -17,8 +17,10 @@ webimage_extra_packages: [bats, lz4, zstd, mycli]
 use_dns_when_possible: true
 composer_version: 2.2.17
 web_environment:
-    - MAGERUN_SETUP_TEST_DEFAULT_MAGENTO_VERSION=2.4.7-p6
+    #- MAGERUN_SETUP_TEST_DEFAULT_MAGENTO_VERSION=2.4.7-p6
+    - MAGERUN_SETUP_TEST_DEFAULT_MAGEOS_VERSION=1.2.0
     - N98_MAGERUN2_BIN=/var/www/html/bin/n98-magerun2
+    - N98_MAGERUN2_TEST_MAGENTO_ROOT=/opt/magento-test-environments/mageos_1_2_0/
 nodejs_version: "16"
 corepack_enable: false
 
