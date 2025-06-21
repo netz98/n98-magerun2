@@ -272,7 +272,7 @@ class ConfigurationLoader
                 }
             }
 
-            if (count($moduleBaseFolders) > 0) {
+            if (count($moduleBaseFolders) > 0 || count($this->additionalModulePaths) > 0) {
                 // Glob plugin folders
                 $finder = Finder::create();
                 $finder
@@ -281,25 +281,12 @@ class ConfigurationLoader
                     ->followLinks()
                     ->ignoreUnreadableDirs(true)
                     ->name($customFilename)
-                    ->in($moduleBaseFolders);
+                    ->in($moduleBaseFolders)
+                    ->in($this->additionalModulePaths);
 
                 foreach ($finder as $file) {
                     /* @var $file SplFileInfo */
                     $this->registerPluginConfigFile($magentoRootFolder, $file);
-                }
-            }
-
-            // Process explicitly added module paths
-            foreach ($this->additionalModulePaths as $modulePath) {
-                $configFile = $modulePath . '/' . $this->customConfigFilename;
-                if (file_exists($configFile) && is_readable($configFile)) {
-                    // We need to create an SplFileInfo object to pass to registerPluginConfigFile
-                    // or refactor registerPluginConfigFile. For now, let's create SplFileInfo.
-                    $fileInfo = new SplFileInfo($configFile, $modulePath, $modulePath . '/' . $this->customConfigFilename);
-                    $this->registerPluginConfigFile($magentoRootFolder, $fileInfo);
-                    $this->logDebug('Load additional module config <comment>' . $configFile . '</comment>');
-                } else {
-                    $this->logDebug(sprintf('No %s found in additional module path: %s', $this->customConfigFilename, $modulePath));
                 }
             }
         }
