@@ -144,4 +144,6 @@ Available Table Groups:
 
 ---
 
+:::tip
 You can extend the db:dump with own table groups. Have a look here: [Extend db:dump Command](../../extending/extend-db-dump-command.md#add-your-own-groups)
+:::
