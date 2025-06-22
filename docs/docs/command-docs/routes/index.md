@@ -1,6 +1,6 @@
 ---
 title: Routes Commands
-sidebar_label: Routes
+sidebar_label: Route Commands
 ---
 
 # Routes Commands
