@@ -13,6 +13,7 @@ use RuntimeException;
 use Symfony\Component\Console\Helper\Helper as AbstractHelper;
 use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Console\Output\OutputInterface;
+use Throwable;
 
 /**
  * Class DatabaseHelper
@@ -228,7 +229,7 @@ class DatabaseHelper extends AbstractHelper implements CommandAware
         try {
             $this->_connection->query('USE `' . $this->dbSettings['dbname'] . '`');
         } catch (PDOException $e) {
-            if (OutputInterface::VERBOSITY_VERY_VERBOSE <= $output->getVerbosity()) {
+            if ($output && OutputInterface::VERBOSITY_VERY_VERBOSE <= $output->getVerbosity()) {
                 $output->writeln(sprintf(
                     '<error>Failed to use database <comment>%s</comment>: %s</error>',
                     var_export($this->dbSettings['dbname'], true),
@@ -327,7 +328,7 @@ class DatabaseHelper extends AbstractHelper implements CommandAware
     public function isMariaDbClientToolUsed(): bool
     {
         Exec::run('mysqldump --help', $output, $exitCode);
-        return strpos($output, 'MariaDB') !== false;
+        return stripos($output, 'MariaDB') !== false;
     }
 
     /**
@@ -337,8 +338,9 @@ class DatabaseHelper extends AbstractHelper implements CommandAware
      */
     public function isSslModeOptionSupported(): bool
     {
-        Exec::run('mysqldump --help', $output, $exitCode);
-        return strpos($output, '--ssl-mode') !== false;
+        $dumpBinary = $this->getMysqlDumpBinary();
+        Exec::run($dumpBinary . ' --help', $output, $exitCode);
+        return str_contains($output, '--ssl-mode');
     }
 
     /**
@@ -349,7 +351,7 @@ class DatabaseHelper extends AbstractHelper implements CommandAware
         try {
             $version = $this->getMysqlVariable('version');
             return stripos((string) $version, 'mariadb') !== false;
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             return false;
         }
     }
@@ -610,13 +612,14 @@ class DatabaseHelper extends AbstractHelper implements CommandAware
             // resolve wildcards
             if (strpos($entry, '*') !== false || strpos($entry, '?') !== false) {
                 $connection = $this->getConnection();
+                if (!$connection instanceof PDO) {
+                    throw new RuntimeException('Database connection is not a valid PDO instance');
+                }
                 $sth = $connection->prepare(
                     'SHOW TABLES LIKE :like',
                     [PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY]
                 );
-                $entry = str_replace('_', '\\_', $entry);
-                $entry = str_replace('*', '%', $entry);
-                $entry = str_replace('?', '_', $entry);
+                $entry = str_replace(['_', '*', '?'], ['\\_', '%', '_'], $entry);
                 $sth->execute(
                     [':like' => $this->dbSettings['prefix'] . $entry]
                 );
@@ -697,6 +700,9 @@ class DatabaseHelper extends AbstractHelper implements CommandAware
         $withoutPrefix = (bool) $withoutPrefix;
 
         $db = $this->getConnection();
+        if (!$db instanceof PDO) {
+            throw new RuntimeException('Database connection is not a valid PDO instance');
+        }
         $prefix = $this->dbSettings['prefix'];
         $prefixLength = strlen($prefix);
 
@@ -787,6 +793,9 @@ class DatabaseHelper extends AbstractHelper implements CommandAware
     public function getTablesStatus($withoutPrefix = false)
     {
         $db = $this->getConnection();
+        if (!$db instanceof PDO) {
+            throw new RuntimeException('Database connection is not a valid PDO instance');
+        }
         $prefix = $this->dbSettings['prefix'];
         if ($prefix != '') {
             $statement = $db->prepare('SHOW TABLE STATUS LIKE :like', [PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY]);
