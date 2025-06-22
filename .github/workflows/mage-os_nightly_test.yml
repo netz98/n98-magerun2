@@ -42,7 +42,7 @@ jobs:
       - name: Check MariaDB version
         run: "mariadb -uroot -proot -e 'SELECT version();'"
 
-      - name: Create Mageneto database
+      - name: Create Magento database
         run: "mariadb -uroot -proot -e 'CREATE DATABASE magento;'"
 
       - name: Linux Setup
