@@ -36,7 +36,9 @@ jobs:
 
       - uses: shogo82148/actions-setup-mysql@v1
         with:
-          mysql-version: "mariadb-11.6"
+          distribution: "mariadb"
+          mysql-version: "11.4"
+          auto-start: "true"
           root-password: "root"
 
       - name: Check MariaDB version
