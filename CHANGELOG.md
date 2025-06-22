@@ -13,6 +13,7 @@ RECENT CHANGES
 - Add: Docusaurus documentation and deployment workflow (PR #1643, issue #1643)
 - Imp: update to Symfony 6.4 (PR #1608, issue #1608, by Christian Münch)
 - Imp: optimize development setup and Magento version detection (by Christian Münch)
+- Imp: Update 3rd party dependencies (sigstore/cosign-installer, brace-expansion, captainhook)
 - Fix: better TTY handling in proxy command (PR #1667, issue #1422, by Christian Münch)
 - Fix: PHP 8.4 compatibility updates (PR #1655, issue #1654, by Christian Münch)
 - Build: CI release workflow enhancements (PR #1657, issue #1657, by Christian Münch)
