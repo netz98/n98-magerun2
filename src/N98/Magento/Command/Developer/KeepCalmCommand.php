@@ -31,6 +31,7 @@ class KeepCalmCommand extends AbstractMagentoCommand
     private array $commands = [
         'hyva:config:generate' => 'Generate Hyvä theme configuration files if they are missing.',
         'setup:upgrade' => 'Run setup upgrade and database schema/data updates. Clears also the cache.',
+        'db:add-default-authorization-entries' => 'Add default authorization entries for admin users if they are missing.',
         'generation:flush' => 'Flushes the generated code in generation/code directory.',
         'setup:di:compile' => 'Compile dependency injection configuration and generate code.',
         'setup:static-content:deploy' => 'Deploy static content for the current locale',

@@ -21,6 +21,7 @@ Run the following commands in order (unless skipped or not needed):
 
 - `hyva:config:generate` (only if `app/etc/hyva-themes.json` does not exist)
 - `setup:upgrade` (also clears cache)
+- [`db:add-default-authorization-entries`](../db/db-add-default-authorization-entries.md)
 - [`generation:flush`](../generation/generation-flush-command.md) (clears generated code)
 - `setup:di:compile` (compiles dependency injection)
 - `setup:static-content:deploy` (skipped in non-production mode unless `--force-static-content-deploy` is used)
