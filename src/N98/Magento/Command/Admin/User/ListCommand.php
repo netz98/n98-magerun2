@@ -82,6 +82,7 @@ class ListCommand extends AbstractAdminUserCommand
             'lognum' => 'lognum',
             'reload_acl_flag' => 'reload_acl_flag',
             'is_active' => 'status',
+            'status' => 'status',
             'extra' => 'extra',
             'rp_token' => 'rp_token',
             'rp_token_created_at' => 'rp_token_created_at',
@@ -133,6 +134,7 @@ class ListCommand extends AbstractAdminUserCommand
                         $row[] = $user->getId();
                         break;
                     case 'is_active':
+                    case 'status':
                         $row[] = $user->getIsActive() ? 'active' : 'inactive';
                         break;
                     default:
