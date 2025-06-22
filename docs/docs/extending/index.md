@@ -13,8 +13,15 @@ title: Extending n98-magerun2
 
 ## Modules (Extensions)
 
-- [Modules](./modules/)
+This is the way to extend the tool with features for *your* needs. 
+This is helpful for *agencies* to add customized commands for your team.
+This is helpful for *hosters* to add commands for your customers.
+
+- [Modules](./modules/index.md)
 
 ## Developer Setups
 
+This section describes how to set up n98-magerun2 in different development environments.
+
 - [ddev](./development/install-in-ddev.md)
+- [Warden](./development/install-in-warden.md)

@@ -3,4 +3,8 @@ title: Development
 ---
 
 - [Add own commands](./add-custom-commands.md)
-- [n98-magerun2 Modules](./modules)
+
+## Development Environments
+
+- [Install in DDEV](./install-in-ddev.md)
+- [Install in Warden](./install-in-warden.md)
