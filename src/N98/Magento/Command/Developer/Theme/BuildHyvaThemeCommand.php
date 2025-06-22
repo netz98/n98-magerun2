@@ -164,7 +164,8 @@ class BuildHyvaThemeCommand extends AbstractMagentoCommand
 
             $result = Command::SUCCESS;
             foreach ($themePaths as $path) {
-                if (!$this->buildTheme($path, $output, $input)) {
+                $statusCode = $this->buildTheme($path, $output, $input);
+                if ($statusCode !== Command::SUCCESS) {
                     $output->writeln(
                         sprintf(
                             '<error>Build of theme "%s" failed with status code: %d</error>',
@@ -248,6 +249,10 @@ class BuildHyvaThemeCommand extends AbstractMagentoCommand
             $process->setWorkingDirectory($webTailwindDirInTheme);
             $process->setTty(true);
             $process->run();
+
+            if (!$process->isSuccessful()) {
+                throw new RuntimeException($process->getErrorOutput());
+            }
         }
 
         $buildNpmCommand = 'watch'; // Default is watch mode
