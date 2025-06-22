@@ -44,6 +44,17 @@ jobs:
       - name: Check MariaDB version
         run: "mariadb -uroot -proot -e 'SELECT version();'"
 
+      - name: Link MariaDB tools as mysql
+        run: |
+          MARIADB_BIN=$(which mariadb 2>/dev/null || true)
+          MARIADB_DUMP_BIN=$(which mariadb-dump 2>/dev/null || true)
+          if [ -x "$MARIADB_BIN" ]; then
+            sudo ln -sf "$MARIADB_BIN" /usr/bin/mysql
+          fi
+          if [ -x "$MARIADB_DUMP_BIN" ]; then
+            sudo ln -sf "$MARIADB_DUMP_BIN" /usr/bin/mysqldump
+          fi
+
       - name: List installed MySQL/MariaDB tools
         run: |
           mariadb --version || true
