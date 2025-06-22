@@ -87,9 +87,11 @@ class BuildHyvaThemeCommand extends AbstractMagentoCommand
     protected function interact(InputInterface $input, OutputInterface $output)
     {
         if ($input->getOption('all')) {
-            // No need to interact if --all is set
+            // if --all option is set, we don't need a theme argument
+            $input->setArgument('theme', null);
             return;
         }
+
         if (!$input->getArgument('theme')) {
             // use theme collection to get all themes and then select one
 
@@ -159,14 +161,21 @@ class BuildHyvaThemeCommand extends AbstractMagentoCommand
                 return Command::FAILURE;
             }
 
+            $result = Command::SUCCESS;
             foreach ($themePaths as $path) {
-                $this->buildTheme($path, $output, $input);
+                if (!$this->buildTheme($path, $output, $input)) {
+                    $result = Command::FAILURE;
+                }
             }
 
-            return Command::SUCCESS;
+            return $result;
         }
 
-        return $this->buildTheme($themePath, $output, $input);
+        if (!$input->getOption('all')) {
+            $result = $this->buildTheme($themePath, $output, $input);
+        }
+
+        return $result;
 
     }
 

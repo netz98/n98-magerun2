@@ -155,6 +155,7 @@ class KeepCalmCommand extends AbstractMagentoCommand
                     continue;
                 }
             }
+
             if ($this->shouldSkipCommand($commandName, $input, $output)) {
                 $executedCommands[] = [
                     'index' => $commandIndex,
@@ -166,7 +167,8 @@ class KeepCalmCommand extends AbstractMagentoCommand
                 $commandIndex++;
                 continue;
             }
-            $success = $this->runCommand($commandName, $description, $output, $commandIndex);
+
+            $success = $this->runCommand($commandData['commandString'], $description, $output, $commandIndex);
             if ($success === null) {
                 $executedCommands[] = [
                     'index' => $commandIndex,
@@ -177,6 +179,7 @@ class KeepCalmCommand extends AbstractMagentoCommand
                 ];
                 continue;
             }
+
             $executedCommands[] = [
                 'index' => $commandIndex,
                 'name' => $commandName,
