@@ -482,8 +482,10 @@ function cleanup_files_in_magento() {
 }
 
 @test "Command: db:dump with --keep-definer" {
-  run $BIN "db:dump" --keep-definer db.sql
-  assert_output --partial "Finished"
+  run $BIN "db:dump" --keep-definer --only-command db.sql
+
+  # check if the sed to replace the definer is not in the command pipe
+  refute_output --partial "DEFINER"
 }
 
 @test "Command: db:dump --stdout with --strip" {
