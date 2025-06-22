@@ -41,7 +41,7 @@ class BuildHyvaThemeCommand extends AbstractMagentoCommand
     protected function configure()
     {
         $this
-            ->setName('BuildHyvaThemeCommandTestdev:theme:build-hyva')
+            ->setName('dev:theme:build-hyva')
             ->setDescription('Build Hyvä theme CSS')
             ->addOption(
                 'production',
