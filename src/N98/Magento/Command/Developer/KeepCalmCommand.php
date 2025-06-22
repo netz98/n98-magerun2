@@ -24,20 +24,51 @@ class KeepCalmCommand extends AbstractMagentoCommand
     private DeploymentConfig $deploymentConfig;
 
     /**
-     * List of commands and their descriptions to be executed in sequence.
+     * List of commands and their metadata to be executed in sequence.
      *
-     * @var array<string, string>
+     * @var array<string, array{description: string, commandString: string}>
      */
     private array $commands = [
-        'hyva:config:generate' => 'Generate Hyvä theme configuration files if they are missing.',
-        'setup:upgrade' => 'Run setup upgrade and database schema/data updates. Clears also the cache.',
-        'db:add-default-authorization-entries' => 'Add default authorization entries for admin users if they are missing.',
-        'generation:flush' => 'Flushes the generated code in generation/code directory.',
-        'setup:di:compile' => 'Compile dependency injection configuration and generate code.',
-        'setup:static-content:deploy' => 'Deploy static content for the current locale',
-        'indexer:reset' => 'Reset all indexers to their initial state.',
-        'indexer:reindex' => 'Update all indexer data. This often helps if something is not displayed correctly in the frontend.',
-        'maintenance:disable' => 'Disable maintenance mode and let you see your frontend again.',
+        'hyva:config:generate' => [
+            'description' => 'Generate Hyvä theme configuration files if they are missing.',
+            'commandString' => 'hyva:config:generate',
+        ],
+        'setup:upgrade' => [
+            'description' => 'Run setup upgrade and database schema/data updates. Clears also the cache.',
+            'commandString' => 'setup:upgrade',
+        ],
+        'db:add-default-authorization-entries' => [
+            'description' => 'Add default authorization entries for admin users if they are missing.',
+            'commandString' => 'db:add-default-authorization-entries',
+        ],
+        'generation:flush' => [
+            'description' => 'Flushes the generated code in generation/code directory.',
+            'commandString' => 'generation:flush',
+        ],
+        'setup:di:compile' => [
+            'description' => 'Compile dependency injection configuration and generate code.',
+            'commandString' => 'setup:di:compile',
+        ],
+        'dev:theme:build-hyva' => [
+            'description' => 'Build Hyvä theme CSS and JS files.',
+            'commandString' => 'dev:theme:build-hyva --production --all --suppress-no-theme-found-error',
+        ],
+        'setup:static-content:deploy' => [
+            'description' => 'Deploy static content for the current locale',
+            'commandString' => 'setup:static-content:deploy',
+        ],
+        'indexer:reset' => [
+            'description' => 'Reset all indexers to their initial state.',
+            'commandString' => 'indexer:reset',
+        ],
+        'indexer:reindex' => [
+            'description' => 'Update all indexer data. This often helps if something is not displayed correctly in the frontend.',
+            'commandString' => 'indexer:reindex',
+        ],
+        'maintenance:disable' => [
+            'description' => 'Disable maintenance mode and let you see your frontend again.',
+            'commandString' => 'maintenance:disable',
+        ],
     ];
 
     /**
@@ -91,7 +122,9 @@ class KeepCalmCommand extends AbstractMagentoCommand
         $commandIndex = 1;
         $executedCommands = [];
 
-        foreach ($this->commands as $commandName => $description) {
+        foreach ($this->commands as $commandName => $commandData) {
+            $description = $commandData['description'];
+
             // Special handling for hyva:config:generate
             if ($commandName === 'hyva:config:generate') {
                 if (file_exists('app/etc/hyva-themes.json')) {
