@@ -10,7 +10,7 @@ Import database
 Using the `--drop` or `--drop-tables` options will remove existing data before import. Make sure you have backups and understand the consequences before using these options.
 :::
 
-- Requires MySQL CLI tools
+- Requires MySQL or MariaDB CLI tools
 
 ```sh
 n98-magerun2.phar db:import [options] [<filename>]
@@ -31,7 +31,7 @@ n98-magerun2.phar db:import [options] [<filename>]
 | `--drop`                              | Drop and recreate database before import                                           |
 | `--drop-tables`                       | Drop tables before import                                                          |
 | `--force`                             | Continue even if an SQL error occurs                                               |
-| `--only-command`                      | Print only mysql command. Do not execute                                           |
+| `--only-command`                      | Print only mysql/mariadb command. Do not execute                                   |
 | `--only-if-empty`                     | Imports only if database is empty                                                  |
 | `--optimize`                          | Convert verbose INSERTs to short ones before import (not working with compression) |
 | `--skip-authorization-entry-creation` | Do not create authorization rule/role entries if they are missing.                 |

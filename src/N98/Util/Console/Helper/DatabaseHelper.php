@@ -342,6 +342,43 @@ class DatabaseHelper extends AbstractHelper implements CommandAware
     }
 
     /**
+     * Check if the connected database server is MariaDB
+     */
+    public function isMariaDbServer(): bool
+    {
+        try {
+            $version = $this->getMysqlVariable('version');
+            return stripos((string) $version, 'mariadb') !== false;
+        } catch (\Throwable $e) {
+            return false;
+        }
+    }
+
+    private function commandExists(string $command): bool
+    {
+        exec('command -v ' . escapeshellarg($command) . ' >/dev/null 2>&1', $o, $r);
+        return $r === 0;
+    }
+
+    public function getMysqlDumpBinary(): string
+    {
+        if ($this->isMariaDbServer() && $this->commandExists('mariadb-dump')) {
+            return 'mariadb-dump';
+        }
+
+        return 'mysqldump';
+    }
+
+    public function getMysqlBinary(): string
+    {
+        if ($this->isMariaDbServer() && $this->commandExists('mariadb')) {
+            return 'mariadb';
+        }
+
+        return 'mysql';
+    }
+
+    /**
      * @return string
      * @throws FileSystemException
      */

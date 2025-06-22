@@ -350,7 +350,8 @@ HELP;
             }
         }
 
-        $execs = new Execs('mysqldump');
+        $database = $this->getDatabaseHelper();
+        $execs = new Execs($database->getMysqlDumpBinary());
         $execs->setCompression($input->getOption('compression'), $input);
         $execs->setFileName($this->getFileName($input, $output, $execs->getCompressor()));
 

@@ -145,9 +145,10 @@ HELP;
 
         $compressor = AbstractCompressor::create($compression, $input);
 
-        $exec = 'mysql ';
+        $mysqlBinary = $dbHelper->getMysqlBinary();
+        $exec = $mysqlBinary . ' ';
         if ($input->getOption('force')) {
-            $exec = 'mysql --force ';
+            $exec = $mysqlBinary . ' --force ';
         }
 
         // create import command
