@@ -36,7 +36,7 @@ jobs:
 
       - uses: shogo82148/actions-setup-mysql@v1
         with:
-          mysql-version: "mariadb-11.4"
+          mysql-version: "mariadb-11.6"
           root-password: "root"
 
       - name: Check MariaDB version
