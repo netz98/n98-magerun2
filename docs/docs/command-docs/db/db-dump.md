@@ -7,12 +7,12 @@ title: db:dump
 Dump database
 
 :::info
-Requires MySQL CLI tools (`mysqldump` or `mydumper`). Use the `--force` option with caution, as it will skip confirmation prompts. The `--strip` option can remove important data from the dump; review your table groups before using it.
+Requires MySQL or MariaDB CLI tools (`mysqldump`/`mariadb-dump` or `mydumper`). Use the `--force` option with caution, as it will skip confirmation prompts. The `--strip` option can remove important data from the dump; review your table groups before using it.
 :::
 
-Dumps configured Magento database with `mysqldump` or `mydumper`.
+Dumps configured Magento database with `mysqldump`, `mariadb-dump`, or `mydumper`.
 
-- Requires MySQL CLI tools (either `mysqldump` or `mydumper`)
+- Requires MySQL or MariaDB CLI tools (either `mysqldump`/`mariadb-dump` or `mydumper`)
 
 ```sh
 n98-magerun2.phar db:dump [options] [--] [<filename>]
@@ -43,7 +43,7 @@ n98-magerun2.phar db:dump [options] [--] [<filename>]
 | `--mydumper`                        | Use mydumper instead of mysqldump for potentially faster dumps.                                                                      |
 | `--no-single-transaction`           | Do not use single-transaction (not recommended, this is blocking).                                                                   |
 | `--no-tablespaces`                  | Use this option if you want to create a dump without having the PROCESS privilege.                                                   |
-| `--only-command`                    | Print only mysqldump/mydumper command. Does not execute.                                                                             |
+| `--only-command`                    | Print only mysqldump/mariadb-dump/mydumper command. Does not execute.                                                                             |
 | `--print-only-filename`             | Execute and prints no output except the dump filename.                                                                               |
 | `--set-gtid-purged-off`             | Adds --set-gtid-purged=OFF to mysqldump.                                                                                             |
 | `--stdout`                          | Dump to stdout.                                                                                                                      |
