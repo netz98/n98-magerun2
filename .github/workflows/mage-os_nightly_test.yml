@@ -42,6 +42,13 @@ jobs:
       - name: Check MariaDB version
         run: "mariadb -uroot -proot -e 'SELECT version();'"
 
+      - name: List installed MySQL/MariaDB tools
+        run: |
+          mariadb --version || true
+          mariadb-dump --version || true
+          mysql --version || true
+          mysqldump --version || true
+
       - name: Create Magento database
         run: "mariadb -uroot -proot -e 'CREATE DATABASE magento;'"
 
