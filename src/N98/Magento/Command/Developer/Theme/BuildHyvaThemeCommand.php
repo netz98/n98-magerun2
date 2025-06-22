@@ -165,6 +165,13 @@ class BuildHyvaThemeCommand extends AbstractMagentoCommand
             $result = Command::SUCCESS;
             foreach ($themePaths as $path) {
                 if (!$this->buildTheme($path, $output, $input)) {
+                    $output->writeln(
+                        sprintf(
+                            '<error>Build of theme "%s" failed with status code: %d</error>',
+                            $path,
+                            $result
+                        )
+                    );
                     $result = Command::FAILURE;
                 }
             }

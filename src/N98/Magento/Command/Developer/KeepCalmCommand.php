@@ -235,7 +235,6 @@ class KeepCalmCommand extends AbstractMagentoCommand
             $this->writeCommandBanner($commandName, $description, $output, $commandIndex);
             $output->writeln('<info>What is going on?</info> -> <comment>' . $description . '</comment>');
 
-            var_dump($commandString);
             $commandInput = new StringInput($commandString);
             $exitCode = $command->run($commandInput, $output);
 
