@@ -51,7 +51,7 @@ class KeepCalmCommand extends AbstractMagentoCommand
         ],
         'dev:theme:build-hyva' => [
             'description' => 'Build Hyvä theme CSS and JS files.',
-            'commandString' => 'dev:theme:build-hyva --production --all --suppress-no-theme-found-error',
+            'commandString' => 'dev:theme:build-hyva --all --suppress-no-theme-found-error',
         ],
         'setup:static-content:deploy' => [
             'description' => 'Deploy static content for the current locale',
@@ -235,6 +235,7 @@ class KeepCalmCommand extends AbstractMagentoCommand
             $this->writeCommandBanner($commandName, $description, $output, $commandIndex);
             $output->writeln('<info>What is going on?</info> -> <comment>' . $description . '</comment>');
 
+            var_dump($commandString);
             $commandInput = new StringInput($commandString);
             $exitCode = $command->run($commandInput, $output);
 

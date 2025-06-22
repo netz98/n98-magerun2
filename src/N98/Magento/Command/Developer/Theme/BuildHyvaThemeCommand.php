@@ -89,7 +89,7 @@ class BuildHyvaThemeCommand extends AbstractMagentoCommand
         if ($input->getOption('all')) {
             // if --all option is set, we don't need a theme argument
             $input->setArgument('theme', null);
-            $input->setArgument('production', true);
+            $input->setOption('production', true);
             return;
         }
 
