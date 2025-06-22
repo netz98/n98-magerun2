@@ -66,15 +66,14 @@ function cleanup_files_in_magento() {
 }
 
 @test "Test Application --add-module-dir" {
-  # Call the test command in the example module in the tests/_files/example-module directory
-  run $BIN -vvv --add-module-dir=${MAGERUN_SRC_ROOT}/tests/_files/example-module "magerun:example-module:test"
-  assert_output --partial "Load additional module config"
+  # Call the test command in the example module in the tests/_files/modules/example-module directory
+  run $BIN -vvv --add-module-dir=${MAGERUN_SRC_ROOT}/tests/_files/modules "magerun:example-module:test"
   assert_output --partial "Successfully executed example module command!"
   assert [ "$status" -eq 0 ]
 }
 
 @test "Test Application --skip-config" {
-  run $BIN -vvv --add-module-dir=${MAGERUN_SRC_ROOT}/tests/_files/example-module --skip-config
+  run $BIN -vvv --add-module-dir=${MAGERUN_SRC_ROOT}/tests/_files/modules --skip-config
 
   # no module should be loaded -> --skip-config means no module config should be loaded
   refute_output "Load additional module config"
