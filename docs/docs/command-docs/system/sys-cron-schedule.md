@@ -10,7 +10,7 @@ Schedule a cronjob for execution right now.
 ## Usage
 
 ```bash
-n98-magerun2 sys:cron:schedule <job_code>
+n98-magerun2.phar sys:cron:schedule <job_code>
 ```
 
 - `<job_code>`: The code of the cronjob to schedule for immediate execution.
@@ -24,7 +24,7 @@ This command schedules a Magento cronjob (defined in crontab.xml) to be executed
 Schedule the `indexer_reindex_all_invalid` cronjob:
 
 ```bash
-n98-magerun2 sys:cron:schedule indexer_reindex_all_invalid
+n98-magerun2.phar sys:cron:schedule indexer_reindex_all_invalid
 ```
 
 ## Options

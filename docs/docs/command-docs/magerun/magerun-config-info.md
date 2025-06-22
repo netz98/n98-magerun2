@@ -11,7 +11,7 @@ This command displays a list of all configuration files currently applied to n98
 ## Usage
 
 ```bash
-n98-magerun2 magerun:config:info
+n98-magerun2.phar magerun:config:info
 ```
 
 ## Example Output

@@ -11,7 +11,7 @@ This command dumps the full, current (merged) configuration for n98-magerun2. Us
 ## Usage
 
 ```bash
-n98-magerun2 magerun:config:dump
+n98-magerun2.phar magerun:config:dump
 ```
 
 :::tip

@@ -12,7 +12,7 @@ This command enables or disables the demo store notice in Magento for a specific
 ## Usage
 
 ```bash
-n98-magerun2 design:demo-notice [options] [--] [<store>]
+n98-magerun2.phar design:demo-notice [options] [--] [<store>]
 ```
 
 ## Arguments
@@ -37,7 +37,7 @@ Enable the demo notice for all store views:
 :::
 
 ```bash
-n98-magerun2 design:demo-notice --on --global
+n98-magerun2.phar design:demo-notice --on --global
 ```
 
 :::tip
@@ -45,7 +45,7 @@ Disable the demo notice for a specific store view:
 :::
 
 ```bash
-n98-magerun2 design:demo-notice --off default
+n98-magerun2.phar design:demo-notice --off default
 ```
 
 :::tip
