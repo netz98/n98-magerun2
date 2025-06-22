@@ -10,6 +10,7 @@ use Magento\Framework\Component\ComponentRegistrarInterface;
 use Magento\Theme\Model\ResourceModel\Theme\Collection as ThemeCollection;
 use N98\Magento\Command\AbstractMagentoCommand;
 use RuntimeException;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -49,6 +50,18 @@ class BuildHyvaThemeCommand extends AbstractMagentoCommand
                 InputOption::VALUE_NONE,
                 'Build for production (minified) instead of watch mode'
             )
+            ->addOption(
+                'all',
+                'a',
+                InputOption::VALUE_NONE,
+                'Build all Hyvä themes'
+            )
+            ->addOption(
+                'suppress-no-theme-found-error',
+                null,
+                InputOption::VALUE_NONE,
+                'Suppress error if no Hyvä theme was found'
+            )
             ->addArgument(
                 'theme',
                 InputArgument::OPTIONAL,
@@ -73,6 +86,10 @@ class BuildHyvaThemeCommand extends AbstractMagentoCommand
 
     protected function interact(InputInterface $input, OutputInterface $output)
     {
+        if ($input->getOption('all')) {
+            // No need to interact if --all is set
+            return;
+        }
         if (!$input->getArgument('theme')) {
             // use theme collection to get all themes and then select one
 
@@ -83,17 +100,7 @@ class BuildHyvaThemeCommand extends AbstractMagentoCommand
             }, $themes);
 
             $themePaths = array_filter($themePaths, function ($themePath) {
-                if (str_starts_with($themePath, 'frontend/Magento')) {
-                    return false;
-                }
-
-                if (str_starts_with($themePath, 'adminhtml/Magento')) {
-                    return false;
-                }
-
-                // Improve this check -> find a better way to detect Hyva themes
-
-                return true;
+                return $this->isHyvaTheme($themePath);
             });
 
             // start index with 0
@@ -116,7 +123,7 @@ class BuildHyvaThemeCommand extends AbstractMagentoCommand
      * @return int
      * @throws \Exception
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    public function execute(InputInterface $input, OutputInterface $output)
     {
         $this->detectMagento($output);
         $this->initMagento();
@@ -125,8 +132,66 @@ class BuildHyvaThemeCommand extends AbstractMagentoCommand
 
         $themePath = $input->getArgument('theme');
 
-        if (empty($themePath)) {
+        if (empty($themePath) && !$input->getOption('all')) {
             throw new InvalidArgumentException('Theme path is required. Add theme as first argument.');
+        }
+
+        if ($input->getOption('all')) {
+            // Build all Hyvä themes
+            $themes = $this->themeCollection->getItems();
+            $themePaths = array_map(function ($theme) {
+                return $theme->getFullPath();
+            }, $themes);
+            $themePaths = array_filter($themePaths, function ($themePath) {
+                return $this->isHyvaTheme($themePath);
+            });
+            $themePaths = array_values($themePaths);
+
+            /**
+             * Check if there are any Hyvä themes available.
+             */
+            if (empty($themePaths)) {
+                if ($input->getOption('suppress-no-theme-found-error')) {
+                    return Command::SUCCESS;
+                }
+                $output->writeln('<error>No Hyvä themes found.</error>');
+
+                return Command::FAILURE;
+            }
+
+            foreach ($themePaths as $path) {
+                $this->buildTheme($path, $output, $input);
+            }
+
+            return Command::SUCCESS;
+        }
+
+        return $this->buildTheme($themePath, $output, $input);
+
+    }
+
+    /**
+     * @param string $themePath
+     * @return bool
+     */
+    private function isHyvaTheme(string $themePath): bool
+    {
+        // if directory "web/tailwind" does not exist, skip this theme
+        $themeDir = $this->componentRegistrar->getPath(ComponentRegistrar::THEME, $themePath);
+
+        return is_dir($themeDir . '/web/tailwind');
+    }
+
+    /**
+     * @param mixed $themePath
+     * @param \Symfony\Component\Console\Output\OutputInterface $output
+     * @param \Symfony\Component\Console\Input\InputInterface $input
+     * @return int|null
+     */
+    protected function buildTheme(mixed $themePath, OutputInterface $output, InputInterface $input): ?int
+    {
+        if (!$this->isHyvaTheme($themePath)) {
+            throw new InvalidArgumentException(sprintf('Theme "%s" is not a Hyvä theme.', $themePath));
         }
 
         // prefix the theme path with (=frontend|adminhtml) to get the full path then we prepend "frontend/"

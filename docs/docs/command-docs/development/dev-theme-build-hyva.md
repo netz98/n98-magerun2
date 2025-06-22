@@ -21,6 +21,20 @@ n98-magerun2.phar dev:theme:build-hyva [--production] [<theme-name>]
 
 **Options:**
 
-| Option         | Description                                 |
-|----------------|---------------------------------------------|
-| --production   | Build CSS for production (minified output)  |
+| Option                          | Description                                                |
+|---------------------------------|------------------------------------------------------------|
+| --production                    | Build CSS for production (minified output)                 |
+| --all                           | Build CSS for all Hyvä themes                              |
+| --suppress-no-theme-found-error | Suppress error if no Hyvä theme was found when using --all |
+
+:::tip
+**--all**
+
+Use this option to build CSS for all Hyvä themes in your Magento installation. No theme argument is required when using this option.
+:::
+
+:::tip
+**--suppress-no-theme-found-error**
+
+Use this option together with `--all` to suppress the error if no Hyvä theme is found. The command will exit successfully instead of returning an error.
+:::
