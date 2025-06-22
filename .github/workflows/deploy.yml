@@ -174,8 +174,7 @@ jobs:
             ${{secrets.SSH_DEPLOY_PASSPHRASE}}
           script: |
             ./site/build/build_phive.sh
-            curl -s https://files.magerun.net/list.php > \
-              ./site/public/index.html
+            php ./site/public/list.php > ./site/public/index.html
 
       - name: Invalidate cloudflare
         run: |
