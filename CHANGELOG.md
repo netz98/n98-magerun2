@@ -4,7 +4,7 @@ RECENT CHANGES
 9.0.0
 -----
 
-- Add: keep calm command for maintenance workflow (PR #1692, issue #499, by Christian Münch)
+- Add: keep calm command (PR #1692, issue #499, by Christian Münch)
 - Add: extend admin:user:list with --sort option and logdate column (PR #1647, issue #1646)
 - Add: support view handling in db:dump and db:drop commands (PR #1672, issue #602)
 - Add: enable github tokens in github:pr command (issue #1633, by Christian Münch)
@@ -15,6 +15,8 @@ RECENT CHANGES
 - Imp: optimize development setup and Magento version detection (by Christian Münch)
 - Imp: Update 3rd party dependencies (sigstore/cosign-installer, brace-expansion, captainhook)
 - Imp: feat(db): prefer mariadb client tools when available (PR #1695, by Christian Münch)
+- Imp: feat(dev:hyva:build): Add --all and --supress-no-theme-found-error in dev:hyva:build command (by Christian Münch)
+- Imp: feat(dev:hyva:build): Add check for Hyvä theme in dev:hyva:build command (by Christian Münch)
 - Fix: better TTY handling in proxy command (PR #1667, issue #1422, by Christian Münch)
 - Fix: PHP 8.4 compatibility updates (PR #1655, issue #1654, by Christian Münch)
 - Build: CI release workflow enhancements (PR #1657, issue #1657, by Christian Münch)
