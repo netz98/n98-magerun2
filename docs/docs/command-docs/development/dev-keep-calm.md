@@ -13,44 +13,62 @@ Don't panic! Run all the magic commands to (maybe) fix your broken shop and rest
 Command is experimental and not intended for production use. Use with caution!
 :::
 
-Runs a sequence of common Magento 2 maintenance commands in a single step:
+The `dev:keep-calm` command runs a sequence of common Magento 2 maintenance and development commands in a single step. This helps you quickly restore your development environment after code changes or when things go wrong.
 
+### What It Does
+
+Run the following commands in order (unless skipped or not needed):
+
+- `hyva:config:generate` (only if `app/etc/hyva-themes.json` does not exist)
 - `setup:upgrade` (also clears cache)
+- [`generation:flush`](../generation/generation-flush-command.md) (clears generated code)
+- `setup:di:compile` (compiles dependency injection)
+- `setup:static-content:deploy` (skipped in non-production mode unless `--force-static-content-deploy` is used)
+- `indexer:reset`
 - `indexer:reindex`
-- `setup:di:compile`
-- `setup:static-content:deploy`
+- `maintenance:disable`
 
-This command is experimental and intended to simplify the process of keeping your Magento 2 environment up to date during development or after code changes.
+Each command can be skipped with a `--skip-<command>` option, e.g. `--skip-setup-upgrade`.
 
-## Usage
+At the end, a summary checklist is printed showing which commands were executed, skipped, or failed.
 
-```bash
-n98-magerun2 dev:keep-calm [--force-static-content-deploy]
-```
-
-## Options
-
-| Option                        | Description                                                                 |
-|-------------------------------|-----------------------------------------------------------------------------|
-| `--force-static-content-deploy` | Force static content deploy with `--force` option, even in developer/default mode. |
-
-## Behavior
-
-- In Magento's `default` and `developer` modes, static content deployment is usually skipped for performance. Use `--force-static-content-deploy` to always run `setup:static-content:deploy --force` regardless of the mode.
-- If any command in the sequence fails, the process stops and the error is displayed.
-
-:::tip
-This command is your all-in-one rescue rope for those days when Magento just won't cooperate. Hit it, cross your fingers, and hope for the best!
-:::
-
-## Example
+### Usage
 
 ```bash
-n98-magerun2 dev:keep-calm --force-static-content-deploy
+n98-magerun2.phar dev:keep-calm [--force-static-content-deploy] [--skip-setup-upgrade] [--skip-indexer-reindex] ...
 ```
 
-Runs all steps, forcing static content deployment even in developer mode.
+#### Options
 
-## See Also
-- [Magento Deploy Modes](https://experienceleague.adobe.com/en/docs/commerce-operations/configuration-guide/cli/set-mode)
-- https://x.com/sandermangel/status/573506345275686912
+- `--force-static-content-deploy` – Forces static content deploy even in non-production mode.
+- `--skip-<command>` – Skips the specified command (replace `<command>` with the command name, e.g. `setup-upgrade`).
+
+Example if you want to skip the `indexer:reset` and `indexer:reindex` commands:
+
+```bash
+n98-magerun2.phar dev:keep-calm --skip-indexer-reset --skip-indexer-reindex
+```
+
+### Example Output
+
+```text
+1. 🚀  Running command: hyva:config:generate
+😊  Skipping command: hyva:config:generate (app/etc/hyva-themes.json exists)
+2. 🚀  Running command: setup:upgrade
+... (output of each command)
+
+Command Execution Summary:
+  1. ⏭️ hyva:config:generate - Generate Hyvä theme configuration files if they are missing. (app/etc/hyva-themes.json exists)
+  2. ✅ setup:upgrade - Run setup upgrade and database schema/data updates. Clears also the cache.
+  ...
+```
+
+### Notes
+
+- The command is intended for development environments only.
+- The summary at the end helps you quickly see what was done and what was skipped.
+
+### See Also
+
+- [Magento 2 Maintenance Commands](https://devdocs.magento.com/guides/v2.4/config-guide/cli/config-cli-subcommands-maint.html)
+- [n98-magerun2 Documentation](../../README.md)

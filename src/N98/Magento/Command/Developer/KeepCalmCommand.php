@@ -7,6 +7,7 @@ use Magento\Framework\App\DeploymentConfig;
 use Magento\Framework\App\State as AppState;
 use N98\Magento\Command\AbstractMagentoCommand;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Exception\CommandNotFoundException;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\StringInput;
@@ -28,10 +29,12 @@ class KeepCalmCommand extends AbstractMagentoCommand
      * @var array<string, string>
      */
     private array $commands = [
+        'hyva:config:generate' => 'Generate Hyvä theme configuration files if they are missing.',
         'setup:upgrade' => 'Run setup upgrade and database schema/data updates. Clears also the cache.',
         'generation:flush' => 'Flushes the generated code in generation/code directory.',
         'setup:di:compile' => 'Compile dependency injection configuration and generate code.',
         'setup:static-content:deploy' => 'Deploy static content for the current locale',
+        'indexer:reset' => 'Reset all indexers to their initial state.',
         'indexer:reindex' => 'Update all indexer data. This often helps if something is not displayed correctly in the frontend.',
         'maintenance:disable' => 'Disable maintenance mode and let you see your frontend again.',
     ];
@@ -85,22 +88,68 @@ class KeepCalmCommand extends AbstractMagentoCommand
         $isProductionMode = $this->deploymentConfig->get(AppState::PARAM_MODE) === AppState::MODE_PRODUCTION;
         $anyFailed = false;
         $commandIndex = 1;
+        $executedCommands = [];
 
         foreach ($this->commands as $commandName => $description) {
+            // Special handling for hyva:config:generate
+            if ($commandName === 'hyva:config:generate') {
+                if (file_exists('app/etc/hyva-themes.json')) {
+                    $executedCommands[] = [
+                        'index' => $commandIndex,
+                        'name' => $commandName,
+                        'description' => $description,
+                        'status' => 'skipped',
+                        'reason' => 'app/etc/hyva-themes.json exists',
+                    ];
+                    $commandIndex++;
+                    continue;
+                }
+            }
             if ($commandName === 'setup:static-content:deploy') {
                 $forceDeploy = $input->getOption('force-static-content-deploy');
                 if (!$isProductionMode && !$forceDeploy) {
                     $this->writeCommandBanner($commandName, $description, $output, $commandIndex);
                     $this->writeInfoMessage('Skipping static content deploy (not required in current mode).', $output);
+                    $executedCommands[] = [
+                        'index' => $commandIndex,
+                        'name' => $commandName,
+                        'description' => $description,
+                        'status' => 'skipped',
+                        'reason' => 'Not required in current mode',
+                    ];
                     $commandIndex++;
                     continue;
                 }
             }
             if ($this->shouldSkipCommand($commandName, $input, $output)) {
+                $executedCommands[] = [
+                    'index' => $commandIndex,
+                    'name' => $commandName,
+                    'description' => $description,
+                    'status' => 'skipped',
+                    'reason' => 'Skipped by user option',
+                ];
                 $commandIndex++;
                 continue;
             }
-            $success = $this->runSubCommand($commandName, $description, $output, $commandIndex);
+            $success = $this->runCommand($commandName, $description, $output, $commandIndex);
+            if ($success === null) {
+                $executedCommands[] = [
+                    'index' => $commandIndex,
+                    'name' => $commandName,
+                    'description' => $description,
+                    'status' => 'skipped',
+                    'reason' => 'Command not found',
+                ];
+                continue;
+            }
+            $executedCommands[] = [
+                'index' => $commandIndex,
+                'name' => $commandName,
+                'description' => $description,
+                'status' => $success ? 'success' : 'failed',
+                'reason' => null,
+            ];
             $commandIndex++;
             if (!$success) {
                 $anyFailed = true;
@@ -108,6 +157,7 @@ class KeepCalmCommand extends AbstractMagentoCommand
         }
 
         $this->writeRandomMessageAtTheEnd($output, $anyFailed);
+        $this->writeCommandSummaryChecklist($output, $executedCommands);
 
         return Command::SUCCESS;
     }
@@ -130,19 +180,24 @@ class KeepCalmCommand extends AbstractMagentoCommand
     /**
      * Executes a given sub-command string and handles output and errors.
      */
-    private function runSubCommand(string $commandString, string $description, OutputInterface $output, int $commandIndex = 1): bool
+    private function runCommand(string $commandString, string $description, OutputInterface $output, int $commandIndex = 1): ?bool
     {
-        // The command name is the first part of the string (e.g., 'setup:upgrade' from 'setup:upgrade --force').
-        $commandName = explode(' ', $commandString, 2)[0];
-
-        $this->writeCommandBanner($commandName, $description, $output, $commandIndex);
-        $output->writeln('<info>What is going on?</info> -> <comment>' . $description . '</comment>');
-
         try {
+            // The command name is the first part of the string (e.g., 'setup:upgrade' from 'setup:upgrade --force').
+            $commandName = explode(' ', $commandString, 2)[0];
+
             /**
              * Run the commands
              */
-            $command = $this->getApplication()->find($commandName);
+            try {
+                $command = $this->getApplication()->find($commandName);
+            } catch (CommandNotFoundException $e) {
+                return null;
+            }
+
+            $this->writeCommandBanner($commandName, $description, $output, $commandIndex);
+            $output->writeln('<info>What is going on?</info> -> <comment>' . $description . '</comment>');
+
             $commandInput = new StringInput($commandString);
             $exitCode = $command->run($commandInput, $output);
 
@@ -238,5 +293,26 @@ class KeepCalmCommand extends AbstractMagentoCommand
         }
 
         $this->writeSuccessMessage($message, $output);
+    }
+
+    /**
+     * Prints a checklist summary of all executed/skipped commands.
+     */
+    private function writeCommandSummaryChecklist(OutputInterface $output, array $executedCommands): void
+    {
+        $output->writeln("\n<info>Command Execution Summary:</info>");
+        foreach ($executedCommands as $cmd) {
+            if ($cmd['reason'] === 'Command not found') {
+                continue;
+            }
+            $statusIcon = [
+                'success' => '✅',
+                'failed' => '❌',
+                'skipped' => '⏭️',
+            ][$cmd['status']] ?? '❓';
+            $reason = $cmd['reason'] ? " (<comment>{$cmd['reason']}</comment>)" : '';
+            $output->writeln("  {$cmd['index']}. {$statusIcon} <comment>{$cmd['name']}</comment>  {$reason}");
+        }
+        $output->writeln("");
     }
 }
