@@ -3,7 +3,7 @@ title: Route Commands
 sidebar_label: Route Commands
 ---
 
-# Routes Commands
+# Route Commands
 
 Commands for managing and viewing Magento routes.
 
