@@ -13,7 +13,7 @@ title: Extending n98-magerun2
 
 ## Modules (Extensions)
 
-- [Modules](./development/modules/)
+- [Modules](./modules/)
 
 ## Developer Setups
 
