@@ -17,19 +17,20 @@ webimage_extra_packages: [bats, lz4, zstd, mycli]
 use_dns_when_possible: true
 composer_version: 2.2.17
 web_environment:
-    #- MAGERUN_SETUP_TEST_DEFAULT_MAGENTO_VERSION=2.4.7-p6
     - MAGERUN_SETUP_TEST_DEFAULT_MAGEOS_VERSION=1.2.0
     - N98_MAGERUN2_BIN=/var/www/html/bin/n98-magerun2
     - N98_MAGERUN2_TEST_MAGENTO_ROOT=/opt/magento-test-environments/mageos_1_2_0/
-nodejs_version: "16"
+nodejs_version: "20"
 corepack_enable: false
 
 # Key features of DDEV's config.yaml:
 
 # name: <projectname> # Name of the project, automatically provides
 #   http://projectname.ddev.site and https://projectname.ddev.site
+# If the name is omitted, the project will take the name of the enclosing directory,
+# which is useful if you want to have a copy of the project side by side with this one.
 
-# type: <projecttype>  # backdrop, cakephp, craftcms, drupal, drupal6, drupal7, drupal8, drupal9, drupal10, drupal11, laravel, magento, magento2, php, shopware6, silverstripe, symfony, typo3, wordpress
+# type: <projecttype>  # backdrop, cakephp, craftcms, drupal, drupal6, drupal7, drupal8, drupal9, drupal10, drupal11, generic, laravel, magento, magento2, php, shopware6, silverstripe, symfony, typo3, wordpress
 # See https://ddev.readthedocs.io/en/stable/users/quickstart/ for more
 # information on the different project types
 
@@ -58,12 +59,29 @@ corepack_enable: false
 # "ddev xdebug" to enable Xdebug and "ddev xdebug off" to disable it work better,
 # as leaving Xdebug enabled all the time is a big performance hit.
 
+# xhgui_https_port: 8142
+# Can be used to change the router https port for xhgui application
+# Very rarely used
+
+# xhgui_http_port: 8143
+# Can be used to change the router http port for xhgui application
+# Very rarely used
+
+# host_xhgui_port: 8142
+# Can be used to change the host binding port of the xhgui
+# application. Rarely used; only when port conflict and 
+# bind_all_ports is used (normally with router disabled)
+
 # xhprof_enabled: false  # Set to true to enable Xhprof and "ddev start" or "ddev restart"
 # Note that for most people the commands
 # "ddev xhprof" to enable Xhprof and "ddev xhprof off" to disable it work better,
 # as leaving Xhprof enabled all the time is a big performance hit.
 
-# webserver_type: nginx-fpm or apache-fpm
+# xhprof_mode: [prepend|xhgui|global]
+# Set to "xhgui" to enable XHGui features
+# "xhgui" will become default in a future major release
+
+# webserver_type: nginx-fpm, apache-fpm, generic
 
 # timezone: Europe/Berlin
 # If timezone is unset, DDEV will attempt to derive it from the host system timezone
