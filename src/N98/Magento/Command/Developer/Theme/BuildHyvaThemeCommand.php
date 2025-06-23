@@ -264,7 +264,7 @@ class BuildHyvaThemeCommand extends AbstractMagentoCommand
         $process = new Process(['npm', 'run', $buildNpmCommand]);
         $process->setWorkingDirectory($webTailwindDirInTheme);
         $process->setTty(true);
-        $process->setTimeout(3600 * 2); // 2 hours timeout for production builds
+        $process->setTimeout(null); // No timeout for watch mode
         $process->run();
 
         if (!$process->isSuccessful()) {
