@@ -13,6 +13,7 @@ RECENT CHANGES
 - Add: Docusaurus documentation and deployment workflow (PR #1643, issue #1643)
 - Imp: update to Symfony 6.4 (PR #1608, issue #1608, by Christian Münch)
 - Imp: optimize development setup and Magento version detection (by Christian Münch)
+- Imp: feat(dev:theme:build-hyva): add --force-npm-install option to always run npm install
 - Imp: Update 3rd party dependencies (sigstore/cosign-installer, brace-expansion, captainhook)
 - Imp: feat(db): prefer mariadb client tools when available (PR #1695, by Christian Münch)
 - Imp: feat(dev:hyva:build): Add --all and --supress-no-theme-found-error in dev:hyva:build command (by Christian Münch)

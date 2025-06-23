@@ -62,6 +62,12 @@ class BuildHyvaThemeCommand extends AbstractMagentoCommand
                 InputOption::VALUE_NONE,
                 'Suppress error if no Hyvä theme was found'
             )
+            ->addOption(
+                'force-npm-install',
+                'f',
+                InputOption::VALUE_NONE,
+                'Always run npm install. Otherwise npm install runs only if the node_modules folder is missing.'
+            )
             ->addArgument(
                 'theme',
                 InputArgument::OPTIONAL,
@@ -212,6 +218,8 @@ class BuildHyvaThemeCommand extends AbstractMagentoCommand
             throw new InvalidArgumentException(sprintf('Theme "%s" is not a Hyvä theme.', $themePath));
         }
 
+        $forceNpmInstall = $input->getOption('force-npm-install');
+
         // prefix the theme path with (=frontend|adminhtml) to get the full path then we prepend "frontend/"
         if (!str_starts_with($themePath, 'frontend/') && !str_starts_with($themePath, 'adminhtml/')) {
             $themePath = 'frontend/' . $themePath;
@@ -242,8 +250,8 @@ class BuildHyvaThemeCommand extends AbstractMagentoCommand
 
         $webTailwindDirInTheme = $themeDir . '/web/tailwind';
 
-        // Check if node_modules directory exists
-        if (!is_dir($webTailwindDirInTheme . '/node_modules')) {
+        // Check if node_modules directory exists or force install is requested
+        if ($forceNpmInstall || !is_dir($webTailwindDirInTheme . '/node_modules')) {
             $output->writeln('<info>Installing node modules...</info>');
             $process = new Process(['npm', 'install']);
             $process->setWorkingDirectory($webTailwindDirInTheme);
