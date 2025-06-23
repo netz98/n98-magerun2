@@ -11,7 +11,7 @@ Running raw SQL queries can affect your database and should be done with caution
 :::
 
 ```sh
-n98-magerun2.phar db:query [--connection=CONNECTION] [--only-command] [<query>]
+n98-magerun2.phar db:query [--connection=CONNECTION] [--only-command] [--format=FORMAT] [<query>]
 ```
 
 **Arguments:**
@@ -26,9 +26,14 @@ n98-magerun2.phar db:query [--connection=CONNECTION] [--only-command] [<query>]
 |--------------------------|-----------------------------------------------------------------------------|
 | `--connection=CONNECTION`| Select DB connection type for Magento configurations with several databases |
 | `--only-command`         | Print only mysql command. Do not execute                                    |
+| `--format=FORMAT`        | Output format (currently only `csv` is supported)                           |
 
-**Example:**
+**Examples:**
 
 ```sh
 n98-magerun2.phar db:query "select * from store"
+```
+
+```sh
+n98-magerun2.phar db:query --format=csv "select * from store"
 ```
