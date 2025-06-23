@@ -555,8 +555,8 @@ function cleanup_files_in_magento() {
 
 @test "Command: db:query --format=csv" {
   run $BIN "db:query" --format=csv "SELECT 1 AS foo, 2 AS bar"
-  assert_output --partial "foo,bar"
-  assert_output --partial "1,2"
+  assert_output --partial '"foo","bar"'
+  assert_output --partial '"1","2"'
   assert [ "$status" -eq 0 ]
 }
 
