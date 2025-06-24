@@ -20,6 +20,7 @@ RECENT CHANGES
 - Imp: feat(dev:hyva:build): Add check for Hyvä theme in dev:hyva:build command (by Christian Münch)
 - Fix: better TTY handling in proxy command (PR #1667, issue #1422, by Christian Münch)
 - Fix: PHP 8.4 compatibility updates (PR #1655, issue #1654, by Christian Münch)
+- Fix: Port handling in database helper (by Christian Münch)
 - Build: CI release workflow enhancements (PR #1657, issue #1657, by Christian Münch)
 
 8.1.1
