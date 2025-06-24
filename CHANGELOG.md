@@ -1,6 +1,11 @@
 RECENT CHANGES
 ==============
 
+9.0.1
+-----
+
+- fix: phar file had to re-create, due to a release issue
+
 9.0.0
 -----
 
