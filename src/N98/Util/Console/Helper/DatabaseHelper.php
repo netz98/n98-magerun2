@@ -153,8 +153,14 @@ class DatabaseHelper extends AbstractHelper implements CommandAware
             if (strpos($this->dbSettings['host'], '/') !== false) {
                 $this->dbSettings['unix_socket'] = $this->dbSettings['host'];
                 unset($this->dbSettings['host']);
-            } elseif (strpos($this->dbSettings['host'], ':') !== false) {
-                list($this->dbSettings['host'], $this->dbSettings['port']) = explode(':', $this->dbSettings['host']);
+            } elseif (strpos($this->dbSettings['host'], ':') !== false
+                && substr_count($this->dbSettings['host'], ':') === 1) {
+                // Only split if not IPv6 (which has multiple colons)
+                list($host, $port) = explode(':', $this->dbSettings['host'], 2);
+                $this->dbSettings['host'] = $host;
+                if (is_numeric($port)) {
+                    $this->dbSettings['port'] = (int)$port;
+                }
             }
         }
 
@@ -195,8 +201,13 @@ class DatabaseHelper extends AbstractHelper implements CommandAware
             if (strpos($this->dbSettings['host'], '/') !== false) {
                 $this->dbSettings['unix_socket'] = $this->dbSettings['host'];
                 unset($this->dbSettings['host']);
-            } elseif (strpos($this->dbSettings['host'], ':') !== false) {
-                list($this->dbSettings['host'], $this->dbSettings['port']) = explode(':', $this->dbSettings['host']);
+            } elseif (strpos($this->dbSettings['host'], ':') !== false && substr_count($this->dbSettings['host'], ':') === 1) {
+                // Only split if not IPv6 (which has multiple colons)
+                list($host, $port) = explode(':', $this->dbSettings['host'], 2);
+                $this->dbSettings['host'] = $host;
+                if (is_numeric($port)) {
+                    $this->dbSettings['port'] = (int)$port;
+                }
             }
         }
 
