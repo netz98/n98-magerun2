@@ -169,6 +169,7 @@ commands:
     - N98\Magento\Command\System\Setup\DowngradeVersionsCommand
     - N98\Magento\Command\System\Store\ListCommand
     - N98\Magento\Command\System\Url\ListCommand
+    - N98\Magento\Command\System\Url\RegenerateCommand
     - N98\Magento\Command\System\Store\Config\BaseUrlListCommand
     - N98\Magento\Command\System\Website\ListCommand
     - N98\Magento\Command\Indexer\ListCommand
