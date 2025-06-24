@@ -29,12 +29,13 @@ jobs:
           --health-retries=10
 
       mariadb:
-        image: mariadb:11.4
+        image: "mariadb:11.6"
         env:
           MARIADB_ROOT_PASSWORD: root
           MARIADB_DATABASE: magento
         ports:
-          - 3306
+          - 3306 # Standard MariaDB/MySQL port
+        # Options remain largely the same, health check uses mysqladmin (compatible)
         options: >-
           --tmpfs /tmp:rw
           --tmpfs /var/lib/mysql:rw
