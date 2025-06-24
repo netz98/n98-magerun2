@@ -71,6 +71,33 @@ try {
     echo "Product not found: joust-duffel-bag\n";
 }
 ```
+### Development Helper (`$dh`)
+
+When `dev:console` starts, both `$di` and `$dh` variables are predefined. `$dh` contains an instance of `\N98\Magento\Command\Developer\DevelopmentHelper` and provides shortcut methods for common debugging tasks.
+
+| Method | Description |
+| ------ | ----------- |
+| `debugProductBySku($sku, $storeId = 0)` | Load and dump a product by SKU. |
+| `getProductRepository()` | Returns the product repository. |
+| `debugProductById($id, $storeId = 0)` | Load and dump a product by ID. |
+| `debugCategoryById($id, $storeId = 0)` | Dump a category by ID. |
+| `getCategoryRepository()` | Returns the category repository. |
+| `debugOrderById($id)` | Dump an order by ID. |
+| `getOrderRepository()` | Returns the order repository. |
+| `debugCustomerById($id)` | Dump a customer by ID. |
+| `debugCustomerByEmail($email, $websiteId = 0)` | Dump a customer by e-mail. |
+| `getCustomerRepository()` | Returns the customer repository. |
+| `getCustomerModel()` | Returns the customer model. |
+| `debugCartById($cartId)` | Dump a cart by ID. |
+| `getCartRepository()` | Returns the cart repository. |
+| `getStoreManager()` | Returns the store manager. |
+| `createProductModel()` | Creates a product model instance. |
+| `createCustomerModel()` | Creates a customer model instance. |
+| `getScopeConfig()` | Returns the scope configuration. |
+| `getEavAttributeRepository()` | Returns the EAV attribute repository. |
+| `getCmsBlockRepository()` | Returns the CMS block repository. |
+| `getCmsPageRepository()` | Returns the CMS page repository. |
+| `getDatabaseConnection()` | Returns the database connection. |
 
 ## Benefits and Use Cases
 
@@ -87,29 +114,28 @@ The `dev:console`, as part of `n98-magerun2`, offers several advantages for Mage
 
 We offer some commands which can be used to create boilerplate code or even a complete new module.
 
-```
-  make:config:di                    Creates a new di.xml file
-  make:config:crontab               Creates a new crontab.xml file
-  make:config:events                Creates a new events.xml file
-  make:config:fieldset              Creates a new fieldset.xml file
-  make:config:menu                  Creates a new menu.xml file
-  make:config:routes                Creates a new routes.xml file
-  make:config:system                Creates a new system.xml file
-  make:config:widget                Creates a new widget.xml file
-  make:config:webapi                Creates a new webapi.xml file
-  module                            Set current module context
-  make:block                        Creates a generic block class
-  make:helper                       Creates a helper class
-  make:module                       Creates a new module
-  modules                           List all modules
-  make:class                        Creates a generic class
-  make:command                      Creates a cli command
-  make:controller                   Creates a controller action class
-  make:model                        Creates a model class
-  make:interface                    Creates a generic interface
-  make:theme                        Creates a new theme
-```
-
+| Command | Description |
+| ------- | ----------- |
+| `make:config:di` | Creates a new `di.xml` file |
+| `make:config:crontab` | Creates a new `crontab.xml` file |
+| `make:config:events` | Creates a new `events.xml` file |
+| `make:config:fieldset` | Creates a new `fieldset.xml` file |
+| `make:config:menu` | Creates a new `menu.xml` file |
+| `make:config:routes` | Creates a new `routes.xml` file |
+| `make:config:system` | Creates a new `system.xml` file |
+| `make:config:widget` | Creates a new `widget.xml` file |
+| `make:config:webapi` | Creates a new `webapi.xml` file |
+| `module` | Set current module context |
+| `make:block` | Creates a generic block class |
+| `make:helper` | Creates a helper class |
+| `make:module` | Creates a new module |
+| `modules` | List all modules |
+| `make:class` | Creates a generic class |
+| `make:command` | Creates a CLI command |
+| `make:controller` | Creates a controller action class |
+| `make:model` | Creates a model class |
+| `make:interface` | Creates a generic interface |
+| `make:theme` | Creates a new theme |
 The idea is that you can create a new module with `make:module` command or switch in the context of an existing module with the `module` command.
 Inside this context it's possible to generate config files, classes, etc
 
@@ -123,10 +149,6 @@ This video showcases many of the features discussed, including live examples of 
 
 **Video by Mark Shust.**
 
-## Known Issues
-
-We also work on support for switching the app area. Currently only the "global" area is loaded.
-In some cases (errors) we loose the context of the module.
 
 ## dev:console Deep Dive
 The dev:console command provides an interactive PHP shell with full Magento integration, making it an invaluable tool for rapid debugging, one-off code execution, and complex data manipulation directly from the command line.
@@ -152,3 +174,7 @@ Example: Inspecting Product Data
 $product = $dh->loadProductBySku('joust-duffel-bag'); # Using a helper function
 $dh->dump($product->getData()); # Inspect all product data
 ```
+## Known Issues
+
+We also work on support for switching the app area. Currently only the "global" area is loaded.
+In some cases (errors) we lose the context of the module.
