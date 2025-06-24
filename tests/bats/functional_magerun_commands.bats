@@ -530,6 +530,18 @@ function cleanup_files_in_magento() {
   assert_output --partial "innodb_buffer_pool_size"
 }
 
+
+# ============================================
+# Command: db:query
+# ============================================
+
+@test "Command: db:query --format=csv" {
+  run $BIN "db:query" --format=csv "SELECT 1 AS foo, 2 AS bar"
+  assert_output --partial '"foo","bar"'
+  assert_output --partial '"1","2"'
+  assert [ "$status" -eq 0 ]
+}
+
 # ============================================
 # Command: design:demo-notice
 # ============================================
@@ -548,17 +560,6 @@ function cleanup_files_in_magento() {
 #  run echo "dev:console --auto-exit 'ls'" | $BIN_INTERACTION
 #  assert_output --partial "di"
 #}
-
-# ============================================
-# Command: db:query
-# ============================================
-
-@test "Command: db:query --format=csv" {
-  run $BIN "db:query" --format=csv "SELECT 1 AS foo, 2 AS bar"
-  assert_output --partial '"foo","bar"'
-  assert_output --partial '"1","2"'
-  assert [ "$status" -eq 0 ]
-}
 
 # ============================================
 # Command: dev:module:create
