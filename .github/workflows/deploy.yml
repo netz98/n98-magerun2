@@ -132,11 +132,11 @@ jobs:
           # Only mark as latest if it's a stable version
           if [[ "$TAG" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
             echo "This is a stable release. Marking as latest."
-            mv "n98-magerun2.phar" \
+            cp "n98-magerun2.phar" \
               "n98-magerun2-latest.phar"
-            mv "n98-magerun2.phar.asc" \
+            cp "n98-magerun2.phar.asc" \
               "n98-magerun2-latest.phar.asc"
-            mv "n98-magerun2.phar.sig" \
+            cp "n98-magerun2.phar.sig" \
               "n98-magerun2-latest.phar.sig"
           else
             echo "This is an alpha/beta release. Not marking as latest."
