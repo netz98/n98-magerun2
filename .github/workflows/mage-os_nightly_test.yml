@@ -28,31 +28,26 @@ jobs:
           --health-timeout=5s
           --health-retries=10
 
+      mariadb:
+        image: mariadb:11.4
+        env:
+          MARIADB_ROOT_PASSWORD: root
+          MARIADB_DATABASE: magento
+        ports:
+          - 3306
+        options: >-
+          --tmpfs /tmp:rw
+          --tmpfs /var/lib/mysql:rw
+          --health-cmd="mysqladmin ping -h 127.0.0.1 --silent"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
+
     steps:
       - name: Checkout develop branch
         uses: actions/checkout@v4.2.2
         with:
           ref: develop
-
-      - uses: shogo82148/actions-setup-mysql@v1
-        with:
-          distribution: "mariadb"
-          mysql-version: "11.4"
-          auto-start: "true"
-          root-password: "root"
-
-      - name: Check MariaDB version
-        run: "mariadb -uroot -proot -e 'SELECT version();'"
-
-      - name: List installed MySQL/MariaDB tools
-        run: |
-          mariadb --version || true
-          mariadb-dump --version || true
-          mysql --version || true
-          mysqldump --version || true
-
-      - name: Create Magento database
-        run: "mariadb -uroot -proot -e 'CREATE DATABASE magento;'"
 
       - name: Linux Setup
         run: ./.github/workflows/linux-setup.sh
