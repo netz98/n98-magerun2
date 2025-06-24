@@ -440,7 +440,7 @@ class DatabaseHelper extends AbstractHelper implements CommandAware
             . ' '
             . '-u' . escapeshellarg($this->dbSettings['username'])
             . ' '
-            . (isset($this->dbSettings['port'])
+            . (isset($this->dbSettings['port']) && is_numeric($this->dbSettings['port']) && (int)$this->dbSettings['port'] > 0
                 ? '-P' . escapeshellarg($this->dbSettings['port']) . ' ' : '')
             . (strlen($this->dbSettings['password'])
                 ? '--password=' . escapeshellarg($this->dbSettings['password']) . ' ' : '')
