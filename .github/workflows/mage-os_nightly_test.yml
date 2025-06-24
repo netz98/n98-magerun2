@@ -37,8 +37,6 @@ jobs:
           - 3306 # Standard MariaDB/MySQL port
         # Options remain largely the same, health check uses mysqladmin (compatible)
         options: >-
-          --tmpfs /tmp:rw
-          --tmpfs /var/lib/mysql:rw
           --health-cmd="mysqladmin ping -h 127.0.0.1 --silent"
           --health-interval=10s
           --health-timeout=5s
