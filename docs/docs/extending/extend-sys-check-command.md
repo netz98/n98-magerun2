@@ -4,7 +4,7 @@ title: Extend sys:check Command
 
 The `sys:check` command in n98-magerun is a powerful tool for verifying the health of a Magento installation. It features a modular architecture that allows developers to add their own custom checks. This guide explains how to create and register your own checks.
 
-# Core Concept: Modular Checks
+## Core Concept: Modular Checks
 
 The sys:check command discovers available checks through configuration. Checks are organized into groups, and these groups are registered in a YAML config file. This allows you to define new checks on a per-project basis or create a distributable n98-magerun module.
 

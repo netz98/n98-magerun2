@@ -1,15 +1,23 @@
 ---
 title: Extending n98-magerun2
+sidebar_title: Extending
+sidebar_position: 1
 ---
 
 ## Extend by Configuration
 
 - [Configuration explained](./configuration.md)
+- [Command Alias](./command-alias.md)
+
+## Development Guide
+
+- [Guide for Developers](./development/index.md)
 
 ## Extend existing Commands
 
 - [sys:check Command](./extend-sys-check-command.md)
 - [db:dump Command](./extend-db-dump-command.md)
+- [dev:console Command](./extend-dev-console-command.md)
 
 ## Modules (Extensions)
 

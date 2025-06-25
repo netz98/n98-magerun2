@@ -1,5 +1,6 @@
 ---
 title: Extend db:dump Command
+sidebar_label: Extend db:dump Command
 ---
 
 Extend the [db:dump](../command-docs/db/db-dump.md) command to add your own table groups.
