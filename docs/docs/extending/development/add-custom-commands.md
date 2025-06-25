@@ -11,8 +11,8 @@ The config file must be placed in your *home directory* with the name **~/.n98-m
 
 It's also possible (since version 1.36.0) to place a config in your magento installation to add custom project based command. Create config and save it as **app/etc/n98-magerun2.yaml**. The project config can use the variable **%root%** to get magento root folder dynamically.
 
-Since version 1.72.0 it's possible to structure commands in modules.
-See [[Modules]].
+You can organize custom commands into modules to better structure your code (available since version 1.72.0).
+For more details, see the [Modules documentation](../modules/index.md).
 
 ## Config
 
@@ -72,10 +72,10 @@ class MyExampleCommand extends AbstractMagentoCommand
             ->setName('my:example')
             ->setDescription('An example command that uses Magento dependencies');
             ->addArgument(
-                'sku
+                'sku',
                 InputArgument::REQUIRED,
                 'The sku of the product to retrieve'
-            )
+            );
     }
 
     /**
@@ -95,8 +95,6 @@ class MyExampleCommand extends AbstractMagentoCommand
     public function execute(InputInterface $input, OutputInterface $output): int
     {
         $product = $this->productRepository->get($input->getArgument('sku'));
-        
-        $this->
         
         // dumper output of product data
         $output->writeln('Product ID: ' . $product->getId());
