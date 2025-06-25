@@ -7,12 +7,16 @@ You can assign your own Symfony2 commands to `n98-magerun2`.
 1. Add the folder which contains your custom commands to the autoloader.
 2. Register Commands
 
-The config file must be placed in your *home directory* with the name **~/.n98-magerun2.yaml**.
+There are three locations where you can register your custom commands:
 
-It's also possible (since version 1.36.0) to place a config in your magento installation to add custom project based command. Create config and save it as **app/etc/n98-magerun2.yaml**. The project config can use the variable **%root%** to get magento root folder dynamically.
-
-You can organize custom commands into modules to better structure your code (available since version 1.72.0).
-For more details, see the [Modules documentation](../modules/index.md).
+- **User Config**: `~/.n98-magerun2.yaml`
+  Commands defined in this file will be available globally for all Magento installations on your system. This is the most common place to define custom commands that you want to use across multiple projects.
+- **Project Config**: `app/etc/n98-magerun2.yaml`
+  It's also possible to place a config in your magento installation to add custom project based command. Create config and save it as `app/etc/n98-magerun2.yaml`. The project config can use the variable **%root%** to get magento root folder dynamically.
+- **Module Config**: `%module%/etc/n98-magerun2.yaml`
+  This is the **recommended way** to register commands in a module. The `%module%` variable will be replaced with the module name, allowing you to keep your commands organized within your module's structure.
+   For more details, see the [Modules documentation](../modules/index.md).
+   Modules are the most flexible way to add commands, as they can be easily shared and reused across different projects. Modules can be placed under different directories. See [Module Location](../modules/index.md#module-location) for more details.
 
 ## Config
 
