@@ -61,15 +61,9 @@ $page = $di->get('Magento\Cms\Api\PageRepositoryInterface');
 With this feature you are able to run short tests in your development or production environment.
 
 ```php
-// Example: Load product information (inspired by the n98-magerun2 video)
 $productRepository = $di->get(\Magento\Catalog\Api\ProductRepositoryInterface::class);
-try {
-    $product = $productRepository->get('joust-duffel-bag');
-    echo "Product Name: " . $product->getName() . "\n";
-    echo "Price: " . $product->getPrice() . "\n";
-} catch (\Magento\Framework\Exception\NoSuchEntityException $e) {
-    echo "Product not found: joust-duffel-bag\n";
-}
+$product = $productRepository->get('24-MB01');
+$product->dump();
 ```
 ### Development Helper (`$dh`)
 
@@ -98,6 +92,46 @@ When `dev:console` starts, both `$di` and `$dh` variables are predefined. `$dh` 
 | `getCmsBlockRepository()` | Returns the CMS block repository. |
 | `getCmsPageRepository()` | Returns the CMS page repository. |
 | `getDatabaseConnection()` | Returns the database connection. |
+
+### Example Usage of `$dh`
+
+#### Loading and Dumping Product Data
+
+Dump product data by SKU:
+
+```php
+$dh->debugProductBySku('24-MB01');
+```
+
+Load product by ID and dump its data:
+
+```php
+$dh->debugProductById(123);
+```
+
+Load the product repository and fetch a product:
+
+```php
+$productRepository = $dh->getProductRepository();
+$product = $productRepository->get('24-MB01');
+$product->dump();
+```
+
+#### Dump Cart (Quote) Data
+
+Dump cart data by ID:
+
+```php
+$dh->debugCartById('1234');
+```
+
+#### Dump Order Data
+
+Dump order data by ID:
+
+```php
+$dh->debugOrderById(4711);
+```
 
 ## Benefits and Use Cases
 
