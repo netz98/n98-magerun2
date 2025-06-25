@@ -14,19 +14,19 @@ It's also possible (since version 1.36.0) to place a config in your magento inst
 Since version 1.72.0 it's possible to structure commands in modules.
 See [[Modules]].
 
-Config
-------
+## Config
+
 ```yaml
 autoloaders_psr4:
-  MyCommandNamespace\: /home/myuser/lib
+  MyCommandNamespace\: %module%/src
 
-  # or in project based config i.e.: 
+  # or in project based config i.e.:
   # MyCommandNamespace\: %root%/lib
 
 # old deprecated psr-0
 autoloaders:
   # Namespace => path to your libs
-  MyCommandNamespace: /home/myuser/lib
+  MyCommandNamespace: src
 
 commands:  
   customCommands:
@@ -52,56 +52,95 @@ Here's an example of how to use the `inject` method:
 
 namespace MyCommandNamespace;
 
+use Magento\Catalog\Api\ProductRepositoryInterface;
 use N98\Magento\Command\AbstractMagentoCommand;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Magento\Framework\App\ProductMetadataInterface; // Example Magento class
 
-class MyInjectedCommand extends AbstractMagentoCommand
+class MyExampleCommand extends AbstractMagentoCommand
 {
-    /** @var ProductMetadataInterface */
-    protected $productMetadata;
+    /**
+     * @var \Magento\Catalog\Api\ProductRepositoryInterface
+     */
+    private ProductRepositoryInterface $productRepository;
 
     protected function configure()
     {
         $this
-            ->setName('my:injected:command')
-            ->setDescription('A command that uses injected Magento dependencies');
+            ->setName('my:example')
+            ->setDescription('An example command that uses Magento dependencies');
+            ->addArgument(
+                'sku
+                InputArgument::REQUIRED,
+                'The sku of the product to retrieve'
+            )
     }
 
     /**
-     * Inject Magento dependencies.
-     *
-     * @param ProductMetadataInterface $productMetadata
+     * @param \Magento\Catalog\Api\ProductRepositoryInterface $productRepository
+     * @return void
      */
-    public function inject(ProductMetadataInterface $productMetadata)
+    public function inject(ProductRepositoryInterface $productRepository): void
     {
-        $this->productMetadata = $productMetadata;
+        $this->productRepository = $productRepository;
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    /**
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     * @return int
+     */
+    public function execute(InputInterface $input, OutputInterface $output): int
     {
-        // $this->detectMagento($output); // Called by injectObjects before inject()
-        // if ($this->initMagento()) {   // Called by injectObjects before inject()
-            if ($this->productMetadata) {
-                $output->writeln('Successfully injected ProductMetadataInterface.');
-                $output->writeln('Magento Version: ' . $this->productMetadata->getVersion());
-            } else {
-                $output->writeln('<error>Failed to inject ProductMetadataInterface.</error>');
-            }
-        // }
+        $product = $this->productRepository->get($input->getArgument('sku'));
+        
+        $this->
+        
+        // dumper output of product data
+        $output->writeln('Product ID: ' . $product->getId());
+        $output->writeln('Product Name: ' . $product->getName());
+        $output->writeln('Product SKU: ' . $product->getSku());
+        
+        return self::SUCCESS;
     }
 }
+
 ```
 
 In this example:
-1. We type-hint the `ProductMetadataInterface` in the `inject` method's signature.
-2. The `InjectionHelper` (used by `AbstractMagentoCommand::injectObjects`) will use the Magento `ObjectManager` to create an instance of `ProductMetadataInterface` and pass it to the `inject` method.
-3. We then store the injected instance in a class property (`$this->productMetadata`) for use in the `execute` method.
+1. We type-hint the `ProductRepositoryInterface` in the `inject` method's signature.
+2. The internal `InjectionHelper` (used by `AbstractMagentoCommand::injectObjects`) will use the Magento `ObjectManager` to create an instance of `ProductRepositoryInterface` and pass it to the `inject` method.
+3. We then store the injected instance in a class property (`$this->productRepository`) for use in the `execute` method.
 
 The `detectMagento()` and `initMagento()` methods are automatically called by `AbstractMagentoCommand::injectObjects()` before your `inject()` method is executed, so you don't need to call them explicitly if you are using the `inject()` method.
 
 Make sure that any classes you are trying to inject are available through Magento's ObjectManager.
+
+:::note
+We do not use the constructor injection pattern. This is because with the constructor injection all objects would be created for all commands, just to list them. This would lead to performance issues, especially if the command is not executed.
+:::
+
+### Command Configuration
+
+You can also define configuration for your command in the `n98-magerun2.yaml` file. This allows you to set options or parameters that your command can access.
+
+```yaml
+commands:
+  MyCommandNamespace\MyInjectedCommand:
+    bar: zoz
+```
+
+In the code example above, you can access the `bar` configuration in your command by using `$this->getCommandConfig()['bar']` after the `detectMagento()` and `initMagento()` calls.
+
+```php
+public function execute(InputInterface $input, OutputInterface $output)
+{
+    $barValue = $this->getCommandConfig()['bar'] ?? 'default_value';
+    $output->writeln('Bar value: ' . $barValue);
+}
+```
 
 ### Basic Command Structure
 
@@ -166,11 +205,6 @@ $this->getApplication()->setAutoExit(true);
 
 When extending `AbstractMagentoCommand`, you have access to several helpful methods:
 
-*   **`initialize(InputInterface $input, OutputInterface $output): void`**
-    *   This method is called by Symfony Console after the input has been validated but before the `execute` method.
-    *   It's useful for setting up properties based on input arguments and options.
-    *   By default, it calls `checkDeprecatedAliases`.
-
 *   **`getObjectManager(): ObjectManagerInterface`**
     *   Returns an instance of Magento's `ObjectManagerInterface`.
     *   This is your gateway to instantiating Magento classes if you are not using the `inject()` method.
@@ -194,17 +228,6 @@ When extending `AbstractMagentoCommand`, you have access to several helpful meth
     *   Throws a `RuntimeException` if Magento cannot be found.
     *   It's automatically called by `injectObjects()` if your command has an `inject()` method.
 
-*   **`run(InputInterface $input, OutputInterface $output): int`**
-    *   This is the main method called by Symfony Console to execute your command.
-    *   It first calls `injectCommandToHelpers()` and then `injectObjects(OutputInterface $output)`.
-    *   `injectObjects()` is responsible for calling your command's `inject()` method (if it exists) after initializing Magento.
-    *   Finally, it calls `parent::run()`, which in turn calls your command's `execute()` method.
-
-*   **`injectObjects(OutputInterface $output): void`**
-    *   This method orchestrates the dependency injection process.
-    *   It first calls `detectMagento()` and `initMagento()`.
-    *   Then, if your command class has a public method named `inject`, it uses `InjectionHelper` to resolve and pass dependencies to it using Magento's `ObjectManager`.
-
 *   **`createSubCommandFactory(InputInterface $input, OutputInterface $output, string $baseNamespace = ''): SubCommandFactory`**
     *   Useful for creating and managing sub-commands within your command.
 
@@ -219,9 +242,17 @@ When extending `AbstractMagentoCommand`, you have access to several helpful meth
 $rootFolder = $this->getApplication()->getMagentoRootFolder();
 ```
 
-## Enterprise Edition Only Commands
+## Get Magento Version
 
-Add isEnable method to your command.
+```php
+$version = $this->getApplication()->getMagentoVersion();
+```
+
+## Dynamically Enable/Disable Commands
+
+The ìsEnabled` method allows you to control whether your command should be available based on certain conditions, such as the Magento version or edition.
+
+### Example with a Adobe Commerce (Magento Enterprise) only command
 
 ```php
 <?php
@@ -232,5 +263,19 @@ Add isEnable method to your command.
 public function isEnabled()
 {
     return $this->getApplication()->isMagentoEnterprise();
+}
+```
+
+### Example with a Magento 2.4.8+ only command
+
+```php
+<?php
+
+/**
+ * @return bool
+ */
+public function isEnabled()
+{
+    return version_compare($this->getApplication()->getMagentoVersion(), '2.4.8', '>=');
 }
 ```
