@@ -7,7 +7,7 @@ sidebar_position: 1
 ## Extend by Configuration
 
 - [Configuration explained](./configuration.md)
-- [Command Alias](./command-alias.md)
+- [Command Alias](./command-aliases.md)
 
 ## Development Guide
 
