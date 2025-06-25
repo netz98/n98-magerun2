@@ -10,6 +10,7 @@ Configs can be loaded on different levels:
 - build-in config by magerun
 - on system level
 - on user level
+- on module level
 - on project level
 
 All configs will be merged in the following order: `buildin -> system -> user -> project`
