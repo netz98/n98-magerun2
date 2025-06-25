@@ -185,6 +185,7 @@ This video showcases many of the features discussed, including live examples of 
 
 
 ## dev:console Deep Dive
+
 The dev:console command provides an interactive PHP shell with full Magento integration, making it an invaluable tool for rapid debugging, one-off code execution, and complex data manipulation directly from the command line.
 Key Capabilities:
 Interactive PHP Shell: Drop directly into a PHP environment with Magento's bootstrap loaded, allowing immediate execution of PHP code within the Magento context.
@@ -192,7 +193,7 @@ Full Magento Integration: Commands are carried out extremely fast due to local i
 Direct Object Manager Access: The special $di (or $dh for Development Helper) variable provides direct access to Magento's Object Manager, enabling easy creation and manipulation of objects with dependency injection.
 Example:
 
-```
+```php
 $product = $di->create(\Magento\Catalog\Model\Product::class)->load(123);
 ```
 
@@ -203,10 +204,9 @@ Area Initialization: The dev:console can be initialized in different Magento app
 
 Example: Inspecting Product Data
 
-```
+```php
 # In dev:console
-$product = $dh->loadProductBySku('joust-duffel-bag'); # Using a helper function
-$dh->dump($product->getData()); # Inspect all product data
+$product = $dh->loadProductBySku('24-MB01'); # Using a helper function
 ```
 ## Known Issues
 

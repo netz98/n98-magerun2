@@ -1,7 +1,7 @@
 ---
 title: Command Documentation
 sidebar_label: Command Documentation
-sidebar_position: 5
+sidebar_position: 1
 ---
 
 # Command Documentation
