@@ -31,6 +31,10 @@ Possible area codes are:
 - `adminhtml`
 - `crontab`
 
+:::info
+The idea behind the way the `make` commands works was invented by [Jacques Bodin-Hullin](https://monsieurbiz.com). Special thanks for the inspiration!
+:::
+
 ## Executing Code
 
 :::note
