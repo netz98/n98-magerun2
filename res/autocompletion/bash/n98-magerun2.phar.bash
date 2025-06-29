@@ -185,6 +185,9 @@ _n98-magerun2()
             dev:module:observer:list)
             opts="${opts} --format --sort"
             ;;
+            dev:class:plugin:list)
+            opts="${opts} --format"
+            ;;
             dev:report:count)
             opts="${opts} "
             ;;
