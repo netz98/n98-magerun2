@@ -152,23 +152,19 @@ class ListCommand extends AbstractMagentoCommand
             $configLoader = $objectManager->get(ConfigLoaderInterface::class);
             $diConfig = $configLoader->load($area);
 
-            // Check for preferences that might be used as plugins
-            if (isset($diConfig['preferences'])) {
-                foreach ($diConfig['preferences'] as $interfaceName => $implementation) {
-                    // If this is a plugin for our class or if it's related
-                    if (strpos($interfaceName, '\\Plugin\\') !== false ||
-                        strpos($implementation, '\\Plugin\\') !== false) {
-
-                        // Extract potential plugin name from the class/interface name
-                        $potentialPluginName = $this->getShortClassName($implementation);
-
-                        // Only add if we don't already have a name for this implementation
-                        if (!isset($pluginNameMap[$implementation])) {
-                            $pluginNameMap[$implementation] = $potentialPluginName;
+            // Find in the $dicConfig['perferences'] the interface (it's in the key) for the className (value)
+            // If we find a match, we have to extend the pluginNameMap with the plugins of the interface
+            foreach ($diConfig['preferences'] as $interface => $preference) {
+                if ($preference === $className && isset($config[$interface])) {
+                    foreach ($config[$interface] as $pluginName => $pluginData) {
+                        if (isset($pluginData['instance'])) {
+                            $pluginNameMap[$pluginData['instance']] = $pluginName;
                         }
                     }
                 }
             }
+
+
         } catch (Exception $e) {
             // If there's an error, we'll return what we have so far
         }
