@@ -11,3 +11,9 @@ Use this command to encrypt sensitive data using Magento's crypt key. The output
 ```sh
 n98-magerun2.phar dev:encrypt <value>
 ```
+
+---
+
+:::note
+This command was introduced with version 7.4.0.
+:::
