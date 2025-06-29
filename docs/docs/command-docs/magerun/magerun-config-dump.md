@@ -48,3 +48,9 @@ script:
     - etc
     - generated
 ```
+
+---
+
+:::note
+This command was introduced with version 8.1.0.
+:::

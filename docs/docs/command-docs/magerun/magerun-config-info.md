@@ -25,3 +25,9 @@ n98-magerun2.phar magerun:config:info
 | project| /var/www/html/app/etc/n98-magerun2.yaml | The config is stored in the currently used project |
 +--------+-----------------------------------------+----------------------------------------------------+
 ```
+
+---
+
+:::note
+This command was introduced with version 8.1.0.
+:::

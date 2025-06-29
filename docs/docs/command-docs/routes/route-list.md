@@ -15,3 +15,9 @@ n98-magerun2.phar route:list [-a|--area=AREA] [-m|--module=MODULE] [--format=FOR
 | `-m, --module[=MODULE]`  | Show registered routes of a module                   |
 | `--format[=FORMAT]`      | Output Format. One of [csv,json,json_array,yaml,xml] |
 
+
+---
+
+:::note
+This command was introduced with version 6.0.0.
+:::

@@ -52,3 +52,9 @@ Use this option to force a fresh `npm install` before building the theme CSS. Th
 - The `npm install` process has a timeout of 1 hour (3600 seconds) to prevent hanging on long installs.
 - The build process (`npm run watch` or `npm run build-prod`) has no timeout in watch mode, so it will run until you stop it (Ctrl+C). In production mode, it will run until the build completes.
 :::
+
+---
+
+:::note
+This command was introduced with version 8.0.0.
+:::

@@ -26,3 +26,9 @@ n98-magerun2.phar customer:create foo@example.com passworD123 John Doe base taxv
 | Option              | Description                                          |
 |---------------------|------------------------------------------------------|
 | `--format[=FORMAT]` | Output Format. One of [csv,json,json_array,yaml,xml] |
+
+---
+
+:::note
+This command was introduced with version 1.2.0.
+:::

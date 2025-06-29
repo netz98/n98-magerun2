@@ -15,3 +15,9 @@ Type can be one of:
 n98-magerun2.phar config:search [--format[="..."]] <search>
 ```
 
+
+---
+
+:::note
+This command was introduced with version 7.3.0.
+:::

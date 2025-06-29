@@ -11,3 +11,9 @@ Use this command to decrypt values that were previously encrypted with Magento's
 ```sh
 n98-magerun2.phar dev:decrypt <value>
 ```
+
+---
+
+:::note
+This command was introduced with version 7.4.0.
+:::

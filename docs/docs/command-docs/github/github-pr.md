@@ -46,3 +46,9 @@ n98-magerun2.phar github:pr --mage-os <number>
 ```sh
 n98-magerun2.phar github:pr --patch <number>
 ```
+
+---
+
+:::note
+This command was introduced with version 7.1.0.
+:::

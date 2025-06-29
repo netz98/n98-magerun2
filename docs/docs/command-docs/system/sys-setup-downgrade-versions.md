@@ -11,3 +11,9 @@ Downgrade the versions in the database.
 n98-magerun2.phar sys:setup:downgrade-versions <module> <version>
 ```
 
+
+---
+
+:::note
+This command was introduced with version 1.2.0.
+:::

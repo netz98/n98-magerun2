@@ -20,3 +20,9 @@ n98-magerun2.phar config:env:delete cache.frontend.default.backend
 n98-magerun2.phar config:env:delete cache.frontend.default.backend_options
 ```
 
+
+---
+
+:::note
+This command was introduced with version 4.9.0.
+:::

@@ -73,3 +73,9 @@ Command Execution Summary:
 ### See Also
 
 - [Magento 2 Maintenance Commands](https://devdocs.magento.com/guides/v2.4/config-guide/cli/config-cli-subcommands-maint.html)
+
+---
+
+:::note
+This command was introduced with version 9.0.0.
+:::

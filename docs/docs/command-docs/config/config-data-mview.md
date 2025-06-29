@@ -18,3 +18,9 @@ n98-magerun2.phar config:data:mview [options]
 | `--tree` `-t`       | Print data as tree                                                                                      |
 | `--format[=FORMAT]` | Output Format. One of [csv,json,json_array,yaml,xml]                                                    |
 
+
+---
+
+:::note
+This command was introduced with version 6.0.0.
+:::
