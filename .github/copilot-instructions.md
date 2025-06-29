@@ -63,14 +63,18 @@ The project uses PHPUnit for unit tests and BATS for functional tests.
 
 1. **Running PHPUnit Tests**:
    ```bash
-   vendor/bin/phpunit
+   ddev unit-test
+   ddev unit-test <filename>
    ```
 
 2. **Running Functional Tests with BATS**:
+
+    Start the magerun test suite and filter by command name:
    ```bash
-   export N98_MAGERUN2_BIN=/path/to/n98-magerun2.phar
-   bats tests/bats/functional_magerun_commands.bats
-   bats tests/bats/functional_core_commands.bats
+   ddev bats-magerun --filter "<regex>"
+   
+   # Example 
+   ddev bats-magerun --filter "admin:user:list"
    ```
 
 ### Adding New Tests
