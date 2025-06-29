@@ -35,3 +35,31 @@ If you really decide to run the tool with root permissions then it's possible to
 application:
   check-root-user: false
 ```
+### Command not found
+
+If the shell cannot locate `n98-magerun2.phar`, either call it with a path (`./n98-magerun2.phar`) or move the file into a directory that is part of your `$PATH` such as `/usr/local/bin`.
+
+### Permission denied
+
+When the file is not executable, run `chmod +x n98-magerun2.phar` to add execute permission.
+
+### PHP Fatal error: Class 'Phar' not found
+
+Ensure the PHP `phar` extension is installed and enabled for the CLI. On Debian based systems this can be installed with `sudo apt-get install php-phar`.
+
+### Check tool, PHP and Magento versions
+
+Incompatibilities can lead to `TypeError` or fatal errors. Verify the versions via `n98-magerun2 --version`, `php -v` and the Magento `composer.json`. Updating n98-magerun2 with `self-update` often resolves these issues.
+
+### Increasing verbosity
+
+Re-run failing commands with `-v`, `-vv` or `-vvv` to receive more detailed output and stack traces. This helps identifying the origin of an error, especially for proxied Magento commands.
+
+### Troubles with self-update
+
+If `self-update` fails due to missing permissions or a broken Magento installation, run the command with `sudo` (if installed system-wide) or execute it from outside the Magento root.
+
+### Manually specify the Magento root
+
+When automatic detection fails use the `--root-dir=/path/to/magento` option or create a `.n98-magerun2` file in a parent directory containing the relative path to the Magento root.
+
