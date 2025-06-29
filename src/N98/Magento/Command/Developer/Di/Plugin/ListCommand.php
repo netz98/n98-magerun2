@@ -163,8 +163,6 @@ class ListCommand extends AbstractMagentoCommand
                     }
                 }
             }
-
-
         } catch (Exception $e) {
             // If there's an error, we'll return what we have so far
         }
