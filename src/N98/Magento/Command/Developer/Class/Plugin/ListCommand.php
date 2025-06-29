@@ -2,6 +2,7 @@
 
 namespace N98\Magento\Command\Developer\Class\Plugin;
 
+use Exception;
 use Magento\Developer\Model\Di\PluginList;
 use N98\Magento\Command\AbstractMagentoCommand;
 use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
@@ -44,12 +45,15 @@ class ListCommand extends AbstractMagentoCommand
         $config = $pluginList->getPluginsConfig();
         $methods = $pluginList->getPluginsListByClass($class);
 
+        // Load plugin names from di.xml files
+        $diXmlPluginNames = $this->loadPluginNamesFromDiXml($class, $area);
+
         $meta = [];
         if (isset($config[$class])) {
             foreach ($config[$class] as $pluginName => $pluginData) {
                 $instance = $pluginData['instance'] ?? '';
                 $meta[$instance] = [
-                    'name' => $pluginName,
+                    'name' => $pluginName, // This is the name attribute from di.xml
                     'sortOrder' => $pluginData['sortOrder'] ?? 0,
                     'active' => empty($pluginData['disabled']) ? 1 : 0,
                 ];
@@ -60,7 +64,19 @@ class ListCommand extends AbstractMagentoCommand
         foreach ($methods as $type => $list) {
             foreach ($list as $instance => $methodList) {
                 foreach ($methodList as $method) {
+                    // Get plugin metadata if available, otherwise create default values
                     $info = $meta[$instance] ?? ['name' => '', 'sortOrder' => 0, 'active' => 1];
+
+                    // Try to get plugin name from di.xml files if available
+                    if (empty($info['name']) && isset($diXmlPluginNames[$instance])) {
+                        $info['name'] = $diXmlPluginNames[$instance];
+                    }
+
+                    // If plugin name is still empty, use class name as fallback
+                    if (empty($info['name'])) {
+                        $info['name'] = $this->getShortClassName($instance);
+                    }
+
                     $table[] = [
                         $info['name'],
                         $instance,
@@ -86,5 +102,54 @@ class ListCommand extends AbstractMagentoCommand
             ->renderByFormat($output, $table, $input->getOption('format'));
 
         return 0;
+    }
+
+    /**
+     * Get the short class name from a fully qualified class name
+     *
+     * @param string $className
+     * @return string
+     */
+    protected function getShortClassName(string $className): string
+    {
+        $parts = explode('\\', $className);
+        return end($parts);
+    }
+
+    /**
+     * Load plugin configuration using Magento's public interfaces
+     *
+     * @param string $className The class name to find plugins for
+     * @param string $area Area code (e.g., frontend, adminhtml, etc.)
+     * @return array Array mapping plugin class names to their di.xml plugin names
+     */
+    protected function loadPluginNamesFromDiXml(string $className, string $area = 'global'): array
+    {
+        $objectManager = $this->getObjectManager();
+        $pluginNameMap = [];
+
+        try {
+            // Use the Developer module's PluginList which is specifically designed to get plugin information
+            /** @var \Magento\Developer\Model\Di\PluginList $pluginList */
+            $pluginList = $objectManager->get(PluginList::class);
+            $pluginList->setScopePriorityScheme([$area]);
+
+            // Get plugin configurations using public methods
+            $config = $pluginList->getPluginsConfig();
+
+            // Process the plugin configuration
+            if (isset($config[$className])) {
+                foreach ($config[$className] as $pluginName => $pluginData) {
+                    if (isset($pluginData['instance'])) {
+                        $pluginNameMap[$pluginData['instance']] = $pluginName;
+                    }
+                }
+            }
+
+        } catch (Exception $e) {
+            // If there's an error, we'll return what we have so far
+        }
+
+        return $pluginNameMap;
     }
 }
