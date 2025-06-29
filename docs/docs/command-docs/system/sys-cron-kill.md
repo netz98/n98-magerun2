@@ -12,3 +12,9 @@ Jobs can only be killed if the process runs on the same machine as n98-magerun2.
 ```sh
 n98-magerun2.phar sys:cron:kill [--timeout <seconds>] [job_code]
 ```
+
+---
+
+:::note
+This command was introduced with version 7.1.0.
+:::
