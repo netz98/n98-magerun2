@@ -121,8 +121,8 @@ commands:
     - N98\Magento\Command\Database\InfoCommand
     - N98\Magento\Command\Design\DemoNoticeCommand
     - N98\Magento\Command\Developer\Asset\ClearCommand
-    - N98\Magento\Command\Developer\Class\Plugin\ListCommand
     - N98\Magento\Command\Developer\ConsoleCommand
+    - N98\Magento\Command\Developer\Di\Plugin\ListCommand
     - N98\Magento\Command\Developer\Di\Preference\ListCommand
     - N98\Magento\Command\Developer\DecryptCommand
     - N98\Magento\Command\Developer\EncryptCommand

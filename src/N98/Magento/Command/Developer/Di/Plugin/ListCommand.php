@@ -1,9 +1,10 @@
 <?php
 
-namespace N98\Magento\Command\Developer\Class\Plugin;
+namespace N98\Magento\Command\Developer\Di\Plugin;
 
 use Exception;
 use Magento\Developer\Model\Di\PluginList;
+use Magento\Framework\ObjectManager\ConfigLoaderInterface;
 use N98\Magento\Command\AbstractMagentoCommand;
 use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
 use Symfony\Component\Console\Input\InputArgument;
@@ -16,7 +17,7 @@ class ListCommand extends AbstractMagentoCommand
     protected function configure()
     {
         $this
-            ->setName('dev:class:plugin:list')
+            ->setName('dev:di:plugin:list')
             ->setDescription('Lists plugins for a class name')
             ->addArgument('class', InputArgument::REQUIRED, 'Class name')
             ->addArgument('area', InputArgument::OPTIONAL, 'Area code (e.g. global, frontend, adminhtml)')
@@ -146,6 +147,28 @@ class ListCommand extends AbstractMagentoCommand
                 }
             }
 
+            // Try to get additional plugin information from ConfigLoaderInterface
+            /** @var \Magento\Framework\ObjectManager\ConfigLoaderInterface $configLoader */
+            $configLoader = $objectManager->get(ConfigLoaderInterface::class);
+            $diConfig = $configLoader->load($area);
+
+            // Check for preferences that might be used as plugins
+            if (isset($diConfig['preferences'])) {
+                foreach ($diConfig['preferences'] as $interfaceName => $implementation) {
+                    // If this is a plugin for our class or if it's related
+                    if (strpos($interfaceName, '\\Plugin\\') !== false ||
+                        strpos($implementation, '\\Plugin\\') !== false) {
+
+                        // Extract potential plugin name from the class/interface name
+                        $potentialPluginName = $this->getShortClassName($implementation);
+
+                        // Only add if we don't already have a name for this implementation
+                        if (!isset($pluginNameMap[$implementation])) {
+                            $pluginNameMap[$implementation] = $potentialPluginName;
+                        }
+                    }
+                }
+            }
         } catch (Exception $e) {
             // If there's an error, we'll return what we have so far
         }

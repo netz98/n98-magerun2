@@ -572,6 +572,14 @@ function cleanup_files_in_magento() {
 }
 
 # ============================================
+# Command: dev:di:plugin:list
+# ============================================
+@test "Command: dev:di:plugin:list" {
+  run $BIN "dev:di:plugin:list" "Magento\\Catalog\\Api\\ProductRepositoryInterface"
+  assert_output --partial "remove_images_from_gallery_after_removing_product"
+}
+
+# ============================================
 # Command: dev:di:preference:list
 # ============================================
 
@@ -614,14 +622,6 @@ function cleanup_files_in_magento() {
 @test "Command: dev:module:observer:list" {
   run $BIN "dev:module:observer:list" sales_order_place_after global
   assert_output --partial "Observer name"
-}
-
-# ============================================
-# Command: dev:class:plugin:list
-# ============================================
-@test "Command: dev:class:plugin:list" {
-  run $BIN "dev:class:plugin:list" "Magento\\Catalog\\Api\\ProductRepositoryInterface"
-  assert_output --partial "remove_images_from_gallery_after_removing_product"
 }
 
 # ============================================

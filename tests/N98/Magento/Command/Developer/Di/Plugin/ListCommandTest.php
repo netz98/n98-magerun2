@@ -1,6 +1,6 @@
 <?php
 
-namespace N98\Magento\Command\Developer\Class\Plugin;
+namespace N98\Magento\Command\Developer\Di\Plugin;
 
 use N98\Magento\Command\TestCase;
 
@@ -10,7 +10,7 @@ class ListCommandTest extends TestCase
     {
         $this->assertDisplayContains(
             [
-                'command' => 'dev:class:plugin:list',
+                'command' => 'dev:di:plugin:list',
                 'class'   => 'Magento\\Catalog\\Api\\ProductRepositoryInterface',
             ],
             'remove_images_from_gallery_after_removing_product'
