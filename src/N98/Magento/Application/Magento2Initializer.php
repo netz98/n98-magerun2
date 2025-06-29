@@ -10,7 +10,9 @@ namespace N98\Magento\Application;
 
 use Composer\Autoload\ClassLoader;
 use Magento\Framework\App\Bootstrap;
+use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Framework\Autoload\AutoloaderRegistry;
+use Magento\Framework\Filesystem\DirectoryList as FsDirectoryList;
 use Magento\Framework\ObjectManagerInterface;
 use Magento\Store\Model\Store;
 use Magento\Store\Model\StoreManager;
@@ -61,11 +63,30 @@ class Magento2Initializer
         $params[StoreManager::PARAM_RUN_CODE] = 'admin';
         $params[Store::CUSTOM_ENTRY_POINT_PARAM] = true;
         $params['entryPoint'] = basename(__FILE__);
+        $params = $this->resolveDocumentRoot($magentoRootFolder, $params);
 
         $bootstrap = Bootstrap::create($magentoRootFolder, $params);
         $objectManager = $bootstrap->getObjectManager();
 
         return $objectManager;
+    }
+
+    private function resolveDocumentRoot(string $magentoRootFolder, array $params): array
+    {
+        $envFile = $magentoRootFolder . '/app/etc/env.php';
+        if (is_readable($envFile)) {
+            $env = include $envFile;
+            if (!empty($env['directories']['document_root_is_pub'])) {
+                $params[Bootstrap::INIT_PARAM_FILESYSTEM_DIR_PATHS] = [
+                    DirectoryList::PUB => [FsDirectoryList::URL_PATH => ''],
+                    DirectoryList::MEDIA => [FsDirectoryList::URL_PATH => 'media'],
+                    DirectoryList::STATIC_VIEW => [FsDirectoryList::URL_PATH => 'static'],
+                    DirectoryList::UPLOAD => [FsDirectoryList::URL_PATH => 'media/upload'],
+                ];
+            }
+        }
+
+        return $params;
     }
 
     public static function loadMagentoBootstrap($magentoRootFolder)
