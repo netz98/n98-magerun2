@@ -2,14 +2,12 @@
 title: dev:class:plugin:list
 ---
 
-## List Class Plugins
-
 :::info
 This command lists all plugins registered for a given class. It can help you debug the interception configuration of your Magento installation.
 :::
 
 ```sh
-n98-magerun2.phar dev:class:plugin:list <class> [<area>] [--format=FORMAT]
+n98-magerun2.phar dev:di:plugin:list <class> [<area>] [--format=FORMAT]
 ```
 
 **Arguments:**
@@ -25,3 +23,8 @@ n98-magerun2.phar dev:class:plugin:list <class> [<area>] [--format=FORMAT]
 |-----------------|-----------------------------------------------------|
 | --format=FORMAT | Output Format. One of [csv,json,json_array,yaml,xml] |
 
+---
+
+:::note
+This command was introduced with version 9.1.0.
+:::
