@@ -24,6 +24,7 @@ Run the following commands in order (unless skipped or not needed):
 - [`db:add-default-authorization-entries`](../db/db-add-default-authorization-entries.md)
 - [`generation:flush`](../generation/generation-flush-command.md) (clears generated code)
 - `setup:di:compile` (compiles dependency injection)
+- `dev:asset:clear` (clears static assets)
 - `dev:theme:build-hyva` (builds the CSS for all installed Hyvä themes)
 - `setup:static-content:deploy` (skipped in non-production mode unless `--force-static-content-deploy` is used)
 - `indexer:reset`
