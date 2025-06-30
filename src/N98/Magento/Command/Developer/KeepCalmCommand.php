@@ -49,6 +49,10 @@ class KeepCalmCommand extends AbstractMagentoCommand
             'description' => 'Compile dependency injection configuration and generate code.',
             'commandString' => 'setup:di:compile',
         ],
+        'dev:asset:clear' => [
+            'description' => 'Clear the generated static assets.',
+            'commandString' => 'dev:asset:clear',
+        ],
         'dev:theme:build-hyva' => [
             'description' => 'Build Hyvä theme CSS and JS files.',
             'commandString' => 'dev:theme:build-hyva --all --suppress-no-theme-found-error',
