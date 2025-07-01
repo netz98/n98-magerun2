@@ -11,6 +11,7 @@ This section contains documentation for all customer-related commands in n98-mag
 
 - [customer:info](./customer-info.md)
 - [customer:create](./customer-create.md)
+- [customer:add-address](./customer-add-address.md)
 - [customer:list](./customer-list.md)
 - [customer:change-password](./customer-change-password.md)
 - [customer:token:create](./customer-token-create.md)
