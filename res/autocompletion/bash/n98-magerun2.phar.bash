@@ -174,7 +174,7 @@ _n98-magerun2()
             opts="${opts} --theme"
             ;;
             dev:console)
-            opts="${opts} "
+            opts="${opts} --area --auto-exit --single-process"
             ;;
             dev:module:create)
             opts="${opts} --minimal --add-blocks --add-helpers --add-models --add-setup --add-all --enable --modman --add-readme --add-composer --add-strict-types --author-name --author-email --description"

@@ -53,6 +53,7 @@ class ConsoleCommand extends AbstractMagentoCommand
             ->setName('dev:console')
             ->addOption('area', 'a', InputOption::VALUE_REQUIRED, 'Area to initialize')
             ->addOption('auto-exit', 'e', InputOption::VALUE_NONE, 'Automatic exit after cmd')
+            ->addOption('single-process', 's', InputOption::VALUE_NONE, 'Run without forking (single process)')
             ->addArgument('cmd', InputArgument::OPTIONAL, 'Direct code to run', '')
             ->setDescription(
                 'Opens PHP interactive shell with a initialized Magento application</comment>'
@@ -96,6 +97,13 @@ class ConsoleCommand extends AbstractMagentoCommand
 
         error_reporting(E_ERROR | E_WARNING | E_PARSE);
         $config = new Configuration();
+
+        if ($input->getOption('single-process')) {
+            $output->writeln(
+                '<comment>Warning: Running console in single process mode disables process forking. Use only for DB transaction edge cases and not for daily work.</comment>'
+            );
+            $config->setUsePcntl(false);
+        }
 
         $php8Parser = new Parser\Php8(new Lexer\Emulative());
 
