@@ -19,8 +19,13 @@ n98-magerun2.phar dev:console [options] [--] [<cmd>]
 |------------------|----------------------------|
 | `-a, --area=AREA`| Area to initialize         |
 | `-e, --auto-exit`| Automatic exit after cmd   |
+| `-s, --single-process`| Run without forking (single process) |
 
 Optional an area code can be defined. If provided, the configuration (di.xml, translations) of the area are loaded.
+
+:::warning
+The `--single-process` flag disables process forking and should only be used for database transaction edge cases. It is not recommended for daily work.
+:::
 
 :::tip
 Use area codes like `adminhtml` or `crontab` to load specific Magento configurations for your session.
