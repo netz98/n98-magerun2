@@ -1,8 +1,9 @@
 <?php
 /**
- * @copyright Copyright (c) netz98 GmbH (https://www.netz98.de)
+ * This file is part of the n98-magerun2 project.
  *
- * @see PROJECT_LICENSE.txt
+ * For the full copyright and license information, please view the MIT-LICENSE.txt
+ * file that was distributed with this source code.
  */
 
 declare(strict_types=1);

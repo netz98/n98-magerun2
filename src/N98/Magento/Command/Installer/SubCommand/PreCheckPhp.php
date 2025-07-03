@@ -1,16 +1,11 @@
 <?php
-
-/** @noinspection PhpComposerExtensionStubsInspection */
-
-namespace N98\Magento\Command\Installer\SubCommand;
-
-use N98\Magento\Command\SubCommand\AbstractSubCommand;
-use Symfony\Component\Console\Exception\RuntimeException;
-
 /**
- * Class PreCheckPhp
- * @package N98\Magento\Command\Installer\SubCommand
+ * This file is part of the n98-magerun2 project.
+ *
+ * For the full copyright and license information, please view the MIT-LICENSE.txt
+ * file that was distributed with this source code.
  */
+
 class PreCheckPhp extends AbstractSubCommand
 {
     /**
