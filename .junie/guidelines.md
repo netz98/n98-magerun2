@@ -90,6 +90,13 @@ Here's a simple example of a command test:
 
 ```php
 <?php
+/**
+ * This file is part of the n98-magerun2 project.
+ *
+ * For the full copyright and license information, please view the MIT-LICENSE.txt
+ * file that was distributed with this source code.
+ */
+
 namespace N98\Magento\Command\YourNamespace;
 
 use N98\Magento\Command\TestCase;
@@ -104,6 +111,23 @@ class YourCommandTest extends TestCase
 ```
 
 ## Additional Development Information
+
+### File Header
+
+All PHP files should start with a file header that includes the copyright and license information. The header should look like this:
+
+```php
+<?php
+/**
+ * This file is part of the n98-magerun2 project.
+ *
+ * For the full copyright and license information, please view the MIT-LICENSE.txt
+ * file that was distributed with this source code.
+ */
+ 
+ namespace N98\Magento\Command\YourNamespace;
+ 
+```
 
 ### Code Style
 
