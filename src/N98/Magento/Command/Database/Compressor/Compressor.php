@@ -1,8 +1,9 @@
 <?php
 /**
- * this file is part of magerun
+ * This file is part of the n98-magerun2 project.
  *
- * @author Tom Klingenberg <https://github.com/ktomk>
+ * For the full copyright and license information, please view the MIT-LICENSE.txt
+ * file that was distributed with this source code.
  */
 
 namespace N98\Magento\Command\Database\Compressor;

@@ -1,4 +1,10 @@
 <?php
+/**
+ * This file is part of the n98-magerun2 project.
+ *
+ * For the full copyright and license information, please view the MIT-LICENSE.txt
+ * file that was distributed with this source code.
+ */
 
 if (!class_exists(N98\MagerunBootstrap::class)) {
     require_once __DIR__ . '/N98/MagerunBootstrap.php';
