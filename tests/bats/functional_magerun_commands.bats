@@ -1020,8 +1020,26 @@ function cleanup_files_in_magento() {
   assert_output --partial "/"
 }
 
-@test "Command: sys:url:regenerate" {
-  run $BIN sys:url:regenerate --products 1 --categories 2 --store 1
+@test "Command: sys:url:regenerate --products 1 --categories 2 --store 1" {
+  run $BIN sys:url:regenerate
+  assert_output --partial "Generated"
+  assert [ "$status" -eq 0 ]
+}
+
+@test "Command: sys:url:regenerate --all-products" {
+  run $BIN sys:url:regenerate
+  assert_output --partial "Generated"
+  assert [ "$status" -eq 0 ]
+}
+
+@test "Command: sys:url:regenerate --all-categories" {
+  run $BIN sys:url:regenerate
+  assert_output --partial "Generated"
+  assert [ "$status" -eq 0 ]
+}
+
+@test "Command: sys:url:regenerate --all-cms-pages" {
+  run $BIN sys:url:regenerate
   assert_output --partial "Generated"
   assert [ "$status" -eq 0 ]
 }
