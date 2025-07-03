@@ -1,6 +1,9 @@
 <?php
 /**
- * @see http://ocramius.github.io/blog/automated-code-coverage-check-for-github-pull-requests-with-travis/
+ * This file is part of the n98-magerun2 project.
+ *
+ * For the full copyright and license information, please view the MIT-LICENSE.txt
+ * file that was distributed with this source code.
  */
 
 // coverage-checker.php

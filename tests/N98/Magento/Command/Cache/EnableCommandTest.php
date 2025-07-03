@@ -1,8 +1,9 @@
 <?php
 /**
- * @todo    writing unit tests for toggling caches is complicated because environments differ
- *          touching caches changes state and will result in different test result second time
- *          solutions: disabling/enabling, faking&mocking or having one defined test environment
+ * This file is part of the n98-magerun2 project.
+ *
+ * For the full copyright and license information, please view the MIT-LICENSE.txt
+ * file that was distributed with this source code.
  */
 
 namespace N98\Magento\Command\Cache;
