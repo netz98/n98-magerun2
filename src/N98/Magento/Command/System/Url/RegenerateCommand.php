@@ -6,10 +6,14 @@ use Magento\Catalog\Model\ResourceModel\Category\CollectionFactory as CategoryCo
 use Magento\Catalog\Model\ResourceModel\Product\CollectionFactory as ProductCollectionFactory;
 use Magento\CatalogUrlRewrite\Model\CategoryUrlRewriteGenerator;
 use Magento\CatalogUrlRewrite\Model\ProductUrlRewriteGenerator;
+use Magento\Cms\Model\ResourceModel\Page\CollectionFactory as CmsPageCollectionFactory;
+use Magento\CmsUrlRewrite\Model\CmsPageUrlRewriteGenerator;
 use Magento\Store\Model\StoreManagerInterface;
 use Magento\UrlRewrite\Model\UrlPersistInterface;
-use Magento\UrlRewrite\Service\V1\Data\UrlRewrite;
 use N98\Magento\Command\AbstractMagentoCommand;
+use N98\Magento\Command\System\Url\Generator\CategoryGenerator;
+use N98\Magento\Command\System\Url\Generator\CmsPageGenerator;
+use N98\Magento\Command\System\Url\Generator\ProductGenerator;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -18,29 +22,19 @@ use Symfony\Component\Console\Output\OutputInterface;
 class RegenerateCommand extends AbstractMagentoCommand
 {
     /**
-     * @var UrlPersistInterface
-     */
-    protected $urlPersist;
-
-    /**
-     * @var ProductUrlRewriteGenerator
+     * @var ProductGenerator
      */
     protected $productGenerator;
 
     /**
-     * @var CategoryUrlRewriteGenerator
+     * @var CategoryGenerator
      */
     protected $categoryGenerator;
 
     /**
-     * @var ProductCollectionFactory
+     * @var CmsPageGenerator
      */
-    protected $productCollectionFactory;
-
-    /**
-     * @var CategoryCollectionFactory
-     */
-    protected $categoryCollectionFactory;
+    protected $cmsPageGenerator;
 
     /**
      * @var StoreManagerInterface
@@ -51,25 +45,48 @@ class RegenerateCommand extends AbstractMagentoCommand
     {
         $this
             ->setName('sys:url:regenerate')
-            ->setDescription('Regenerate product and category url rewrites')
+            ->setDescription('Regenerate product, category and cms page url rewrites')
             ->addOption('products', null, InputOption::VALUE_OPTIONAL, 'Comma separated product ids', '')
             ->addOption('categories', null, InputOption::VALUE_OPTIONAL, 'Comma separated category ids', '')
-            ->addOption('store', null, InputOption::VALUE_OPTIONAL, 'Store id', 0);
+            ->addOption('cms-pages', null, InputOption::VALUE_OPTIONAL, 'Comma separated cms page ids', '')
+            ->addOption('store', null, InputOption::VALUE_OPTIONAL, 'Store id', 0)
+            ->addOption('all-products', null, InputOption::VALUE_NONE, 'Regenerate all products')
+            ->addOption('all-categories', null, InputOption::VALUE_NONE, 'Regenerate all categories')
+            ->addOption('all-cms-pages', null, InputOption::VALUE_NONE, 'Regenerate all cms pages')
+            ->addOption('batch-size', null, InputOption::VALUE_OPTIONAL, 'Batch size for pagination', 100);
     }
 
     public function inject(
         UrlPersistInterface $urlPersist,
-        ProductUrlRewriteGenerator $productGenerator,
-        CategoryUrlRewriteGenerator $categoryGenerator,
+        ProductUrlRewriteGenerator $productUrlRewriteGenerator,
+        CategoryUrlRewriteGenerator $categoryUrlRewriteGenerator,
+        CmsPageUrlRewriteGenerator $cmsPageUrlRewriteGenerator,
         ProductCollectionFactory $productCollectionFactory,
         CategoryCollectionFactory $categoryCollectionFactory,
+        CmsPageCollectionFactory $cmsPageCollectionFactory,
         StoreManagerInterface $storeManager
     ) {
-        $this->urlPersist = $urlPersist;
-        $this->productGenerator = $productGenerator;
-        $this->categoryGenerator = $categoryGenerator;
-        $this->productCollectionFactory = $productCollectionFactory;
-        $this->categoryCollectionFactory = $categoryCollectionFactory;
+        $this->productGenerator = new ProductGenerator(
+            $urlPersist,
+            $storeManager,
+            $productUrlRewriteGenerator,
+            $productCollectionFactory
+        );
+
+        $this->categoryGenerator = new CategoryGenerator(
+            $urlPersist,
+            $storeManager,
+            $categoryUrlRewriteGenerator,
+            $categoryCollectionFactory
+        );
+
+        $this->cmsPageGenerator = new CmsPageGenerator(
+            $urlPersist,
+            $storeManager,
+            $cmsPageUrlRewriteGenerator,
+            $cmsPageCollectionFactory
+        );
+
         $this->storeManager = $storeManager;
     }
 
@@ -85,78 +102,58 @@ class RegenerateCommand extends AbstractMagentoCommand
 
         $productIds = array_filter(array_map('intval', explode(',', (string) $input->getOption('products'))));
         $categoryIds = array_filter(array_map('intval', explode(',', (string) $input->getOption('categories'))));
+        $cmsPageIds = array_filter(array_map('intval', explode(',', (string) $input->getOption('cms-pages'))));
+        $batchSize = (int) $input->getOption('batch-size');
+
+        // Set batch size for pagination
+        $this->productGenerator->setBatchSize($batchSize);
+        $this->categoryGenerator->setBatchSize($batchSize);
+        $this->cmsPageGenerator->setBatchSize($batchSize);
 
         $count = 0;
         foreach ($stores as $id) {
+            // Regenerate specific categories if IDs are provided
             if ($input->getOption('categories') !== '') {
-                $count += $this->regenerateCategories($categoryIds, $id, $output);
+                $count += $this->categoryGenerator->regenerate($categoryIds, $id, $output);
             }
+
+            // Regenerate all categories if --all-categories option is set
+            if ($input->getOption('all-categories')) {
+                if ($output->isVerbose()) {
+                    $output->writeln('<info>Regenerating all categories...</info>');
+                }
+                $count += $this->categoryGenerator->regenerateAll($id, $output);
+            }
+
+            // Regenerate specific products if IDs are provided
             if ($input->getOption('products') !== '') {
-                $count += $this->regenerateProducts($productIds, $id, $output);
+                $count += $this->productGenerator->regenerate($productIds, $id, $output);
+            }
+
+            // Regenerate all products if --all-products option is set
+            if ($input->getOption('all-products')) {
+                if ($output->isVerbose()) {
+                    $output->writeln('<info>Regenerating all products...</info>');
+                }
+                $count += $this->productGenerator->regenerateAll($id, $output);
+            }
+
+            // Regenerate specific CMS pages if IDs are provided
+            if ($input->getOption('cms-pages') !== '') {
+                $count += $this->cmsPageGenerator->regenerate($cmsPageIds, $id, $output);
+            }
+
+            // Regenerate all CMS pages if --all-cms-pages option is set
+            if ($input->getOption('all-cms-pages')) {
+                if ($output->isVerbose()) {
+                    $output->writeln('<info>Regenerating all CMS pages...</info>');
+                }
+                $count += $this->cmsPageGenerator->regenerateAll($id, $output);
             }
         }
 
         $output->writeln(sprintf('<info>Generated %d url rewrites</info>', $count));
 
         return Command::SUCCESS;
-    }
-
-    private function regenerateCategories(array $categoryIds, $storeId, OutputInterface $output)
-    {
-        $collection = $this->categoryCollectionFactory->create();
-        $collection->setStoreId($storeId);
-        $collection->addAttributeToSelect(['name', 'url_path', 'url_key', 'path']);
-        if ($categoryIds) {
-            $collection->addAttributeToFilter('entity_id', ['in' => $categoryIds]);
-        }
-
-        $counter = 0;
-        foreach ($collection as $category) {
-            $output->writeln(sprintf('Regenerating category %s (%s)', $category->getName(), $category->getId()));
-            $this->urlPersist->deleteByData([
-                UrlRewrite::ENTITY_ID => $category->getId(),
-                UrlRewrite::ENTITY_TYPE => CategoryUrlRewriteGenerator::ENTITY_TYPE,
-                UrlRewrite::REDIRECT_TYPE => 0,
-                UrlRewrite::STORE_ID => $storeId,
-            ]);
-            $urls = $this->categoryGenerator->generate($category);
-            $urls = array_filter($urls, function ($url) {
-                return !empty($url->getRequestPath());
-            });
-            $this->urlPersist->replace($urls);
-            $counter += count($urls);
-        }
-
-        return $counter;
-    }
-
-    private function regenerateProducts(array $productIds, $storeId, OutputInterface $output)
-    {
-        $collection = $this->productCollectionFactory->create();
-        $collection->setStoreId($storeId);
-        $collection->addStoreFilter($storeId);
-        $collection->addAttributeToSelect('name');
-        if ($productIds) {
-            $collection->addIdFilter($productIds);
-        }
-
-        $counter = 0;
-        foreach ($collection as $product) {
-            $output->writeln(sprintf('Regenerating product %s (%s)', $product->getSku(), $product->getId()));
-            $this->urlPersist->deleteByData([
-                UrlRewrite::ENTITY_ID => $product->getId(),
-                UrlRewrite::ENTITY_TYPE => ProductUrlRewriteGenerator::ENTITY_TYPE,
-                UrlRewrite::REDIRECT_TYPE => 0,
-                UrlRewrite::STORE_ID => $storeId,
-            ]);
-            $urls = $this->productGenerator->generate($product);
-            $urls = array_filter($urls, function ($url) {
-                return !empty($url->getRequestPath());
-            });
-            $this->urlPersist->replace($urls);
-            $counter += count($urls);
-        }
-
-        return $counter;
     }
 }
