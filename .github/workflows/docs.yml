@@ -21,12 +21,13 @@ jobs:
           node-version: '22'
       - name: Install dependencies
         run: npm ci
+      - name: Create .env file
+        run: |
+          echo "MEILISEARCH_URL=${{ secrets.MEILISEARCH_URL }}" > .env
+          echo "MEILISEARCH_API_KEY=${{ secrets.MEILISEARCH_API_KEY }}" >> .env
+          echo "MEILISEARCH_INDEX_UID=${{ secrets.MEILISEARCH_INDEX_UID }}" >> .env
       - name: Build website
         run: npm run build
-        env:
-          MEILISEARCH_URL: ${{ secrets.MEILISEARCH_URL }}
-          MEILISEARCH_API_KEY: ${{ secrets.MEILISEARCH_API_KEY }}
-          MEILISEARCH_INDEX_UID: ${{ secrets.MEILISEARCH_INDEX_UID }}
       - name: Upload Build Artifact
         uses: actions/upload-pages-artifact@v3
         with:
