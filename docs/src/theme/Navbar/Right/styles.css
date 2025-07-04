@@ -1,0 +1,5 @@
+/* Styles for the navbar right section */
+.navbar__right-wrapper {
+  display: flex;
+  align-items: center;
+}
