@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
+import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import docsearch from 'meilisearch-docsearch'
 import 'meilisearch-docsearch/css'
 import './styles.css'
@@ -44,6 +45,7 @@ export default function SearchBar () {
   const [searchInitialized, setSearchInitialized] = useState(false)
   const [initializationError, setInitializationError] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const {siteConfig} = useDocusaurusContext();
 
   useEffect(() => {
     // Only run on client-side
@@ -61,11 +63,10 @@ export default function SearchBar () {
 
             // Initialize Meilisearch with the directly imported docsearch function
             const destroy = docsearch({
-              host: 'https://meilisearch.muench.dev',
-              apiKey: 'd0e5e73058f4dbcfe8412dec11e83662b1e629ca9dc7c4c7b803de1a97dce308',
-              indexUid: 'n98-magerun2-docs',
+              host: `${siteConfig.customFields.meilisearchUrl}`,
+              apiKey: `${siteConfig.customFields.meilisearchApiKey}`,
+              indexUid: `${siteConfig.customFields.meilisearchIndexUid}`,
               container: '#docsearch',
-              debug: true
             })
 
             destroyRef.current = destroy
@@ -193,7 +194,7 @@ export default function SearchBar () {
           <FallbackSearchButton />
         </div>
       ) : (
-        <div ref={docsearchRef} id='docsearch' className='search-bar'></div>
+        <div ref={docsearchRef} id='docsearch' className='search-bar' />
       )}
       {isModalOpen && (
         <div className='fallback-search-modal'>
