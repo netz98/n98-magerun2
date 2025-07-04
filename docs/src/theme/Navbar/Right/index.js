@@ -4,7 +4,7 @@ import './styles.css'
 
 export default function NavbarRightWrapper (props) {
   return (
-    <div className='navbar__right-wrapper'>
+    <div className='navbar-right-wrapper'>
       <NavbarRight {...props} />
     </div>
   )
