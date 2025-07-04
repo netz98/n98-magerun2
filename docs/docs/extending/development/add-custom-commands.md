@@ -16,7 +16,7 @@ There are three locations where you can register your custom commands:
 - **Module Config**: `%module%/etc/n98-magerun2.yaml`
   This is the **recommended way** to register commands in a module. The `%module%` variable will be replaced with the module name, allowing you to keep your commands organized within your module's structure.
    For more details, see the [Modules documentation](../modules/index.md).
-   Modules are the most flexible way to add commands, as they can be easily shared and reused across different projects. Modules can be placed under different directories. See [Module Location](../modules/index.md#module-location) for more details.
+   Modules are the most flexible way to add commands, as they can be easily shared and reused across different projects. Modules can be placed under different directories. See [Module Location](../modules/module-location) for more details.
 
 ## Config
 
