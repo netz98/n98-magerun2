@@ -1,11 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react'
-import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
+import useDocusaurusContext from '@docusaurus/useDocusaurusContext'
 import docsearch from 'meilisearch-docsearch'
 import 'meilisearch-docsearch/css'
 import './styles.css'
 
 // Fallback search button component
-function FallbackSearchButton () {
+function FallbackSearchButton() {
   const [isModalOpen, setIsModalOpen] = useState(false)
 
   const openSearchModal = () => {
@@ -39,13 +39,13 @@ function FallbackSearchButton () {
   )
 }
 
-export default function SearchBar () {
+export default function SearchBar() {
   const docsearchRef = useRef(null)
   const destroyRef = useRef(null)
   const [searchInitialized, setSearchInitialized] = useState(false)
   const [initializationError, setInitializationError] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const {siteConfig} = useDocusaurusContext();
+  const { siteConfig } = useDocusaurusContext()
 
   useEffect(() => {
     // Only run on client-side
