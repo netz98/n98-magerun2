@@ -32,13 +32,22 @@
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s ease;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 5px rgb(0 0 0 / 10%);
 }
 
 #docsearch button:hover {
   background-color: var(--ifm-color-primary-darker);
   border-color: var(--ifm-color-primary-darker);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 2px 8px rgb(0 0 0 / 15%);
+}
+
+.meilisearch-autocomplete-wrapper button {
+  display: flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  position: relative !important;
+  z-index: 10 !important;
+  pointer-events: auto !important;
 }
 
 /* Add a search icon if button has no content */
@@ -53,7 +62,7 @@
 }
 
 /* Ensure Algolia-specific styles are visible */
-.DocSearch-Button {
+.docsearch-button {
   display: flex !important;
 }
 
@@ -65,7 +74,7 @@
 /* Force the search button to be visible */
 #docsearch button,
 .meilisearch-docsearch-button,
-.meilisearch-autocomplete__wrapper button {
+.meilisearch-autocomplete-wrapper button {
   display: flex !important;
   visibility: visible !important;
   opacity: 1 !important;
@@ -89,13 +98,13 @@
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s ease;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 5px rgb(0 0 0 / 10%);
 }
 
 .fallback-search-button:hover {
   background-color: var(--ifm-color-primary-darker);
   border-color: var(--ifm-color-primary-darker);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 2px 8px rgb(0 0 0 / 15%);
 }
 
 /* Styles for the fallback search modal */
@@ -108,9 +117,9 @@
   color: #dc2626; /* Red color for error message */
   padding: 12px 20px;
   border-radius: 4px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 12px rgb(0 0 0 / 15%);
   z-index: 1000;
-  animation: fadeIn 0.3s ease;
+  animation: fade-in 0.3s ease;
 }
 
 [data-theme='dark'] .fallback-search-modal {
@@ -118,7 +127,13 @@
   color: #fca5a5; /* Lighter red for dark mode */
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: translate(-50%, -10px); }
-  to { opacity: 1; transform: translate(-50%, 0); }
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -10px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
 }
