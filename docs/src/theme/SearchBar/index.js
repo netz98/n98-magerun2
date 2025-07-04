@@ -5,7 +5,7 @@ import 'meilisearch-docsearch/css'
 import './styles.css'
 
 // Fallback search button component
-function FallbackSearchButton() {
+function FallbackSearchButton () {
   const [isModalOpen, setIsModalOpen] = useState(false)
 
   const openSearchModal = () => {
@@ -39,7 +39,7 @@ function FallbackSearchButton() {
   )
 }
 
-export default function SearchBar() {
+export default function SearchBar () {
   const docsearchRef = useRef(null)
   const destroyRef = useRef(null)
   const [searchInitialized, setSearchInitialized] = useState(false)
@@ -66,7 +66,7 @@ export default function SearchBar() {
               host: `${siteConfig.customFields.meilisearchUrl}`,
               apiKey: `${siteConfig.customFields.meilisearchApiKey}`,
               indexUid: `${siteConfig.customFields.meilisearchIndexUid}`,
-              container: '#docsearch',
+              container: '#docsearch'
             })
 
             destroyRef.current = destroy
@@ -189,13 +189,15 @@ export default function SearchBar() {
 
   return (
     <div className='search-bar-container'>
-      {initializationError ? (
-        <div className='search-bar-fallback'>
-          <FallbackSearchButton />
-        </div>
-      ) : (
-        <div ref={docsearchRef} id='docsearch' className='search-bar' />
-      )}
+      {initializationError
+        ? (
+          <div className='search-bar-fallback'>
+            <FallbackSearchButton />
+          </div>
+          )
+        : (
+          <div ref={docsearchRef} id='docsearch' className='search-bar' />
+          )}
       {isModalOpen && (
         <div className='fallback-search-modal'>
           Search is currently unavailable. Please try again later.
