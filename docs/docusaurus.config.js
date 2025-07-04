@@ -27,7 +27,7 @@ const config = {
   customFields: {
     meilisearchUrl: process.env.MEILISEARCH_URL || '',
     meilisearchApiKey: process.env.MEILISEARCH_API_KEY || '',
-    meilisearchIndexUid: process.env.MEILISEARCH_INDEX_UID || 'n98-magerun2-docs',
+    meilisearchIndexUid: process.env.MEILISEARCH_INDEX_UID || 'n98-magerun2-docs'
   },
   themes: ['@docusaurus/theme-mermaid'],
   themeConfig: {
