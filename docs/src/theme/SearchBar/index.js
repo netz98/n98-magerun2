@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext'
-import docsearch from 'meilisearch-docsearch'
 import 'meilisearch-docsearch/css'
 import './styles.css'
 
@@ -60,6 +59,8 @@ export default function SearchBar () {
 
             // Force the container to be empty
             docsearchRef.current.innerHTML = ''
+
+            const docsearch = require('meilisearch-docsearch').default
 
             // Initialize Meilisearch with the directly imported docsearch function
             const destroy = docsearch({
