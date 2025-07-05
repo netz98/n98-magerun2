@@ -39,11 +39,11 @@ jobs:
       - name: Run Scrapix Scraper
         uses: addnab/docker-run-action@v3
         with:
-          image: docker://getmeili/scrapix:v0.2.1
+          image: getmeili/scrapix:v0.2.1
           options: -v ./config.json:/app/config.json
           run: >-
             yarn start:prod
-            -p /github/workspace/scraper/config.json
+            -p /app/config.json
             -b /usr/bin/google-chrome
             --silent
         env:
