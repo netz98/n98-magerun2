@@ -41,7 +41,7 @@ jobs:
         uses: addnab/docker-run-action@v3
         with:
           image: docker://getmeili/scrapix:v0.2.1
-          options: -v config.json:/app/config.json
+          options: -v ./config.json:/app/config.json
           run: >-
             yarn start:prod
             -p /github/workspace/scraper/config.json
