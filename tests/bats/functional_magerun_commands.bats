@@ -572,6 +572,14 @@ function cleanup_files_in_magento() {
 }
 
 # ============================================
+# Command: dev:di:plugin:list
+# ============================================
+@test "Command: dev:di:plugin:list" {
+  run $BIN "dev:di:plugin:list" "Magento\\Catalog\\Api\\ProductRepositoryInterface"
+  assert_output --partial "remove_images_from_gallery_after_removing_product"
+}
+
+# ============================================
 # Command: dev:di:preference:list
 # ============================================
 
