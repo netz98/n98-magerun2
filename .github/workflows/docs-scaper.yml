@@ -1,0 +1,48 @@
+name: Run Scraper for Documentation Search
+
+on:
+  workflow_dispatch:
+
+jobs:
+  run-scraper:
+    runs-on: ubuntu-latest
+
+    # Scrapix uses a queue, so we start a Redis container as a service for the job.
+    services:
+      redis:
+        image: redis:7-alpine
+        # Healthcheck ensures Redis is ready before the scraper tries to connect.
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Create config.json from template
+        # This step assumes your template is in a 'scraper' subdirectory.
+        working-directory: ./.github/workflows/scraper
+        env:
+          MEILISEARCH_URL: ${{ secrets.MEILISEARCH_URL }}
+          MEILISEARCH_INDEX_API_KEY: ${{ secrets.MEILISEARCH_INDEX_API_KEY }}
+          MEILISEARCH_INDEX_UID: ${{ secrets.MEILISEARCH_INDEX_UID }}
+        run: |
+          envsubst < magerun_docs_config.template.json > config.json
+          echo "config.json successfully generated."
+
+      - name: Run Scrapix Scraper
+        uses: addnab/docker-run-action@v3
+        with:
+          image: docker://getmeili/scrapix:v0.2.1
+          options: -v ${{ github.workspace }}:/.github/scraper/config.json:/app/config.json
+          run: >-
+            yarn start:prod
+            -p /github/workspace/scraper/config.json
+            -b /usr/bin/google-chrome
+            --silent
+        env:
+          # The scraper connects to the Redis service container started for this job.
+          QUEUE_URL: redis://redis:6379
