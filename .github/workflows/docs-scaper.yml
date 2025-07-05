@@ -24,7 +24,7 @@ jobs:
 
       - name: Create config.json from template
         # This step assumes your template is in a 'scraper' subdirectory.
-        working-directory: ./.github/workflows/scraper
+        working-directory: .github/scraper
         env:
           MEILISEARCH_URL: ${{ secrets.MEILISEARCH_URL }}
           MEILISEARCH_INDEX_API_KEY: ${{ secrets.MEILISEARCH_INDEX_API_KEY }}
