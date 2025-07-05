@@ -1,0 +1,8 @@
+{
+  "meilisearch_url": "${MEILISEARCH_URL}",
+  "meilisearch_api_key": "${MEILISEARCH_INDEX_API_KEY}",
+  "meilisearch_index_uid": "${MEILISEARCH_INDEX_UID}",
+  "start_urls": ["https://netz98.github.io/n98-magerun2/"],
+  "strategy": "docssearch",
+  "headless": true
+}
