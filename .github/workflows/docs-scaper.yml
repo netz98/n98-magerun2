@@ -3,6 +3,11 @@ name: Run Scraper for Documentation Search
 on:
   workflow_dispatch:
 
+defaults:
+  run:
+    shell: bash
+    working-directory: ${{ github.workspace }}/.github/scraper
+
 jobs:
   run-scraper:
     runs-on: ubuntu-latest
@@ -24,7 +29,6 @@ jobs:
 
       - name: Create config.json from template
         # This step assumes your template is in a 'scraper' subdirectory.
-        working-directory: ${{ github.workspace }}/.github/scraper
         env:
           MEILISEARCH_URL: ${{ secrets.MEILISEARCH_URL }}
           MEILISEARCH_INDEX_API_KEY: ${{ secrets.MEILISEARCH_INDEX_API_KEY }}
@@ -37,7 +41,7 @@ jobs:
         uses: addnab/docker-run-action@v3
         with:
           image: docker://getmeili/scrapix:v0.2.1
-          options: -v ${{ github.workspace }}/.github/scraper/config.json:/app/config.json
+          options: -v config.json:/app/config.json
           run: >-
             yarn start:prod
             -p /github/workspace/scraper/config.json
