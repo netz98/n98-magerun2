@@ -6,7 +6,7 @@ on:
 defaults:
   run:
     shell: bash
-    working-directory: ${{ github.workspace }}/.github/scraper
+    working-directory: .github/scraper
 
 jobs:
   run-scraper:
