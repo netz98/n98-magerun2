@@ -1,6 +1,6 @@
 ---
-title: Extending composer:redeploy-base-packages Command
-sidebar_label: Extending composer:redeploy-base-packages
+title: Extend composer:redeploy-base-packages Command
+sidebar_label: Extend composer:redeploy-base-packages Command
 ---
 
 # Extending the composer:redeploy-base-packages Command
