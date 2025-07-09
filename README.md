@@ -59,6 +59,7 @@ For full installation, usage, development, and contribution guidelines, please v
 | [admin](https://netz98.github.io/n98-magerun2/command-docs/admin/)           | Commands for managing Magento admin user accounts and related settings.     | `admin:user:list`, `admin:user:create`, `admin:user:change-password`, `admin:notifications` |
 | [cache](https://netz98.github.io/n98-magerun2/command-docs/cache/)           | Commands for interacting with and managing Magento's various cache systems. | `cache:clean`, `cache:disable`, `cache:enable`, `cache:flush`, `cache:list`                 |
 | [config](https://netz98.github.io/n98-magerun2/command-docs/config/)         | Commands for managing Magento store configurations and environment settings.  | `config:store:get`, `config:store:set`, `config:env:set`, `config:search`                   |
+| [composer](https://netz98.github.io/n98-magerun2/command-docs/composer/)     | Commands for managing Composer-related tasks and package deployment.      | `composer:redeploy-base-packages`                                                           |
 | [customer](https://netz98.github.io/n98-magerun2/command-docs/customer/)     | Commands for managing Magento customer accounts.                            | `customer:create`, `customer:list`, `customer:info`, `customer:change-password`             |
 | [db](https://netz98.github.io/n98-magerun2/command-docs/db/)                 | Commands for database operations such as dumps, imports, and queries.       | `db:dump`, `db:import`, `db:query`, `db:create`, `db:info`                                  |
 | [dev](https://netz98.github.io/n98-magerun2/command-docs/development/)       | Commands tailored for Magento developers, including code generation and debugging tools. | `dev:module:create`, `dev:console`, `dev:translate:admin`, `dev:theme:list`                 |
@@ -72,6 +73,7 @@ For full installation, usage, development, and contribution guidelines, please v
 | [routes](https://netz98.github.io/n98-magerun2/command-docs/routes/)         | Commands for managing and viewing Magento routes.                                  | `routes:list`                                                                               |
 | [script](https://netz98.github.io/n98-magerun2/command-docs/scripting/)      | Command for running sequences of n98-magerun2 commands from a file.       | `script`                                                                                    |
 | [sys](https://netz98.github.io/n98-magerun2/command-docs/sys/)               | Commands for system-level information, checks, and maintenance tasks.     | `sys:info`, `sys:check`, `sys:maintenance`, `sys:cron:list`, `sys:store:list`               |
+
 
 
 ## License
