@@ -1,16 +1,15 @@
 RECENT CHANGES
 ==============
 
-9.0.2
------
+9.1.0 (unreleased)
+------------------
 
-- fix: excluded tables were dumped as structure if --strip option was used (issue #1731)
+- Add: --check option in dev:module:detect-composer-dependencies command (issue #1727)
 
 9.0.1
 -----
 
 - fix: phar file had to re-create, due to a release issue
-- Add: --check option in dev:module:detect-composer-dependencies command (issue #1727)
 
 9.0.0
 -----
