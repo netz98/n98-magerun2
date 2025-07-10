@@ -43,8 +43,9 @@ class DetectComposerDependenciesCommand extends AbstractMagentoCommand
     protected function configure(): void
     {
         $this->setName('dev:module:detect-composer-dependencies')
-            ->addArgument('path', InputArgument::IS_ARRAY|InputArgument::REQUIRED, 'Path to modules')
+            ->addArgument('path', InputArgument::IS_ARRAY | InputArgument::REQUIRED, 'Path to modules')
             ->addOption('only-missing', null, InputOption::VALUE_NONE, 'Print only missing dependencies.')
+            ->addOption('check', null, InputOption::VALUE_NONE, 'Return exit code 1 if dependencies are missing.')
             ->setDescription(
                 'This command will search for any soft and hard dependencies '
                 . 'for the Magento 2 modules in the given paths and will generate a list of ' .
@@ -83,10 +84,15 @@ class DetectComposerDependenciesCommand extends AbstractMagentoCommand
 
         $foundModules = $this->getModulesInModulePath($input->getArgument('path'));
 
+        $totalMissing = 0;
         foreach ($foundModules as $foundModuleName => $foundModulePath) {
             $this->writeSection($output, 'Module: ' . $foundModuleName);
             $output->writeln(sprintf("<info>Directory: </info><comment>%s</comment>\n", $foundModulePath));
-            $this->analyseModule($input, $output, $foundModulePath, $projectPsr4Namespaces);
+            $totalMissing += $this->analyseModule($input, $output, $foundModulePath, $projectPsr4Namespaces);
+        }
+
+        if ($input->getOption('check') && $totalMissing > 0) {
+            return Command::FAILURE;
         }
 
         return Command::SUCCESS;
@@ -131,14 +137,14 @@ class DetectComposerDependenciesCommand extends AbstractMagentoCommand
      * @param \Symfony\Component\Console\Output\OutputInterface $output
      * @param string $modulePath
      * @param array $projectPsr4Namespaces
-     * @return void
+     * @return int Number of missing dependencies
      */
     private function analyseModule(
         InputInterface $input,
         OutputInterface $output,
         string $modulePath,
         array $projectPsr4Namespaces
-    ) {
+    ) : int {
         $moduleFiles = $this->getModuleFiles($modulePath);
 
         if (isset($moduleFiles['composer.json'])) {
@@ -197,6 +203,8 @@ class DetectComposerDependenciesCommand extends AbstractMagentoCommand
                 . 'composer.json look good, no change needed</info>'
             );
         }
+
+        return count($difference);
     }
 
     /**
