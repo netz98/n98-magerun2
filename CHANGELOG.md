@@ -10,6 +10,7 @@ RECENT CHANGES
 -----
 
 - fix: phar file had to re-create, due to a release issue
+- Add: --check option in dev:module:detect-composer-dependencies command (issue #1727)
 
 9.0.0
 -----
