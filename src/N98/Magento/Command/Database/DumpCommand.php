@@ -550,20 +550,26 @@ HELP;
     private function excludeTables(InputInterface $input, OutputInterface $output)
     {
         $excludeTables = [];
+        $includeTables = [];
+        $database = $this->getDatabaseHelper();
 
         if ($input->getOption('include')) {
-            $database = $this->getDatabaseHelper();
             $includeTables = $this->resolveDatabaseTables($input->getOption('include'));
-            $excludeTables = array_diff($database->getTables(), $includeTables);
         }
 
         if ($input->getOption('exclude')) {
-            $excludeTables = array_merge($excludeTables, $this->resolveDatabaseTables($input->getOption('exclude')));
-            if (isset($includeTables)) { // only needed when also "include" was given
+            $excludeTables = array_merge(
+                $excludeTables,
+                $this->resolveDatabaseTables($input->getOption('exclude'))
+            );
+            if ($includeTables) { // include takes precedence over exclude
                 asort($excludeTables);
                 $excludeTables = array_unique($excludeTables);
                 $excludeTables = array_diff($excludeTables, $includeTables);
             }
+        } elseif ($includeTables) {
+            // include without explicit exclude means only dump the included tables
+            $excludeTables = array_diff($database->getTables(), $includeTables);
         }
 
         if ($excludeTables && $this->nonCommandOutput($input)) {

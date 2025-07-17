@@ -52,6 +52,7 @@ n98-magerun2.phar db:dump [options] [--] [<filename>]
 | `--no-views`                        | Exclude all views from the dump. This overrides any other view inclusion.                                                            |
 | `--zstd-level[=ZSTD-LEVEL]`         | ZSTD compression level. (default: `10`)                                                                                              |
 | `--zstd-extra-args[=ZSTD-EXTRA-ARGS]` | Custom extra options for zstd.                                                                                                       |
+If a table matches both `--exclude` and `--include`, the include rule wins and the table is dumped.
 
 (For a full list of strip table groups and other options, use `n98-magerun2.phar help db:dump`)
 
