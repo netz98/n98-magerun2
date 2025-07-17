@@ -215,6 +215,30 @@ class DumpCommandTest extends TestCase
         $this->assertDoesNotMatchRegularExpression('/--no-data .*core_config_data/', $display);
     }
 
+    public function testWithIncludeExcludeStripOptions()
+    {
+        $input = [
+            'command'        => 'db:dump',
+            '--add-time'     => true,
+            '--only-command' => true,
+            '--force'        => true,
+            '--include'      => 'admin_user',
+            '--exclude'      => 'admin_*',
+            '--strip'        => '@development',
+        ];
+
+        $dbConfig = $this->getDatabaseConnection()->getConfig();
+        $db = $dbConfig['dbname'];
+
+        $tester = new MagerunCommandTester($this, $input);
+        $display = $tester->getDisplay();
+
+        $this->assertStringContainsString("--ignore-table=$db.admin_passwords", $display);
+        $this->assertStringNotContainsString("--ignore-table=$db.admin_user", $display);
+        $this->assertMatchesRegularExpression('/--no-data=(\'|\")?' . $db . '\\.admin_user(\'|\")?/', $display);
+        $this->assertDoesNotMatchRegularExpression('/--no-data=(\'|\")?' . $db . '\\.admin_passwords(\'|\")?/', $display);
+    }
+
     public function testExecuteWithMydumper()
     {
         if (OperatingSystem::isProgramInstalled('mydumper') === false) {

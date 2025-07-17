@@ -562,6 +562,7 @@ HELP;
             if (isset($includeTables)) { // only needed when also "include" was given
                 asort($excludeTables);
                 $excludeTables = array_unique($excludeTables);
+                $excludeTables = array_diff($excludeTables, $includeTables);
             }
         }
 
