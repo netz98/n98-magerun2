@@ -5,6 +5,7 @@ RECENT CHANGES
 ------------------
 
 - Add: --check option in dev:module:detect-composer-dependencies command (issue #1727)
+- Fix: excluded tables were dumped as structure if --strip option was used (issue #1731)
 
 9.0.1
 -----
