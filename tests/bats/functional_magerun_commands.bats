@@ -492,8 +492,10 @@ function cleanup_files_in_magento() {
   run $BIN "db:dump" --stdout --strip=@development
   assert [ "$status" -eq 0 ]
 }
-
-
+@test "Command: db:dump with --strip and --only-command" {
+  run $BIN "db:dump" --strip=@development --only-command db.sql
+  assert [ "$status" -eq 0 ]
+}
 #@test "Command: db:dump fails with invalid credentials" {
 #  cp $N98_MAGERUN2_TEST_MAGENTO_ROOT/app/etc/env.php $N98_MAGERUN2_TEST_MAGENTO_ROOT/app/etc/env.php.bak
 #  sed -i "s/username' => '[^']*'/username' => 'invaliduser'/g" $N98_MAGERUN2_TEST_MAGENTO_ROOT/app/etc/env.php
