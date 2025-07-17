@@ -3,6 +3,7 @@
 namespace N98\Magento\Command\Database;
 
 use N98\Magento\Command\TestCase;
+use N98\Magento\MagerunCommandTester;
 use N98\Util\OperatingSystem;
 
 /**
@@ -185,6 +186,27 @@ class DumpCommandTest extends TestCase
         $this->assertDisplayNotContains($input, "--ignore-table=$db.customer_address_entity");
         $this->assertDisplayContains($input, "--ignore-table=$db.admin_user");
         $this->assertDisplayContains($input, "--ignore-table=$db.catalog_product_entity");
+    }
+
+    public function testWithExcludeStripOptions()
+    {
+        $input = [
+            'command'        => 'db:dump',
+            '--add-time'     => true,
+            '--only-command' => true,
+            '--force'        => true,
+            '--exclude'      => 'core_config_data',
+            '--strip'        => '@development',
+        ];
+
+        $dbConfig = $this->getDatabaseConnection()->getConfig();
+        $db = $dbConfig['dbname'];
+
+        $tester = new MagerunCommandTester($this, $input);
+        $display = $tester->getDisplay();
+
+        $this->assertStringContainsString("--ignore-table=$db.core_config_data", $display);
+        $this->assertDoesNotMatchRegularExpression('/--no-data .*core_config_data/', $display);
     }
 
     public function testExecuteWithMydumper()
