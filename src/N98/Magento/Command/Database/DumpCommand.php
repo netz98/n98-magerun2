@@ -406,6 +406,7 @@ HELP;
         $excludeTablesUserInput = $this->excludeTables($input, $output); // Unprefixed
         $includeTablesUserInput = $this->includeTables($input, $output); // Unprefixed
         $stripTablesUserInput = $this->stripTables($input, $output);     // Unprefixed
+        $stripTablesUserInput = array_diff($stripTablesUserInput, $excludeTablesUserInput);
 
         // Filter out any tables that should be excluded entirely
         // This ensures tables matching exclude patterns (like admin_*) are not included in structure dump
