@@ -405,6 +405,7 @@ HELP;
 
         $excludeTablesUserInput = $this->excludeTables($input, $output); // Unprefixed
         $stripTablesUserInput = $this->stripTables($input, $output);     // Unprefixed
+        $stripTablesUserInput = array_diff($stripTablesUserInput, $excludeTablesUserInput);
 
         // Structure dump part (for stripped tables)
         $tablesForStructureDump = $stripTablesUserInput;
