@@ -229,4 +229,25 @@ class DumpCommandTest extends TestCase
         $this->assertDisplayContains($input, 'core_config_data');
         $this->assertDisplayNotContains($input, "not_existing_table_1");
     }
+
+    public function testWithIncludeExcludeOptions()
+    {
+        $input = [
+            'command'        => 'db:dump',
+            '--add-time'     => true,
+            '--only-command' => true,
+            '--force'        => true,
+            '--include'      => 'admin_user',
+            '--exclude'      => 'admin_user',
+        ];
+
+        $dbConfig = $this->getDatabaseConnection()->getConfig();
+        $db = $dbConfig['dbname'];
+
+        // in the structure dump should be the table name explicitly listed
+        $this->assertDisplayContains($input, "admin_user");
+
+        // The table should be included, even though it is also excluded
+        $this->assertDisplayNotContains($input, "--ignore-table=$db.admin_user ");
+    }
 }
