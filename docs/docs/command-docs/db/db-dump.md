@@ -62,6 +62,42 @@ By default, `db:dump` includes views if their underlying tables are dumped or if
 *   `--views`: This option can be used to explicitly state that views should be included. Since views are generally included by default if not otherwise excluded (e.g., by a specific table exclusion pattern that happens to match a view name, or by `--no-views`), this option is mainly for clarity or to ensure views are included if a very broad exclusion pattern might accidentally exclude them.
 *   `--no-views`: This option ensures that **no views** are included in the dump. Their definitions will not be present in the SQL file. This option takes precedence over any other rules that might otherwise include a view (e.g., if a view name matches an `--include` pattern or is part of a table list provided for the dump).
 
+## Table Inclusion and Exclusion
+
+The `db:dump` command provides fine-grained control over which tables are included in or excluded from the database dump using the `--include` and `--exclude` options:
+
+- `--include=INCLUDE` (or `-i`): Only the specified tables will be included in the dump. You can specify multiple tables by repeating the option or providing a comma-separated list. Wildcards (`*`, `?`) are supported.
+- `--exclude=EXCLUDE` (or `-e`): The specified tables will be excluded from the dump entirely (structure and data). Multiple tables can be specified, and wildcards are supported.
+
+**Combining `--include` and `--exclude`:**
+
+If both options are used together, the following logic applies:
+
+- The `--include` option first selects the set of tables to be dumped.
+- The `--exclude` option then removes any tables from that set that match its patterns.
+- The result is a dump containing only tables that match `--include`, except those matching `--exclude`—**unless** a table is explicitly listed in `--include`, in which case it will always be included, even if it matches an `--exclude` pattern.
+
+**Examples:**
+
+Include only `admin_user` table, but exclude all tables starting with `admin_`:
+```sh
+n98-magerun2.phar db:dump --include="admin_user" --exclude="admin_*" dump.sql
+```
+
+This will dump the `admin_user` table, even though it matches the `admin_*` exclude pattern, because explicit includes always take precedence over excludes.
+
+For example, this will still include `admin_user`:
+```sh
+n98-magerun2.phar db:dump --include="admin_user" --include="admin_user" --exclude="admin_user" dump.sql
+```
+
+**Note:** Explicitly included tables always take precedence over exclusions.
+
+**Note:**
+- If neither option is provided, all tables are included by default.
+- If only `--exclude` is provided, all tables except those matching the exclude pattern(s) are dumped.
+- If only `--include` is provided, only the specified tables are dumped.
+
 **Examples:**
 
 Dump database without any views:
