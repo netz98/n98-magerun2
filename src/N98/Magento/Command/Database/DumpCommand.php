@@ -404,22 +404,24 @@ HELP;
         $mysqlClientToolConnectionString = $database->getMysqlClientToolConnectionString();
 
         $excludeTablesUserInput = $this->excludeTables($input, $output); // Unprefixed
+        $includeTablesUserInput = $this->includeTables($input, $output); // Unprefixed
         $stripTablesUserInput = $this->stripTables($input, $output);     // Unprefixed
+
+        // Filter out any tables that should be excluded entirely
+        // This ensures tables matching exclude patterns (like admin_*) are not included in structure dump
         $stripTablesUserInput = array_diff($stripTablesUserInput, $excludeTablesUserInput);
 
-        // Structure dump part (for stripped tables)
-        $tablesForStructureDump = $stripTablesUserInput;
+        // Structure dump part (for stripped tables and included tables)
+        $tablesForStructureDump = array_merge($stripTablesUserInput, $includeTablesUserInput);
+        $tablesForStructureDump = array_unique($tablesForStructureDump);
 
         if ($input->getOption('no-views')) {
-            // If --no-views, ensure only actual tables are in the structure dump of stripped tables
             $tablesForStructureDump = array_intersect($tablesForStructureDump, $allActualTables);
         }
-
         $prefixedTablesForStructureDump = [];
         foreach ($tablesForStructureDump as $table) {
             $prefixedTablesForStructureDump[] = $this->prefixTableIfNeeded($table, $dbPrefix);
         }
-
         if ($prefixedTablesForStructureDump) {
             $execs->add(
                 '--no-data ' . $mysqlClientToolConnectionString .
@@ -547,6 +549,29 @@ HELP;
      * @return array
      * @throws FileSystemException
      */
+    private function includeTables(InputInterface $input, OutputInterface $output)
+    {
+        if (!$input->getOption('include')) {
+            return [];
+        }
+
+        $includeTables = $this->resolveDatabaseTables($input->getOption('include'));
+
+        if ($includeTables && $this->nonCommandOutput($input)) {
+            $output->writeln(
+                sprintf('<comment>Included: <info>%s</info></comment>', implode(' ', $includeTables))
+            );
+        }
+
+        return $includeTables;
+    }
+
+    /**
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     * @return array
+     * @throws FileSystemException
+     */
     private function excludeTables(InputInterface $input, OutputInterface $output)
     {
         $excludeTables = [];
@@ -601,7 +626,7 @@ HELP;
         return $input->getOption('keep-definer')
             ? ''
             : ' | LANG=C LC_CTYPE=C LC_ALL=C sed -E '
-              . escapeshellarg('s/DEFINER[ ]*=[ ]*`[^`]+`@`[^`]+`/DEFINER=CURRENT_USER/g');
+            . escapeshellarg('s/DEFINER[ ]*=[ ]*`[^`]+`@`[^`]+`/DEFINER=CURRENT_USER/g');
     }
 
     /**
