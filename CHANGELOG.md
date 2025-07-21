@@ -2,7 +2,7 @@ RECENT CHANGES
 ==============
 
 9.0.2
-------------------
+-----
 
 - fix: excluded tables were dumped as structure if --strip option was used (issue #1731)
 
