@@ -10,7 +10,7 @@ n98-magerun2.phar dev:theme:duplicates <theme> [<originalTheme>] [--log-junit=<p
 | Argument | Description |
 |----------|-------------|
 | `theme` | Your theme |
-| `originalTheme` | Original theme to compare. Default is "base/default" |
+| `originalTheme` | Original theme to compare. Default is "Magento/blank" |
 
 **Options:**
 | Option | Description |

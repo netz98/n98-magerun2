@@ -32,8 +32,8 @@ class DuplicatesCommand extends AbstractMagentoCommand
             ->addArgument(
                 'originalTheme',
                 InputArgument::OPTIONAL,
-                'Original theme to compare. Default is "base/default"',
-                'base/default'
+                'Original theme to compare. Default is "Magento/blank"',
+                'Magento/blank'
             )
             ->addOption(
                 'log-junit',

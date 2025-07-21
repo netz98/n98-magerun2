@@ -23,8 +23,8 @@ class DuplicatesCommandTest extends TestCase
         $commandTester = new CommandTester($command);
         $commandTester->execute([
             'command'       => $command->getName(),
-            'theme'         => 'base/default',
-            'originalTheme' => 'base/default',
+            'theme'         => 'Magento/blank',
+            'originalTheme' => 'Magento/blank',
         ]);
 
         $display = $commandTester->getDisplay();
