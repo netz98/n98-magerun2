@@ -16,18 +16,13 @@ use N98\Magento\Command\TestCase;
  */
 class FlushCommandTest extends TestCase
 {
-    public function testExecuteWithoutMagentoRoot()
+    public function testExecuteWithEmptySandboxDir()
     {
-        $this->assertDisplayContains('test:integration:flush', 'Could not determine Magento root directory');
-    }
-
-    public function testExecuteWithoutIntegrationTests()
-    {
-        $this->assertDisplayContains('test:integration:flush', 'No integration tests directory found');
+        $this->assertDisplayContains('test:integration:flush', 'No sandbox directories found');
     }
 
     public function testExecuteWithForceOption()
     {
-        $this->assertDisplayContains('test:integration:flush --force', 'No integration tests directory found');
+        $this->assertDisplayContains('test:integration:flush --force', 'No sandbox directories found');
     }
 }
