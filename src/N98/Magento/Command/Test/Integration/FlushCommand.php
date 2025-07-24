@@ -45,6 +45,11 @@ class FlushCommand extends AbstractMagentoCommand
         $this->detectMagento($output);
 
         $magentoRoot = $this->getApplication()->getMagentoRootFolder();
+        if (!$magentoRoot || !is_dir($magentoRoot)) {
+            $output->writeln('<error>Could not determine Magento root directory</error>');
+            return Command::FAILURE;
+        }
+
         $integrationTestsPath = $magentoRoot . '/dev/tests/integration';
         
         if (!is_dir($integrationTestsPath)) {
@@ -100,7 +105,7 @@ class FlushCommand extends AbstractMagentoCommand
                         $errors++;
                     }
                 } else {
-                    $output->writeln('<comment>No var folder found in sandbox: <comment>' . $sandboxName . '</comment></comment>');
+                    $output->writeln('<comment>No var folder found in sandbox: ' . $sandboxName . '</comment>');
                 }
             }
         }
