@@ -51,7 +51,7 @@ class FlushCommand extends AbstractMagentoCommand
         }
 
         $integrationTestsPath = $magentoRoot . '/dev/tests/integration';
-        
+
         if (!is_dir($integrationTestsPath)) {
             $output->writeln('<comment>No integration tests directory found at: ' . $integrationTestsPath . '</comment>');
             return Command::SUCCESS;
