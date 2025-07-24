@@ -183,6 +183,7 @@ commands:
     - N98\Magento\Command\Integration\ListCommand
     - N98\Magento\Command\Integration\ShowCommand
     - N98\Magento\Command\Installer\InstallCommand
+    - N98\Magento\Command\Test\Integration\FlushCommand
     - N98\Magento\Command\ScriptCommand
     - N98\Magento\Command\SelfUpdateCommand
     - N98\Magento\Command\Route\ListCommand
