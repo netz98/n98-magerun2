@@ -863,6 +863,22 @@ function cleanup_files_in_magento() {
 }
 
 # ============================================
+# Command: test:integration:flush
+# ============================================
+
+@test "Command: test:integration:flush" {
+  run $BIN "test:integration:flush"
+  assert_success
+  assert_output --partial "No integration tests directory found"
+}
+
+@test "Command: test:integration:flush --force" {
+  run $BIN "test:integration:flush" --force
+  assert_success
+  assert_output --partial "No integration tests directory found"
+}
+
+# ============================================
 # Command: magerun:config:dump
 # ============================================
 
