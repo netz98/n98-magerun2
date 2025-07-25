@@ -65,7 +65,7 @@ HELP;
 
         $duplicates = [];
         foreach ($themeFiles as $themeFilename => $themeFileChecksum) {
-            if (isset($referenceFiles[$themeFilename]) && $themeFileChecksum == $referenceFiles[$themeFilename]) {
+            if (isset($referenceFiles[$themeFilename]) && $themeFileChecksum === $referenceFiles[$themeFilename]) {
                 $duplicates[] = $themeFolder . '/' . $themeFilename;
             }
         }
