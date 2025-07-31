@@ -62,7 +62,7 @@ const config = {
     },
     algolia: {
       appId: process.env.ALGOLIA_APP_ID,
-      apiKey: process.env.ALGOLIA_SEARCH_API_KEY,
+      apiKey: process.env.ALGOLIA_API_KEY,
       indexName: 'netz98io',
       contextualSearch: true,
     },
