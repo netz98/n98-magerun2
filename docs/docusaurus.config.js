@@ -64,7 +64,7 @@ const config = {
       appId: process.env.ALGOLIA_APP_ID,
       apiKey: process.env.ALGOLIA_API_KEY,
       indexName: 'netz98io',
-      contextualSearch: true,
+      contextualSearch: true
     },
     mermaid: {
       theme: { light: 'neutral', dark: 'forest' }
