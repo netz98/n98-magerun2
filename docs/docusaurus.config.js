@@ -24,11 +24,7 @@ const config = {
   markdown: {
     mermaid: true
   },
-  customFields: {
-    meilisearchUrl: process.env.MEILISEARCH_URL || '',
-    meilisearchApiKey: process.env.MEILISEARCH_API_KEY || '',
-    meilisearchIndexUid: process.env.MEILISEARCH_INDEX_UID || 'n98-magerun2-docs'
-  },
+  customFields: {},
   themes: ['@docusaurus/theme-mermaid'],
   themeConfig: {
     navbar: {
@@ -51,6 +47,10 @@ const config = {
           label: 'Commands'
         },
         {
+          type: 'search',
+          position: 'right'
+        },
+        {
           label: 'GitHub',
           href: 'https://github.com/netz98/n98-magerun2'
         },
@@ -59,6 +59,12 @@ const config = {
           href: 'https://netz98.de'
         }
       ]
+    },
+    algolia: {
+      appId: process.env.ALGOLIA_APP_ID,
+      apiKey: process.env.ALGOLIA_SEARCH_API_KEY,
+      indexName: 'netz98io',
+      contextualSearch: true,
     },
     mermaid: {
       theme: { light: 'neutral', dark: 'forest' }
