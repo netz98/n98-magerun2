@@ -23,11 +23,13 @@ jobs:
         run: npm ci
       - name: Create .env file
         run: |
-          echo "MEILISEARCH_URL=${{ secrets.MEILISEARCH_URL }}" > .env
-          echo "MEILISEARCH_API_KEY=${{ secrets.MEILISEARCH_API_KEY }}" >> .env
-          echo "MEILISEARCH_INDEX_UID=${{ secrets.MEILISEARCH_INDEX_UID }}" >> .env
-          echo "ALGOLIA_APP_ID=${{ secrets.ALGOLIA_APP_ID }}" >> .env
-          echo "ALGOLIA_API_KEY=${{ secrets.ALGOLIA_API_KEY }}" >> .env
+          {
+            echo "MEILISEARCH_URL=${{ secrets.MEILISEARCH_URL }}"
+            echo "MEILISEARCH_API_KEY=${{ secrets.MEILISEARCH_API_KEY }}"
+            echo "MEILISEARCH_INDEX_UID=${{ secrets.MEILISEARCH_INDEX_UID }}"
+            echo "ALGOLIA_APP_ID=${{ secrets.ALGOLIA_APP_ID }}"
+            echo "ALGOLIA_API_KEY=${{ secrets.ALGOLIA_API_KEY }}"
+          } > .env
       - name: Build website
         run: npm run build
       - name: Upload Build Artifact
