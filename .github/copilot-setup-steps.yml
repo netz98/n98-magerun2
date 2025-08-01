@@ -1,0 +1,111 @@
+---
+name: Copilot Mage-OS Setup
+
+on:
+  workflow_dispatch:
+
+jobs:
+  setup:
+    name: >-
+      Setup Mage-OS (1.2.0 / PHP 8.3 /
+      MariaDB 10.6 /
+      OpenSearch)
+    runs-on: ubuntu-22.04
+    services:
+      opensearch:
+        image: opensearchproject/opensearch:2
+        env:
+          discovery.type: single-node
+          DISABLE_INSTALL_DEMO_CONFIG: true
+          DISABLE_SECURITY_PLUGIN: true
+        options: >-
+          --health-cmd "curl http://localhost:9200/_cluster/health"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 10
+        ports:
+          - 9200:9200
+
+      mariadb:
+        image: mariadb:10.6
+        env:
+          MARIADB_ROOT_PASSWORD: root
+          MARIADB_DATABASE: magento
+        ports:
+          - 3306
+        options: >-
+          --tmpfs /tmp:rw
+          --tmpfs /var/lib/mysql:rw
+          --health-cmd="mysqladmin ping -h 127.0.0.1 --silent"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
+
+    env:
+      MAGENTO_MARKETPLACE_USERNAME: ${{ secrets.MAGENTO_MARKETPLACE_USERNAME }}
+      MAGENTO_MARKETPLACE_PASSWORD: ${{ secrets.MAGENTO_MARKETPLACE_PASSWORD }}
+      COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    steps:
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          tools: composer:2.8.8
+          php-version: '8.3'
+          extensions: >-
+            bcmath, ctype, curl, dom, gd, hash, iconv, intl, mbstring, pdo_mysql,
+            simplexml, soap, sodium, xml, zip, sockets
+          ini-values: memory_limit=-1
+          coverage: none
+
+      - name: Checkout HEAD
+        uses: actions/checkout@v4
+
+      - name: Linux Setup
+        run: ./.github/workflows/linux-setup.sh
+
+      - name: Get Composer Cache Directory
+        id: composer-cache
+        run: echo "dir=$(composer config cache-files-dir)" >> "$GITHUB_OUTPUT"
+
+      - name: Cache Composer Dependencies
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-php-8.3-composer-1.2.0-${{ hashFiles('composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-php-8.3-composer-1.2.0-
+            ${{ runner.os }}-php-8.3-composer-
+
+      - name: Install Magerun dependencies
+        run: composer install --no-interaction --prefer-dist --no-progress
+
+      - name: Install Magento via Composer
+        run: |
+          composer create-project --repository-url="https://repo.mage-os.org/" \
+            "mage-os/project-community-edition" ./magento "1.2.0" --no-interaction --no-progress
+
+      - name: Install Magento Database & Config
+        working-directory: ./magento
+        run: |
+          bin/magento setup:install \
+            --db-host=127.0.0.1:${{ job.services.mariadb.ports['3306'] }} \
+            --db-user=root \
+            --db-password=root \
+            --db-name=magento \
+            --cleanup-database \
+            --session-save=db \
+            --backend-frontname=admin \
+            --timezone="Europe/Berlin" \
+            --currency="EUR" \
+            --base-url="http://github.magerun.test/" \
+            --use-rewrites=1 \
+            --use-secure=0 \
+            --use-secure-admin=0 \
+            --admin-user=admin \
+            --admin-password=Password123 \
+            --admin-firstname=Armin \
+            --admin-lastname=Admin \
+            --admin-email="admin@example.com" \
+            --search-engine="opensearch" \
+            --opensearch-port=${{ job.services.opensearch.ports['9200'] }}
