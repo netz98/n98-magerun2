@@ -15,15 +15,15 @@ class SizeCommandTest extends TestCase
     public function testExecute()
     {
         $this->assertDisplayContains(
-            ['dev:log:size'],
-            ['Total:', 'log files']
+            ['command' => 'dev:log:size'],
+            'Total:'
         );
     }
 
     public function testExecuteWithHumanReadableOption()
     {
         $this->assertDisplayContains(
-            ['dev:log:size', '--human-readable'],
+            ['command' => 'dev:log:size', '--human-readable' => true],
             'Total:'
         );
     }
@@ -31,7 +31,7 @@ class SizeCommandTest extends TestCase
     public function testExecuteWithSortBySizeOption()
     {
         $this->assertDisplayContains(
-            ['dev:log:size', '--sort-by-size'],
+            ['command' => 'dev:log:size', '--sort-by-size' => true],
             'Total:'
         );
     }
@@ -39,7 +39,7 @@ class SizeCommandTest extends TestCase
     public function testExecuteWithFilterOption()
     {
         $this->assertDisplayContains(
-            ['dev:log:size', '--filter', 'system'],
+            ['command' => 'dev:log:size', '--filter' => 'system'],
             'Total:'
         );
     }

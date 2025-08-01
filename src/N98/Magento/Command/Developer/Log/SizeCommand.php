@@ -12,10 +12,10 @@ use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Framework\Filesystem;
 use N98\Magento\Command\AbstractMagentoCommand;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Finder\Finder;
 
 /**
@@ -53,7 +53,7 @@ class SizeCommand extends AbstractMagentoCommand
             )
             ->addOption(
                 'human-readable',
-                'h',
+                'H', // use uppercase H as shortcut (-h is reserved for help)
                 InputOption::VALUE_NONE,
                 'Show file sizes in human readable format'
             )
@@ -111,7 +111,7 @@ class SizeCommand extends AbstractMagentoCommand
         foreach ($finder as $file) {
             $size = $file->getSize();
             $totalSize += $size;
-            
+
             $logFiles[] = [
                 'name' => $file->getBasename(),
                 'size' => $size,
@@ -146,7 +146,7 @@ class SizeCommand extends AbstractMagentoCommand
         foreach ($logFiles as $file) {
             $size = $humanReadable ? $this->formatBytes($file['size']) : $file['size'];
             $modified = date('Y-m-d H:i:s', $file['modified']);
-            
+
             $table->addRow([
                 $file['name'],
                 $size,
@@ -160,7 +160,7 @@ class SizeCommand extends AbstractMagentoCommand
         $fileCount = count($logFiles);
         $totalSizeFormatted = $humanReadable ? $this->formatBytes($totalSize) : $totalSize;
         $filterMessage = $filter ? " (filtered by '$filter')" : '';
-        
+
         $output->writeln('');
         $output->writeln(sprintf(
             '<info>Total: %d log files%s, %s</info>',
@@ -182,11 +182,11 @@ class SizeCommand extends AbstractMagentoCommand
     private function formatBytes($bytes, $precision = 2)
     {
         $units = ['B', 'KB', 'MB', 'GB', 'TB'];
-        
+
         for ($i = 0; $bytes > 1024 && $i < count($units) - 1; $i++) {
             $bytes /= 1024;
         }
-        
+
         return round($bytes, $precision) . ' ' . $units[$i];
     }
 }
