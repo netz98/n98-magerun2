@@ -1,11 +1,23 @@
 ---
 name: Copilot Mage-OS Setup
 
+permissions:
+  id-token: write
+  contents: write
+  pull-requests: write
+
 on:
   workflow_dispatch:
+  push:
+    paths:
+      - .github/workflows/copilot-setup-steps.yml
+  pull_request:
+    paths:
+      - .github/workflows/copilot-setup-steps.yml
+
 
 jobs:
-  setup:
+  copilot-setup-steps:
     name: >-
       Setup Mage-OS (1.2.0 / PHP 8.3 /
       MariaDB 10.6 /
