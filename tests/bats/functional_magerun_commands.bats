@@ -1061,3 +1061,31 @@ function cleanup_files_in_magento() {
   run $BIN "dev:keep-calm"
   assert [ "$status" -eq 0 ]
 }
+
+# ============================================
+# Command: dev:log:size
+# ============================================
+
+@test "Command: dev:log:size" {
+  run $BIN "dev:log:size"
+  assert_output --partial "Total:"
+  assert [ "$status" -eq 0 ]
+}
+
+@test "Command: dev:log:size --human-readable" {
+  run $BIN "dev:log:size" --human-readable
+  assert_output --partial "Total:"
+  assert [ "$status" -eq 0 ]
+}
+
+@test "Command: dev:log:size --sort-by-size" {
+  run $BIN "dev:log:size" --sort-by-size
+  assert_output --partial "Total:"
+  assert [ "$status" -eq 0 ]
+}
+
+@test "Command: dev:log:size --filter system" {
+  run $BIN "dev:log:size" --filter system
+  assert_output --partial "Total:"
+  assert [ "$status" -eq 0 ]
+}

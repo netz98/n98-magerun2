@@ -28,6 +28,7 @@ Commands tailored for Magento developers, including code generation and debuggin
 
 ### Development Utilities
 - [dev:console](./dev-console.md) - Run the interactive PHP console
+- [dev:log:size](./dev-log-size.md) - Get size of log files
 - [dev:report:count](./dev-report-count.md) - Get count of report files
 - [dev:symlinks](./dev-symlinks.md) - Toggle allow symlinks setting
 - [dev:template-hints](./dev-template-hints.md) - Toggle template hints

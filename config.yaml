@@ -126,6 +126,7 @@ commands:
     - N98\Magento\Command\Developer\DecryptCommand
     - N98\Magento\Command\Developer\EncryptCommand
     - N98\Magento\Command\Developer\KeepCalmCommand
+    - N98\Magento\Command\Developer\Log\SizeCommand
     - N98\Magento\Command\Developer\Module\CreateCommand
     - N98\Magento\Command\Developer\Module\DetectComposerDependenciesCommand
     - N98\Magento\Command\Developer\Module\ListCommand
