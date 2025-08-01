@@ -43,4 +43,12 @@ class SizeCommandTest extends TestCase
             'Total:'
         );
     }
+
+    public function testExecuteWithFormatOption()
+    {
+        $this->assertDisplayContains(
+            ['command' => 'dev:log:size', '--format' => 'csv'],
+            '"Log File",Size,"Last Modified"'
+        );
+    }
 }
