@@ -16,16 +16,13 @@ n98-magerun2 dev:log:size [options]
 
 This command displays the size of all log files in the `var/log` directory. Magento 2 typically generates multiple log files including `system.log`, `debug.log`, `exception.log`, and others depending on your configuration and installed modules.
 
-## Options
+**Options:**
+| Option               | Shortcut | Description                                                |
+|----------------------|----------|------------------------------------------------------------|
+| `--human-readable`   | -H       | Show file sizes in a human readable format (e.g., KB, MB). |
+| `--sort-by-size`     | -s       | Sort files by size, showing largest files first.           |
+| `--filter=PATTERN`   | -f       | Filter log files by name pattern. Only files containing the specified pattern will be displayed. |
 
-### `--sort-by-size` (`-s`)
-Sort files by size, showing largest files first.
-
-### `--filter` (`-f`)
-Filter log files by name pattern. Only files containing the specified pattern will be displayed.
-
-### `--human-readable` (`-h`)
-Display file sizes in human-readable format (B, KB, MB, GB) instead of bytes.
 
 ## Examples
 
