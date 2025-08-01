@@ -17,6 +17,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Finder\Finder;
+use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
 
 /**
  * Class SizeCommand
@@ -53,9 +54,15 @@ class SizeCommand extends AbstractMagentoCommand
             )
             ->addOption(
                 'human-readable',
-                'H', // use uppercase H as shortcut (-h is reserved for help)
+                'H',
                 InputOption::VALUE_NONE,
                 'Show file sizes in human readable format'
+            )
+            ->addOption(
+                'format',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'Output Format. One of [' . implode(',', RendererFactory::getFormats()) . ']'
             )
             ->setHelp(
                 'This command displays the size of all log files in the var/log directory. ' .
@@ -138,23 +145,32 @@ class SizeCommand extends AbstractMagentoCommand
         }
 
         $humanReadable = $input->getOption('human-readable');
+        $format = $input->getOption('format');
 
-        // Display results in table format
-        $table = new Table($output);
-        $table->setHeaders(['Log File', 'Size', 'Last Modified']);
-
+        $rows = [];
         foreach ($logFiles as $file) {
             $size = $humanReadable ? $this->formatBytes($file['size']) : $file['size'];
             $modified = date('Y-m-d H:i:s', $file['modified']);
-
-            $table->addRow([
+            $rows[] = [
                 $file['name'],
                 $size,
                 $modified
-            ]);
+            ];
         }
 
-        $table->render();
+        $headers = ['Log File', 'Size', 'Last Modified'];
+        if ($format) {
+            $this->getHelper('table')
+                ->setHeaders($headers)
+                ->renderByFormat($output, $rows, $format);
+        } else {
+            $table = new Table($output);
+            $table->setHeaders($headers);
+            foreach ($rows as $row) {
+                $table->addRow($row);
+            }
+            $table->render();
+        }
 
         // Display summary
         $fileCount = count($logFiles);
