@@ -505,6 +505,16 @@ HELP;
     {
         $commandOutput = '';
 
+        // Use bash with pipefail to ensure correct exit code propagation in pipelines
+        $useBash = (bool) shell_exec('command -v bash');
+        if ($useBash) {
+            $command = "bash -c 'set -o pipefail; " . $this->escapeForBash($command) . "'";
+            if ($output->isVeryVerbose()) {
+                $output->writeln('<comment>Using bash for command execution</comment>');
+                $output->writeln('<comment>' . $command . '</comment>');
+            }
+        }
+
         if ($input->getOption('stdout')) {
             passthru($command, $returnCode);
         } else {
@@ -849,5 +859,16 @@ HELP;
         }
 
         return $execs;
+    }
+
+    /**
+     * Escapes a shell command for safe use inside single quotes for bash -c '...'.
+     * @param string $command
+     * @return string
+     */
+    private function escapeForBash($command)
+    {
+        // Replace every single quote with: '"'"'
+        return str_replace("'", "'\"'\"'", $command);
     }
 }
