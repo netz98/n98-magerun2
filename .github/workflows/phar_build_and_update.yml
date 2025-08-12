@@ -36,14 +36,14 @@ jobs:
 
     steps:
       - name: Checkout PR
-        uses: actions/checkout@v4.2.2
+        uses: actions/checkout@v5
         if: github.event_name == 'pull_request'
         with:
           ref: ${{ github.event.pull_request.head.sha }}
 
       - name: Manually triggered checkout
         if: github.event_name == 'workflow_dispatch'
-        uses: actions/checkout@v4.2.2
+        uses: actions/checkout@v5
         with:
           ref: ${{ github.ref }}
           fetch-depth: 0
@@ -57,7 +57,7 @@ jobs:
           ini-values: 'memory_limit=-1, phar.readonly=0'
 
       - name: Checkout HEAD
-        uses: actions/checkout@v4.2.2
+        uses: actions/checkout@v5
         if: github.event_name == 'push'
 
       - name: Check Security
