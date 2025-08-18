@@ -11,7 +11,7 @@ The command can be used to activate or deactivate a user. If no option is provid
 ## Usage
 
 ```bash
-n98-magerun2.phar admin:user:change-status <username> [options]
+n98-magerun2.phar admin:user:change-status [options] <username>
 ```
 
 ## Arguments
@@ -32,13 +32,13 @@ n98-magerun2.phar admin:user:change-status <username> [options]
 ### Activate a user
 
 ```bash
-n98-magerun2.phar admin:user:change-status john.doe --activate
+n98-magerun2.phar admin:user:change-status --activate john.doe
 ```
 
 ### Deactivate a user
 
 ```bash
-n98-magerun2.phar admin:user:change-status john.doe --deactivate
+n98-magerun2.phar admin:user:change-status --deactivate john.doe
 ```
 
 ### Toggle a user's status
