@@ -1,7 +1,12 @@
 #!/usr/bin/env php
 <?php
 
+if (file_exists('/tmp/magento2/vendor/autoload.php')) {
+    require_once '/tmp/magento2/vendor/autoload.php';
+}
 $application = require __DIR__.'/../src/bootstrap.php';
+require_once __DIR__.'/../src/N98/Magento/Command/Customer/CreateDummyCommand.php';
+$application->add(new \N98\Magento\Command\Customer\CreateDummyCommand());
 $application->run();
 
 __halt_compiler();
