@@ -18,8 +18,6 @@ All configs will be merged in the following order: `buildin -> system -> user ->
 To verify which config is loaded, you can use the command [`magerun:config:dump`](../command-docs/magerun/magerun-config-dump.md).
 The commands [`magerun:config:info`](../command-docs/magerun/magerun-config-info.md) shows the merged config and the source of each config value.
 
-For details on how configuration files are merged and the order of precedence, see the [Config Merging Concept](../concepts/config-merging.md).
-
 ## Example Config 
 
 ```yaml
