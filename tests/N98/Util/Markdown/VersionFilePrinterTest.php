@@ -13,7 +13,7 @@ class VersionFilePrinterTest extends \PHPUnit\Framework\TestCase
     /**
      * @test
      */
-    public function itShouldReturnOnlyAPart()
+    public function itShouldReturnOnlyAPartForOldChangelogFormatWithoutDate()
     {
         $content = <<<CONTENT
 RECENT CHANGES
@@ -52,5 +52,50 @@ EXPECTED_CONTENT;
         $sut = new VersionFilePrinter($content);
 
         $this->assertEquals($expectedContent, $sut->printFromVersion('2.1.1'));
+    }
+
+    /**
+     * @test
+     */
+    public function itShouldReturnChangelogSectionWithDates()
+    {
+        $content = <<<CONTENT
+RECENT CHANGES
+==============
+
+9.1.0 (unreleased)
+------------------
+
+- Add: --check option in dev:module:detect-composer-dependencies command (issue #1727)
+- Fix: excluded tables were dumped as structure if --strip option was used (issue #1731)
+
+9.0.2 (2025-07-21)
+------------------
+
+- Fix: db dump command hotfix release
+
+9.0.1 (2025-06-24)
+------------------
+
+- fix: phar file had to re-create, due to a release issue
+CONTENT;
+
+        $expectedContent = <<<EXPECTED_CONTENT
+RECENT CHANGES
+==============
+
+9.1.0 (unreleased)
+------------------
+
+- Add: --check option in dev:module:detect-composer-dependencies command (issue #1727)
+- Fix: excluded tables were dumped as structure if --strip option was used (issue #1731)
+
+EXPECTED_CONTENT;
+
+        $sut = new VersionFilePrinter($content);
+        $this->assertEquals(
+            $expectedContent,
+            $sut->printFromVersion('9.0.2')
+        );
     }
 }

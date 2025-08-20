@@ -36,9 +36,10 @@ class VersionFilePrinter
         $contentToReturn = '';
 
         $lines = preg_split("/((\r?\n)|(\r\n?))/", $this->content);
+        $versionPattern = '/^' . preg_quote($startVersion, '/') . '(\s+\(.*\))?$/';
 
         foreach ($lines as $line) {
-            if ($line === $startVersion) {
+            if (preg_match($versionPattern, $line)) {
                 break;
             }
 
