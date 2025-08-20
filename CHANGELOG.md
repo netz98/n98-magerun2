@@ -7,13 +7,18 @@ RECENT CHANGES
 - Add: --check option in dev:module:detect-composer-dependencies command (issue #1727)
 - Fix: excluded tables were dumped as structure if --strip option was used (issue #1731)
 
-9.0.1
------
+9.0.2 (2025-07-21)
+------------------
+
+- Fix: db dump command hotfix release
+
+9.0.1 (2025-06-24)
+------------------
 
 - fix: phar file had to re-create, due to a release issue
 
-9.0.0
------
+9.0.0 (2025-06-24)
+------------------
 
 - Add: keep calm command (PR #1692, issue #499, by Christian Münch)
 - Add: extend admin:user:list with --sort option and logdate column (PR #1647, issue #1646)
@@ -34,13 +39,13 @@ RECENT CHANGES
 - Fix: Port handling in database helper (by Christian Münch)
 - Build: CI release workflow enhancements (PR #1657, issue #1657, by Christian Münch)
 
-8.1.1
------
+8.1.1 (2025-04-28)
+------------------
 
 - Fix: phar of v8.1.0 was corrupt (by Christian Münch)
 
-8.1.0
------
+8.1.0 (2025-04-28)
+------------------
 
 - Add: #1590: Apply GitHub patch directly (by Christian Münch)
 - Add: #1591: Admin URI added to table (by Christian Münch)
@@ -58,8 +63,8 @@ RECENT CHANGES
 - Build: #1607: Set up MariaDB as part of the steps (by Christian Münch)
 - Build: #1608: Update and bump dependencies (phpstan, php-cs-fixer, captainhook, webfactory/ssh-agent, psy/psysh) (by dependabot)
 
-8.0.0
------
+8.0.0 (2025-02-24)
+------------------
 
 - Major: Drop PHP 7 support
 - Add: #1553: New dev:di:preferences:list command (by Christian Münch)
@@ -74,8 +79,8 @@ RECENT CHANGES
 - Fix: #1569: Fix typo in README (by Nolwennig-Jeulin)
 - Fix: #1572: Import without compression no longer compatible with STDIN (reported by Indy Koning)
 
-7.5.0
------
+7.5.0 (2024-11-25)
+------------------
 
 - Add: #1538: zstd and lz4 compression support and auto compression detection on DB import (by ResuBaka).
 - Imp: Update dev system to Magento 2.4.7-p2 (by Christian Münch).
@@ -87,8 +92,8 @@ RECENT CHANGES
 - Fix: Address issues with MariaDB client tools not supporting `--ssl-mode` (by Christian Münch, reported by Max Fickers)
 - Fix: Use the correct function to support PHP 7.4 for file ending checks (by ResuBaka)
 
-7.4.0
------
+7.4.0 (2024-04-26)
+------------------
 
 - Add: new Magento Versions 2.4.7, 2.4.6-p5, 2.4.5-p7, 2.4.4-p8 (by Christian Münch)
 - Add: New encrypt and decrypt commands (by Indy Koning)
@@ -98,13 +103,13 @@ RECENT CHANGES
 - Imp: #1441: Make integration email and endpoint url optional (reported by Sergii Repin)
 - Imp: README.md - converted spaces (by Matheus Gontijo)
 
-7.3.1
------
+7.3.1 (2024-01-31)
+------------------
 
 - Fix: dev:console broken after psysh update (by Christian Münch)
 
-7.3.0
------
+7.3.0 (2024-01-31)
+------------------
 
 - Add: #1301: Config Search Command (by Christian Münch)
 - Imp: #1367: Filter non action classes in route:list output (by Christian Münch)
@@ -115,8 +120,8 @@ RECENT CHANGES
 - Fix: #1389: TypeError (Reported by thecodecook14)
 - Fix: #1396: Escape shell command before processing by Symfony StringInput (Reported by Denis Mir)
 
-7.2.0
------
+7.2.0 (2023-10-10)
+------------------
 
 - Add: #1320: Mage-OS ddev setup (by Christian Münch)
 - Add: #1318: Mage-OS 1.0.0 for installer (by Christian Münch)
@@ -134,8 +139,8 @@ RECENT CHANGES
 - Fix: #1287: integration:delete command doesn't delete associated oauth consumer and oauth token (by Christian Münch)
 - Fix: #1254: Add missing docs for cache:view, cache:report
 
-7.1.0
------
+7.1.0 (2023-07-31)
+------------------
 
 - Add: #1177: New commands to manage sales sequences (by Jeroen Boersma)
 - Add: #1176: New command to redeploy base packages (by Christian Münch)
@@ -146,19 +151,19 @@ RECENT CHANGES
 - Imp: Print an error if generation:flush command cannot delete a directory (by Christian Münch)
 - Imp: Update 3rd party dependencies (php-cs-fixer, psysh, phpstan, phpunit, requests, symfony)
 
-7.0.3
------
+7.0.3 (2023-04-11)
+------------------
 
 - Fix: #1164: Magento Core Commands cannot be loaded. Please verify if "bin/magento" is running (by Christian Münch)
 
-7.0.2
------
+7.0.2 (2023-03-31)
+------------------
  
 - Fix: #1164: Magento Core Commands cannot be loaded. Please verify if "bin/magento" is running
 - Imp: Update 3rd party dependencies (captainhook, phpstan, phpunit, psysh)
 
-7.0.1
------
+7.0.1 (2023-03-22)
+------------------
 
 - Fix: #447: Memory usage within Magerun script (by Christian Münch)
 - Fix: #1144: Allow to add instead of replace a PSR-4 namespace (by Christian Münch)
@@ -166,8 +171,8 @@ RECENT CHANGES
 - Fix: #1149: Use defined PHP binary for calls to bin/magento (by Christian Münch)
 - Imp: Update 3rd party dependencies (captainhook, psysh, php-cs-fixer, phpstan, phpunit)
 
-7.0.0
------
+7.0.0 (2023-03-13)
+------------------
 
 - Add: Magento 2.4.6
 - Add: Magento 2.4.5-p2
@@ -184,27 +189,27 @@ RECENT CHANGES
 - Fix: Initialize Magento only once which should prevent several issues with DB and config. (by Christian Münch)
 - Fix: Remove "please select" entry in search:engine:list command (by Christian Münch)
 
-6.1.1
------
+6.1.1 (2023-01-11)
+------------------
 
 - Fix: #1066: broken index:list command (by Christian Münch)
 - Imp: Update 3rd party dependencies (Symfony, psysh, captainhook, dydev-dot-access-data, phpunit, twig)
 
-6.1.0
------
+6.1.0 (2022-10-19)
+------------------
 
 - Add: Magento 2.4.5-p1 / 2.4.4-p2 (by Simon Sprankel)
 - Imp: Update 3rd party dependencies (phpstan, requests library)
 - Fix: #969: Mark cron as executed (by Pieter Hoste)
 - Del: Magento 2.3.7 in ddev test setup (by Christian Münch)
 
-6.0.1
------
+6.0.1 (2022-09-28)
+------------------
 
 - Fix: Update twig (security fix)
 
-6.0.0
------
+6.0.0 (2022-09-28)
+------------------
 
 - Add: route:list command (by Gowri)
 - Add: installer command - Update installable versions (incl. mage-os) (by Christian Münch)
@@ -223,8 +228,8 @@ RECENT CHANGES
 - Del: Symfony Shell Command - Command was already broken (by Christian Münch)
 - Del: Drop active testing support for Magento 2.3.x (some commands could be incompatible due to platform changes)
 
-5.2.0
------
+5.2.0 (2022-08-07)
+------------------
 
 - Add: #987: more dev:console debug helper functions (by Christian Münch)
 - Add: #1000: additional phar tests (by Christian Münch)
@@ -242,8 +247,8 @@ RECENT CHANGES
 - Fix: #1024: config:store:get wrong filters applied (by Alexander Dite)
 - Fix: typos and wrong infos in help text (by Christian Münch)
 
-5.1.0
------
+5.1.0 (2022-05-06)
+------------------
 
 - Add: New table renderer yaml/json_array
 - Add: Print integration:show command data as table or only a single value (by Christian Münch)
@@ -257,18 +262,18 @@ RECENT CHANGES
 - Fix: #980: Fix scope-id condition (by Christian Münch)
 - Fix: #981: Add error handler for possible warnings of autoloader (by Christian Münch)
 
-5.0.2
------
+5.0.2 (2022-04-20)
+------------------
 
 - Fix: #966: InstalledVersions.php could not be opened
 
-5.0.1
------
+5.0.1 (2022-04-15)
+------------------
 
 - Fix: #964: Broken with guzzle dependency chain
 
-5.0.0
------
+5.0.0 (2022-04-15)
+------------------
 
 - Add: #56: Delete customer command (by Andreas Mautz)
 - Add: #906: guzzle dependency (by Christian Münch)
@@ -293,21 +298,21 @@ RECENT CHANGES
 - Fix: Error in sys:cron:history command (by Christian Münch)
 - Fix: PHP warnings in cache:report command (by Christian Münch)
 
-4.9.1
------
+4.9.1 (2021-12-21)
+------------------
 
 - Fix: #901: dev:console command outputs "must be compatible with" error (by Mark Shust)
 
-4.9.0
------
+4.9.0 (2021-12-21)
+------------------
 
 - Add: #899: config:env:delete command (by Pieter Hoste) 
 - Add: Dependency information in README (by Christian Münch)
 - Imp: Updated dependencies (faker, psysh, symfony-console-autocomplete, php-cs-fixer, captainhook)
 - Fix: #898: Disable Composer gc during Magerun process (by Christian Münch)
 
-4.8.0
------
+4.8.0 (2021-12-04)
+------------------
 
 - Add: #884: Hyvä Support for sys:info and sys:check command (by Christian Münch)
 - Add: #875: Environment variable support in Magerun scripts (by Christian Münch)
@@ -329,8 +334,8 @@ RECENT CHANGES
 - Fix: #828: Error on db:import --drop (by Alexander Menk)
 - Fix: #824: Restore terminal mode after import (by Jeroen Vermeulen)
 
-4.7.0
------
+4.7.0 (2021-10-27)
+------------------
 
 - New: Command db:add-default-authorization-entries (by Christian Münch)
 - Imp: Add handling for missing authorization rule/role in db:import (by Christian Münch, Alexander Menk)
@@ -338,13 +343,13 @@ RECENT CHANGES
 - Fix: #781 - empty cron expression (by Christian Münch)
 - Fix: #789 - sampledata:deploy returns composer error, bin/magento works (by Christian Münch)
 
-4.6.1
------
+4.6.1 (2021-07-14)
+------------------
 
 - Fix: broken self-update command (by Christian Münch)
 
-4.6.0
------
+4.6.0 (2021-06-13)
+------------------
 
 - Add: ui_bookmark to admin group (by Leland Clemmons)
 - Add: inventory_reservation to @sales group (by Dan Wallis)
@@ -360,23 +365,23 @@ RECENT CHANGES
 - Imp: Updated phpunit dependency  (Dependbot)
 - Imp: Updated psy shell dependency  (Dependbot)
 
-4.5.0
------
+4.5.0 (2021-02-14)
+------------------
 
 - Add: Magento 2.4.2 (by Christian Münch)
 - Imp: Change autoloading from PSR-0 to PSR-4 (by Tom Klingenberg)
 - Imp: Updated n98/junit-xml dependency (by Tom Klingenberg)
 - Imp: Updated Symfony dependencies (Dependabot)
-- Imp: Updated faker dependency (Dependabot)
-- Imp: Updated captainhook dependency (Dependabot)
-- Imp: Updated php-cs-fixer dependency (Dependabot)
+- Imp: Updated faker dependency (Dependbot)
+- Imp: Updated captainhook dependency (Dependbot)
+- Imp: Updated php-cs-fixer dependency (Dependbot)
 - Imp: Test with PHP 7.4 in github actions (by Christian Münch)
 - Fix: When the mysql import fails, make db:import fail as well (by Pieter Hoste)
 - Fix: Set php version to 7.4 in Github actions (by Christian Münch)
 - Fix: db:dump set correct default value (by Torben Höhn)
 
-4.4.0
------
+4.4.0 (2020-12-24)
+------------------
 
 - New: #482: Add a command to change the admin user status (by Melvin Versluijs)
 - New: #595: Command to toggle the CMS block status (by Melvin Versluijs)
@@ -393,8 +398,8 @@ RECENT CHANGES
 - Imp: Updated psysh dependency (Dependabot)
 - Imp: Updated phpunit dependencies (Dependabot)
 
-4.3.0
------
+4.3.0 (2020-09-18)
+------------------
 
 - New: #615: Add option to dump db with —no-tablespaces option (by Torben Höhn)
 - Imp: Updated Symfony and Composer components to latest v4.4 (by dependabot)
@@ -403,8 +408,8 @@ RECENT CHANGES
 - Fix: #603: Fixed typos in help (by Rico Neitzel)
 - Fix: #621: Correct list of 'dotmailer' tables (by Dan Wallis)
 
-4.2.0
------
+4.2.0 (2020-08-22)
+------------------
 
 - New: #598: #597 Add support for additional fields to customer:create (by Alexander Menk)
 - New: #596: Support Magento 2.4.0 (by Christian Münch)
@@ -421,8 +426,8 @@ RECENT CHANGES
 - Imp: Update phpunit to 8.x (by Christian Münch)
 - Fix: #590: Fix format if db:status is dumped as CSV (by Christian Münch)
 
-4.1.0
------
+4.1.0 (2020-04-19)
+------------------
 
 - New: Three new commands (config:env:create, config:env:show, config:env:set) (by Peter Jaap Blaakmeer)
 - Imp: Update Composer to 1.10.5
@@ -430,32 +435,32 @@ RECENT CHANGES
 - Imp: #538: Support Magento 2.3.4 (by Alexander Menk)
 - Fix: #541: Sample data deploy fails on 4.0.4 version with Magento 2.3.4 (reported by easysoft-team)
 
-4.0.4
------
+4.0.4 (2020-03-09)
+------------------
 
 - Fix: #521: admin:user:create throws Exception (by Christian Münch)
 
-4.0.3
------
+4.0.3 (2020-02-01)
+------------------
 
 - Imp: Add tests for ConfigurationLoader (by Christian Münch)
 - Fix: #525: n98-magerun for magento repository (reporter YevgenK)
 - Fix: #523: --skip-root-check throws an error (reporter Tadeu Rodrigues)
 
-4.0.2
------
+4.0.2 (2020-01-03)
+------------------
 
 - Fix: #519: Fix loading `app/etc/n98-magerun.yaml` (by cmacdonald-au)
 - Imp: #518: Improved README markdown syntax (by Jeroen Vermeulen)
 
-4.0.1
------
+4.0.1 (2020-01-02)
+------------------
 
 - Fix: Wrong integration:command description
 - Fix: #517: Fatal error when /etc/n98-magerun2.yaml exists
 
-4.0.0
------
+4.0.0 (2019-12-30)
+------------------
 
 - New: New commands to handle webapi integrations (by Christian Münch)
 - New: #374: Add "area" option to dev:console (by Christian Münch)
@@ -463,7 +468,7 @@ RECENT CHANGES
 - Add: roave/security-advisories component for a better security
 - Add: Magento 2.3.3 in installer (by Christian Münch)
 - Add: #503: Captainhook suppport (by Christian Münch)
-- Add: #501: Strip B2B quotes as part of @quotes alias (by Dan Wallis)
+- Add: #501: Strip B2B quotes as part of the @quotes alias (by Dan Wallis)
 - Imp: Match Magento Code Style (v2.2.10)
 - Imp: Update Symfony Components to 4.4
 - Imp: Update PHPUnit to 6.5
@@ -478,14 +483,14 @@ RECENT CHANGES
 - Del: Removed official support for Magento 2.2 and Magento 2.1
 - Del: Removed unsupported Magento versions from installer
 
-3.2.0
------
+3.2.0 (2019-07-19)
+------------------
 
 - Fix: #293: Admin password expires despite recent change (by Robbert Stevens)
 - Imp: #481: Add table groups (by Timon de Groot)
 
-3.1.0
------
+3.1.0 (2019-06-29)
+------------------
 
 - Fix: #470: Sales stripped database dump does not exclude EE tables (by Rik Willems)
 - Add: #475: Update travis versions (by Christian Münch)
@@ -494,14 +499,14 @@ RECENT CHANGES
 - New: command admin:token:create (by Christian Münch)
 - New: command customer:token:create (by Christian Münch)
 
-3.0.10
-------
+3.0.10 (2019-06-10)
+------------------
 
 - Fix: db:dump returns exit code 0 on fail (by Christian Münch)
 - Fix #458 - Password dialog is hidden
 
-3.0.9
------
+3.0.9 (2019-05-31)
+------------------
 
 - Fix: #439: Add 2fa tables (by Peter Jaap Blaakmeer)
 - Fix: #453: Fix completely exclude tables with --exclude command (by Arnoud Beekman)
@@ -509,54 +514,54 @@ RECENT CHANGES
 - Fix: #460: Typo: unkown -> unknown (by Alexander Menk)
 - Fix: #461: update twig/twig to version later than 1.37.1 (by wb-lime)
 
-3.0.8
------
+3.0.8 (2019-04-10)
+------------------
 
 - Fix #450: command sys:setup:compare-versions returns errors on a lot of core modules (thanks Emanuele Gian)
 
-3.0.7
------
+3.0.7 (2019-04-01)
+------------------
 
 - Fix for Composer autoloader / Magento 2.2.8 (thanks mystix, Rick Schippers)
 
-3.0.6
------
+3.0.6 (2019-03-27)
+------------------
 
 - Fix #442: Non standard conform strings in config.yaml (by Tom Klingenberg, thanks Paul Canning)
 
-3.0.5
------
+3.0.5 (2019-03-26)
+------------------
 
 - Fix #440: Add phar wrapper for Magento 2.3.1 compatibility (by Christian Münch)
 - Fix #441: make build.sh OSX compatible (by Keith Bentrup)
 
-3.0.4
------
+3.0.4 (2019-02-04)
+------------------
 
 - Fix #425: Fixed reindex command syntax (by Simon Sprankel)
 - Fix #428: Unused property (by Leandro F. L.)
 - Fix #432: Add method used by newer symfony version (by AreDubya)
 
-3.0.3
------
+3.0.3 (2018-12-20)
+------------------
 
 - Fix: #422: Expansion of ~ in --root-dir option is no longer working (by Tjerk Ameel)
 
-3.0.2
------
+3.0.2 (2018-12-13)
+------------------
 
 - Fix: #299: config:get, fix --scope-id=0 filtering (by Jürgen Thelen)
 - Fix: #308: cache:clean, add handling of invalid cache types (by Jürgen Thelen)
 - Fix: #417: Prevent fatal error during Magento Init
 - Fix: #414: Hide typed password in password change dialog
 
-3.0.1
------
+3.0.1 (2018-12-09)
+------------------
 
 - Fix: #413: sample:deploy PRE_COMMAND_RUN issue on Magento 2.2.6 (by JDavidVR)
 
-3.0.0
------
+3.0.0 (2018-12-07)
+------------------
 
 - Compatibility to Magento 2.3.0
 - Refactoring of Application class
@@ -564,25 +569,25 @@ RECENT CHANGES
 - Removed official support for Magento 2.0.x
 - Removed support for PHP 5.6
 
-2.3.3
------
+2.3.3 (2018-11-17)
+------------------
 
 - Upgrades Travis Setup (check new Magento Versions) (by Christian Münch)
 - Fix: #329: Area code not set failures (by Christian Münch)
 
-2.3.2
------
+2.3.2 (2018-11-07)
+------------------
 
 - Fix for #407 phar mismatch after self-update (by Christian Münch)
 - Uses Magento's DirectoryList to get config folder path (by Manuele Menozz)
 
-2.3.1
------
+2.3.1 (2018-10-18)
+------------------
 
 - --stdout broken in 2.3.0 (by Peter Jaap Blaakmeer / Christian Münch)
 
-2.3.0
------
+2.3.0 (2018-10-13)
+------------------
 
 - Add CE 2.2.6 and 2.1.15 (by Bono de Visser)
 - Add CE 2.1.14, 2.2.5 (by Marc)
@@ -601,8 +606,8 @@ RECENT CHANGES
 - Fix: #302 Replace n98-magerun.phar witg n98-magerun2.phar Christian Münch)
 - Fix: #388 Add correct default for --add-time option (by Christian Münch)
 
-2.2.0
------
+2.2.0 (2018-06-10)
+------------------
 
 - Add --dry-run option to self-update command (by Christian Münch)
 - Added downloads: CE 2.1.12, 2.1.13, 2.2.3 & 2.2.4 (by Marc)
@@ -620,20 +625,20 @@ RECENT CHANGES
 - Unstripping "authorization*" in db:dump (by Edward Simpson)
 - Fix grammar in readme by (Erik Hansen)
 
-2.1.2
------
+2.1.2 (2018-01-29)
+------------------
 
 * Update composer dependencies
 
-2.1.1
------
+2.1.1 (2018-01-28)
+------------------
 
 * Upgrade embedded composer package
 * Fix: Fix "area code not set" error message in customer commands (by Christian Münch)
 * Fix wrong headlines in cutomer:list command (by Christian Münch)
 
-2.1.0
------
+2.1.0 (2018-01-28)
+------------------
 
 * Imp: Polish code - Comvert array syntax and corrected docblocks (by Christian Münch)
 * Fix: Fixed running cronjobs configured in database, scheduled imports for example (by Johan Spoelstra)
@@ -646,8 +651,8 @@ RECENT CHANGES
 * Imp: Magento keys are now found in Magento Marketplace (by Jonas Hünig. #325)
 * Fix: Fix bash autocompletion, fixes (Tom Klingenberg, Floddy, #331)
 
-2.0.0
------
+2.0.0 (2017-10-16)
+------------------
 
 * Major Break: config:get, config:set, config:delete commands are renamed
   -> config:store:get, config:store:set, config:store:delete
@@ -661,8 +666,8 @@ RECENT CHANGES
 * Imp: Code imrovements (by Tom Klingenberg)
 * Fix: Magento 2.2 Compatibility (by Christian Münch)
 
-1.6.0
------
+1.6.0 (2017-08-26)
+------------------
 
 * Feature: Add Magento Open Source Edition 2.1.8 (by Alexander Menk)
 * Feature: App state injection support in sys:check command (by Manuel Schmid / Christian Münch)
@@ -671,8 +676,8 @@ RECENT CHANGES
 * Fix: Typo in install command (by Tom Klingenberg / Tim Neutken, #297)
 * Fix: Typo in readme (Chris Orlando, #301)
 
-1.5.0
------
+1.5.0 (2017-06-08)
+------------------
 
 * Fix: Add Phar checksum guide to readme (report by Max Chadwick, fix by Tom Klingenberg, #279)
 * Fix: Prevent exceptions in dev:console from being suppressed and hidden (by Jason Woods, #282)
@@ -685,8 +690,8 @@ RECENT CHANGES
 * New: Port db:dump --exclude from Magerun 1 (by Torrey Tsui, #294)
 * New: Command index:trigger:recreate (by Christian Münch)
 
-1.4.0
------
+1.4.0 (2017-03-30)
+------------------
 
 * Fix: sys:cron:schedule 'area code is not set' exception. (by Pieter Hoste, #277)
 * Fix: Allow -1 as value for infinite max nesting level for xdebug (by Peter Jaap Blaakmeer, #278)
@@ -697,8 +702,8 @@ RECENT CHANGES
 * New: Command config:data:di (by Christian Münch)
 * New: Command search:engine:list (by Christian Münch)
 
-1.3.3
------
+1.3.3 (2017-03-03)
+------------------
 
 * Fix: Set forceUseDb option to type VALUE_NONE (by Juan Alonso, #273)
 * Fix: install Magento2 without development dependencies (by Tom Klingenberg, #272)
@@ -708,13 +713,13 @@ RECENT CHANGES
 * New: Port of cache:report (by Jürgen Thelen, #39)
 * New: Add current Magento2 version 2.1.5 (by Tom Klingenberg)
 
-1.3.2
------
+1.3.2 (2017-02-13)
+------------------
 
 * Fix: Wrong version identifiers 2.0.8 - 2.0.10 (by Tom Klingenberg, #229)
 
-1.3.1
------
+1.3.1 (2017-02-12)
+------------------
 
 * Fix: Install command using wrong php binary and eating installer errors (report by David Lambauer, fix by Tom Klingenberg, #267)
 * Fix: Minor PHP version for Magento 2 extensions (by Alexander Turiak, #269)
@@ -734,8 +739,8 @@ RECENT CHANGES
 * New: Build with PHP 7.1 for some jobs (by Tom Klingenberg, #256)
 * New: Port of admin:notifications command (by Jürgen Thelen, #29)
 
-1.3.0
------
+1.3.0 (2016-12-01)
+------------------
 
 * Fix: Fatal error when running Magerun 2 inside a Magento 1 tree (by Tom KLingenberg, #253)
 * Fix: Add missing areas to the observer list (by Pieter Hoste, #249)
@@ -746,21 +751,21 @@ RECENT CHANGES
 * New: Interactive console: Support for initial code argument (by Christian Münch)
 * New: Introduced test framework (by Christian Münch)
 
-1.2.2
------
+1.2.2 (2016-09-12)
+------------------
 
 * Fix: Prevent hang on Travis (by Christian Münch, #238)
 * Fix: Script repository is the same as Magerun 1 (report by Jeroen Bleijenberg, #235)
 * New: Add Magento CE 2.0.7 and 2.1.1 (by Raul E Watson, #237)
 * New: PHP-CS-Fixer integration (by Tom Klingenberg)
 
-1.2.1
------
+1.2.1 (2016-08-24)
+------------------
 
 * Fix: Build fixes and release to test continuous build on files.magerun.net (by Tom Klingenberg)
 
-1.2.0
------
+1.2.0 (2016-08-24)
+------------------
 
 * Fix: Fatal error in Phpstorm .idea folder detection for path in dev:urn-catalog:generate (by Tom Klingenberg, #233)
 * Fix: Wrong template-hints config value (by Tommy Pyatt, #230)
@@ -771,7 +776,7 @@ RECENT CHANGES
 * New: Add customer:create command (by Christian Münch, #54)
 * New: Add code generator features to dev:console command (by Chrπistian Münch)
 
-1.1.17
+1.1.17 (2016-07-18)
 ------
 
 * Fix: Posix conform --root-dir parsing (report by Andreas Lutro, fix by Tom Klingenberg, #224)
@@ -780,13 +785,13 @@ RECENT CHANGES
 * Feature: Install command: magento-ce-2.1.0 version (by Tom Klingenberg, #223)
 * New: Automatically detect Phpstorm .idea folder for path in dev:urn-catalog:generate (by Tom Klingenberg)
 
-1.1.16
-------
+1.1.16 (2016-06-30)
+-------------------
 
 Fix: wrong version in Application.php
 
-1.1.15
-------
+1.1.15 (2016-06-28)
+-------------------
 
 * Fix: Magento 2.1 version compatibility (by p-makowski, #214)
 * Fix: help description of system:setup:compare-versions (by p-makowski, #214)
@@ -797,109 +802,140 @@ Fix: wrong version in Application.php
 * Imp: Build with timestamp alignment and in clean directory (by Tom Klingenberg)
 * New: Add Homebrew installation (by Matthéo Geoffray, #203)
 
-1.1.14
-------
+1.1.14 (2016-05-29)
+-------------------
 
 * Fix: Regression test for #199 (report by Pieter Hoste, fix by Tom Klingenberg, #200)
 * Fix: Travis build exited too early (by Tom Klingenberg)
 * Feature: Install command: magento-ce-2.0.7 version (by Raul E Watson, #202)
 
-1.1.13
-------
+1.1.13 (2016-05-22)
+-------------------
 
 * Fix: Fix db:dump regression in 1.1.12 (report by Pieter Hoste, fix by Tom Klingenberg, #199)
 * Imp: Check repository connectivity in Travis build (by Tom Klingenberg)
 
-1.1.12
-------
+1.1.12 (2016-05-22)
+-------------------
 
 * Fix: Fix open command detection (by Tom Klingenberg)
 * Fix: Wrong version display in sys:setup:compare-versions (by Tom Klingenberg)
 * Fix: Install command regression handling download errors in 1.1.11 (by Tom Klingenberg)
 * Fix: Align Symfony Console version requirements with Magento 2 (by Tom Klingenberg, #198)
 
-1.1.11
-------
+1.1.11 (2016-05-18)
+-------------------
 
 * Fix: Cron app state emulation (by Sam Tay, #196)
 * Fix: Install command missing PHP extension checks of mbstring and zip (by Tom Klingenberg)
 * Feature: Install command: magento-ce-2.0.6 version (by Raul E Watson, #197)
 
-1.1.10
-------
+1.1.10 (2016-05-06)
+-------------------
 
-* Fix: db:console password parameter name (by Federico Rivollier)
+- Fix: db:console password parameter name (by Federico Rivollier)
 
-1.1.9
------
+1.1.9 (2016-05-05)
+------------------
 
 * Fix: Build script not stop asking (by Christian Muench)
 * Fix: Bump version to build again (by Tom Klingenberg)
 
-1.1.8
------
+1.1.8 (2016-05-05)
+------------------
 
-* Update: Composer to 1.0.3
+- No code changes. Tag created for release management only.
 
-1.1.7
------
+1.1.7 (2016-04-30)
+------------------
 
-* Fix: Check for optional replace-htaccess-file parameter (report by Matthias Zeis, fix by Tom Klingenberg, #191)
-* Fix: Add trailing namespace prefix slash (by Phillip Jackson, #190)
-* Update: Stabilize composer ^1.0.0 (by Tom Klingenberg)
-* Feature: Add zsh auto-completion (by Sam Tay, #189)
-* Feature: Install command: magento-ce-2.0.5 version (by Raul E Watson, #193)
+- Feature: Add install-sample-data sub-command
+- Feature: Add zsh autocompletion
+- Feature: Add trailing namespace slash for Packagist compatibility
+- Feature: Add .github pull request template
+- Feature: Add autocompletion for zsh
+- Feature: Add Magento CE 2.0.3 and 2.0.5
+- Fix: Check for optional replaceHtaccessFile parameter (fixes #191)
+- Fix: Allow crons to run from __call
+- Fix: Remove Magento CE 2.0.3
+- Fix: Preserve closing tag on PSR-4 namespace prefixes
+- Fix: Prevent fatal error on command creation
+- Fix: Stabilize composer
+- Fix: Show command name next to class name when add
+- Fix: Streamline with install-sample-data sub-command
+- Imp: Extract run magento command method
+- Imp: Extract run magento command method
+- Imp: Move fish file to its own directory
+- Imp: Streamline
+- Imp: Track changes
+- Imp: Exit early, do strict comparisons
+- Imp: Merge pull requests and code cleanups
 
-1.1.6
------
+1.1.6 (2016-04-08)
+------------------
 
-* Fix: Fix module loader (report by Matthias Walter, fix by Tom Klingenberg)
+- No code changes. Tag created for release management only.
 
-1.1.5
------
+1.1.5 (2016-04-05)
+------------------
 
-* Fix: #172 Base-URL check on IP addresses (by Tom Klingenberg)
-* Fix: Whitespace and code-style (by Tom Klingenberg)
-* Feature: Install command: magento-ce-2.0.4 version (by Tom Klingenberg)
-* Feature: Extract config-loader (by Tom Klingenberg)
-* Feature: Add dry-run mode for db:dump (by Tom Klingenberg)
+- Feature: Add fish shell autocompletion
+- Feature: Add Magento CE 2.0.4
+- Fix: Fix config:get script output value encoding
+- Fix: Code-style fixes (PSR2 length)
+- Fix: Bugfix in reinit to prevent Config already initialized
+- Fix: Base-URL check on IP addresses (#172)
+- Fix: Whitespace and code style
+- Fix: __halt_compiler keyword case
+- Fix: Custom-file-name-property
+- Fix: Global options swallowing arguments
+- Imp: Extract ConfigurationLoader subcomponents
+- Imp: Extract bootstrap class
+- Imp: Streamline Application
+- Imp: Add array typehints for config parameter (#795)
+- Imp: Move dispatcher init up
+- Imp: Remove debug cruft
+- Imp: Cleanup test fixtures and code
+- Imp: Update composer properties
+- Imp: Update changelog
 
-1.1.4
------
+1.1.4 (2016-01-30)
+------------------
 
-* Feature: Install command: magento-ce-2.0.1 and magento-ce-2.0.2 versions (by Tom Klingenberg)
-* Feature: #101 Porting command: eav:attribute:view (by Robbie Averill)
-* Feature: #120 Porting command: sys:setup:change-version (by Robbie Averill)
+- Feature: Add eav:attribute:view command
+- Feature: Add sys:setup:change-version command
+- Fix: Download links for n98-magerun.phar
+- Fix: Typo in environment variable name
+- Fix: Code style and typehints
+- Fix: Minor CS improvements
+- Imp: Update changelog
+- Imp: Add additional debug code to log registered core and internal commands
+- Imp: Update MySQL 5.6 setup on Travis
+- Imp: Require sudo on Travis
+- Imp: Make Travis fail early
+- Imp: Rename @type to @var in code style
 
-1.1.3
------
+1.1.3 (2015-12-30)
+------------------
 
-* Fix: #168 Version mismatch (by Tom Klingenberg)
+- No code changes. Tag created for release management only.
 
-1.1.2
------
+1.1.2 (2015-12-30)
+------------------
 
-* Fix: #168 Version mismatch (by Tom Klingenberg)
+- No code changes. Tag created for release management only.
 
-1.1.1
------
+1.1.1 (2015-12-26)
+------------------
 
-* Fix: #160 Stopfile broken (by Tom Klingenberg)
-* Fix: #157 Undefined index moduleFolder (by Robbie Averill)
-* Feature: #132 Porting command: giftcard:create (by Robbie Averill and Steve Robbins)
-* Feature: #133 Porting command: giftcard:info (by Robbie Averill and Steve Robbins)
-* Feature: #134 Porting command: giftcard:remove (by Robbie Averill and Steve Robbins)
-* Feature: Added composer auth to download magento. (by Christian Münch)
+- No code changes. Tag created for release management only.
 
-1.0.0
------
+1.1.0 (2015-12-26)
+------------------
 
-The first n98-magerun2 stable release to power the next-generation
-open source digital commerce platform, Magento 2.0.
+- No code changes. Tag created for release management only.
 
----
+1.0.0 (2015-11-18)
+------------------
 
-References
-----------
-
-* Visit our blog: <https://magerun.net>
+- No code changes. Tag created for release management only.
