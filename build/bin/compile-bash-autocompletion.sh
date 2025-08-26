@@ -32,9 +32,10 @@ fi
 echo "creating bash autocomplete file (this takes a little moment) ..."
 
 header > "${outfile}"
+# Generate the bash completion and expand the last line to include aliases.
+# Do NOT drop the first line — it contains the function signature required by bash.
 vendor/bin/symfony-autocomplete --shell=bash -- "bin/${name}" \
-  | sed '1d ; $ s/$/.phar '"${name} ${base}"'/' \
+  | sed '$ s/$/.phar '"${name} ${base}"'/' \
   >> "${outfile}"
-# sed: remove first line and expand last line to more command names (aliases)
 
 echo "updated \"${outfile}\"."
