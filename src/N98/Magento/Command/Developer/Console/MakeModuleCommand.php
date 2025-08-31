@@ -24,6 +24,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\Question;
 
 /**
  * Class MakeModuleCommand
@@ -47,7 +48,7 @@ class MakeModuleCommand extends AbstractGeneratorCommand
     {
         $this
             ->setName('make:module')
-            ->addArgument('modulename', InputArgument::REQUIRED)
+            ->addArgument('modulename', InputArgument::OPTIONAL, 'Module name (Vendor_Module)')
             ->addOption(
                 'modules-base-dir',
                 'd',
@@ -55,6 +56,25 @@ class MakeModuleCommand extends AbstractGeneratorCommand
                 'Directory where module should be created. Default is app/code if not reconfigured'
             )
             ->setDescription('Creates a new module');
+    }
+
+    protected function interact(InputInterface $input, OutputInterface $output)
+    {
+        if (!$input->getArgument('modulename')) {
+            $helper = $this->getHelper('question');
+            $question = new Question('Module name: ');
+            $question->setValidator(function ($value) {
+                try {
+                    new ModuleNameStructure($value);
+                } catch (\InvalidArgumentException $e) {
+                    throw new \RuntimeException($e->getMessage());
+                }
+                return $value;
+            });
+            $question->setMaxAttempts(null);
+            $moduleName = $helper->ask($input, $output, $question);
+            $input->setArgument('modulename', $moduleName);
+        }
     }
 
     /**
