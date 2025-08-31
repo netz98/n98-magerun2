@@ -171,7 +171,7 @@ We offer some commands which can be used to create boilerplate code or even a co
 | `module` | Set current module context |
 | `make:block` | Creates a generic block class |
 | `make:helper` | Creates a helper class |
-| `make:module` | Creates a new module |
+| `make:module` | Creates a new module (prompts for module name if omitted) |
 | `modules` | List all modules |
 | `make:class` | Creates a generic class |
 | `make:command` | Creates a CLI command |
