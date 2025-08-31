@@ -97,7 +97,7 @@ jobs:
             operating-system: ubuntu-22.04
             php-version: '8.4'
             mariadb-version: '11.4'
-            opensearch-version: '2.19'
+            opensearch-version: '2.19.3'
             composer-version: '2.8.8'
             use-git-repository: false
             git-repository: ""
