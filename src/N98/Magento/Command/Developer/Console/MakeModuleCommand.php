@@ -182,13 +182,22 @@ FILE_BODY;
      */
     private function createComposerFile(ModuleNameStructure $moduleName, WriteInterface $appDirectoryWriter)
     {
+        if ($this->getMagerunApplication()->isMageOs()) {
+            $frameworkPackageName = 'mage-os/framework';
+        } else {
+            $frameworkPackageName = 'magento/framework';
+        }
+
+        $frameworkPackage = $this->magentoComposerLock->getPackageByName($frameworkPackageName);
+
         $composerFileBody = $this->getHelper('twig')->render(
             'dev/console/make/module/composer.json.twig',
             [
                 'vendor'    => $moduleName->getVendorName(),
                 'module'    => $moduleName->getShortModuleName(),
                 'php_version' => '~' . PHP_MAJOR_VERSION . '.' . PHP_MINOR_VERSION . '.0',
-                'magento_framework_version' => '~' . $this->magentoComposerLock->getPackageByName('magento/framework')->version,
+                'magento_framework_package' => $frameworkPackageName,
+                'magento_framework_version' => '~' . $frameworkPackage->version ?? '*',
                 'namespace' => str_replace('\\', '\\\\', $this->getModuleNamespace($moduleName->getFullModuleName())),
             ]
         );
