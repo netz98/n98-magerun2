@@ -11,6 +11,8 @@ namespace N98\Magento;
 use BadMethodCallException;
 use Composer\Autoload\ClassLoader;
 use Exception;
+use Magento\Framework\App\DistributionMetadataInterface;
+use Magento\Framework\App\ProductMetadataInterface;
 use Magento\Framework\Exception\FileSystemException;
 use Magento\Framework\ObjectManagerInterface;
 use N98\Magento\Application\ApplicationAwareInterface;
@@ -199,6 +201,33 @@ class Application extends BaseApplication
     public function isMagentoEnterprise()
     {
         return $this->detectionResult ? $this->detectionResult->isEnterpriseEdition() : false;
+    }
+
+    /**
+     * Check if the current Magento distribution is Mage-OS
+     *
+     * @return bool
+     */
+    public function isMageOs(): bool
+    {
+        try {
+            // Try soft initialization to access the object manager if available
+            $this->initMagento(true);
+
+            $objectManager = $this->getObjectManager();
+            if (!$objectManager) {
+                return false;
+            }
+
+            $productMetadata = $objectManager->get(ProductMetadataInterface::class);
+            if ($productMetadata instanceof DistributionMetadataInterface) {
+                return $productMetadata->getDistributionName() === 'Mage-OS';
+            }
+        } catch (\Throwable $e) {
+            // ignore and return false
+        }
+
+        return false;
     }
 
     /**
