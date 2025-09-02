@@ -196,7 +196,17 @@ FILE_BODY;
                 'vendor'    => $moduleName->getVendorName(),
                 'module'    => $moduleName->getShortModuleName(),
                 'php_version' => '~' . PHP_MAJOR_VERSION . '.' . PHP_MINOR_VERSION . '.0',
-                'magento_framework_package' => $frameworkPackageName,
+
+                /**
+                 * The framework package should always be with the "magento" vendor, because the "mage-os" fork
+                 * is a drop-in replacement for the original package and provides a "replace" directive
+                 * in its composer.json.
+                 *
+                 * See discord thread:
+                 * https://discord.com/channels/893449664093904936/950670671145467924/1412071791622361128
+                 */
+
+                'magento_framework_package' => 'magento/framework',
                 'magento_framework_version' => '~' . $frameworkPackage->version ?? '*',
                 'namespace' => str_replace('\\', '\\\\', $this->getModuleNamespace($moduleName->getFullModuleName())),
             ]
