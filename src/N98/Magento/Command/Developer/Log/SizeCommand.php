@@ -176,6 +176,12 @@ class SizeCommand extends AbstractMagentoCommand
 
         $headers = ['Log File', 'Size', 'Last Modified'];
         if ($format) {
+            // Ensure header is rendered even if there are no rows
+            // (e.g., CSV renderer prints headers only on first row)
+            if (empty($rows)) {
+                $rows[] = array_fill(0, count($headers), '');
+            }
+
             $this->getHelper('table')
                 ->setHeaders($headers)
                 ->renderByFormat($output, $rows, $format);
