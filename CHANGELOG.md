@@ -5,7 +5,6 @@ RECENT CHANGES
 ------------------
 
 - Add: --check option in dev:module:detect-composer-dependencies command (issue #1727)
-- Fix: excluded tables were dumped as structure if --strip option was used (issue #1731)
 - Add: admin:user:activate and admin:user:deactivate commands (PR #1761, issue #1760)
 - Add: new dev:log:size command to show log file sizes (PR #1749, issue #76)
 - Add: --format option to dev:log:size command (e.g. human-readable output) (issue #76)
@@ -16,6 +15,7 @@ RECENT CHANGES
 - Fix: cron initialization respects configured pub root (issue #545)
 - Fix: bash autocompletion updates (PR #1774, #1765; issues #1773, #1764)
 - Fix: use "magento" vendor for generated framework package in module generator (Mage-OS compatibility) (#1239)
+- Fix: excluded tables were dumped as structure if --strip option was used (issue #1731)
 - Build: update dev services (MariaDB 10.6, OpenSearch 2.19.3)
 - Build: bump CI actions and dev dependencies (phpstan, php-cs-fixer, captainhook, psysh, etc.)
 - Docs: add docs for admin:user:{activate,deactivate,change-status} and update sys:url:regenerate (PRs #1763, #1770)
