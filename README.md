@@ -72,7 +72,7 @@ For full installation, usage, development, and contribution guidelines, please v
 | [magerun](https://netz98.github.io/n98-magerun2/command-docs/magerun/)       | Commands for working with n98-magerun2 config and internal tools.         | `magerun:config:info`, `magerun:config:dump`                                                 |
 | [routes](https://netz98.github.io/n98-magerun2/command-docs/routes/)         | Commands for managing and viewing Magento routes.                                  | `routes:list`                                                                               |
 | [script](https://netz98.github.io/n98-magerun2/command-docs/scripting/)      | Command for running sequences of n98-magerun2 commands from a file.       | `script`                                                                                    |
-| [sys](https://netz98.github.io/n98-magerun2/command-docs/sys/)               | Commands for system-level information, checks, and maintenance tasks.     | `sys:info`, `sys:check`, `sys:maintenance`, `sys:cron:list`, `sys:store:list`               |
+| [sys](https://netz98.github.io/n98-magerun2/command-docs/system/)            | Commands for system-level information, checks, and maintenance tasks.     | `sys:info`, `sys:check`, `sys:maintenance`, `sys:cron:list`, `sys:store:list`               |
 
 
 
