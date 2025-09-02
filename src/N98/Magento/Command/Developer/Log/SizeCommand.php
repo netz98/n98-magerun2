@@ -102,14 +102,28 @@ class SizeCommand extends AbstractMagentoCommand
 
         $finder = Finder::create()
             ->files()
-            ->name('*.log')
             ->ignoreUnreadableDirs(true)
             ->in($logPath);
 
-        // Apply filter if provided
+        // Apply name pattern. Important: multiple ->name() calls in Finder are ORed,
+        // which would make a subsequent filter ineffective if '*.log' is already set.
+        // Build a single pattern depending on whether a filter is provided.
         $filter = $input->getOption('filter');
-        if ($filter) {
-            $finder->name('*' . $filter . '*');
+        if ($filter !== null && $filter !== '') {
+            // If user provided wildcards, respect them; otherwise do a substring match within .log files
+            $hasWildcard = (false !== strpbrk($filter, '*?'));
+            if ($hasWildcard) {
+                $pattern = $filter;
+                // If user did not include the .log extension explicitly, append it
+                if (stripos($pattern, '.log') === false) {
+                    $pattern .= '.log';
+                }
+            } else {
+                $pattern = '*' . $filter . '*.log';
+            }
+            $finder->name($pattern);
+        } else {
+            $finder->name('*.log');
         }
 
         $logFiles = [];
