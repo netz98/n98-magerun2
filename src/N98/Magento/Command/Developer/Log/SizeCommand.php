@@ -143,8 +143,10 @@ class SizeCommand extends AbstractMagentoCommand
 
         if (empty($logFiles)) {
             $filterMessage = $filter ? " matching filter '$filter'" : '';
+            // Inform about no matches but continue to render an empty table
+            // and print a total summary to keep output consistent for tests/CI.
             $output->writeln("<info>No log files found{$filterMessage}</info>");
-            return Command::SUCCESS;
+            // Do not return here; continue to render headers and summary below.
         }
 
         // Sort files
