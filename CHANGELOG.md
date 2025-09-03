@@ -1,8 +1,8 @@
 RECENT CHANGES
 ==============
 
-9.1.0 (2025-09-02)
-------------------
+9.1.0-beta1 (2025-09-02)
+------------------------
 
 - Add: --check option in dev:module:detect-composer-dependencies command (issue #1727)
 - Add: admin:user:activate and admin:user:deactivate commands (PR #1761, issue #1760)
