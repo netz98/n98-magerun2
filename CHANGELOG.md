@@ -1,6 +1,15 @@
 RECENT CHANGES
 ==============
 
+9.1.0 (2025-09-08)
+------------------
+
+- Imp: Update 3rd party dependencies (actions, php-cs-fixer)
+- Fix: Fixes broken link to system documentation (by Pieter Hoste)
+- Fix: ensure headers are rendered when no log rows are present
+- Fix: improve log file filtering in dev:log:size command
+- Fix: ensure consistent output when no log files are found
+
 9.1.0-beta1 (2025-09-02)
 ------------------------
 
