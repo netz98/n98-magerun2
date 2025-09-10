@@ -21,6 +21,15 @@ The `docs` directory contains the official documentation for n98-magerun2. We us
    npm run start
    ```
    This will start a local server (usually at http://localhost:3000) for live preview.
+   
+   Note on search (Algolia): Local dev works without any Algolia configuration. If you want the search bar to appear locally, copy `.env.example` to `.env` in the `docs` directory and set:
+   
+   ```bash
+   ALGOLIA_APP_ID=your_app_id
+   ALGOLIA_API_KEY=your_search_only_api_key
+   ```
+   
+   When not set, the search bar is hidden during local development so `npm run start` does not fail.
 5. To build the static documentation site:
    ```bash
    npm run build
