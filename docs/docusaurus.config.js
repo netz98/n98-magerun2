@@ -7,6 +7,33 @@ import { configDotenv } from 'dotenv'
 configDotenv()
 
 /** @type {import('@docusaurus/types').Config} */
+const hasAlgolia = !!process.env.ALGOLIA_APP_ID && !!process.env.ALGOLIA_API_KEY
+
+const navbarItems = [
+  {
+    type: 'doc',
+    position: 'left',
+    docId: 'intro',
+    label: 'Docs'
+  },
+  {
+    type: 'doc',
+    position: 'left',
+    docId: 'command-docs/index',
+    label: 'Commands'
+  },
+  // Only show search when Algolia is configured
+  ...(hasAlgolia ? [{ type: 'search', position: 'right' }] : []),
+  {
+    label: 'GitHub',
+    href: 'https://github.com/netz98/n98-magerun2'
+  },
+  {
+    label: 'valantic (formerly netz98)',
+    href: 'https://netz98.de'
+  }
+]
+
 const config = {
   title: 'n98-magerun2',
   tagline: 'Magento 2 Console Tool',
@@ -33,39 +60,18 @@ const config = {
         src: 'img/logo.svg',
         height: 64
       },
-      items: [
-        {
-          type: 'doc',
-          position: 'left',
-          docId: 'intro',
-          label: 'Docs'
-        },
-        {
-          type: 'doc',
-          position: 'left',
-          docId: 'command-docs/index',
-          label: 'Commands'
-        },
-        {
-          type: 'search',
-          position: 'right'
-        },
-        {
-          label: 'GitHub',
-          href: 'https://github.com/netz98/n98-magerun2'
-        },
-        {
-          label: 'valantic (formerly netz98)',
-          href: 'https://netz98.de'
+      items: navbarItems
+    },
+    ...(hasAlgolia
+      ? {
+          algolia: {
+            appId: process.env.ALGOLIA_APP_ID,
+            apiKey: process.env.ALGOLIA_API_KEY,
+            indexName: 'netz98io',
+            contextualSearch: true
+          }
         }
-      ]
-    },
-    algolia: {
-      appId: process.env.ALGOLIA_APP_ID,
-      apiKey: process.env.ALGOLIA_API_KEY,
-      indexName: 'netz98io',
-      contextualSearch: true
-    },
+      : {}),
     mermaid: {
       theme: { light: 'neutral', dark: 'forest' }
     },
