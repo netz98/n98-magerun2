@@ -92,7 +92,7 @@ jobs:
             use-git-repository: false
             git-repository: ""
 
-          - magento-version: 1.3.0
+          - magento-version: 1.3.1
             composer-repository-url: "https://repo.mage-os.org/"
             operating-system: ubuntu-22.04
             php-version: '8.4'
