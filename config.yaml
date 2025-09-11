@@ -367,6 +367,11 @@ commands:
 
   N98\Magento\Command\Installer\InstallCommand:
     magento-packages:
+      - name: mage-os-1.3.1
+        package: mage-os/project-community-edition
+        version: 1.3.1
+        options:
+          repository-url: https://repo.mage-os.org
       - name: mage-os-1.3.0
         package: mage-os/project-community-edition
         version: 1.3.0
