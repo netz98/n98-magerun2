@@ -74,7 +74,7 @@ jobs:
         uses: actions/checkout@v5
 
       - name: Linux Setup
-        run: ./.github/workflows/linux-setup.sh
+        run: ./.github/scripts/linux-setup.sh
 
       - name: Get Composer Cache Directory
         id: composer-cache

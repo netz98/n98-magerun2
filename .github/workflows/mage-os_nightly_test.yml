@@ -49,7 +49,7 @@ jobs:
           ref: develop
 
       - name: Linux Setup
-        run: ./.github/workflows/linux-setup.sh
+        run: ./.github/scripts/linux-setup.sh
 
       - name: Dump GitHub context
         run: echo "Register Github context"
