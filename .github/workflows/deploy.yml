@@ -51,7 +51,7 @@ jobs:
         run: php n98-magerun2.phar --version
 
       - name: Install Cosign
-        uses: sigstore/cosign-installer@v3.9.2
+        uses: sigstore/cosign-installer@v3.10.0
 
       - name: Sign PHAR file using Cosign
         run: |
@@ -201,7 +201,7 @@ jobs:
         env:
           GIT_USER_EMAIL: ${{secrets.GIT_USER_EMAIL}}
           GIT_USER_NAME: ${{secrets.GIT_USER_NAME}}
-        run: bash .github/workflows/update-dist-repo.sh
+        run: bash .github/scripts/update-dist-repo.sh
 
   create-github-release:
     runs-on: ubuntu-latest
