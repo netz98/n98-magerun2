@@ -20,6 +20,7 @@ jobs:
     permissions:
       contents: read
       checks: write
+      statuses: write
 
     ##################
     # Load all steps #
