@@ -17,6 +17,9 @@ jobs:
     name: Lint Code Base
     # Set the agent to run on
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      checks: write
 
     ##################
     # Load all steps #
@@ -28,8 +31,10 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v5
         with:
-          # Full git history is needed to get a proper list of changed files within `super-linter`
+          # Full git history is needed to get a proper list of changed files
+          # within super-linter
           fetch-depth: 0
+          persist-credentials: false
 
       - name: Remove files which should not be linted
         run: |
@@ -39,7 +44,7 @@ jobs:
       # Run Linter against code base #
       ################################
       - name: Lint Code Base
-        uses: super-linter/super-linter/slim@v5
+        uses: super-linter/super-linter/slim@v8
         env:
           VALIDATE_ALL_CODEBASE: false
           VALIDATE_BASH: false
@@ -50,6 +55,9 @@ jobs:
           VALIDATE_PHP_PHPCS: false
           VALIDATE_PHP_PHPSTAN: false
           VALIDATE_PHP_PSALM: false
+          VALIDATE_CHECKOV: false
+          VALIDATE_YAML_PRETTIER: false
+          VALIDATE_TRIVY: false
           MARKDOWN_CONFIG_FILE: '.markdown-lint.yml'
           DEFAULT_BRANCH: 'develop'
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
