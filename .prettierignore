@@ -1,0 +1,2 @@
+# Avoid prettifying Composer manifests; composer.json files are managed by Composer itself.
+**/composer.json
