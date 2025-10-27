@@ -1058,7 +1058,7 @@ function cleanup_files_in_magento() {
 # ============================================
 
 @test "Command: dev:keep-calm" {
-  run $BIN "dev:keep-calm"
+  run $BIN "dev:keep-calm --force-static-content-deploy"
   assert [ "$status" -eq 0 ]
 }
 

@@ -134,6 +134,7 @@ class KeepCalmCommand extends AbstractMagentoCommand
 
         foreach ($this->commands as $commandName => $commandData) {
             $description = $commandData['description'];
+            $commandString = $commandData['commandString'];
 
             // Special handling for hyva:config:generate
             if ($commandName === 'hyva:config:generate') {
@@ -164,6 +165,9 @@ class KeepCalmCommand extends AbstractMagentoCommand
                     $commandIndex++;
                     continue;
                 }
+                if ($forceDeploy && !preg_match('/(^|\s)-f(\s|$)/', $commandString)) {
+                    $commandString .= ' -f';
+                }
             }
 
             if ($this->shouldSkipCommand($commandName, $input, $output)) {
@@ -178,7 +182,7 @@ class KeepCalmCommand extends AbstractMagentoCommand
                 continue;
             }
 
-            $success = $this->runCommand($commandData['commandString'], $description, $output, $commandIndex);
+            $success = $this->runCommand($commandString, $description, $output, $commandIndex);
             if ($success === null) {
                 $executedCommands[] = [
                     'index' => $commandIndex,
