@@ -41,6 +41,9 @@ jobs:
         run: |
           rm -Rf tests/N98/Util/_files/sample-project/composer
 
+      - name: Install Composer Dependencies (ignore platform requirements)
+        run: composer install --ignore-platform-reqs
+
       ################################
       # Run Linter against code base #
       ################################
