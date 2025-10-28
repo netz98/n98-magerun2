@@ -55,7 +55,11 @@ jobs:
 
       - name: Sign PHAR file using Cosign
         run: |
-          cosign sign-blob --yes --output-signature n98-magerun2.phar.sig n98-magerun2.phar
+          cosign sign-blob \
+            --yes \
+            --output-signature n98-magerun2.phar.sig \
+            --bundle n98-magerun2.phar.bundle \
+            n98-magerun2.phar
 
       - name: Import GPG key
         uses: crazy-max/ghaction-import-gpg@v6
@@ -86,6 +90,7 @@ jobs:
             n98-magerun2.phar
             n98-magerun2.phar.asc
             n98-magerun2.phar.sig
+            n98-magerun2.phar.bundle
 
   update-files-magerun-net:
     runs-on: ubuntu-latest
@@ -103,6 +108,7 @@ jobs:
           mv n98-magerun2.phar n98-magerun2-dev.phar
           mv n98-magerun2.phar.asc n98-magerun2-dev.phar.asc
           mv n98-magerun2.phar.sig n98-magerun2-dev.phar.sig
+          mv n98-magerun2.phar.bundle n98-magerun2-dev.phar.bundle
           ls -l
 
       - name: rename phar file (tag)
@@ -128,6 +134,8 @@ jobs:
             "n98-magerun2-${TAG}.phar.asc"
           cp "n98-magerun2.phar.sig" \
             "n98-magerun2-${TAG}.phar.sig"
+          cp "n98-magerun2.phar.bundle" \
+            "n98-magerun2-${TAG}.phar.bundle"
 
           # Only mark as latest if it's a stable version
           if [[ "$TAG" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
@@ -138,6 +146,8 @@ jobs:
               "n98-magerun2-latest.phar.asc"
             cp "n98-magerun2.phar.sig" \
               "n98-magerun2-latest.phar.sig"
+            cp "n98-magerun2.phar.bundle" \
+              "n98-magerun2-latest.phar.bundle"
           else
             echo "This is an alpha/beta release. Not marking as latest."
             # Remove only the original phar file since we don't need it anymore
@@ -145,6 +155,7 @@ jobs:
             rm "n98-magerun2.phar"
             rm "n98-magerun2.phar.asc"
             rm "n98-magerun2.phar.sig"
+            rm "n98-magerun2.phar.bundle"
           fi
 
           # List files to verify
@@ -159,7 +170,7 @@ jobs:
           passphrase: >-
             ${{secrets.SSH_DEPLOY_PASSPHRASE}}
           source: >-
-            *.phar,*.phar.asc,*.phar.sig
+            *.phar,*.phar.asc,*.phar.sig,*.phar.bundle
           target: ${{secrets.SSH_DEPLOY_TARGET}}
           rm: false
           overwrite: true
@@ -254,3 +265,4 @@ jobs:
             n98-magerun2.phar
             n98-magerun2.phar.asc
             n98-magerun2.phar.sig
+            n98-magerun2.phar.bundle
