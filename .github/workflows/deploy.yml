@@ -61,6 +61,13 @@ jobs:
             --bundle n98-magerun2.phar.bundle \
             n98-magerun2.phar
 
+      - name: Ensure Cosign signature file
+        run: |
+          set -eo pipefail
+          jq -er '.messageSignature.signature' \
+            n98-magerun2.phar.bundle | \
+            base64 --decode > n98-magerun2.phar.sig
+
       - name: Import GPG key
         uses: crazy-max/ghaction-import-gpg@v6
         with:
