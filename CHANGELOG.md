@@ -1,6 +1,11 @@
 RECENT CHANGES
 ==============
 
+9.1.1
+-----
+
+- Fix: ensure force deploy flag is added to command string (issue #1816)
+
 9.1.0 (2025-09-08)
 ------------------
 
