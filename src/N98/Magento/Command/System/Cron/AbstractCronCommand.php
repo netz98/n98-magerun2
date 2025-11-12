@@ -8,6 +8,15 @@
 
 namespace N98\Magento\Command\System\Cron;
 
+use InvalidArgumentException;
+use Magento\Cron\Model\ConfigInterface;
+use Magento\Cron\Model\ResourceModel\Schedule\Collection;
+use Magento\Cron\Model\ScheduleFactory;
+use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Framework\App\ProductMetadataInterface;
+use Magento\Framework\App\State;
+use Magento\Framework\Stdlib\DateTime\DateTime;
+use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
 use Magento\Store\Model\ScopeInterface as ScopeInterfaceAlias;
 use N98\Magento\Command\AbstractMagentoCommand;
 use Symfony\Component\Console\Exception\RuntimeException;
@@ -73,14 +82,14 @@ abstract class AbstractCronCommand extends AbstractMagentoCommand
      * @param \Magento\Cron\Model\ScheduleFactory $cronSchedulFactory
      */
     public function inject(
-        \Magento\Framework\App\State $state,
-        \Magento\Cron\Model\ConfigInterface $cronConfig,
-        \Magento\Framework\App\ProductMetadataInterface $productMetadata,
-        \Magento\Framework\Stdlib\DateTime\TimezoneInterface $timezone,
-        \Magento\Framework\Stdlib\DateTime\DateTime $dateTime,
-        \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
-        \Magento\Cron\Model\ResourceModel\Schedule\Collection $cronScheduleCollection,
-        \Magento\Cron\Model\ScheduleFactory $cronSchedulFactory
+        State $state,
+        ConfigInterface $cronConfig,
+        ProductMetadataInterface $productMetadata,
+        TimezoneInterface $timezone,
+        DateTime $dateTime,
+        ScopeConfigInterface $scopeConfig,
+        Collection $cronScheduleCollection,
+        ScheduleFactory $cronSchedulFactory
     ) {
         $this->state = $state;
         $this->cronConfig = $cronConfig;
@@ -105,7 +114,7 @@ abstract class AbstractCronCommand extends AbstractMagentoCommand
 
         foreach ($jobs as $jobGroupCode => $jobGroup) {
             foreach ($jobGroup as $jobKey => $jobConfig) {
-                $currentJobName = $jobGroup['name'] ?? $jobKey;
+                $currentJobName = $jobConfig['name'] ?? $jobKey;
                 if ($jobName && !fnmatch($jobName, $currentJobName)) {
                     continue;
                 }
@@ -239,7 +248,7 @@ abstract class AbstractCronCommand extends AbstractMagentoCommand
         $question = new ChoiceQuestion('<question>Please select a job:</question>', $choices);
         $question->setValidator(function ($typeInput) use ($jobs) {
             if (!isset($jobs[$typeInput - 1])) {
-                throw new \InvalidArgumentException('Invalid job');
+                throw new InvalidArgumentException('Invalid job');
             }
             return $jobs[$typeInput - 1]['Job'];
         });
@@ -268,7 +277,7 @@ abstract class AbstractCronCommand extends AbstractMagentoCommand
         $jobConfig = $this->getJobConfig($jobCode);
 
         if (empty($jobCode) || !isset($jobConfig['instance'])) {
-            throw new \InvalidArgumentException('No job config found!');
+            throw new InvalidArgumentException('No job config found!');
         }
 
         $model = $this->getObjectManager()->get($jobConfig['instance']);
