@@ -10,12 +10,17 @@ Lists all cronjobs defined in crontab.xml files. This is useful for auditing sch
 :::
 
 ```sh
-n98-magerun2.phar sys:cron:list [--format[="..."]]
+n98-magerun2.phar sys:cron:list [<job_code>] [--format[="..."]]
 ```
 
+## Arguments
+| Argument     | Description                                                                                                                                        |
+|--------------|----------------------------------------------------------------------------------------------------------------------------------------------------|
+| `<job_code>` | *(Optional)* Filter the output to cronjobs matching the given code. Supports wildcards (`*`) so you can target groups of jobs (e.g., `catalog_*`). |
+
 ## Options
-| Option             | Description                                          |
-|--------------------|------------------------------------------------------|
+| Option              | Description                                          |
+|---------------------|------------------------------------------------------|
 | `--format[=FORMAT]` | Output Format. One of [csv,json,json_array,yaml,xml] |
 
 The `--format` option allows you to specify the output format for the list of cronjobs. Supported formats are:
