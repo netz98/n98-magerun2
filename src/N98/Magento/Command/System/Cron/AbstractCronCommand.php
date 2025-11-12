@@ -93,10 +93,11 @@ abstract class AbstractCronCommand extends AbstractMagentoCommand
     }
 
     /**
+     * @param string|null $jobName
      * @return array
      * @throws \Magento\Framework\Exception\CronException
      */
-    protected function getJobs()
+    protected function getJobs($jobName = null)
     {
         $table = [];
 
@@ -104,8 +105,12 @@ abstract class AbstractCronCommand extends AbstractMagentoCommand
 
         foreach ($jobs as $jobGroupCode => $jobGroup) {
             foreach ($jobGroup as $jobKey => $jobConfig) {
+                $currentJobName = $jobGroup['name'] ?? $jobKey;
+                if ($jobName && !fnmatch($jobName, $currentJobName)) {
+                    continue;
+                }
                 $row = [
-                    'Job'   => $jobGroup['name'] ?? $jobKey,
+                    'Job'   => $currentJobName,
                     'Group' => $jobGroupCode,
                 ];
 
@@ -119,9 +124,12 @@ abstract class AbstractCronCommand extends AbstractMagentoCommand
             }
         }
 
-        usort($table, static function ($a, $b) {
-            return strcmp($a['Job'], $b['Job']);
-        });
+        usort(
+            $table,
+            static function ($a, $b) {
+                return strcmp($a['Job'], $b['Job']);
+            }
+        );
 
         return $table;
     }

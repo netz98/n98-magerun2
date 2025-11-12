@@ -16,4 +16,19 @@ class ListCommandTest extends TestCase
     {
         $this->assertDisplayContains('sys:cron:list', 'Cronjob List');
     }
+
+    public function testExecuteWithFilter()
+    {
+        $this->assertDisplayContains('sys:cron:list catalog_product_outdated_price_values_cleanup', 'catalog_product_outdated_price_values_cleanup');
+    }
+
+    public function testExecuteWithWildcardFilter()
+    {
+        $this->assertDisplayContains('sys:cron:list catalog_*', 'catalog_product_outdated_price_values_cleanup');
+    }
+
+    public function testExecuteWithNonExistentFilter()
+    {
+        $this->assertDisplayContains('sys:cron:list non_existent_filter', 'No cron jobs found.');
+    }
 }

@@ -12,6 +12,7 @@ use Magento\Framework\App\Area;
 use Magento\Framework\App\AreaList;
 use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -27,6 +28,7 @@ class ListCommand extends AbstractCronCommand
         $this
             ->setName('sys:cron:list')
             ->setDescription('Lists all cronjobs')
+            ->addArgument('jobName', InputArgument::OPTIONAL, 'Filter by job name. Wildcards allowed.')
             ->addOption(
                 'format',
                 null,
@@ -57,7 +59,12 @@ class ListCommand extends AbstractCronCommand
             $this->writeSection($output, 'Cronjob List');
         }
 
-        $table = $this->getJobs();
+        $table = $this->getJobs((string) $input->getArgument('jobName'));
+        if (empty($table)) {
+            $output->writeln('<info>No cron jobs found.</info>');
+
+            return Command::SUCCESS;
+        }
         $this->getHelper('table')
             ->setHeaders(array_keys(current($table)))
             ->renderByFormat($output, $table, $input->getOption('format'));
