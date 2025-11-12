@@ -28,7 +28,11 @@ class ListCommand extends AbstractCronCommand
         $this
             ->setName('sys:cron:list')
             ->setDescription('Lists all cronjobs')
-            ->addArgument('jobName', InputArgument::OPTIONAL, 'Filter by job name. Wildcards allowed.')
+            ->addArgument(
+                'job_name',
+                InputArgument::OPTIONAL,
+                'Filter by job name. Wildcards with * are allowed.'
+            )
             ->addOption(
                 'format',
                 null,
@@ -59,7 +63,7 @@ class ListCommand extends AbstractCronCommand
             $this->writeSection($output, 'Cronjob List');
         }
 
-        $table = $this->getJobs((string) $input->getArgument('jobName'));
+        $table = $this->getJobs((string) $input->getArgument('job_name'));
         if (empty($table)) {
             $output->writeln('<info>No cron jobs found.</info>');
 
