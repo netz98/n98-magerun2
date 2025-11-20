@@ -2302,16 +2302,16 @@
         },
         {
             "name": "captainhook/captainhook",
-            "version": "5.26.0",
+            "version": "5.26.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/captainhook-git/captainhook.git",
-                "reference": "25f4a8a1ab0ed315952007fa26ca4357c0213d13"
+                "reference": "799be87f8f4ccb3af0bd0e7518695ac9b21e883e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/captainhook-git/captainhook/zipball/25f4a8a1ab0ed315952007fa26ca4357c0213d13",
-                "reference": "25f4a8a1ab0ed315952007fa26ca4357c0213d13",
+                "url": "https://api.github.com/repos/captainhook-git/captainhook/zipball/799be87f8f4ccb3af0bd0e7518695ac9b21e883e",
+                "reference": "799be87f8f4ccb3af0bd0e7518695ac9b21e883e",
                 "shasum": ""
             },
             "require": {
@@ -2374,7 +2374,7 @@
             ],
             "support": {
                 "issues": "https://github.com/captainhook-git/captainhook/issues",
-                "source": "https://github.com/captainhook-git/captainhook/tree/5.26.0"
+                "source": "https://github.com/captainhook-git/captainhook/tree/5.26.1"
             },
             "funding": [
                 {
@@ -2382,7 +2382,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-11-18T23:47:11+00:00"
+            "time": "2025-11-19T21:03:15+00:00"
         },
         {
             "name": "captainhook/secrets",
@@ -6267,16 +6267,16 @@
         },
         {
             "name": "sebastianfeldmann/git",
-            "version": "3.15.1",
+            "version": "3.15.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianfeldmann/git.git",
-                "reference": "90cb5a32f54dbb0d7dcd87d02e664ec2b50c0c96"
+                "reference": "90083f7930134846e18a0dec4110dd4bd191161c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianfeldmann/git/zipball/90cb5a32f54dbb0d7dcd87d02e664ec2b50c0c96",
-                "reference": "90cb5a32f54dbb0d7dcd87d02e664ec2b50c0c96",
+                "url": "https://api.github.com/repos/sebastianfeldmann/git/zipball/90083f7930134846e18a0dec4110dd4bd191161c",
+                "reference": "90083f7930134846e18a0dec4110dd4bd191161c",
                 "shasum": ""
             },
             "require": {
@@ -6317,7 +6317,7 @@
             ],
             "support": {
                 "issues": "https://github.com/sebastianfeldmann/git/issues",
-                "source": "https://github.com/sebastianfeldmann/git/tree/3.15.1"
+                "source": "https://github.com/sebastianfeldmann/git/tree/3.15.2"
             },
             "funding": [
                 {
@@ -6325,7 +6325,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-09-05T08:07:09+00:00"
+            "time": "2025-11-20T19:10:49+00:00"
         },
         {
             "name": "seld/phar-utils",
