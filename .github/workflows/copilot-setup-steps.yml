@@ -71,7 +71,7 @@ jobs:
           coverage: none
 
       - name: Checkout HEAD
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Linux Setup
         run: ./.github/scripts/linux-setup.sh

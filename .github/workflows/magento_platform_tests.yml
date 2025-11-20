@@ -207,13 +207,13 @@ jobs:
           coverage: none
 
       - name: Checkout PR
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         if: github.event_name == 'pull_request_target'
         with:
           ref: ${{ github.event.pull_request.head.sha }}
 
       - name: Checkout HEAD
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
 
       - name: Linux Setup
