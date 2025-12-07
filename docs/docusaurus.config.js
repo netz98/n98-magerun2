@@ -6,6 +6,13 @@ import { configDotenv } from 'dotenv'
 
 configDotenv()
 
+// Node 25 exposes a throwing localStorage getter unless a storage file path is provided.
+// Remove it to keep SSR evaluation from failing during the static build.
+const localStorageDescriptor = Object.getOwnPropertyDescriptor(globalThis, 'localStorage')
+if (localStorageDescriptor) {
+  delete globalThis.localStorage
+}
+
 /** @type {import('@docusaurus/types').Config} */
 const hasAlgolia = !!process.env.ALGOLIA_APP_ID && !!process.env.ALGOLIA_API_KEY
 
