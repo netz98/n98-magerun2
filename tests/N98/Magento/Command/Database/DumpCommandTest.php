@@ -189,7 +189,7 @@ class DumpCommandTest extends TestCase
 
         // Both tables should be included.
         // If the bug exists, only the last one (admin_user) might be included, or it fails to run if not handling array.
-        // However, with current code, if we pass array to input in test, Console logic might pass it as array to command, 
+        // However, with current code, if we pass array to input in test, Console logic might pass it as array to command,
         // but if command option is not array, it might take last one or behave weirdly.
         // Actually, in Symfony Console Test, passing array to a non-array option usually throws Exception or takes last.
         // Let's see what happens.
@@ -199,7 +199,7 @@ class DumpCommandTest extends TestCase
         // includeTables are used to merge into tablesForStructureDump.
         // Then ignores are calculated.
 
-        // If included, it should NOT be in the ignore list for DATA dump? 
+        // If included, it should NOT be in the ignore list for DATA dump?
         // excludeTables = all - includeTables
         // So included tables are NOT in excludeTables.
         // ignoreTableList = excludeTables + stripTables.
