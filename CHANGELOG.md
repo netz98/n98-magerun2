@@ -1,6 +1,11 @@
 RECENT CHANGES
 ==============
 
+9.2.1 (2026-01-05)
+------------------
+
+- Fix: support multiple --exclude options in db:dump command
+
 9.2.0 (2026-01-05)
 ------------------
 
