@@ -20,11 +20,11 @@ class DumpCommandTest extends TestCase
     public function testExecute()
     {
         $input = [
-            'command'        => 'db:dump',
-            '--add-time'     => true,
+            'command' => 'db:dump',
+            '--add-time' => true,
             '--only-command' => true,
-            '--force'        => true,
-            '--compression'  => 'gz',
+            '--force' => true,
+            '--compression' => 'gz',
         ];
 
         // Accept both mysqldump and mariadb-dump for compatibility
@@ -71,10 +71,10 @@ class DumpCommandTest extends TestCase
     public function filenamePatterns($regex, array $options)
     {
         $mandatory = [
-            'command'               => 'db:dump',
-            '--force'               => true,
+            'command' => 'db:dump',
+            '--force' => true,
             '--print-only-filename' => true,
-            '--dry-run'             => null,
+            '--dry-run' => null,
         ];
 
         $defaults = [
@@ -87,12 +87,12 @@ class DumpCommandTest extends TestCase
     public function testWithStripOption()
     {
         $input = [
-            'command'        => 'db:dump',
-            '--add-time'     => true,
+            'command' => 'db:dump',
+            '--add-time' => true,
             '--only-command' => true,
-            '--force'        => true,
-            '--strip'        => '@development not_existing_table_1',
-            '--compression'  => 'gzip',
+            '--force' => true,
+            '--strip' => '@development not_existing_table_1',
+            '--compression' => 'gzip',
         ];
 
         $dbConfig = $this->getDatabaseConnection()->getConfig();
@@ -111,11 +111,11 @@ class DumpCommandTest extends TestCase
          */
         $this->assertDisplayNotContains(
             [
-                'command'        => 'db:dump',
-                '--add-time'     => true,
+                'command' => 'db:dump',
+                '--add-time' => true,
                 '--only-command' => true,
-                '--force'        => true,
-                '--strip'        => '@development',
+                '--force' => true,
+                '--strip' => '@development',
             ],
             ".sql.gz"
         );
@@ -124,12 +124,12 @@ class DumpCommandTest extends TestCase
     public function testWithExcludeOption()
     {
         $input = [
-            'command'        => 'db:dump',
-            '--add-time'     => true,
+            'command' => 'db:dump',
+            '--add-time' => true,
             '--only-command' => true,
-            '--force'        => true,
-            '--exclude'      => 'core_config_data',
-            '--compression'  => 'gzip',
+            '--force' => true,
+            '--exclude' => 'core_config_data',
+            '--compression' => 'gzip',
         ];
 
         $dbConfig = $this->getDatabaseConnection()->getConfig();
@@ -144,11 +144,11 @@ class DumpCommandTest extends TestCase
          */
         $this->assertDisplayNotContains(
             [
-                'command'        => 'db:dump',
-                '--add-time'     => true,
+                'command' => 'db:dump',
+                '--add-time' => true,
                 '--only-command' => true,
-                '--force'        => true,
-                '--exclude'      => 'core_config_data',
+                '--force' => true,
+                '--exclude' => 'core_config_data',
             ],
             ".sql.gz"
         );
@@ -157,12 +157,12 @@ class DumpCommandTest extends TestCase
     public function testWithIncludeOptions()
     {
         $input = [
-            'command'        => 'db:dump',
-            '--add-time'     => true,
+            'command' => 'db:dump',
+            '--add-time' => true,
             '--only-command' => true,
-            '--force'        => true,
-            '--include'      => 'core_config_data',
-            '--compression'  => 'gzip',
+            '--force' => true,
+            '--include' => 'core_config_data',
+            '--compression' => 'gzip',
         ];
 
         $dbConfig = $this->getDatabaseConnection()->getConfig();
@@ -173,6 +173,45 @@ class DumpCommandTest extends TestCase
         $this->assertDisplayContains($input, ".sql.gz");
     }
 
+    public function testWithMultipleIncludeOptions()
+    {
+        $input = [
+            'command' => 'db:dump',
+            '--add-time' => true,
+            '--only-command' => true,
+            '--force' => true,
+            '--include' => ['core_config_data', 'admin_user'],
+            '--compression' => 'gzip',
+        ];
+
+        $dbConfig = $this->getDatabaseConnection()->getConfig();
+        $db = $dbConfig['dbname'];
+
+        // Both tables should be included.
+        // If the bug exists, only the last one (admin_user) might be included, or it fails to run if not handling array.
+        // However, with current code, if we pass array to input in test, Console logic might pass it as array to command, 
+        // but if command option is not array, it might take last one or behave weirdly.
+        // Actually, in Symfony Console Test, passing array to a non-array option usually throws Exception or takes last.
+        // Let's see what happens.
+        // We expect these to be NOT ignored (i.e. included)
+        // But simpler check: if they are included, they effectively are NOT in the ignore list for the structure dump?
+        // Wait, DumpCommand logic:
+        // includeTables are used to merge into tablesForStructureDump.
+        // Then ignores are calculated.
+
+        // If included, it should NOT be in the ignore list for DATA dump? 
+        // excludeTables = all - includeTables
+        // So included tables are NOT in excludeTables.
+        // ignoreTableList = excludeTables + stripTables.
+        // So included tables are NOT in ignoreTableList.
+
+        // So we assert Display NOT Contains "--ignore-table=$db.core_config_data"
+        // And NOT Contains "--ignore-table=$db.admin_user"
+
+        $this->assertDisplayNotContains($input, "--ignore-table=$db.core_config_data ");
+        $this->assertDisplayNotContains($input, "--ignore-table=$db.admin_user ");
+    }
+
     public function testExecuteWithMydumper()
     {
         if (OperatingSystem::isProgramInstalled('mydumper') === false) {
@@ -180,12 +219,12 @@ class DumpCommandTest extends TestCase
         }
 
         $input = [
-            'command'        => 'db:dump',
-            '--add-time'     => true,
+            'command' => 'db:dump',
+            '--add-time' => true,
             '--only-command' => true,
-            '--force'        => true,
-            '--compression'  => 'gz',
-            '--mydumper'     => true,
+            '--force' => true,
+            '--compression' => 'gz',
+            '--mydumper' => true,
         ];
 
         $this->assertDisplayContains($input, 'mydumper');
@@ -200,13 +239,13 @@ class DumpCommandTest extends TestCase
         }
 
         $input = [
-            'command'        => 'db:dump',
-            '--add-time'     => true,
+            'command' => 'db:dump',
+            '--add-time' => true,
             '--only-command' => true,
-            '--force'        => true,
-            '--strip'        => '@development not_existing_table_1',
-            '--compression'  => 'gzip',
-            '--mydumper'     => true,
+            '--force' => true,
+            '--strip' => '@development not_existing_table_1',
+            '--compression' => 'gzip',
+            '--mydumper' => true,
         ];
 
         $this->assertDisplayRegExp($input, '/--no-data=(\'|\")?customer_entity(\'|\")?/');
@@ -222,13 +261,13 @@ class DumpCommandTest extends TestCase
         }
 
         $input = [
-            'command'        => 'db:dump',
-            '--add-time'     => true,
+            'command' => 'db:dump',
+            '--add-time' => true,
             '--only-command' => true,
-            '--force'        => true,
-            '--exclude'      => 'core_config_data',
-            '--compression'  => 'gzip',
-            '--mydumper'     => true,
+            '--force' => true,
+            '--exclude' => 'core_config_data',
+            '--compression' => 'gzip',
+            '--mydumper' => true,
         ];
 
         $this->assertDisplayContains($input, '--ignore-table');
@@ -239,12 +278,12 @@ class DumpCommandTest extends TestCase
     public function testWithIncludeExcludeOptions()
     {
         $input = [
-            'command'        => 'db:dump',
-            '--add-time'     => true,
+            'command' => 'db:dump',
+            '--add-time' => true,
             '--only-command' => true,
-            '--force'        => true,
-            '--include'      => 'admin_user',
-            '--exclude'      => 'admin_user',
+            '--force' => true,
+            '--include' => 'admin_user',
+            '--exclude' => 'admin_user',
         ];
 
         $dbConfig = $this->getDatabaseConnection()->getConfig();

@@ -14,6 +14,7 @@ use N98\Magento\Command\Database\Compressor\Compressor;
 use N98\Util\Console\Enabler;
 use N98\Util\Console\Helper\DatabaseHelper;
 use N98\Util\Exec;
+use N98\Util\OperatingSystem;
 use N98\Util\VerifyOrDie;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\QuestionHelper;
@@ -137,7 +138,7 @@ class DumpCommand extends AbstractDatabaseCommand
             ->addOption(
                 'include',
                 'i',
-                InputOption::VALUE_OPTIONAL,
+                InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY,
                 'Tables to include entirely in the dump (including structure)'
             )
             ->addOption(
@@ -440,11 +441,13 @@ HELP;
         $ignoreTableList = array_unique($ignoreTableList);
 
         $ignore = '';
-        foreach ($ignoreTableList as $ignoreItem) {
-            $prefixedIgnoreItem = $this->prefixTableIfNeeded($ignoreItem, $dbPrefix);
-            $ignore .= '--ignore-table=' . $dbName . '.' . $prefixedIgnoreItem . ' ';
+        // exclude tables from dump
+        if (count($ignoreTableList) > 0) {
+            foreach ($ignoreTableList as $ignoreItem) {
+                $prefixedIgnoreItem = $this->prefixTableIfNeeded($ignoreItem, $dbPrefix);
+                $ignore .= '--ignore-table=' . $dbName . '.' . $prefixedIgnoreItem . ' ';
+            }
         }
-
         $execs->add(
             rtrim($ignore) // Use rtrim to remove trailing space if any
             . ' ' . $mysqlClientToolConnectionString
@@ -552,11 +555,16 @@ HELP;
      */
     private function includeTables(InputInterface $input, OutputInterface $output)
     {
-        if (!$input->getOption('include')) {
+        $includeOption = $input->getOption('include');
+        if (!$includeOption) {
             return [];
         }
 
-        $includeTables = $this->resolveDatabaseTables($input->getOption('include'));
+        if (is_array($includeOption)) {
+            $includeOption = implode(' ', $includeOption);
+        }
+
+        $includeTables = $this->resolveDatabaseTables($includeOption);
 
         if ($includeTables && $this->nonCommandOutput($input)) {
             $output->writeln(
@@ -579,7 +587,11 @@ HELP;
 
         if ($input->getOption('include')) {
             $database = $this->getDatabaseHelper();
-            $includeTables = $this->resolveDatabaseTables($input->getOption('include'));
+            $includeOption = $input->getOption('include');
+            if (is_array($includeOption)) {
+                $includeOption = implode(' ', $includeOption);
+            }
+            $includeTables = $this->resolveDatabaseTables($includeOption);
             $excludeTables = array_diff($database->getTables(), $includeTables);
         }
 
@@ -658,9 +670,20 @@ HELP;
 
         list($namePrefix, $nameSuffix) = $this->getFileNamePrefixSuffix($optionAddTime);
 
+        if ($fileName = $input->getArgument('filename')) {
+            // Expand tilde
+            if (strpos($fileName, '~') === 0 && ($home = OperatingSystem::getHomeDir())) {
+                if ($fileName === '~') {
+                    $fileName = $home;
+                } elseif (strpos($fileName, '~/') === 0) {
+                    $fileName = $home . substr($fileName, 1);
+                }
+            }
+        }
+
         if (
             (
-                ($fileName = $input->getArgument('filename')) === null
+                $fileName === null
                 || ($isDir = is_dir($fileName))
             )
             && !$input->getOption('stdout')
