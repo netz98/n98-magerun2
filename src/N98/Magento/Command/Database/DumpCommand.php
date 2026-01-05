@@ -132,7 +132,7 @@ class DumpCommand extends AbstractDatabaseCommand
             ->addOption(
                 'exclude',
                 'e',
-                InputOption::VALUE_OPTIONAL,
+                InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY,
                 'Tables to exclude entirely from the dump (including structure)'
             )
             ->addOption(
@@ -596,7 +596,11 @@ HELP;
         }
 
         if ($input->getOption('exclude')) {
-            $excludeTables = array_merge($excludeTables, $this->resolveDatabaseTables($input->getOption('exclude')));
+            $excludeOption = $input->getOption('exclude');
+            if (is_array($excludeOption)) {
+                $excludeOption = implode(' ', $excludeOption);
+            }
+            $excludeTables = array_merge($excludeTables, $this->resolveDatabaseTables($excludeOption));
             if (isset($includeTables)) { // only needed when also "include" was given
                 asort($excludeTables);
                 $excludeTables = array_unique($excludeTables);
