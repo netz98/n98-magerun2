@@ -4,16 +4,13 @@ namespace N98\Magento\Command\Database;
 
 use N98\Magento\Application;
 use N98\Magento\Command\Database\Compressor\Compressor;
-use N98\Magento\Command\Database\DumpCommand;
 use N98\Util\Console\Helper\DatabaseHelper;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 use Symfony\Component\Console\Helper\HelperSet;
 use Symfony\Component\Console\Helper\QuestionHelper;
-use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Input\InputOption;
 
 class DumpCommandUnitTest extends TestCase
 {
@@ -86,8 +83,9 @@ class DumpCommandUnitTest extends TestCase
 
             // If I fix logic to handle array inside DumpCommand, `resolveDatabaseTables` will likely pass array to `resolveTables`.
             // So return argument as is.
-            if (is_string($tables))
+            if (is_string($tables)) {
                 return explode(' ', $tables);
+            }
             return $tables;
         }));
         $databaseHelper->method('getMysqlClientToolConnectionString')->willReturn('-h localhost -u user -p pass magento');
