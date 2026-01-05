@@ -56,7 +56,7 @@ class Application extends BaseApplication
     /**
      * @var string
      */
-    const APP_VERSION = '9.1.1';
+    const APP_VERSION = '9.2.0';
 
     /**
      * @var int
@@ -223,7 +223,7 @@ class Application extends BaseApplication
             if ($productMetadata instanceof DistributionMetadataInterface) {
                 return $productMetadata->getDistributionName() === 'Mage-OS';
             }
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             // ignore and return false
         }
 

@@ -1,10 +1,14 @@
 RECENT CHANGES
 ==============
 
-9.1.1
------
+9.2.0 (2026-01-05)
+------------------
 
+- Add: sys:cron:list supports filtering by job code/name (wildcards)
+- Fix: support multiple --include options in db:dump command (issue #1868)
 - Fix: ensure force deploy flag is added to command string (issue #1816)
+- Build: add signing and deployment of PHAR bundles via Cosign; ensure signature file is created
+- Build: bump dependencies (php-cs-fixer, phpstan, psy/psysh, twig/twig, rmccue/requests, super-linter, GitHub Actions, webpack-dev-server, qs, npm/yarn group)
 
 9.1.0 (2025-09-08)
 ------------------
