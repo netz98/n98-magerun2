@@ -184,4 +184,86 @@ class DumpCommandUnitTest extends TestCase
         $this->assertStringStartsWith($home, $expanded);
         $this->assertStringNotContainsString('~', $expanded);
     }
+
+    public function testMultipleExcludesAreRespectedInCommandGeneration()
+    {
+        // Mock Input
+        $input = $this->createMock(InputInterface::class);
+        $input->method('getOption')->will($this->returnValueMap([
+            ['include', null],
+            ['exclude', ['table1', 'table2']],
+            ['strip', null],
+            ['no-views', false],
+            ['compression', null],
+            ['no-single-transaction', true],
+            ['human-readable', false],
+            ['set-gtid-purged-off', false],
+            ['add-routines', false],
+            ['no-tablespaces', false],
+            ['keep-column-statistics', false],
+            ['git-friendly', false],
+            ['keep-definer', false],
+            ['mydumper', false],
+            ['stdout', false],
+            ['only-command', true],
+            ['print-only-filename', false],
+            ['dry-run', false],
+            ['views', false],
+            ['force', true],
+            ['add-time', 'no'],
+        ]));
+
+        $input->method('getArgument')->will($this->returnValueMap([
+            ['filename', 'dump.sql']
+        ]));
+
+        $output = $this->createMock(OutputInterface::class);
+        $outputBuffer = [];
+        $output->method('writeln')->will($this->returnCallback(function ($message) use (&$outputBuffer) {
+            $outputBuffer[] = $message;
+        }));
+
+        $databaseHelper = $this->createMock(DatabaseHelper::class);
+        $databaseHelper->method('getDbSettings')->willReturn([
+            'host' => 'localhost',
+            'username' => 'user',
+            'password' => 'pass',
+            'dbname' => 'magento',
+            'prefix' => '',
+        ]);
+        $databaseHelper->method('getMysqlDumpBinary')->willReturn('mysqldump');
+        $databaseHelper->method('getViews')->willReturn([]);
+        $databaseHelper->method('getTables')->willReturn(['table1', 'table2', 'table3']);
+        $databaseHelper->method('resolveTables')->will($this->returnCallback(function ($tables) {
+            if (is_string($tables)) {
+                return explode(' ', $tables);
+            }
+            return $tables;
+        }));
+        $databaseHelper->method('getMysqlClientToolConnectionString')->willReturn('-h localhost -u user -p pass magento');
+        $databaseHelper->method('getTableDefinitions')->willReturn([]);
+
+        $questionHelper = $this->createMock(QuestionHelper::class);
+        $helperSet = $this->createMock(HelperSet::class);
+        $helperSet->method('get')->will($this->returnValueMap([
+            ['database', $databaseHelper],
+            ['question', $questionHelper]
+        ]));
+
+        $application = $this->createMock(Application::class);
+        $application->method('getConfig')->willReturn(['commands' => []]);
+
+        $command = new DumpCommand();
+        $command->setApplication($application);
+        $command->setHelperSet($helperSet);
+
+        $command->run($input, $output);
+
+        $fullOutput = implode("\n", $outputBuffer);
+
+        // table1 and table2 are EXCLUDED, so they should be in ignore-table list
+        $this->assertStringContainsString('--ignore-table=magento.table1', $fullOutput, 'table1 should be ignored (excluded)');
+        $this->assertStringContainsString('--ignore-table=magento.table2', $fullOutput, 'table2 should be ignored (excluded)');
+        $this->assertStringNotContainsString('--ignore-table=magento.table3', $fullOutput, 'table3 should NOT be ignored (not excluded)');
+    }
 }
