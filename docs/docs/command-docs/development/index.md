@@ -18,6 +18,7 @@ Commands tailored for Magento developers, including code generation and debuggin
 ### Theme and Asset Development
 - [dev:asset:clear](./dev-asset-clear.md) - Clear static view files
 - [dev:theme:list](./dev-theme-list.md) - List Themes
+- [dev:theme:duplicates](./dev-theme-duplicates.md) - Find duplicate theme files
 - [dev:theme:build-hyva](./dev-theme-build-hyva.md) - Build Hyva Theme CSS
 
 ### Translation Tools
