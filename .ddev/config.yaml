@@ -8,7 +8,7 @@ additional_hostnames: []
 additional_fqdns: []
 database:
     type: mariadb
-    version: "11,4"
+    version: "11.4"
 hooks:
     post-start:
         - composer: install
