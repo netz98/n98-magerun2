@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "068cf556917ae64c7b026dc7b610080f",
+    "content-hash": "cb938473129a3901ab08349cad5b7017",
     "packages": [
         {
             "name": "dflydev/dot-access-data",
@@ -422,16 +422,16 @@
         },
         {
             "name": "mcp/sdk",
-            "version": "v0.2.2",
+            "version": "v0.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/modelcontextprotocol/php-sdk.git",
-                "reference": "2f29b1dbe5e540162cde4d09e4fea48e83d4c01f"
+                "reference": "42fe1430ce2ceee17be9e119a1f245f5d8dda3bb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/modelcontextprotocol/php-sdk/zipball/2f29b1dbe5e540162cde4d09e4fea48e83d4c01f",
-                "reference": "2f29b1dbe5e540162cde4d09e4fea48e83d4c01f",
+                "url": "https://api.github.com/repos/modelcontextprotocol/php-sdk/zipball/42fe1430ce2ceee17be9e119a1f245f5d8dda3bb",
+                "reference": "42fe1430ce2ceee17be9e119a1f245f5d8dda3bb",
                 "shasum": ""
             },
             "require": {
@@ -488,9 +488,9 @@
             "description": "Model Context Protocol SDK for Client and Server applications in PHP",
             "support": {
                 "issues": "https://github.com/modelcontextprotocol/php-sdk/issues",
-                "source": "https://github.com/modelcontextprotocol/php-sdk/tree/v0.2.2"
+                "source": "https://github.com/modelcontextprotocol/php-sdk/tree/v0.3.0"
             },
-            "time": "2025-12-28T06:32:37+00:00"
+            "time": "2026-01-11T21:16:27+00:00"
         },
         {
             "name": "n98/junit-xml",
