@@ -20,7 +20,8 @@
         },
         "sort-packages": true,
         "allow-plugins": {
-            "phpstan/extension-installer": true
+            "phpstan/extension-installer": true,
+            "php-http/discovery": true
         }
     },
     "require": {
@@ -35,6 +36,7 @@
         "dflydev/dot-access-data": "^3.0",
         "fakerphp/faker": "~1.16",
         "laminas/laminas-filter": "^2.12",
+        "mcp/sdk": "^0.2",
         "n98/junit-xml": "~1.0",
         "psr/container": "~1.1.2",
         "psr/log": "^2.0",
