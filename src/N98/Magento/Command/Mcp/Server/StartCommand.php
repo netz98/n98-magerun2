@@ -14,10 +14,9 @@ use N98\Magento\Command\AbstractMagentoCommand;
 use N98\Magento\Mcp\CommandToolHandler;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\ConsoleOutputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Process\Process;
+
 
 class StartCommand extends AbstractMagentoCommand
 {
@@ -28,97 +27,13 @@ class StartCommand extends AbstractMagentoCommand
     {
         $this
             ->setName('mcp:server:start')
-            ->setDescription('Start an MCP server exposing all n98-magerun2 commands as tools')
-            ->addOption(
-                'transport',
-                't',
-                InputOption::VALUE_REQUIRED,
-                'Transport mode: "stdio" or "http"',
-                'stdio'
-            )
-            ->addOption(
-                'address',
-                'a',
-                InputOption::VALUE_REQUIRED,
-                'Address to bind to (HTTP mode only)',
-                '127.0.0.1'
-            )
-            ->addOption(
-                'port',
-                'p',
-                InputOption::VALUE_REQUIRED,
-                'Port to listen on (HTTP mode only)',
-                '8098'
-            );
+            ->setDescription('Start an MCP server exposing all n98-magerun2 commands as tools');
     }
 
     /**
      * @inheritdoc
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
-    {
-        $transportMode = $input->getOption('transport');
-
-        if ($transportMode === 'http') {
-            return $this->startHttpServer($input, $output);
-        }
-
-        return $this->startStdioServer($input, $output);
-    }
-
-    private function startHttpServer(InputInterface $input, OutputInterface $output): int
-    {
-        $address = $input->getOption('address');
-        $port = $input->getOption('port');
-
-        /** @var \N98\Magento\Application $app */
-        $app = $this->getApplication();
-        $rootDir = $app->getMagentoRootFolder();
-
-        $routerScript = __DIR__ . '/../../../../../../bin/mcp-router.php';
-        if (!file_exists($routerScript)) {
-            // Fallback for installed phar/composer structure if needed, but for dev this is fine
-            $routerScript = realpath(__DIR__ . '/../../../../../../bin/mcp-router.php');
-        }
-
-        if (!$routerScript || !file_exists($routerScript)) {
-            $output->writeln('<error>Could not locate bin/mcp-router.php</error>');
-            return Command::FAILURE;
-        }
-
-        $msg = sprintf("Starting MCP HTTP server at http://%s:%s", $address, $port);
-        $output->writeln("<info>$msg</info>");
-        if ($rootDir) {
-            $output->writeln("<comment>Magento Root: $rootDir</comment>");
-        }
-
-        $process = new Process([
-            PHP_BINARY,
-            '-S',
-            sprintf('%s:%s', $address, $port),
-            '-t',
-            ($rootDir ?: getcwd()), // serve from root or current dir
-            $routerScript,
-        ]);
-
-        $process->setTimeout(null);
-        $process->setIdleTimeout(null);
-
-        // Pass root dir environment variable
-        $env = $process->getEnv();
-        $env['N98_MAGERUN2_ROOT_DIR'] = $rootDir;
-        $process->setEnv($env);
-
-        $process->start(function ($type, $buffer) use ($output) {
-            $output->write($buffer);
-        });
-
-        $process->wait();
-
-        return $process->getExitCode() ?? Command::SUCCESS;
-    }
-
-    private function startStdioServer(InputInterface $input, OutputInterface $output): int
     {
         /** @var \N98\Magento\Application $application */
         $application = $this->getApplication();
@@ -166,7 +81,7 @@ class StartCommand extends AbstractMagentoCommand
         }
 
         $server = $builder->build();
-        if ($logOutput !== null) {
+        if ($logOutput !== null && $logOutput->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE) {
             $logOutput->writeln(sprintf(
                 '<info>MCP server started (%d tools registered).</info>',
                 count($toolNames)
