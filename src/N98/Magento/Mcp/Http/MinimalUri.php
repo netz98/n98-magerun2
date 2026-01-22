@@ -38,10 +38,12 @@ class MinimalUri implements UriInterface
     public function getAuthority(): string
     {
         $auth = $this->host;
-        if ($this->port)
+        if ($this->port) {
             $auth .= ':' . $this->port;
-        if ($this->user)
+        }
+        if ($this->user) {
             $auth = $this->user . ($this->pass ? ':' . $this->pass : '') . '@' . $auth;
+        }
         return $auth;
     }
     public function getUserInfo(): string
