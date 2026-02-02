@@ -40,7 +40,7 @@
         "n98/junit-xml": "~1.0",
         "psr/container": "~1.1.2",
         "psr/log": "^2.0",
-        "psy/psysh": "~0.7",
+        "psy/psysh": "^0.12.19",
         "rmccue/requests": "^2.0",
         "symfony/console": "^6.4",
         "symfony/event-dispatcher": "^6.4",
