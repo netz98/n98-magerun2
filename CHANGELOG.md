@@ -1,6 +1,16 @@
 RECENT CHANGES
 ==============
 
+9.3.0 (2026-02-02)
+------------------
+
+- Add: MCP server command
+- Fix: correct signature check after download (#1885)
+- Fix: resolve psysh test failures (update psysh, disable color auto-detection)
+- Docs: add documentation for MCP server command
+- Build: update dependencies (phpstan, php-cs-fixer, captainhook, twig/twig, qs, lodash, mcp/sdk, super-linter, composer group, Appleboy SSH action)
+- Build: update ddev MariaDB version
+
 9.2.1 (2026-01-05)
 ------------------
 
