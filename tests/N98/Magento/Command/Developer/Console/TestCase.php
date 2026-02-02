@@ -57,6 +57,7 @@ abstract class TestCase extends BaseTestCase
 
         $config = new Configuration();
         $config->setInteractiveMode(Configuration::INTERACTIVE_MODE_DISABLED);
+        $config->setColorMode(Configuration::COLOR_MODE_DISABLED);
         $config->setTrustProject('never');
 
         $shell = new Shell($config);
