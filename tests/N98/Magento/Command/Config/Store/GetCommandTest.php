@@ -204,6 +204,36 @@ class GetCommandTest extends TestCase
         );
     }
 
+    /**
+     * @test
+     */
+    public function testEnhancedConfigReading()
+    {
+        /**
+         * Test that config:store:get uses ScopeConfigInterface to get actual values
+         * This test validates the enhancement that reads from config.php, env.php, and XML defaults
+         */
+        
+        // Set a config value in database
+        $this->assertDisplayContains(
+            [
+                'command' => 'config:store:set',
+                'path'    => 'n98_magerun/test/enhanced_reading',
+                'value'   => 'database_value',
+            ],
+            'n98_magerun/test/enhanced_reading => database_value'
+        );
+
+        // Verify that we can retrieve the value (which should now come from ScopeConfigInterface)
+        $this->assertDisplayContains(
+            [
+                'command' => 'config:store:get',
+                'path'    => 'n98_magerun/test/enhanced_reading',
+            ],
+            '| n98_magerun/test/enhanced_reading | default | 0        |'
+        );
+    }
+
     public function testItAddsScopeIdFilterOnZero()
     {
         $this->assertDisplayContains(

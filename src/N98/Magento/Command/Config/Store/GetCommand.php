@@ -9,6 +9,7 @@
 namespace N98\Magento\Command\Config\Store;
 
 use Magento\Config\Model\ResourceModel\Config\Data\Collection;
+use Magento\Framework\App\Config\ScopeConfigInterface;
 use N98\Magento\Command\Config\AbstractConfigCommand;
 use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
 use Symfony\Component\Console\Command\Command;
@@ -20,6 +21,8 @@ use UnexpectedValueException;
 
 class GetCommand extends AbstractConfigCommand
 {
+    use ConfigReaderTrait;
+
     /**
      * @var Collection
      */
@@ -88,6 +91,25 @@ HELP;
     }
 
     /**
+     * Maps database scope names to ScopeConfigInterface scope names
+     *
+     * @param string $databaseScope
+     * @return string
+     */
+    private function mapDatabaseScopeToConfigScope($databaseScope)
+    {
+        switch ($databaseScope) {
+            case 'websites':
+                return 'website';
+            case 'stores':
+                return 'store';
+            case 'default':
+            default:
+                return 'default';
+        }
+    }
+
+    /**
      * @param InputInterface $input
      * @param OutputInterface $output
      * @return int
@@ -139,12 +161,20 @@ HELP;
         }
 
         foreach ($collection as $item) {
+            // Use ScopeConfigInterface to get the actual effective value
+            $configScope = $this->mapDatabaseScopeToConfigScope($item->getScope());
+            $actualValue = $this->getScopeConfigValue(
+                $item->getPath(),
+                $configScope,
+                $item->getScopeId()
+            );
+
             $table[] = [
                 'path'     => $item->getPath(),
                 'scope'    => $item->getScope(),
                 'scope_id' => $item->getScopeId(),
                 'value'    => $this->_formatValue(
-                    $item->getValue(),
+                    $actualValue,
                     $input->getOption('decrypt') ? 'decrypt' : ''
                 ),
                 'updated_at' => $item->getUpdatedAt()
