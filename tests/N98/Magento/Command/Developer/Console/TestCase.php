@@ -12,7 +12,7 @@ use Magento\Framework\App\State;
 use Magento\Framework\Filesystem\Directory\WriteInterface;
 use N98\Magento\Command\TestCase as BaseTestCase;
 use PHPUnit_Framework_MockObject_MockObject;
-use Psy\Context;
+use Psy\Configuration;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Tester\CommandTester;
@@ -55,8 +55,15 @@ abstract class TestCase extends BaseTestCase
     {
         $di = $this->getApplication()->getObjectManager();
 
-        $command->setContext(new Context());
+        $config = new Configuration();
+        $config->setInteractiveMode(Configuration::INTERACTIVE_MODE_DISABLED);
+        $config->setTrustProject('never');
+
+        $shell = new Shell($config);
+        $shell->add($command);
+
         $command->setScopeVariable('di', $di);
+        $command->setScopeVariable('magerun', $this->getApplication());
         $command->setScopeVariable(
             'magentoVersion',
             $this->getApplication()->getObjectManager()->get(\Magento\Framework\App\ProductMetadataInterface::class)
