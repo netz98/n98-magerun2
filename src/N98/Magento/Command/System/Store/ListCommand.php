@@ -56,17 +56,30 @@ class ListCommand extends AbstractMagentoCommand
     {
         $table = [];
 
-        foreach ($this->storeManager->getStores() as $store) {
+        foreach ($this->storeManager->getStores(true, true) as $store) {
+            /** @var \Magento\Store\Model\Store $store */
             $table[$store->getId()] = [
                 $store->getId(),
+                $store->getWebsiteId(),
+                $store->getStoreGroupId(),
+                $store->getName(),
                 $store->getCode(),
+                $store->getData('sort_order'),
+                $store->getIsActive(),
             ];
         }
 
         ksort($table);
+
+        $format = $input->getOption('format');
+        $renderFormat = $format;
+        if ($format === 'json') {
+            $renderFormat = 'json_array';
+        }
+
         $this->getHelper('table')
-            ->setHeaders(['id', 'code'])
-            ->renderByFormat($output, $table, $input->getOption('format'));
+            ->setHeaders(['id', 'website_id', 'group_id', 'name', 'code', 'sort_order', 'is_active'])
+            ->renderByFormat($output, $table, $renderFormat);
 
         return Command::SUCCESS;
     }
