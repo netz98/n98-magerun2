@@ -72,14 +72,10 @@ class ListCommand extends AbstractMagentoCommand
         ksort($table);
 
         $format = $input->getOption('format');
-        $renderFormat = $format;
-        if ($format === 'json') {
-            $renderFormat = 'json_array';
-        }
 
         $this->getHelper('table')
             ->setHeaders(['id', 'website_id', 'group_id', 'name', 'code', 'sort_order', 'is_active'])
-            ->renderByFormat($output, $table, $renderFormat);
+            ->renderByFormat($output, $table, $format);
 
         return Command::SUCCESS;
     }

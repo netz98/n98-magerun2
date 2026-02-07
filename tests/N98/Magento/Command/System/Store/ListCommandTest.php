@@ -17,4 +17,29 @@ class ListCommandTest extends TestCase
         $this->assertDisplayContains('sys:store:list', 'id');
         $this->assertDisplayContains('sys:store:list', 'code');
     }
+
+    public function testExecuteJsonFormat()
+    {
+        $tester = $this->assertExecute([
+            'command' => 'sys:store:list',
+            '--format' => 'json',
+        ]);
+
+        $display = $tester->getDisplay();
+        $this->assertStringStartsWith('{', ltrim($display));
+
+        $data = json_decode($display, true);
+
+        $this->assertIsArray($data);
+        $this->assertNotEmpty($data);
+
+        $first = reset($data);
+        $this->assertArrayHasKey('id', $first);
+        $this->assertArrayHasKey('website_id', $first);
+        $this->assertArrayHasKey('group_id', $first);
+        $this->assertArrayHasKey('name', $first);
+        $this->assertArrayHasKey('code', $first);
+        $this->assertArrayHasKey('sort_order', $first);
+        $this->assertArrayHasKey('is_active', $first);
+    }
 }
