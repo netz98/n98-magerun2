@@ -1,0 +1,13 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+    "mcp": {
+        "github": {
+            "type": "local",
+            "command": ["npx", "-y", "@modelcontextprotocol/server-github"],
+            "environment": {
+                "GITHUB_PERSONAL_ACCESS_TOKEN": "{env:GITHUB_TOKEN}"
+            },
+            "enabled": true
+        }
+    }
+}
