@@ -35,3 +35,6 @@ super-linter.log
 /*.sql
 /*.sql.gz
 
+# Test Magento installation
+./magento/
+
