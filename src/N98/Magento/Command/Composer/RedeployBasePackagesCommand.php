@@ -41,7 +41,15 @@ class RedeployBasePackagesCommand extends AbstractMagentoCommand
             return Command::FAILURE;
         }
 
-        $this->initMagento();
+        // Hide PHP deprecation warnings
+        $errorReportingBefore = error_reporting(error_reporting() & ~E_USER_DEPRECATED);
+
+        try {
+            $this->initMagento();
+        } catch (\Exception $e) {
+            // could be that Magento is corrupt but we need to use the bundled composer
+            $output->writeln('<warning>Magento initialization failed, using bundled composer</warning>');
+        }
 
         $commandConfig = $this->getCommandConfig();
 
@@ -68,6 +76,9 @@ class RedeployBasePackagesCommand extends AbstractMagentoCommand
                 new NullIO()
             )
         );
+
+        // reset error reporting
+        error_reporting($errorReportingBefore);
 
         return Command::SUCCESS;
     }
