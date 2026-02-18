@@ -41,6 +41,8 @@ class RedeployBasePackagesCommand extends AbstractMagentoCommand
             return Command::FAILURE;
         }
 
+        $this->initMagento();
+
         $commandConfig = $this->getCommandConfig();
 
         $composer = MagentoComposer::initBundledComposer($this->getApplication()->getMagentoRootFolder());
