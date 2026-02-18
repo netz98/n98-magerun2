@@ -232,6 +232,16 @@ function cleanup_files_in_magento() {
 }
 
 # ============================================
+# Command: composer:redeploy-base-packages
+# ============================================
+
+@test "Command: composer:redeploy-base-packages" {
+  run $BIN "composer:redeploy-base-packages"
+  assert [ "$status" -eq 0 ]
+  refute_output --partial "Calling PluginManager::addPlugin without \$sourcePackage is deprecated"
+}
+
+# ============================================
 # Command: config:data:acl
 # ============================================
 
