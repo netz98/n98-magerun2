@@ -33,7 +33,6 @@
         "ext-json": "*",
         "ext-posix": "*",
         "ext-zip": "*",
-        "composer/composer": "^2.2",
         "dflydev/dot-access-data": "^3.0",
         "fakerphp/faker": "~1.16",
         "laminas/laminas-filter": "^2.12",
