@@ -67,8 +67,8 @@ class ComposerLock implements \IteratorAggregate
             $packages = $this->composerJsonData->packages;
         }
 
-        if (isset($packagesConfig->{'packages-dev'})) {
-            $packages = array_merge($packages, $this->composerJsonData->{'dev-packages'});
+        if (isset($this->composerJsonData->{'packages-dev'})) {
+            $packages = array_merge($packages, $this->composerJsonData->{'packages-dev'});
         }
 
         return $packages;
