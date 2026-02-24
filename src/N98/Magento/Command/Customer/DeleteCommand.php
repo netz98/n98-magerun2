@@ -312,8 +312,7 @@ class DeleteCommand extends AbstractCustomerCommand
         $this->registry->register('isSecureArea', true);
         $isSecure = $this->registry->registry('isSecureArea');
         foreach ($customerCollection as $customerToDelete) {
-            $customer = $this->customerRepository->getById($customerToDelete->getId());
-            if ($this->customerRepository->delete($customer)) {
+            if ($this->customerRepository->deleteById($customerToDelete->getId())) {
                 $count++;
             }
         }
