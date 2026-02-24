@@ -8,4 +8,4 @@ Commands for the Model Context Protocol (MCP) server integration.
 
 ## Commands
 
-- [mcp:server:start](./mcp-server-start.md) - Start an MCP server exposing all n98-magerun2 commands as tools
+- [mcp:server:start](./mcp-server-start.md) - Start an MCP server exposing a filtered n98-magerun2 command set as tools

@@ -11,5 +11,7 @@ class StartCommandTest extends TestCase
         $command = new StartCommand();
         $this->assertEquals('mcp:server:start', $command->getName());
         $this->assertStringContainsString('Start an MCP server', $command->getDescription());
+        $this->assertTrue($command->getDefinition()->hasOption('include'));
+        $this->assertTrue($command->getDefinition()->hasOption('exclude'));
     }
 }
