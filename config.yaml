@@ -200,6 +200,60 @@ commands:
   # The configuration can be changed by magerun modules
   # and on project and user level. See wiki for details.
 
+  N98\Magento\Command\Mcp\Server\StartCommand:
+    command-groups:
+      - id: admin
+        description: Admin users, tokens and notifications
+        commands: "admin:*"
+
+      - id: cron
+        description: Cron related commands
+        commands: "sys:cron:*"
+
+      - id: cache
+        description: Cache related commands
+        commands: "cache:*"
+
+      - id: config
+        description: Environment and store configuration commands
+        commands: "config:* magerun:config:*"
+
+      - id: database
+        description: Database commands
+        commands: "db:*"
+
+      - id: development
+        description: Developer and generation commands
+        commands: "dev:* generation:*"
+
+      - id: index
+        description: Indexer commands
+        commands: "index:*"
+
+      - id: integration
+        description: Integration token and API integration commands
+        commands: "integration:*"
+
+      - id: maintenance
+        description: Core maintenance and setup commands
+        commands: "sys:maintenance sys:setup:*"
+
+      - id: read-only
+        description: Mostly read-only inspection commands
+        commands: "@cron cache:list config:env:show config:store:get customer:info customer:list db:info db:status db:variables dev:log:size dev:module:list dev:module:observer:list dev:report:count dev:theme:list eav:attribute:list eav:attribute:view index:list integration:list integration:show magerun:config:info route:list script:repo:list search:engine:list sys:check sys:info sys:store:list sys:url:list sys:website:list"
+
+      - id: repo
+        description: Script repository commands
+        commands: "script script:repo:*"
+
+      - id: risky
+        description: Commands that can mutate or delete data
+        commands: "admin:* cache:clean cache:disable cache:enable cache:flush cache:remove:id cms:block:toggle config:env:create config:env:delete config:env:set config:store:delete config:store:set customer:add-address customer:change-password customer:create customer:delete db:* dev:* eav:attribute:remove generation:flush index:trigger:recreate integration:create integration:delete install media:dump sales:sequence:* script script:repo:run sys:cron:kill sys:cron:run sys:cron:schedule sys:maintenance sys:setup:* sys:url:regenerate"
+
+      - id: system
+        description: System commands
+        commands: "sys:*"
+
   N98\Magento\Command\Composer\RedeployBasePackagesCommand:
     packages:
       - magento/magento2-base
