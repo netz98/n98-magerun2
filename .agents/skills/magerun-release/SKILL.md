@@ -27,4 +27,5 @@ To release a new version, follow these steps:
    - File: `CHANGELOG.md`
    - Ensure all changes from the git log are documented.
 6. **Run `release-it` tool.**
-   - Command: `npx release-it` (or `vendor/bin/release-it` if available via composer, but typically it's a JS tool)
+   - Command: `npx release-it` (or `vendor/bin/release-it` if available via composer, but typically it's a JS tool).
+   - Ask the user to confirm the release process and follow the prompts to complete the release. The release-it call has to be done in the `master` branch.
