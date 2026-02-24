@@ -62,7 +62,7 @@ class OpenBrowserCommand extends AbstractMagentoCommand
         $output->writeln('Opening URL <comment>' . $url . '</comment> in browser');
 
         $opener = $this->resolveOpenerCommand($output);
-        Exec::run(escapeshellcmd($opener . ' ' . $url));
+        Exec::run(escapeshellcmd($opener) . ' ' . escapeshellarg($url));
 
         return Command::SUCCESS;
     }
