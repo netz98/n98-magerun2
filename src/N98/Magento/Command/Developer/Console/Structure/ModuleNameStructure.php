@@ -35,6 +35,10 @@ class ModuleNameStructure
             throw new \InvalidArgumentException('Please specify a correct module name like Acme_Foo');
         }
 
+        if (!preg_match('/^[a-z0-9]+$/i', $parts[0]) || !preg_match('/^[a-z0-9]+$/i', $parts[1])) {
+            throw new \InvalidArgumentException('Module name parts must be alphanumeric');
+        }
+
         $this->vendorName = ucfirst($parts[0]);
         $this->shortModuleName = ucfirst($parts[1]);
     }

@@ -36,6 +36,13 @@ class ThemeNameStructure
      */
     public function __construct($area, $package, $name)
     {
+        if (!preg_match('/^[a-z0-9_-]+$/i', $area) ||
+            !preg_match('/^[a-z0-9_-]+$/i', $package) ||
+            !preg_match('/^[a-z0-9_-]+$/i', $name)
+        ) {
+            throw new \InvalidArgumentException('Theme name parts must be alphanumeric (including underscore and hyphen)');
+        }
+
         $this->area = $area;
         $this->package = ucfirst($package);
         $this->name = strtolower($name);
