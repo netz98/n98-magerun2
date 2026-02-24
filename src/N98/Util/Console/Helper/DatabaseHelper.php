@@ -106,7 +106,8 @@ class DatabaseHelper extends AbstractHelper implements CommandAware
 
             $droppedCount = 0;
             foreach ($views as $viewName) {
-                $db->exec("DROP VIEW IF EXISTS `{$viewName}`;");
+                $escapedViewName = $this->escapeIdentifier($viewName);
+                $db->exec("DROP VIEW IF EXISTS `{$escapedViewName}`;");
                 $output->writeln("<comment>Dropped view:</comment> {$viewName}");
                 $droppedCount++;
             }
@@ -889,7 +890,7 @@ class DatabaseHelper extends AbstractHelper implements CommandAware
         $query = 'SET FOREIGN_KEY_CHECKS = 0; ';
         $count = 0;
         foreach ($result as $tableName) {
-            $query .= 'DROP TABLE IF EXISTS `' . $tableName . '`; ';
+            $query .= 'DROP TABLE IF EXISTS `' . $this->escapeIdentifier($tableName) . '`; ';
             $count++;
         }
         $query .= 'SET FOREIGN_KEY_CHECKS = 1;';
@@ -992,5 +993,14 @@ class DatabaseHelper extends AbstractHelper implements CommandAware
         }
 
         return $output;
+    }
+
+    /**
+     * @param string $identifier
+     * @return string
+     */
+    private function escapeIdentifier($identifier)
+    {
+        return str_replace('`', '``', $identifier);
     }
 }
