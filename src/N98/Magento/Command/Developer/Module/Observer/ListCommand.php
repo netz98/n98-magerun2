@@ -14,6 +14,7 @@ use N98\Magento\Command\AbstractMagentoCommand;
 use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Helper\TableSeparator;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
@@ -126,28 +127,39 @@ class ListCommand extends AbstractMagentoCommand
         }
 
         $table = [];
+        $hasRows = false;
 
         foreach ($observerConfig as $eventName => $observers) {
-            $firstObserver = true;
-
             if ($eventFilter !== null && $eventName !== $eventFilter) {
                 continue;
             }
+
+            $currentEventRows = [];
+            $firstObserver = true;
 
             foreach ($observers as $observerName => $observerData) {
                 if (!isset($observerData['instance'])) {
                     continue;
                 }
                 if ($firstObserver) {
-                    $firstObserver = !$firstObserver;
-                    $table[] = [$eventName, $observerName, $observerData['instance'] . '::' . $observerData['name']];
+                    $firstObserver = false;
+                    $currentEventRows[] = [$eventName, $observerName, $observerData['instance'] . '::' . $observerData['name']];
                 } else {
-                    $table[] = ['', $observerName, $observerData['instance'] . '::' . $observerData['name']];
+                    $currentEventRows[] = ['', $observerName, $observerData['instance'] . '::' . $observerData['name']];
                 }
+            }
+
+            if (count($currentEventRows) > 0) {
+                if ($hasRows && $input->getOption('format') === null) {
+                    $table[] = new TableSeparator();
+                }
+                foreach ($currentEventRows as $row) {
+                    $table[] = $row;
+                }
+                $hasRows = true;
             }
         }
 
-        // @todo Output is a bit ugly!?
         $this->getHelper('table')
                 ->setHeaders(['Event', 'Observer name', 'Fires'])
                 ->setRows($table)
