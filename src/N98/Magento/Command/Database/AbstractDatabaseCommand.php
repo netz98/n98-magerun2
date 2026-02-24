@@ -76,11 +76,15 @@ abstract class AbstractDatabaseCommand extends AbstractMagentoCommand
      *
      * @return mixed
      * @throws \Magento\Framework\Exception\FileSystemException
+     * @deprecated
      */
     public function __get($name)
     {
         if ($name == '_connection') {
-            // TODO(tk): deprecate
+            trigger_error(
+                'Accessing the magic property "_connection" is deprecated. Use getDatabaseHelper()->getConnection() instead.',
+                E_USER_DEPRECATED
+            );
             return $this->getDatabaseHelper()->getConnection();
         }
     }
