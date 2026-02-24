@@ -50,4 +50,16 @@ class ProjectComposerTest extends TestCase
 
         $this->assertCount(44, $returnedPackages);
     }
+
+    /**
+     * @test
+     */
+    public function itShouldReturnEmptyArrayIfLockFileIsMalformed()
+    {
+        $projectComposer = new ProjectComposer(__DIR__ . '/_files/malformed-project');
+        $returnedPackages = $projectComposer->getComposerLockPackages();
+
+        $this->assertIsArray($returnedPackages);
+        $this->assertEmpty($returnedPackages);
+    }
 }
