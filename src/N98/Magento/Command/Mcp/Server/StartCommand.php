@@ -66,17 +66,19 @@ class StartCommand extends AbstractMagentoCommand
 
             $description .= ' Arguments: provide CLI arguments as a single string (without the command name).';
 
+            $toolName = str_replace(':', '_', $commandName);
+
             $builder->addTool(
                 handler: function (string $arguments = '') use ($application, $commandName): string {
                     $handler = new CommandToolHandler($application, $commandName);
 
                     return $handler($arguments);
                 },
-                name: $commandName,
+                name: $toolName,
                 description: $description
             );
 
-            $toolNames[] = $commandName;
+            $toolNames[] = $toolName;
         }
 
         $server = $builder->build();
