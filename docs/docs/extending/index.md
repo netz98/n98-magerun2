@@ -18,6 +18,7 @@ sidebar_position: 1
 - [sys:check Command](./extend-sys-check-command.md)
 - [db:dump Command](./extend-db-dump-command.md)
 - [dev:console Command](./extend-dev-console-command.md)
+- [mcp:server:start Command](./extend-mcp-server-start-command.md)
 
 ## Modules (Extensions)
 
