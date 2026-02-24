@@ -8,10 +8,10 @@
 
 namespace N98\Util\Console\Helper\Table\Renderer;
 
-class RenderFactoryTest extends \PHPUnit\Framework\TestCase
+class RendererFactoryTest extends \PHPUnit\Framework\TestCase
 {
     /**
-     * @covers \N98\Util\Console\Helper\Table\Renderer\RendererFactory::getFormats
+     * @covers \N98\Util\Console\Helper\Table\Renderer\RendererFactory::create
      */
     public function testCreate()
     {
@@ -31,5 +31,20 @@ class RenderFactoryTest extends \PHPUnit\Framework\TestCase
 
         $invalidFormat = $renderFactory->create('invalid_format');
         $this->assertFalse($invalidFormat);
+    }
+
+    /**
+     * @covers \N98\Util\Console\Helper\Table\Renderer\RendererFactory::getFormats
+     */
+    public function testGetFormats()
+    {
+        $formats = RendererFactory::getFormats();
+        $this->assertIsArray($formats);
+        $this->assertContains('csv', $formats);
+        $this->assertContains('json', $formats);
+        $this->assertContains('json_array', $formats);
+        $this->assertContains('yaml', $formats);
+        $this->assertContains('xml', $formats);
+        $this->assertCount(5, $formats);
     }
 }
