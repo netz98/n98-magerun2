@@ -1,6 +1,20 @@
 RECENT CHANGES
 ==============
 
+9.4.0-dev
+---------
+
+- Add: support include/exclude command groups for MCP tool exposure
+- Add: `sys:store:list` format option
+- Imp: optimize `eav:attribute:list` and `customer:delete` commands to prevent N+1 queries
+- Imp: improve `composer:redeploy-base-packages` initialization/error handling and add Mage-OS base package support
+- Imp: deprecate `_connection` magic property in `AbstractDatabaseCommand`
+- Fix: harden security for browser argument handling and SQL execution in `db:drop`
+- Fix: verify Composer installer integrity during setup
+- Fix: improve output format compatibility for list/renderer output
+- Test: extend renderer and composer lock handling coverage
+- Build: update development dependencies and toolchain packages
+
 9.3.0 (2026-02-02)
 ------------------
 
