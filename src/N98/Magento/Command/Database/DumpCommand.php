@@ -30,16 +30,6 @@ use Symfony\Component\Console\Question\Question;
  */
 class DumpCommand extends AbstractDatabaseCommand
 {
-    /**
-     * @var array
-     */
-    protected $tableDefinitions = null;
-
-    /**
-     * @var array
-     */
-    protected $commandConfig = null;
-
     protected function configure()
     {
         parent::configure();
@@ -223,25 +213,6 @@ HELP;
     }
 
     /**
-     * @return array
-     *
-     * @deprecated Use database helper
-     */
-    private function getTableDefinitions()
-    {
-        $this->commandConfig = $this->getCommandConfig();
-
-        if ($this->tableDefinitions === null) {
-            /* @var $dbHelper DatabaseHelper */
-            $dbHelper = $this->getHelper('database');
-
-            $this->tableDefinitions = $dbHelper->getTableDefinitions($this->commandConfig);
-        }
-
-        return $this->tableDefinitions;
-    }
-
-    /**
      * Generate help for table definitions
      *
      * @return string
@@ -249,7 +220,6 @@ HELP;
     public function getTableDefinitionHelp()
     {
         $messages = PHP_EOL;
-        $this->commandConfig = $this->getCommandConfig();
         $messages .= <<<HELP
 <comment>Strip option</comment>
  If you like to skip data of some tables you can use the --strip option.
@@ -269,7 +239,7 @@ HELP;
 
 HELP;
 
-        $definitions = $this->getTableDefinitions();
+        $definitions = $this->getDatabaseHelper()->getTableDefinitions($this->getCommandConfig());
         $list = [];
         $maxNameLen = 0;
         foreach ($definitions as $id => $definition) {
