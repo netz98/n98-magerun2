@@ -13,7 +13,7 @@ class InstallComposerTest extends TestCase
         $content = '<?php echo "installer"; ?>';
         $signature = hash('sha384', $content);
 
-        $command = new class extends InstallComposer {
+        $command = new class() extends InstallComposer {
             public $installerContent;
             public $signatureContent;
 
@@ -57,7 +57,7 @@ class InstallComposerTest extends TestCase
         $content = 'some content';
         $signature = 'invalid_hash';
 
-        $command = new class extends InstallComposer {
+        $command = new class() extends InstallComposer {
             public $installerContent;
             public $signatureContent;
 
