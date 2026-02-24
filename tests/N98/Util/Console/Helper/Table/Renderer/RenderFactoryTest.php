@@ -23,6 +23,9 @@ class RenderFactoryTest extends \PHPUnit\Framework\TestCase
         $json = $renderFactory->create('json');
         $this->assertInstanceOf('N98\Util\Console\Helper\Table\Renderer\JsonRenderer', $json);
 
+        $jsonArray = $renderFactory->create('json_array');
+        $this->assertInstanceOf('N98\Util\Console\Helper\Table\Renderer\JsonArrayRenderer', $jsonArray);
+
         $xml = $renderFactory->create('xml');
         $this->assertInstanceOf('N98\Util\Console\Helper\Table\Renderer\XmlRenderer', $xml);
 
