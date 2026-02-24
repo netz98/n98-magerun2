@@ -9,6 +9,7 @@
 namespace N98\Magento\Command\Eav\Attribute;
 
 use Magento\Eav\Model\Attribute;
+use Magento\Eav\Model\Config as EavConfig;
 use Magento\Eav\Model\Entity\Type as EntityType;
 use Magento\Eav\Model\ResourceModel\Entity\Attribute\Collection as AttributeCollection;
 use N98\Magento\Command\AbstractMagentoCommand;
@@ -30,13 +31,21 @@ class ListCommand extends AbstractMagentoCommand
     private $attributeCollection;
 
     /**
+     * @var EavConfig
+     */
+    private $eavConfig;
+
+    /**
      * @param AttributeCollection $attributeCollection
+     * @param EavConfig $eavConfig
      * @return void
      */
     public function inject(
-        AttributeCollection $attributeCollection
+        AttributeCollection $attributeCollection,
+        EavConfig $eavConfig
     ) {
         $this->attributeCollection = $attributeCollection;
+        $this->eavConfig = $eavConfig;
     }
 
     /**
@@ -90,16 +99,20 @@ class ListCommand extends AbstractMagentoCommand
         $addSource = $input->getOption('add-source');
         $addBackend = $input->getOption('add-backend');
         $filterType = $input->getOption('filter-type');
+        if ($filterType) {
+            try {
+                $entityType = $this->eavConfig->getEntityType($filterType);
+                $this->attributeCollection->setEntityTypeFilter($entityType->getEntityTypeId());
+            } catch (\Exception $e) {
+                $this->attributeCollection->addFieldToFilter('entity_type_id', -1);
+            }
+        }
         $this->attributeCollection->setOrder('attribute_code', 'asc');
 
         /** @var Attribute $attribute */
         foreach ($this->attributeCollection as $attribute) {
             /** @var EntityType $entityType */
             $entityType = $attribute->getEntityType();
-            if ($filterType &&
-                $entityType->getEntityTypeCode() !== $filterType) {
-                continue;
-            }
 
             $row = [
                 $attribute->getAttributeCode(),
