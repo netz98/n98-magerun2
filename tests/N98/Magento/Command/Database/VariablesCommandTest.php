@@ -20,6 +20,8 @@ class VariablesCommandTest extends TestCase
         ];
 
         $this->assertDisplayContains($input, 'innodb_log_buffer_size');
+        $this->assertDisplayContains($input, 'Description');
+        $this->assertDisplayContains($input, 'The size of the memory buffer InnoDB uses to cache data');
     }
 
     public function testSearch()
