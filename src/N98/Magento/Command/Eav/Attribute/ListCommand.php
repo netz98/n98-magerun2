@@ -11,6 +11,7 @@ namespace N98\Magento\Command\Eav\Attribute;
 use Magento\Eav\Model\Attribute;
 use Magento\Eav\Model\Entity\Type as EntityType;
 use Magento\Eav\Model\ResourceModel\Entity\Attribute\Collection as AttributeCollection;
+use Magento\Eav\Model\ResourceModel\Entity\Type\CollectionFactory as EntityTypeCollectionFactory;
 use N98\Magento\Command\AbstractMagentoCommand;
 use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
 use Symfony\Component\Console\Command\Command;
@@ -30,13 +31,21 @@ class ListCommand extends AbstractMagentoCommand
     private $attributeCollection;
 
     /**
+     * @var EntityTypeCollectionFactory
+     */
+    private $entityTypeCollectionFactory;
+
+    /**
      * @param AttributeCollection $attributeCollection
+     * @param EntityTypeCollectionFactory $entityTypeCollectionFactory
      * @return void
      */
     public function inject(
-        AttributeCollection $attributeCollection
+        AttributeCollection $attributeCollection,
+        EntityTypeCollectionFactory $entityTypeCollectionFactory
     ) {
         $this->attributeCollection = $attributeCollection;
+        $this->entityTypeCollectionFactory = $entityTypeCollectionFactory;
     }
 
     /**
@@ -92,10 +101,32 @@ class ListCommand extends AbstractMagentoCommand
         $filterType = $input->getOption('filter-type');
         $this->attributeCollection->setOrder('attribute_code', 'asc');
 
+        $entityTypeCollection = $this->entityTypeCollectionFactory->create();
+        $entityTypesById = [];
+        $entityTypesByCode = [];
+
+        foreach ($entityTypeCollection as $entityType) {
+            $entityTypesById[$entityType->getId()] = $entityType;
+            $entityTypesByCode[$entityType->getEntityTypeCode()] = $entityType->getId();
+        }
+
+        if ($filterType) {
+            if (isset($entityTypesByCode[$filterType])) {
+                $this->attributeCollection->addFieldToFilter('entity_type_id', $entityTypesByCode[$filterType]);
+            } else {
+                $this->attributeCollection->addFieldToFilter('entity_type_id', 0);
+            }
+        }
+
         /** @var Attribute $attribute */
         foreach ($this->attributeCollection as $attribute) {
             /** @var EntityType $entityType */
-            $entityType = $attribute->getEntityType();
+            if (isset($entityTypesById[$attribute->getEntityTypeId()])) {
+                $entityType = $entityTypesById[$attribute->getEntityTypeId()];
+            } else {
+                $entityType = $attribute->getEntityType();
+            }
+
             if ($filterType &&
                 $entityType->getEntityTypeCode() !== $filterType) {
                 continue;
