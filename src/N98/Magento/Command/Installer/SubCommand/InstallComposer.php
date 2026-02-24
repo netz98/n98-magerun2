@@ -67,13 +67,12 @@ class InstallComposer extends AbstractSubCommand
     {
         $this->output->writeln('<info>Could not find composer. Try to download it.</info>');
 
-        $response = Requests::get('https://getcomposer.org/installer');
+        $composerInstaller = $this->fetchComposerInstaller();
+        $signature = $this->fetchComposerSignature();
 
-        if (!$response->success) {
-            throw new \RuntimeException('Cannot download Composer installer: ' . $response->status_code);
+        if (hash('sha384', $composerInstaller) !== $signature) {
+            throw new \RuntimeException('Composer installer corrupt');
         }
-
-        $composerInstaller = $response->body;
 
         $tempComposerInstaller = $this->config['initialFolder'] . '/_composer_installer.php';
         file_put_contents($tempComposerInstaller, $composerInstaller);
@@ -97,6 +96,34 @@ class InstallComposer extends AbstractSubCommand
         $this->output->writeln('<info>Successfully installed composer to Magento root</info>');
 
         return $this->config['initialFolder'] . '/composer.phar';
+    }
+
+    /**
+     * @return string
+     */
+    protected function fetchComposerInstaller()
+    {
+        $response = Requests::get('https://getcomposer.org/installer');
+
+        if (!$response->success) {
+            throw new \RuntimeException('Cannot download Composer installer: ' . $response->status_code);
+        }
+
+        return $response->body;
+    }
+
+    /**
+     * @return string
+     */
+    protected function fetchComposerSignature()
+    {
+        $response = Requests::get('https://composer.github.io/installer.sig');
+
+        if (!$response->success) {
+            throw new \RuntimeException('Cannot download Composer installer signature: ' . $response->status_code);
+        }
+
+        return trim($response->body);
     }
 
     /**
