@@ -23,30 +23,6 @@ class ChooseInstallationFolder extends AbstractSubCommand
     public function execute()
     {
         $input = $this->input;
-        $validateInstallationFolder = function ($folderName) {
-            $folderName = rtrim(trim($folderName, ' '), '/');
-            if ($folderName[0] === '.') {
-                $cwd = \getcwd();
-                if (empty($cwd) && isset($_SERVER['PWD'])) {
-                    $cwd = $_SERVER['PWD'];
-                }
-                $folderName = $cwd . substr($folderName, 1);
-            }
-
-            if (empty($folderName)) {
-                throw new \InvalidArgumentException('Installation folder cannot be empty');
-            }
-
-            if (!is_dir($folderName)) {
-                if (!mkdir($folderName, 0777, true) && !is_dir($folderName)) {
-                    throw new \InvalidArgumentException('Cannot create folder.');
-                }
-
-                return $folderName;
-            }
-
-            return $folderName;
-        };
 
         $installationFolder = $input->getOption('installationFolder');
         if ($installationFolder === null) {
@@ -58,7 +34,7 @@ class ChooseInstallationFolder extends AbstractSubCommand
                 ),
                 $defaultFolder
             );
-            $question->setValidator($validateInstallationFolder);
+            $question->setValidator([$this, 'validateInstallationFolder']);
 
             $installationFolder = $this->getCommand()->getHelper('question')->ask(
                 $this->input,
@@ -66,8 +42,7 @@ class ChooseInstallationFolder extends AbstractSubCommand
                 $question
             );
         } else {
-            // @Todo improve validation and bring it to 1 single function
-            $installationFolder = $validateInstallationFolder($installationFolder);
+            $installationFolder = $this->validateInstallationFolder($installationFolder);
         }
 
         $this->config->setString('initialFolder', getcwd());
@@ -75,5 +50,34 @@ class ChooseInstallationFolder extends AbstractSubCommand
         \chdir($this->config->getString('installationFolder'));
 
         return true;
+    }
+
+    /**
+     * @param string $folderName
+     * @return string
+     * @throws \InvalidArgumentException
+     */
+    public function validateInstallationFolder($folderName)
+    {
+        $folderName = rtrim(trim($folderName, ' '), '/');
+        if (!empty($folderName) && $folderName[0] === '.') {
+            $cwd = \getcwd();
+            if (empty($cwd) && isset($_SERVER['PWD'])) {
+                $cwd = $_SERVER['PWD'];
+            }
+            $folderName = $cwd . substr($folderName, 1);
+        }
+
+        if (empty($folderName)) {
+            throw new \InvalidArgumentException('Installation folder cannot be empty');
+        }
+
+        if (!is_dir($folderName)) {
+            if (!mkdir($folderName, 0777, true) && !is_dir($folderName)) {
+                throw new \InvalidArgumentException('Cannot create folder.');
+            }
+        }
+
+        return $folderName;
     }
 }
