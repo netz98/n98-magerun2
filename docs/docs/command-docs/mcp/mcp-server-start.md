@@ -81,13 +81,13 @@ The project ships with these predefined groups in `config.yaml`:
 - `@maintenance` - Core maintenance and setup commands (`sys:maintenance`, `sys:setup:*`)
 - `@read-only` - Mostly read-only inspection command set
 - `@repo` - Script repository commands (`script`, `script:repo:*`)
-- `@risky` - Commands that can mutate or delete data
+- `@unsafe` - Commands that can mutate or delete data
 - `@system` - System commands (`sys:*`)
 
 Example:
 
 ```bash
-n98-magerun2.phar mcp:server:start --include="@read-only" --exclude="@risky"
+n98-magerun2.phar mcp:server:start --include="@read-only" --exclude="@unsafe"
 ```
 
 ## Example Configuration (Claude Desktop)

@@ -29,7 +29,7 @@ commands:
 Use your custom groups with `mcp:server:start`:
 
 ```bash
-n98-magerun2.phar mcp:server:start --include="@safe-default" --exclude="@risky"
+n98-magerun2.phar mcp:server:start --include="@safe-default" --exclude="@unsafe"
 ```
 
 Verify with `mcp:server:start --help` if your new groups are registered.

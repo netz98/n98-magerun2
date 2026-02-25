@@ -246,7 +246,7 @@ commands:
         description: Script repository commands
         commands: "script script:repo:*"
 
-      - id: risky
+      - id: unsafe
         description: Commands that can mutate or delete data
         commands: "admin:* cache:clean cache:disable cache:enable cache:flush cache:remove:id cms:block:toggle config:env:create config:env:delete config:env:set config:store:delete config:store:set customer:add-address customer:change-password customer:create customer:delete db:* dev:* eav:attribute:remove generation:flush index:trigger:recreate integration:create integration:delete install media:dump sales:sequence:* script script:repo:run sys:cron:kill sys:cron:run sys:cron:schedule sys:maintenance sys:setup:* sys:url:regenerate"
 
