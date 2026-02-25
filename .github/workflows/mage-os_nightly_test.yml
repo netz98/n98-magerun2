@@ -35,12 +35,13 @@ jobs:
           MARIADB_DATABASE: magento
         ports:
           - 3306 # Standard MariaDB/MySQL port
-        # Options remain largely the same, health check uses mysqladmin (compatible)
+        # Use authenticated TCP ping to avoid false negatives on CI runners
         options: >-
-          --health-cmd="mariadb-admin ping -uroot -proot || exit 1"
+          --health-cmd="mariadb-admin ping -h 127.0.0.1 --protocol=tcp -uroot -proot || exit 1"
           --health-interval=10s
           --health-timeout=5s
-          --health-retries=10
+          --health-retries=20
+          --health-start-period=40s
 
     steps:
       - name: Checkout develop branch
