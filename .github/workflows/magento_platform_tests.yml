@@ -361,7 +361,14 @@ jobs:
           contains(matrix.magento-version, '2.4.7') 
 
       - name: Apply patch for Mage-OS PHP 8.4 compatibility
-        run: patch -p1 < ${{ github.workspace }}/.github/patches/mage-os-admin-analytics-nullable-type.patch
+        run: |
+          PATCH_FILE="${{ github.workspace }}/.github/patches/mage-os-admin-analytics-nullable-type.patch"
+
+          if patch --dry-run -p1 < "$PATCH_FILE" > /dev/null 2>&1; then
+            patch -p1 < "$PATCH_FILE"
+          else
+            echo "Patch not applicable for this Mage-OS release. Skipping."
+          fi
         working-directory: ./magento
         if: >-
           contains(matrix.composer-repository-url, 'mage-os.org') &&
