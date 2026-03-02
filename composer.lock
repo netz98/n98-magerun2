@@ -3420,16 +3420,16 @@
         },
         {
             "name": "captainhook/captainhook",
-            "version": "5.28.4",
+            "version": "5.28.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/captainhook-git/captainhook.git",
-                "reference": "9cf7e17c1f74e9aa3bbf5b394ae86510be503a91"
+                "reference": "2a7316bf4ba4c3b11b3544c063788622d3520ee1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/captainhook-git/captainhook/zipball/9cf7e17c1f74e9aa3bbf5b394ae86510be503a91",
-                "reference": "9cf7e17c1f74e9aa3bbf5b394ae86510be503a91",
+                "url": "https://api.github.com/repos/captainhook-git/captainhook/zipball/2a7316bf4ba4c3b11b3544c063788622d3520ee1",
+                "reference": "2a7316bf4ba4c3b11b3544c063788622d3520ee1",
                 "shasum": ""
             },
             "require": {
@@ -3492,7 +3492,7 @@
             ],
             "support": {
                 "issues": "https://github.com/captainhook-git/captainhook/issues",
-                "source": "https://github.com/captainhook-git/captainhook/tree/5.28.4"
+                "source": "https://github.com/captainhook-git/captainhook/tree/5.28.5"
             },
             "funding": [
                 {
@@ -3500,7 +3500,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-02-27T11:47:08+00:00"
+            "time": "2026-02-28T08:59:22+00:00"
         },
         {
             "name": "captainhook/secrets",
@@ -8136,5 +8136,5 @@
     "platform-overrides": {
         "php": "8.1.0"
     },
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.9.0"
 }
