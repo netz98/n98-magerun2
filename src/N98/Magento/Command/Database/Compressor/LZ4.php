@@ -54,7 +54,7 @@ class LZ4 extends AbstractCompressor
                 return 'pv -cN tar -zxf ' . escapeshellarg($fileName) . ' && pv -cN mysql | ' . $command;
             }
 
-            return 'tar -zxf ' . escapeshellarg($fileName) . ' -C ' . dirname($fileName) . ' && ' . $command . ' < '
+            return 'tar -zxf ' . escapeshellarg($fileName) . ' -C ' . escapeshellarg(dirname($fileName)) . ' && ' . $command . ' < '
                 . escapeshellarg(substr($fileName, 0, -4));
         }
     }

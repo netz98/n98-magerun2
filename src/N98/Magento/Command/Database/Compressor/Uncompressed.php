@@ -37,10 +37,10 @@ class Uncompressed extends AbstractCompressor
     public function getDecompressingCommand($command, $fileName, $pipe = true)
     {
         if ($this->hasPipeViewer()) {
-            return 'pv ' . $fileName . ' | ' . $command;
+            return 'pv ' . escapeshellarg($fileName) . ' | ' . $command;
         }
 
-        return $command . ' < ' . $fileName;
+        return $command . ' < ' . escapeshellarg($fileName);
     }
 
     /**
