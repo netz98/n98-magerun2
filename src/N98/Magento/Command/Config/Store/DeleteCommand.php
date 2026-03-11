@@ -87,7 +87,7 @@ HELP;
 
         $configWriter = $this->getConfigWriter();
         foreach ($paths as $path) {
-            $deleted = array_merge($deleted, $this->_deletePath($input, $configWriter, $path, $scopeId));
+            array_push($deleted, ...$this->_deletePath($input, $configWriter, $path, $scopeId));
         }
 
         if (count($deleted) > 0) {
