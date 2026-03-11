@@ -170,16 +170,4 @@ class OperatingSystem
 
         return self::getPhpBinary();
     }
-
-    /**
-     * @deprecated 5.1.1 No longer used by internal code
-     * @return bool
-     */
-    public static function isBashCompatibleShell()
-    {
-        return in_array(
-            basename(getenv('SHELL')),
-            ['bash', 'zsh']
-        );
-    }
 }
