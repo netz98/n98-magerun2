@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace N98\Util;
 
+use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
 
 class ProjectComposerTest extends TestCase
@@ -57,6 +58,45 @@ class ProjectComposerTest extends TestCase
     public function itShouldReturnEmptyArrayIfLockFileIsMalformed()
     {
         $projectComposer = new ProjectComposer(__DIR__ . '/_files/malformed-project');
+        $returnedPackages = $projectComposer->getComposerLockPackages();
+
+        $this->assertIsArray($returnedPackages);
+        $this->assertEmpty($returnedPackages);
+    }
+
+    /**
+     * @test
+     */
+    public function itShouldReturnEmptyArrayIfLockFileDoesNotExist()
+    {
+        vfsStream::setup('root');
+        $projectComposer = new ProjectComposer(vfsStream::url('root'));
+        $returnedPackages = $projectComposer->getComposerLockPackages();
+
+        $this->assertIsArray($returnedPackages);
+        $this->assertEmpty($returnedPackages);
+    }
+
+    /**
+     * @test
+     */
+    public function itShouldReturnEmptyArrayIfLockFileContainsInvalidJson()
+    {
+        vfsStream::setup('root', null, ['composer.lock' => '{invalid}']);
+        $projectComposer = new ProjectComposer(vfsStream::url('root'));
+        $returnedPackages = $projectComposer->getComposerLockPackages();
+
+        $this->assertIsArray($returnedPackages);
+        $this->assertEmpty($returnedPackages);
+    }
+
+    /**
+     * @test
+     */
+    public function itShouldHandleMissingPackagesKeys()
+    {
+        vfsStream::setup('root', null, ['composer.lock' => '{}']);
+        $projectComposer = new ProjectComposer(vfsStream::url('root'));
         $returnedPackages = $projectComposer->getComposerLockPackages();
 
         $this->assertIsArray($returnedPackages);

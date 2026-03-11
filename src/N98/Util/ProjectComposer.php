@@ -52,9 +52,14 @@ class ProjectComposer
      */
     public function getComposerLockPackages()
     {
+        $lockFilePath = $this->getComposerLockPath();
+        if (!file_exists($lockFilePath)) {
+            return [];
+        }
+
         try {
             $composerLockContent = json_decode(
-                file_get_contents($this->getComposerLockPath()),
+                file_get_contents($lockFilePath),
                 true,
                 512,
                 JSON_THROW_ON_ERROR
