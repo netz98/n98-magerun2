@@ -4,6 +4,7 @@ RECENT CHANGES
 9.4.0-dev
 ---------
 
+- Add: `mageforge:install` command to install MageForge tool with optional post-install Hyva compatibility check
 - Add: support include/exclude command groups for MCP tool exposure
 - Add: `sys:store:list` format option
 - Imp: optimize `eav:attribute:list` and `customer:delete` commands to prevent N+1 queries
