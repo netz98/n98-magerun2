@@ -800,13 +800,17 @@ HELP;
         $execs->addOptions('--outputdir=' . escapeshellarg($outputDir));
 
         // Database connection options
-        $execs->addOptions(sprintf(
+        $connectionOptions = sprintf(
             '--host=%s --user=%s --password=%s --database=%s',
             escapeshellarg($this->dbSettings['host']),
             escapeshellarg($this->dbSettings['username']),
             escapeshellarg($this->dbSettings['password']),
             escapeshellarg($this->dbSettings['dbname'])
-        ));
+        );
+        if (isset($this->dbSettings['port']) && is_numeric($this->dbSettings['port']) && (int)$this->dbSettings['port'] > 0) {
+            $connectionOptions .= ' --port=' . escapeshellarg($this->dbSettings['port']);
+        }
+        $execs->addOptions($connectionOptions);
 
         if (!$input->getOption('no-single-transaction')) {
             $execs->addOptions($this->getMydumperTransactionFlag());
