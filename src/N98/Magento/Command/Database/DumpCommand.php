@@ -809,8 +809,7 @@ HELP;
         ));
 
         if (!$input->getOption('no-single-transaction')) {
-            // --trx-consistency-only was deprecated in mydumper 0.15; use --trx-tables instead.
-            $execs->addOptions('--trx-tables');
+            $execs->addOptions($this->getMydumperTransactionFlag());
         }
 
         if ($input->getOption('human-readable')) {
@@ -879,6 +878,32 @@ HELP;
         }
 
         return $execs;
+    }
+
+    /**
+     * Returns the correct mydumper flag for transaction consistency depending on the
+     * installed version. mydumper 0.15+ uses --trx-tables; older versions use
+     * --trx-consistency-only.
+     */
+    private function getMydumperTransactionFlag(): string
+    {
+        exec('mydumper --version 2>&1', $output, $returnVal);
+        $versionString = implode(' ', $output);
+
+        // Version string examples:
+        //   "mydumper 0.11.5, built against MySQL 8.0.28"
+        //   "mydumper v0.15.1-3, built against MySQL 8.0.33 with SSL support"
+        if (preg_match('/v?(\d+)\.(\d+)/', $versionString, $matches)) {
+            $major = (int) $matches[1];
+            $minor = (int) $matches[2];
+
+            if ($major > 0 || $minor >= 15) {
+                return '--trx-tables';
+            }
+        }
+
+        // Older versions (< 0.15) or version detection failure: use the legacy flag.
+        return '--trx-consistency-only';
     }
 
     /**
