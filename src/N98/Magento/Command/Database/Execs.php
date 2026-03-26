@@ -43,6 +43,11 @@ class Execs
     private $fileName;
 
     /**
+     * @var array
+     */
+    private $postCommands = [];
+
+    /**
      * Execs constructor.
      *
      * @param string|null $command [optional]
@@ -105,6 +110,16 @@ class Execs
     }
 
     /**
+     * Adds an independent command to run after all main commands (e.g. post-processing steps).
+     *
+     * @param string $command
+     */
+    public function addPostCommand($command)
+    {
+        $this->postCommands[] = $command;
+    }
+
+    /**
      * @param string $separator
      * @return string
      */
@@ -127,16 +142,16 @@ class Execs
     public function getCommands()
     {
         if (empty($this->execs)) {
-            return [$this->getBaseCommand()];
+            $commands = [$this->getBaseCommand()];
+        } else {
+            $commands = [];
+            foreach ($this->execs as $exec) {
+                $next = clone $this;
+                $next->options[] = trim($exec);
+                $commands[] = $next->getBaseCommand($commands ? '>>' : '>');
+            }
         }
 
-        $commands = [];
-        foreach ($this->execs as $exec) {
-            $next = clone $this;
-            $next->options[] = trim($exec);
-            $commands[] = $next->getBaseCommand($commands ? '>>' : '>');
-        }
-
-        return $commands;
+        return array_merge($commands, $this->postCommands);
     }
 }
