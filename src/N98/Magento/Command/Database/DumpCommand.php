@@ -10,6 +10,7 @@ namespace N98\Magento\Command\Database;
 
 use InvalidArgumentException;
 use Magento\Framework\Exception\FileSystemException;
+use N98\Magento\Command\Database\Compressor\AbstractCompressor;
 use N98\Magento\Command\Database\Compressor\Compressor;
 use N98\Util\Console\Enabler;
 use N98\Util\Console\Helper\DatabaseHelper;
@@ -769,12 +770,33 @@ HELP;
         /* @var $database DatabaseHelper */
         $database = $this->getDatabaseHelper(); // Ensure helper is available
         $dbPrefix = $this->dbSettings['prefix'];
+        $compressionType = $input->getOption('compression');
 
+        // mydumper writes to a directory, not stdout — never pipe through a compressor.
+        // Compression is handled as a post-step using tar.
         $execs = new Execs('mydumper');
-        $execs->setCompression($input->getOption('compression'), $input);
+        $execs->setCompression(null, $input);
 
-        // Get output directory from filename
-        $outputDir = dirname($this->getFileName($input, $output, $execs->getCompressor()));
+        // Determine the mydumper output directory and optional archive file.
+        $archiveFile = null;
+        $archiveCompressor = null;
+        if ($compressionType && $compressionType !== 'none') {
+            $archiveCompressor = AbstractCompressor::create($compressionType, $input);
+            // Get the filename that the compressor would normally produce (handles user-supplied
+            // filenames, timestamp flags, default name generation, etc.), then strip the
+            // compression extension so we can use it as the mydumper output directory.
+            $compressedFileName = $this->getFileName($input, $output, $archiveCompressor);
+            $outputDir = $this->stripMydumperCompressionExtension($compressedFileName);
+            // Use the non-pipe (tar-based) filename as the final archive path.
+            $archiveFile = $archiveCompressor->getFileName($outputDir, false);
+        } else {
+            // Without compression: derive the directory from the SQL filename.
+            $sqlFileName = $this->getFileName($input, $output, AbstractCompressor::create(null, $input));
+            $outputDir = str_ends_with($sqlFileName, '.sql')
+                ? substr($sqlFileName, 0, -4)
+                : $sqlFileName;
+        }
+
         $execs->addOptions('--outputdir=' . escapeshellarg($outputDir));
 
         // Database connection options
@@ -787,7 +809,8 @@ HELP;
         ));
 
         if (!$input->getOption('no-single-transaction')) {
-            $execs->addOptions('--trx-consistency-only');
+            // --trx-consistency-only was deprecated in mydumper 0.15; use --trx-tables instead.
+            $execs->addOptions('--trx-tables');
         }
 
         if ($input->getOption('human-readable')) {
@@ -845,6 +868,35 @@ HELP;
             $execs->addOptions(implode(' ', array_unique($noDataOptions)));
         }
 
+        // After mydumper writes its files to $outputDir, compress the directory into an archive
+        // and remove the temporary directory.
+        if ($archiveFile !== null && $archiveCompressor !== null) {
+            $tarCmd = $archiveCompressor->getCompressingCommand(escapeshellarg($archiveFile), false)
+                . ' -C ' . escapeshellarg(dirname($outputDir))
+                . ' ' . escapeshellarg(basename($outputDir));
+            $execs->addPostCommand($tarCmd);
+            $execs->addPostCommand('rm -rf ' . escapeshellarg($outputDir));
+        }
+
         return $execs;
+    }
+
+    /**
+     * Strips known dump/compression file extensions from a filename so that the bare
+     * base name can be used as a mydumper output directory.
+     *
+     * @param string $fileName
+     * @return string
+     */
+    private function stripMydumperCompressionExtension(string $fileName): string
+    {
+        $extensions = ['.sql.gz', '.sql.lz4', '.sql.zstd', '.tar.gz', '.tar.lz4', '.tar.zstd', '.tgz', '.sql'];
+        foreach ($extensions as $ext) {
+            if (str_ends_with($fileName, $ext)) {
+                return substr($fileName, 0, -strlen($ext));
+            }
+        }
+
+        return $fileName;
     }
 }
