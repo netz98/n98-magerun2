@@ -514,6 +514,56 @@ function cleanup_files_in_magento() {
 }
 
 # ============================================
+# Command: db:dump (mydumper)
+# ============================================
+
+@test "Command: db:dump --mydumper to directory" {
+  if ! command -v mydumper &> /dev/null; then
+    skip "mydumper not installed"
+  fi
+  run $BIN "db:dump" --mydumper db_mydumper.sql
+  assert_output --partial "Finished"
+  assert [ "$status" -eq 0 ]
+}
+
+@test "Command: db:dump --mydumper with --strip" {
+  if ! command -v mydumper &> /dev/null; then
+    skip "mydumper not installed"
+  fi
+  run $BIN "db:dump" --mydumper --strip=@development db_mydumper_strip.sql
+  assert_output --partial "Finished"
+  assert [ "$status" -eq 0 ]
+}
+
+@test "Command: db:dump --mydumper with --strip and --exclude" {
+  if ! command -v mydumper &> /dev/null; then
+    skip "mydumper not installed"
+  fi
+  run $BIN "db:dump" --mydumper --strip=@development --exclude=core_config_data db_mydumper_strip_excl.sql
+  assert_output --partial "Finished"
+  assert [ "$status" -eq 0 ]
+}
+
+@test "Command: db:dump --mydumper --only-command" {
+  if ! command -v mydumper &> /dev/null; then
+    skip "mydumper not installed"
+  fi
+  run $BIN "db:dump" --mydumper --only-command db_mydumper_cmd.sql
+  assert [ "$status" -eq 0 ]
+  assert_output --partial "mydumper"
+}
+
+@test "Command: db:dump --mydumper --only-command with --strip and --exclude" {
+  if ! command -v mydumper &> /dev/null; then
+    skip "mydumper not installed"
+  fi
+  run $BIN "db:dump" --mydumper --strip=@development --exclude=admin_* --only-command db_mydumper_strip_cmd.sql
+  assert [ "$status" -eq 0 ]
+  assert_output --partial "--no-data="
+  assert_output --partial "--ignore-table="
+}
+
+# ============================================
 # Command: db:info
 # ============================================
 
