@@ -539,6 +539,9 @@ function cleanup_files_in_magento() {
   if ! command -v mydumper &> /dev/null; then
     skip "mydumper not installed"
   fi
+  if ! mydumper --help 2>&1 | grep -q -- '--ignore-table'; then
+    skip "mydumper version does not support --ignore-table"
+  fi
   run $BIN "db:dump" --mydumper --strip=@development --exclude=core_config_data db_mydumper_strip_excl.sql
   assert_output --partial "Finished"
   assert [ "$status" -eq 0 ]
