@@ -272,7 +272,7 @@ class BuildHyvaThemeCommand extends AbstractMagentoCommand
 
         $buildNpmCommand = 'watch'; // Default is watch mode
         if ($isProduction) {
-            $buildNpmCommand = 'build-prod';
+            $buildNpmCommand = 'build';
         }
 
         $process = new Process(['npm', 'run', $buildNpmCommand]);
