@@ -258,7 +258,7 @@ HELP;
 
         if (!is_null($sttyMode)) {
             // Restore stty mode because 'pv' breaks it in some cases
-            exec(sprintf('stty %s', $sttyMode));
+            exec(sprintf('stty %s', escapeshellarg($sttyMode)));
         }
 
         return $success;
