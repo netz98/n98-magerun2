@@ -245,7 +245,7 @@ class DatabaseHelper extends AbstractHelper implements CommandAware
         $this->_connection->query("SET SQL_MODE=''");
 
         try {
-            $this->_connection->query('USE `' . $this->dbSettings['dbname'] . '`');
+            $this->_connection->query('USE `' . $this->escapeIdentifier($this->dbSettings['dbname']) . '`');
         } catch (PDOException $e) {
             if ($output && OutputInterface::VERBOSITY_VERY_VERBOSE <= $output->getVerbosity()) {
                 $output->writeln(sprintf(
@@ -876,7 +876,7 @@ class DatabaseHelper extends AbstractHelper implements CommandAware
     {
         $this->detectDbSettings($output);
         $db = $this->getConnection();
-        $db->query('DROP DATABASE IF EXISTS `' . $this->dbSettings['dbname'] . '`');
+        $db->query('DROP DATABASE IF EXISTS `' . $this->escapeIdentifier($this->dbSettings['dbname']) . '`');
         $output->writeln('<info>Dropped database</info> <comment>' . $this->dbSettings['dbname'] . '</comment>');
     }
 
@@ -906,7 +906,7 @@ class DatabaseHelper extends AbstractHelper implements CommandAware
     {
         $this->detectDbSettings($output);
         $db = $this->getConnection();
-        $db->query('CREATE DATABASE IF NOT EXISTS `' . $this->dbSettings['dbname'] . '`');
+        $db->query('CREATE DATABASE IF NOT EXISTS `' . $this->escapeIdentifier($this->dbSettings['dbname']) . '`');
         $output->writeln('<info>Created database</info> <comment>' . $this->dbSettings['dbname'] . '</comment>');
     }
 
@@ -999,7 +999,7 @@ class DatabaseHelper extends AbstractHelper implements CommandAware
      * @param string $identifier
      * @return string
      */
-    private function escapeIdentifier($identifier)
+    public function escapeIdentifier($identifier)
     {
         return str_replace('`', '``', $identifier);
     }

@@ -186,6 +186,20 @@ class CreateDatabase extends AbstractSubCommand
     }
 
     /**
+     * @param string $host
+     * @param int $port
+     * @param string $user
+     * @param string $pass
+     * @return PDO
+     * @codeCoverageIgnore
+     */
+    protected function createPdoConnection($host, $port, $user, $pass)
+    {
+        $dsn = sprintf('mysql:host=%s;port=%s', $host, $port);
+        return new \PDO($dsn, $user, $pass);
+    }
+
+    /**
      * @param InputInterface $input
      * @param OutputInterface $output
      * @return bool|\PDO
@@ -193,19 +207,19 @@ class CreateDatabase extends AbstractSubCommand
     protected function validateDatabaseSettings(InputInterface $input, OutputInterface $output)
     {
         try {
-            $dsn = sprintf(
-                'mysql:host=%s;port=%s',
+            $db = $this->createPdoConnection(
                 $this->config->getString('db_host'),
-                $this->config->getString('db_port')
+                $this->config->getInt('db_port'),
+                $this->config->getString('db_user'),
+                $this->config->getString('db_pass')
             );
 
-            $db = new \PDO($dsn, $this->config->getString('db_user'), $this->config->getString('db_pass'));
-
             $dbName = $this->config->getString('db_name');
-            if (!$db->query('USE `' . $dbName . '`')) {
-                $db->query('CREATE DATABASE `' . $dbName . '`');
+            $escapedDbName = str_replace('`', '``', $dbName);
+            if (!$db->query('USE `' . $escapedDbName . '`')) {
+                $db->query('CREATE DATABASE `' . $escapedDbName . '`');
                 $output->writeln('<info>Created database ' . $dbName . '</info>');
-                $db->query('USE `' . $dbName . '`');
+                $db->query('USE `' . $escapedDbName . '`');
 
                 // Check DB version
                 $statement = $db->query('SELECT VERSION()');

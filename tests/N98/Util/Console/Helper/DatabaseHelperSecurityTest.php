@@ -76,4 +76,72 @@ class DatabaseHelperSecurityTest extends TestCase
 
         $helper->dropViews($outputMock);
     }
+
+    /**
+     * @test
+     */
+    public function dropDatabaseWithVulnerableName()
+    {
+        $pdoMock = $this->getMockBuilder(PDO::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $pdoMock->expects($this->once())
+            ->method('query')
+            ->with($this->callback(function ($query) {
+                return strpos($query, "DROP DATABASE IF EXISTS `db``name`") !== false;
+            }));
+
+        $helper = $this->getMockBuilder(DatabaseHelper::class)
+            ->onlyMethods(['getConnection', 'detectDbSettings'])
+            ->getMock();
+
+        $helper->expects($this->any())
+            ->method('getConnection')
+            ->willReturn($pdoMock);
+
+        // Set dbSettings directly as it is protected
+        $reflection = new \ReflectionClass(DatabaseHelper::class);
+        $property = $reflection->getProperty('dbSettings');
+        $property->setAccessible(true);
+        $property->setValue($helper, ['dbname' => 'db`name']);
+
+        $outputMock = $this->getMockBuilder(OutputInterface::class)->getMock();
+
+        $helper->dropDatabase($outputMock);
+    }
+
+    /**
+     * @test
+     */
+    public function createDatabaseWithVulnerableName()
+    {
+        $pdoMock = $this->getMockBuilder(PDO::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $pdoMock->expects($this->once())
+            ->method('query')
+            ->with($this->callback(function ($query) {
+                return strpos($query, "CREATE DATABASE IF NOT EXISTS `db``name`") !== false;
+            }));
+
+        $helper = $this->getMockBuilder(DatabaseHelper::class)
+            ->onlyMethods(['getConnection', 'detectDbSettings'])
+            ->getMock();
+
+        $helper->expects($this->any())
+            ->method('getConnection')
+            ->willReturn($pdoMock);
+
+        // Set dbSettings directly as it is protected
+        $reflection = new \ReflectionClass(DatabaseHelper::class);
+        $property = $reflection->getProperty('dbSettings');
+        $property->setAccessible(true);
+        $property->setValue($helper, ['dbname' => 'db`name']);
+
+        $outputMock = $this->getMockBuilder(OutputInterface::class)->getMock();
+
+        $helper->createDatabase($outputMock);
+    }
 }
