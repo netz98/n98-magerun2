@@ -122,13 +122,12 @@ HELP;
 
         $collection->addOrder('path', 'ASC');
 
+        $paths = [];
         foreach ($collection as $item) {
-            $paths[] = $item->getPath();
+            $paths[$item->getPath()] = $item->getPath();
         }
 
-        $paths = array_unique($paths);
-
-        return $paths;
+        return array_values($paths);
     }
 
     /**
