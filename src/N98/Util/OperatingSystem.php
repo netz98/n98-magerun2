@@ -98,7 +98,7 @@ class OperatingSystem
 
         $out = null;
         $return = null;
-        @exec('which ' . $program, $out, $return);
+        @exec('which ' . escapeshellarg($program), $out, $return);
         return ($return === 0 && isset($out[0])) ? $out[0] : '';
     }
 
