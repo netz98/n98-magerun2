@@ -12,6 +12,7 @@ use Exception;
 use InvalidArgumentException;
 use N98\Magento\Command\AbstractMagentoCommand;
 use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
+use Symfony\Component\Console\Helper\TableSeparator;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -126,32 +127,37 @@ class ListCommand extends AbstractMagentoCommand
         }
 
         $table = [];
+        $isFirstEvent = true;
+        $format = $input->getOption('format');
 
         foreach ($observerConfig as $eventName => $observers) {
-            $firstObserver = true;
-
             if ($eventFilter !== null && $eventName !== $eventFilter) {
                 continue;
             }
+
+            if (!$isFirstEvent && $format === null) {
+                $table[] = new TableSeparator();
+            }
+
+            $isFirstEvent = false;
 
             foreach ($observers as $observerName => $observerData) {
                 if (!isset($observerData['instance'])) {
                     continue;
                 }
-                if ($firstObserver) {
-                    $firstObserver = !$firstObserver;
-                    $table[] = [$eventName, $observerName, $observerData['instance'] . '::' . $observerData['name']];
-                } else {
-                    $table[] = ['', $observerName, $observerData['instance'] . '::' . $observerData['name']];
-                }
+
+                $table[] = [
+                    $eventName,
+                    $observerName,
+                    $observerData['instance'] . '::' . $observerData['name'],
+                ];
             }
         }
 
-        // @todo Output is a bit ugly!?
         $this->getHelper('table')
-                ->setHeaders(['Event', 'Observer name', 'Fires'])
-                ->setRows($table)
-                ->renderByFormat($output, $table, $input->getOption('format'));
+            ->setHeaders(['Event', 'Observer name', 'Fires'])
+            ->setRows($table)
+            ->renderByFormat($output, $table, $format);
 
         return 0;
     }
