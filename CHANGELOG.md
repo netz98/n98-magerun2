@@ -7,7 +7,7 @@ RECENT CHANGES
 - Add: `mageforge:install` command to install MageForge with an optional post-install Hyva compatibility check
 - Add: support include/exclude command groups for MCP tool exposure
 - Add: `sys:store:list` format option
-- Add: Mage-OS 2.1.0 support in the installer and test matrix
+- Add: Mage-OS 2.1.0 and 2.2.0 support in the installer and test matrix
 - Imp: improve `composer:redeploy-base-packages` initialization/error handling and add Mage-OS base package support
 - Imp: improve `db:dump` mydumper integration for newer versions, non-default ports, and transaction flag handling
 - Imp: optimize `eav:attribute:list`, `customer:delete`, `db:check-tables`, and `config:store:delete`
