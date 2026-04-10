@@ -15,6 +15,7 @@ RECENT CHANGES
 - Imp: deprecate `_connection` magic property in `AbstractDatabaseCommand`
 - Fix: harden security for browser argument handling, database creation/drop flows, compressor execution, terminal mode handling, and program lookup
 - Fix: verify Composer installer integrity during setup
+- Fix: restore installer `PreCheckPhp` subcommand namespace resolution
 - Fix: improve output format compatibility for list and renderer output
 - Test: extend coverage for renderers, project composer handling, curl responses, and mydumper integration
 - Docs: add MageBox and clarify local environment entries
