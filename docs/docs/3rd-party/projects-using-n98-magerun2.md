@@ -1,8 +1,9 @@
 # 3rd Party Projects Using n98-magerun2
 
 ## Local development environments
-*   [ddev](https://github.com/drud/ddev) – Docker-based local dev for PHP/Magento with n98-magerun2 bundled for admin and maintenance tasks.
-*   [warden](https://warden.dev/) – Docker Compose orchestration for Magento that exposes n98-magerun2 inside service containers.
+*   [ddev](https://github.com/drud/ddev) – Docker-based local development environment for PHP and Magento that ships with n98-magerun2 for admin and maintenance tasks.
+*   [warden](https://warden.dev/) – Docker Compose-based Magento development environment that ships with n98-magerun2 inside its service containers.
+*   [MageBox](https://magebox.dev) – Development environment for Magento 2 and MageOS that runs PHP and Nginx natively while using Docker for supporting services like databases and caches.
 *   [magento2-lando-wsl2](https://github.com/dev-jq/magento2-lando-wsl2) – Lando + WSL2 (Windows 10) environment shipping n98-magerun2 for maintenance and scripting.
 *   [valet-plus](https://github.com/weprovide/valet-plus) – macOS-native Laravel Valet stack (no Docker/Vagrant) with n98-magerun2 available out of the box.
 *   [devcontainers-features (Alpine)](https://github.com/cirolosapio/devcontainers-features) – Devcontainer feature that installs n98-magerun2 during Alpine-based container builds.
