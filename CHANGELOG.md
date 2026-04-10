@@ -1,20 +1,24 @@
 RECENT CHANGES
 ==============
 
-9.4.0-dev
----------
+9.4.0 (2026-04-10)
+------------------
 
-- Add: `mageforge:install` command to install MageForge tool with optional post-install Hyva compatibility check
+- Add: `mageforge:install` command to install MageForge with an optional post-install Hyva compatibility check
 - Add: support include/exclude command groups for MCP tool exposure
 - Add: `sys:store:list` format option
-- Imp: optimize `eav:attribute:list` and `customer:delete` commands to prevent N+1 queries
+- Add: Mage-OS 2.1.0 support in the installer and test matrix
 - Imp: improve `composer:redeploy-base-packages` initialization/error handling and add Mage-OS base package support
+- Imp: improve `db:dump` mydumper integration for newer versions, non-default ports, and transaction flag handling
+- Imp: optimize `eav:attribute:list`, `customer:delete`, `db:check-tables`, and `config:store:delete`
+- Imp: improve observer list output and document MCP server extensibility
 - Imp: deprecate `_connection` magic property in `AbstractDatabaseCommand`
-- Fix: harden security for browser argument handling and SQL execution in `db:drop`
+- Fix: harden security for browser argument handling, database creation/drop flows, compressor execution, terminal mode handling, and program lookup
 - Fix: verify Composer installer integrity during setup
-- Fix: improve output format compatibility for list/renderer output
-- Test: extend renderer and composer lock handling coverage
-- Build: update development dependencies and toolchain packages
+- Fix: improve output format compatibility for list and renderer output
+- Test: extend coverage for renderers, project composer handling, curl responses, and mydumper integration
+- Docs: add MageBox and clarify local environment entries
+- Build: update development dependencies, CI actions, and related toolchain packages
 
 9.3.0 (2026-02-02)
 ------------------
