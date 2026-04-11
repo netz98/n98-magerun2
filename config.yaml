@@ -120,6 +120,7 @@ commands:
     - N98\Magento\Command\Database\VariablesCommand
     - N98\Magento\Command\Database\StatusCommand
     - N98\Magento\Command\Database\Maintain\CheckTablesCommand
+    - N98\Magento\Command\Database\PrepareUpgradeCommand
     - N98\Magento\Command\Database\InfoCommand
     - N98\Magento\Command\Design\DemoNoticeCommand
     - N98\Magento\Command\Developer\Asset\ClearCommand

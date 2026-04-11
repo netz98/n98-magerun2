@@ -11,6 +11,7 @@ namespace N98\Magento\Command\Database;
 use Exception;
 use InvalidArgumentException;
 use N98\Magento\Command\Database\Compressor\AbstractCompressor;
+use N98\Util\Console\Helper\DatabaseHelper;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -31,6 +32,7 @@ class ImportCommand extends AbstractDatabaseCommand
         $this
             ->setName('db:import')
             ->addArgument('filename', InputArgument::OPTIONAL, 'Dump filename')
+            ->addOption('db-name', null, InputOption::VALUE_REQUIRED, 'Override database name from env.php for this command')
             ->addOption('compression', 'c', InputOption::VALUE_OPTIONAL, 'The compression of the specified file')
             ->addOption('zstd-level', null, InputOption::VALUE_OPTIONAL, '', 10)
             ->addOption('zstd-extra-args', null, InputOption::VALUE_OPTIONAL, '', '')
@@ -56,6 +58,14 @@ HELP;
         $help .= "\n" . $this->getCompressionHelp();
 
         $this->setHelp($help);
+    }
+
+    protected function initialize(InputInterface $input, OutputInterface $output): void
+    {
+        parent::initialize($input, $output);
+
+        $dbName = $input->getOption('db-name');
+        $this->getDatabaseHelper()->setDatabaseNameOverride($dbName !== null ? (string) $dbName : null);
     }
 
     /**
@@ -131,6 +141,8 @@ HELP;
     {
         $this->detectDbSettings($output);
         $this->writeSection($output, 'Import MySQL Database');
+
+        /** @var DatabaseHelper $dbHelper */
         $dbHelper = $this->getHelper('database');
 
         $fileName = $this->checkFilename($input);

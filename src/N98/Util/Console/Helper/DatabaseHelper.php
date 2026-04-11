@@ -56,6 +56,11 @@ class DatabaseHelper extends AbstractHelper implements CommandAware
     private $connectionType = 'default';
 
     /**
+     * @var string|null
+     */
+    private $databaseNameOverride = null;
+
+    /**
      * Set connection type when several db used.
      *
      * @param $connectionType
@@ -63,6 +68,26 @@ class DatabaseHelper extends AbstractHelper implements CommandAware
     public function setConnectionType($connectionType)
     {
         $this->connectionType = $connectionType;
+    }
+
+    /**
+     * Override database name from env.php for current command execution context.
+     *
+     * @param string|null $databaseName
+     */
+    public function setDatabaseNameOverride(?string $databaseName): void
+    {
+        $normalized = $databaseName !== null && $databaseName !== '' ? $databaseName : null;
+
+        if ($this->databaseNameOverride === $normalized) {
+            return;
+        }
+
+        $this->databaseNameOverride = $normalized;
+
+        // Force re-detection/reconnect on override changes.
+        $this->dbSettings = null;
+        $this->_connection = null;
     }
 
     /**
@@ -173,6 +198,10 @@ class DatabaseHelper extends AbstractHelper implements CommandAware
 
         if (isset($this->dbSettings['comment'])) {
             unset($this->dbSettings['comment']);
+        }
+
+        if ($this->databaseNameOverride !== null) {
+            $this->dbSettings['dbname'] = $this->databaseNameOverride;
         }
 
         if (isset($this->dbSettings['unix_socket'])) {
@@ -406,6 +435,20 @@ class DatabaseHelper extends AbstractHelper implements CommandAware
     {
         $this->detectDbSettings($this->fallbackOutput());
 
+        return $this->getMysqlClientToolConnectionStringForDb($this->dbSettings['dbname']);
+    }
+
+    /**
+     * Build mysql client connection string for a specific database name.
+     *
+     * @param string $dbName
+     * @return string
+     * @throws FileSystemException
+     */
+    public function getMysqlClientToolConnectionStringForDb(string $dbName)
+    {
+        $this->detectDbSettings($this->fallbackOutput());
+
         if ($this->isSocketConnect) {
             $string = '--socket=' . escapeshellarg($this->dbSettings['unix_socket']);
         } else {
@@ -462,7 +505,7 @@ class DatabaseHelper extends AbstractHelper implements CommandAware
                 ? '-P' . escapeshellarg($this->dbSettings['port']) . ' ' : '')
             . (strlen($this->dbSettings['password'])
                 ? '--password=' . escapeshellarg($this->dbSettings['password']) . ' ' : '')
-            . escapeshellarg($this->dbSettings['dbname']);
+            . escapeshellarg($dbName);
 
         return $string;
     }
