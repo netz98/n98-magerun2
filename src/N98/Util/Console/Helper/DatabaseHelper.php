@@ -259,7 +259,11 @@ class DatabaseHelper extends AbstractHelper implements CommandAware
         $this->_connection->query('SET NAMES utf8');
 
         $this->_connection->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
-        $this->_connection->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true);
+
+        $bufferedQueryAttr = defined('\Pdo\Mysql::ATTR_USE_BUFFERED_QUERY')
+            ? \Pdo\Mysql::ATTR_USE_BUFFERED_QUERY
+            : \PDO::MYSQL_ATTR_USE_BUFFERED_QUERY;
+        $this->_connection->setAttribute($bufferedQueryAttr, true);
 
         return $this->_connection;
     }

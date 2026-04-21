@@ -37,7 +37,9 @@ class InstallComposerTest extends TestCase
         try {
             $reflection = new \ReflectionClass($command);
             $method = $reflection->getMethod('downloadComposer');
-            $method->setAccessible(true);
+            if (\PHP_VERSION_ID < 80100) {
+                $method->setAccessible(true);
+            }
             $result = $method->invoke($command);
 
             // If it returns a path, it means it succeeded (execution passed, which might happen if exec works or fails gracefully without throw)
@@ -83,7 +85,9 @@ class InstallComposerTest extends TestCase
 
         $reflection = new \ReflectionClass($command);
         $method = $reflection->getMethod('downloadComposer');
-        $method->setAccessible(true);
+        if (\PHP_VERSION_ID < 80100) {
+            $method->setAccessible(true);
+        }
         $method->invoke($command);
     }
 }

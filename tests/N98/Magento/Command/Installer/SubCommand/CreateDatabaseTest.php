@@ -67,7 +67,9 @@ class CreateDatabaseTest extends TestCase
 
         $reflection = new \ReflectionClass(CreateDatabase::class);
         $method = $reflection->getMethod('validateDatabaseSettings');
-        $method->setAccessible(true);
+        if (\PHP_VERSION_ID < 80100) {
+            $method->setAccessible(true);
+        }
 
         $result = $method->invoke($subCommand, $inputMock, $outputMock);
 
