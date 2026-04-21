@@ -168,7 +168,9 @@ class DumpCommandUnitTest extends TestCase
 
         $reflection = new ReflectionClass($command);
         $method = $reflection->getMethod('getFileName');
-        $method->setAccessible(true);
+        if (\PHP_VERSION_ID < 80100) {
+            $method->setAccessible(true);
+        }
 
         $compressor = $this->createMock(Compressor::class);
         $compressor->method('getFileName')->will($this->returnArgument(0));

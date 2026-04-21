@@ -103,7 +103,9 @@ class DatabaseHelperSecurityTest extends TestCase
         // Set dbSettings directly as it is protected
         $reflection = new \ReflectionClass(DatabaseHelper::class);
         $property = $reflection->getProperty('dbSettings');
-        $property->setAccessible(true);
+        if (\PHP_VERSION_ID < 80100) {
+            $property->setAccessible(true);
+        }
         $property->setValue($helper, ['dbname' => 'db`name']);
 
         $outputMock = $this->getMockBuilder(OutputInterface::class)->getMock();
@@ -137,7 +139,9 @@ class DatabaseHelperSecurityTest extends TestCase
         // Set dbSettings directly as it is protected
         $reflection = new \ReflectionClass(DatabaseHelper::class);
         $property = $reflection->getProperty('dbSettings');
-        $property->setAccessible(true);
+        if (\PHP_VERSION_ID < 80100) {
+            $property->setAccessible(true);
+        }
         $property->setValue($helper, ['dbname' => 'db`name']);
 
         $outputMock = $this->getMockBuilder(OutputInterface::class)->getMock();

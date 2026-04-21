@@ -175,7 +175,9 @@ class AutoloaderDecorator implements AutoloaderInterface
         try {
             $autoloaderReflection = new \ReflectionObject($this->magentoAutoloader);
             $autoloaderProperty = $autoloaderReflection->getProperty('autoloader');
-            $autoloaderProperty->setAccessible(true);
+            if (\PHP_VERSION_ID < 80100) {
+                $autoloaderProperty->setAccessible(true);
+            }
 
             /** @var ClassLoader $magentoComposerAutoloader */
             $magentoComposerAutoloader = $autoloaderProperty->getValue($this->magentoAutoloader);
