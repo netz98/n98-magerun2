@@ -1,7 +1,7 @@
 name: n98-magerun2
 type: php
 docroot: ""
-php_version: "8.3"
+php_version: "8.5"
 webserver_type: nginx-fpm
 xdebug_enabled: false
 additional_hostnames: []
@@ -32,13 +32,13 @@ xhgui_http_port: "8143"
 # If the name is omitted, the project will take the name of the enclosing directory,
 # which is useful if you want to have a copy of the project side by side with this one.
 
-# type: <projecttype>  # backdrop, cakephp, craftcms, drupal, drupal6, drupal7, drupal8, drupal9, drupal10, drupal11, generic, laravel, magento, magento2, php, shopware6, silverstripe, symfony, typo3, wordpress
+# type: <projecttype>  # backdrop, cakephp, codeigniter, craftcms, drupal, drupal6, drupal7, drupal8, drupal9, drupal10, drupal11, drupal12, generic, laravel, magento, magento2, php, shopware6, silverstripe, symfony, typo3, wordpress
 # See https://docs.ddev.com/en/stable/users/quickstart/ for more
 # information on the different project types
 
 # docroot: <relative_path> # Relative path to the directory containing index.php.
 
-# php_version: "8.3"  # PHP version to use, "5.6" through "8.5"
+# php_version: "8.4"  # PHP version to use, "5.6" through "8.5"
 
 # You can explicitly specify the webimage but this
 # is not recommended, as the images are often closely tied to DDEV's' behavior,
@@ -74,8 +74,7 @@ xhgui_http_port: "8143"
 # bind_all_ports is used (normally with router disabled)
 
 # xhprof_mode: [prepend|xhgui|global]
-# Set to "xhgui" to enable XHGui features
-# "xhgui" will become default in a future major release
+# Default is "xhgui"
 
 # webserver_type: nginx-fpm, apache-fpm, generic
 
@@ -93,7 +92,7 @@ xhgui_http_port: "8143"
 # commands are executed.
 
 # composer_version: "2"
-# You can set it to "" or "2" (default) for Composer v2 or "1" for Composer v1
+# You can set it to "" or "2" (default) for Composer v2
 # to use the latest major version available at the time your container is built.
 # It is also possible to use each other Composer version channel. This includes:
 #   - 2.2 (latest Composer LTS version)
@@ -101,14 +100,12 @@ xhgui_http_port: "8143"
 #   - preview
 #   - snapshot
 # Alternatively, an explicit Composer version may be specified, for example "2.2.18".
-# To reinstall Composer after the image was built, run "ddev debug rebuild".
+# To reinstall Composer after the image was built, run "ddev utility rebuild".
 
-# nodejs_version: "22"
+# nodejs_version: "24"
 # change from the default system Node.js version to any other version.
 # See https://docs.ddev.com/en/stable/users/configuration/config/#nodejs_version for more information
-# and https://www.npmjs.com/package/n#specifying-nodejs-versions for the full documentation,
-# Note that using of 'ddev nvm' is discouraged because "nodejs_version" is much easier to use,
-# can specify any version, and is more robust than using 'nvm'.
+# and https://www.npmjs.com/package/n#specifying-nodejs-versions for the full documentation.
 
 # corepack_enable: false
 # Change to 'true' to 'corepack enable' and gain access to latest versions of yarn/pnpm
@@ -168,9 +165,7 @@ xhgui_http_port: "8143"
 #   - "global":  uses the value from the global config.
 #   - "none":    disables performance optimization for this project.
 #   - "mutagen": enables Mutagen for this project.
-#   - "nfs":     enables NFS for this project.
 #
-# See https://docs.ddev.com/en/stable/users/install/performance/#nfs
 # See https://docs.ddev.com/en/stable/users/install/performance/#mutagen
 
 # fail_on_hook_fail: False
@@ -200,10 +195,10 @@ xhgui_http_port: "8143"
 # The mailpit port is not normally bound on the host at all, instead being routed
 # through ddev-router, but it can be bound directly to localhost if specified here.
 
-# webimage_extra_packages: [php7.4-tidy, php-bcmath]
+# webimage_extra_packages: ['php${DDEV_PHP_VERSION}-tidy', 'php${DDEV_PHP_VERSION}-yac']
 # Extra Debian packages that are needed in the webimage can be added here
 
-# dbimage_extra_packages: [telnet,netcat]
+# dbimage_extra_packages: [netcat, telnet, sudo]
 # Extra Debian packages that are needed in the dbimage can be added here
 
 # use_dns_when_possible: true
@@ -215,12 +210,15 @@ xhgui_http_port: "8143"
 # project_tld: ddev.site
 # The top-level domain used for project URLs
 # The default "ddev.site" allows DNS lookup via a wildcard
-# If you prefer you can change this to "ddev.local" to preserve
-# pre-v1.9 behavior.
 
-# ngrok_args: --basic-auth username:pass1234
-# Provide extra flags to the "ngrok http" command, see
-# https://ngrok.com/docs/agent/config/v3/#agent-configuration or run "ngrok http -h"
+# share_default_provider: ngrok
+# The default share provider to use for "ddev share"
+# Defaults to global configuration, usually "ngrok"
+# Can be "ngrok" or "cloudflared" or the name of a custom provider from .ddev/share-providers/
+
+# share_provider_args: --basic-auth username:pass1234
+# Provide extra flags to the share provider script
+# See https://docs.ddev.com/en/stable/users/configuration/config/#share_provider_args
 
 # disable_settings_management: false
 # If true, DDEV will not create CMS-specific settings files like
