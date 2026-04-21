@@ -10,6 +10,7 @@ We recommend using the **latest version** of n98-magerun2 for the best support a
 
 | Platform & Version                        | Recommended n98-magerun2 Version |
 | ----------------------------------------- |----------------------------------|
+| Adobe Commerce / Magento OS 2.4.9-beta1+  | `v9.0.0` or later                |
 | Adobe Commerce / Magento OS 2.4.8+        | `v9.0.0` or later                |
 | Mage-OS 1.2.x+                            | `v9.0.0` or later                |
 | Adobe Commerce / Magento OS 2.4.5 - 2.4.7 | `v8.0.0` or later                |
@@ -24,6 +25,7 @@ We recommend using the **latest version** of n98-magerun2 for the best support a
 
 | PHP Version | Required n98-magerun2 Version |
 | ----------- |-------------------------------|
+| PHP 8.5     | `v9.0.0` or later             |
 | PHP 8.4     | `v9.0.0` or later             |
 | PHP 8.3     | `v8.0.0` or later             |
 | PHP 8.2     | `v8.0.0` or later             |
