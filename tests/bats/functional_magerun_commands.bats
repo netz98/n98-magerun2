@@ -214,6 +214,9 @@ function cleanup_files_in_magento() {
 
 @test "Command: cache:report" {
   run $BIN "cache:report"
+  if [[ "$output" == *"The current cache adapter does not support getting all IDs."* ]]; then
+    skip "The current cache adapter does not support getting all IDs."
+  fi
   assert_output --partial "EXPIRE"
 }
 
