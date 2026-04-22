@@ -112,20 +112,34 @@ class CurlHttpResponseTest extends TestCase
     {
         $response = new CurlHttpResponse();
 
-        $this->expectNotice();
-        $this->expectNoticeMessage('Undefined property: N98\Util\Http\CurlHttpResponse::invalid');
+        $errorOccurred = false;
+        set_error_handler(function ($errno, $errstr) use (&$errorOccurred) {
+            $this->assertEquals('Undefined property: N98\Util\Http\CurlHttpResponse::invalid', $errstr);
+            $errorOccurred = true;
+            return true;
+        }, E_USER_NOTICE);
 
         $value = $response->invalid;
         $this->assertNull($value);
+
+        restore_error_handler();
+        $this->assertTrue($errorOccurred);
     }
 
     public function testUndefinedPropertySet()
     {
         $response = new CurlHttpResponse();
 
-        $this->expectNotice();
-        $this->expectNoticeMessage('Undefined property: N98\Util\Http\CurlHttpResponse::invalid');
+        $errorOccurred = false;
+        set_error_handler(function ($errno, $errstr) use (&$errorOccurred) {
+            $this->assertEquals('Undefined property: N98\Util\Http\CurlHttpResponse::invalid', $errstr);
+            $errorOccurred = true;
+            return true;
+        }, E_USER_NOTICE);
 
         $response->invalid = 'foo';
+
+        restore_error_handler();
+        $this->assertTrue($errorOccurred);
     }
 }

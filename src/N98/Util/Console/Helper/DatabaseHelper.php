@@ -433,10 +433,15 @@ class DatabaseHelper extends AbstractHelper implements CommandAware
             ? $this->dbSettings['driver_options']
             : [];
 
+        $pdoMysqlAttrSslCa = defined('\Pdo\Mysql::ATTR_SSL_CA') ? \Pdo\Mysql::ATTR_SSL_CA : \PDO::MYSQL_ATTR_SSL_CA;
+        $pdoMysqlAttrSslCert = defined('\Pdo\Mysql::ATTR_SSL_CERT') ? \Pdo\Mysql::ATTR_SSL_CERT : \PDO::MYSQL_ATTR_SSL_CERT;
+        $pdoMysqlAttrSslKey = defined('\Pdo\Mysql::ATTR_SSL_KEY') ? \Pdo\Mysql::ATTR_SSL_KEY : \PDO::MYSQL_ATTR_SSL_KEY;
+        $pdoMysqlAttrSslVerifyServerCert = defined('\Pdo\Mysql::ATTR_SSL_VERIFY_SERVER_CERT') ? \Pdo\Mysql::ATTR_SSL_VERIFY_SERVER_CERT : \PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT;
+
         $sslConfigMap = [
-            PDO::MYSQL_ATTR_SSL_CA => '--ssl-ca',
-            PDO::MYSQL_ATTR_SSL_CERT => '--ssl-cert',
-            PDO::MYSQL_ATTR_SSL_KEY => '--ssl-key'
+            $pdoMysqlAttrSslCa => '--ssl-ca',
+            $pdoMysqlAttrSslCert => '--ssl-cert',
+            $pdoMysqlAttrSslKey => '--ssl-key'
         ];
 
         $sslOptions = [];
@@ -451,9 +456,9 @@ class DatabaseHelper extends AbstractHelper implements CommandAware
 
         // see https://dev.mysql.com/doc/refman/8.0/en/connection-options.html#option_general_ssl-mode
         // see https://dev.mysql.com/doc/refman/8.0/en/connection-options.html#option_general_ssl-mode
-        if ($isSslModeSupported && array_key_exists(PDO::MYSQL_ATTR_SSL_CA, $connectionOptions)) {
-            $sslOptions[] = !array_key_exists(PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT, $connectionOptions)
-            || $connectionOptions[PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT]
+        if ($isSslModeSupported && array_key_exists($pdoMysqlAttrSslCa, $connectionOptions)) {
+            $sslOptions[] = !array_key_exists($pdoMysqlAttrSslVerifyServerCert, $connectionOptions)
+            || $connectionOptions[$pdoMysqlAttrSslVerifyServerCert]
                 ? '--ssl-mode=VERIFY_CA'
                 : '--ssl-mode=REQUIRED';
         }

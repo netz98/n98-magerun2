@@ -110,7 +110,16 @@ class ReportCommand extends AbstractMagentoCommand
         }
 
         $table = [];
-        $cacheIds = $lowLevelFrontend->getIds();
+        try {
+            $cacheIds = $lowLevelFrontend->getIds();
+        } catch (\Throwable $e) {
+            if (strpos($e->getMessage(), 'getIds') !== false) {
+                $output->writeln('<error>The current cache adapter does not support getting all IDs.</error>');
+                return Command::FAILURE;
+            }
+            throw $e;
+        }
+        
         $filterId = $input->getOption('filter-id');
         $filterTag = $input->getOption('filter-tag');
         $mTime = $input->getOption('mtime');
