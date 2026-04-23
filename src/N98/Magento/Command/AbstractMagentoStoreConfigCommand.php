@@ -156,7 +156,7 @@ abstract class AbstractMagentoStoreConfigCommand extends AbstractMagentoCommand
         $this->beforeSave($store, $isFalse);
 
         if ($store->getId() == \Magento\Store\Model\Store::DEFAULT_STORE_ID) {
-            $scope = 'default'; // @TODO Constant was removed in Magento2 ?
+            $scope = \Magento\Framework\App\ScopeInterface::SCOPE_DEFAULT;
         } else {
             $scope = \Magento\Store\Model\ScopeInterface::SCOPE_STORES;
         }
