@@ -1155,3 +1155,17 @@ function cleanup_files_in_magento() {
   assert_output --partial "Total:"
   assert [ "$status" -eq 0 ]
 }
+
+##
+# Command: setup:prepare-upgrade
+##
+
+@test "Command: setup:prepare-upgrade --help" {
+  run $BIN "setup:prepare-upgrade" --help
+  assert_output --partial "original DB"
+  assert_output --partial "--original-db"
+  assert_output --partial "--output-file"
+  assert_output --partial "--compare-extra-arg"
+  assert_output --partial "mysqldbcompare"
+  assert [ "$status" -eq 0 ]
+}

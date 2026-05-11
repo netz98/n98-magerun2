@@ -37,6 +37,7 @@ class DumpCommand extends AbstractDatabaseCommand
         $this
             ->setName('db:dump')
             ->addArgument('filename', InputArgument::OPTIONAL, 'Dump filename')
+            ->addOption('db-name', null, InputOption::VALUE_REQUIRED, 'Override database name from env.php for this command')
             ->addOption('zstd-level', null, InputOption::VALUE_OPTIONAL, 'Set the level of compression the higher the smaller the result', 10)
             ->addOption('zstd-extra-args', null, InputOption::VALUE_OPTIONAL, 'Set custom extra options that zstd supports', '')
             ->addOption(
@@ -196,6 +197,14 @@ See it in action: http://youtu.be/ttjZHY6vThs
 
 HELP;
         $this->setHelp($help);
+    }
+
+    protected function initialize(InputInterface $input, OutputInterface $output): void
+    {
+        parent::initialize($input, $output);
+
+        $dbName = $input->getOption('db-name');
+        $this->getDatabaseHelper()->setDatabaseNameOverride($dbName !== null ? (string) $dbName : null);
     }
 
     /**

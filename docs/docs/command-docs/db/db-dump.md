@@ -28,6 +28,7 @@ n98-magerun2.phar db:dump [options] [--] [<filename>]
 
 | Option                              | Description                                                                                                                          |
 |-------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------|
+| `--db-name=DB-NAME`                 | Override database name from `env.php` for this command run only.                                                                     |
 | `--connection=CONNECTION`           | Select DB connection type for Magento configurations with several databases (default: `default`)                                       |
 | `--add-routines`                    | Include stored routines in dump (procedures & functions).                                                                            |
 | `--add-time[=ADD-TIME]`             | Append or prepend a timestamp to filename. Values: `suffix`, `prefix`, `no`. (default: `no`)                                          |

@@ -25,6 +25,7 @@ n98-magerun2.phar db:import [options] [<filename>]
 | Option                                | Description                                                                        |
 |---------------------------------------|------------------------------------------------------------------------------------|
 | `--connection=CONNECTION`             | Select DB connection type for Magento configurations with several databases        |
+| `--db-name=DB-NAME`                   | Override database name from `env.php` for this command run only                   |
 | `-c`, `--compression=COMPRESSION`     | The compression of the specified file (e.g. `gzip`, `lz4`, `zstd`)                 |
 | `--zstd-level[=ZSTD-LEVEL]`           | ZSTD compression level [default: 10]                                               |
 | `--zstd-extra-args[=ZSTD-EXTRA-ARGS]` | Custom extra options for zstd                                                      |

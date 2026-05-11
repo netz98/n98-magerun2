@@ -23,5 +23,6 @@ Commands for database operations such as dumps, imports, and queries.
 ### Database Maintenance
 - [db:dump](./db-dump.md) - Dump database
 - [db:import](./db-import.md) - Import database
+- [setup:prepare-upgrade](./db-prepare-upgrade.md) - Generate SQL diff for fast production upgrades
 - [db:add-default-authorization-entries](./db-add-default-authorization-entries.md) - Fix empty authorization tables
 - [db:maintain:check-tables](./db-maintain-check-tables.md) - Check database tables
