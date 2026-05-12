@@ -134,7 +134,7 @@ HELP;
         return function_exists('exec');
     }
 
-    protected function initialize(InputInterface $input, OutputInterface $output)
+    protected function initialize(InputInterface $input, OutputInterface $output): void
     {
         $output->writeln('<warning>DEPRECATED: The "install" command is deprecated and will be removed in v10.0.0.</warning>');
     }
