@@ -134,6 +134,11 @@ HELP;
         return function_exists('exec');
     }
 
+    protected function initialize(InputInterface $input, OutputInterface $output)
+    {
+        $output->writeln('<warning>DEPRECATED: The "install" command is deprecated and will be removed in v10.0.0.</warning>');
+    }
+
     /**
      * @param InputInterface $input
      * @param OutputInterface $output
@@ -142,7 +147,6 @@ HELP;
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $output->writeln('<warning>WARNING: The \'install\' command is deprecated and will be removed in v10.0.0. A new install command will be available in that version.</warning>');
         $this->commandConfig = $this->getCommandConfig();
         $this->writeSection($output, 'Magento 2 Installation');
 
