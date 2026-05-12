@@ -1,6 +1,17 @@
 RECENT CHANGES
 ==============
 
+9.5.0 (2026-05-12)
+------------------
+
+- Dep: show deprecation notice at start of `install` command (will be removed in v10.0.0)
+- Add: PHP 8.5 and Magento 2.4.9 support in CI matrix and docs
+- Fix: add PHP 8.5 compatibility for reflection and PDO attributes
+- Fix: improve `cache:report` error handling, update PHPUnit notice assertions, and resolve PDO SSL constant compatibility issues
+- Test: skip `cache:report` test if cache adapter does not support ID retrieval
+- Test: disable deprecation-to-exception conversion in PHPUnit
+- Build: update development dependencies (phpstan, php-cs-fixer, mcp/sdk, rmccue/requests, sigstore/cosign-installer, actions/github-script, softprops/action-gh-release, actions/upload-pages-artifact)
+
 9.4.0 (2026-04-10)
 ------------------
 
