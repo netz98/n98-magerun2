@@ -119,7 +119,7 @@ class ReportCommand extends AbstractMagentoCommand
             }
             throw $e;
         }
-        
+
         $filterId = $input->getOption('filter-id');
         $filterTag = $input->getOption('filter-tag');
         $mTime = $input->getOption('mtime');

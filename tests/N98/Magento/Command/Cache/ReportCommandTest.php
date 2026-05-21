@@ -21,9 +21,9 @@ class ReportCommandTest extends TestCase
         $commandObj = $this->getApplication()->find('cache:report');
         $tester = new \Symfony\Component\Console\Tester\CommandTester($commandObj);
         $tester->execute(['command' => $commandObj->getName()]);
-        
+
         $display = $tester->getDisplay();
-        
+
         if (strpos($display, 'does not support getting all IDs') !== false) {
             $this->markTestSkipped('The current cache adapter does not support getting all IDs.');
         }
