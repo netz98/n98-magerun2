@@ -1,6 +1,16 @@
 RECENT CHANGES
 ==============
 
+9.5.1 (2026-05-21)
+------------------
+
+- Fix: add missing void return type to `initialize()` method in installer command
+- Test: skip varnish VCL generation test on Mage-OS
+- Fix: correct Mage-OS platform matrix version to 3.0.0
+- Chore: add Mage-OS 2.3.0 to platform test matrix
+- Build: update vulnerable composer packages
+- Build: update npm/yarn dependencies (7 updates)
+
 9.5.0 (2026-05-12)
 ------------------
 
