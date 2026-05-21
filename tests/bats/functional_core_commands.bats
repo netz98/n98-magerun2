@@ -3,6 +3,7 @@
 setup() {
     load 'test_helper/bats-support/load'
     load 'test_helper/bats-assert/load'
+    load 'test_helper/distribution'
 
     declare PHP_BIN
     if ! PHP_BIN=$(which php); then
@@ -290,7 +291,10 @@ setup() {
 }
 
 @test "Command: varnish:vcl:generate" {
+  if is_mage_os_distribution; then
+    skip "varnish:vcl:generate is not supported on Mage-OS"
+  fi
+
   run $BIN "varnish:vcl:generate"
   assert_output --partial "vcl 4.0"
 }
-
