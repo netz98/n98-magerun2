@@ -480,7 +480,7 @@ HELP;
         $commandOutput = '';
 
         if ($input->getOption('stdout')) {
-            passthru($command, $returnCode);
+            passthru(Exec::wrapWithBashPipefail($command), $returnCode);
         } else {
             Exec::run($command, $commandOutput, $returnCode);
         }

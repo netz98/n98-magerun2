@@ -11,6 +11,7 @@ namespace N98\Magento\Command\Database;
 use Exception;
 use InvalidArgumentException;
 use N98\Magento\Command\Database\Compressor\AbstractCompressor;
+use N98\Util\Exec;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -249,7 +250,7 @@ HELP;
             '<comment>Importing SQL dump <info>' . $fileName . '</info> to database <info>'
             . $this->dbSettings['dbname'] . '</info>'
         );
-        exec($exec, $commandOutput, $returnValue);
+        exec(Exec::wrapWithBashPipefail($exec), $commandOutput, $returnValue);
         if ($returnValue != 0) {
             $output->writeln('<error>' . implode(PHP_EOL, $commandOutput) . '</error>');
             $success = false;
