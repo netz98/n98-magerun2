@@ -482,7 +482,12 @@ HELP;
         if ($input->getOption('stdout')) {
             passthru(Exec::wrapWithBashPipefail($command), $returnCode);
         } else {
-            Exec::run($command, $commandOutput, $returnCode);
+            try {
+                Exec::run($command, $commandOutput, $returnCode);
+            } catch (\RuntimeException $e) {
+                $output->writeln('<error>' . $e->getMessage() . '</error>');
+                return false;
+            }
         }
 
         if ($returnCode > 0) {
