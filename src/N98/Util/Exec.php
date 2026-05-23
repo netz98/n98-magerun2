@@ -33,6 +33,11 @@ class Exec
     const SET_O_PIPEFAIL = 'set -o pipefail; ';
 
     /**
+     * @var string|null Cached bash binary path; empty string means "not found"
+     */
+    private static $bashBinary = null;
+
+    /**
      * @param string $command
      * @param string|null $output
      * @param int $returnCode
@@ -44,10 +49,7 @@ class Exec
             throw new RuntimeException($message);
         }
 
-        if (self::isPipefailOptionAvailable()) {
-            $command = self::SET_O_PIPEFAIL . $command;
-        }
-
+        $command = self::wrapWithBashPipefail($command);
         $command .= self::REDIRECT_STDERR_TO_STDOUT;
 
         exec($command, $outputArray, $returnCode);
@@ -82,12 +84,51 @@ class Exec
     }
 
     /**
-     * @return bool
+     * Wraps a command in an explicit bash sub-shell with pipefail enabled so that
+     * errors in any segment of a pipeline propagate correctly even when /bin/sh is
+     * dash (which does not support set -o pipefail).
+     *
+     * When bash is not available the command is returned unchanged.
+     *
+     * @param string $command
+     * @return string
      */
-    private static function isPipefailOptionAvailable()
+    public static function wrapWithBashPipefail($command)
     {
-        exec('set -o | grep pipefail 2>&1', $output, $returnCode);
+        $bash = self::getBashBinary();
+        if ($bash === null) {
+            return $command;
+        }
 
-        return $returnCode == self::CODE_CLEAN_EXIT;
+        return $bash . " -c 'set -o pipefail; " . self::escapeForBash($command) . "'";
+    }
+
+    /**
+     * Returns the absolute path to bash, or null when bash is not available.
+     * The result is cached for the lifetime of the PHP process.
+     *
+     * @return string|null
+     */
+    private static function getBashBinary()
+    {
+        if (self::$bashBinary === null) {
+            $path = trim((string) shell_exec('command -v bash 2>/dev/null'));
+            self::$bashBinary = $path ?: '';
+        }
+
+        return self::$bashBinary ?: null;
+    }
+
+    /**
+     * Escapes a command string for safe embedding inside a bash single-quoted argument.
+     * Every ' is replaced with '"'"' which ends the single-quoted string, appends a
+     * double-quoted single quote, then reopens the single-quoted string.
+     *
+     * @param string $command
+     * @return string
+     */
+    private static function escapeForBash($command)
+    {
+        return str_replace("'", "'\"'\"'", $command);
     }
 }
