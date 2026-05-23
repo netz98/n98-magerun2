@@ -281,8 +281,8 @@ commands:
         tables: session persistent_session
 
       - id: stripped
-        description: Standard definition for a stripped dump (logs, sessions, dotmailer)
-        tables: "@log @sessions @dotmailer @newrelic_reporting @temp system_config_snapshot"
+        description: Standard definition for a stripped dump (logs, sessions, dotmailer, indexer noise)
+        tables: "@log @sessions @dotmailer @newrelic_reporting @temp @ee_changelog @indexer_batches system_config_snapshot"
 
       - id: sales
         description: Sales data (orders, invoices, creditmemos etc)
@@ -356,6 +356,10 @@ commands:
       - id: ee_changelog
         description: Changelog tables of new indexer since EE 1.13
         tables: "*_cl"
+
+      - id: indexer_batches
+        description: Indexer batch tables (data exporter, etc.) — regenerated on demand
+        tables: "*_index_batches"
 
       - id: search
         description: Search related tables
