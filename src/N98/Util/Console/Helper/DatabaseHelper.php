@@ -349,8 +349,15 @@ class DatabaseHelper extends AbstractHelper implements CommandAware
      */
     public function isMariaDbClientToolUsed(): bool
     {
-        Exec::run('mysqldump --help', $output, $exitCode);
-        return stripos($output, 'MariaDB') !== false;
+        if (!$this->commandExists('mysqldump')) {
+            return false;
+        }
+        try {
+            Exec::run('mysqldump --help', $output, $exitCode);
+            return stripos($output, 'MariaDB') !== false;
+        } catch (Throwable $e) {
+            return false;
+        }
     }
 
     /**
@@ -361,8 +368,15 @@ class DatabaseHelper extends AbstractHelper implements CommandAware
     public function isSslModeOptionSupported(): bool
     {
         $dumpBinary = $this->getMysqlDumpBinary();
-        Exec::run($dumpBinary . ' --help', $output, $exitCode);
-        return str_contains($output, '--ssl-mode');
+        if (!$this->commandExists($dumpBinary)) {
+            return false;
+        }
+        try {
+            Exec::run($dumpBinary . ' --help', $output, $exitCode);
+            return str_contains($output, '--ssl-mode');
+        } catch (Throwable $e) {
+            return false;
+        }
     }
 
     /**
@@ -378,7 +392,7 @@ class DatabaseHelper extends AbstractHelper implements CommandAware
         }
     }
 
-    private function commandExists(string $command): bool
+    public function commandExists(string $command): bool
     {
         exec('command -v ' . escapeshellarg($command) . ' >/dev/null 2>&1', $o, $r);
         return $r === 0;
