@@ -747,17 +747,21 @@ HELP;
             && !$input->getOption('print-only-filename');
     }
 
-    /**
-     * Checks if 'column statistics' are present in the current MySQL distribution
-     *
-     * @return bool
-     */
     private function checkColumnStatistics()
     {
-        Exec::run('mysqldump --help | grep -c column-statistics || true', $output, $returnCode);
+        $database = $this->getDatabaseHelper();
+        $dumpBinary = $database->getMysqlDumpBinary();
+        if (!$database->commandExists($dumpBinary)) {
+            return false;
+        }
 
-        if ($output > 0) {
-            return true;
+        try {
+            Exec::run($dumpBinary . ' --help | grep -c column-statistics || true', $output, $returnCode);
+            if ($output > 0) {
+                return true;
+            }
+        } catch (\Throwable $e) {
+            // Ignore exception if binary not found/not executable
         }
 
         return false;

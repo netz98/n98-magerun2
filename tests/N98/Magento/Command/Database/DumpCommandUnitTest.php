@@ -268,4 +268,82 @@ class DumpCommandUnitTest extends TestCase
         $this->assertStringContainsString('--ignore-table=magento.table2', $fullOutput, 'table2 should be ignored (excluded)');
         $this->assertStringNotContainsString('--ignore-table=magento.table3', $fullOutput, 'table3 should NOT be ignored (not excluded)');
     }
+
+    public function testOnlyCommandSupportsNoBinaryInstalled()
+    {
+        // Mock Input
+        $input = $this->createMock(InputInterface::class);
+        $input->method('getOption')->will($this->returnValueMap([
+            ['include', null],
+            ['exclude', null],
+            ['strip', null],
+            ['no-views', false],
+            ['compression', null],
+            ['no-single-transaction', true],
+            ['human-readable', false],
+            ['set-gtid-purged-off', false],
+            ['add-routines', false],
+            ['no-tablespaces', false],
+            ['keep-column-statistics', false],
+            ['git-friendly', false],
+            ['keep-definer', false],
+            ['mydumper', false],
+            ['stdout', false],
+            ['only-command', true],
+            ['print-only-filename', false],
+            ['dry-run', false],
+            ['views', false],
+            ['force', true],
+            ['add-time', 'no'],
+        ]));
+
+        $input->method('getArgument')->will($this->returnValueMap([
+            ['filename', 'dump.sql']
+        ]));
+
+        $output = $this->createMock(OutputInterface::class);
+        $outputBuffer = [];
+        $output->method('writeln')->will($this->returnCallback(function ($message) use (&$outputBuffer) {
+            $outputBuffer[] = $message;
+        }));
+
+        $databaseHelper = $this->createMock(DatabaseHelper::class);
+        $databaseHelper->method('getDbSettings')->willReturn([
+            'host' => 'localhost',
+            'username' => 'user',
+            'password' => 'pass',
+            'dbname' => 'magento',
+            'prefix' => '',
+        ]);
+        $databaseHelper->method('getMysqlDumpBinary')->willReturn('mysqldump');
+        $databaseHelper->method('getViews')->willReturn([]);
+        $databaseHelper->method('getTables')->willReturn([]);
+        $databaseHelper->method('getMysqlClientToolConnectionString')->willReturn('-h localhost -u user -p pass magento');
+        $databaseHelper->method('getTableDefinitions')->willReturn([]);
+        // Simulate missing binary
+        $databaseHelper->method('commandExists')->with('mysqldump')->willReturn(false);
+
+        $questionHelper = $this->createMock(QuestionHelper::class);
+        $helperSet = $this->createMock(HelperSet::class);
+        $helperSet->method('get')->will($this->returnValueMap([
+            ['database', $databaseHelper],
+            ['question', $questionHelper]
+        ]));
+
+        $application = $this->createMock(Application::class);
+        $application->method('getConfig')->willReturn(['commands' => []]);
+
+        $command = new DumpCommand();
+        $command->setApplication($application);
+        $command->setHelperSet($helperSet);
+
+        // Run the command. It should not throw any exception even though 'mysqldump' binary is missing.
+        $command->run($input, $output);
+
+        $fullOutput = implode("\n", $outputBuffer);
+
+        // Verify the generated command output contains 'mysqldump' even if the binary is not present on system
+        $this->assertStringContainsString('mysqldump', $fullOutput);
+        $this->assertStringContainsString('-h localhost -u user -p pass magento', $fullOutput);
+    }
 }
