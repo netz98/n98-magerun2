@@ -77,9 +77,9 @@ class CommandPatternResolver
 
                 if (!isset($resolved[$code])) {
                     $resolved[$code] = true;
-                    $resolvedList = array_merge(
+                    array_push(
                         $resolvedList,
-                        $this->resolvePatterns($definitions[$code]['commands'], $definitions, $resolved)
+                        ...$this->resolvePatterns($definitions[$code]['commands'], $definitions, $resolved)
                     );
                 }
 
