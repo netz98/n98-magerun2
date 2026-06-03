@@ -23,7 +23,7 @@ shasum -a 256 -c n98-magerun2.phar.sha256
 The dist package installs the n98-magerun2 PHAR file directly in your project.
 
 ```sh
-composer require netz98/magerun2-dist
+composer require n98/magerun2-dist
 ```
 ## Run the PHAR file
 
