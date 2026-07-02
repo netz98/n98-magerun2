@@ -184,6 +184,7 @@ commands:
     - N98\Magento\Command\Integration\ListCommand
     - N98\Magento\Command\Integration\ShowCommand
     - N98\Magento\Command\Installer\InstallCommand
+    - N98\Magento\Command\Project\DownloadCommand
     - N98\Magento\Command\ScriptCommand
     - N98\Magento\Command\SelfUpdateCommand
     - N98\Magento\Command\Route\ListCommand
@@ -261,6 +262,34 @@ commands:
       - magento/magento2-ee-base
       - magento/magento2-b2b-base
       - mage-os/magento2-base
+
+  N98\Magento\Command\Project\DownloadCommand:
+    editions:
+      - name: open-source
+        package: magento/project-community-edition
+        repository-url: https://repo.magento.com
+        requires-auth: true
+        default-dir: ./magento-open-source
+        description: "Community Edition — free, requires a Marketplace account for repo.magento.com"
+      - name: adobe-commerce
+        package: magento/project-enterprise-edition
+        repository-url: https://repo.magento.com
+        requires-auth: true
+        default-dir: ./adobe-commerce
+        description: "Commerce Edition — commercial license, requires Marketplace credentials"
+      - name: mage-os
+        package: mage-os/project-community-edition
+        repository-url: https://repo.mage-os.org
+        requires-auth: false
+        default-dir: ./mage-os
+        description: "Mage-OS"
+    git-repositories:
+      - name: magento2
+        label: "Magento 2 (official core)"
+        url: https://github.com/magento/magento2.git
+      - name: mage-os
+        label: "Mage-OS (community fork)"
+        url: https://github.com/mage-os/mage-os.git
 
   N98\Magento\Command\Database\DumpCommand:
     table-groups:
