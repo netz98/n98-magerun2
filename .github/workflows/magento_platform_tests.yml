@@ -39,14 +39,27 @@ on:
       # Trigger also on workflow changes
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   phpunit:
     # Updated job name to reflect MariaDB usage
     name: >-
-      Unit Tests (${{ matrix.magento-version }} / PHP ${{ matrix.php-version }} / 
-      MariaDB ${{ matrix.mariadb-version }} / 
+      Unit Tests (${{ matrix.magento-version }} / PHP ${{ matrix.php-version }} /
+      MariaDB ${{ matrix.mariadb-version }} /
       ${{ matrix.opensearch-version && 'OpenSearch' || 'Elasticsearch' }})
     runs-on: ${{ matrix.operating-system }}
+    # Fork PRs from non-collaborators must be approved via the 'external-contribution'
+    # environment (required reviewer) before this job's secrets and PR checkout run.
+    # Trusted events (push/workflow_dispatch, or PRs from collaborators/members/owners)
+    # route to 'trusted-ci', which has no protection rules and runs immediately.
+    environment: >-
+      ${{
+        (github.event_name == 'pull_request_target' &&
+         !contains(fromJson('["OWNER","MEMBER","COLLABORATOR"]'), github.event.pull_request.author_association))
+        && 'external-contribution' || 'trusted-ci'
+      }}
     strategy:
       fail-fast: false
       matrix:
@@ -263,6 +276,10 @@ jobs:
         if: github.event_name == 'pull_request_target'
         with:
           ref: ${{ github.event.pull_request.head.sha }}
+          persist-credentials: false
+          # Safe here: the 'environment' gate above already required a maintainer
+          # to review and approve untrusted fork PRs before this step runs.
+          allow-unsafe-pr-checkout: true
 
       - name: Checkout HEAD
         uses: actions/checkout@v7
