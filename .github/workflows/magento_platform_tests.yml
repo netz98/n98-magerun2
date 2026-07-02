@@ -122,7 +122,7 @@ jobs:
             use-git-repository: false
             git-repository: ""
 
-          - magento-version: 3.0.0
+          - magento-version: 3.1.0
             composer-repository-url: "https://repo.mage-os.org/"
             operating-system: ubuntu-22.04
             php-version: '8.5'
@@ -132,7 +132,7 @@ jobs:
             use-git-repository: false
             git-repository: ""
 
-          - magento-version: 3.0.0
+          - magento-version: 3.1.0
             composer-repository-url: "https://repo.mage-os.org/"
             operating-system: ubuntu-22.04
             php-version: '8.4'
