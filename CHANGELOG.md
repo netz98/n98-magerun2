@@ -1,6 +1,17 @@
 RECENT CHANGES
 ==============
 
+10.0.0-dev (2026-07-05)
+------------------------
+
+- Add: interactive download command for Magento/Adobe Commerce/Mage-OS
+- Test: add unit tests for the download command
+- Security: gate `pull_request_target` CI behind maintainer approval
+- Fix: switch platform tests from Mage-OS 3.0.0 to 3.1.0
+- Chore: ignore tarballs
+- Docs: fix composer require command in README
+- Build: update dependencies (actions/cache, actions/checkout, super-linter, php-cs-fixer, phpstan, psy/psysh, twig/twig, mcp/sdk, npm/yarn group)
+
 9.5.1 (2026-05-21)
 ------------------
 
