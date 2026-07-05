@@ -53,12 +53,12 @@ jobs:
     # Fork PRs from non-collaborators must be approved via the 'external-contribution'
     # environment (required reviewer) before this job's secrets and PR checkout run.
     # Trusted events (push/workflow_dispatch, or PRs from collaborators/members/owners)
-    # route to 'trusted-ci', which has no protection rules and runs immediately.
+    # run with no environment at all, so GitHub doesn't log a deployment for them.
     environment: >-
       ${{
         (github.event_name == 'pull_request_target' &&
          !contains(fromJson('["OWNER","MEMBER","COLLABORATOR"]'), github.event.pull_request.author_association))
-        && 'external-contribution' || 'trusted-ci'
+        && 'external-contribution' || ''
       }}
     strategy:
       fail-fast: false
