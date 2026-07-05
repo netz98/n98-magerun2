@@ -8,6 +8,7 @@
 
 namespace N98\Magento\Command\Integration;
 
+use function Laravel\Prompts\text;
 use Magento\Framework\Exception\AlreadyExistsException;
 use Magento\Framework\Exception\IntegrationException;
 use Magento\Framework\Exception\LocalizedException;
@@ -77,7 +78,7 @@ class CreateCommand extends AbstractMagentoCommand
     {
         $this
             ->setName('integration:create')
-            ->addArgument('name', InputArgument::REQUIRED, 'Name of the integration')
+            ->addArgument('name', InputArgument::OPTIONAL, 'Name of the integration')
             ->addArgument('email', InputArgument::OPTIONAL, 'Email')
             ->addArgument('endpoint', InputArgument::OPTIONAL, 'Endpoint URL')
             ->addOption('consumer-key', '', InputOption::VALUE_REQUIRED, 'Consumer Key (length 32 chars)')
@@ -136,8 +137,31 @@ HELP;
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $integrationName = $input->getArgument('name');
+        if ($integrationName === null || $integrationName === '') {
+            $integrationName = text(
+                '<question>Name of the integration:</question>',
+                validate: fn ($value) => $value === '' ? 'Please enter a name for the integration' : null
+            );
+        }
+
         $integrationEmail = $input->getArgument('email');
+        if ($integrationEmail === null) {
+            $integrationEmail = text(
+                '<question>Email (optional):</question>',
+                validate: fn ($value) => $this->validateOptionalEmail($value)
+            );
+            $integrationEmail = $integrationEmail === '' ? null : $integrationEmail;
+        }
+
         $integrationEndpoint = $input->getArgument('endpoint');
+        if ($integrationEndpoint === null) {
+            $integrationEndpoint = text(
+                '<question>Endpoint URL (optional):</question>',
+                validate: fn ($value) => $this->validateOptionalUrl($value)
+            );
+            $integrationEndpoint = $integrationEndpoint === '' ? null : $integrationEndpoint;
+        }
+
         $consumerKey = $input->getOption('consumer-key');
         $consumerSecret = $input->getOption('consumer-secret');
         $accessToken = $input->getOption('access-token');
@@ -176,6 +200,32 @@ HELP;
             ->renderByFormat($output, $table, $input->getOption('format'));
 
         return Command::SUCCESS;
+    }
+
+    /**
+     * @param string $value
+     * @return string|null
+     */
+    private function validateOptionalEmail(string $value): ?string
+    {
+        if ($value !== '' && !filter_var($value, FILTER_VALIDATE_EMAIL)) {
+            return 'Please enter a valid email address';
+        }
+
+        return null;
+    }
+
+    /**
+     * @param string $value
+     * @return string|null
+     */
+    private function validateOptionalUrl(string $value): ?string
+    {
+        if ($value !== '' && !filter_var($value, FILTER_VALIDATE_URL)) {
+            return 'Please enter a valid URL';
+        }
+
+        return null;
     }
 
     /**
