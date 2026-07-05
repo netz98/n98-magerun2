@@ -85,9 +85,13 @@ trait ConfiguresPromptFallbacks
     /**
      * laravel/prompts doesn't support Windows and reads directly from STDIN, bypassing
      * Symfony's input stream - so it can't be driven by CommandTester either.
+     *
+     * The STDIN constant itself is only registered by the CLI SAPI when file descriptor 0
+     * is valid at process start; some CI runners launch PHP with stdin closed, in which case
+     * the constant is undefined and must be treated the same as a non-interactive stream.
      */
     protected function shouldFallbackToPlainPrompts(): bool
     {
-        return OperatingSystem::isWindows() || !stream_isatty(STDIN);
+        return OperatingSystem::isWindows() || !defined('STDIN') || !stream_isatty(STDIN);
     }
 }
