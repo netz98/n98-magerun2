@@ -9,6 +9,8 @@
 namespace N98\Magento\Command\Customer;
 
 use Exception;
+use function Laravel\Prompts\confirm;
+use function Laravel\Prompts\text;
 use Magento\Customer\Api\CustomerRepositoryInterface;
 use Magento\Customer\Api\Data\CustomerInterface as Customer;
 use Magento\Customer\Model\ResourceModel\Customer\Collection;
@@ -17,11 +19,9 @@ use N98\Util\Console\Helper\ParameterHelper;
 use RuntimeException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
+
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-
-use function Laravel\Prompts\confirm;
-use function Laravel\Prompts\text;
 
 /**
  * Class DeleteCommand

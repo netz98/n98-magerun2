@@ -8,8 +8,8 @@
 
 namespace N98\Magento\Command\System\Cron;
 
-use function Laravel\Prompts\select;
 use InvalidArgumentException;
+use function Laravel\Prompts\select;
 use Magento\Cron\Model\ConfigInterface;
 use Magento\Cron\Model\ResourceModel\Schedule\Collection;
 use Magento\Cron\Model\ScheduleFactory;
