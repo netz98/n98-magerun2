@@ -14,7 +14,6 @@ use Magento\Framework\App\ProductMetadataInterface;
 use N98\Magento\Application;
 use N98\Magento\Application\ApplicationAwareInterface;
 use N98\Magento\Application\Console\Events;
-use N98\Magento\Command\Installer\InstallCommand;
 use N98\Magento\Command\MagentoCoreProxyCommand;
 use N98\Magento\Command\SelfUpdateCommand;
 use Symfony\Component\Console\Event\ConsoleEvent;
@@ -72,11 +71,6 @@ class CheckCompatibility implements EventSubscriberInterface, ApplicationAwareIn
 
         if ($command instanceof MagentoCoreProxyCommand) {
             // We do no compatibility check for Magento Core Commands
-            return;
-        }
-
-        if ($command instanceof InstallCommand) {
-            // We do not check the installer command
             return;
         }
 
