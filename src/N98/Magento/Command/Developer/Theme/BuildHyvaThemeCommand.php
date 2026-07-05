@@ -8,8 +8,8 @@
 
 namespace N98\Magento\Command\Developer\Theme;
 
-use function Laravel\Prompts\select;
 use InvalidArgumentException;
+use function Laravel\Prompts\select;
 use Magento\Framework\App\Area;
 use Magento\Framework\App\State;
 use Magento\Framework\Component\ComponentRegistrar;

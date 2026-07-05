@@ -9,6 +9,8 @@
 namespace N98\Magento\Command\Customer;
 
 use Exception;
+use function Laravel\Prompts\password;
+use function Laravel\Prompts\text;
 use Magento\Customer\Api\AccountManagementInterface;
 use Magento\Framework\App\State as AppState;
 use Magento\Framework\Exception\LocalizedException;
@@ -17,11 +19,9 @@ use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-
-use function Laravel\Prompts\password;
-use function Laravel\Prompts\text;
 
 /**
  * Class CreateCommand

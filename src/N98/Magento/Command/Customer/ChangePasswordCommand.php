@@ -9,13 +9,13 @@
 namespace N98\Magento\Command\Customer;
 
 use Exception;
+use function Laravel\Prompts\password;
 use Magento\Framework\App\Area;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
 
-use function Laravel\Prompts\password;
+use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Class ChangePasswordCommand
