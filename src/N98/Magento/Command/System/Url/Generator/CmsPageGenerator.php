@@ -68,7 +68,7 @@ class CmsPageGenerator extends AbstractGenerator
         }
 
         $collection->load();
-        $progressBar = $this->createProgressBar($output, $collection->count());
+        $progressBar = $this->createProgressBar($output, $collection->count(), 'Generating CMS page URLs');
         $progressBar->start();
 
         $counter = 0;
@@ -125,7 +125,7 @@ class CmsPageGenerator extends AbstractGenerator
         $totalSize = $countCollection->getSize();
 
         // Create a progress bar for all CMS pages
-        $progressBar = $this->createProgressBar($output, $totalSize);
+        $progressBar = $this->createProgressBar($output, $totalSize, 'Generating CMS page URLs');
         $progressBar->start();
 
         do {

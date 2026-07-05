@@ -15,12 +15,13 @@ use Magento\Framework\Exception\LocalizedException;
 use Magento\Theme\Model\View\Design;
 use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Question\Question;
+
+use function Laravel\Prompts\password;
+use function Laravel\Prompts\text;
 
 /**
  * Class CreateCommand
@@ -82,32 +83,25 @@ class CreateCommand extends AbstractCustomerCommand
             return Command::FAILURE;
         }
 
-        /** @var QuestionHelper $questionHelper */
-        $questionHelper = $this->getHelperSet()->get('question');
-
         // Email
         $email = $this->getHelperSet()->get('parameter')->askEmail($input, $output);
 
         // Password
         $password = $input->getArgument('password');
         if ($password === null) {
-            $question = new Question('<question>Password:</question> ');
-            $question->setHidden(true);
-            $password = $questionHelper->ask($input, $output, $question);
+            $password = password('<question>Password:</question> ');
         }
 
         // Firstname
         $firstname = $input->getArgument('firstname');
         if ($firstname === null) {
-            $question = new Question('<question>Firstname:</question> ');
-            $firstname = $questionHelper->ask($input, $output, $question);
+            $firstname = text('<question>Firstname:</question> ');
         }
 
         // Lastname
         $lastname = $input->getArgument('lastname');
         if ($lastname === null) {
-            $question = new Question('<question>Lastname:</question> ');
-            $lastname = $questionHelper->ask($input, $output, $question);
+            $lastname = text('<question>Lastname:</question> ');
         }
 
         $website = $this->getHelperSet()->get('parameter')->askWebsite($input, $output);

@@ -8,6 +8,7 @@
 
 namespace N98\Magento\Command\Developer\Console;
 
+use function Laravel\Prompts\text;
 use Magento\Framework\App\Cache;
 use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Framework\App\State\CleanupFiles;
@@ -23,8 +24,8 @@ use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
+
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Question\Question;
 
 /**
  * Class MakeModuleCommand
@@ -61,18 +62,18 @@ class MakeModuleCommand extends AbstractGeneratorCommand
     protected function interact(InputInterface $input, OutputInterface $output)
     {
         if (!$input->getArgument('modulename')) {
-            $helper = $this->getHelper('question');
-            $question = new Question('Module name: ');
-            $question->setValidator(function ($value) {
-                try {
-                    new ModuleNameStructure($value);
-                } catch (\InvalidArgumentException $e) {
-                    throw new \RuntimeException($e->getMessage());
+            $moduleName = text(
+                'Module name: ',
+                validate: function ($value) {
+                    try {
+                        new ModuleNameStructure($value);
+                    } catch (\InvalidArgumentException $e) {
+                        return $e->getMessage();
+                    }
+
+                    return null;
                 }
-                return $value;
-            });
-            $question->setMaxAttempts(null);
-            $moduleName = $helper->ask($input, $output, $question);
+            );
             $input->setArgument('modulename', $moduleName);
         }
     }

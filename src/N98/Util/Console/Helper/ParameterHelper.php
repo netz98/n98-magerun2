@@ -10,15 +10,15 @@ namespace N98\Util\Console\Helper;
 
 use Exception;
 use InvalidArgumentException;
+use function Laravel\Prompts\password;
+use function Laravel\Prompts\select;
+use function Laravel\Prompts\text;
 use N98\Magento\Command\CommandAware;
 use N98\Util\Validator\FakeMetadataFactory;
 use RuntimeException;
 use Symfony\Component\Console\Helper\Helper as AbstractHelper;
-use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Question\ChoiceQuestion;
-use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Validator\Constraints;
 use Symfony\Component\Validator\ConstraintValidatorFactory;
 use Symfony\Component\Validator\Validation;
@@ -79,40 +79,22 @@ class ParameterHelper extends AbstractHelper implements CommandAware
             $store = $storeManager->getStore($input->getArgument($argumentName));
         } catch (Exception $e) {
             $stores = [];
-            $choices = [];
-            $questionHelper = [];
-            $i = 0;
             foreach ($storeManager->getStores($withDefaultStore) as $store) {
-                $stores[$i] = $store->getId();
-                $choices[$i + 1] = sprintf(
-                    '<comment>' . $store->getCode() . ' - ' . $store->getName() . '</comment>'
+                $stores[$store->getId()] = sprintf(
+                    '<comment>%s - %s</comment>',
+                    $store->getCode(),
+                    $store->getName()
                 );
-                $i++;
             }
 
             if (count($stores) > 1) {
-                $questionHelper[] = '';
-
-                $question = new ChoiceQuestion('Please select a store', $choices);
-                $question->setValidator(
-                    function ($typeInput) use ($stores) {
-                        if (!isset($stores[$typeInput - 1])) {
-                            throw new InvalidArgumentException('Invalid store');
-                        }
-
-                        return $stores[$typeInput - 1];
-                    }
-                );
-
-                /** @var QuestionHelper $questionHelper */
-                $questionHelper = $this->getHelperSet()->get('question');
-                $storeId = $questionHelper->ask($input, $output, $question);
+                $storeId = select('Please select a store', $stores);
             } else {
                 // only one store view available -> take it
-                $storeId = $stores[0];
+                $storeId = array_key_first($stores);
             }
 
-            $store = $storeManager->getStore($storeId);
+            $store = $storeManager->getStore((int) $storeId);
         }
 
         return $store;
@@ -143,34 +125,22 @@ class ParameterHelper extends AbstractHelper implements CommandAware
             }
             $website = $storeManager->getWebsite($input->getArgument($argumentName));
         } catch (Exception $e) {
-            $i = 0;
             $websites = [];
-            $choices = [];
-
             foreach ($storeManager->getWebsites() as $website) {
-                $websites[$i] = $website->getId();
-                $choices[$i + 1] = '<comment>' . $website->getCode() . ' - ' . $website->getName() . '</comment>';
-                $i++;
+                $websites[$website->getId()] = sprintf(
+                    '<comment>%s - %s</comment>',
+                    $website->getCode(),
+                    $website->getName()
+                );
             }
 
             if (count($websites) === 1) {
-                return $storeManager->getWebsite($websites[0]);
+                return $storeManager->getWebsite(array_key_first($websites));
             }
 
-            $question = new ChoiceQuestion('Please select a website', $choices);
-            $question->setValidator(function ($typeInput) use ($websites) {
-                if (!isset($websites[$typeInput - 1])) {
-                    throw new InvalidArgumentException('Invalid store');
-                }
+            $websiteId = select('Please select a website', $websites);
 
-                return $websites[$typeInput - 1];
-            });
-
-            /** @var QuestionHelper $questionHelper */
-            $questionHelper = $this->getHelperSet()->get('question');
-            $websiteId = $questionHelper->ask($input, $output, $question);
-
-            $website = $storeManager->getWebsite($websiteId);
+            $website = $storeManager->getWebsite((int) $websiteId);
         }
 
         return $website;
@@ -195,7 +165,7 @@ class ParameterHelper extends AbstractHelper implements CommandAware
             ]
         );
 
-        return $this->_validateArgument($input, $output, $argumentName, $input->getArgument($argumentName), $constraints);
+        return $this->_validateArgument($argumentName, $input->getArgument($argumentName), $constraints);
     }
 
     /**
@@ -229,47 +199,33 @@ class ParameterHelper extends AbstractHelper implements CommandAware
             ]
         );
 
-        return $this->_validateArgument($input, $output, $argumentName, $input->getArgument($argumentName), $constraints);
+        return $this->_validateArgument($argumentName, $input->getArgument($argumentName), $constraints, true);
     }
 
     /**
-     * @param InputInterface $input
-     * @param OutputInterface $output
-     * @param $name
-     * @param $value
-     * @param $constraints
+     * @param string $name
+     * @param mixed $value
+     * @param \Symfony\Component\Validator\Constraints\Collection $constraints
+     * @param bool $masked mask the input, e.g. for passwords
      * @return mixed
      */
-    protected function _validateArgument(InputInterface $input, OutputInterface $output, $name, $value, $constraints)
+    protected function _validateArgument($name, $value, $constraints, $masked = false)
     {
         $validator = $this->initValidator();
-        $errors = [];
 
-        if (!empty($value)) {
-            $errors = $validator->validate([$name => $value], $constraints);
-            if (count($errors) > 0) {
-                $output->writeln('<error>' . $errors[0]->getMessage() . '</error>');
-            }
-        }
+        $validate = function ($input) use ($validator, $constraints, $name): ?string {
+            $errors = $validator->validate([$name => $input], $constraints);
 
-        if (count($errors) > 0 || empty($value)) {
-            $question = new Question('<question>' . ucfirst($name) . ': </question>');
-            $question->setValidator(function ($typeInput) use ($validator, $constraints, $name) {
-                $errors = $validator->validate([$name => $typeInput], $constraints);
-                if (count($errors) > 0) {
-                    throw new InvalidArgumentException($errors[0]->getMessage());
-                }
+            return count($errors) > 0 ? $errors[0]->getMessage() : null;
+        };
 
-                return $typeInput;
-            });
-
-            /** @var $questionHelper QuestionHelper */
-            $questionHelper = $this->getHelperSet()->get('question');
-            $value = $questionHelper->ask($input, $output, $question);
-
+        if (!empty($value) && $validate($value) === null) {
             return $value;
         }
-        return $value;
+
+        $label = sprintf('<question>%s:</question>', ucfirst($name));
+
+        return $masked ? password($label, validate: $validate) : text($label, validate: $validate);
     }
 
     /**

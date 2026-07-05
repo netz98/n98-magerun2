@@ -14,7 +14,8 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Question\Question;
+
+use function Laravel\Prompts\password;
 
 /**
  * Class ChangePasswordCommand
@@ -91,15 +92,12 @@ HELP;
     {
         $this->detectMagento($output);
         if ($this->initMagento()) {
-            $questionHelper = $this->getHelperSet()->get('question');
             $email = $this->getHelper('parameter')->askEmail($input, $output);
 
             // Password
             $password = $input->getArgument('password');
             if ($password === null) {
-                $question = new Question('<question>Password:</question>');
-                $question->setHidden(true);
-                $password = $questionHelper->ask($input, $output, $question);
+                $password = password('<question>Password:</question>');
             }
 
             $website = $this->getHelper('parameter')->askWebsite($input, $output);

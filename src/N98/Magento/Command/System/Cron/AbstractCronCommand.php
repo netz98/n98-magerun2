@@ -8,6 +8,7 @@
 
 namespace N98\Magento\Command\System\Cron;
 
+use function Laravel\Prompts\select;
 use InvalidArgumentException;
 use Magento\Cron\Model\ConfigInterface;
 use Magento\Cron\Model\ResourceModel\Schedule\Collection;
@@ -20,10 +21,8 @@ use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
 use Magento\Store\Model\ScopeInterface as ScopeInterfaceAlias;
 use N98\Magento\Command\AbstractMagentoCommand;
 use Symfony\Component\Console\Exception\RuntimeException;
-use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Question\ChoiceQuestion;
 
 /**
  * Class AbstractCronCommand
@@ -240,22 +239,7 @@ abstract class AbstractCronCommand extends AbstractMagentoCommand
      */
     protected function askJobCode(InputInterface $input, OutputInterface $output, $jobs)
     {
-        $choices = [];
-        foreach ($jobs as $key => $job) {
-            $choices[$key + 1] = $job['Job'];
-        }
-
-        $question = new ChoiceQuestion('<question>Please select a job:</question>', $choices);
-        $question->setValidator(function ($typeInput) use ($jobs) {
-            if (!isset($jobs[$typeInput - 1])) {
-                throw new InvalidArgumentException('Invalid job');
-            }
-            return $jobs[$typeInput - 1]['Job'];
-        });
-
-        /** @var $questionHelper QuestionHelper */
-        $questionHelper = $this->getHelper('question');
-        return $questionHelper->ask($input, $output, $question);
+        return select('<question>Please select a job:</question>', array_column($jobs, 'Job'));
     }
 
     /**

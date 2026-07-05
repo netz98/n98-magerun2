@@ -8,6 +8,8 @@
 
 namespace N98\Magento\Command\System\Url\Generator;
 
+use function Laravel\Prompts\progress;
+use Laravel\Prompts\Progress;
 use Magento\Store\Model\StoreManagerInterface;
 use Magento\UrlRewrite\Model\UrlPersistInterface;
 use Symfony\Component\Console\Helper\ProgressBar;
@@ -31,7 +33,7 @@ abstract class AbstractGenerator implements GeneratorInterface
     protected $batchSize = 100;
 
     /**
-     * @var ProgressBar
+     * @var ProgressBar|Progress
      */
     protected $progressBar;
 
@@ -87,10 +89,16 @@ abstract class AbstractGenerator implements GeneratorInterface
      *
      * @param OutputInterface $output
      * @param int $max
-     * @return ProgressBar
+     * @param string $label
+     * @return ProgressBar|Progress
      */
-    protected function createProgressBar(OutputInterface $output, int $max): ProgressBar
+    protected function createProgressBar(OutputInterface $output, int $max, string $label = ''): ProgressBar|Progress
     {
+        if ($output->isDecorated() && $max > 0) {
+            $this->progressBar = progress(label: $label, steps: $max);
+            return $this->progressBar;
+        }
+
         $this->progressBar = new ProgressBar($output, $max);
         $this->progressBar->setFormat(
             '%current%/%max% [%bar%] %percent:3s%% %elapsed:6s%/%estimated:-6s% %memory:6s%'

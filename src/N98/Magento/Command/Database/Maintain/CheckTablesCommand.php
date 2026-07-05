@@ -8,6 +8,8 @@
 
 namespace N98\Magento\Command\Database\Maintain;
 
+use function Laravel\Prompts\progress;
+use Laravel\Prompts\Progress;
 use N98\Magento\Command\AbstractMagentoCommand;
 use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
 use Symfony\Component\Console\Command\Command;
@@ -126,9 +128,9 @@ HELP;
     }
 
     /**
-     * @param ProgressBar $progress
+     * @param ProgressBar|Progress $progress
      */
-    protected function progressAdvance(ProgressBar $progress)
+    protected function progressAdvance(ProgressBar|Progress $progress)
     {
         if ($this->showProgress) {
             $progress->advance();
@@ -171,10 +173,14 @@ HELP;
 
         $tableOutput = [];
 
-        $progress = new ProgressBar($output, 50);
-
-        if ($this->showProgress) {
-            $progress->start(count($tables));
+        if ($this->showProgress && $output->isDecorated() && count($tables) > 0) {
+            $progress = progress(label: 'Checking tables', steps: count($tables));
+            $progress->start();
+        } else {
+            $progress = new ProgressBar($output, 50);
+            if ($this->showProgress) {
+                $progress->start(count($tables));
+            }
         }
 
         $methods = [

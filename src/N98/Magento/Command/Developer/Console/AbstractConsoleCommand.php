@@ -9,9 +9,11 @@
 namespace N98\Magento\Command\Developer\Console;
 
 use Magento\Framework\App\ObjectManager;
+use N98\Util\Console\Prompts\ConfiguresPromptFallbacks;
 use Psy\Command\ReflectingCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
  * Class AbstractConsoleCommand
@@ -19,6 +21,16 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 abstract class AbstractConsoleCommand extends ReflectingCommand
 {
+    use ConfiguresPromptFallbacks;
+
+    /**
+     * @return void
+     */
+    protected function initialize(InputInterface $input, OutputInterface $output)
+    {
+        $this->configurePrompts(new SymfonyStyle($input, $output));
+    }
+
     /**
      * @param string $variable
      * @param mixed $value

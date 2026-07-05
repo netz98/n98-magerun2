@@ -16,13 +16,13 @@ use Magento\Framework\App\State;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Question\ConfirmationQuestion;
-use Symfony\Component\Console\Question\Question;
+
+use function Laravel\Prompts\confirm;
+use function Laravel\Prompts\text;
 
 /**
  * Class: AddAddressCommand
@@ -91,14 +91,10 @@ class AddAddressCommand extends AbstractCustomerCommand
 
         $isError = false;
 
-        /** @var QuestionHelper $questionHelper */
-        $questionHelper = $this->getHelperSet()->get('question');
-
         // Email is a required argument, so we check and ask if it's not provided
         $email = $input->getArgument('email');
         if (!$email) {
-            $question = new Question('Please enter the customer\'s email: ');
-            $email = $questionHelper->ask($input, $output, $question);
+            $email = text('Please enter the customer\'s email: ');
         }
 
         $website = $this->getHelperSet()->get('parameter')->askWebsite($input, $output);
@@ -109,8 +105,7 @@ class AddAddressCommand extends AbstractCustomerCommand
         foreach ($options as $option) {
             $value = $input->getOption($option);
             if (!$value) {
-                $question = new Question("Please enter the customer's $option: ");
-                $value = $questionHelper->ask($input, $output, $question);
+                $value = text("Please enter the customer's $option: ");
             }
             $data[$option] = $value;
         }
@@ -120,8 +115,7 @@ class AddAddressCommand extends AbstractCustomerCommand
         foreach ($defaultOptions as $option) {
             $value = $input->getOption($option);
             if (null === $value) {
-                $question = new ConfirmationQuestion("Set address as customer's $option? (yes/no): ", false);
-                $value = $questionHelper->ask($input, $output, $question);
+                $value = confirm("Set address as customer's $option? (yes/no): ", false);
             }
             $data[$option] = $value;
         }

@@ -8,22 +8,20 @@
 
 namespace N98\Magento\Command;
 
-use Exception;
 use function file_get_contents;
 use InvalidArgumentException;
+use function Laravel\Prompts\select;
+use function Laravel\Prompts\text;
 use Magento\Framework\App\DistributionMetadataInterface;
 use Magento\Framework\App\ProductMetadataInterface;
 use N98\Util\BinaryString;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\RuntimeException;
-use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\StringInput;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Question\ChoiceQuestion;
-use Symfony\Component\Console\Question\Question;
 
 /**
  * Class ScriptCommand
@@ -246,48 +244,24 @@ HELP;
                     return $this->scriptVars[$matches[1]];
                 }
 
-                /* @var $questionHelper QuestionHelper */
-                $questionHelper = $this->getHelper('question');
-
                 /**
                  * Check for select "?["
                  */
                 if (isset($matches[2][1]) && $matches[2][1] == '[') {
                     if (preg_match('/\[(.+)\]/', $matches[2], $choiceMatches)) {
                         $choices = BinaryString::trimExplodeEmpty(',', $choiceMatches[1]);
-                        $question = new ChoiceQuestion(
-                            sprintf(
-                                '<question>Pleaase enter a value for </question> <comment>%s</comment>',
-                                $matches[1]
-                            ),
+                        $this->scriptVars[$matches[1]] = select(
+                            sprintf('Pleaase enter a value for %s', $matches[1]),
                             $choices
-                        );
-                        $this->scriptVars[$matches[1]] = $questionHelper->ask(
-                            $input,
-                            $output,
-                            $question
                         );
                     } else {
                         throw new RuntimeException('Invalid choices');
                     }
                 } else {
                     // normal input
-                    $question = new Question(
-                        '<question>Please enter a value for <comment>' . $matches[1] . '</comment>:</question>'
-                    );
-                    $question->setMaxAttempts(20);
-                    $question->setValidator(function ($value) {
-                        if (empty($value)) {
-                            throw new Exception('Please enter a value');
-                        }
-
-                        return $value;
-                    });
-
-                    $this->scriptVars[$matches[1]] = $questionHelper->ask(
-                        $input,
-                        $output,
-                        $question
+                    $this->scriptVars[$matches[1]] = text(
+                        'Please enter a value for <comment>' . $matches[1] . '</comment>:',
+                        validate: fn ($value) => empty($value) ? 'Please enter a value' : null
                     );
                 }
             } else {

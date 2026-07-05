@@ -8,14 +8,13 @@
 
 namespace N98\Magento\Command\Admin\User;
 
+use function Laravel\Prompts\confirm;
+use function Laravel\Prompts\text;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Question\ConfirmationQuestion;
-use Symfony\Component\Console\Question\Question;
 
 /**
  * Class DeleteUserCommand
@@ -47,21 +46,13 @@ class DeleteUserCommand extends AbstractAdminUserCommand
             return Command::FAILURE;
         }
 
-        /** @var $questionHelper QuestionHelper */
-        $questionHelper = $this->getHelper('question');
-
         // Username
         $id = $input->getArgument('id');
         if ($id === null) {
-            $question = new Question('<question>Username or Email:</question>');
-            $question->setValidator(function ($value) {
-                if ($value === '') {
-                    throw new \Exception('Please enter a username or email');
-                }
-
-                return $value;
-            });
-            $id = $questionHelper->ask($input, $output, $question);
+            $id = text(
+                '<question>Username or Email:</question>',
+                validate: fn ($value) => $value === '' ? 'Please enter a username or email' : null
+            );
         }
 
         $user = $this->userModel->loadByUsername($id);
@@ -76,15 +67,7 @@ class DeleteUserCommand extends AbstractAdminUserCommand
 
         $shouldRemove = $input->getOption('force');
         if (!$shouldRemove) {
-            $question = new ConfirmationQuestion(
-                '<question>Are you sure?</question> <comment>[n]</comment>: ',
-                false
-            );
-            $shouldRemove = $questionHelper->ask(
-                $input,
-                $output,
-                $question
-            );
+            $shouldRemove = confirm('<question>Are you sure?</question>', default: false);
         }
 
         if ($shouldRemove) {

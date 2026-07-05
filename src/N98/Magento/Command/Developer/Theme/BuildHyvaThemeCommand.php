@@ -8,6 +8,7 @@
 
 namespace N98\Magento\Command\Developer\Theme;
 
+use function Laravel\Prompts\select;
 use InvalidArgumentException;
 use Magento\Framework\App\Area;
 use Magento\Framework\App\State;
@@ -21,7 +22,6 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Process\Process;
 
 /**
@@ -125,9 +125,7 @@ class BuildHyvaThemeCommand extends AbstractMagentoCommand
                 return;
             }
 
-            $helper = $this->getHelper('question');
-            $question = new ChoiceQuestion('Please select a theme to build', $themePaths);
-            $themePath = $helper->ask($input, $output, $question);
+            $themePath = select('Please select a theme to build', $themePaths);
             $input->setArgument('theme', $themePath);
         }
     }

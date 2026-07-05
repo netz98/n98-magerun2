@@ -8,12 +8,11 @@
 
 namespace N98\Magento\Command\Database;
 
-use Symfony\Component\Console\Helper\QuestionHelper;
+use function Laravel\Prompts\text;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Question\Question;
 
 /**
  * Class QueryCommand
@@ -84,10 +83,7 @@ HELP;
         $this->detectDbSettings($output);
 
         if (($query = $input->getArgument('query')) === null) {
-            /** @var $questionHelper QuestionHelper */
-            $questionHelper = $this->getHelper('question');
-            $question = new Question('<question>SQL Query:</question>');
-            $query = $questionHelper->ask($input, $output, $question);
+            $query = text('SQL Query:');
         }
 
         $query = $this->getEscapedSql($query);

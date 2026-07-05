@@ -10,13 +10,13 @@ declare(strict_types=1);
 
 namespace N98\Magento\Command\System\Cron;
 
+use function Laravel\Prompts\select;
 use Magento\Cron\Model\Schedule;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Process\Process;
 
 class KillCommand extends AbstractCronCommand
@@ -58,10 +58,8 @@ class KillCommand extends AbstractCronCommand
         if (!$jobCode) {
             $cronJobs = $this->getAllRunningJobs();
             if (count($cronJobs) > 0) {
-                $helper = $this->getHelper('question');
                 $jobCodes = $cronJobs->getColumnValues('job_code');
-                $question = new ChoiceQuestion('Please select a job code to kill', $jobCodes);
-                $jobCode = $helper->ask($input, $output, $question);
+                $jobCode = select('Please select a job code to kill', $jobCodes);
                 $input->setArgument('job_code', $jobCode);
             }
         }

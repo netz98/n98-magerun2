@@ -9,7 +9,7 @@
 namespace N98\Magento\Command\Developer\Module\Observer;
 
 use Exception;
-use InvalidArgumentException;
+use function Laravel\Prompts\select;
 use N98\Magento\Command\AbstractMagentoCommand;
 use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
 use Symfony\Component\Console\Helper\TableSeparator;
@@ -17,7 +17,6 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Question\ChoiceQuestion;
 
 /**
  * Class ListCommand
@@ -89,15 +88,8 @@ class ListCommand extends AbstractMagentoCommand
                 $choices[$key + 1] = '<comment>[' . $area . ']</comment> ';
             }
 
-            $question = new ChoiceQuestion('<question>Please select an area:</question>', $choices);
-            $question->setValidator(function ($areaIndex) {
-                if (!in_array($areaIndex - 1, range(0, count($this->areas) - 1), true)) {
-                    throw new InvalidArgumentException('Invalid selection.' . $areaIndex);
-                }
-
-                return $this->areas[$areaIndex - 1];
-            });
-            $area = $this->getHelper('question')->ask($input, $output, $question);
+            $areaIndex = select('<question>Please select an area:</question>', $choices);
+            $area = $this->areas[$areaIndex - 1];
         }
 
         if ($input->getOption('format') === null) {
