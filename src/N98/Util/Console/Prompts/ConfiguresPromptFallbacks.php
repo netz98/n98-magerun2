@@ -33,7 +33,9 @@ trait ConfiguresPromptFallbacks
         SelectPrompt::fallbackUsing(static fn (SelectPrompt $prompt): int|string => $io->choice(
             $prompt->label,
             $prompt->options,
-            $prompt->default
+            // SymfonyStyle::choice() returns null (crashing this non-nullable return type) when
+            // run non-interactively without a default, so fall back to the first option.
+            $prompt->default ?? array_key_first($prompt->options)
         ));
 
         ConfirmPrompt::fallbackUsing(static fn (ConfirmPrompt $prompt): bool => $io->confirm(
