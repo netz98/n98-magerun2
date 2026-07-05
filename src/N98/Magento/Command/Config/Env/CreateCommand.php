@@ -9,14 +9,14 @@
 namespace N98\Magento\Command\Config\Env;
 
 use Dflydev\DotAccessData\Data;
+use function Laravel\Prompts\confirm;
+use function Laravel\Prompts\text;
 use N98\Magento\Command\AbstractMagentoCommand;
 use RecursiveArrayIterator;
 use RecursiveIteratorIterator;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Question\ConfirmationQuestion;
-use Symfony\Component\Console\Question\Question;
 
 /**
  * Class EnvCreateCommand
@@ -54,18 +54,14 @@ class CreateCommand extends AbstractMagentoCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $questionHelper = $this->getHelperSet()->get('question');
-
         $this->detectMagento($output);
-
-        $updateEnvQuestion = new ConfirmationQuestion(
-            '<question>env file found. Do you want to update it?</question> <comment>[Y/n]</comment> ',
-            true
-        );
 
         $envFilePath = $this->getApplication()->getMagentoRootFolder() . '/app/etc/env.php';
 
-        if (file_exists($envFilePath) && $questionHelper->ask($input, $output, $updateEnvQuestion)) {
+        if (
+            file_exists($envFilePath)
+            && confirm('<question>env file found. Do you want to update it?</question>', default: true)
+        ) {
             $envConfig = include $envFilePath;
         } else {
             $envConfig = include __DIR__ . '/stubs/env.php';
@@ -86,12 +82,10 @@ class CreateCommand extends AbstractMagentoCommand
 
                 $path = implode('.', $p);
                 $default = $this->getDefaultValue($path, $default);
-                $question = new Question(
-                    '<question>' . $path . '</question> <comment>[' . $default . ']</comment> ',
-                    $default
+                $newValue = text(
+                    '<question>' . $path . '</question> <comment>[' . $default . ']</comment>',
+                    default: (string) $default
                 );
-
-                $newValue = $questionHelper->ask($input, $output, $question);
                 $env->set($path, $newValue);
             }
         }

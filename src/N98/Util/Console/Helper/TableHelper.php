@@ -8,6 +8,7 @@
 
 namespace N98\Util\Console\Helper;
 
+use function Laravel\Prompts\table;
 use N98\Magento\Command\CommandAware;
 use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
 use N98\Util\Console\Helper\Table\Renderer\RendererInterface;
@@ -109,10 +110,18 @@ class TableHelper extends AbstractHelper implements CommandAware
             $rows = $this->rows;
         }
 
-        $baseTable = new Table($output);
-        $baseTable->setRows($rows);
-        $baseTable->setHeaders($this->headers);
-        $baseTable->render();
+        if (!$output->isDecorated()) {
+            // Laravel Prompts' table() has no piped/redirected-output safety net (unlike
+            // Symfony's Table), so keep the old renderer for non-tty/scripted/cron usage.
+            $baseTable = new Table($output);
+            $baseTable->setRows($rows);
+            $baseTable->setHeaders($this->headers);
+            $baseTable->render();
+
+            return;
+        }
+
+        table($this->headers, $rows);
     }
 
     /**

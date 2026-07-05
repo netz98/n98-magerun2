@@ -16,11 +16,13 @@ use N98\Magento\Application;
 use N98\Magento\Command\SubCommand\ConfigBag;
 use N98\Magento\Command\SubCommand\SubCommandFactory;
 use N98\Util\Console\Helper\InjectionHelper;
+use N98\Util\Console\Prompts\ConfiguresPromptFallbacks;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\RuntimeException;
 use Symfony\Component\Console\Helper\FormatterHelper;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
  * Class AbstractMagentoCommand
@@ -31,6 +33,8 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 abstract class AbstractMagentoCommand extends Command
 {
+    use ConfiguresPromptFallbacks;
+
     /**
      * @var int
      */
@@ -84,6 +88,7 @@ abstract class AbstractMagentoCommand extends Command
     protected function initialize(InputInterface $input, OutputInterface $output): void
     {
         $this->checkDeprecatedAliases($input, $output);
+        $this->configurePrompts(new SymfonyStyle($input, $output));
     }
 
     /**

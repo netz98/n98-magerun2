@@ -66,7 +66,7 @@ class ProductGenerator extends AbstractGenerator
         }
 
         $collection->load();
-        $progressBar = $this->createProgressBar($output, $collection->count());
+        $progressBar = $this->createProgressBar($output, $collection->count(), 'Generating product URLs');
         $progressBar->start();
 
         $counter = 0;
@@ -119,7 +119,7 @@ class ProductGenerator extends AbstractGenerator
         $totalSize = $countCollection->getSize();
 
         // Create a progress bar for all products
-        $progressBar = $this->createProgressBar($output, $totalSize);
+        $progressBar = $this->createProgressBar($output, $totalSize, 'Generating product URLs');
         $progressBar->start();
 
         do {

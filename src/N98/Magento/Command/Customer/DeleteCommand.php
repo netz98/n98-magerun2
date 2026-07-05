@@ -16,12 +16,12 @@ use Magento\Framework\Registry;
 use N98\Util\Console\Helper\ParameterHelper;
 use RuntimeException;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Question\ConfirmationQuestion;
-use Symfony\Component\Console\Question\Question;
+
+use function Laravel\Prompts\confirm;
+use function Laravel\Prompts\text;
 
 /**
  * Class DeleteCommand
@@ -84,9 +84,6 @@ class DeleteCommand extends AbstractCustomerCommand
             return Command::FAILURE;
         }
 
-        /** @var QuestionHelper $questionHelper */
-        $questionHelper = $this->getHelperSet()->get('question');
-
         // defaults
         $filterType = 'eq';
         $filterPrefix = '';
@@ -113,7 +110,7 @@ class DeleteCommand extends AbstractCustomerCommand
         }
 
         if ($all) {
-            return $this->deleteAllCustomers($force, $questionHelper, $input, $output);
+            return $this->deleteAllCustomers($force, $input, $output);
         }
 
         // Get args required
@@ -131,17 +128,15 @@ class DeleteCommand extends AbstractCustomerCommand
         //      all
         if (!($id || ($website && ($email || ($lastname && $firstname)))) && ($range || $all || $fuzzy)) {
             // Delete more than one customer ?
-            $question = new Question('<question>Delete more than 1 customer?</question> <comment>[n]</comment>: ');
-            $batchDelete = $questionHelper->ask($input, $output, $question);
+            $batchDelete = text('<question>Delete more than 1 customer?</question> <comment>[n]</comment>: ');
 
             if ($batchDelete) {
                 $range = $input->getOption('range');
                 if ($all === null) {
-                    $question = new ConfirmationQuestion(
+                    $range = confirm(
                         '<question>Delete a range of customers?</question> <comment>[n]</comment>: ',
                         false
                     );
-                    $range = $questionHelper->ask($input, $output, $question);
                 }
 
                 if (!$range) {
@@ -162,7 +157,7 @@ class DeleteCommand extends AbstractCustomerCommand
                 return false;
             }
 
-            if ($force || $this->shouldRemove($questionHelper, $input, $output)) {
+            if ($force || $this->shouldRemove($input, $output)) {
                 $isSecure = $this->registry->registry('isSecureArea');
                 $this->registry->unregister('isSecureArea');
                 $this->registry->register('isSecureArea', true);
@@ -201,11 +196,8 @@ class DeleteCommand extends AbstractCustomerCommand
             if ($range) {
                 // Get Range
                 $ranges = [];
-                $question = new Question('<question>Range start Id</question> ');
-                $ranges[0] = $questionHelper->ask($input, $output, $question);
-
-                $question = new Question('<question>Range end Id</question> ');
-                $ranges[1] = $questionHelper->ask($input, $output, $question);
+                $ranges[0] = text('<question>Range start Id</question> ');
+                $ranges[1] = text('<question>Range end Id</question> ');
 
                 // Ensure ascending order
                 sort($ranges);
@@ -243,7 +235,7 @@ class DeleteCommand extends AbstractCustomerCommand
                 )
             );
 
-            if ($force || $this->shouldRemove($questionHelper, $input, $output)) {
+            if ($force || $this->shouldRemove($input, $output)) {
                 $count = $this->batchDelete($customerCollection);
                 $output->writeln('<info>Successfully deleted ' . $count . ' customer/s</info>');
             } else {
@@ -257,17 +249,9 @@ class DeleteCommand extends AbstractCustomerCommand
     /**
      * @return bool
      */
-    protected function shouldRemove($questionHelper, $input, $output)
+    protected function shouldRemove($input, $output)
     {
-        $question = new ConfirmationQuestion(
-            '<question>Are you sure?</question> <comment>[n]</comment>: ',
-            false
-        );
-        return $questionHelper->ask(
-            $input,
-            $output,
-            $question
-        );
+        return confirm('<question>Are you sure?</question> <comment>[n]</comment>: ', false);
     }
 
     /**
@@ -324,23 +308,20 @@ class DeleteCommand extends AbstractCustomerCommand
 
     /**
      * @param $force
-     * @param QuestionHelper $questionHelper
      * @param InputInterface $input
      * @param OutputInterface $output
      * @return int
      */
     protected function deleteAllCustomers(
         $force,
-        QuestionHelper $questionHelper,
         InputInterface $input,
         OutputInterface $output
     ): int {
         if (!$force) {
-            $question = new ConfirmationQuestion(
+            if (!confirm(
                 '<question>WARNING: You are about to delete ALL customers. Are you sure?</question> <comment>[n]</comment>: ',
                 false
-            );
-            if (!$questionHelper->ask($input, $output, $question)) {
+            )) {
                 $output->writeln('<error>Operation cancelled.</error>');
                 return Command::FAILURE;
             }

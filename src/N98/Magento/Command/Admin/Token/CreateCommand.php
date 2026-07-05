@@ -9,17 +9,16 @@
 namespace N98\Magento\Command\Admin\Token;
 
 use Exception;
+use function Laravel\Prompts\text;
 use Magento\Integration\Model\Oauth\Token;
 use Magento\Integration\Model\Oauth\TokenFactory;
 use Magento\User\Model\User;
 use N98\Magento\Command\AbstractMagentoCommand;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Question\Question;
 
 /**
  * Class CreateCommand
@@ -76,17 +75,10 @@ class CreateCommand extends AbstractMagentoCommand
         // Username
         $username = $input->getArgument('username');
         if ($username === null) {
-            /** @var $questionHelper QuestionHelper */
-            $questionHelper = $this->getHelper('question');
-            $question = new Question('<question>Username:</question>');
-            $question->setValidator(function ($value) {
-                if ($value === '') {
-                    throw new \Exception('Please enter a valid username');
-                }
-
-                return $value;
-            });
-            $username = $questionHelper->ask($input, $output, $question);
+            $username = text(
+                '<question>Username:</question>',
+                validate: fn ($value) => $value === '' ? 'Please enter a valid username' : null
+            );
         }
 
         $adminUser = $this->userModel->loadByUsername($username);

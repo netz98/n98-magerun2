@@ -8,16 +8,15 @@
 
 namespace N98\Magento\Command\Developer\Translate;
 
+use function Laravel\Prompts\text;
 use Magento\Store\Api\Data\StoreInterface;
 use Magento\Store\Model\ScopeInterface;
 use N98\Magento\Command\Config\Store\ConfigReaderTrait;
 use N98\Magento\Command\Config\Store\ConfigWriterTrait;
-use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Question\Question;
 
 trait TranslateFunctionsTrait
 {
@@ -76,14 +75,8 @@ trait TranslateFunctionsTrait
             )
         );
 
-        /** @var QuestionHelper $questionHelper */
-        $questionHelper = $this->getHelperSet()->get('question');
-        $newDeveloperIp = $questionHelper->ask(
-            $input,
-            $output,
-            new Question(
-                '<question>Change developer IP? Enter a new IP to change or leave blank to skip.</question>: '
-            )
+        $newDeveloperIp = text(
+            '<question>Change developer IP? Enter a new IP to change or leave blank to skip.</question>: '
         );
 
         if (empty($newDeveloperIp)) {

@@ -65,7 +65,7 @@ class CategoryGenerator extends AbstractGenerator
         }
 
         $collection->load();
-        $progressBar = $this->createProgressBar($output, $collection->count());
+        $progressBar = $this->createProgressBar($output, $collection->count(), 'Generating category URLs');
         $progressBar->start();
 
         $counter = 0;
@@ -117,7 +117,7 @@ class CategoryGenerator extends AbstractGenerator
         $totalSize = $countCollection->getSize();
 
         // Create a progress bar for all categories
-        $progressBar = $this->createProgressBar($output, $totalSize);
+        $progressBar = $this->createProgressBar($output, $totalSize, 'Generating category URLs');
         $progressBar->start();
 
         do {

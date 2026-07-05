@@ -9,6 +9,7 @@
 namespace N98\Magento\Command\Database;
 
 use InvalidArgumentException;
+use function Laravel\Prompts\text;
 use Magento\Framework\Exception\FileSystemException;
 use N98\Magento\Command\Database\Compressor\AbstractCompressor;
 use N98\Magento\Command\Database\Compressor\Compressor;
@@ -18,12 +19,10 @@ use N98\Util\Exec;
 use N98\Util\OperatingSystem;
 use N98\Util\VerifyOrDie;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Question\Question;
 
 /**
  * Class DumpCommand
@@ -675,18 +674,7 @@ HELP;
                 $defaultName = rtrim($fileName, '/') . '/' . $defaultName;
             }
             if (!$input->getOption('force')) {
-                $question = new Question(
-                    '<question>Filename for SQL dump:</question> [<comment>' . $defaultName . '</comment>]',
-                    $defaultName
-                );
-
-                /** @var QuestionHelper $questionHelper */
-                $questionHelper = $this->getHelper('question');
-                $fileName = $questionHelper->ask(
-                    $input,
-                    $output,
-                    $question
-                );
+                $fileName = text('Filename for SQL dump:', default: $defaultName);
             } else {
                 $fileName = $defaultName;
             }

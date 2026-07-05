@@ -12,12 +12,10 @@ namespace N98\Magento\Command\Project;
 
 use InvalidArgumentException;
 use function Laravel\Prompts\confirm;
-use Laravel\Prompts\ConfirmPrompt;
-use Laravel\Prompts\Prompt;
+use function Laravel\Prompts\password;
 use function Laravel\Prompts\select;
-use Laravel\Prompts\SelectPrompt;
 use function Laravel\Prompts\suggest;
-use Laravel\Prompts\SuggestPrompt;
+use function Laravel\Prompts\text;
 use N98\Magento\Command\AbstractMagentoCommand;
 use N98\Util\Console\Helper\ComposerHelper;
 use N98\Util\OperatingSystem;
@@ -27,7 +25,6 @@ use Symfony\Component\Console\Exception\RuntimeException;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Question\Question;
 
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Process\Process;
@@ -151,7 +148,6 @@ HELP
     {
         $io = new SymfonyStyle($input, $output);
         $interactive = $input->isInteractive();
-        $this->configurePrompts($io);
 
         if ($interactive) {
             $io->title('Magento Download Wizard');
@@ -197,40 +193,6 @@ HELP
         }
 
         return $this->downloadWithComposer($input, $io, $interactive);
-    }
-
-    /**
-     * Wires laravel/prompts select()/confirm() to fall back to the equivalent SymfonyStyle
-     * prompt on platforms/environments that can't do raw-terminal arrow-key input.
-     */
-    private function configurePrompts(SymfonyStyle $io): void
-    {
-        Prompt::fallbackWhen($this->shouldFallbackToPlainPrompts());
-
-        SelectPrompt::fallbackUsing(static fn (SelectPrompt $prompt): int|string => $io->choice(
-            $prompt->label,
-            $prompt->options,
-            $prompt->default
-        ));
-
-        ConfirmPrompt::fallbackUsing(static fn (ConfirmPrompt $prompt): bool => $io->confirm(
-            $prompt->label,
-            $prompt->default
-        ));
-
-        SuggestPrompt::fallbackUsing(static fn (SuggestPrompt $prompt): string => (string) $io->ask(
-            $prompt->label,
-            $prompt->default
-        ));
-    }
-
-    /**
-     * laravel/prompts doesn't support Windows and reads directly from STDIN, bypassing
-     * Symfony's input stream - so it can't be driven by CommandTester either.
-     */
-    protected function shouldFallbackToPlainPrompts(): bool
-    {
-        return OperatingSystem::isWindows() || !stream_isatty(STDIN);
     }
 
     private function downloadWithComposer(InputInterface $input, SymfonyStyle $io, bool $interactive): int
@@ -305,7 +267,7 @@ HELP
             ));
         }
 
-        $dir = $this->resolveTargetDirectory($input, $io, $interactive, $editionConfig['default_dir']);
+        $dir = $this->resolveTargetDirectory($input, $interactive, $editionConfig['default_dir']);
         $this->assertTargetUsable($dir);
 
         $proceed = $this->confirmProceed($io, $interactive, [
@@ -614,44 +576,31 @@ HELP
             'My Profile -> Access Keys. Use the public key as username and the private key as password.',
         ]);
 
-        $publicKeyQuestion = new Question('Please enter your public key');
-        $publicKeyQuestion->setMaxAttempts(20);
-        $publicKeyQuestion->setValidator(function ($value) {
-            if ($value === '') {
-                throw new InvalidArgumentException('The public key (auth token) can not be empty');
-            }
+        $username = text(
+            'Please enter your public key',
+            validate: fn ($value) => $value === '' ? 'The public key (auth token) can not be empty' : null
+        );
 
-            return $value;
-        });
-        $username = $io->askQuestion($publicKeyQuestion);
-
-        $privateKeyQuestion = new Question('Please enter your private key');
-        $privateKeyQuestion->setHidden(true);
-        $privateKeyQuestion->setMaxAttempts(20);
-        $privateKeyQuestion->setValidator(function ($value) {
-            if ($value === '') {
-                throw new InvalidArgumentException('The private key (auth token) can not be empty');
-            }
-
-            return $value;
-        });
-        $password = $io->askQuestion($privateKeyQuestion);
+        $password = password(
+            'Please enter your private key',
+            validate: fn ($value) => $value === '' ? 'The private key (auth token) can not be empty' : null
+        );
 
         $composerHelper->setConfigValue($configKey, [$username, $password]);
     }
 
     private function downloadWithGit(InputInterface $input, SymfonyStyle $io, bool $interactive): int
     {
-        $repo = $this->resolveGitRepo($input, $io, $interactive);
+        $repo = $this->resolveGitRepo($input, $interactive);
 
         $branch = $input->getOption('branch');
         if ($branch === null) {
             $branch = $interactive
-                ? $io->ask('Branch/tag/ref (leave empty for default branch)', '')
+                ? text('Branch/tag/ref (leave empty for default branch)')
                 : '';
         }
 
-        $dir = $this->resolveTargetDirectory($input, $io, $interactive, './magento2');
+        $dir = $this->resolveTargetDirectory($input, $interactive, './magento2');
         $this->assertTargetUsable($dir);
 
         if (!OperatingSystem::isProgramInstalled('git')) {
@@ -676,7 +625,7 @@ HELP
         return $this->runGitClone($repo, (string) $branch, $dir, $io);
     }
 
-    private function resolveGitRepo(InputInterface $input, SymfonyStyle $io, bool $interactive): string
+    private function resolveGitRepo(InputInterface $input, bool $interactive): string
     {
         $repo = $input->getOption('repo');
         if ($repo) {
@@ -701,13 +650,7 @@ HELP
         $selected = select('Repository', $choices, array_key_first($choices));
 
         if ($selected === self::CUSTOM_GIT_REPO_KEY) {
-            $question = new Question('Git URL or GitHub "owner/repo"');
-            $question->setMaxAttempts(20);
-            $question->setValidator(static function ($value) {
-                return self::normalizeGitRepoUrl((string) $value);
-            });
-
-            return (string) $io->askQuestion($question);
+            return self::normalizeGitRepoUrl(text('Git URL or GitHub "owner/repo"'));
         }
 
         return $repositories[$selected]['url'];
@@ -742,7 +685,6 @@ HELP
 
     private function resolveTargetDirectory(
         InputInterface $input,
-        SymfonyStyle $io,
         bool $interactive,
         string $default
     ): string {
@@ -751,7 +693,7 @@ HELP
             if (!$interactive) {
                 throw new RuntimeException('The "--dir" option is required in non-interactive mode.');
             }
-            $dir = $io->ask('Target directory', $default);
+            $dir = text('Target directory', default: $default);
         }
 
         return rtrim((string) $dir, '/');

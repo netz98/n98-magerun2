@@ -8,6 +8,7 @@
 
 namespace N98\Magento\Command\Sales;
 
+use function Laravel\Prompts\confirm;
 use Magento\Framework\Event;
 use Magento\Framework\Event\Observer;
 use Magento\SalesSequence\Observer\SequenceRemovalObserver;
@@ -15,11 +16,9 @@ use Magento\Store\Api\StoreInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use N98\Magento\Command\AbstractMagentoCommand;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Question\ConfirmationQuestion;
 
 class SequenceRemoveCommand extends AbstractMagentoCommand
 {
@@ -58,19 +57,11 @@ class SequenceRemoveCommand extends AbstractMagentoCommand
         $storeCode = $input->getArgument('store');
         $interaction = ! $input->getOption('no-interaction');
 
-        /** @var $questionHelper QuestionHelper */
-        $questionHelper = $this->getHelper('question');
-
         if ($interaction) {
-            $question = new ConfirmationQuestion(
+            $shouldContinue = confirm(
                 '<error>Only continue if you know what you\'re doing!</error> ' .
-                '<question>Do you know what you are doing?</question> <comment>[n]</comment>: ',
-                false
-            );
-            $shouldContinue = $questionHelper->ask(
-                $input,
-                $output,
-                $question
+                '<question>Do you know what you are doing?</question>',
+                default: false
             );
 
             if (! $shouldContinue) {
@@ -92,21 +83,15 @@ class SequenceRemoveCommand extends AbstractMagentoCommand
         foreach ($stores as $store) {
 
             if ($interaction) {
-                $question = new ConfirmationQuestion(
+                $shouldRemove = confirm(
                     sprintf(
                         '<question>Are you sure to remove sequence for ' .
-                            '<comment>%s (%s #%d)</comment>?</question> ' .
-                            '<comment>[n]</comment>: ',
+                            '<comment>%s (%s #%d)</comment>?</question>',
                         $store->getName(),
                         $store->getCode(),
                         $store->getId()
                     ),
-                    false
-                );
-                $shouldRemove = $questionHelper->ask(
-                    $input,
-                    $output,
-                    $question
+                    default: false
                 );
 
                 if (! $shouldRemove) {

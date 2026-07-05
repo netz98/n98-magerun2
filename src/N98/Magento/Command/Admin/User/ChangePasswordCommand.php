@@ -9,12 +9,12 @@
 namespace N98\Magento\Command\Admin\User;
 
 use Exception;
+use function Laravel\Prompts\password;
+use function Laravel\Prompts\text;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Question\Question;
 
 /**
  * Class ChangePasswordCommand
@@ -44,23 +44,13 @@ class ChangePasswordCommand extends AbstractAdminUserCommand
             return Command::FAILURE;
         }
 
-        /** @var $questionHelper QuestionHelper */
-        $questionHelper = $this->getHelper('question');
-
         // Username
         $username = $username = $input->getArgument('username');
         if ($username === null) {
-            $question = new Question('<question>Username:</question>');
-            $question->setMaxAttempts(20);
-            $question->setValidator(function ($value) {
-                if (trim($value) === '') {
-                    throw new \Exception('Please enter a valid username');
-                }
-
-                return $value;
-            });
-
-            $username = $questionHelper->ask($input, $output, $question);
+            $username = text(
+                '<question>Username:</question>',
+                validate: fn ($value) => trim($value) === '' ? 'Please enter a valid username' : null
+            );
         }
 
         $user = $this->userModel->loadByUsername($username);
@@ -72,9 +62,7 @@ class ChangePasswordCommand extends AbstractAdminUserCommand
         // Password
         $password = $input->getArgument('password');
         if ($password === null) {
-            $question = new Question('<question>Password:</question>');
-            $question->setHidden(true);
-            $password = $questionHelper->ask($input, $output, $question);
+            $password = password('<question>Password:</question>');
         }
 
         try {
