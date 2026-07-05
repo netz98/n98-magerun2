@@ -47,10 +47,6 @@ class Gzip extends AbstractCompressor
 
             return 'gzip -dc < ' . escapeshellarg($fileName) . ' | ' . $command;
         } else {
-            if ($this->hasPipeViewer()) {
-                return 'pv -cN tar -zxf ' . escapeshellarg($fileName) . ' && pv -cN mysql | ' . $command;
-            }
-
             return 'tar -zxf ' . escapeshellarg($fileName) . ' -C ' . escapeshellarg(dirname($fileName)) . ' && ' . $command . ' < '
                 . escapeshellarg(substr($fileName, 0, -4));
         }
