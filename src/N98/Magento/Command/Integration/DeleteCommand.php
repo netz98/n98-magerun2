@@ -9,7 +9,11 @@
 namespace N98\Magento\Command\Integration;
 
 use Exception;
+use function Laravel\Prompts\confirm;
+use function Laravel\Prompts\select;
 use Magento\Integration\Api\OauthServiceInterface;
+use Magento\Integration\Model\Integration as IntegrationAlias;
+use Magento\Integration\Model\IntegrationFactory;
 use Magento\Integration\Model\IntegrationService;
 use N98\Magento\Command\AbstractMagentoCommand;
 use Symfony\Component\Console\Command\Command;
@@ -35,24 +39,26 @@ class DeleteCommand extends AbstractMagentoCommand
     private $oauthService;
 
     /**
-     * @var TokenCollectionFactory
+     * @var IntegrationFactory
      */
-    private $tokenCollectionFactory;
+    private $integrationFactory;
 
     protected function configure()
     {
         $this
             ->setName('integration:delete')
-            ->addArgument('name', InputArgument::REQUIRED, 'Name or ID of the integration')
+            ->addArgument('name', InputArgument::OPTIONAL, 'Name or ID of the integration')
             ->setDescription('Delete an existing integration.');
     }
 
     public function inject(
         IntegrationService $integrationService,
-        OauthServiceInterface $oauthService
+        OauthServiceInterface $oauthService,
+        IntegrationFactory $integrationFactory
     ) {
         $this->integrationService = $integrationService;
         $this->oauthService = $oauthService;
+        $this->integrationFactory = $integrationFactory;
     }
 
     /**
@@ -64,6 +70,15 @@ class DeleteCommand extends AbstractMagentoCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $integrationName = $input->getArgument('name');
+        $selectedInteractively = false;
+
+        if ($integrationName === null || $integrationName === '') {
+            $integrationName = $this->selectIntegration($output);
+            if ($integrationName === null) {
+                return Command::SUCCESS;
+            }
+            $selectedInteractively = true;
+        }
 
         $integrationModel = $this->integrationService->findByName($integrationName);
 
@@ -73,6 +88,18 @@ class DeleteCommand extends AbstractMagentoCommand
 
         if ($integrationModel->getId() <= 0) {
             throw new RuntimeException('Integration with this name or ID does not exist.');
+        }
+
+        if ($selectedInteractively && !confirm(
+            sprintf(
+                '<question>Are you sure you want to delete integration "%s" (ID: %d)?</question>',
+                $integrationModel->getName(),
+                $integrationModel->getId()
+            ),
+            false
+        )) {
+            $output->writeln('<error>Operation cancelled.</error>');
+            return Command::FAILURE;
         }
 
         $this->integrationService->delete($integrationModel->getId());
@@ -94,5 +121,31 @@ class DeleteCommand extends AbstractMagentoCommand
         );
 
         return Command::SUCCESS;
+    }
+
+    /**
+     * @return string|null Name of the selected integration, or null if there was nothing to select
+     */
+    private function selectIntegration(OutputInterface $output): ?string
+    {
+        $integrations = $this->integrationFactory->create()->getCollection()->getItems();
+
+        if (count($integrations) === 0) {
+            $output->writeln('<info>No integrations found.</info>');
+            return null;
+        }
+
+        $options = [];
+        /** @var IntegrationAlias $integration */
+        foreach ($integrations as $integration) {
+            $options[$integration->getName()] = sprintf(
+                '%s (ID: %d, email: %s)',
+                $integration->getName(),
+                $integration->getId(),
+                $integration->getEmail() ?: '-'
+            );
+        }
+
+        return select('<question>Select an integration to delete:</question>', $options);
     }
 }
