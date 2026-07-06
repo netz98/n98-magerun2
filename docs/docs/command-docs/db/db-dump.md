@@ -66,8 +66,8 @@ By default, `db:dump` includes views if their underlying tables are dumped or if
 
 The `db:dump` command provides fine-grained control over which tables are included in or excluded from the database dump using the `--include` and `--exclude` options:
 
-- `--include=INCLUDE` (or `-i`): Only the specified tables will be included in the dump. You can specify multiple tables by repeating the option or providing a comma-separated list. Wildcards (`*`, `?`) are supported.
-- `--exclude=EXCLUDE` (or `-e`): The specified tables will be excluded from the dump entirely (structure and data). Multiple tables can be specified, and wildcards are supported.
+- `--include=INCLUDE` (or `-i`): Only the specified tables will be included in the dump. You can specify multiple tables by repeating the option or providing a comma-separated list. Wildcards (`*`, `?`) and `@`-table-groups are supported.
+- `--exclude=EXCLUDE` (or `-e`): The specified tables will be excluded from the dump entirely (structure and data). Multiple tables can be specified, and wildcards and `@`-table-groups are supported.
 
 **Combining `--include` and `--exclude`:**
 
@@ -158,10 +158,9 @@ Available Table Groups:
 | `@2fa`                | 2FA tables. These tables are used for storing 2FA information for admin users.                                                       |
 | `@admin`              | Admin users, roles, sessions, etc.                                                                                                   |
 | `@aggregated`         | Aggregated tables used for generating reports, etc.                                                                                  |
-| `@dotmailer`          | Dotmailer data(`email_abandoned_cart` `email_automation` `email_campaign` `email_contact`).                                          |
 | `@customers`          | Customer data (and company data from the B2B extension).                                                                             |
-| `@development`        | Removes logs, sessions, trade data and admin users so developers do not have to work with real customer data or admin user accounts. |
-| `@dotmailer`          | Dotmailer module tables                                                                                                              |
+| `@development`        | Removes all production data not required for developers, incl. `@admin`, `@oauth`, `@trade`, `@stripped`, `@search`, `@2fa`, `@aggregated`.|
+| `@dotmailer`          | Dotmailer module tables (`email_abandoned_cart` `email_automation` `email_campaign` `email_contact`, etc.)                           |
 | `@ee_changelog`       | Changelog tables of new indexer since EE 1.13                                                                                        |
 | `@idx`                | Tables with `_idx` suffix and index event tables.                                                                                    |
 | `@klarna`             | Klarna tables containing information about klarna payments and their quotes/orders.                                                  |
@@ -174,8 +173,8 @@ Available Table Groups:
 | `@sales`              | Sales data (orders, invoices, creditmemos etc).                                                                                      |
 | `@search`             | Search related tables (catalogsearch\_).                                                                                             |
 | `@sessions`           | Database session tables.                                                                                                             |
-| `@stripped`           | Standard definition for a stripped dump (logs and sessions).                                                                         |
-| `@trade`              | Current trade data (customers, orders and quotes). You usually do not want those in developer systems.                               |
+| `@stripped`           | Standard definition for a stripped dump (`@log`, `@sessions`, `@dotmailer`, `@newrelic_reporting`, `@temp`, `@ee_changelog`, etc.).  |
+| `@trade`              | Current trade data (`@customers`, `@sales`, `@quotes`, `@klarna`, `@mailchimp`). You usually do not want those in developer systems. |
 | `@temp`               | Indexer __temp tables.                                                                                                               |
 
 ---
