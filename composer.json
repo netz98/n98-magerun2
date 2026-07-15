@@ -37,7 +37,7 @@
         "fakerphp/faker": "~1.16",
         "laminas/laminas-filter": "^2.12",
         "laravel/prompts": "^0.3.21",
-        "mcp/sdk": "^0.6",
+        "mcp/sdk": "^0.7",
         "n98/junit-xml": "~1.0",
         "psr/container": "~1.1.2",
         "psr/log": "^2.0",
