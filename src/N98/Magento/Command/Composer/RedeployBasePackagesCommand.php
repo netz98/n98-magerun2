@@ -138,10 +138,13 @@ class RedeployBasePackagesCommand extends AbstractMagentoCommand
      */
     private function findMagentoComposerInstallerPackage(Composer $composer): ?PackageInterface
     {
-        return $composer->getRepositoryManager()->getLocalRepository()->findPackage(
-            'magento/magento-composer-installer',
-            '*'
-        );
+        foreach ($composer->getRepositoryManager()->getLocalRepository()->getPackages() as $package) {
+            if ($package->getType() === 'composer-plugin' && ($package->getExtra()['class'] ?? null) === Plugin::class) {
+                return $package;
+            }
+        }
+
+        return null;
     }
 
     /**
