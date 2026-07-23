@@ -49,7 +49,7 @@ class CommandToolHandler
             $argumentString = '--no-interaction ' . $argumentString;
         }
 
-        $input = new StringInput($argumentString);
+        $input = new StringInput($this->commandName . ' ' . $argumentString);
         $input->setInteractive(false);
 
         $output = new BufferedOutput(OutputInterface::VERBOSITY_NORMAL, false);
