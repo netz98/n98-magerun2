@@ -12,6 +12,7 @@ namespace N98\Magento\Command\Composer;
 
 use Composer\Composer;
 use Composer\IO\NullIO;
+use Composer\Package\PackageInterface;
 use MagentoHackathon\Composer\Magento\Deploy\Manager\Entry;
 use MagentoHackathon\Composer\Magento\DeployManager;
 use MagentoHackathon\Composer\Magento\Installer;
@@ -111,6 +112,7 @@ class RedeployBasePackagesCommand extends AbstractMagentoCommand
     ): array {
         $addPluginArguments = [$magentoPlugin];
         $addPluginParameters = $addPluginMethod->getParameters();
+        $sourcePackage = $this->findMagentoComposerInstallerPackage($composer);
 
         if (
             isset($addPluginParameters[1], $addPluginParameters[2])
@@ -118,16 +120,28 @@ class RedeployBasePackagesCommand extends AbstractMagentoCommand
             && $addPluginParameters[2]->getName() === 'sourcePackage'
         ) {
             $addPluginArguments[] = false;
-            $addPluginArguments[] = $composer->getPackage();
+            $addPluginArguments[] = $sourcePackage;
 
             return $addPluginArguments;
         }
 
         if (isset($addPluginParameters[1]) && $addPluginParameters[1]->getName() === 'sourcePackage') {
-            $addPluginArguments[] = $composer->getPackage();
+            $addPluginArguments[] = $sourcePackage;
         }
 
         return $addPluginArguments;
+    }
+
+    /**
+     * @param \Composer\Composer $composer
+     * @return \Composer\Package\PackageInterface|null
+     */
+    private function findMagentoComposerInstallerPackage(Composer $composer): ?PackageInterface
+    {
+        return $composer->getRepositoryManager()->getLocalRepository()->findPackage(
+            'magento/magento-composer-installer',
+            '*'
+        );
     }
 
     /**
