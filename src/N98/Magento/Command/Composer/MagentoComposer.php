@@ -11,8 +11,8 @@ declare(strict_types=1);
 namespace N98\Magento\Command\Composer;
 
 use Composer\Composer;
-use Composer\Config;
-use Composer\Console\Application;
+use Composer\Factory;
+use Composer\IO\NullIO;
 
 class MagentoComposer
 {
@@ -22,25 +22,22 @@ class MagentoComposer
     private static $composer;
 
     /**
-     * @param string $composerConfigFile
+     * @param string $magentoRootDir
      * @return Composer
      * @throws \Composer\Json\JsonValidationException
      */
     public static function initBundledComposer(string $magentoRootDir)
     {
         if (! self::$composer instanceof Composer) {
-            $composerApplication = new Application();
-            $composerApplication->setAutoExit(false);
-
-            $composer = $composerApplication->getComposer();
-            $composer->setConfig(
-                new Config(
-                    true,
-                    $magentoRootDir
-                )
+            // Factory::create() forces plugins into 'local'-disabled mode whenever a non-default
+            // composer.json path is passed in, so createComposer() is called directly with $cwd
+            // set to $magentoRootDir instead, as documented in Factory::create()'s source.
+            self::$composer = (new Factory())->createComposer(
+                new NullIO(),
+                $magentoRootDir . '/composer.json',
+                false,
+                $magentoRootDir
             );
-
-            self::$composer = $composer;
         }
 
         return self::$composer;
