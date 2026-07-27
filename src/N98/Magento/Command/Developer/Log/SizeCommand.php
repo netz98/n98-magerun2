@@ -11,9 +11,7 @@ namespace N98\Magento\Command\Developer\Log;
 use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Framework\Filesystem;
 use N98\Magento\Command\AbstractMagentoCommand;
-use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -58,12 +56,7 @@ class SizeCommand extends AbstractMagentoCommand
                 InputOption::VALUE_NONE,
                 'Show file sizes in human readable format'
             )
-            ->addOption(
-                'format',
-                null,
-                InputOption::VALUE_OPTIONAL,
-                'Output Format. One of [' . implode(',', RendererFactory::getFormats()) . ']'
-            )
+            ->addFormatOption()
             ->setHelp(
                 'This command displays the size of all log files in the var/log directory. ' .
                 'Magento 2 has various log files like system.log, debug.log, exception.log, etc.'
@@ -175,24 +168,16 @@ class SizeCommand extends AbstractMagentoCommand
         }
 
         $headers = ['Log File', 'Size', 'Last Modified'];
-        if ($format) {
+        if ($format && empty($rows)) {
             // Ensure header is rendered even if there are no rows
             // (e.g., CSV renderer prints headers only on first row)
-            if (empty($rows)) {
-                $rows[] = array_fill(0, count($headers), '');
-            }
-
-            $this->getHelper('table')
-                ->setHeaders($headers)
-                ->renderByFormat($output, $rows, $format);
-        } else {
-            $table = new Table($output);
-            $table->setHeaders($headers);
-            foreach ($rows as $row) {
-                $table->addRow($row);
-            }
-            $table->render();
+            $rows[] = array_fill(0, count($headers), '');
         }
+
+        $this->getHelper('table')
+            ->setTitle('Log sizes')
+            ->setHeaders($headers)
+            ->renderByFormat($output, $rows, $format);
 
         // Display summary
         $fileCount = count($logFiles);

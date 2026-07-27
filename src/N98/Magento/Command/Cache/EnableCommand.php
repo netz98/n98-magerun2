@@ -8,9 +8,7 @@
 
 namespace N98\Magento\Command\Cache;
 
-use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
 use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Input\InputOption;
 
 class EnableCommand extends AbstractModifierCommand
 {
@@ -34,11 +32,6 @@ class EnableCommand extends AbstractModifierCommand
                 InputArgument::IS_ARRAY,
                 'Type of cache to enable (separate multiple types with a space)'
             )
-            ->addOption(
-                'format',
-                null,
-                InputOption::VALUE_OPTIONAL,
-                'Output Format. One of [' . implode(',', RendererFactory::getFormats()) . ']'
-            );
+            ->addFormatOption();
     }
 }

@@ -8,7 +8,6 @@
 
 namespace N98\Magento\Command\Admin\User;
 
-use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -21,12 +20,7 @@ class ListCommand extends AbstractAdminUserCommand
         $this
             ->setName('admin:user:list')
             ->setDescription('List admin users.')
-            ->addOption(
-                'format',
-                null,
-                InputOption::VALUE_OPTIONAL,
-                'Output Format. One of [' . implode(',', RendererFactory::getFormats()) . ']'
-            )
+            ->addFormatOption()
             ->addOption(
                 'sort',
                 null,
@@ -152,6 +146,7 @@ class ListCommand extends AbstractAdminUserCommand
         }
 
         $this->getHelper('table')
+            ->setTitle('Admin users')
             ->setHeaders($headers)
             ->renderByFormat($output, $table, $input->getOption('format'));
 

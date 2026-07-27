@@ -12,11 +12,9 @@ use Exception;
 use function Laravel\Prompts\select;
 use Magento\Framework\ObjectManager\ConfigLoaderInterface;
 use N98\Magento\Command\AbstractMagentoCommand;
-use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
@@ -50,12 +48,7 @@ class ListCommand extends AbstractMagentoCommand
                 InputArgument::OPTIONAL,
                 'Filter observers in specific area. One of [' . implode(',', $this->areas) . ']'
             )
-            ->addOption(
-                'format',
-                null,
-                InputOption::VALUE_OPTIONAL,
-                'Output Format. One of [' . implode(',', RendererFactory::getFormats()) . ']'
-            );
+            ->addFormatOption();
     }
 
     protected function interact(InputInterface $input, OutputInterface $output)

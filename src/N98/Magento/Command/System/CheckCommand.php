@@ -18,11 +18,9 @@ use N98\Magento\Command\System\Check\Result;
 use N98\Magento\Command\System\Check\ResultCollection;
 use N98\Magento\Framework\AreaAware;
 use N98\Util\Console\Helper\InjectionHelper;
-use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
 use N98\Util\Unicode\Charset;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
@@ -59,12 +57,7 @@ class CheckCommand extends AbstractMagentoCommand
         $this
             ->setName('sys:check')
             ->setDescription('Checks Magento System')
-            ->addOption(
-                'format',
-                null,
-                InputOption::VALUE_OPTIONAL,
-                'Output Format. One of [' . implode(',', RendererFactory::getFormats()) . ']'
-            );
+            ->addFormatOption();
 
         $help = <<<HELP
 - Checks missing files and folders

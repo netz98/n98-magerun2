@@ -15,7 +15,6 @@ use Magento\Framework\UrlInterface;
 use Magento\Store\Model\Store;
 use Magento\Store\Model\StoreManagerInterface;
 use N98\Magento\Command\AbstractMagentoCommand;
-use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -44,12 +43,7 @@ class BaseUrlListCommand extends AbstractMagentoCommand
             ->setDescription('Lists all base urls')
             ->addOption('with-admin-store', null, InputOption::VALUE_NONE, 'Include admin store')
             ->addOption('with-admin-login-url', null, InputOption::VALUE_NONE, 'Include admin login url')
-            ->addOption(
-                'format',
-                null,
-                InputOption::VALUE_OPTIONAL,
-                'Output Format. One of [' . implode(',', RendererFactory::getFormats()) . ']'
-            );
+            ->addFormatOption();
     }
 
     /**

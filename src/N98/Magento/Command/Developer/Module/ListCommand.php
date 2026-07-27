@@ -11,7 +11,6 @@ namespace N98\Magento\Command\Developer\Module;
 use Magento\Framework\Module\FullModuleList;
 use Magento\Framework\Module\Manager;
 use N98\Magento\Command\AbstractMagentoCommand;
-use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -69,12 +68,7 @@ class ListCommand extends AbstractMagentoCommand
             ->setDescription('List all installed modules')
             ->addOption('only-enabled', 'e', InputOption::VALUE_NONE, 'Show only enabled modules')
             ->addOption('only-disabled', 'd', InputOption::VALUE_NONE, 'Show only disabled modules')
-            ->addOption(
-                'format',
-                null,
-                InputOption::VALUE_OPTIONAL,
-                'Output Format. One of [' . implode(',', RendererFactory::getFormats()) . ']'
-            );
+            ->addFormatOption();
     }
 
     /**

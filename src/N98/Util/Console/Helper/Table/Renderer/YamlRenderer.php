@@ -23,6 +23,8 @@ class YamlRenderer implements RendererInterface
      */
     public function render(OutputInterface $output, array $rows)
     {
-        $output->writeln(Yaml::dump($rows));
+        // Raw, so a cell value that looks like markup keeps its angle brackets instead of being
+        // run through the output formatter and having "tags" stripped out of the document.
+        $output->writeln(Yaml::dump($rows), OutputInterface::OUTPUT_RAW);
     }
 }

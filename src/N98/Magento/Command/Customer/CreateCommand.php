@@ -15,12 +15,10 @@ use Magento\Customer\Api\AccountManagementInterface;
 use Magento\Framework\App\State as AppState;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Theme\Model\View\Design;
-use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
@@ -49,12 +47,7 @@ class CreateCommand extends AbstractCustomerCommand
             ->addArgument('lastname', InputArgument::OPTIONAL, 'Lastname')
             ->addArgument('website', InputArgument::OPTIONAL, 'Website')
             ->addArgument('additionalFields', InputArgument::IS_ARRAY, 'Additional fields, specifiy as field_name1 value2 field_name2 value2')
-            ->addOption(
-                'format',
-                null,
-                InputOption::VALUE_OPTIONAL,
-                'Output Format. One of [' . implode(',', RendererFactory::getFormats()) . ']'
-            )
+            ->addFormatOption()
             ->setDescription('Creates a new customer/user for shop frontend.');
     }
 

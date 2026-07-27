@@ -10,7 +10,6 @@ namespace N98\Magento\Command\Cache;
 
 use Magento\Framework\App\Cache\TypeList;
 use N98\Magento\Command\AbstractMagentoCommand;
-use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -42,12 +41,7 @@ class ListCommand extends AbstractMagentoCommand
                 InputOption::VALUE_OPTIONAL,
                 'Filter the list to display only enabled [1] or disabled [0] cache types'
             )
-            ->addOption(
-                'format',
-                null,
-                InputOption::VALUE_OPTIONAL,
-                'Output Format. One of [' . implode(',', RendererFactory::getFormats()) . ']'
-            );
+            ->addFormatOption();
     }
 
     /**

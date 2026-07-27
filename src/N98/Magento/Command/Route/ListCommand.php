@@ -22,7 +22,6 @@ use Magento\Framework\App\AreaList;
 use Magento\Framework\App\Route\Config;
 use Magento\Framework\Module\Dir\Reader;
 use N98\Magento\Command\AbstractMagentoCommand;
-use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -65,12 +64,7 @@ class ListCommand extends AbstractMagentoCommand
                 'm',
                 InputOption::VALUE_OPTIONAL,
                 'Show registered routes of a module'
-            )->addOption(
-                'format',
-                null,
-                InputOption::VALUE_OPTIONAL,
-                'Output Format. One of [' . implode(',', RendererFactory::getFormats()) . ']'
-            );
+            )->addFormatOption();
     }
 
     /**
@@ -154,6 +148,7 @@ class ListCommand extends AbstractMagentoCommand
         }
 
         $this->getHelper('table')
+            ->setTitle('Routes')
             ->setHeaders(
                 [
                     'Area',

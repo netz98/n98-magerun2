@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace N98\Magento\Command\Config;
 
+use function Laravel\Prompts\search;
 use Magento\Config\Model\Config\Structure as ConfigStructure;
 use Magento\Config\Model\Config\Structure\Data as ConfigStructureData;
 use Magento\Config\Model\Config\Structure\Element\AbstractComposite;
@@ -17,15 +18,22 @@ use Magento\Framework\App\Area;
 use Magento\Framework\App\AreaList;
 use Magento\Framework\App\State;
 use Magento\Framework\ObjectManager\ConfigLoaderInterface;
+use N98\Magento\Application\Console\CommandPalette;
 use N98\Magento\Command\AbstractMagentoCommand;
-use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
+use N98\Util\Console\Interaction;
+use Symfony\Component\Console\Exception\RuntimeException;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Throwable;
 
 class SearchCommand extends AbstractMagentoCommand
 {
+    /**
+     * Rows of the result list to keep on screen.
+     */
+    private const SCROLL = 12;
+
     private ConfigStructure $configStructure;
     private ConfigStructureData $configStructureData;
     private array $results = [];
@@ -42,13 +50,8 @@ class SearchCommand extends AbstractMagentoCommand
                 Searches the merged system.xml configuration tree <labels/> and <comments/> for the indicated text.
 EOT
             )
-            ->addOption(
-                'format',
-                null,
-                InputOption::VALUE_OPTIONAL,
-                'Output Format. One of [' . implode(',', RendererFactory::getFormats()) . ']'
-            )
-            ->addArgument('text', InputArgument::REQUIRED, 'The text to search for');
+            ->addFormatOption()
+            ->addArgument('text', InputArgument::OPTIONAL, 'The text to search for');
 
         parent::configure();
     }
@@ -78,10 +81,20 @@ EOT
 
         $this->tabMap = $configData['tabs'];
 
+        $searchTerm = $input->getArgument('text');
+        $interactive = $searchTerm === null;
+
+        if ($interactive && !$this->canBrowse($input, $output)) {
+            // Same message Symfony produced while the argument was still REQUIRED, so scripts that
+            // relied on the failure keep seeing it rather than hanging on a prompt they cannot answer.
+            throw new RuntimeException('Not enough arguments (missing: "text").');
+        }
+
         if (isset($configData['sections'])) {
+            // A null term collects the whole tree, which is what the picker searches through.
             $this->findInStructure(
                 $configData['sections'],
-                $input->getArgument('text'),
+                $searchTerm,
                 ''
             );
         }
@@ -91,7 +104,12 @@ EOT
             return self::SUCCESS;
         }
 
+        if ($interactive) {
+            return $this->browse($output);
+        }
+
         $this->getHelper('table')
+            ->setTitle('Config matches')
             ->setHeaders(array_keys($this->results[0]))
             ->renderByFormat($output, $this->results, $input->getOption('format'));
 
@@ -99,13 +117,133 @@ EOT
     }
 
     /**
+     * Whether the interactive picker can be offered for this invocation.
+     */
+    private function canBrowse(InputInterface $input, OutputInterface $output): bool
+    {
+        // A caller that asked for json/csv/xml wants data, not a prompt.
+        if ($input->getOption('format')) {
+            return false;
+        }
+
+        return Interaction::isPromptable($input, $output);
+    }
+
+    /**
+     * Let the user search the configuration tree as they type and pick a single entry.
+     *
+     * `config:search` exists to answer "where does this setting live?", and a term good enough to
+     * narrow 3000-odd entries to a readable table is usually found by trial and error. Doing that
+     * against a live list is faster than re-running the command with a different word each time.
+     */
+    private function browse(OutputInterface $output): int
+    {
+        // Keyed by config path, which is what search() hands back. It has to be a *non-numeric*
+        // key: PHP turns numeric string keys back into integers, and laravel/prompts returns the
+        // label rather than the key once the option array looks like a plain list.
+        $byPath = [];
+        foreach ($this->results as $result) {
+            if ($result['id'] !== '') {
+                $byPath[$result['id']] = $result;
+            }
+        }
+
+        if ($byPath === []) {
+            $output->writeln('<info>No results found.</info>');
+
+            return self::SUCCESS;
+        }
+
+        try {
+            $chosen = search(
+                label: 'Which setting are you looking for?',
+                options: fn (string $value): array => $this->match($byPath, $value),
+                placeholder: 'Start typing, e.g. base url, robots, cache',
+                scroll: self::SCROLL,
+                hint: sprintf('%d settings available. Ctrl+C to quit.', count($byPath))
+            );
+        } catch (Throwable $e) {
+            // Ctrl+C, and a terminal that turns out not to support raw input, both land here.
+            CommandPalette::restoreTerminal();
+
+            return self::SUCCESS;
+        }
+
+        CommandPalette::restoreTerminal();
+
+        if (!is_string($chosen) || !isset($byPath[$chosen])) {
+            return self::SUCCESS;
+        }
+
+        $result = $byPath[$chosen];
+
+        $this->io->heading('Config match');
+        $this->io->keyValue([
+            'path' => $result['id'],
+            'type' => $result['type'],
+            'name' => self::plainLabel($result['name']),
+        ]);
+        $this->io->hint(sprintf('Read the current value with: config:store:get %s', $result['id']));
+
+        return self::SUCCESS;
+    }
+
+    /**
+     * Rank collected settings against what the user has typed.
+     *
+     * A path match outranks a label match, so typing "base_url" offers `web/unsecure/base_url`
+     * before the settings that merely mention base URLs in their breadcrumb.
+     *
+     * @param array<string, array<string, string>> $byPath
+     * @return array<string, string> config path => label shown in the list
+     */
+    private function match(array $byPath, string $value): array
+    {
+        $needle = trim(mb_strtolower($value));
+
+        $pathMatches = [];
+        $nameMatches = [];
+
+        foreach ($byPath as $path => $result) {
+            if ($needle === '' || str_contains(mb_strtolower($path), $needle)) {
+                $pathMatches[$path] = self::optionLabel($path, $result);
+                continue;
+            }
+
+            if (str_contains(mb_strtolower($result['name']), $needle)) {
+                $nameMatches[$path] = self::optionLabel($path, $result);
+            }
+        }
+
+        return $pathMatches + $nameMatches;
+    }
+
+    /**
+     * @param array<string, string> $result
+     */
+    private static function optionLabel(string $path, array $result): string
+    {
+        return sprintf('%s  —  %s', self::plainLabel($result['name']), $path);
+    }
+
+    /**
+     * Magento's system.xml labels are HTML fragments - "<strong>Get more insights</strong>" and
+     * the like. laravel/prompts writes to the terminal directly rather than through Symfony's
+     * formatter, so the markup would show up as-is in the picker.
+     */
+    private static function plainLabel(string $name): string
+    {
+        return trim(preg_replace('/\s+/u', ' ', strip_tags($name)));
+    }
+
+    /**
      * @param array $elements
-     * @param string $searchTerm
+     * @param string|null $searchTerm null collects every element, for the interactive picker
      * @param string $pathLabel
      */
     private function findInStructure($elements, $searchTerm, $pathLabel = '')
     {
-        if (empty($searchTerm)) {
+        if ($searchTerm !== null && empty($searchTerm)) {
             return;
         }
 
@@ -119,7 +257,8 @@ EOT
                 $structureElement = $this->configStructure->getElement($structureElement['id']);
             }
 
-            if (mb_stripos((string)$structureElement->getLabel(), $searchTerm) !== false
+            if ($searchTerm === null
+                || mb_stripos((string)$structureElement->getLabel(), $searchTerm) !== false
                 || mb_stripos((string)$structureElement->getComment(), $searchTerm) !== false
             ) {
                 $elementData = $structureElement->getData();

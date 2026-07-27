@@ -8,10 +8,8 @@
 
 namespace N98\Magento\Command\Database\Maintain;
 
-use function Laravel\Prompts\progress;
-use Laravel\Prompts\Progress;
 use N98\Magento\Command\AbstractMagentoCommand;
-use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
+use N98\Util\Console\ProgressFactory;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputInterface;
@@ -105,12 +103,7 @@ HELP;
                 InputOption::VALUE_OPTIONAL,
                 'Process only given table (wildcards are supported)'
             )
-            ->addOption(
-                'format',
-                null,
-                InputOption::VALUE_OPTIONAL,
-                'Output Format. One of [' . implode(',', RendererFactory::getFormats()) . ']'
-            )
+            ->addFormatOption()
             ->setHelp($help);
     }
 
@@ -128,11 +121,11 @@ HELP;
     }
 
     /**
-     * @param ProgressBar|Progress $progress
+     * @param ProgressBar|null $progress null when progress output is suppressed
      */
-    protected function progressAdvance(ProgressBar|Progress $progress)
+    protected function progressAdvance(?ProgressBar $progress)
     {
-        if ($this->showProgress) {
+        if ($progress !== null) {
             $progress->advance();
         }
     }
@@ -173,14 +166,12 @@ HELP;
 
         $tableOutput = [];
 
-        if ($this->showProgress && $output->isDecorated() && count($tables) > 0) {
-            $progress = progress(label: 'Checking tables', steps: count($tables));
+        // No bar at all when a machine-readable --format was requested; even the label line would
+        // end up in the csv/json the caller is parsing.
+        $progress = null;
+        if ($this->showProgress) {
+            $progress = ProgressFactory::create($output, count($tables), 'Checking tables');
             $progress->start();
-        } else {
-            $progress = new ProgressBar($output, 50);
-            if ($this->showProgress) {
-                $progress->start(count($tables));
-            }
         }
 
         $methods = [
@@ -204,8 +195,9 @@ HELP;
             $this->progressAdvance($progress);
         }
 
-        if ($this->showProgress) {
+        if ($progress !== null) {
             $progress->finish();
+            $output->writeln('');
         }
 
         $this->getHelper('table')

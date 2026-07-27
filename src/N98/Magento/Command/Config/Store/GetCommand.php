@@ -10,7 +10,6 @@ namespace N98\Magento\Command\Config\Store;
 
 use Magento\Config\Model\ResourceModel\Config\Data\Collection;
 use N98\Magento\Command\Config\AbstractConfigCommand;
-use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -66,12 +65,7 @@ EOT
             )
             ->addOption('update-script', null, InputOption::VALUE_NONE, 'Output as update script lines')
             ->addOption('magerun-script', null, InputOption::VALUE_NONE, 'Output for usage with config:store:set')
-            ->addOption(
-                'format',
-                null,
-                InputOption::VALUE_OPTIONAL,
-                'Output Format. One of [' . implode(',', RendererFactory::getFormats()) . ']'
-            );
+            ->addFormatOption();
 
         $help = <<<HELP
 If path is not set, all available config items will be listed. path may contain wildcards (*)
@@ -185,6 +179,7 @@ HELP;
         /* @var $tableHelper \N98\Util\Console\Helper\TableHelper */
         $tableHelper = $this->getHelper('table');
         $tableHelper
+            ->setTitle('Config values')
             ->setHeaders(['Path', 'Scope', 'Scope-ID', 'Value', 'Updated At'])
             ->setRows($formattedTable)
             ->renderByFormat($output, $formattedTable, $format);

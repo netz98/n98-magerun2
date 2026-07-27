@@ -9,10 +9,8 @@
 namespace N98\Magento\Command\System\Store;
 
 use N98\Magento\Command\AbstractMagentoCommand;
-use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
@@ -31,12 +29,7 @@ class ListCommand extends AbstractMagentoCommand
         $this
             ->setName('sys:store:list')
             ->setDescription('Lists all installed store-views')
-            ->addOption(
-                'format',
-                null,
-                InputOption::VALUE_OPTIONAL,
-                'Output Format. One of [' . implode(',', RendererFactory::getFormats()) . ']'
-            );
+            ->addFormatOption();
     }
 
     /**
@@ -74,6 +67,7 @@ class ListCommand extends AbstractMagentoCommand
         $format = $input->getOption('format');
 
         $this->getHelper('table')
+            ->setTitle('Stores')
             ->setHeaders(['id', 'website_id', 'group_id', 'name', 'code', 'sort_order', 'is_active'])
             ->renderByFormat($output, $table, $format);
 

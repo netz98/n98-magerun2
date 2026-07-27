@@ -9,10 +9,8 @@
 namespace N98\Magento\Command\GiftCard;
 
 use Magento\GiftCardAccount\Model\Giftcardaccount;
-use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
@@ -31,12 +29,7 @@ class InfoCommand extends AbstractGiftCardCommand
         $this
             ->setName('giftcard:info')
             ->addArgument('code', \Symfony\Component\Console\Input\InputArgument::REQUIRED, 'Gift card code')
-            ->addOption(
-                'format',
-                null,
-                InputOption::VALUE_OPTIONAL,
-                'Output Format. One of [' . implode(',', RendererFactory::getFormats()) . ']'
-            )
+            ->addFormatOption()
             ->setDescription('Get gift card account information by code');
 
         $help = <<<HELP

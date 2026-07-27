@@ -23,7 +23,6 @@ use Magento\Framework\App\State as AppState;
 use Magento\Framework\Module\ModuleListInterface;
 use Magento\User\Model\ResourceModel\User\CollectionFactory;
 use N98\Magento\Command\AbstractMagentoCommand;
-use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
 use N98\Util\ProjectComposer;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -103,12 +102,7 @@ class InfoCommand extends AbstractMagentoCommand
                 'Only output value of named param like "version". Key is case insensitive.'
             )
             ->addOption('sort', '', InputOption::VALUE_NONE, 'Sort by name')
-            ->addOption(
-                'format',
-                null,
-                InputOption::VALUE_OPTIONAL,
-                'Output Format. One of [' . implode(',', RendererFactory::getFormats()) . ']'
-            );
+            ->addFormatOption();
     }
 
     /**

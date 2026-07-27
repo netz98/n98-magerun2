@@ -11,7 +11,6 @@ namespace N98\Magento\Command\Cache;
 use Magento\Framework\App\CacheInterface;
 use Magento\PageCache\Model\Cache\Type as FullPageCache;
 use N98\Magento\Command\AbstractMagentoCommand;
-use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -79,12 +78,7 @@ class ReportCommand extends AbstractMagentoCommand
                 InputOption::VALUE_OPTIONAL,
                 'Filter output by TAG (separate multiple tags by comma)'
             )
-            ->addOption(
-                'format',
-                null,
-                InputOption::VALUE_OPTIONAL,
-                'Output Format. One of [' . implode(', ', RendererFactory::getFormats()) . ']'
-            )
+            ->addFormatOption()
             ->setDescription('View inside the cache');
     }
 

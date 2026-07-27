@@ -23,7 +23,6 @@ use Magento\Integration\Model\Oauth\TokenFactory;
 use Magento\Integration\Model\OauthService;
 use Magento\Integration\Model\ResourceModel\Oauth\Consumer;
 use N98\Magento\Command\AbstractMagentoCommand;
-use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\RuntimeException;
 use Symfony\Component\Console\Input\InputArgument;
@@ -86,12 +85,7 @@ class CreateCommand extends AbstractMagentoCommand
             ->addOption('access-token', '', InputOption::VALUE_REQUIRED, 'Access-Token (length 32 chars)')
             ->addOption('access-token-secret', '', InputOption::VALUE_REQUIRED, 'Access-Token Secret (length 32 chars)')
             ->addOption('resource', 'r', InputOption::VALUE_IS_ARRAY|InputOption::VALUE_REQUIRED, 'Defines a granted ACL resource', [])
-            ->addOption(
-                'format',
-                null,
-                InputOption::VALUE_OPTIONAL,
-                'Output Format. One of [' . implode(',', RendererFactory::getFormats()) . ']'
-            )
+            ->addFormatOption()
             ->setDescription('Create a new integration');
 
         $help = <<<HELP
