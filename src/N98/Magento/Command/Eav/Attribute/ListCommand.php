@@ -13,7 +13,6 @@ use Magento\Eav\Model\Entity\Type as EntityType;
 use Magento\Eav\Model\ResourceModel\Entity\Attribute\Collection as AttributeCollection;
 use Magento\Eav\Model\ResourceModel\Entity\Type\CollectionFactory as EntityTypeCollectionFactory;
 use N98\Magento\Command\AbstractMagentoCommand;
-use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -73,12 +72,7 @@ class ListCommand extends AbstractMagentoCommand
                 InputOption::VALUE_OPTIONAL,
                 'Filter attributes by entity type'
             )
-            ->addOption(
-                'format',
-                null,
-                InputOption::VALUE_OPTIONAL,
-                'Output Format. One of [' . implode(',', RendererFactory::getFormats()) . ']'
-            )
+            ->addFormatOption()
             ->setDescription('List EAV attributes');
     }
 
@@ -162,6 +156,7 @@ class ListCommand extends AbstractMagentoCommand
         }
 
         $this->getHelper('table')
+            ->setTitle('EAV attributes')
             ->setHeaders($headers)
             ->renderByFormat($output, $table, $input->getOption('format'));
 

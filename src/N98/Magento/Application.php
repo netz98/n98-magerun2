@@ -11,6 +11,7 @@ namespace N98\Magento;
 use BadMethodCallException;
 use Composer\Autoload\ClassLoader;
 use Exception;
+use Laravel\Prompts\Prompt;
 use Magento\Framework\App\DistributionMetadataInterface;
 use Magento\Framework\App\ProductMetadataInterface;
 use Magento\Framework\Exception\FileSystemException;
@@ -19,6 +20,10 @@ use N98\Magento\Application\ApplicationAwareInterface;
 use N98\Magento\Application\ArgsParser\AddModuleDirOptionParser;
 use N98\Magento\Application\Config;
 use N98\Magento\Application\ConfigurationLoader;
+use N98\Magento\Application\Console\Command\HelpCommand;
+use N98\Magento\Application\Console\Command\ListCommand;
+use N98\Magento\Application\Console\CommandPalette;
+use N98\Magento\Application\Console\ErrorRenderer;
 use N98\Magento\Application\Console\Events;
 use N98\Magento\Application\DetectionResult;
 use N98\Magento\Application\Magento1Initializer;
@@ -28,11 +33,14 @@ use N98\Magento\Application\MagentoDetector;
 use N98\Magento\Command\DummyCommand;
 use N98\Magento\Command\MagentoCoreProxyCommandFactory;
 use N98\Util\Console\Helper\TwigHelper;
+use N98\Util\Console\Theme;
 use Symfony\Component\Console\Application as BaseApplication;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Command\HelpCommand as SymfonyHelpCommand;
+use Symfony\Component\Console\Command\ListCommand as SymfonyListCommand;
 use Symfony\Component\Console\Event\ConsoleEvent;
-use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Input\ArgvInput;
+use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -142,6 +150,14 @@ class Application extends BaseApplication
     private $isSelfUpdate = false;
 
     /**
+     * @var string|null name of the command currently executing
+     *
+     * Symfony tracks this privately, so it is mirrored here for the error report.
+     * @see renderThrowable()
+     */
+    private $runningCommandName;
+
+    /**
      * @param ClassLoader $autoloader
      */
     public function __construct($autoloader = null)
@@ -187,12 +203,36 @@ class Application extends BaseApplication
      */
     public function getHelp(): string
     {
-        return self::$logo . parent::getHelp();
+        // The banner already ends with the version line that parent::getHelp() would return.
+        return $this->getBanner();
     }
 
     public function getLongVersion()
     {
-        return parent::getLongVersion() . ' (commit: @git_commit_short@) by <info>valantic CEC</info>';
+        return sprintf(
+            '<emphasis>%s</emphasis> <accent>%s</accent> <muted>(commit: @git_commit_short@)</muted> ' .
+            '<muted>by</muted> valantic CEC',
+            $this->getName(),
+            $this->getVersion()
+        );
+    }
+
+    /**
+     * The ASCII logo, tinted and followed by the version line.
+     *
+     * The tag wraps each line individually because a style tag spanning newlines is reset by most
+     * terminals at the line break, which would leave only the first line coloured.
+     */
+    public function getBanner(): string
+    {
+        $lines = explode("\n", trim(self::$logo, "\n"));
+
+        $banner = '';
+        foreach ($lines as $line) {
+            $banner .= sprintf("<accent>%s</accent>\n", $line);
+        }
+
+        return "\n" . $banner . "\n" . $this->getLongVersion() . "\n";
     }
 
     /**
@@ -292,11 +332,49 @@ class Application extends BaseApplication
     public function doRun(InputInterface $input, OutputInterface $output)
     {
         $input = $this->config->checkConfigCommandAlias($input);
+        $input = $this->askForCommand($input, $output);
 
         $event = new ConsoleEvent(new DummyCommand(), $input, $output);
         $this->dispatcher->dispatch($event, Events::RUN_BEFORE);
 
         return parent::doRun($input, $output);
+    }
+
+    /**
+     * Offer the interactive command palette when magerun was started without a command.
+     *
+     * Returns the input unchanged for every invocation the palette does not apply to, so
+     * non-interactive callers keep getting the full `list` output.
+     *
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     *
+     * @return InputInterface
+     */
+    private function askForCommand(InputInterface $input, OutputInterface $output)
+    {
+        $palette = new CommandPalette($this);
+
+        if (!$palette->isApplicable($input, $output)) {
+            return $input;
+        }
+
+        $commandName = $palette->choose($output);
+        CommandPalette::restoreTerminal();
+
+        if ($commandName === null) {
+            // Aborted: fall through to `list` so the user is not left with a blank screen.
+            return $input;
+        }
+
+        $output->writeln('');
+
+        if ($input instanceof ArgvInput) {
+            // Splice the choice into the original argv so global options already typed survive.
+            return $palette->buildInput($_SERVER['argv'] ?? [$this->getName()], $commandName);
+        }
+
+        return new ArrayInput(['command' => $commandName]);
     }
 
     /**
@@ -398,11 +476,14 @@ class Application extends BaseApplication
             $output = new ConsoleOutput();
         }
         $this->_addOutputStyles($output);
-        if ($output instanceof ConsoleOutput) {
-            $this->_addOutputStyles($output->getErrorOutput());
-        }
 
         $this->configureIO($input, $output);
+
+        // laravel/prompts renders to its own global stream by default, which bypasses the
+        // OutputInterface the command was given (and with it --no-ansi, verbosity and any
+        // redirection). Point it at the real output so prompts honour the same rules as
+        // everything else.
+        Prompt::setOutput($output);
 
         try {
             $this->init([], $input, $output);
@@ -428,12 +509,89 @@ class Application extends BaseApplication
     }
 
     /**
+     * Register magerun's semantic output styles on an output and its error stream.
+     *
      * @param OutputInterface $output
      */
     protected function _addOutputStyles(OutputInterface $output)
     {
-        $output->getFormatter()->setStyle('debug', new OutputFormatterStyle('magenta', 'white'));
-        $output->getFormatter()->setStyle('warning', new OutputFormatterStyle('red', 'yellow', ['bold']));
+        Theme::apply($output);
+    }
+
+    /**
+     * Swap Symfony's `help` and `list` for the variants that use magerun's text descriptor.
+     *
+     * @return array<int, Command>
+     */
+    protected function getDefaultCommands(): array
+    {
+        $commands = [];
+
+        foreach (parent::getDefaultCommands() as $command) {
+            if ($command instanceof SymfonyHelpCommand) {
+                $commands[] = new HelpCommand();
+                continue;
+            }
+
+            if ($command instanceof SymfonyListCommand) {
+                $commands[] = new ListCommand();
+                continue;
+            }
+
+            $commands[] = $command;
+        }
+
+        return $commands;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function doRunCommand(Command $command, InputInterface $input, OutputInterface $output)
+    {
+        $this->runningCommandName = $command->getName();
+
+        // Deliberately not cleared in a finally block: when the command throws, the name must
+        // still be set for renderThrowable() to report which command failed.
+        $exitCode = parent::doRunCommand($command, $input, $output);
+
+        $this->runningCommandName = null;
+
+        return $exitCode;
+    }
+
+    /**
+     * Render an uncaught throwable as a compact, actionable report instead of Symfony's
+     * full-width red block.
+     */
+    public function renderThrowable(Throwable $e, OutputInterface $output): void
+    {
+        // Styles are registered in run(), but renderThrowable() is also reachable from callers
+        // that built their own output (and from the init() failure path below).
+        Theme::apply($output);
+
+        (new ErrorRenderer())->render($e, $output, $this->runningCommandName, $this->getAllCommandNames());
+    }
+
+    /**
+     * Every registered command name and alias, used to suggest alternatives for a typo.
+     *
+     * @return array<int, string>
+     */
+    private function getAllCommandNames(): array
+    {
+        $names = [];
+
+        try {
+            foreach ($this->all() as $name => $command) {
+                $names[] = $name;
+            }
+        } catch (Throwable $e) {
+            // Command registration itself may be what failed; suggestions are optional.
+            return [];
+        }
+
+        return $names;
     }
 
     /**

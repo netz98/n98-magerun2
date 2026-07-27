@@ -11,7 +11,6 @@ namespace N98\Magento\Command\Developer\Module\Observer;
 use Exception;
 use function Laravel\Prompts\select;
 use N98\Magento\Command\AbstractMagentoCommand;
-use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
 use Symfony\Component\Console\Helper\TableSeparator;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -56,12 +55,7 @@ class ListCommand extends AbstractMagentoCommand
                 InputArgument::OPTIONAL,
                 'Filter observers in specific area. One of [' . implode(',', $this->areas) . ']'
             )
-            ->addOption(
-                'format',
-                null,
-                InputOption::VALUE_OPTIONAL,
-                'Output Format. One of [' . implode(',', RendererFactory::getFormats()) . ']'
-            )
+            ->addFormatOption()
             ->addOption(
                 'sort',
                 null,

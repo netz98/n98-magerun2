@@ -8,7 +8,6 @@
 
 namespace N98\Magento\Command\Database;
 
-use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
 use N98\Util\Filesystem;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -62,12 +61,7 @@ abstract class AbstractShowCommand extends AbstractDatabaseCommand
                 InputArgument::OPTIONAL,
                 'Only output variables of specified name. The wildcard % is supported!'
             )
-            ->addOption(
-                'format',
-                null,
-                InputOption::VALUE_OPTIONAL,
-                'Output Format. One of [' . implode(',', RendererFactory::getFormats()) . ']'
-            )
+            ->addFormatOption()
             ->addOption(
                 'rounding',
                 null,

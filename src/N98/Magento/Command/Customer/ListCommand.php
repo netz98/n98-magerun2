@@ -8,11 +8,9 @@
 
 namespace N98\Magento\Command\Customer;
 
-use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
@@ -27,12 +25,7 @@ class ListCommand extends AbstractCustomerCommand
             ->setName('customer:list')
             ->setDescription('Lists all magento customers')
             ->addArgument('search', InputArgument::OPTIONAL, 'Search query')
-            ->addOption(
-                'format',
-                null,
-                InputOption::VALUE_OPTIONAL,
-                'Output Format. One of [' . implode(',', RendererFactory::getFormats()) . ']'
-            );
+            ->addFormatOption();
 
         $help = <<<HELP
 Lists all Magento Customers of current installation.
@@ -73,6 +66,7 @@ HELP;
 
         if (count($table) > 0) {
             $helper = $this->getHelper('table');
+            $helper->setTitle('Customers');
             $helper->setHeaders(['id', 'firstname', 'lastname', 'email', 'website', 'created_at']);
             $helper->renderByFormat($output, $table, $input->getOption('format'));
         } else {

@@ -11,12 +11,10 @@ namespace N98\Magento\Command\Config\Env;
 use Dflydev\DotAccessData\Data;
 use InvalidArgumentException;
 use N98\Magento\Command\AbstractMagentoCommand;
-use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
 use RuntimeException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\VarDumper\Cloner\VarCloner;
 use Symfony\Component\VarDumper\Dumper\CliDumper;
@@ -33,12 +31,7 @@ class ShowCommand extends AbstractMagentoCommand
             ->setName('config:env:show')
             ->setDescription('List env.php file')
             ->addArgument('key', InputArgument::OPTIONAL, 'Key to show.')
-            ->addOption(
-                'format',
-                null,
-                InputOption::VALUE_OPTIONAL,
-                'Output Format. One of [' . implode(',', RendererFactory::getFormats()) . ']'
-            );
+            ->addFormatOption();
     }
 
     /**
@@ -94,6 +87,7 @@ class ShowCommand extends AbstractMagentoCommand
             }
 
             $this->getHelper('table')
+                ->setTitle('env.php')
                 ->setHeaders(['key', 'value'])
                 ->renderByFormat($output, $table, $input->getOption('format'));
         }

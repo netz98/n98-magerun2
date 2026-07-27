@@ -12,10 +12,8 @@ namespace N98\Magento\Command\Magerun;
 
 use N98\Magento\Application\ConfigInfo;
 use N98\Magento\Command\AbstractMagentoCommand;
-use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class ConfigInfoCommand extends AbstractMagentoCommand
@@ -25,12 +23,7 @@ class ConfigInfoCommand extends AbstractMagentoCommand
         $this
             ->setName('magerun:config:info')
             ->setDescription('Prints infos about the loaded config files')
-            ->addOption(
-                'format',
-                null,
-                InputOption::VALUE_OPTIONAL,
-                'Output Format. One of [' . implode(',', RendererFactory::getFormats()) . ']'
-            );
+            ->addFormatOption();
     }
 
     public function execute(InputInterface $input, OutputInterface $output)
@@ -47,6 +40,7 @@ class ConfigInfoCommand extends AbstractMagentoCommand
         }
 
         $this->getHelper('table')
+            ->setTitle('Magerun config')
             ->setHeaders(['type', 'path', 'note'])
             ->renderByFormat($output, $table, $input->getOption('format'));
 

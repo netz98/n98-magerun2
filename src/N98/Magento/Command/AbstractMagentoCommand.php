@@ -16,13 +16,15 @@ use N98\Magento\Application;
 use N98\Magento\Command\SubCommand\ConfigBag;
 use N98\Magento\Command\SubCommand\SubCommandFactory;
 use N98\Util\Console\Helper\InjectionHelper;
+use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
+use N98\Util\Console\MagerunStyle;
 use N98\Util\Console\Prompts\ConfiguresPromptFallbacks;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\RuntimeException;
 use Symfony\Component\Console\Helper\FormatterHelper;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
  * Class AbstractMagentoCommand
@@ -76,19 +78,54 @@ abstract class AbstractMagentoCommand extends Command
     protected $_objectManager = null;
 
     /**
+     * Shared output vocabulary - headings, status lines, tables, progress, prompts.
+     *
+     * Available from initialize() onwards. Prefer this over writing raw markup to $output so every
+     * command speaks the same visual language and gets the plain-output fallbacks for free.
+     *
+     * @var MagerunStyle|null
+     */
+    protected $io = null;
+
+    /**
      * Initializes the command just after the input has been validated.
      *
      * This is mainly useful when a lot of commands extends one main command
      * where some things need to be initialized based on the input arguments and options.
      *
      * @param InputInterface $input An InputInterface instance
-     * @param InputInterface $input An InputInterface instance
      * @param OutputInterface $output An OutputInterface instance
      */
     protected function initialize(InputInterface $input, OutputInterface $output): void
     {
+        $this->io = new MagerunStyle($input, $output);
+
         $this->checkDeprecatedAliases($input, $output);
-        $this->configurePrompts(new SymfonyStyle($input, $output));
+        $this->configurePrompts($this->io);
+    }
+
+    /**
+     * The shared output style, built on demand for the rare caller that runs before initialize()
+     * or that overrides it without chaining to the parent.
+     */
+    protected function io(InputInterface $input, OutputInterface $output): MagerunStyle
+    {
+        return $this->io ??= new MagerunStyle($input, $output);
+    }
+
+    /**
+     * Add the `--format` option every command that renders a table shares.
+     *
+     * @return $this
+     */
+    protected function addFormatOption()
+    {
+        return $this->addOption(
+            'format',
+            null,
+            InputOption::VALUE_OPTIONAL,
+            'Output Format. One of [' . implode(',', RendererFactory::getFormats()) . ']'
+        );
     }
 
     /**
@@ -117,12 +154,30 @@ abstract class AbstractMagentoCommand extends Command
     }
 
     /**
+     * Write the heading that introduces a command's output.
+     *
+     * Delegates to MagerunStyle::heading(), which draws the dense rule on a terminal and reproduces
+     * the historic blue block byte for byte everywhere else - so the ~16 commands calling this get
+     * the new look without a change of their own, and piped output is untouched.
+     *
      * @param OutputInterface $output
      * @param string $text
-     * @param string $style
+     * @param string $style only honoured for the legacy block, i.e. when a caller asked for a
+     *                      colour other than the default
+     * @param int|null $count number of items listed below the heading
      */
-    protected function writeSection(OutputInterface $output, $text, $style = 'bg=blue;fg=white'): void
-    {
+    protected function writeSection(
+        OutputInterface $output,
+        $text,
+        $style = 'bg=blue;fg=white',
+        ?int $count = null
+    ): void {
+        if ($style === 'bg=blue;fg=white' && $this->io !== null && $this->io->getOutput() === $output) {
+            $this->io->heading($text, $count);
+
+            return;
+        }
+
         /** @var $formatter FormatterHelper */
         $formatter = $this->getHelper('formatter');
 

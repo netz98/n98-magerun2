@@ -48,7 +48,7 @@ class ModulesCommand extends AbstractConsoleCommand
             });
         }
 
-        $output->writeln('<strong>' . implode(PHP_EOL, $modules) . '</strong>');
+        $output->writeln('<emphasis>' . implode(PHP_EOL, $modules) . '</emphasis>');
 
         return Command::SUCCESS;
     }

@@ -11,14 +11,30 @@ if (!class_exists(N98\MagerunBootstrap::class)) {
 }
 
 try {
-    if (version_compare(PHP_VERSION, '7.4.0', '<')) {
-        throw new \ErrorException('PHP Version is lower than 7.4.0. Please upgrade your runtime.');
+    // Keep in sync with the "php" constraint in composer.json.
+    if (version_compare(PHP_VERSION, '8.0.0', '<')) {
+        throw new \ErrorException('PHP Version is lower than 8.0.0. Please upgrade your runtime.');
     }
     return N98\MagerunBootstrap::createApplication();
-} catch (Exception $e) {
-    printf("%s: %s\n", get_class($e), $e->getMessage());
-    if (array_intersect(['-vvv', '-vv', '-v', '--verbose'], $argv)) {
-        printf("%s\n", $e->getTraceAsString());
+} catch (Throwable $e) {
+    $verbose = (bool) array_intersect(['-vvv', '-vv', '-v', '--verbose'], $argv);
+
+    // Bootstrapping is where the autoloader itself can be broken, so the styled renderer is only
+    // used when its classes are actually loadable; otherwise fall back to unformatted output.
+    if (class_exists(N98\Magento\Application\Console\ErrorRenderer::class)) {
+        $output = new Symfony\Component\Console\Output\ConsoleOutput(
+            $verbose
+                ? Symfony\Component\Console\Output\OutputInterface::VERBOSITY_VERBOSE
+                : Symfony\Component\Console\Output\OutputInterface::VERBOSITY_NORMAL
+        );
+
+        (new N98\Magento\Application\Console\ErrorRenderer())->render($e, $output->getErrorOutput());
+    } else {
+        fprintf(STDERR, "%s: %s\n", get_class($e), $e->getMessage());
+        if ($verbose) {
+            fprintf(STDERR, "%s\n", $e->getTraceAsString());
+        }
     }
+
     exit(1);
 }

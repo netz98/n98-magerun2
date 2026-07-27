@@ -8,10 +8,8 @@
 
 namespace N98\Magento\Command\Script\Repository;
 
-use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
@@ -25,12 +23,7 @@ class ListCommand extends AbstractRepositoryCommand
         $this
             ->setName('script:repo:list')
             ->setDescription('Lists all scripts in repository')
-            ->addOption(
-                'format',
-                null,
-                InputOption::VALUE_OPTIONAL,
-                'Output Format. One of [' . implode(',', RendererFactory::getFormats()) . ']'
-            );
+            ->addFormatOption();
 
         $help = <<<HELP
 You can organize your scripts in a repository.
@@ -74,6 +67,7 @@ HELP;
         }
 
         $this->getHelper('table')
+            ->setTitle('Scripts')
             ->setHeaders(['Script', 'Location', 'Description'])
             ->renderByFormat($output, $table, $input->getOption('format'));
 

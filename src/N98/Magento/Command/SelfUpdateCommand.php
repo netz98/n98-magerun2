@@ -9,8 +9,7 @@
 namespace N98\Magento\Command;
 
 use Exception;
-use function Laravel\Prompts\progress;
-use Laravel\Prompts\Progress;
+use N98\Util\Console\ProgressFactory;
 use N98\Util\Markdown\VersionFilePrinter;
 use Phar;
 use PharException;
@@ -359,23 +358,10 @@ EOT
     /**
      * Create a progress bar for the download.
      */
-    private function createProgressBar(OutputInterface $output, int $filesize): ProgressBar|Progress
+    private function createProgressBar(OutputInterface $output, int $filesize): ProgressBar
     {
-        if ($output->isDecorated() && $filesize > 0) {
-            $progress = progress(label: 'Downloading', steps: $filesize);
-            $progress->start();
-
-            return $progress;
-        }
-
-        $progress = new ProgressBar($output);
-        if ($filesize > 0) {
-            $progress->setFormat('[%bar%] %current%/%max% bytes %percent:3s%% %elapsed:6s%/%estimated:-6s%');
-            $progress->start($filesize);
-        } else {
-            $progress->setFormat('[%bar%] %current% bytes downloaded');
-            $progress->start(0);
-        }
+        $progress = ProgressFactory::create($output, $filesize, 'Downloading');
+        $progress->start();
 
         return $progress;
     }
@@ -397,18 +383,15 @@ EOT
     /**
      * Perform the download using the prepared options.
      */
-    private function performDownload(string $remoteUrl, string $tempFilename, ProgressBar|Progress $progress, array $requestOpts)
+    private function performDownload(string $remoteUrl, string $tempFilename, ProgressBar $progress, array $requestOpts)
     {
         // Create a hooks instance for progress reporting
         $hooks = new Hooks();
 
         // Register a progress callback
+        // Bytes, not steps: the bar was created with the content-length as its maximum.
         $hooks->register('request.progress', function ($data, $bytes_so_far, $bytes_limit) use ($progress) {
-            if ($progress instanceof Progress) {
-                $progress->advance($bytes_so_far - $progress->progress);
-            } elseif ($progress->getMaxSteps() > 0) {
-                $progress->setProgress($bytes_so_far);
-            }
+            $progress->setProgress($bytes_so_far);
         });
 
         // Prepare options for the request
@@ -449,7 +432,7 @@ EOT
         int $maxRetries,
         int $retryDelaySeconds,
         string $tempFilename,
-        ProgressBar|Progress $progress
+        ProgressBar $progress
     ) {
         $progress->finish();
         $output->writeln('');

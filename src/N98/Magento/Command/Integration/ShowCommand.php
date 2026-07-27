@@ -13,12 +13,10 @@ use Magento\Integration\Model\IntegrationService;
 use Magento\Integration\Model\Oauth\TokenFactory;
 use Magento\Integration\Model\OauthService;
 use N98\Magento\Command\AbstractMagentoCommand;
-use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\RuntimeException;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
@@ -60,12 +58,7 @@ class ShowCommand extends AbstractMagentoCommand
                 InputArgument::OPTIONAL,
                 'Only output value of named param like "Access Token". Key is case insensitive.'
             )
-            ->addOption(
-                'format',
-                null,
-                InputOption::VALUE_OPTIONAL,
-                'Output Format. One of [' . implode(',', RendererFactory::getFormats()) . ']'
-            );
+            ->addFormatOption();
     }
 
     public function inject(

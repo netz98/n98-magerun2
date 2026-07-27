@@ -9,7 +9,6 @@
 namespace N98\Magento\Command\Config\Data;
 
 use N98\Magento\Command\AbstractMagentoCommand;
-use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
 use N98\Util\Console\Helper\TreeHelper;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -35,12 +34,7 @@ class MViewCommand extends AbstractMagentoCommand
                 'global'
             )
             ->addOption('tree', 't', InputOption::VALUE_NONE, 'Show data as tree')
-            ->addOption(
-                'format',
-                null,
-                InputOption::VALUE_OPTIONAL,
-                'Output Format. One of [' . implode(',', RendererFactory::getFormats()) . ']'
-            )
+            ->addFormatOption()
             ->setDescription('Dump merged data of mview.xml files');
     }
 

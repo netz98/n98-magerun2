@@ -15,7 +15,6 @@
 namespace N98\Magento\Command\System\Setup;
 
 use N98\Util\ArrayFunctions;
-use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
 use N98\Util\Console\Helper\TableHelper;
 use N98\Util\JUnitSession;
 use Symfony\Component\Console\Input\InputInterface;
@@ -37,12 +36,7 @@ class CompareVersionsCommand extends AbstractSetupCommand
             ->setName('sys:setup:compare-versions')
             ->addOption('ignore-data', null, InputOption::VALUE_NONE, 'Ignore data updates')
             ->addOption('log-junit', null, InputOption::VALUE_REQUIRED, 'Log output to a JUnit xml file.')
-            ->addOption(
-                'format',
-                null,
-                InputOption::VALUE_OPTIONAL,
-                'Output Format. One of [' . implode(',', RendererFactory::getFormats()) . ']'
-            )
+            ->addFormatOption()
             ->setDescription('Compare module version with setup_module table.');
         $help = <<<HELP
 Compares module version with saved setup version in `setup_module` table and displays version mismatch.

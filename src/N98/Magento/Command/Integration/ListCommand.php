@@ -11,10 +11,8 @@ namespace N98\Magento\Command\Integration;
 use Magento\Integration\Model\Integration;
 use Magento\Integration\Model\ResourceModel\Integration\Collection;
 use N98\Magento\Command\AbstractMagentoCommand;
-use N98\Util\Console\Helper\Table\Renderer\RendererFactory;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
@@ -48,12 +46,7 @@ class ListCommand extends AbstractMagentoCommand
         $this
             ->setName('integration:list')
             ->setDescription('List all existing integrations.')
-            ->addOption(
-                'format',
-                null,
-                InputOption::VALUE_OPTIONAL,
-                'Output Format. One of [' . implode(',', RendererFactory::getFormats()) . ']'
-            );
+            ->addFormatOption();
     }
 
     public function inject(
@@ -103,6 +96,7 @@ class ListCommand extends AbstractMagentoCommand
         }
 
         $this->getHelper('table')
+            ->setTitle('Integrations')
             ->setHeaders(['id', 'name', 'email', 'endpoint', 'type', 'status'])
             ->renderByFormat($output, $table, $input->getOption('format'));
 

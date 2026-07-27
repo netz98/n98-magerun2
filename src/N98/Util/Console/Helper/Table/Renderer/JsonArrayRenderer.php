@@ -23,6 +23,11 @@ class JsonArrayRenderer implements RendererInterface
     public function render(OutputInterface $output, array $rows)
     {
         $rows = array_values($rows);
-        $output->writeln(\json_encode($rows, JSON_THROW_ON_ERROR | \JSON_PRETTY_PRINT));
+        // Raw, so a cell value that looks like markup keeps its angle brackets instead of being
+        // run through the output formatter and having "tags" stripped out of the document.
+        $output->writeln(
+            \json_encode($rows, JSON_THROW_ON_ERROR | \JSON_PRETTY_PRINT),
+            OutputInterface::OUTPUT_RAW
+        );
     }
 }
