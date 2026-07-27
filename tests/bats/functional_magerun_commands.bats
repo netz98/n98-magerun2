@@ -391,6 +391,8 @@ function cleanup_files_in_magento() {
 # ============================================
 
 @test "Command: customer:create" {
+  $BIN "customer:delete" --email=foo@example.com --force >/dev/null 2>&1 || true
+
   run $BIN "customer:create" "foo@example.com" "Password123" "Firstname" "Lastname"
   assert_output --partial "Customer foo@example.com successfully created"
 }
@@ -633,9 +635,11 @@ function cleanup_files_in_magento() {
 # ============================================
 
 @test "Command: dev:module:create" {
+  cleanup_files_in_magento "app/code/Magerun123/TestModule"
+
   run $BIN "dev:module:create" Magerun123 TestModule
   assert_output --partial "Created directory"
-  cleanup_files_in_magento "app/code/N98/Magerun123"
+  cleanup_files_in_magento "app/code/Magerun123/TestModule"
 }
 
 # ============================================
@@ -883,6 +887,9 @@ function cleanup_files_in_magento() {
 # ============================================
 
 @test "Command: Integration:create" {
+  $BIN "integration:delete" magerun-test >/dev/null 2>&1 || true
+  $BIN "integration:delete" magerun-test1 >/dev/null 2>&1 || true
+
   # Create with all arguments
   run $BIN "integration:create" magerun-test magerun@example.com https://localhost
   assert_output --partial "Integration ID"
@@ -927,6 +934,8 @@ function cleanup_files_in_magento() {
 @test "Command: integration:delete" {
   run $BIN "integration:delete" magerun-test
   assert_output --partial "Successfully deleted integration"
+
+  $BIN "integration:delete" magerun-test1 >/dev/null 2>&1 || true
 }
 
 # ============================================
