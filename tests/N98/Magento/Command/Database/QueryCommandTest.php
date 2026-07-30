@@ -20,9 +20,11 @@ class QueryCommandTest extends TestCase
         $application = $this->getApplication();
         $this->assertTrue($application->has('db:query'), 'Command db:query should be registered.');
 
-        $this->mockDatabaseHelper('--host=localhost --user=test --password=test test_db');
-
-        $this->assertExecute(['command' => 'db:query', 'query' => 'SELECT 1', '--format' => 'csv']);
+        // Uses the real DatabaseHelper (configured against the test Magento install's
+        // actual database) so the query genuinely succeeds and exercises the CSV
+        // formatting path end to end.
+        $tester = $this->assertExecute(['command' => 'db:query', 'query' => 'SELECT 1', '--format' => 'csv']);
+        $this->assertStringContainsString('"1"', $tester->getDisplay());
     }
 
     public function testThrowsWhenNoQueryGivenNonInteractively()
