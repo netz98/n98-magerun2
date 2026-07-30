@@ -9,10 +9,12 @@
 namespace N98\Magento\Command\Database;
 
 use function Laravel\Prompts\text;
+use RuntimeException;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Process\Process;
 
 /**
  * Class QueryCommand
@@ -83,6 +85,9 @@ HELP;
         $this->detectDbSettings($output);
 
         if (($query = $input->getArgument('query')) === null) {
+            if (!$input->isInteractive()) {
+                throw new RuntimeException('No SQL query provided. Please pass the query as a command argument.');
+            }
             $query = text('SQL Query:');
         }
 
@@ -92,32 +97,44 @@ HELP;
 
         if ($input->getOption('only-command')) {
             $output->writeln($exec);
-            $returnValue = 0;
-        } else {
-            $format = $input->getOption('format');
-            if ($format === 'csv') {
-                // Prepend -B for batch mode (tab-separated output)
-                $exec = str_replace('mysql ', 'mysql -B ', $exec);
-                exec($exec, $commandOutput, $returnValue);
-
-                if ($returnValue === 0) {
-                    foreach ($commandOutput as $line) {
-                        $parts = explode("\t", $line);
-                        $csvLine = '"' . implode('","', $parts) . '"';
-                        $output->writeln($csvLine);
-                    }
-                } else {
-                    $output->writeln('<error>' . implode(PHP_EOL, $commandOutput) . '</error>');
-                }
-            } else {
-                exec($exec, $commandOutput, $returnValue);
-                $output->writeln($commandOutput);
-                if ($returnValue > 0) {
-                    $output->writeln('<error>' . implode(PHP_EOL, $commandOutput) . '</error>');
-                }
-            }
+            return 0;
         }
 
-        return $returnValue;
+        $format = $input->getOption('format');
+        if ($format === 'csv') {
+            // Prepend -B for batch mode (tab-separated output)
+            $exec = str_replace('mysql ', 'mysql -B ', $exec);
+        }
+
+        $process = Process::fromShellCommandline($exec);
+        $process->setTimeout(null);
+        $process->run();
+
+        if (!$process->isSuccessful()) {
+            $errorOutput = trim($process->getErrorOutput());
+            if ($errorOutput === '') {
+                $errorOutput = trim($process->getOutput());
+            }
+            $output->writeln('<error>' . $errorOutput . '</error>');
+
+            return $process->getExitCode() ?: 1;
+        }
+
+        $commandOutput = rtrim($process->getOutput(), "\r\n");
+        if ($commandOutput === '') {
+            return 0;
+        }
+
+        if ($format === 'csv') {
+            foreach (explode("\n", $commandOutput) as $line) {
+                $parts = explode("\t", rtrim($line, "\r"));
+                $csvLine = '"' . implode('","', $parts) . '"';
+                $output->writeln($csvLine);
+            }
+        } else {
+            $output->writeln($commandOutput);
+        }
+
+        return 0;
     }
 }
