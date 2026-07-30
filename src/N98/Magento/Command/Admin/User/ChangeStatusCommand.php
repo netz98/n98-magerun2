@@ -32,11 +32,16 @@ class ChangeStatusCommand extends AbstractMagentoCommand
 
     protected $userResourceModel;
     protected $userCollectionFactory;
+    protected $userModel;
 
-    public function inject(UserResourceModel $userResourceModel, CollectionFactory $userCollectionFactory): void
-    {
+    public function inject(
+        UserResourceModel $userResourceModel,
+        CollectionFactory $userCollectionFactory,
+        User $userModel
+    ): void {
         $this->userResourceModel = $userResourceModel;
         $this->userCollectionFactory = $userCollectionFactory;
+        $this->userModel = $userModel;
     }
 
     protected function configure(): void
@@ -103,8 +108,17 @@ class ChangeStatusCommand extends AbstractMagentoCommand
             ]
         );
         $collection->getItems();
-        $user = $collection->getFirstItem();
-        return $user->getUserId() !== null ? $user : null;
+        $userId = $collection->getFirstItem()->getUserId();
+        if ($userId === null) {
+            return null;
+        }
+
+        // Load the user through the resource model instead of using the collection item directly, so that
+        // the load lifecycle (e.g. Magento\User\Model\ResourceModel\User::_afterLoad()) deserializes
+        // "extra" into an array. Otherwise, saving the collection item would re-encode "extra" as JSON.
+        $this->userResourceModel->load($this->userModel, $userId);
+
+        return $this->userModel->getUserId() !== null ? $this->userModel : null;
     }
 
     protected function getNewStatusForUser(User $user, InputInterface $input): bool
