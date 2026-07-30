@@ -16,7 +16,7 @@
         "use-include-path": false,
         "preferred-install": "dist",
         "platform": {
-            "php": "8.1.0"
+            "php": "8.2.0"
         },
         "sort-packages": true,
         "allow-plugins": {
@@ -25,7 +25,7 @@
         }
     },
     "require": {
-        "php": "^8.0",
+        "php": "^8.2",
         "ext-PDO": "*",
         "ext-SimpleXML": "*",
         "ext-dom": "*",
