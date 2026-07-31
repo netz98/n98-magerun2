@@ -35,7 +35,7 @@
         "ext-zip": "*",
         "dflydev/dot-access-data": "^3.0",
         "fakerphp/faker": "~1.16",
-        "laminas/laminas-filter": "^2.12",
+        "laminas/laminas-filter": "^3.4",
         "laravel/prompts": "^0.3.21",
         "mcp/sdk": "^0.7",
         "n98/junit-xml": "~1.0",
