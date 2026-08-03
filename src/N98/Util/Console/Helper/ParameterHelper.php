@@ -88,7 +88,7 @@ class ParameterHelper extends AbstractHelper implements CommandAware
             }
 
             if (count($stores) > 1) {
-                $storeId = select('Please select a store', $stores);
+                $storeId = $this->selectByKey('Please select a store', $stores);
             } else {
                 // only one store view available -> take it
                 $storeId = array_key_first($stores);
@@ -138,7 +138,7 @@ class ParameterHelper extends AbstractHelper implements CommandAware
                 return $storeManager->getWebsite(array_key_first($websites));
             }
 
-            $websiteId = select('Please select a website', $websites);
+            $websiteId = $this->selectByKey('Please select a website', $websites);
 
             $website = $storeManager->getWebsite((int) $websiteId);
         }
@@ -200,6 +200,30 @@ class ParameterHelper extends AbstractHelper implements CommandAware
         );
 
         return $this->_validateArgument($argumentName, $input->getArgument($argumentName), $constraints, true);
+    }
+
+    /**
+     * Prompt a select list and return the array key of the chosen entry.
+     *
+     * Laravel Prompts' select() returns the array VALUE instead of the KEY when the
+     * given options array happens to have sequential integer keys starting at 0
+     * (e.g. store/website IDs 0, 1, 2, ...), because it is then indistinguishable
+     * from a plain list of choices. Prefixing the keys avoids that ambiguity.
+     *
+     * @param string $label
+     * @param array<int|string, string> $choices
+     * @return int|string
+     */
+    protected function selectByKey($label, array $choices)
+    {
+        $prefixedChoices = [];
+        foreach ($choices as $key => $value) {
+            $prefixedChoices['choice_' . $key] = $value;
+        }
+
+        $selected = select($label, $prefixedChoices);
+
+        return substr($selected, strlen('choice_'));
     }
 
     /**
