@@ -47,8 +47,8 @@ class AddAddressCommand extends AbstractCustomerCommand
         $this
             ->setName('customer:add-address')
             ->setDescription('Adds an address to a customer')
-            ->addArgument('email', InputArgument::REQUIRED, 'Customer email')
-            ->addArgument('website', InputArgument::REQUIRED, 'Customer website')
+            ->addArgument('email', InputArgument::OPTIONAL, 'Customer email')
+            ->addArgument('website', InputArgument::OPTIONAL, 'Customer website')
             ->addOption('firstname', null, InputOption::VALUE_REQUIRED, 'First name')
             ->addOption('lastname', null, InputOption::VALUE_REQUIRED, 'Last name')
             ->addOption('street', null, InputOption::VALUE_REQUIRED, 'Street address')
@@ -91,11 +91,7 @@ class AddAddressCommand extends AbstractCustomerCommand
 
         $isError = false;
 
-        // Email is a required argument, so we check and ask if it's not provided
-        $email = $input->getArgument('email');
-        if (!$email) {
-            $email = text('Please enter the customer\'s email: ');
-        }
+        $email = $this->getHelperSet()->get('parameter')->askEmail($input, $output);
 
         $website = $this->getHelperSet()->get('parameter')->askWebsite($input, $output);
 
