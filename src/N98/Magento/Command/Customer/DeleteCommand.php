@@ -19,9 +19,10 @@ use N98\Util\Console\Helper\ParameterHelper;
 use RuntimeException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
-
 use Symfony\Component\Console\Input\InputOption;
+
 use Symfony\Component\Console\Output\OutputInterface;
+use Throwable;
 
 /**
  * Class DeleteCommand
@@ -161,9 +162,18 @@ class DeleteCommand extends AbstractCustomerCommand
                 $isSecure = $this->registry->registry('isSecureArea');
                 $this->registry->unregister('isSecureArea');
                 $this->registry->register('isSecureArea', true);
-                $this->customerRepository->delete($customer);
-                $this->registry->unregister('isSecureArea');
-                $this->registry->register('isSecureArea', $isSecure);
+                try {
+                    $this->customerRepository->delete($customer);
+                } catch (Throwable $e) {
+                    // Some B2B modules (e.g. Magento\NegotiableQuote) fatal error on deletion
+                    // of customers whose company has no resolvable admin. Report and continue
+                    // instead of letting the whole command crash.
+                    $output->writeln(sprintf('<error>Could not delete customer: %s</error>', $e->getMessage()));
+                    return Command::FAILURE;
+                } finally {
+                    $this->registry->unregister('isSecureArea');
+                    $this->registry->register('isSecureArea', $isSecure);
+                }
             } else {
                 $output->writeln('<error>Aborting delete</error>');
             }
@@ -236,7 +246,7 @@ class DeleteCommand extends AbstractCustomerCommand
             );
 
             if ($force || $this->shouldRemove($input, $output)) {
-                $count = $this->batchDelete($customerCollection);
+                $count = $this->batchDelete($customerCollection, $output);
                 $output->writeln('<info>Successfully deleted ' . $count . ' customer/s</info>');
             } else {
                 $output->writeln('<error>Aborting delete</error>');
@@ -284,23 +294,35 @@ class DeleteCommand extends AbstractCustomerCommand
 
     /**
      * @param \Magento\Customer\Model\ResourceModel\Customer\Collection $customerCollection
+     * @param OutputInterface $output
      *
      * @return int
      * @throws \Magento\Framework\Exception\LocalizedException
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    protected function batchDelete(Collection $customerCollection): int
+    protected function batchDelete(Collection $customerCollection, OutputInterface $output): int
     {
         $count = 0;
         $this->registry->unregister('isSecureArea');
         $this->registry->register('isSecureArea', true);
         $isSecure = $this->registry->registry('isSecureArea');
         foreach ($customerCollection as $customerToDelete) {
-            // Load the complete customer data before deleting it. This avoids Magento B2B
-            // plugins receiving the partially loaded collection entity through deleteById().
-            $customer = $this->customerRepository->getById($customerToDelete->getId());
-            if ($this->customerRepository->delete($customer)) {
-                $count++;
+            try {
+                // Load the complete customer data before deleting it. This avoids Magento B2B
+                // plugins receiving the partially loaded collection entity through deleteById().
+                $customer = $this->customerRepository->getById($customerToDelete->getId());
+                if ($this->customerRepository->delete($customer)) {
+                    $count++;
+                }
+            } catch (Throwable $e) {
+                // Some B2B modules (e.g. Magento\NegotiableQuote) fatal error on deletion of
+                // customers whose company has no resolvable admin. Report and continue with
+                // the remaining customers instead of letting the whole batch crash.
+                $output->writeln(sprintf(
+                    '<error>Could not delete customer #%s: %s</error>',
+                    $customerToDelete->getId(),
+                    $e->getMessage()
+                ));
             }
         }
         $this->registry->unregister('isSecureArea');
@@ -332,7 +354,7 @@ class DeleteCommand extends AbstractCustomerCommand
 
         // Proceed with deletion of all customers
         $customerCollection = $this->getCustomerCollection();
-        $count = $this->batchDelete($customerCollection);
+        $count = $this->batchDelete($customerCollection, $output);
         $output->writeln('<info>Successfully deleted ' . $count . ' customer/s</info>');
 
         return Command::SUCCESS;
