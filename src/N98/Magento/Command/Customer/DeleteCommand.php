@@ -296,7 +296,10 @@ class DeleteCommand extends AbstractCustomerCommand
         $this->registry->register('isSecureArea', true);
         $isSecure = $this->registry->registry('isSecureArea');
         foreach ($customerCollection as $customerToDelete) {
-            if ($this->customerRepository->deleteById($customerToDelete->getId())) {
+            // Load the complete customer data before deleting it. This avoids Magento B2B
+            // plugins receiving the partially loaded collection entity through deleteById().
+            $customer = $this->customerRepository->getById($customerToDelete->getId());
+            if ($this->customerRepository->delete($customer)) {
                 $count++;
             }
         }
