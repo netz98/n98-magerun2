@@ -22,4 +22,4 @@ n98-magerun2.phar eav:attribute:list [options]
 | `--add-source`             | Add source models to list.                           |
 | `--add-backend`            | Add backend type to list.                            |
 | `--filter-type[=FILTER-TYPE]` | Filter attributes by entity type.                    |
-| `--format[=FORMAT]`        | Output Format. One of [csv,json,json_array,yaml,xml] |
+| `--format[=FORMAT]`        | Output Format. One of [csv,tsv,json,json_array,jsonl,yaml,markdown,xml]. Aliases: yml,md,ndjson |

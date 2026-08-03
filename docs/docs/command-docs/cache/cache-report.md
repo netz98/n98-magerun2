@@ -21,4 +21,4 @@ n98-magerun2.phar cache:report [options]
 | `-m, --mtime`               | Output last modification time                                  |
 | `--filter-id[=FILTER-ID]`   | Filter output by ID (substring)                                |
 | `--filter-tag[=FILTER-TAG]` | Filter output by TAG (separate multiple tags by comma)         |
-| `--format[=FORMAT]`         | Output Format. One of [csv, json, json_array, yaml, xml]       |
+| `--format[=FORMAT]`         | Output Format. One of [csv, tsv, json, json_array, jsonl, yaml, markdown, xml]. Aliases: yml, md, ndjson       |

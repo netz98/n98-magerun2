@@ -25,7 +25,7 @@ n98-magerun2.phar config:store:get [--scope="..."] [--scope-id="..."] [--decrypt
 | `--decrypt`        | Decrypt the config value using crypt key defined in `env.php`.               |
 | `--update-script`  | Output as update script lines.                                               |
 | `--magerun-script` | Output for usage with `config:store:set`.                                    |
-| `--format[=FORMAT]`| Output Format. One of [csv,json,json_array,yaml,xml].                        |
+| `--format[=FORMAT]`| Output Format. One of [csv,tsv,json,json_array,jsonl,yaml,markdown,xml]. Aliases: yml,md,ndjson                        |
 
 **Help:**
 
@@ -36,4 +36,3 @@ If path is not set, all available config items will be listed. path may contain 
 ```sh
 n98-magerun2.phar config:store:get web/* --magerun-script
 ```
-

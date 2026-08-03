@@ -25,6 +25,6 @@ n98-magerun2.phar db:variables [options] [--] [<search>]
 | Option                   | Description                                                                 |
 |--------------------------|-----------------------------------------------------------------------------|
 | `--connection=CONNECTION`| Select DB connection type for Magento configurations with several databases |
-| `--format[=FORMAT]`      | Output Format. One of [csv,json,json_array,yaml,xml]                        |
+| `--format[=FORMAT]`      | Output Format. One of [csv,tsv,json,json_array,jsonl,yaml,markdown,xml]. Aliases: yml,md,ndjson                        |
 | `--rounding[=ROUNDING]`  | Amount of decimals to display. If -1 then disabled [default: 0]             |
 | `--no-description`       | Disable description                                                         |

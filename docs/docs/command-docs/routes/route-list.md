@@ -13,7 +13,7 @@ n98-magerun2.phar route:list [-a|--area=AREA] [-m|--module=MODULE] [--format=FOR
 |--------------------------|------------------------------------------------------|
 | `-a, --area[=AREA]`      | Route area code. One of [frontend,adminhtml]         |
 | `-m, --module[=MODULE]`  | Show registered routes of a module                   |
-| `--format[=FORMAT]`      | Output Format. One of [csv,json,json_array,yaml,xml] |
+| `--format[=FORMAT]`      | Output Format. One of [csv,tsv,json,json_array,jsonl,yaml,markdown,xml]. Aliases: yml,md,ndjson |
 
 
 ---

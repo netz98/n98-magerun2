@@ -11,7 +11,7 @@ n98-magerun2.phar dev:module:list [options]
 | `--vendor[=VENDOR]` | Show modules of a specific vendor (case insensitive)   |
 | `-e, --only-enabled`| Show only enabled modules                              |
 | `-d, --only-disabled`| Show only disabled modules                             |
-| `--format[=FORMAT]` | Output Format. One of [csv,json,json_array,yaml,xml]   |
+| `--format[=FORMAT]` | Output Format. One of [csv,tsv,json,json_array,jsonl,yaml,markdown,xml]. Aliases: yml,md,ndjson   |
 
 :::info
 Lists all installed modules. You can filter by vendor, enabled/disabled state, and output format. Useful for auditing and debugging module status.

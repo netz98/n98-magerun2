@@ -21,4 +21,4 @@ n98-magerun2.phar db:maintain:check-tables [options]
 | `--type[=TYPE]`    | Check type (one of QUICK, FAST, MEDIUM, EXTENDED, CHANGED) [default: "MEDIUM"] |
 | `--repair`         | Repair tables (only MyISAM)                                                 |
 | `--table[=TABLE]`  | Process only given table (wildcards are supported)                          |
-| `--format[=FORMAT]`| Output Format. One of [csv,json,json_array,yaml,xml]                        |
+| `--format[=FORMAT]`| Output Format. One of [csv,tsv,json,json_array,jsonl,yaml,markdown,xml]. Aliases: yml,md,ndjson                        |

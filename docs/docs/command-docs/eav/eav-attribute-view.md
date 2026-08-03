@@ -24,4 +24,4 @@ n98-magerun2.phar eav:attribute:view [--format[="..."]] <entityType> <attributeC
 **Options:**
 | Option             | Description                                          |
 |--------------------|------------------------------------------------------|
-| `--format[=FORMAT]` | Output Format. One of [csv,json,json_array,yaml,xml] |
+| `--format[=FORMAT]` | Output Format. One of [csv,tsv,json,json_array,jsonl,yaml,markdown,xml]. Aliases: yml,md,ndjson |

@@ -25,7 +25,7 @@ n98-magerun2.phar db:info [options] [--] [<setting>]
 | Option                   | Description                                                                 |
 |--------------------------|-----------------------------------------------------------------------------|
 | `--connection=CONNECTION`| Select DB connection type for Magento configurations with several databases |
-| `--format[=FORMAT]`      | Output Format. One of [csv,json,json_array,yaml,xml]                        |
+| `--format[=FORMAT]`      | Output Format. One of [csv,tsv,json,json_array,jsonl,yaml,markdown,xml]. Aliases: yml,md,ndjson                        |
 
 **Help:**
 
