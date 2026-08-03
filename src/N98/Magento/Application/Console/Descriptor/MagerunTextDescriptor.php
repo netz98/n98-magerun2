@@ -202,21 +202,26 @@ final class MagerunTextDescriptor extends TextDescriptor
             $isGrouped = !$describedNamespace && ApplicationDescription::GLOBAL_NAMESPACE !== $namespace['id'];
 
             if ($isGrouped) {
-                $this->writeRaw(sprintf("\n  <subheading>%s</subheading>\n", $namespace['id']), $options);
+                $this->writeRaw(sprintf(
+                    "\n  <subheading>%s</subheading>\n",
+                    OutputFormatter::escape($namespace['id'])
+                ), $options);
             }
 
             foreach ($namespace['commands'] as $name) {
                 $command = $commands[$name];
-                $aliases = $name === $command->getName() ? $this->aliasesText($command) : '';
+                $aliases = $name === $command->getName()
+                    ? OutputFormatter::escape($this->aliasesText($command))
+                    : '';
                 $indent = $isGrouped ? '    ' : '  ';
                 $padding = max(1, $width - Helper::width($name) - ($isGrouped ? 2 : 0));
 
                 $this->writeRaw(sprintf(
                     "%s<accent>%s</accent>%s<muted>%s</muted>\n",
                     $indent,
-                    $name,
+                    OutputFormatter::escape($name),
                     str_repeat(' ', $padding),
-                    $aliases . $command->getDescription()
+                    $aliases . OutputFormatter::escape($command->getDescription())
                 ), $options);
             }
         }
