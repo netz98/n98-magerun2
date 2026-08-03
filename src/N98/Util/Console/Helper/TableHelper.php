@@ -103,7 +103,17 @@ class TableHelper extends AbstractHelper implements CommandAware
         $rendererFactory = new RendererFactory();
         $renderer = $rendererFactory->create($format);
 
-        if ($renderer && $renderer instanceof RendererInterface) {
+        if ($format !== null && $renderer === false) {
+            throw new \InvalidArgumentException(
+                sprintf(
+                    'Unknown output format "%s". Supported formats: %s.',
+                    $format,
+                    implode(', ', RendererFactory::getFormats())
+                )
+            );
+        }
+
+        if ($renderer instanceof RendererInterface) {
             foreach ($rows as &$row) {
                 if (!empty($this->headers)) {
                     $row = array_combine($this->headers, $row);
