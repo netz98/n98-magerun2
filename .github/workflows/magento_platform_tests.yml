@@ -52,11 +52,13 @@ jobs:
     runs-on: ${{ matrix.operating-system }}
     # Fork PRs from non-collaborators must be approved via the 'external-contribution'
     # environment (required reviewer) before this job's secrets and PR checkout run.
-    # Trusted events (push/workflow_dispatch, or PRs from collaborators/members/owners)
-    # run with no environment at all, so GitHub doesn't log a deployment for them.
+    # Trusted events (push/workflow_dispatch, or PRs from collaborators/members/owners),
+    # as well as Dependabot PRs, run with no environment at all, so GitHub doesn't log
+    # a deployment for them.
     environment: >-
       ${{
         (github.event_name == 'pull_request_target' &&
+         github.actor != 'dependabot[bot]' &&
          !contains(fromJson('["OWNER","MEMBER","COLLABORATOR"]'), github.event.pull_request.author_association))
         && 'external-contribution' || ''
       }}
