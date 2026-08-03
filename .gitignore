@@ -36,3 +36,6 @@ super-linter.log
 /*.sql.gz
 
 .tokensave
+
+# Claude Code
+.claude/.headroom_wrap_marker.json
