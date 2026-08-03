@@ -37,8 +37,8 @@ class CreateCommandTest extends TestCase
         $input['email'] = $generatedEmail;
         $input['--format'] = 'csv';
 
-        $this->assertDisplayContains($input, 'email,password,firstname,lastname');
-        $this->assertdisplayContains($input, $generatedEmail . ',Password123,John,Doe');
+        $this->assertDisplayContains($input, 'email,firstname,lastname');
+        $this->assertdisplayContains($input, $generatedEmail . ',John,Doe');
     }
 
     public function testExecuteAdditionalFields()
@@ -61,8 +61,8 @@ class CreateCommandTest extends TestCase
         $input['email'] = $generatedEmail;
         $input['--format'] = 'csv';
 
-        $this->assertDisplayContains($input, 'email,password,firstname,lastname');
-        $this->assertdisplayContains($input, $generatedEmail . ',Password123,John,Doe');
+        $this->assertDisplayContains($input, 'email,firstname,lastname');
+        $this->assertdisplayContains($input, $generatedEmail . ',John,Doe');
     }
 
     /**
