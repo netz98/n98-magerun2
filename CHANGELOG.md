@@ -4,13 +4,28 @@ RECENT CHANGES
 10.0.0-dev (2026-07-05)
 ------------------------
 
+- Break: raise minimum PHP requirement to 8.2 (and update laminas dependencies accordingly)
 - Add: interactive download command for Magento/Adobe Commerce/Mage-OS
+- Add: prompt interactively for `integration:create` arguments and make `integration:delete` interactive when no name is given
+- Imp: overhaul command output look and feel
+- Fix: stop double-JSON-encoding `admin_user.extra` on `admin:user:change-status`
+- Fix: surface mysql errors and reject silent empty queries in `db:query`
+- Fix: MCP proxy commands returning a generic `bin/magento` list
+- Fix: build MCP command input from ArrayInput to preserve arguments verbatim
+- Fix: resolve installer plugin package by class instead of name
+- Fix: build a Magento-scoped Composer instance and resolve the real plugin package for the allow-plugins check in `composer:redeploy-base-packages`
+- Fix: remove broken `pv` branch in non-piped decompression commands
+- Fix: guard against undefined STDIN constant in prompt fallback check, and fall back to the first option in `select()` when non-interactive
 - Test: add unit tests for the download command
+- Test: add regression test for `admin:user:change-status` extra column
+- Test: use the real DatabaseHelper in `QueryCommandTest` CSV test
+- Test: make functional bats tests idempotent
 - Security: gate `pull_request_target` CI behind maintainer approval
 - Fix: switch platform tests from Mage-OS 3.0.0 to 3.1.0
 - Chore: ignore tarballs
 - Docs: fix composer require command in README
-- Build: update dependencies (actions/cache, actions/checkout, super-linter, php-cs-fixer, phpstan, psy/psysh, twig/twig, mcp/sdk, npm/yarn group)
+- Docs: update db-dump documentation
+- Build: update dependencies (actions/cache, actions/checkout, actions/setup-node, super-linter, php-cs-fixer, phpstan, psy/psysh, twig/twig, mcp/sdk, rmccue/requests, js-yaml, postcss, websocket-driver, npm/yarn group)
 
 9.5.1 (2026-05-21)
 ------------------
