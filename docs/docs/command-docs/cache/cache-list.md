@@ -15,4 +15,4 @@ n98-magerun2.phar cache:list [--enabled[=ENABLED]] [--format[=FORMAT]]
 | Option                | Description                                                              |
 |-----------------------|--------------------------------------------------------------------------|
 | `--enabled[=ENABLED]` | Filter the list to display only enabled [1] or disabled [0] cache types  |
-| `--format[=FORMAT]`   | Output Format. One of [csv,json,json_array,yaml,xml]                     |
+| `--format[=FORMAT]`   | Output Format. One of [csv,tsv,json,json_array,jsonl,yaml,markdown,xml]. Aliases: yml,md,ndjson                     |

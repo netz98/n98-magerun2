@@ -14,7 +14,6 @@ n98-magerun2.phar sys:setup:compare-versions [--ignore-data] [--log-junit="..."]
 |------------------------|------------------------------------------------------|
 | `--ignore-data`        | Ignore data updates                                  |
 | `--log-junit=LOG-JUNIT`| Log output to a JUnit xml file.                      |
-| `--format[=FORMAT]`    | Output Format. One of [csv,json,json_array,yaml,xml] |
+| `--format[=FORMAT]`    | Output Format. One of [csv,tsv,json,json_array,jsonl,yaml,markdown,xml]. Aliases: yml,md,ndjson |
 
 - If a filename with `--log-junit` option is set the tool generates an XML file and no output to *stdout*.
-

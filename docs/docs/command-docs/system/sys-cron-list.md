@@ -21,7 +21,7 @@ n98-magerun2.phar sys:cron:list [<job_code>] [--format[="..."]]
 ## Options
 | Option              | Description                                          |
 |---------------------|------------------------------------------------------|
-| `--format[=FORMAT]` | Output Format. One of [csv,json,json_array,yaml,xml] |
+| `--format[=FORMAT]` | Output Format. One of [csv,tsv,json,json_array,jsonl,yaml,markdown,xml]. Aliases: yml,md,ndjson |
 
 The `--format` option allows you to specify the output format for the list of cronjobs. Supported formats are:
 - csv

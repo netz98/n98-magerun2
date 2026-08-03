@@ -28,7 +28,7 @@ n98-magerun2.phar integration:create [options] [--] <name> [<email> [<endpoint>]
 | `--access-token=ACCESS-TOKEN`               | Access-Token (length 32 chars)                           |
 | `--access-token-secret=ACCESS-TOKEN-SECRET` | Access-Token Secret (length 32 chars)                    |
 | `--resource=RESOURCE` `-r`                  | Defines a granted ACL resource (multiple values allowed) |
-| `--format[=FORMAT]`                         | Output Format. One of [csv,json,json_array,yaml,xml]     |
+| `--format[=FORMAT]`                         | Output Format. One of [csv,tsv,json,json_array,jsonl,yaml,markdown,xml]. Aliases: yml,md,ndjson     |
 
 :::warning
 If no ACL resource is defined, the new integration token will be created with FULL ACCESS. To restrict access, provide a list of ACL resources using the `--resource` option.

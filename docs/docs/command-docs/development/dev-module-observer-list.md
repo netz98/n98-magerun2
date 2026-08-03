@@ -24,4 +24,4 @@ n98-magerun2.phar dev:module:observer:list [--sort] [--format=FORMAT] [<event> [
 | Option            | Description                                         |
 |-------------------|-----------------------------------------------------|
 | --sort            | Sort output ascending by event name                 |
-| --format=FORMAT   | Output Format. One of [csv,json,json_array,yaml,xml]|
+| --format=FORMAT   | Output Format. One of [csv,tsv,json,json_array,jsonl,yaml,markdown,xml]. Aliases: yml,md,ndjson|
