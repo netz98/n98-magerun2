@@ -56,6 +56,13 @@ function cleanup_files_in_magento() {
   assert_output --partial "n98-magerun2"
 }
 
+@test "Test Application - list with ANSI output" {
+  run $BIN --ansi "list"
+  assert_success
+  assert_output --partial "COMMANDS"
+  refute_output --partial "Incorrectly nested style tag found"
+}
+
 @test "Test Application - help" {
   run $BIN "list"
   assert_output --partial "Display help for a command"
