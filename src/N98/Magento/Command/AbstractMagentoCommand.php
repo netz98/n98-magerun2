@@ -124,7 +124,7 @@ abstract class AbstractMagentoCommand extends Command
             'format',
             null,
             InputOption::VALUE_OPTIONAL,
-            'Output Format. One of [' . implode(',', RendererFactory::getFormats()) . ']'
+            'Output Format. One of [' . implode(',', RendererFactory::getFormats()) . ']. Aliases: yml,md,ndjson'
         );
     }
 
