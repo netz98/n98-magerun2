@@ -151,7 +151,6 @@ class CreateCommand extends AbstractCustomerCommand
                 } else {
                     $table[] = [
                         $email,
-                        $password,
                         $firstname,
                         $lastname,
                     ];
@@ -166,7 +165,7 @@ class CreateCommand extends AbstractCustomerCommand
 
         if (!$outputPlain) {
             $this->getHelper('table')
-                ->setHeaders(['email', 'password', 'firstname', 'lastname'])
+                ->setHeaders(['email', 'firstname', 'lastname'])
                 ->renderByFormat($output, $table, $input->getOption('format'));
         }
 
