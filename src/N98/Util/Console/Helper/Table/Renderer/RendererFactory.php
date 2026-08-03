@@ -15,11 +15,20 @@ namespace N98\Util\Console\Helper\Table\Renderer;
 class RendererFactory
 {
     protected static $formats = [
-        'csv'  => 'N98\Util\Console\Helper\Table\Renderer\CsvRenderer',
-        'json' => 'N98\Util\Console\Helper\Table\Renderer\JsonRenderer',
+        'csv'        => 'N98\Util\Console\Helper\Table\Renderer\CsvRenderer',
+        'tsv'        => 'N98\Util\Console\Helper\Table\Renderer\TsvRenderer',
+        'json'       => 'N98\Util\Console\Helper\Table\Renderer\JsonRenderer',
         'json_array' => 'N98\Util\Console\Helper\Table\Renderer\JsonArrayRenderer',
-        'yaml'  => 'N98\Util\Console\Helper\Table\Renderer\YamlRenderer',
-        'xml'  => 'N98\Util\Console\Helper\Table\Renderer\XmlRenderer',
+        'jsonl'      => 'N98\Util\Console\Helper\Table\Renderer\JsonLinesRenderer',
+        'yaml'       => 'N98\Util\Console\Helper\Table\Renderer\YamlRenderer',
+        'markdown'   => 'N98\Util\Console\Helper\Table\Renderer\MarkdownRenderer',
+        'xml'        => 'N98\Util\Console\Helper\Table\Renderer\XmlRenderer',
+    ];
+
+    protected static $aliases = [
+        'yml'    => 'yaml',
+        'md'     => 'markdown',
+        'ndjson' => 'jsonl',
     ];
 
     /**
@@ -34,6 +43,7 @@ class RendererFactory
         }
 
         $format = strtolower($format);
+        $format = self::$aliases[$format] ?? $format;
         if (isset(self::$formats[$format])) {
             $rendererClass = self::$formats[$format];
             return new $rendererClass();

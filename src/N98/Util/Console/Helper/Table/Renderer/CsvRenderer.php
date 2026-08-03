@@ -18,6 +18,8 @@ use Symfony\Component\Console\Output\StreamOutput;
  */
 class CsvRenderer implements RendererInterface
 {
+    protected $delimiter = ',';
+
     /**
      * @param OutputInterface $output
      * @param array           $rows
@@ -33,9 +35,9 @@ class CsvRenderer implements RendererInterface
         $i = 0;
         foreach ($rows as $row) {
             if ($i++ == 0) {
-                fputcsv($stream, array_keys($row), escape: '"');
+                fputcsv($stream, array_keys($row), $this->delimiter, '"', escape: '"');
             }
-            fputcsv($stream, $row, escape: '"');
+            fputcsv($stream, $row, $this->delimiter, '"', escape: '"');
         }
     }
 }

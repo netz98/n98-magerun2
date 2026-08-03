@@ -20,11 +20,33 @@ class RendererFactoryTest extends \PHPUnit\Framework\TestCase
         $csv = $renderFactory->create('csv');
         $this->assertInstanceOf('N98\Util\Console\Helper\Table\Renderer\CsvRenderer', $csv);
 
+        $tsv = $renderFactory->create('tsv');
+        $this->assertInstanceOf('N98\Util\Console\Helper\Table\Renderer\TsvRenderer', $tsv);
+
         $json = $renderFactory->create('json');
         $this->assertInstanceOf('N98\Util\Console\Helper\Table\Renderer\JsonRenderer', $json);
 
         $jsonArray = $renderFactory->create('json_array');
         $this->assertInstanceOf('N98\Util\Console\Helper\Table\Renderer\JsonArrayRenderer', $jsonArray);
+
+        $jsonLines = $renderFactory->create('jsonl');
+        $this->assertInstanceOf('N98\Util\Console\Helper\Table\Renderer\JsonLinesRenderer', $jsonLines);
+
+        $yaml = $renderFactory->create('yaml');
+        $this->assertInstanceOf('N98\Util\Console\Helper\Table\Renderer\YamlRenderer', $yaml);
+        $this->assertInstanceOf('N98\Util\Console\Helper\Table\Renderer\YamlRenderer', $renderFactory->create('yml'));
+
+        $markdown = $renderFactory->create('markdown');
+        $this->assertInstanceOf('N98\Util\Console\Helper\Table\Renderer\MarkdownRenderer', $markdown);
+        $this->assertInstanceOf(
+            'N98\Util\Console\Helper\Table\Renderer\MarkdownRenderer',
+            $renderFactory->create('md')
+        );
+
+        $this->assertInstanceOf(
+            'N98\Util\Console\Helper\Table\Renderer\JsonLinesRenderer',
+            $renderFactory->create('ndjson')
+        );
 
         $xml = $renderFactory->create('xml');
         $this->assertInstanceOf('N98\Util\Console\Helper\Table\Renderer\XmlRenderer', $xml);
@@ -43,8 +65,11 @@ class RendererFactoryTest extends \PHPUnit\Framework\TestCase
         $this->assertContains('csv', $formats);
         $this->assertContains('json', $formats);
         $this->assertContains('json_array', $formats);
+        $this->assertContains('tsv', $formats);
+        $this->assertContains('jsonl', $formats);
         $this->assertContains('yaml', $formats);
+        $this->assertContains('markdown', $formats);
         $this->assertContains('xml', $formats);
-        $this->assertCount(5, $formats);
+        $this->assertCount(8, $formats);
     }
 }
