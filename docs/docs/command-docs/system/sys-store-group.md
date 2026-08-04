@@ -6,15 +6,15 @@ title: Store Group Commands
 
 ## sys:store-group:create
 
-Creates a store group for an existing website. When `--website-id` or `--website-code` is omitted, the command displays a website selector. The name and root category ID are also requested interactively when omitted. A default store ID is optional.
+Creates a store group for an existing website. The name, code, website, and root category ID are requested interactively when omitted. A default store ID is optional.
 
 ```bash
-bin/n98-magerun2 sys:store-group:create [<name>]
+bin/n98-magerun2 sys:store-group:create [<name>] [<code>]
 
-bin/n98-magerun2 sys:store-group:create [<name>] --website-id=<id> \
+bin/n98-magerun2 sys:store-group:create [<name>] [<code>] --website-id=<id> \
   --root-category-id=<id> [--default-store-id=<id>]
 
-bin/n98-magerun2 sys:store-group:create [<name>] --website-code=<code> \
+bin/n98-magerun2 sys:store-group:create [<name>] [<code>] --website-code=<code> \
   --root-category-id=<id> [--default-store-id=<id>]
 ```
 

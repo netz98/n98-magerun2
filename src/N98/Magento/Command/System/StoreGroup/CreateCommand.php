@@ -38,6 +38,7 @@ class CreateCommand extends AbstractMagentoCommand
         $this
             ->setName('sys:store-group:create')
             ->addArgument('name', InputArgument::OPTIONAL, 'Store group name')
+            ->addArgument('code', InputArgument::OPTIONAL, 'Store group code')
             ->addOption('website-id', null, InputOption::VALUE_REQUIRED, 'Website ID')
             ->addOption('website-code', null, InputOption::VALUE_REQUIRED, 'Website code')
             ->addOption('root-category-id', null, InputOption::VALUE_REQUIRED, 'Root category ID')
@@ -59,6 +60,19 @@ class CreateCommand extends AbstractMagentoCommand
                 '<question>Store group name:</question>',
                 validate: fn ($value) => $value === '' ? 'Please enter a store group name' : null
             );
+        }
+
+        $code = $input->getArgument('code');
+        if ($code === null || $code === '') {
+            $code = text(
+                '<question>Store group code:</question>',
+                validate: fn ($value) => $this->validateStoreGroupCode($value)
+            );
+        }
+
+        $codeValidationError = $this->validateStoreGroupCode($code);
+        if ($codeValidationError !== null) {
+            throw new RuntimeException($codeValidationError);
         }
 
         $websiteId = $input->getOption('website-id');
@@ -112,6 +126,7 @@ class CreateCommand extends AbstractMagentoCommand
 
         $group = $this->groupFactory->create();
         $group->setName($name);
+        $group->setCode($code);
         $group->setWebsiteId((int) $website->getId());
         $group->setRootCategoryId((int) $rootCategoryId);
         if ($defaultStoreId !== null) {
@@ -162,5 +177,15 @@ class CreateCommand extends AbstractMagentoCommand
     private function validatePositiveInteger(string $value, string $message): ?string
     {
         return ctype_digit($value) && (int) $value > 0 ? null : $message;
+    }
+
+    private function validateStoreGroupCode(string $code): ?string
+    {
+        if (preg_match('/^[a-zA-Z][a-zA-Z0-9_]*$/', $code) !== 1) {
+            return 'Store group code may only contain letters (a-z), numbers (0-9) or underscore (_), '
+                . 'and the first character must be a letter.';
+        }
+
+        return null;
     }
 }
