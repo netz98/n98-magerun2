@@ -5,7 +5,7 @@ sidebar_label: Table Output Formats
 
 # Table Output Formats
 
-Commands that display tabular data provide a shared `--format` option. The option is available on commands such as `cache:list`, `customer:list`, `index:list`, and `sys:cron:list`.
+Commands that display tabular data provide a shared `--format` option. The option is available on commands such as `cache:list`, `customer:list`, `indexer:list`, and `sys:cron:list`.
 
 ## Supported Formats
 
@@ -37,7 +37,7 @@ Aliases are case-insensitive, as are canonical format names.
 Export an indexer list as CSV:
 
 ```sh
-n98-magerun2.phar index:list --format=csv
+n98-magerun2.phar indexer:list --format=csv
 ```
 
 Generate a Markdown table:

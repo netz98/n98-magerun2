@@ -1,8 +1,8 @@
 ---
-title: index:list
+title: indexer:list
 ---
 
-# index:list
+# indexer:list
 
 Lists all Magento indexes.
 
@@ -12,7 +12,7 @@ This command helps you quickly see the status and details of all Magento indexer
 
 ## Usage
 ```sh
-n98-magerun2.phar index:list [--format[=FORMAT]]
+n98-magerun2.phar indexer:list [--format[=FORMAT]]
 ```
 
 ## Options

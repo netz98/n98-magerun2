@@ -13,5 +13,5 @@ Indexers are essential for Magento's performance and data consistency. Use these
 
 ## Commands
 
-- [index:list](./index-list.md) - List all Magento indexes
-- [index:trigger:recreate](./index-trigger-recreate.md) - ReCreate all triggers
+- [indexer:list](./index-list.md) - List all Magento indexes
+- [indexer:trigger:recreate](./index-trigger-recreate.md) - ReCreate all triggers

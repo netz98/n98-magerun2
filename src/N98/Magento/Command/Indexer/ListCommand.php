@@ -21,7 +21,7 @@ class ListCommand extends AbstractIndexerCommand
     protected function configure()
     {
         $this
-            ->setName('index:list')
+            ->setName('indexer:list')
             ->setDescription('Lists all magento indexes')
             ->addFormatOption();
 
