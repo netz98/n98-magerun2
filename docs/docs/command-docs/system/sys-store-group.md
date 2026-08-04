@@ -20,8 +20,8 @@ bin/n98-magerun2 sys:store-group:create [<name>] [<code>] --website-code=<code> 
 
 ## sys:store-group:delete
 
-Deletes a store group by ID. The website's default store group cannot be deleted. The command asks for confirmation unless `--force` (or `-f`) is supplied.
+Deletes a store group by ID. If no ID is supplied, the command displays a selector. The website's default store group cannot be deleted. The command asks for confirmation unless `--force` (or `-f`) is supplied.
 
 ```bash
-bin/n98-magerun2 sys:store-group:delete <id> [--force]
+bin/n98-magerun2 sys:store-group:delete [<id>] [--force]
 ```

@@ -9,6 +9,7 @@
 namespace N98\Magento\Command\System\StoreGroup;
 
 use function Laravel\Prompts\confirm;
+use function Laravel\Prompts\select;
 use Magento\Framework\Registry;
 use Magento\Store\Model\GroupFactory;
 use N98\Magento\Command\AbstractMagentoCommand;
@@ -35,7 +36,7 @@ class DeleteCommand extends AbstractMagentoCommand
     {
         $this
             ->setName('sys:store-group:delete')
-            ->addArgument('id', InputArgument::REQUIRED, 'Store group ID')
+            ->addArgument('id', InputArgument::OPTIONAL, 'Store group ID')
             ->addOption('force', 'f', InputOption::VALUE_NONE, 'Delete without confirmation')
             ->setDescription('Delete an existing store group');
     }
@@ -49,6 +50,16 @@ class DeleteCommand extends AbstractMagentoCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $identifier = $input->getArgument('id');
+        if ($identifier === null) {
+            $identifier = $this->selectStoreGroup();
+        }
+
+        if ($identifier === null) {
+            $output->writeln('<info>No store groups found.</info>');
+
+            return Command::SUCCESS;
+        }
+
         if (!ctype_digit((string) $identifier) || (int) $identifier < 1) {
             throw new RuntimeException('The store group ID must be a positive integer.');
         }
@@ -103,5 +114,23 @@ class DeleteCommand extends AbstractMagentoCommand
         );
 
         return Command::SUCCESS;
+    }
+
+    private function selectStoreGroup(): ?string
+    {
+        $options = [];
+        foreach ($this->groupFactory->create()->getCollection()->getItems() as $group) {
+            $options[(string) $group->getId()] = sprintf(
+                '%s (ID: %d)',
+                $group->getName(),
+                $group->getId()
+            );
+        }
+
+        if ($options === []) {
+            return null;
+        }
+
+        return (string) select('<question>Select a store group to delete:</question>', $options);
     }
 }

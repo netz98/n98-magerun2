@@ -1186,7 +1186,7 @@ function cleanup_files_in_magento() {
   group_id=$(printf '%s\n' "$output" | sed -n 's/.*ID: \([0-9][0-9]*\).*/\1/p')
   assert [ -n "$group_id" ]
 
-  run $BIN "sys:store-group:delete" "$group_id" --force
+  run bash -c "printf '%s\\n' \"$group_id\" | $BIN_INTERACTION sys:store-group:delete --force"
   assert [ "$status" -eq 0 ]
 }
 
