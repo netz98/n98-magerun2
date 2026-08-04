@@ -23,7 +23,7 @@ This table will help you navigate to the relevant group of commands based on the
 | [eav](./eav/)                  | Commands for managing EAV (Entity-Attribute-Value) attributes.                           | `eav:attribute:list`, `eav:attribute:view`, `eav:attribute:remove`                          |
 | [generation](./generation/)    | Commands related to Magento's code generation processes.                                 | `generation:flush`                                                                          |
 | [giftcard](./giftcard/)        | Commands for managing Magento gift cards.                                                | `giftcard:pool:generate`, `giftcard:create`, `giftcard:info`, `giftcard:remove`             |
-| [index](./index/)              | Commands for managing Magento's indexers.                                                | `index:list`, `index:trigger:recreate`                                                      |
+| [index](./index/)              | Commands for managing Magento's indexers.                                                | `indexer:list`, `indexer:trigger:recreate`                                                  |
 | [install](./installer/)        | Command for installing Magento.                                                          | `install`                                                                                   |
 | [integration](./integration/)  | Command for integrations to Magento.                                                     | `integration:list`, `integration:show`, `integration:delete`                                |
 | [mageforge](./mageforge/)      | Commands for installing and managing the MageForge tool.                                  | `mageforge:install`                                                                         |
@@ -32,4 +32,3 @@ This table will help you navigate to the relevant group of commands based on the
 | [routes](./routes/)            | Commands for managing and viewing Magento routes.                                  | `routes:list`                                                                               |
 | [script](./scripting/)         | Command for running sequences of n98-magerun2 commands from a file.                      | `script`                                                                                    |
 | [sys](./system/)               | Commands for system-level information, checks, and maintenance tasks.                    | `sys:info`, `sys:check`, `sys:maintenance`, `sys:cron:list`, `sys:store:list`               |
-

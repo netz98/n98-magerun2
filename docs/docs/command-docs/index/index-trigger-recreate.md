@@ -1,8 +1,8 @@
 ---
-title: index:trigger:recreate
+title: indexer:trigger:recreate
 ---
 
-# index:trigger:recreate
+# indexer:trigger:recreate
 
 ReCreate all triggers.
 
@@ -12,5 +12,5 @@ Use this command with caution. Recreating triggers may affect ongoing indexing o
 
 ## Usage
 ```sh
-n98-magerun2.phar index:trigger:recreate
+n98-magerun2.phar indexer:trigger:recreate
 ```
