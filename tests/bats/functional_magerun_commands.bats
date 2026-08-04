@@ -1135,6 +1135,27 @@ function cleanup_files_in_magento() {
   assert_output --partial "1,base"
 }
 
+@test "Command: sys:website:create and sys:website:delete" {
+  website_code="bats_website_$(date +%s%N)"
+  website_name="Bats Website"
+
+  run $BIN "sys:website:create" "$website_code" "$website_name"
+  assert [ "$status" -eq 0 ]
+  assert_output --partial "Successfully created website"
+  assert_output --partial "$website_code"
+
+  run $BIN "sys:website:delete" "$website_code" --force
+  assert [ "$status" -eq 0 ]
+  assert_output --partial "Successfully deleted website"
+  assert_output --partial "$website_code"
+}
+
+@test "Command: sys:website:create rejects invalid website code" {
+  run $BIN "sys:website:create" "1invalid" "Invalid Website"
+  assert [ "$status" -ne 0 ]
+  assert_output --partial "Website code may only contain letters"
+}
+
 
 # ============================================
 # Command: dev: keep-calm
