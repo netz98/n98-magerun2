@@ -8,7 +8,9 @@
 
 namespace N98\Magento\Command\System\StoreGroup;
 
+use function Laravel\Prompts\select;
 use function Laravel\Prompts\text;
+use Magento\Store\Api\Data\WebsiteInterface;
 use Magento\Store\Model\GroupFactory;
 use Magento\Store\Model\WebsiteFactory;
 use N98\Magento\Command\AbstractMagentoCommand;
@@ -65,10 +67,6 @@ class CreateCommand extends AbstractMagentoCommand
             throw new RuntimeException('Specify either --website-id or --website-code, not both.');
         }
 
-        if ($websiteId === null && $websiteCode === null) {
-            throw new RuntimeException('Either --website-id or --website-code is required.');
-        }
-
         if ($websiteId !== null && (!ctype_digit((string) $websiteId) || (int) $websiteId < 1)) {
             throw new RuntimeException('The website ID must be a positive integer.');
         }
@@ -76,7 +74,14 @@ class CreateCommand extends AbstractMagentoCommand
         $website = $this->websiteFactory->create();
         if ($websiteId !== null) {
             $website->load((int) $websiteId);
+        } elseif ($websiteCode !== null) {
+            $website->load($websiteCode, 'code');
         } else {
+            $websiteCode = $this->selectWebsite();
+            if ($websiteCode === null) {
+                throw new RuntimeException('No websites found.');
+            }
+
             $website->load($websiteCode, 'code');
         }
 
@@ -86,6 +91,16 @@ class CreateCommand extends AbstractMagentoCommand
         }
 
         $rootCategoryId = $input->getOption('root-category-id');
+        if ($rootCategoryId === null) {
+            $rootCategoryId = text(
+                '<question>Root category ID:</question>',
+                validate: fn ($value) => $this->validatePositiveInteger(
+                    $value,
+                    'The root category ID must be a positive integer.'
+                )
+            );
+        }
+
         if ($rootCategoryId === null || !ctype_digit((string) $rootCategoryId) || (int) $rootCategoryId < 1) {
             throw new RuntimeException('The root category ID must be a positive integer.');
         }
@@ -120,5 +135,32 @@ class CreateCommand extends AbstractMagentoCommand
         );
 
         return Command::SUCCESS;
+    }
+
+    private function selectWebsite(): ?string
+    {
+        $options = [];
+        foreach ($this->websiteFactory->create()->getCollection()->getItems() as $website) {
+            if ($website->getCode() === WebsiteInterface::ADMIN_CODE) {
+                continue;
+            }
+
+            $options[$website->getCode()] = sprintf(
+                '%s (ID: %d)',
+                $website->getCode(),
+                $website->getId()
+            );
+        }
+
+        if ($options === []) {
+            return null;
+        }
+
+        return select('<question>Select a website:</question>', $options);
+    }
+
+    private function validatePositiveInteger(string $value, string $message): ?string
+    {
+        return ctype_digit($value) && (int) $value > 0 ? null : $message;
     }
 }

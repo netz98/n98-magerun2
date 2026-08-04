@@ -1173,6 +1173,21 @@ function cleanup_files_in_magento() {
   assert_output --partial "$group_name"
 }
 
+@test "Command: sys:store-group:create prompts for missing parameters" {
+  group_name="Bats Interactive Store Group $(date +%s%N)"
+
+  run bash -c "printf '%s\\n0\\n2\\n' \"$group_name\" | $BIN_INTERACTION sys:store-group:create"
+  assert [ "$status" -eq 0 ]
+  assert_output --partial "Successfully created store group"
+  assert_output --partial "$group_name"
+
+  group_id=$(printf '%s\n' "$output" | sed -n 's/.*ID: \([0-9][0-9]*\).*/\1/p')
+  assert [ -n "$group_id" ]
+
+  run $BIN "sys:store-group:delete" "$group_id" --force
+  assert [ "$status" -eq 0 ]
+}
+
 @test "Command: sys:store-group:create validates website and root category" {
   run $BIN "sys:store-group:create" "Invalid Store Group" --website-id=999999 --root-category-id=2
   assert [ "$status" -ne 0 ]
