@@ -15,6 +15,8 @@ Commands for system-level information, checks, and maintenance tasks in Magento.
 - sys:info - Provide system information like edition, version, cache backends
 - [sys:store:list](./sys-store-list.md) - List all store views
 - sys:website:list - List all websites
+- [sys:website:create](./sys-website.md) - Create a website
+- [sys:website:delete](./sys-website.md) - Delete a website
 
 ### Cron Jobs
 - [sys:cron:list](./sys-cron-list.md) - List all cronjobs defined in crontab.xml files
