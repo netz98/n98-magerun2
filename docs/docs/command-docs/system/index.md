@@ -14,6 +14,8 @@ Commands for system-level information, checks, and maintenance tasks in Magento.
 ### System Information
 - sys:info - Provide system information like edition, version, cache backends
 - [sys:store:list](./sys-store-list.md) - List all store views
+- [sys:store:create](./sys-store.md) - Create a store view
+- [sys:store:delete](./sys-store.md) - Delete a store view
 - [sys:store-group:create](./sys-store-group.md) - Create a store group
 - [sys:store-group:delete](./sys-store-group.md) - Delete a store group
 - sys:website:list - List all websites
