@@ -58,7 +58,7 @@ class CreateCommand extends AbstractMagentoCommand
         if ($input->isInteractive() || $name === null || $name === '') {
             $name = text(
                 '<question>Store group name:</question>',
-                default: $input->isInteractive() ? null : $name,
+                default: (string) ($name ?? ''),
                 validate: fn ($value) => $value === '' ? 'Please enter a store group name' : null
             );
         }
@@ -67,7 +67,7 @@ class CreateCommand extends AbstractMagentoCommand
         if ($input->isInteractive() || $code === null || $code === '') {
             $code = text(
                 '<question>Store group code:</question>',
-                default: $input->isInteractive() ? null : $code,
+                default: (string) ($code ?? ''),
                 validate: fn ($value) => $this->validateStoreGroupCode($value)
             );
         }
@@ -117,7 +117,7 @@ class CreateCommand extends AbstractMagentoCommand
         if ($input->isInteractive() || $rootCategoryId === null) {
             $rootCategoryId = text(
                 '<question>Root category ID:</question>',
-                default: $input->isInteractive() ? null : $rootCategoryId,
+                default: (string) ($rootCategoryId ?? ''),
                 validate: fn ($value) => $this->validatePositiveInteger(
                     $value,
                     'The root category ID must be a positive integer.'
