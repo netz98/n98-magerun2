@@ -1156,6 +1156,62 @@ function cleanup_files_in_magento() {
   assert_output --partial "Website code may only contain letters"
 }
 
+@test "Command: sys:store-group:create and sys:store-group:delete" {
+  group_name="Bats Store Group $(date +%s%N)"
+  group_code="bats_store_group_$(date +%s%N)"
+
+  run $BIN "sys:store-group:create" "$group_name" "$group_code" --website-id=1 --root-category-id=2
+  assert [ "$status" -eq 0 ]
+  assert_output --partial "Successfully created store group"
+  assert_output --partial "$group_name"
+
+  group_id=$(printf '%s\n' "$output" | sed -n 's/.*ID: \([0-9][0-9]*\).*/\1/p')
+  assert [ -n "$group_id" ]
+
+  run $BIN "sys:store-group:delete" "$group_id" --force
+  assert [ "$status" -eq 0 ]
+  assert_output --partial "Successfully deleted store group"
+  assert_output --partial "$group_name"
+}
+
+@test "Command: sys:store-group:create prompts for missing parameters" {
+  group_name="Bats Interactive Store Group $(date +%s%N)"
+  group_code="bats_interactive_group_$(date +%s%N)"
+
+  run bash -c "printf '%s\\n%s\\nbase\\n2\\n' \"$group_name\" \"$group_code\" | $BIN_INTERACTION sys:store-group:create"
+  assert [ "$status" -eq 0 ]
+  assert_output --partial "Successfully created store group"
+  assert_output --partial "$group_name"
+
+  group_id=$(printf '%s\n' "$output" | sed -n 's/.*ID: \([0-9][0-9]*\).*/\1/p' | sed -n '$p')
+  assert [ -n "$group_id" ]
+
+  run $BIN "sys:store-group:delete" "$group_id" --force
+  assert [ "$status" -eq 0 ]
+}
+
+@test "Command: sys:store-group:create validates website and root category" {
+  run $BIN "sys:store-group:create" "Invalid Store Group" invalid_group --website-id=999999 --root-category-id=2
+  assert [ "$status" -ne 0 ]
+  assert_output --partial "does not exist"
+
+  run $BIN "sys:store-group:create" "Invalid Store Group" invalid_group --website-id=1 --root-category-id=0
+  assert [ "$status" -ne 0 ]
+  assert_output --partial "root category ID must be a positive integer"
+}
+
+@test "Command: sys:store-group:delete rejects the default store group" {
+  run $BIN "sys:store:list" --format=csv
+  assert [ "$status" -eq 0 ]
+
+  default_group_id=$(printf '%s\n' "$output" | awk -F, '$2 == "1" { print $3; exit }')
+  assert [ -n "$default_group_id" ]
+
+  run $BIN "sys:store-group:delete" "$default_group_id" --force
+  assert [ "$status" -ne 0 ]
+  assert_output --partial "The default store group cannot be deleted"
+}
+
 
 # ============================================
 # Command: dev: keep-calm
