@@ -48,9 +48,10 @@ class CreateCommand extends AbstractMagentoCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $code = $input->getArgument('code');
-        if ($code === null || $code === '') {
+        if ($input->isInteractive() || $code === null || $code === '') {
             $code = text(
                 '<question>Website code:</question>',
+                default: $input->isInteractive() ? null : $code,
                 validate: fn ($value) => $this->validateWebsiteCode($value)
             );
         }
@@ -61,9 +62,10 @@ class CreateCommand extends AbstractMagentoCommand
         }
 
         $name = $input->getArgument('name');
-        if ($name === null || $name === '') {
+        if ($input->isInteractive() || $name === null || $name === '') {
             $name = text(
                 '<question>Website name:</question>',
+                default: $input->isInteractive() ? null : $name,
                 validate: fn ($value) => $value === '' ? 'Please enter a website name' : null
             );
         }
