@@ -30,6 +30,16 @@ function cleanup_files_in_magento() {
   rm -Rf "${N98_MAGERUN2_TEST_MAGENTO_ROOT:?}/$1"
 }
 
+function extract_store_id() {
+  sed -n 's/.*ID: \([0-9][0-9]*\).*/\1/p' | sed -n '$p'
+}
+
+teardown() {
+  if [ -n "${store_id:-}" ]; then
+    $BIN "sys:store:delete" "$store_id" --force >/dev/null 2>&1 || true
+  fi
+}
+
 @test "Issue: 1414" {
   tempfilename=$(mktemp)
   # Generate random numbers for email uniqueness
@@ -1103,11 +1113,12 @@ function cleanup_files_in_magento() {
   store_name="Bats Store"
 
   run $BIN "sys:store:create" "$store_code" "$store_name" --group-id=1
+  store_id=$(printf '%s\n' "$output" | extract_store_id)
+
   assert [ "$status" -eq 0 ]
   assert_output --partial "Successfully created store"
   assert_output --partial "$store_code"
 
-  store_id=$(printf '%s\n' "$output" | sed -n 's/.*ID: \([0-9][0-9]*\).*/\1/p')
   assert [ -n "$store_id" ]
 
   run $BIN "sys:store:delete" "$store_id" --force
@@ -1121,11 +1132,12 @@ function cleanup_files_in_magento() {
   store_name="Bats Interactive Store"
 
   run bash -c "printf '%s\\n%s\\n1\\n' \"$store_code\" \"$store_name\" | $BIN_INTERACTION sys:store:create"
+  store_id=$(printf '%s\n' "$output" | extract_store_id)
+
   assert [ "$status" -eq 0 ]
   assert_output --partial "Successfully created store"
   assert_output --partial "$store_code"
 
-  store_id=$(printf '%s\n' "$output" | sed -n 's/.*ID: \([0-9][0-9]*\).*/\1/p')
   assert [ -n "$store_id" ]
 
   run $BIN "sys:store:delete" "$store_id" --force
@@ -1137,15 +1149,15 @@ function cleanup_files_in_magento() {
   store_name="Bats Select Store"
 
   run $BIN "sys:store:create" "$store_code" "$store_name" --group-id=1
-  assert [ "$status" -eq 0 ]
+  store_id=$(printf '%s\n' "$output" | extract_store_id)
 
-  store_id=$(printf '%s\n' "$output" | sed -n 's/.*ID: \([0-9][0-9]*\).*/\1/p')
+  assert [ "$status" -eq 0 ]
   assert [ -n "$store_id" ]
 
   run bash -c "printf '%s\\ny\\n' \"$store_id\" | $BIN_INTERACTION sys:store:delete"
   assert [ "$status" -eq 0 ]
   assert_output --partial "Successfully deleted store"
-  assert_output --partial "$store_code"
+  assert_output --partial "ID: $store_id"
 }
 
 @test "Command: sys:store:create rejects invalid store code" {
