@@ -1178,15 +1178,15 @@ function cleanup_files_in_magento() {
   group_name="Bats Interactive Store Group $(date +%s%N)"
   group_code="bats_interactive_group_$(date +%s%N)"
 
-  run bash -c "printf '%s\\n%s\\n0\\n2\\n' \"$group_name\" \"$group_code\" | $BIN_INTERACTION sys:store-group:create"
+  run bash -c "printf '%s\\n%s\\nbase\\n2\\n' \"$group_name\" \"$group_code\" | $BIN_INTERACTION sys:store-group:create"
   assert [ "$status" -eq 0 ]
   assert_output --partial "Successfully created store group"
   assert_output --partial "$group_name"
 
-  group_id=$(printf '%s\n' "$output" | sed -n 's/.*ID: \([0-9][0-9]*\).*/\1/p')
+  group_id=$(printf '%s\n' "$output" | sed -n 's/.*ID: \([0-9][0-9]*\).*/\1/p' | sed -n '$p')
   assert [ -n "$group_id" ]
 
-  run bash -c "printf '%s\\n' \"$group_id\" | $BIN_INTERACTION sys:store-group:delete --force"
+  run $BIN "sys:store-group:delete" "$group_id" --force
   assert [ "$status" -eq 0 ]
 }
 
