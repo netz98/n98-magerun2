@@ -55,7 +55,7 @@ class CreateCommand extends AbstractMagentoCommand
         if ($input->isInteractive() || $code === null || $code === '') {
             $code = text(
                 '<question>Store code:</question>',
-                default: $input->isInteractive() ? null : $code,
+                default: (string) ($code ?? ''),
                 validate: fn ($value) => $this->validateStoreCode($value)
             );
         }
@@ -69,7 +69,7 @@ class CreateCommand extends AbstractMagentoCommand
         if ($input->isInteractive() || $name === null || $name === '') {
             $name = text(
                 '<question>Store name:</question>',
-                default: $input->isInteractive() ? null : $name,
+                default: (string) ($name ?? ''),
                 validate: fn ($value) => $value === '' ? 'Please enter a store name' : null
             );
         }
@@ -170,7 +170,10 @@ class CreateCommand extends AbstractMagentoCommand
             return null;
         }
 
-        return (string) select('<question>Select a store group:</question>', $options);
+        $selected = (string) select('<question>Select a store group:</question>', $options);
+        $selectedId = array_search($selected, $options, true);
+
+        return $selectedId === false ? $selected : (string) $selectedId;
     }
 
     private function validatePositiveInteger($value, string $message): void

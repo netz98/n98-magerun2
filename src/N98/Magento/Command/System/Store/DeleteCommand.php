@@ -127,6 +127,9 @@ class DeleteCommand extends AbstractMagentoCommand
             return null;
         }
 
-        return (string) select('<question>Select a store to delete:</question>', $options);
+        $selected = (string) select('<question>Select a store to delete:</question>', $options);
+        $selectedId = array_search($selected, $options, true);
+
+        return $selectedId === false ? $selected : (string) $selectedId;
     }
 }
