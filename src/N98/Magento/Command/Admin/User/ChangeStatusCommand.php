@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace N98\Magento\Command\Admin\User;
 
+use function Laravel\Prompts\select;
 use Magento\User\Model\ResourceModel\User as UserResourceModel;
 use Magento\User\Model\ResourceModel\User\CollectionFactory;
 use Magento\User\Model\User;
@@ -48,7 +49,7 @@ class ChangeStatusCommand extends AbstractMagentoCommand
     {
         $this
             ->setName('admin:user:change-status')
-            ->addArgument(self::USER_ARGUMENT, InputArgument::REQUIRED, 'Username or email for the admin user')
+            ->addArgument(self::USER_ARGUMENT, InputArgument::OPTIONAL, 'Username or email for the admin user')
             ->addOption(self::ACTIVATE_OPTION, null, InputOption::VALUE_NONE, 'Activate the user')
             ->addOption(self::DEACTIVATE_OPTION, null, InputOption::VALUE_NONE, 'Deactivate the user')
             ->setDescription(
@@ -72,10 +73,21 @@ class ChangeStatusCommand extends AbstractMagentoCommand
         }
 
         $username = $input->getArgument(self::USER_ARGUMENT);
-        if (!\is_string($username)) {
-            $output->writeln('Please provide an username or email for the admin user. Use --help for more information.');
+        if (!\is_string($username) || $username === '') {
+            if (!$input->isInteractive()) {
+                $output->writeln(
+                    'Please provide an username or email for the admin user. Use --help for more information.'
+                );
 
-            return Command::FAILURE;
+                return Command::FAILURE;
+            }
+
+            $username = $this->selectUsername();
+            if ($username === null) {
+                $output->writeln(\sprintf('<info>%s</info>', $this->getNoUsersMessage()));
+
+                return Command::SUCCESS;
+            }
         }
 
         $user = $this->getUser($username);
@@ -133,5 +145,43 @@ class ChangeStatusCommand extends AbstractMagentoCommand
 
         // If no option is supplied, toggle the status.
         return !$user->getIsActive();
+    }
+
+    protected function selectUsername(): ?string
+    {
+        $options = [];
+        foreach ($this->userCollectionFactory->create()->getItems() as $user) {
+            if (!$this->isSelectableUser($user)) {
+                continue;
+            }
+
+            $options[(string) $user->getUsername()] = \sprintf(
+                '%s (%s) - %s',
+                $user->getUsername(),
+                $user->getEmail(),
+                $user->getIsActive() ? 'active' : 'inactive'
+            );
+        }
+
+        if ($options === []) {
+            return null;
+        }
+
+        return (string) select($this->getSelectQuestion(), $options);
+    }
+
+    protected function isSelectableUser(User $user): bool
+    {
+        return true;
+    }
+
+    protected function getSelectQuestion(): string
+    {
+        return '<question>Select an admin user:</question>';
+    }
+
+    protected function getNoUsersMessage(): string
+    {
+        return 'No admin users found.';
     }
 }

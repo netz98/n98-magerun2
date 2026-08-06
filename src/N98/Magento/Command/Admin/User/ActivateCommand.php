@@ -22,12 +22,31 @@ class ActivateCommand extends ChangeStatusCommand
         $this
             ->setName('admin:user:activate')
             ->setAliases(['admin:user:enable'])
-            ->addArgument(self::USER_ARGUMENT, InputArgument::REQUIRED, 'Username or email for the admin user')
+            ->addArgument(
+                self::USER_ARGUMENT,
+                InputArgument::OPTIONAL,
+                'Username or email for the admin user. If omitted, you will be prompted to select one.'
+            )
             ->setDescription('Activates an admin user.');
     }
 
     protected function getNewStatusForUser(User $user, InputInterface $input): bool
     {
         return true;
+    }
+
+    protected function isSelectableUser(User $user): bool
+    {
+        return !$user->getIsActive();
+    }
+
+    protected function getSelectQuestion(): string
+    {
+        return '<question>Select an admin user to activate:</question>';
+    }
+
+    protected function getNoUsersMessage(): string
+    {
+        return 'No inactive admin users found.';
     }
 }

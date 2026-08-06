@@ -22,12 +22,31 @@ class DeactivateCommand extends ChangeStatusCommand
         $this
             ->setName('admin:user:deactivate')
             ->setAliases(['admin:user:disable'])
-            ->addArgument(self::USER_ARGUMENT, InputArgument::REQUIRED, 'Username or email for the admin user')
+            ->addArgument(
+                self::USER_ARGUMENT,
+                InputArgument::OPTIONAL,
+                'Username or email for the admin user. If omitted, you will be prompted to select one.'
+            )
             ->setDescription('Deactivates an admin user.');
     }
 
     protected function getNewStatusForUser(User $user, InputInterface $input): bool
     {
         return false;
+    }
+
+    protected function isSelectableUser(User $user): bool
+    {
+        return (bool) $user->getIsActive();
+    }
+
+    protected function getSelectQuestion(): string
+    {
+        return '<question>Select an admin user to deactivate:</question>';
+    }
+
+    protected function getNoUsersMessage(): string
+    {
+        return 'No active admin users found.';
     }
 }
