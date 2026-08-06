@@ -34,9 +34,28 @@ function extract_store_id() {
   sed -n 's/.*ID: \([0-9][0-9]*\).*/\1/p' | sed -n '$p'
 }
 
+function create_test_admin_user() {
+  local username="$1"
+  local is_active="$2"
+
+  php "${N98_MAGERUN2_TEST_MAGENTO_ROOT}/bin/magento" admin:user:create \
+    --admin-user="${username}" \
+    --admin-password="BatsPassw0rd#1" \
+    --admin-email="${username}@example.com" \
+    --admin-firstname="Bats" \
+    --admin-lastname="User" >/dev/null 2>&1
+
+  if [ "${is_active}" = "0" ]; then
+    $BIN "db:query" "UPDATE admin_user SET is_active = 0 WHERE username = '${username}'" >/dev/null 2>&1
+  fi
+}
+
 teardown() {
   if [ -n "${store_id:-}" ]; then
     $BIN "sys:store:delete" "$store_id" --force >/dev/null 2>&1 || true
+  fi
+  if [ -n "${admin_test_username:-}" ]; then
+    $BIN "db:query" "DELETE FROM admin_user WHERE username = '${admin_test_username}'" >/dev/null 2>&1 || true
   fi
 }
 
@@ -174,6 +193,90 @@ teardown() {
   assert_output --partial "id"
   assert_output --partial "status"
   assert [ "$status" -eq 0 ]
+}
+
+# ============================================
+# Command: admin:user:enable / admin:user:activate
+# ============================================
+
+@test "Command: admin:user:enable activates the given user" {
+  admin_test_username="bats_enable_$(date +%s%N)"
+  create_test_admin_user "$admin_test_username" 0
+
+  run $BIN "admin:user:enable" "$admin_test_username"
+  assert [ "$status" -eq 0 ]
+  assert_output --partial "User has been"
+  assert_output --partial "activated"
+
+  run $BIN "admin:user:list" --format=csv --columns=username,is_active
+  assert_output --partial "${admin_test_username},active"
+}
+
+@test "Command: admin:user:activate is an alias for admin:user:enable" {
+  admin_test_username="bats_activate_$(date +%s%N)"
+  create_test_admin_user "$admin_test_username" 0
+
+  run $BIN "admin:user:activate" "$admin_test_username"
+  assert [ "$status" -eq 0 ]
+  assert_output --partial "activated"
+}
+
+@test "Command: admin:user:enable fails without a username when not interactive" {
+  run $BIN "admin:user:enable"
+  assert [ "$status" -eq 1 ]
+  assert_output --partial "Please provide an username or email"
+}
+
+@test "Command: admin:user:enable prompts for a user to select when omitted" {
+  admin_test_username="bats_enable_prompt_$(date +%s%N)"
+  create_test_admin_user "$admin_test_username" 0
+
+  run bash -c "printf '%s\\n' \"$admin_test_username\" | $BIN_INTERACTION admin:user:enable"
+  assert [ "$status" -eq 0 ]
+  assert_output --partial "User has been"
+  assert_output --partial "activated"
+}
+
+# ============================================
+# Command: admin:user:disable / admin:user:deactivate
+# ============================================
+
+@test "Command: admin:user:disable deactivates the given user" {
+  admin_test_username="bats_disable_$(date +%s%N)"
+  create_test_admin_user "$admin_test_username" 1
+
+  run $BIN "admin:user:disable" "$admin_test_username"
+  assert [ "$status" -eq 0 ]
+  assert_output --partial "User has been"
+  assert_output --partial "deactivated"
+
+  run $BIN "admin:user:list" --format=csv --columns=username,is_active
+  assert_output --partial "${admin_test_username},inactive"
+}
+
+@test "Command: admin:user:deactivate is an alias for admin:user:disable" {
+  admin_test_username="bats_deactivate_$(date +%s%N)"
+  create_test_admin_user "$admin_test_username" 1
+
+  run $BIN "admin:user:deactivate" "$admin_test_username"
+  assert [ "$status" -eq 0 ]
+  assert_output --partial "deactivated"
+}
+
+@test "Command: admin:user:disable fails without a username when not interactive" {
+  run $BIN "admin:user:disable"
+  assert [ "$status" -eq 1 ]
+  assert_output --partial "Please provide an username or email"
+}
+
+@test "Command: admin:user:disable prompts for a user to select when omitted" {
+  admin_test_username="bats_disable_prompt_$(date +%s%N)"
+  create_test_admin_user "$admin_test_username" 1
+
+  run bash -c "printf '%s\\n' \"$admin_test_username\" | $BIN_INTERACTION admin:user:disable"
+  assert [ "$status" -eq 0 ]
+  assert_output --partial "User has been"
+  assert_output --partial "deactivated"
 }
 
 # ============================================
