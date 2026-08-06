@@ -30,6 +30,16 @@ function cleanup_files_in_magento() {
   rm -Rf "${N98_MAGERUN2_TEST_MAGENTO_ROOT:?}/$1"
 }
 
+function extract_store_id() {
+  sed -n 's/.*ID: \([0-9][0-9]*\).*/\1/p' | sed -n '$p'
+}
+
+teardown() {
+  if [ -n "${store_id:-}" ]; then
+    $BIN "sys:store:delete" "$store_id" --force >/dev/null 2>&1 || true
+  fi
+}
+
 @test "Issue: 1414" {
   tempfilename=$(mktemp)
   # Generate random numbers for email uniqueness
@@ -1096,6 +1106,76 @@ function cleanup_files_in_magento() {
 @test "Command: sys:store:list" {
   run $BIN "sys:store:list"
   assert_output --partial "default"
+}
+
+@test "Command: sys:store:create and sys:store:delete" {
+  store_code="bats_store_$(date +%s%N)"
+  store_name="Bats Store"
+
+  run $BIN "sys:store:create" "$store_code" "$store_name" --group-id=1
+  store_id=$(printf '%s\n' "$output" | extract_store_id)
+
+  assert [ "$status" -eq 0 ]
+  assert_output --partial "Successfully created store"
+  assert_output --partial "$store_code"
+
+  assert [ -n "$store_id" ]
+
+  run $BIN "sys:store:delete" "$store_id" --force
+  assert [ "$status" -eq 0 ]
+  assert_output --partial "Successfully deleted store"
+  assert_output --partial "$store_code"
+}
+
+@test "Command: sys:store:create prompts for every required parameter" {
+  store_code="bats_interactive_store_$(date +%s%N)"
+  store_name="Bats Interactive Store"
+
+  run bash -c "printf '%s\\n%s\\n1\\n' \"$store_code\" \"$store_name\" | $BIN_INTERACTION sys:store:create"
+  store_id=$(printf '%s\n' "$output" | extract_store_id)
+
+  assert [ "$status" -eq 0 ]
+  assert_output --partial "Successfully created store"
+  assert_output --partial "$store_code"
+
+  assert [ -n "$store_id" ]
+
+  run $BIN "sys:store:delete" "$store_id" --force
+  assert [ "$status" -eq 0 ]
+}
+
+@test "Command: sys:store:delete prompts for confirmation and selection" {
+  store_code="bats_select_store_$(date +%s%N)"
+  store_name="Bats Select Store"
+
+  run $BIN "sys:store:create" "$store_code" "$store_name" --group-id=1
+  store_id=$(printf '%s\n' "$output" | extract_store_id)
+
+  assert [ "$status" -eq 0 ]
+  assert [ -n "$store_id" ]
+
+  run bash -c "printf '%s\\ny\\n' \"$store_id\" | $BIN_INTERACTION sys:store:delete"
+  assert [ "$status" -eq 0 ]
+  assert_output --partial "Successfully deleted store"
+  assert_output --partial "ID: $store_id"
+}
+
+@test "Command: sys:store:create rejects invalid store code" {
+  run $BIN "sys:store:create" "1invalid" "Invalid Store" --group-id=1
+  assert [ "$status" -ne 0 ]
+  assert_output --partial "Store code may only contain letters"
+}
+
+@test "Command: sys:store:delete rejects the default store" {
+  run $BIN "sys:store:list" --format=csv
+  assert [ "$status" -eq 0 ]
+
+  default_store_id=$(printf '%s\n' "$output" | awk -F, '$1 == "1" { print $1; exit }')
+  assert [ -n "$default_store_id" ]
+
+  run $BIN "sys:store:delete" "$default_store_id" --force
+  assert [ "$status" -ne 0 ]
+  assert_output --partial "default store"
 }
 
 @test "Command: sys:url:list" {

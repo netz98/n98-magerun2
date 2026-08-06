@@ -55,17 +55,19 @@ class CreateCommand extends AbstractMagentoCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $name = $input->getArgument('name');
-        if ($name === null || $name === '') {
+        if ($input->isInteractive() || $name === null || $name === '') {
             $name = text(
                 '<question>Store group name:</question>',
+                default: (string) ($name ?? ''),
                 validate: fn ($value) => $value === '' ? 'Please enter a store group name' : null
             );
         }
 
         $code = $input->getArgument('code');
-        if ($code === null || $code === '') {
+        if ($input->isInteractive() || $code === null || $code === '') {
             $code = text(
                 '<question>Store group code:</question>',
+                default: (string) ($code ?? ''),
                 validate: fn ($value) => $this->validateStoreGroupCode($value)
             );
         }
@@ -77,16 +79,23 @@ class CreateCommand extends AbstractMagentoCommand
 
         $websiteId = $input->getOption('website-id');
         $websiteCode = $input->getOption('website-code');
-        if ($websiteId !== null && $websiteCode !== null) {
+        if (!$input->isInteractive() && $websiteId !== null && $websiteCode !== null) {
             throw new RuntimeException('Specify either --website-id or --website-code, not both.');
         }
 
-        if ($websiteId !== null && (!ctype_digit((string) $websiteId) || (int) $websiteId < 1)) {
+        if (!$input->isInteractive() && $websiteId !== null && (!ctype_digit((string) $websiteId) || (int) $websiteId < 1)) {
             throw new RuntimeException('The website ID must be a positive integer.');
         }
 
         $website = $this->websiteFactory->create();
-        if ($websiteId !== null) {
+        if ($input->isInteractive()) {
+            $websiteCode = $this->selectWebsite();
+            if ($websiteCode === null) {
+                throw new RuntimeException('No websites found.');
+            }
+
+            $website->load($websiteCode, 'code');
+        } elseif ($websiteId !== null) {
             $website->load((int) $websiteId);
         } elseif ($websiteCode !== null) {
             $website->load($websiteCode, 'code');
@@ -105,9 +114,10 @@ class CreateCommand extends AbstractMagentoCommand
         }
 
         $rootCategoryId = $input->getOption('root-category-id');
-        if ($rootCategoryId === null) {
+        if ($input->isInteractive() || $rootCategoryId === null) {
             $rootCategoryId = text(
                 '<question>Root category ID:</question>',
+                default: (string) ($rootCategoryId ?? ''),
                 validate: fn ($value) => $this->validatePositiveInteger(
                     $value,
                     'The root category ID must be a positive integer.'
