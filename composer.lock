@@ -565,20 +565,23 @@
         },
         {
             "name": "n98/junit-xml",
-            "version": "1.1.0",
+            "version": "1.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cmuench/junit-xml.git",
-                "reference": "0017dd92ac8cb619f02e32f4cffd768cfe327c73"
+                "reference": "942d79c0760f260fa8ea5cceb4005339cbcf9004"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cmuench/junit-xml/zipball/0017dd92ac8cb619f02e32f4cffd768cfe327c73",
-                "reference": "0017dd92ac8cb619f02e32f4cffd768cfe327c73",
+                "url": "https://api.github.com/repos/cmuench/junit-xml/zipball/942d79c0760f260fa8ea5cceb4005339cbcf9004",
+                "reference": "942d79c0760f260fa8ea5cceb4005339cbcf9004",
                 "shasum": ""
             },
+            "require": {
+                "php": "^8.0"
+            },
             "require-dev": {
-                "phpunit/phpunit": "^9.5.0"
+                "phpunit/phpunit": "^9.5.0 || ^12.0.0"
             },
             "type": "library",
             "autoload": {
@@ -599,9 +602,9 @@
             "description": "JUnit XML Document generation library",
             "support": {
                 "issues": "https://github.com/cmuench/junit-xml/issues",
-                "source": "https://github.com/cmuench/junit-xml/tree/1.1.0"
+                "source": "https://github.com/cmuench/junit-xml/tree/1.2.0"
             },
-            "time": "2020-12-25T09:08:58+00:00"
+            "time": "2026-08-04T12:39:16+00:00"
         },
         {
             "name": "nikic/php-parser",
