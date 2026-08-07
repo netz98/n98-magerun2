@@ -5,13 +5,22 @@ RECENT CHANGES
 ------------------------
 
 - Break: raise minimum PHP requirement to 8.2 (and update laminas dependencies accordingly)
+- Break: remove the deprecated `install` command
 - Add: interactive download command for Magento/Adobe Commerce/Mage-OS
 - Add: prompt interactively for `integration:create` arguments and make `integration:delete` interactive when no name is given
+- Add: `sys:website:create` and `sys:website:delete` commands
+- Add: `sys:store-group:create` and `sys:store-group:delete` commands with interactive prompts
+- Add: `sys:store:create` and `sys:store:delete` commands with interactive prompts
+- Add: interactive customer address creation and admin user selection for activate/deactivate commands
 - Imp: overhaul command output look and feel
+- Imp: add table export formats and improve store/website selection
+- Imp: support B2B customer deletion without plugin-related failures
 - Fix: stop double-JSON-encoding `admin_user.extra` on `admin:user:change-status`
 - Fix: surface mysql errors and reject silent empty queries in `db:query`
 - Fix: MCP proxy commands returning a generic `bin/magento` list
 - Fix: build MCP command input from ArrayInput to preserve arguments verbatim
+- Fix: prevent plaintext password exposure in `customer:create`
+- Fix: rename custom index commands to the `indexer` namespace
 - Fix: resolve installer plugin package by class instead of name
 - Fix: build a Magento-scoped Composer instance and resolve the real plugin package for the allow-plugins check in `composer:redeploy-base-packages`
 - Fix: remove broken `pv` branch in non-piped decompression commands
@@ -25,7 +34,9 @@ RECENT CHANGES
 - Chore: ignore tarballs
 - Docs: fix composer require command in README
 - Docs: update db-dump documentation
+- Docs: document website, store group, store view, and table output commands
 - Build: update dependencies (actions/cache, actions/checkout, actions/setup-node, super-linter, php-cs-fixer, phpstan, psy/psysh, twig/twig, mcp/sdk, rmccue/requests, js-yaml, postcss, websocket-driver, npm/yarn group)
+- Build: update fast-uri, brace-expansion, php-cs-fixer, phpstan, and phar-utils
 
 9.5.1 (2026-05-21)
 ------------------
