@@ -10,19 +10,20 @@ namespace N98\Magento\Command\System\Email;
 
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Mail\Template\TransportBuilder;
-use Magento\Framework\Mail\TransportInterface;
 use Magento\Framework\Translate\Inline\StateInterface;
 use Magento\Store\Model\Store;
 use Magento\Store\Model\StoreManagerInterface;
 use N98\Magento\Command\TestCase;
-use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Tester\CommandTester;
 
 class TestCommandTest extends TestCase
 {
     public function testSendsUsingMockedMailTransport()
     {
-        $transport = $this->createMock(TransportInterface::class);
+        $transport = $this->getMockBuilder(\stdClass::class)
+            ->addMethods(['sendMessage'])
+            ->getMock();
         $transport->expects($this->once())->method('sendMessage');
 
         $transportBuilder = $this->createMock(TransportBuilder::class);
@@ -60,7 +61,7 @@ class TestCommandTest extends TestCase
             ['contact/email/email_template', 'stores', 'default', 'contact_email_email_template'],
         ]);
 
-        $command = new class extends TestCommand {
+        $command = new class() extends TestCommand {
             public function detectMagento(OutputInterface $output, $silent = true): bool
             {
                 return true;
@@ -76,7 +77,6 @@ class TestCommandTest extends TestCase
         $tester = new CommandTester($command);
         $status = $tester->execute([
             '--to' => 'recipient@example.com',
-            '--from' => null,
             '--cc' => ['copy@example.com'],
         ]);
 
