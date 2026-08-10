@@ -14,6 +14,7 @@ use Magento\Framework\Translate\Inline\StateInterface;
 use Magento\Store\Model\Store;
 use Magento\Store\Model\StoreManagerInterface;
 use N98\Magento\Command\TestCase;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Tester\CommandTester;
 
@@ -21,6 +22,9 @@ class TestCommandTest extends TestCase
 {
     public function testSendsUsingMockedMailTransport()
     {
+        // Load the Magento installation autoloader before creating framework mocks.
+        $this->getApplication();
+
         $transport = $this->getMockBuilder(\stdClass::class)
             ->addMethods(['sendMessage'])
             ->getMock();
@@ -55,13 +59,21 @@ class TestCommandTest extends TestCase
         $storeManager->expects($this->once())->method('getStore')->with(null)->willReturn($store);
 
         $scopeConfig = $this->createMock(ScopeConfigInterface::class);
-        $scopeConfig->method('getValue')->willReturnMap([
-            ['trans_email/ident_general/email', 'stores', 'default', 'sender@example.com'],
-            ['trans_email/ident_general/name', 'stores', 'default', 'Store Sender'],
-            ['contact/email/email_template', 'stores', 'default', 'contact_email_email_template'],
-        ]);
+        $scopeConfig->method('getValue')->willReturnCallback(static function (string $path): string {
+            return [
+                'trans_email/ident_general/email' => 'sender@example.com',
+                'trans_email/ident_general/name' => 'Store Sender',
+                'contact/email/email_template' => 'contact_email_email_template',
+            ][$path] ?? '';
+        });
 
         $command = new class() extends TestCommand {
+            public function __construct()
+            {
+                parent::__construct();
+                $this->addArgument('command', InputArgument::OPTIONAL);
+            }
+
             public function detectMagento(OutputInterface $output, $silent = true): bool
             {
                 return true;
@@ -71,11 +83,20 @@ class TestCommandTest extends TestCase
             {
                 return true;
             }
+
+            public function injectObjects(OutputInterface $output): void
+            {
+            }
+
+            protected function injectCommandToHelpers(): void
+            {
+            }
         };
         $command->inject($transportBuilder, $storeManager, $scopeConfig, $inlineTranslation);
 
         $tester = new CommandTester($command);
         $status = $tester->execute([
+            'command' => 'sys:email:test',
             '--to' => 'recipient@example.com',
             '--cc' => ['copy@example.com'],
         ]);
