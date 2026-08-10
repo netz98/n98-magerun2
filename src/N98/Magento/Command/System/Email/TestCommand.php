@@ -13,6 +13,7 @@ namespace N98\Magento\Command\System\Email;
 use function Laravel\Prompts\text;
 use Magento\Framework\App\Area;
 use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Framework\App\State;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Mail\Template\TransportBuilder;
 use Magento\Framework\Translate\Inline\StateInterface;
@@ -48,16 +49,23 @@ class TestCommand extends AbstractMagentoCommand
      */
     private $inlineTranslation;
 
+    /**
+     * @var State
+     */
+    private $appState;
+
     public function inject(
         TransportBuilder $transportBuilder,
         StoreManagerInterface $storeManager,
         ScopeConfigInterface $scopeConfig,
-        StateInterface $inlineTranslation
+        StateInterface $inlineTranslation,
+        State $appState
     ): void {
         $this->transportBuilder = $transportBuilder;
         $this->storeManager = $storeManager;
         $this->scopeConfig = $scopeConfig;
         $this->inlineTranslation = $inlineTranslation;
+        $this->appState = $appState;
     }
 
     protected function configure(): void
@@ -200,6 +208,8 @@ HELP
 
         $this->inlineTranslation->suspend();
         try {
+            $this->appState->setAreaCode(Area::AREA_FRONTEND);
+
             $transportBuilder = $this->transportBuilder
                 ->setTemplateIdentifier($templateId)
                 ->setTemplateOptions(

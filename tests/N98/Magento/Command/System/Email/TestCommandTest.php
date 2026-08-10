@@ -9,6 +9,7 @@
 namespace N98\Magento\Command\System\Email;
 
 use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Framework\App\State as AppState;
 use Magento\Framework\Mail\Template\TransportBuilder;
 use Magento\Framework\Translate\Inline\StateInterface;
 use Magento\Store\Model\Store;
@@ -49,6 +50,9 @@ class TestCommandTest extends TestCase
         $inlineTranslation = $this->createMock(StateInterface::class);
         $inlineTranslation->expects($this->once())->method('suspend');
         $inlineTranslation->expects($this->once())->method('resume');
+
+        $appState = $this->createMock(AppState::class);
+        $appState->expects($this->once())->method('setAreaCode')->with('frontend');
 
         $store = $this->createMock(Store::class);
         $store->method('getId')->willReturn(1);
@@ -92,7 +96,7 @@ class TestCommandTest extends TestCase
             {
             }
         };
-        $command->inject($transportBuilder, $storeManager, $scopeConfig, $inlineTranslation);
+        $command->inject($transportBuilder, $storeManager, $scopeConfig, $inlineTranslation, $appState);
 
         $tester = new CommandTester($command);
         $status = $tester->execute([
