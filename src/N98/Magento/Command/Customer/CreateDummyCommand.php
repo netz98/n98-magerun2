@@ -197,7 +197,7 @@ HELP;
                                 sprintf(
                                     '<info>Customer <comment>%s</comment> successfully created with password <comment>%s</comment></info>',
                                     $email,
-                                    $password
+                                    \Symfony\Component\Console\Formatter\OutputFormatter::escape($password)
                                 )
                             );
                         } else {
@@ -323,7 +323,7 @@ HELP;
         $chars = 'abcdefghijklmnopqrstuvwxyz';
         $caps = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
         $nums = '0123456789';
-        $syms = '!@#$%^&*()-_=+[]{}|;:,.<>?';
+        $syms = '!@#$%^&*()-_=+[]{}|;:,.?';
 
         $password = '';
         // Add one from each group
