@@ -4,40 +4,20 @@ RECENT CHANGES
 10.0.0-dev (2026-07-05)
 ------------------------
 
-- Break: raise minimum PHP requirement to 8.2 (and update laminas dependencies accordingly)
+- Break: raise minimum PHP requirement to 8.2 (and update dependencies)
 - Break: remove the deprecated `install` command
 - Add: interactive download command for Magento/Adobe Commerce/Mage-OS
-- Add: `sys:email:test` command to send a test email for deliverability testing
-- Add: prompt interactively for `integration:create` arguments and make `integration:delete` interactive when no name is given
-- Add: `sys:website:create` and `sys:website:delete` commands
-- Add: `sys:store-group:create` and `sys:store-group:delete` commands with interactive prompts
-- Add: `sys:store:create` and `sys:store:delete` commands with interactive prompts
-- Add: interactive customer address creation and admin user selection for activate/deactivate commands
-- Imp: overhaul command output look and feel
-- Imp: add table export formats and improve store/website selection
-- Imp: support B2B customer deletion without plugin-related failures
-- Fix: stop double-JSON-encoding `admin_user.extra` on `admin:user:change-status`
-- Fix: surface mysql errors and reject silent empty queries in `db:query`
-- Fix: MCP proxy commands returning a generic `bin/magento` list
-- Fix: build MCP command input from ArrayInput to preserve arguments verbatim
-- Fix: prevent plaintext password exposure in `customer:create`
-- Fix: rename custom index commands to the `indexer` namespace
-- Fix: resolve installer plugin package by class instead of name
-- Fix: build a Magento-scoped Composer instance and resolve the real plugin package for the allow-plugins check in `composer:redeploy-base-packages`
-- Fix: remove broken `pv` branch in non-piped decompression commands
-- Fix: guard against undefined STDIN constant in prompt fallback check, and fall back to the first option in `select()` when non-interactive
-- Test: add unit tests for the download command
-- Test: add regression test for `admin:user:change-status` extra column
-- Test: use the real DatabaseHelper in `QueryCommandTest` CSV test
-- Test: make functional bats tests idempotent
+- Add: `sys:email:test` command to test deliverability
+- Add: `routes:api:list` command to view all registered API routes and modules
+- Add: `customer:create:dummy` command (ported from M1) to generate mock customer profiles
+- Add: management commands for website, store group, and store view with interactive prompts
+- Imp: support interactive prompts for `integration:create`/`delete`, customer address, and admin user activation
+- Imp: overhaul command output look and feel, and add table export formats
+- Fix: various command robustness improvements (database queries, MCP proxy, customer B2B deletion, plaintext password exposure, indexer namespace)
+- Test: improve test coverage and idempotency (bats, download, query, admin status)
 - Security: gate `pull_request_target` CI behind maintainer approval
-- Fix: switch platform tests from Mage-OS 3.0.0 to 3.1.0
-- Chore: ignore tarballs
-- Docs: fix composer require command in README
-- Docs: update db-dump documentation
-- Docs: document website, store group, store view, and table output commands
-- Build: update dependencies (actions/cache, actions/checkout, actions/setup-node, super-linter, php-cs-fixer, phpstan, psy/psysh, twig/twig, mcp/sdk, rmccue/requests, js-yaml, postcss, websocket-driver, npm/yarn group)
-- Build: update fast-uri, brace-expansion, php-cs-fixer, phpstan, and phar-utils
+- Docs: update documentation for new and improved commands (website/store, db-dump, routes:api:list, email:test)
+- Build: update actions, platform tests, and development dependencies
 
 9.5.1 (2026-05-21)
 ------------------
