@@ -113,6 +113,29 @@ class CreateDummyCommandTest extends TestCase
         $this->assertGreaterThanOrEqual(8, strlen($password));
     }
 
+    public function testExecuteWithEmailDomain()
+    {
+        $input = [
+            'command'        => 'customer:create:dummy',
+            'count'          => 1,
+            'locale'         => 'en_US',
+            'website'        => $this->getWebsiteCode(),
+            '--email-domain' => 'test-magerun.invalid',
+        ];
+
+        $command = $this->getApplication()->find('customer:create:dummy');
+        $commandTester = new CommandTester($command);
+        $commandTester->execute($input);
+
+        $display = $commandTester->getDisplay();
+        $this->assertStringContainsString('successfully created', $display);
+
+        preg_match('/Customer\s+(.+?)\s+successfully created/', strip_tags($display), $matches);
+        $this->assertNotEmpty($matches);
+        $email = trim($matches[1]);
+        $this->assertStringEndsWith('@test-magerun.invalid', $email);
+    }
+
     /**
      * @return string
      */

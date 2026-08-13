@@ -75,6 +75,13 @@ class CreateDummyCommand extends AbstractCustomerCommand
                 InputOption::VALUE_NONE,
                 'Print the generated password in the command line'
             )
+            ->addOption(
+                'email-domain',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'Email domain to generate dummy customer emails with',
+                'example.com'
+            )
             ->setDescription('Generate dummy customers. You can specify a count and a locale.')
             ->addFormatOption();
     }
@@ -127,6 +134,12 @@ HELP;
             return Command::FAILURE;
         }
 
+        $this->getObjectManager()->configure([
+            'preferences' => [
+                'Magento\Customer\Model\EmailNotificationInterface' => 'N98\Magento\Command\Customer\DummyEmailNotification',
+            ]
+        ]);
+
         $count = $input->getArgument('count');
         if ($count === null || $count === '') {
             $count = text('Amount of customers to generate', '1');
@@ -154,12 +167,17 @@ HELP;
         $website = $this->getHelperSet()->get('parameter')->askWebsite($input, $output);
         $withAddresses = $input->getOption('with-addresses');
         $printPassword = $input->getOption('print-password');
+        $domain = $input->getOption('email-domain');
+        if ($domain === null || $domain === '') {
+            $domain = 'example.com';
+        }
+        $domain = ltrim($domain, '@');
         $outputPlain = $input->getOption('format') === null;
         $table = [];
         $isError = false;
 
         for ($i = 0; $i < $count; $i++) {
-            $email = $faker->email;
+            $email = sprintf('%s%d@%s', $faker->userName, $i . rand(10, 99), $domain);
             $password = $printPassword ? $this->generateRandomPassword() : 'Password123!';
             $firstname = $faker->firstName;
             $lastname = $faker->lastName;
