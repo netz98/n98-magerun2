@@ -10,3 +10,4 @@ This section contains commands related to viewing and managing Magento's routing
 ## Available Commands
 
 - [routes:list](./route-list.md)
+- [routes:api:list](./api-list.md)

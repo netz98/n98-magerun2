@@ -133,6 +133,7 @@ commands:
     - N98\Magento\Command\Developer\Module\DetectComposerDependenciesCommand
     - N98\Magento\Command\Developer\Module\ListCommand
     - N98\Magento\Command\Developer\Module\Observer\ListCommand
+    - N98\Magento\Command\Developer\Module\Routes\ListAllRoutesCommand
     - N98\Magento\Command\Developer\Report\CountCommand
     - N98\Magento\Command\Developer\SymlinksCommand
     - N98\Magento\Command\Developer\TemplateHintsBlocksCommand

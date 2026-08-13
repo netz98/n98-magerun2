@@ -298,3 +298,13 @@ setup() {
   run $BIN "varnish:vcl:generate"
   assert_output --partial "vcl 4.0"
 }
+
+@test "Command: routes:api:list" {
+  run $BIN "routes:api:list"
+  assert_output --partial "Fetching API routes for Magento 2..."
+  assert_output --partial "area"
+  assert_output --partial "route_path"
+  assert_output --partial "method"
+  assert_output --partial "handler"
+}
+
