@@ -103,6 +103,7 @@ class ListAllRoutesCommand extends AbstractMagentoCommand
                 $table = [];
                 foreach ($routesData as $route) {
                     $methodStr = $route['method'];
+                    $pathStr = $route['route_path'];
                     if ($format === null && $output->isDecorated()) {
                         $methodStr = match ($methodStr) {
                             'GET' => '<fg=green;options=bold>GET</>',
@@ -112,10 +113,11 @@ class ListAllRoutesCommand extends AbstractMagentoCommand
                             'DELETE' => '<fg=red;options=bold>DELETE</>',
                             default => $methodStr
                         };
+                        $pathStr = preg_replace('/:([a-zA-Z0-9_]+)/', '<fg=magenta>:$1</>', $pathStr);
                     }
                     $table[] = [
                         $route['area'],
-                        $route['route_path'],
+                        $pathStr,
                         $methodStr,
                         $route['handler'],
                     ];
