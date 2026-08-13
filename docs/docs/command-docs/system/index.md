@@ -11,6 +11,9 @@ Commands for system-level information, checks, and maintenance tasks in Magento.
 
 ## Commands
 
+### Email
+- [sys:email:test](./sys-email-test.md) - Send a test email for deliverability testing
+
 ### System Information
 - sys:info - Provide system information like edition, version, cache backends
 - [sys:store:list](./sys-store-list.md) - List all store views

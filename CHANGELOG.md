@@ -7,6 +7,7 @@ RECENT CHANGES
 - Break: raise minimum PHP requirement to 8.2 (and update laminas dependencies accordingly)
 - Break: remove the deprecated `install` command
 - Add: interactive download command for Magento/Adobe Commerce/Mage-OS
+- Add: `sys:email:test` command to send a test email for deliverability testing
 - Add: prompt interactively for `integration:create` arguments and make `integration:delete` interactive when no name is given
 - Add: `sys:website:create` and `sys:website:delete` commands
 - Add: `sys:store-group:create` and `sys:store-group:delete` commands with interactive prompts
