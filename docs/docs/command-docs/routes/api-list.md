@@ -26,7 +26,7 @@ n98-magerun2 routes:api:list [options]
 
 The command operates specifically on Magento 2 installations. It inspects the application's Web API configuration to identify and list API routes.
 
-On decorated terminals, the HTTP methods/verbs in the output table are colored for better readability (e.g. GET is green, POST is cyan, PUT/PATCH is yellow, DELETE is red).
+On decorated terminals, the HTTP methods/verbs in the output table are colored for better readability (e.g., GET is green, POST is cyan, PUT/PATCH is yellow, DELETE is red) and variable names in the path (e.g., `:itemId`) are highlighted in magenta.
 
 The output includes:
 - **area**: Typically `webapi` for these routes.
