@@ -12,26 +12,35 @@ This command is helpful for developers to quickly get an overview of all availab
 ## Usage
 
 ```bash
-n98-magerun2 routes:api:list
+n98-magerun2 routes:api:list [options]
 ```
+
+## Options
+
+- **`-a, --area[=AREA]`**: Filter routes by area (e.g., `webapi`).
+- **`-p, --path[=PATH]`**: Filter routes by path pattern (partial/case-insensitive match, e.g., `carts`).
+- **`-m, --method[=METHOD]`**: Filter routes by HTTP method (case-insensitive, e.g., `GET`, `POST`, `PUT`, `DELETE`, `PATCH`).
+- **`--format[=FORMAT]`**: Output Format. One of [csv,tsv,json,json_array,jsonl,yaml,markdown,xml].
 
 ## Description
 
-The command operates specifically on Magento 2 installations. It inspects the application's router list, focusing on the `\Magento\Webapi\Controller\Router` to identify and list API routes.
+The command operates specifically on Magento 2 installations. It inspects the application's Web API configuration to identify and list API routes.
+
+On decorated terminals, the HTTP methods/verbs in the output table are colored for better readability (e.g. GET is green, POST is cyan, PUT/PATCH is yellow, DELETE is red).
 
 The output includes:
-- **Area**: Typically `webapi` for these routes.
-- **Route Path**: The URL path for the API endpoint.
-- **HTTP Method**: The HTTP method (e.g., GET, POST, PUT, DELETE) associated with the route.
-- **Handler/Service**: The controller class and method, or service class and method, that handles the API request.
+- **area**: Typically `webapi` for these routes.
+- **route_path**: The URL path for the API endpoint.
+- **method**: The HTTP method associated with the route.
+- **handler**: The service class and method that handles the API request.
 
-The information is presented in a table format for easy readability. If no specific API routes are found via the Webapi Router, a message indicating this will be displayed.
+The information is presented in a table format for easy readability. If no specific API routes are found matching the filters, a message indicating this will be displayed.
 
 ## Example Output
 
 ```
 +--------+-------------------------------------------+-------------+------------------------------------------------------------------------------------------+
-| Area   | Route Path                                | HTTP Method | Handler/Service                                                                          |
+| area   | route_path                                | method      | handler                                                                                  |
 +--------+-------------------------------------------+-------------+------------------------------------------------------------------------------------------+
 | webapi | /V1/carts/mine/payment-information        | POST        | Magento\Checkout\Api\PaymentInformationManagementInterface::savePaymentInformationAndPlaceOrder |
 | webapi | /V1/carts/mine/shipping-information       | POST        | Magento\Checkout\Api\ShippingInformationManagementInterface::saveAddressInformation        |
@@ -43,9 +52,8 @@ The information is presented in a table format for easy readability. If no speci
 ## Notes
 
 - The command requires a successfully initialized Magento 2 application to function correctly.
-- The Magento 2 route detection for API endpoints may use reflection to access necessary route details from the Webapi router.
 
 ## Credits
 
-This command is based on the original `dev:module:routes:list` command developed by **bitExpert AG**. Special thanks to them for their contribution to the Magento open-source community.
+This command was initially provided by [bitExpert](https://www.bitexpert.de). Special thanks to them for their contribution to the Magento open-source community.
 The original code can be found at [bitExpert/magerun2-list-all-routes](https://github.com/bitExpert/magerun2-list-all-routes).
