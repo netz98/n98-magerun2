@@ -104,6 +104,7 @@ commands:
     - N98\Magento\Command\Config\Data\IndexerCommand
     - N98\Magento\Command\Customer\AddAddressCommand
     - N98\Magento\Command\Customer\CreateCommand
+    - N98\Magento\Command\Customer\CreateDummyCommand
     - N98\Magento\Command\Customer\ChangePasswordCommand
     - N98\Magento\Command\Customer\DeleteCommand
     - N98\Magento\Command\Customer\InfoCommand
@@ -257,7 +258,7 @@ commands:
 
       - id: unsafe
         description: Commands that can mutate or delete data
-        commands: "admin:* cache:clean cache:disable cache:enable cache:flush cache:remove:id cms:block:toggle config:env:create config:env:delete config:env:set config:store:delete config:store:set customer:add-address customer:change-password customer:create customer:delete db:* dev:* eav:attribute:remove generation:flush indexer:trigger:recreate integration:create integration:delete install media:dump sales:sequence:* script script:repo:run sys:cron:kill sys:cron:run sys:cron:schedule sys:maintenance sys:setup:* sys:store:create sys:store:delete sys:store-group:create sys:store-group:delete sys:url:regenerate sys:website:create sys:website:delete"
+        commands: "admin:* cache:clean cache:disable cache:enable cache:flush cache:remove:id cms:block:toggle config:env:create config:env:delete config:env:set config:store:delete config:store:set customer:add-address customer:change-password customer:create customer:create:dummy customer:delete db:* dev:* eav:attribute:remove generation:flush indexer:trigger:recreate integration:create integration:delete install media:dump sales:sequence:* script script:repo:run sys:cron:kill sys:cron:run sys:cron:schedule sys:maintenance sys:setup:* sys:store:create sys:store:delete sys:store-group:create sys:store-group:delete sys:url:regenerate sys:website:create sys:website:delete"
 
       - id: system
         description: System commands
