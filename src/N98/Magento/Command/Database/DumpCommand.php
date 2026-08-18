@@ -603,7 +603,7 @@ HELP;
         $database = $this->getDatabaseHelper();
 
         return $database->resolveTables(
-            explode(' ', $list),
+            preg_split('/[\s,]+/', $list, -1, PREG_SPLIT_NO_EMPTY),
             $database->getTableDefinitions($this->getCommandConfig())
         );
     }
