@@ -1364,6 +1364,10 @@ teardown() {
   run $BIN "sys:website:create" "1invalid" "Invalid Website"
   assert [ "$status" -ne 0 ]
   assert_output --partial "Website code may only contain letters"
+
+  run $BIN "sys:website:create" "abcdefghijklmnopqrstuvwxyzabcdefg" "Too Long Website"
+  assert [ "$status" -ne 0 ]
+  assert_output --partial "Website code must not exceed 32 characters"
 }
 
 @test "Command: sys:store-group:create and sys:store-group:delete" {
