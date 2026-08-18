@@ -1347,6 +1347,19 @@ teardown() {
   assert_output --partial "$website_code"
 }
 
+@test "Command: sys:website:create prompts for every required parameter" {
+  website_code="bats_interactive_website_$(date +%s%N)"
+  website_name="Bats Interactive Website"
+
+  run bash -c "printf '%s\\n%s\\n' \"$website_code\" \"$website_name\" | $BIN_INTERACTION sys:website:create"
+  assert [ "$status" -eq 0 ]
+  assert_output --partial "Successfully created website"
+  assert_output --partial "$website_code"
+
+  run $BIN "sys:website:delete" "$website_code" --force
+  assert [ "$status" -eq 0 ]
+}
+
 @test "Command: sys:website:create rejects invalid website code" {
   run $BIN "sys:website:create" "1invalid" "Invalid Website"
   assert [ "$status" -ne 0 ]
@@ -1357,7 +1370,7 @@ teardown() {
   group_name="Bats Store Group $(date +%s%N)"
   group_code="bats_store_group_$(date +%s%N)"
 
-  run $BIN "sys:store-group:create" "$group_name" "$group_code" --website-id=1 --root-category-id=2
+  run $BIN "sys:store-group:create" "$group_code" "$group_name" --website-id=1 --root-category-id=2
   assert [ "$status" -eq 0 ]
   assert_output --partial "Successfully created store group"
   assert_output --partial "$group_name"
@@ -1375,7 +1388,7 @@ teardown() {
   group_name="Bats Interactive Store Group $(date +%s%N)"
   group_code="bats_interactive_group_$(date +%s%N)"
 
-  run bash -c "printf '%s\\n%s\\nbase\\n2\\n' \"$group_name\" \"$group_code\" | $BIN_INTERACTION sys:store-group:create"
+  run bash -c "printf '%s\\n%s\\nbase\\n2\\n' \"$group_code\" \"$group_name\" | $BIN_INTERACTION sys:store-group:create"
   assert [ "$status" -eq 0 ]
   assert_output --partial "Successfully created store group"
   assert_output --partial "$group_name"
@@ -1388,11 +1401,11 @@ teardown() {
 }
 
 @test "Command: sys:store-group:create validates website and root category" {
-  run $BIN "sys:store-group:create" "Invalid Store Group" invalid_group --website-id=999999 --root-category-id=2
+  run $BIN "sys:store-group:create" invalid_group "Invalid Store Group" --website-id=999999 --root-category-id=2
   assert [ "$status" -ne 0 ]
   assert_output --partial "does not exist"
 
-  run $BIN "sys:store-group:create" "Invalid Store Group" invalid_group --website-id=1 --root-category-id=0
+  run $BIN "sys:store-group:create" invalid_group "Invalid Store Group" --website-id=1 --root-category-id=0
   assert [ "$status" -ne 0 ]
   assert_output --partial "root category ID must be a positive integer"
 }
