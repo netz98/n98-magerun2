@@ -135,6 +135,7 @@ class DumpCommandUnitTest extends TestCase
         $this->assertStringContainsString('--ignore-table=magento.table3', $fullOutput, 'table3 should be ignored (excluded)');
         $this->assertStringNotContainsString('--ignore-table=magento.table1', $fullOutput, 'table1 should NOT be ignored (included)');
         $this->assertStringNotContainsString('--ignore-table=magento.table2', $fullOutput, 'table2 should NOT be ignored (included)');
+        $this->assertSame(1, substr_count($fullOutput, '--no-create-info'));
     }
 
     public function testTildeExpansionInFilename()
