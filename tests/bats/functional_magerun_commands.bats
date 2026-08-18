@@ -1245,7 +1245,7 @@ teardown() {
 }
 
 @test "Command: sys:store:create prompts for every required parameter" {
-  store_code="bats_interactive_store_$(date +%s%N)"
+  store_code="bats_i_store_$(date +%s%N)"
   store_name="Bats Interactive Store"
 
   run bash -c "printf '%s\\n%s\\n1\\n' \"$store_code\" \"$store_name\" | $BIN_INTERACTION sys:store:create"
@@ -1262,7 +1262,7 @@ teardown() {
 }
 
 @test "Command: sys:store:delete prompts for confirmation and selection" {
-  store_code="bats_select_store_$(date +%s%N)"
+  store_code="bats_s_store_$(date +%s%N)"
   store_name="Bats Select Store"
 
   run $BIN "sys:store:create" "$store_code" "$store_name" --group-id=1
@@ -1372,7 +1372,7 @@ teardown() {
 
 @test "Command: sys:store-group:create and sys:store-group:delete" {
   group_name="Bats Store Group $(date +%s%N)"
-  group_code="bats_store_group_$(date +%s%N)"
+  group_code="bats_group_$(date +%s%N)"
 
   run $BIN "sys:store-group:create" "$group_code" "$group_name" --website-id=1 --root-category-id=2
   assert [ "$status" -eq 0 ]
@@ -1390,7 +1390,7 @@ teardown() {
 
 @test "Command: sys:store-group:create prompts for missing parameters" {
   group_name="Bats Interactive Store Group $(date +%s%N)"
-  group_code="bats_interactive_group_$(date +%s%N)"
+  group_code="bats_i_group_$(date +%s%N)"
 
   run bash -c "printf '%s\\n%s\\nbase\\n2\\n' \"$group_code\" \"$group_name\" | $BIN_INTERACTION sys:store-group:create"
   assert [ "$status" -eq 0 ]
