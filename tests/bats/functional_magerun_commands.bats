@@ -1348,7 +1348,7 @@ teardown() {
 }
 
 @test "Command: sys:website:create prompts for every required parameter" {
-  website_code="bats_interactive_website_$(date +%s%N)"
+  website_code="bats_i_web_$(date +%s%N)"
   website_name="Bats Interactive Website"
 
   run bash -c "printf '%s\\n%s\\n' \"$website_code\" \"$website_name\" | $BIN_INTERACTION sys:website:create"
