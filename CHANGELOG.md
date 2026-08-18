@@ -1,8 +1,8 @@
 RECENT CHANGES
 ==============
 
-10.0.0-dev (2026-07-05)
-------------------------
+10.0.0 (2026-08-18)
+------------------
 
 - Break: raise minimum PHP requirement to 8.2 (and update dependencies)
 - Break: remove the deprecated `install` command
