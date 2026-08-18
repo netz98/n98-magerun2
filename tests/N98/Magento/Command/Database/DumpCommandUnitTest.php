@@ -138,6 +138,98 @@ class DumpCommandUnitTest extends TestCase
         $this->assertSame(1, substr_count($fullOutput, '--no-create-info'));
     }
 
+    public function testCommaSeparatedIncludeListIsResolved()
+    {
+        // Mock Input: a single --include value with a comma-separated list, no spaces
+        $input = $this->createMock(InputInterface::class);
+        $input->method('getOption')->will($this->returnValueMap([
+            ['include', ['table1,table2']],
+            ['strip', null],
+            ['exclude', null],
+            ['no-views', false],
+            ['compression', null],
+            ['no-single-transaction', true], // Avoid adding --single-transaction
+            ['human-readable', false],
+            ['set-gtid-purged-off', false],
+            ['add-routines', false],
+            ['no-tablespaces', false],
+            ['keep-column-statistics', false],
+            ['git-friendly', false],
+            ['keep-definer', false],
+            ['mydumper', false],
+            ['stdout', false],
+            ['only-command', true],
+            ['print-only-filename', false],
+            ['dry-run', false],
+            ['views', false],
+            ['force', true], // Force to true to avoid interaction
+            ['add-time', 'no'],
+        ]));
+
+        // Mock getArgument
+        $input->method('getArgument')->will($this->returnValueMap([
+            ['filename', 'dump.sql']
+        ]));
+
+        // Mock Output
+        $output = $this->createMock(OutputInterface::class);
+        $outputBuffer = [];
+        $output->method('writeln')->will($this->returnCallback(function ($message) use (&$outputBuffer) {
+            $outputBuffer[] = $message;
+        }));
+
+        // Mock DatabaseHelper
+        $databaseHelper = $this->createMock(DatabaseHelper::class);
+        $databaseHelper->method('getDbSettings')->willReturn([
+            'host' => 'localhost',
+            'username' => 'user',
+            'password' => 'pass',
+            'dbname' => 'magento',
+            'prefix' => '',
+        ]);
+        $databaseHelper->method('getMysqlDumpBinary')->willReturn('mysqldump');
+        $databaseHelper->method('getViews')->willReturn([]);
+        $databaseHelper->method('getTables')->willReturn(['table1', 'table2', 'table3']);
+        $databaseHelper->method('resolveTables')->will($this->returnCallback(function ($tables) {
+            // resolveTables always receives an array from resolveDatabaseTables(),
+            // which is responsible for splitting the raw option value.
+            if (is_string($tables)) {
+                return explode(' ', $tables);
+            }
+            return $tables;
+        }));
+        $databaseHelper->method('getMysqlClientToolConnectionString')->willReturn('-h localhost -u user -p pass magento');
+        $databaseHelper->method('getTableDefinitions')->willReturn([]);
+
+        // Mock HelperSet
+        $questionHelper = $this->createMock(QuestionHelper::class); // Mock QuestionHelper
+
+        $helperSet = $this->createMock(HelperSet::class);
+        $helperSet->method('get')->will($this->returnValueMap([
+            ['database', $databaseHelper],
+            ['question', $questionHelper]
+        ]));
+
+        // Mock Application
+        $application = $this->createMock(Application::class);
+        $application->method('getConfig')->willReturn(['commands' => []]);
+
+        // System under test
+        $command = new DumpCommand();
+        $command->setApplication($application);
+        $command->setHelperSet($helperSet);
+
+        $command->run($input, $output);
+
+        $fullOutput = implode("\n", $outputBuffer);
+
+        // A comma-separated --include value ("table1,table2") must resolve the same
+        // way as repeating the option or separating values with spaces would.
+        $this->assertStringContainsString('--ignore-table=magento.table3', $fullOutput, 'table3 should be ignored (not included)');
+        $this->assertStringNotContainsString('--ignore-table=magento.table1', $fullOutput, 'table1 should NOT be ignored (included via comma-separated list)');
+        $this->assertStringNotContainsString('--ignore-table=magento.table2', $fullOutput, 'table2 should NOT be ignored (included via comma-separated list)');
+    }
+
     public function testTildeExpansionInFilename()
     {
         $input = $this->createMock(InputInterface::class);
