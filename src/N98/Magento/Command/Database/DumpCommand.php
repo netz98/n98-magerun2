@@ -418,8 +418,9 @@ HELP;
                 $ignore .= '--ignore-table=' . $dbName . '.' . $prefixedIgnoreItem . ' ';
             }
         }
+        $mainDumpOptions = $includeTablesUserInput ? '--no-create-info ' : '';
         $execs->add(
-            rtrim($ignore) // Use rtrim to remove trailing space if any
+            $mainDumpOptions . rtrim($ignore) // Use rtrim to remove trailing space if any
             . ' ' . $mysqlClientToolConnectionString
             . $postDumpGitFriendlyPipeCommands
             . $this->postDumpPipeCommands($input)
