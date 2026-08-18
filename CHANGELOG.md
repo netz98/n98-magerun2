@@ -14,10 +14,12 @@ RECENT CHANGES
 - Imp: support interactive prompts for `integration:create`/`delete`, customer address, and admin user activation
 - Imp: overhaul command output look and feel, and add table export formats
 - Fix: various command robustness improvements (database queries, MCP proxy, customer B2B deletion, plaintext password exposure, indexer namespace)
+- Fix: `db:dump` avoid duplicate DROP/CREATE TABLE statements with `--include` (#2119, #2120)
+- Fix: `db:dump` support comma-separated table lists for `--include`/`--exclude`/`--strip` (#2119, #2121)
 - Test: improve test coverage and idempotency (bats, download, query, admin status)
 - Security: gate `pull_request_target` CI behind maintainer approval
 - Docs: update documentation for new and improved commands (website/store, db-dump, routes:api:list, email:test)
-- Build: update actions, platform tests, and development dependencies
+- Build: update actions, platform tests, and development dependencies (mcp/sdk)
 
 9.5.1 (2026-05-21)
 ------------------
