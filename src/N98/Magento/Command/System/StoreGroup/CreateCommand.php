@@ -37,8 +37,8 @@ class CreateCommand extends AbstractMagentoCommand
     {
         $this
             ->setName('sys:store-group:create')
-            ->addArgument('name', InputArgument::OPTIONAL, 'Store group name')
             ->addArgument('code', InputArgument::OPTIONAL, 'Store group code')
+            ->addArgument('name', InputArgument::OPTIONAL, 'Store group name')
             ->addOption('website-id', null, InputOption::VALUE_REQUIRED, 'Website ID')
             ->addOption('website-code', null, InputOption::VALUE_REQUIRED, 'Website code')
             ->addOption('root-category-id', null, InputOption::VALUE_REQUIRED, 'Root category ID')
@@ -54,21 +54,21 @@ class CreateCommand extends AbstractMagentoCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $name = $input->getArgument('name');
-        if ($input->isInteractive() || $name === null || $name === '') {
-            $name = text(
-                '<question>Store group name:</question>',
-                default: (string) ($name ?? ''),
-                validate: fn ($value) => $value === '' ? 'Please enter a store group name' : null
-            );
-        }
-
         $code = $input->getArgument('code');
         if ($input->isInteractive() || $code === null || $code === '') {
             $code = text(
                 '<question>Store group code:</question>',
                 default: (string) ($code ?? ''),
                 validate: fn ($value) => $this->validateStoreGroupCode($value)
+            );
+        }
+
+        $name = $input->getArgument('name');
+        if ($input->isInteractive() || $name === null || $name === '') {
+            $name = text(
+                '<question>Store group name:</question>',
+                default: (string) ($name ?? ''),
+                validate: fn ($value) => $value === '' ? 'Please enter a store group name' : null
             );
         }
 
@@ -191,6 +191,10 @@ class CreateCommand extends AbstractMagentoCommand
 
     private function validateStoreGroupCode(string $code): ?string
     {
+        if (strlen($code) > 32) {
+            return 'Store group code must not exceed 32 characters.';
+        }
+
         if (preg_match('/^[a-zA-Z][a-zA-Z0-9_]*$/', $code) !== 1) {
             return 'Store group code may only contain letters (a-z), numbers (0-9) or underscore (_), '
                 . 'and the first character must be a letter.';

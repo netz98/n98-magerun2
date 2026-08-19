@@ -51,7 +51,7 @@ class CreateCommand extends AbstractMagentoCommand
         if ($input->isInteractive() || $code === null || $code === '') {
             $code = text(
                 '<question>Website code:</question>',
-                default: $input->isInteractive() ? null : $code,
+                default: (string) ($code ?? ''),
                 validate: fn ($value) => $this->validateWebsiteCode($value)
             );
         }
@@ -65,7 +65,7 @@ class CreateCommand extends AbstractMagentoCommand
         if ($input->isInteractive() || $name === null || $name === '') {
             $name = text(
                 '<question>Website name:</question>',
-                default: $input->isInteractive() ? null : $name,
+                default: (string) ($name ?? ''),
                 validate: fn ($value) => $value === '' ? 'Please enter a website name' : null
             );
         }
@@ -106,6 +106,10 @@ class CreateCommand extends AbstractMagentoCommand
     {
         if ($code === '') {
             return 'Please enter a website code';
+        }
+
+        if (strlen($code) > 32) {
+            return 'Website code must not exceed 32 characters.';
         }
 
         if (preg_match('/^[a-zA-Z][a-zA-Z0-9_]*$/', $code) !== 1) {
