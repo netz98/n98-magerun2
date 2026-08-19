@@ -1,7 +1,7 @@
 RECENT CHANGES
 ==============
 
-10.0.0 (2026-08-18)
+10.0.0 (2026-08-19)
 ------------------
 
 - Break: raise minimum PHP requirement to 8.2 (and update dependencies)
