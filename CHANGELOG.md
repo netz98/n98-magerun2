@@ -1,7 +1,7 @@
 RECENT CHANGES
 ==============
 
-10.0.0 (2026-08-19)
+10.0.0 (2026-08-20)
 ------------------
 
 - Break: raise minimum PHP requirement to 8.2 (and update dependencies)
@@ -16,10 +16,12 @@ RECENT CHANGES
 - Fix: various command robustness improvements (database queries, MCP proxy, customer B2B deletion, plaintext password exposure, indexer namespace)
 - Fix: `db:dump` avoid duplicate DROP/CREATE TABLE statements with `--include` (#2119, #2120)
 - Fix: `db:dump` support comma-separated table lists for `--include`/`--exclude`/`--strip` (#2119, #2121)
-- Test: improve test coverage and idempotency (bats, download, query, admin status)
+- Fix: store management command robustness (store code/website code length validation, store group argument order, nullable website prompt defaults) (#2122)
+- Test: improve test coverage and idempotency (bats, download, query, admin status, store management)
 - Security: gate `pull_request_target` CI behind maintainer approval
 - Docs: update documentation for new and improved commands (website/store, db-dump, routes:api:list, email:test)
-- Build: update actions, platform tests, and development dependencies (mcp/sdk)
+- Build: update actions, platform tests, and development dependencies (mcp/sdk, laravel/prompts)
+- Build: update box to v4.7.0 to build phar files
 
 9.5.1 (2026-05-21)
 ------------------
