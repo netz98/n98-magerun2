@@ -29,10 +29,14 @@ We recommend using the **latest version** of n98-magerun2 for the best support a
 | PHP 8.4     | `v9.0.0` or later             |
 | PHP 8.3     | `v8.0.0` or later             |
 | PHP 8.2     | `v8.0.0` or later             |
-| PHP 8.1     | `v8.0.0` or later             |
+| PHP 8.1     | `v9.5.1` (last compatible)    |
 | PHP 7.4     | `v7.5.0` (last compatible)    |
 | PHP 7.3     | `v6.1.1` (last compatible)    |
 | PHP 7.2     | `v4.7.0` (last compatible)    |
+
+:::info
+Starting with `v10.0.0`, PHP 8.2 is the minimum supported version. If you're on PHP 8.1 or lower, stay on the `v9.x` line.
+:::
 
 ---
 
