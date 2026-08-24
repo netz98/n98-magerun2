@@ -117,3 +117,9 @@ jobs:
         env:
           N98_MAGERUN2_TEST_MAGENTO_ROOT: "${{ github.workspace }}/mage-os"
           N98_MAGERUN2_BIN: "${{ github.workspace }}/n98-magerun2.phar"
+
+      - name: Phar functional tests (MCP server)
+        run: bats tests/bats/functional_mcp_commands.bats
+        env:
+          N98_MAGERUN2_TEST_MAGENTO_ROOT: "${{ github.workspace }}/mage-os"
+          N98_MAGERUN2_BIN: "${{ github.workspace }}/n98-magerun2.phar"
