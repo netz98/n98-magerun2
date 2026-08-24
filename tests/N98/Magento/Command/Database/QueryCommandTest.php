@@ -27,6 +27,27 @@ class QueryCommandTest extends TestCase
         $this->assertStringContainsString('"1"', $tester->getDisplay());
     }
 
+    public function testDbQueryStripsWrappingDoubleQuotes()
+    {
+        $application = $this->getApplication();
+        $this->assertTrue($application->has('db:query'), 'Command db:query should be registered.');
+
+        // A caller that forwards its argument verbatim (e.g. the MCP tool) may still
+        // include the quotes recommended by this command's own --help text. Those
+        // quotes must be stripped rather than passed through to the mysql CLI.
+        $tester = $this->assertExecute(['command' => 'db:query', 'query' => '"SELECT 1"']);
+        $this->assertStringContainsString('1', $tester->getDisplay());
+    }
+
+    public function testDbQueryStripsWrappingSingleQuotes()
+    {
+        $application = $this->getApplication();
+        $this->assertTrue($application->has('db:query'), 'Command db:query should be registered.');
+
+        $tester = $this->assertExecute(['command' => 'db:query', 'query' => "'SELECT 1'"]);
+        $this->assertStringContainsString('1', $tester->getDisplay());
+    }
+
     public function testThrowsWhenNoQueryGivenNonInteractively()
     {
         $this->mockDatabaseHelper('--host=localhost --user=test --password=test test_db');

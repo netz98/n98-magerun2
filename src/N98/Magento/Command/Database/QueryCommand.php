@@ -75,6 +75,34 @@ HELP;
     }
 
     /**
+     * Strips a single pair of wrapping quotes from the query, as recommended by this
+     * command's own --help text (e.g. `db:query "SELECT 1"`). A real shell already
+     * consumes those quotes before PHP ever sees the argument, but callers that pass
+     * the argument through directly (e.g. the MCP tool) forward them literally, which
+     * would otherwise break the SQL. A genuine query never starts and ends with the
+     * same quote character wrapping the entire statement, so stripping is safe.
+     *
+     * @param string $query
+     * @return string
+     */
+    protected function stripWrappingQuotes($query)
+    {
+        $length = strlen($query);
+        if ($length < 2) {
+            return $query;
+        }
+
+        $first = $query[0];
+        $last = $query[$length - 1];
+
+        if (($first === '"' || $first === "'") && $first === $last) {
+            return substr($query, 1, -1);
+        }
+
+        return $query;
+    }
+
+    /**
      * @param \Symfony\Component\Console\Input\InputInterface $input
      * @param \Symfony\Component\Console\Output\OutputInterface $output
      * @return int
@@ -91,6 +119,7 @@ HELP;
             $query = text('SQL Query:');
         }
 
+        $query = $this->stripWrappingQuotes($query);
         $query = $this->getEscapedSql($query);
 
         $exec = 'mysql ' . $this->getDatabaseHelper()->getMysqlClientToolConnectionString() . " -e '" . $query . "'";
