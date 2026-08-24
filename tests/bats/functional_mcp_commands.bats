@@ -59,3 +59,23 @@ mcp_call_tool() {
   assert_output --partial '"isError":false'
   assert_output --partial "Update On"
 }
+
+# CommandToolHandler forwards the "arguments" string to a command's single scalar
+# argument completely verbatim (see its buildInput() docblock), so a query wrapped
+# in quotes as recommended by `db:query --help` reaches QueryCommand with the quotes
+# still attached. Regression coverage for #2126.
+@test "MCP: db:query strips wrapping double quotes recommended by its own --help text (regression #2126)" {
+  run mcp_call_tool "db:query" "db_query" '\"SELECT 1 AS result\"'
+  assert_success
+  assert_output --partial '"isError":false'
+  assert_output --partial "result"
+  refute_output --partial "ERROR 1064"
+}
+
+@test "MCP: db:query strips wrapping single quotes recommended by its own --help text (regression #2126)" {
+  run mcp_call_tool "db:query" "db_query" "'SELECT 1 AS result'"
+  assert_success
+  assert_output --partial '"isError":false'
+  assert_output --partial "result"
+  refute_output --partial "ERROR 1064"
+}
