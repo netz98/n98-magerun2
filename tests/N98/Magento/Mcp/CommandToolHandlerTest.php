@@ -204,6 +204,83 @@ class CommandToolHandlerTest extends TestCase
         );
     }
 
+    public function testInvokeBindsArgumentCorrectlyOnRepeatedCalls()
+    {
+        $command = new class('proxy:command') extends Command {
+            /** @var InputInterface|null */
+            public $capturedInput;
+
+            protected function configure(): void
+            {
+                $this->addArgument('foo', InputArgument::OPTIONAL);
+            }
+
+            protected function execute(InputInterface $input, OutputInterface $output): int
+            {
+                $this->capturedInput = $input;
+                $output->writeln((string) $input->getArgument('foo'));
+
+                return 0;
+            }
+        };
+
+        $application = new Application();
+        $application->setAutoExit(false);
+        $application->add($command);
+
+        $handler = new CommandToolHandler($application, 'proxy:command');
+
+        $firstResult = $handler('bar');
+        $this->assertSame('bar', $firstResult);
+        $this->assertSame('bar', $command->capturedInput->getArgument('foo'));
+
+        $secondResult = $handler('baz');
+        $this->assertSame('baz', $secondResult);
+        $this->assertSame('baz', $command->capturedInput->getArgument('foo'));
+    }
+
+    public function testInvokeBindsQueryArgumentOnRepeatedCalls()
+    {
+        $command = new class('proxy:query') extends Command {
+            /** @var InputInterface|null */
+            public $capturedInput;
+
+            protected function configure(): void
+            {
+                $this->addArgument('query', InputArgument::OPTIONAL);
+            }
+
+            protected function execute(InputInterface $input, OutputInterface $output): int
+            {
+                $this->capturedInput = $input;
+
+                if ($input->getArgument('query') === null) {
+                    throw new \RuntimeException('No SQL query provided. Please pass the query as a command argument.');
+                }
+
+                $output->writeln((string) $input->getArgument('query'));
+
+                return 0;
+            }
+        };
+
+        $application = new Application();
+        $application->setAutoExit(false);
+        $application->add($command);
+
+        $handler = new CommandToolHandler($application, 'proxy:query');
+
+        $this->assertSame('SELECT 1', $handler('SELECT 1'));
+        $this->assertSame(
+            'SELECT store_id, code, name FROM store LIMIT 5',
+            $handler('SELECT store_id, code, name FROM store LIMIT 5')
+        );
+        $this->assertSame(
+            'SELECT COUNT(*) FROM catalog_product_entity',
+            $handler('SELECT COUNT(*) FROM catalog_product_entity')
+        );
+    }
+
     public function testInvokeThrowsWhenCommandAcceptsNoArgumentsButExtraTextGiven()
     {
         $command = new class('proxy:noargs') extends Command {

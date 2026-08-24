@@ -105,7 +105,15 @@ class CommandToolHandler
         // An empty string renders as the bare flag instead, while still binding correctly.
         $parameters['--no-interaction'] = '';
 
-        $argumentNames = array_keys($definition->getArguments());
+        // Command::run() merges the Application's own "command" argument into the command's
+        // definition on first use (mergeApplicationDefinition()), and that mutation sticks
+        // around on the cached Command instance for the lifetime of the process. Excluding it
+        // here keeps argument targeting stable regardless of whether this is the first or a
+        // later call against the same proxied command.
+        $argumentNames = array_values(array_filter(
+            array_keys($definition->getArguments()),
+            static fn (string $name): bool => $name !== 'command'
+        ));
         $remainder = trim($remainder);
 
         if ($remainder !== '') {
