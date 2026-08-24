@@ -92,9 +92,18 @@ class CommandToolHandler
     {
         $definition = $command->getDefinition();
 
-        [$parameters, $remainder] = $this->consumeOptions($definition, $arguments);
+        [$optionParameters, $remainder] = $this->consumeOptions($definition, $arguments);
 
-        $parameters['--no-interaction'] = true;
+        // Command::run() auto-fills a missing "command" argument on $input, but that happens
+        // via setArgument() after construction, which ArrayInput::__toString() never reflects.
+        // MagentoCoreProxyCommand relies on __toString() to reconstruct the proxied bin/magento
+        // shell command, so the command name must be set here explicitly.
+        $parameters = ['command' => $this->commandName] + $optionParameters;
+
+        // ArrayInput::__toString() always renders a VALUE_NONE option's `true` as `--flag=1`,
+        // which bin/magento's own option parser then rejects as "does not accept a value".
+        // An empty string renders as the bare flag instead, while still binding correctly.
+        $parameters['--no-interaction'] = '';
 
         $argumentNames = array_keys($definition->getArguments());
         $remainder = trim($remainder);
@@ -185,7 +194,9 @@ class CommandToolHandler
                 $consumed += $skippedBeforeValue + $valueLength;
             }
 
-            $parameters['--' . $option->getName()] = $value ?? true;
+            // $value is only still null here for a VALUE_NONE flag (see the --no-interaction
+            // comment above for why an empty string, not `true`, must be used for those).
+            $parameters['--' . $option->getName()] = $value ?? '';
             $offset += $consumed;
         }
 
