@@ -1,6 +1,16 @@
 RECENT CHANGES
 ==============
 
+10.0.1 (2026-08-24)
+------------------
+
+- Fix: `db:query` strip wrapping quotes recommended by the `--help` text (#2126, #2130)
+- Fix: `mcp` restore command name and boolean flag rendering for proxy commands (#2074, #2128)
+- Fix: `mcp` keep proxied command argument binding stable across repeated calls (#2125, #2129)
+- Test: add functional bats coverage for proxied MCP tool calls and repeated cached command calls
+- Docs: note PHP 8.2 minimum requirement for v10.0.0
+- Build: update php-cs-fixer to 3.95.19
+
 10.0.0 (2026-08-20)
 ------------------
 
