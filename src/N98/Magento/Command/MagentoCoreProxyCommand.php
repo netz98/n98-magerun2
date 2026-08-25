@@ -73,11 +73,26 @@ class MagentoCoreProxyCommand extends AbstractMagentoCommand
             );
         }
 
+        // Used both to decide whether to append --no-interaction below and, further down, to
+        // enable TTY only if input is interactive and output is a terminal (not piped).
+        $isInteractive = $input->isInteractive();
+
         $shellCommand = escapeshellarg(OperatingSystem::getPhpBinary())
                       . ' '
                       . escapeshellarg($this->magentoRootDir . '/bin/magento')
                       . ' '
                       . $magentoCoreCommandInput->__toString();
+
+        // A non-interactive $input (e.g. one built by CommandToolHandler for an MCP tool call,
+        // which never puts --no-interaction into its own parameters and instead forces this via
+        // setInteractive(false)) doesn't necessarily carry a --no-interaction/-n token that
+        // __toString() would reflect. Append it explicitly so the proxied bin/magento call is
+        // non-interactive too, unless the original input already spelled it out (avoiding a
+        // duplicate flag in that case).
+        if (!$isInteractive && !$input->hasParameterOption(['--no-interaction', '-n'], true)) {
+            $shellCommand .= ' --no-interaction';
+        }
+
         $process = Process::fromShellCommandline(
             $shellCommand,
             $this->magentoRootDir,
@@ -85,8 +100,6 @@ class MagentoCoreProxyCommand extends AbstractMagentoCommand
         );
 
         $process->setTimeout($config['timeout']);
-        // Enable TTY only if input is interactive and output is a terminal (not piped)
-        $isInteractive = $input->isInteractive();
         $isOutputTerminal = function_exists('posix_isatty') && posix_isatty(STDOUT);
         $process->setTty($isInteractive && $isOutputTerminal && Process::isTtySupported());
 

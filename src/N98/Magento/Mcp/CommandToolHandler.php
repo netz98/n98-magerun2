@@ -100,11 +100,6 @@ class CommandToolHandler
         // shell command, so the command name must be set here explicitly.
         $parameters = ['command' => $this->commandName] + $optionParameters;
 
-        // ArrayInput::__toString() always renders a VALUE_NONE option's `true` as `--flag=1`,
-        // which bin/magento's own option parser then rejects as "does not accept a value".
-        // An empty string renders as the bare flag instead, while still binding correctly.
-        $parameters['--no-interaction'] = '';
-
         // Command::run() merges the Application's own "command" argument into the command's
         // definition on first use (mergeApplicationDefinition()), and that mutation sticks
         // around on the cached Command instance for the lifetime of the process. Excluding it
@@ -202,9 +197,10 @@ class CommandToolHandler
                 $consumed += $skippedBeforeValue + $valueLength;
             }
 
-            // $value is only still null here for a VALUE_NONE flag (see the --no-interaction
-            // comment above for why an empty string, not `true`, must be used for those).
-            $parameters['--' . $option->getName()] = $value ?? '';
+            // $value is only still null here for a VALUE_NONE flag. Binding it as null (rather
+            // than an empty string) lets ArrayInput::addLongOption() apply its normal semantics
+            // and convert it to `true`, matching how a real CLI invocation binds the flag.
+            $parameters['--' . $option->getName()] = $value;
             $offset += $consumed;
         }
 

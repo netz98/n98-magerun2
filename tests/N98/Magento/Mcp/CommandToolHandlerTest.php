@@ -166,13 +166,14 @@ class CommandToolHandlerTest extends TestCase
         $handler('--format=csv bar');
 
         $this->assertNotNull($command->capturedInput);
+        $this->assertFalse($command->capturedInput->isInteractive());
         $this->assertSame(
-            "'proxy:command' --format=csv --no-interaction bar",
+            "'proxy:command' --format=csv bar",
             (string) $command->capturedInput
         );
     }
 
-    public function testInvokeRendersBooleanFlagsWithoutAValue()
+    public function testInvokeBindsBooleanFlagsAsTrue()
     {
         $command = new class('proxy:flag') extends Command {
             public $capturedInput;
@@ -197,9 +198,12 @@ class CommandToolHandlerTest extends TestCase
         $handler = new CommandToolHandler($application, 'proxy:flag');
         $handler('--enabled');
 
-        $this->assertNotFalse($command->capturedInput->getOption('enabled'));
+        // Regression test for https://github.com/netz98/n98-magerun2/issues/2132: a VALUE_NONE
+        // flag must bind as the boolean `true`, not the empty string, so that command code
+        // checking it with a plain truthy test (`if ($input->getOption('enabled'))`) works.
+        $this->assertTrue($command->capturedInput->getOption('enabled'));
         $this->assertSame(
-            "'proxy:flag' --enabled --no-interaction",
+            "'proxy:flag' --enabled",
             (string) $command->capturedInput
         );
     }
