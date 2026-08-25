@@ -79,3 +79,24 @@ mcp_call_tool() {
   assert_output --partial "result"
   refute_output --partial "ERROR 1064"
 }
+
+# CommandToolHandler used to bind every VALUE_NONE option (e.g. customer:delete --force)
+# to the empty string instead of null, so ArrayInput never converted it to `true`. Any
+# command checking the flag with a plain truthy test (`if ($force)`) then saw it as
+# unset, so `customer:delete --email=... --force` always fell into its "Aborting delete"
+# branch instead of actually deleting. Regression coverage for #2132.
+@test "MCP: customer:delete forwards the --force VALUE_NONE flag correctly (regression #2132)" {
+  run mcp_call_tool "customer:create:dummy" "customer_create_dummy" "1 de_DE"
+  assert_success
+  assert_output --partial '"isError":false'
+
+  local email
+  email=$(echo "$output" | grep -oP '(?<=Customer )\S+(?= successfully created)')
+  [ -n "$email" ]
+
+  run mcp_call_tool "customer:delete" "customer_delete" "--email=${email} --force"
+  assert_success
+  assert_output --partial '"isError":false'
+  assert_output --partial "Successfully deleted 1 customer"
+  refute_output --partial "Aborting delete"
+}
