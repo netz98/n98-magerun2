@@ -1,6 +1,15 @@
 RECENT CHANGES
 ==============
 
+10.0.2 (2026-08-27)
+------------------
+
+- Fix: correctly bind MCP `VALUE_NONE` flags as booleans, including `customer:delete --force` (#2132)
+- Test: add end-to-end MCP coverage for forced customer deletion
+- Build: update phpstan/phpstan to 2.2.9 (#2135)
+- Build: update laravel/prompts to 0.3.24 (#2134)
+- Build: update friendsofphp/php-cs-fixer to 3.95.21 (#2131)
+
 10.0.1 (2026-08-24)
 ------------------
 
