@@ -40,3 +40,4 @@ super-linter.log
 
 # Claude Code
 .claude/.headroom_wrap_marker.json
+.claude/settings.local.json
