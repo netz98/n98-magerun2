@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8d9d85df2cd3624c82c51e066b3cd95a",
+    "content-hash": "7adc07d627e35396263943d0c4e2c09d",
     "packages": [
         {
             "name": "dflydev/dot-access-data",
@@ -481,16 +481,16 @@
         },
         {
             "name": "mcp/sdk",
-            "version": "v0.7.1",
+            "version": "v0.8.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/modelcontextprotocol/php-sdk.git",
-                "reference": "785fc3b9b7006ecc8a73322c939d96a4a7154345"
+                "reference": "e173367c5f506af39345f7a18e88764786edbdfa"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/modelcontextprotocol/php-sdk/zipball/785fc3b9b7006ecc8a73322c939d96a4a7154345",
-                "reference": "785fc3b9b7006ecc8a73322c939d96a4a7154345",
+                "url": "https://api.github.com/repos/modelcontextprotocol/php-sdk/zipball/e173367c5f506af39345f7a18e88764786edbdfa",
+                "reference": "e173367c5f506af39345f7a18e88764786edbdfa",
                 "shasum": ""
             },
             "require": {
@@ -508,6 +508,7 @@
                 "psr/http-server-handler": "^1.0",
                 "psr/http-server-middleware": "^1.0",
                 "psr/log": "^1.0 || ^2.0 || ^3.0",
+                "symfony/deprecation-contracts": "^2.5 || ^3.0",
                 "symfony/uid": "^5.4 || ^6.4 || ^7.3 || ^8.0"
             },
             "require-dev": {
@@ -559,9 +560,9 @@
             "description": "Model Context Protocol SDK for Client and Server applications in PHP",
             "support": {
                 "issues": "https://github.com/modelcontextprotocol/php-sdk/issues",
-                "source": "https://github.com/modelcontextprotocol/php-sdk/tree/v0.7.1"
+                "source": "https://github.com/modelcontextprotocol/php-sdk/tree/v0.8.0"
             },
-            "time": "2026-08-10T20:09:23+00:00"
+            "time": "2026-08-24T23:12:29+00:00"
         },
         {
             "name": "n98/junit-xml",
@@ -3016,16 +3017,16 @@
         },
         {
             "name": "symfony/uid",
-            "version": "v7.4.9",
+            "version": "v7.4.17",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/uid.git",
-                "reference": "2676b524340abcfe4d6151ec698463cebafee439"
+                "reference": "69d732355a139c6f8881337d28515aa01f12b8be"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/uid/zipball/2676b524340abcfe4d6151ec698463cebafee439",
-                "reference": "2676b524340abcfe4d6151ec698463cebafee439",
+                "url": "https://api.github.com/repos/symfony/uid/zipball/69d732355a139c6f8881337d28515aa01f12b8be",
+                "reference": "69d732355a139c6f8881337d28515aa01f12b8be",
                 "shasum": ""
             },
             "require": {
@@ -3070,7 +3071,7 @@
                 "uuid"
             ],
             "support": {
-                "source": "https://github.com/symfony/uid/tree/v7.4.9"
+                "source": "https://github.com/symfony/uid/tree/v7.4.17"
             },
             "funding": [
                 {
@@ -3090,7 +3091,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-04-30T15:19:22+00:00"
+            "time": "2026-08-11T07:38:58+00:00"
         },
         {
             "name": "symfony/validator",
