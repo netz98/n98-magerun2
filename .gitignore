@@ -38,5 +38,11 @@ super-linter.log
 .tokensave
 .serena
 
-# Claude Code
-.claude/.headroom_wrap_marker.json
+# Claude Code - only commit shared project config (settings.json, commands, skills);
+# everything else under .claude/ (personal settings, caches, session state) stays untracked.
+.claude/*
+!.claude/settings.json
+!.claude/commands/
+!.claude/commands/**
+!.claude/skills/
+!.claude/skills/**
