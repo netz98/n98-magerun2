@@ -13,3 +13,4 @@ It covers the setup, development practices, and how to contribute effectively.
 - [Add Core Commands](./add-core-commands.md)
 - [Build the PHAR file](./build-the-phar-file.md)
 - [Local DDEV Setup](./local-ddev-setup.md)
+- [AI-Assisted Development](./ai-assisted-development.md)
