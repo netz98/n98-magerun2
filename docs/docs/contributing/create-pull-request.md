@@ -58,6 +58,10 @@ Use Conventional Commits for your commit messages, e.g., `feat: add new command`
 If you push your changes, then a link to create a pull request will appear automatically in your terminal, which you can click (in a modern terminal) to open the PR page.
 :::
 
+:::tip
+If you use Claude Code or OpenCode, the repository provides a `/pr` slash command that opens a pull request for you — filled in from the PR template and linked to a related issue if one is detected. See [AI-Assisted Development](./ai-assisted-development.md) for details.
+:::
+
 ### 7. Respond to Feedback
 
 - Project maintainers may review your PR and request changes or clarifications.
