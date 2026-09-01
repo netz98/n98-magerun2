@@ -1,6 +1,15 @@
 RECENT CHANGES
 ==============
 
+10.1.0-dev (not released)
+------------------------
+
+- Add: `/issue` and `/pr` slash commands for Claude Code and OpenCode to file issues and pull requests against the project
+- Chore: allow committing shared `.claude` project config (commands, skills)
+- Build: update mcp/sdk to 0.8.0 (#2138)
+- Build: update friendsofphp/php-cs-fixer to 3.95.22 (#2137)
+- Build: update github-community-projects/contributors to 2.0.20 (#2136)
+
 10.0.2 (2026-08-27)
 ------------------
 
