@@ -52,6 +52,8 @@ Add new skills under `.agents/skills/<name>/SKILL.md` and symlink them from `.cl
 
 `opencode.json` at the repository root configures the [GitHub MCP server](https://github.com/github/github-mcp-server) for OpenCode, so `/issue` and `/pr` can use it as a fallback when the `gh` CLI isn't available. Claude Code users get equivalent GitHub MCP tools by [connecting the GitHub MCP server](https://docs.claude.com/en/docs/claude-code/mcp) themselves.
 
+n98-magerun2 also ships its own MCP server ([`mcp:server:start`](../command-docs/mcp/mcp-server-start.md)), which lets your assistant run n98-magerun2 commands directly against a Magento installation instead of shelling out. It's a convenient way to exercise commands against the test environments in this repo's ddev setup while contributing — see [Example Configuration (ddev)](../command-docs/mcp/mcp-server-start.md#example-configuration-ddev) for Claude Code and OpenCode setup.
+
 ## What's checked into git
 
 Only the shared, tool-agnostic parts of this configuration are committed — everything else (personal settings, local caches, session state) is ignored:

@@ -109,3 +109,40 @@ To use n98-magerun2 as an MCP server in Claude Desktop, add the following to you
 ```
 
 Make sure to replace `/path/to/php` and `/path/to/n98-magerun2.phar` with your actual paths.
+
+## Example Configuration (ddev)
+
+[ddev](https://ddev.com/) ships `magerun2` out of the box for Magento 2 projects, so you don't have to install anything to run the MCP server. Note that the bundled version may not be the latest — see [ddev Integration](../../extending/development/install-in-ddev.md) if you need to update it.
+
+Since the command must run inside the web container, add it as an MCP server via `ddev exec`.
+
+:::info
+`--root-dir` is resolved **inside the web container**, not on the host. Use the container path to your Magento installation (usually `/var/www/html` unless your project uses a different docroot).
+:::
+
+### Claude Code
+
+```bash
+claude mcp add n98-magerun -- ddev exec magerun2 --root-dir=/var/www/html mcp:server:start
+```
+
+Once added, restart Claude Code (or run `claude mcp list`) to confirm the server is available, then verify the exposed tools with `mcp:server:start --help`.
+
+### OpenCode
+
+Add an entry to `opencode.jsonc` (or `opencode.json`) in your project root:
+
+```jsonc
+{
+  "$schema": "https://opencode.ai/config.json",
+  "mcp": {
+    "n98-magerun": {
+      "type": "local",
+      "command": ["ddev", "exec", "magerun2", "--root-dir=/var/www/html", "mcp:server:start"],
+      "enabled": true
+    }
+  }
+}
+```
+
+Restart OpenCode to pick up the new server.
