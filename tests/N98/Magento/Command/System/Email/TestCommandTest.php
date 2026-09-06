@@ -101,7 +101,7 @@ class TestCommandTest extends TestCase
         $tester = new CommandTester($command);
         $status = $tester->execute([
             'command' => 'sys:email:test',
-            '--to' => 'recipient@example.com',
+            'email' => 'recipient@example.com',
             '--cc' => ['copy@example.com'],
         ]);
 
@@ -128,6 +128,14 @@ class TestCommandTest extends TestCase
     {
         $this->assertDisplayContains(
             ['command' => 'sys:email:test', '--to' => 'not-an-email'],
+            'Please provide a valid recipient email address with --to'
+        );
+    }
+
+    public function testInvalidEmailArgumentFails()
+    {
+        $this->assertDisplayContains(
+            ['command' => 'sys:email:test', 'email' => 'not-an-email'],
             'Please provide a valid recipient email address with --to'
         );
     }
