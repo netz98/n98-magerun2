@@ -10,14 +10,15 @@ Sends a minimal test email through Magento's own mail transport, without creatin
 :::
 
 ```sh
-n98-magerun2.phar sys:email:test [--to=<email>] [--from=<email>] [--cc=<email>]... [--store=<code-or-id>]
+n98-magerun2.phar sys:email:test [<email>] [--to=<email>] [--from=<email>] [--cc=<email>]... [--store=<code-or-id>]
 ```
 
-If `--to` is omitted, you will be prompted for it interactively.
+If the email argument and `--to` are omitted, you will be prompted for the recipient interactively. If both are provided, the positional email argument takes precedence.
 
 ## Options
 
-- `--to` (required, prompted for interactively if omitted) - Recipient email address
+- `<email>` (optional, prompted for interactively if omitted) - Recipient email address
+- `--to` (optional, prompted for interactively if omitted) - Recipient email address; retained for compatibility
 - `--from` (optional) - Sender email address, defaults to the store's configured general contact email
 - `--cc` (optional, repeatable) - Additional cc email address, can be used multiple times
 - `--store` (optional) - Store code or id, defaults to the current store
@@ -26,6 +27,7 @@ If `--to` is omitted, you will be prompted for it interactively.
 
 ```sh
 n98-magerun2.phar sys:email:test
+n98-magerun2.phar sys:email:test you@example.com
 n98-magerun2.phar sys:email:test --to=you@example.com
 n98-magerun2.phar sys:email:test --to=you@example.com --store=2
 n98-magerun2.phar sys:email:test --to=you@example.com --from=sender@example.com --cc=cc1@example.com --cc=cc2@example.com
