@@ -1,0 +1,24 @@
+{
+  "data": {
+    "3.0.0": {
+      "version": "3.0.0",
+      "releaseDate": "2026-05-18",
+      "eolDate": null,
+      "systemRequirements": {
+        "mysql": ["8.4"],
+        "mariadb": ["11.4", "12.3"]
+      }
+    },
+    "2.3.0": {
+      "version": "2.3.0",
+      "releaseDate": "2026-02-01",
+      "eolDate": null,
+      "systemRequirements": {
+        "mysql": ["8.4"],
+        "mariadb": ["11.4", "11.8"]
+      }
+    }
+  },
+  "_documentation": "https://magento.watch/api",
+  "_description": "test fixture"
+}
