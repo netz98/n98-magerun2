@@ -710,6 +710,48 @@ teardown() {
 }
 
 # ============================================
+# Command: db:compatibility
+# ============================================
+
+@test "Command: db:compatibility" {
+  run $BIN "db:compatibility"
+  assert_success
+  assert_output --partial "Database compatibility"
+  assert_output --partial "Support status"
+
+  # Mage-OS has its own version numbering (e.g. "3.0.0"), distinct from magento-community's
+  # "2.4.x" - it must be detected as its own product, not silently evaluated as plain "magento".
+  if is_mage_os_distribution; then
+    assert_output --regexp "mage-os [0-9]"
+  else
+    assert_output --regexp "magento [0-9]"
+  fi
+}
+
+@test "Command: db:compatibility -v shows the full evaluated-configuration table" {
+  run $BIN "db:compatibility" -v
+  assert_success
+  assert_output --partial "Evaluated configuration"
+  assert_output --partial "Database lifecycle"
+  assert_output --regexp "Product +m"
+}
+
+@test "Command: db:compatibility --format=json" {
+  run $BIN "db:compatibility" --format=json
+  assert_success
+  assert_output --partial "\"status\""
+  assert_output --partial "\"findingId\""
+}
+
+@test "Command: db:compatibility --online" {
+  run $BIN "db:compatibility" --online --format=json
+  assert_success
+  # Either a live magento.watch check succeeded, or it gracefully fell back to the bundled
+  # dataset - both are valid outcomes here (this must never hang or error out).
+  assert_output --regexp "\"dataSource\": ?\"(magento-watch-live|bundled)\""
+}
+
+# ============================================
 # Command: db:status
 # ============================================
 

@@ -111,6 +111,7 @@ commands:
     - N98\Magento\Command\Customer\ListCommand
     - N98\Magento\Command\Customer\Token\CreateCommand
     - N98\Magento\Command\Database\AddDefaultAuthorizationRoles
+    - N98\Magento\Command\Database\CompatibilityCommand
     - N98\Magento\Command\Database\ConsoleCommand
     - N98\Magento\Command\Database\CreateCommand
     - N98\Magento\Command\Database\DropCommand

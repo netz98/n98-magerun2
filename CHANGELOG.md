@@ -4,6 +4,13 @@ RECENT CHANGES
 10.1.0-dev (not released)
 ------------------------
 
+- Add: `db:compatibility` command to assess Magento/Adobe Commerce and MySQL/MariaDB version compatibility against a versioned dataset (`./res/db-compatibility.json`), with `--target-version`, `--target-db`, `--target-db-version` and `--format=json` support (#2141)
+- Add: `db:compatibility` detects Mage-OS installations as their own product (with their own version numbering) instead of evaluating them as plain Magento (#2141)
+- Add: `db:compatibility --online` checks the current/target application version live against magento.watch instead of relying solely on the bundled dataset (#2141)
+- Change: `db:compatibility` standard output trimmed to the essentials (verdict and reason); the full evaluated-configuration and database lifecycle tables, dataset metadata, finding IDs, and source citations now require `-v` (`--format=json` is unaffected and always complete) (#2141)
+- Remove: `db:compatibility --dataset-url` - there is no remote endpoint to point it at; use `--online` for live data instead (#2141)
+- Fix: `db:compatibility`'s bundled dataset regenerated from real, per-release MySQL/MariaDB requirements data (via a new `scripts/import-db-compatibility-dataset.php` importer sourced from magento.watch) instead of hand-authored, unverified entries (#2141)
+- Build: `build.sh` refreshes and schema-validates the `db:compatibility` dataset before packaging a release, with a `--skip-dataset-fetch` opt-out (#2141)
 - Add: `/issue` and `/pr` slash commands for Claude Code and OpenCode to file issues and pull requests against the project
 - Chore: allow committing shared `.claude` project config (commands, skills)
 - Build: update mcp/sdk to 0.8.0 (#2138)
