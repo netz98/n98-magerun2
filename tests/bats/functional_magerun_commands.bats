@@ -50,6 +50,14 @@ function create_test_admin_user() {
   fi
 }
 
+function github_platform_outage() {
+  if [[ "$output" != *"The server is unavailable at this time. Please wait a few minutes before you try again."* ]]; then
+    return 1
+  fi
+
+  printf '%s\n' "GitHub platform had an outage during the test run; skipping GitHub response assertions." >&3
+}
+
 teardown() {
   if [ -n "${store_id:-}" ]; then
     $BIN "sys:store:delete" "$store_id" --force >/dev/null 2>&1 || true
@@ -939,31 +947,37 @@ teardown() {
 
 @test "Command: github:pr 21787" {
   run $BIN "github:pr" 21787
+  github_platform_outage && return 0
   assert_output --partial "x_forwarded_for"
 }
 
 @test "Command: github:pr --patch 21787" {
   run $BIN "github:pr" --patch 21787
+  github_platform_outage && return 0
   assert_output --partial "PR-21787-magento-magento2.patch"
 }
 
 @test "Command: github:pr --diff 21787" {
   run $BIN "github:pr" --diff 21787
+  github_platform_outage && return 0
   assert_output --partial "setXForwardedFor"
 }
 
 @test "Command: github:pr --mage-os 1" {
   run $BIN "github:pr" --mage-os 1
+  github_platform_outage && return 0
   assert_output --partial "automatically"
 }
 
 @test "Command: github:pr --mage-os --patch 1" {
   run $BIN "github:pr" --mage-os --patch 1
+  github_platform_outage && return 0
   assert_output --partial "PR-1-mage-os-mageos-magento2.patch"
 }
 
 @test "Command: github:pr --mage-os --diff 1" {
   run $BIN "github:pr" --mage-os --diff 1
+  github_platform_outage && return 0
   assert_output --partial "server_url"
 }
 
