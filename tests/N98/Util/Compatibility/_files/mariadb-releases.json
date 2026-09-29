@@ -1,0 +1,18 @@
+{
+  "major_releases": [
+    {
+      "release_id": "10.11",
+      "release_name": "10.11",
+      "release_status": "Stable",
+      "release_support_type": "Long Term Support",
+      "release_eol_date": "2028-02-16"
+    },
+    {
+      "release_id": "11.4",
+      "release_name": "11.4",
+      "release_status": "Stable",
+      "release_support_type": "Long Term Support",
+      "release_eol_date": "2029-05-29"
+    }
+  ]
+}

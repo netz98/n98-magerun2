@@ -1,0 +1,132 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/netz98/n98-magerun2/blob/develop/res/db-compatibility.schema.json",
+  "title": "n98-magerun2 database compatibility dataset",
+  "description": "Versioned dataset describing which application (Magento Open Source / Adobe Commerce) versions officially support which database (MySQL / MariaDB) versions, consumed by the `db:compatibility` command. This is implemented and validated in PHP by N98\\Util\\Compatibility\\Dataset\\DatasetSchemaValidator.",
+  "type": "object",
+  "required": ["schemaVersion", "datasetRevision", "publishedAt", "sources", "applications", "rules", "migrations"],
+  "additionalProperties": true,
+  "properties": {
+    "schemaVersion": {
+      "type": "string",
+      "description": "Version of this schema the dataset was authored against."
+    },
+    "datasetRevision": {
+      "type": "string",
+      "description": "Monotonically increasing revision identifier for the dataset content itself, independent of schemaVersion."
+    },
+    "publishedAt": {
+      "type": "string",
+      "format": "date",
+      "description": "Date the dataset revision was published."
+    },
+    "freshnessPolicy": {
+      "type": "object",
+      "description": "Documents how stale evidence is treated. Consumers should treat sources whose verifiedAt predates this window as insufficient for a conclusive assessment.",
+      "properties": {
+        "recommendedMaxAgeDays": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "description": {
+          "type": "string"
+        }
+      }
+    },
+    "notes": {
+      "type": "string",
+      "description": "Free-text maintenance notes shown to dataset maintainers, e.g. provenance/community-maintenance status."
+    },
+    "sources": {
+      "type": "array",
+      "description": "Authoritative references cited by applications[] and rules[].",
+      "items": {
+        "type": "object",
+        "required": ["id", "url"],
+        "properties": {
+          "id": {"type": "string"},
+          "title": {"type": "string"},
+          "url": {"type": "string", "format": "uri"},
+          "verifiedAt": {"type": "string", "format": "date"}
+        }
+      }
+    },
+    "applications": {
+      "type": "array",
+      "description": "Declares, per product/edition/deployment-context/version-range scope, which database families are covered by rules[] and whether that coverage is exhaustive (i.e. whether an unmatched family/version may be treated as unsupported rather than unknown).",
+      "items": {
+        "type": "object",
+        "required": ["id", "product", "edition", "context", "versionRange", "dbFamilyCoverage", "exhaustive"],
+        "properties": {
+          "id": {"type": "string"},
+          "product": {"type": "string"},
+          "edition": {"type": "string", "description": "\"community\", \"enterprise\", or \"any\"."},
+          "context": {"type": "string", "description": "Deployment context, e.g. \"on-premise\", \"cloud\", or \"any\"."},
+          "versionRange": {"$ref": "#/definitions/versionRange"},
+          "dbFamilyCoverage": {
+            "type": "array",
+            "items": {"type": "string", "enum": ["mysql", "mariadb"]}
+          },
+          "exhaustive": {
+            "type": "boolean",
+            "description": "When true, a database family not listed in dbFamilyCoverage is reported as unsupported (not unknown) for this scope."
+          },
+          "vendor": {"type": "string"},
+          "sources": {"type": "array", "items": {"type": "string"}}
+        }
+      }
+    },
+    "rules": {
+      "type": "array",
+      "description": "Explicit support rules. A version pair is only ever \"unsupported\" via an explicit rule here, or because it falls inside an exhaustively-covered applications[] scope with no matching rule.",
+      "items": {
+        "type": "object",
+        "required": ["id", "product", "editions", "contexts", "appVersionRange", "dbFamily", "dbVersionRange", "support", "requirement"],
+        "properties": {
+          "id": {"type": "string", "description": "Stable finding identifier."},
+          "product": {"type": "string"},
+          "editions": {"type": "array", "items": {"type": "string"}},
+          "contexts": {"type": "array", "items": {"type": "string"}},
+          "appVersionRange": {"$ref": "#/definitions/versionRange"},
+          "dbFamily": {"type": "string", "enum": ["mysql", "mariadb"]},
+          "dbVersionRange": {"$ref": "#/definitions/versionRange"},
+          "support": {"type": "string", "enum": ["supported", "unsupported"]},
+          "requirement": {"type": "string", "description": "Human-readable explanation of the authoritative requirement backing this rule."},
+          "recommended": {
+            "type": "object",
+            "properties": {
+              "version": {"type": "string"},
+              "rationale": {"type": "string"},
+              "recommendedBy": {"type": "string"}
+            }
+          },
+          "sources": {"type": "array", "items": {"type": "string"}}
+        }
+      }
+    },
+    "migrations": {
+      "type": "array",
+      "description": "Migration guidance for database-family transitions (e.g. MySQL to MariaDB), independent of the support verdict.",
+      "items": {
+        "type": "object",
+        "required": ["from", "to", "applicableVersions", "guideUrl"],
+        "properties": {
+          "from": {"type": "string", "enum": ["mysql", "mariadb"]},
+          "to": {"type": "string", "enum": ["mysql", "mariadb"]},
+          "applicableVersions": {"$ref": "#/definitions/versionRange"},
+          "guideUrl": {"type": "string", "format": "uri"},
+          "notes": {"type": "string"}
+        }
+      }
+    }
+  },
+  "definitions": {
+    "versionRange": {
+      "type": "object",
+      "properties": {
+        "min": {"type": ["string", "null"]},
+        "max": {"type": ["string", "null"]}
+      }
+    }
+  }
+}
