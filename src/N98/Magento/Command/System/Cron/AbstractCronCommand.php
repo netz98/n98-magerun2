@@ -239,7 +239,7 @@ abstract class AbstractCronCommand extends AbstractMagentoCommand
      */
     protected function askJobCode(InputInterface $input, OutputInterface $output, $jobs)
     {
-        return select('<question>Please select a job:</question>', array_column($jobs, 'Job'));
+        return select('<question>Please select a job:</question>', array_column($jobs, 'Job'), scroll: 15);
     }
 
     /**
