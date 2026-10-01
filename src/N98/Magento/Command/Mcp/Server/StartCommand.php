@@ -64,50 +64,9 @@ class StartCommand extends AbstractMagentoCommand
                 'Each tool name matches an n98-magerun2 command. Pass CLI arguments as a single string, without the command name.'
             );
 
-        $commands = $application->all();
-        ksort($commands);
-
-        $patternResolver = new CommandPatternResolver();
-        $commandGroups = $patternResolver->getCommandGroupDefinitions($this->getCommandConfig());
-        $includePatterns = $this->resolveFilterPatterns(
-            $input->getOption('include'),
-            $patternResolver,
-            $commandGroups
-        );
-        $excludePatterns = $this->resolveFilterPatterns(
-            $input->getOption('exclude'),
-            $patternResolver,
-            $commandGroups
-        );
-        $internalCommands = ['help', 'list', 'completion'];
-
         $toolNames = [];
 
-        foreach ($commands as $commandName => $command) {
-            if ($command->isHidden() || $commandName === $this->getName()) {
-                continue;
-            }
-
-            if ($commandName !== $command->getName()) {
-                continue;
-            }
-
-            if (in_array($commandName, $internalCommands, true)) {
-                continue;
-            }
-
-            if ($command instanceof MagentoCoreProxyCommand && !$this->matchesAnyPattern($commandName, $includePatterns)) {
-                continue;
-            }
-
-            if (!empty($includePatterns) && !$this->matchesAnyPattern($commandName, $includePatterns)) {
-                continue;
-            }
-
-            if ($this->matchesAnyPattern($commandName, $excludePatterns)) {
-                continue;
-            }
-
+        foreach ($this->getExposedCommands($input) as $commandName => $command) {
             $description = $command->getDescription();
             if ($description === '') {
                 $description = sprintf('Run the "%s" command.', $commandName);
@@ -146,6 +105,45 @@ class StartCommand extends AbstractMagentoCommand
         $server->run(new StdioTransport());
 
         return Command::SUCCESS;
+    }
+
+    /**
+     * @return array<string, Command>
+     */
+    protected function getExposedCommands(InputInterface $input): array
+    {
+        $commands = $this->getApplication()->all();
+        ksort($commands);
+
+        $commandConfig = $this->getCommandConfig();
+        $patternResolver = new CommandPatternResolver();
+        $commandGroups = $patternResolver->getCommandGroupDefinitions($commandConfig);
+        $includePatterns = $this->resolveFilterPatterns($input->getOption('include'), $patternResolver, $commandGroups);
+        $excludePatterns = array_merge(
+            $this->resolveFilterPatterns($input->getOption('exclude'), $patternResolver, $commandGroups),
+            $this->resolveFilterPatterns($commandConfig['disabled'] ?? [], $patternResolver, $commandGroups)
+        );
+        $internalCommands = ['help', 'list', 'completion'];
+
+        return array_filter($commands, function (Command $command, string $commandName) use ($includePatterns, $excludePatterns, $internalCommands): bool {
+            if ($command->isHidden() || $commandName === $this->getName() || $commandName !== $command->getName()) {
+                return false;
+            }
+
+            if (in_array($commandName, $internalCommands, true)) {
+                return false;
+            }
+
+            if ($command instanceof MagentoCoreProxyCommand && !$this->matchesAnyPattern($commandName, $includePatterns)) {
+                return false;
+            }
+
+            if (!empty($includePatterns) && !$this->matchesAnyPattern($commandName, $includePatterns)) {
+                return false;
+            }
+
+            return !$this->matchesAnyPattern($commandName, $excludePatterns);
+        }, ARRAY_FILTER_USE_BOTH);
     }
 
     public function getHelp(): string

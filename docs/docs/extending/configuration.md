@@ -38,6 +38,67 @@ commands:
     - "customer:create:cmuench": "customer:create c.muench@netz98.de test123456 Christian Münch"
 ```
 
+## Disabling Commands
+
+Use `commands.disabled` to disable commands globally, including their aliases. Disabled commands are unavailable in the CLI and cannot be exposed as MCP tools. Entries can be exact command names or wildcard patterns:
+
+```yaml
+commands:
+  disabled:
+    - mcp:server:start
+    - db:dump
+    - db:import
+```
+
+To disable entire command namespaces, use quoted wildcard patterns:
+
+```yaml
+commands:
+  disabled:
+    - 'mcp:*'
+    - 'db:*'
+```
+
+This disables all MCP server commands and all database commands globally, including Magento core and custom module commands whose names match a pattern. If a command's canonical name matches, all its aliases are unavailable too. A pattern matching only an alias disables that alias while leaving the canonical command and other aliases available.
+
+All commands are enabled by default. To enable a command again, remove every matching name or pattern from the disabled list in the configuration that added it. Lists from different configuration levels are merged; an empty list in a later config does not clear earlier exclusions.
+
+To keep commands available in the CLI but disable them as MCP tools, configure `disabled` under `N98\Magento\Command\Mcp\Server\StartCommand`:
+
+```yaml
+commands:
+  N98\Magento\Command\Mcp\Server\StartCommand:
+    disabled:
+      - db:dump
+      - db:import
+```
+
+For example, exclude all database commands and the predefined unsafe command group from MCP:
+
+```yaml
+commands:
+  N98\Magento\Command\Mcp\Server\StartCommand:
+    disabled:
+      - 'db:*'
+      - '@unsafe'
+```
+
+The MCP-specific list matches canonical CLI command names, such as `db:dump`, rather than MCP tool names, such as `db_dump`. Aliases are never exposed as separate MCP tools. Disabled tools stay excluded even when selected by `--include`. The `--exclude` option adds further exclusions. Globally disabled commands are unavailable to MCP regardless of the MCP-specific settings.
+
+### Wildcard Syntax
+
+Both disabled lists use case-sensitive shell-style wildcard matching:
+
+| Pattern | Meaning | Example |
+| --- | --- | --- |
+| `*` | Zero or more characters, including `:` | `'db:*'` disables every database command. |
+| `?` | Exactly one character | `'db:d?mp'` matches `db:dump`. |
+| `[abc]` | One character from the set | `'db:[di]*'` matches `db:dump`, `db:import`, and `db:info`. |
+
+Quote wildcard patterns in YAML, particularly patterns beginning with `*`, to avoid YAML alias syntax. Use one name or pattern per list entry. `@group` references are supported only by the MCP-specific list; the global list supports names and wildcard patterns.
+
+Configuration changes take effect on the next CLI invocation. Restart an already-running MCP server to apply changes to its tool list. For more examples, see [`mcp:server:start`](../command-docs/mcp/mcp-server-start.md#disabling-mcp-tools-in-configuration).
+
 ## Config Types
 
 ### System Wide Config

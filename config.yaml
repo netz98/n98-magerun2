@@ -202,8 +202,9 @@ commands:
     - N98\Magento\Command\Sales\SequenceAddCommand
     - N98\Magento\Command\Sales\SequenceRemoveCommand
 
-  disabled:
-    - dummy
+  # Commands disabled globally (CLI and MCP), by command name or wildcard pattern.
+  # Example: [mcp:server:start, db:dump, db:import]
+  disabled: []
 
   aliases: []
 
@@ -214,6 +215,9 @@ commands:
   # and on project and user level. See wiki for details.
 
   N98\Magento\Command\Mcp\Server\StartCommand:
+    # Commands disabled only as MCP tools. Supports wildcards and @group references.
+    # Example: [db:dump, db:import]
+    disabled: []
     command-groups:
       - id: admin
         description: Admin users, tokens and notifications

@@ -66,6 +66,48 @@ Run the command help to see all configured groups and their patterns:
 n98-magerun2.phar mcp:server:start --help
 ```
 
+## Disabling MCP Tools in Configuration
+
+To permanently exclude commands from MCP while keeping them available in the CLI, add a `disabled` list to the server's command configuration in your project, user, or system config:
+
+```yaml
+commands:
+  N98\Magento\Command\Mcp\Server\StartCommand:
+    disabled:
+      - db:dump
+      - db:import
+```
+
+Use CLI command names (`db:dump`), rather than MCP tool names (`db_dump`). These exclusions always apply, even with `--include`; `--exclude` can exclude additional commands.
+
+Wildcard matching is case-sensitive. `*` matches zero or more characters (including `:`), `?` matches one character, and `[abc]` matches one character from a set. The MCP-specific list also supports `@group` references:
+
+```yaml
+commands:
+  N98\Magento\Command\Mcp\Server\StartCommand:
+    disabled:
+      - 'db:*'
+      - 'sys:cron:ru?'
+      - '@unsafe'
+```
+
+This excludes all database commands, `sys:cron:run`, and commands in the unsafe group from MCP. Quote wildcard patterns in YAML and use one pattern per list entry. Aliases are never registered as separate MCP tools.
+
+Commands disabled globally through `commands.disabled` are also unavailable as MCP tools. To disable the MCP server itself, add `mcp:server:start` to that global list. See [Disabling Commands](../../extending/configuration.md#disabling-commands) for examples.
+
+The global list supports wildcards too:
+
+```yaml
+commands:
+  disabled:
+    - 'mcp:*'
+    - 'db:*'
+```
+
+This disables all matching commands in both the CLI and MCP, including their aliases. `@group` references are supported only in the MCP-specific list.
+
+Both lists default to empty. To re-enable a command, remove all matching exclusions from the configuration files that added them. Configuration lists are merged, so an empty list in a later config does not clear earlier exclusions. Restart the MCP server after changing configuration to update the tool list.
+
 ## Predefined Command Groups
 
 The project ships with these predefined groups in `config.yaml`:
