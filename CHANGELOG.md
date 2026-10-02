@@ -1,9 +1,14 @@
 RECENT CHANGES
 ==============
 
-10.1.0-dev (not released)
-------------------------
+10.1.0 (2026-10-02)
+------------------
 
+- Add: `fast-di-compile:download-binary` command to download a checksum-verified Rust DI compiler binary for the selected release and platform
+- Add: `fast-di-compile:install` command to install and enable the companion Magento module and verified compiler binary, with an optional `--no-setup-upgrade` flag
+- Add: disable commands globally or only as MCP tools through configuration, with wildcard pattern support
+- Imp: `sys:email:test` accepts the recipient as a positional argument while retaining the `--to` option
+- Fix: limit the interactive cron job selector height
 - Add: `db:compatibility` command to assess Magento/Adobe Commerce and MySQL/MariaDB version compatibility against a versioned dataset (`./res/db-compatibility.json`), with `--target-version`, `--target-db`, `--target-db-version` and `--format=json` support (#2141)
 - Add: `db:compatibility` detects Mage-OS installations as their own product (with their own version numbering) instead of evaluating them as plain Magento (#2141)
 - Add: `db:compatibility --online` checks the current/target application version live against magento.watch instead of relying solely on the bundled dataset (#2141)
@@ -12,10 +17,15 @@ RECENT CHANGES
 - Fix: `db:compatibility`'s bundled dataset regenerated from real, per-release MySQL/MariaDB requirements data (via a new `scripts/import-db-compatibility-dataset.php` importer sourced from magento.watch) instead of hand-authored, unverified entries (#2141)
 - Build: `build.sh` refreshes and schema-validates the `db:compatibility` dataset before packaging a release, with a `--skip-dataset-fetch` opt-out (#2141)
 - Add: `/issue` and `/pr` slash commands for Claude Code and OpenCode to file issues and pull requests against the project
+- Test: tolerate temporary GitHub outages in BATS tests
+- Docs: document fast DI compiler commands, positional email recipients, global and MCP command disabling, MCP usage in ddev, and AI-assisted contributor workflows
 - Chore: allow committing shared `.claude` project config (commands, skills)
-- Build: update mcp/sdk to 0.8.0 (#2138)
-- Build: update friendsofphp/php-cs-fixer to 3.95.22 (#2137)
+- Chore: configure local development tooling
+- Build: update mcp/sdk to 0.8.1
+- Build: update twig/twig to 3.30.0 and rmccue/requests to 2.0.20
+- Build: update phpstan/phpstan to 2.2.16 and friendsofphp/php-cs-fixer to 3.95.27
 - Build: update github-community-projects/contributors to 2.0.20 (#2136)
+- Build: update npm/yarn documentation dependencies, including postcss-selector-parser, and resolve npm security advisories
 
 10.0.2 (2026-08-27)
 ------------------
