@@ -24,7 +24,7 @@ class ChangePasswordCommandTest extends TestCase
      */
     public function testInvalidPasswordLeavesStoredHashUnchanged(array $arguments, string $message, bool $interactive)
     {
-        if ($interactive && stream_isatty(STDIN)) {
+        if ($interactive && defined('STDIN') && stream_isatty(\STDIN)) {
             $this->markTestSkipped('This case requires stdin without a TTY.');
         }
         $application = $this->getApplication();

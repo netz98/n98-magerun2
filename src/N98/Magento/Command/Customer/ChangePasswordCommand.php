@@ -91,7 +91,7 @@ HELP;
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $password = $input->getArgument('password');
-        if ($password === null && (!$input->isInteractive() || !stream_isatty(STDIN))) {
+        if ($password === null && (!$input->isInteractive() || !defined('STDIN') || !stream_isatty(\STDIN))) {
             $output->writeln('<error>A password is required in non-interactive mode.</error>');
             return Command::FAILURE;
         }
