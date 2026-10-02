@@ -90,14 +90,27 @@ HELP;
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $password = $input->getArgument('password');
+        if ($password === null && (!$input->isInteractive() || !stream_isatty(STDIN))) {
+            $output->writeln('<error>A password is required in non-interactive mode.</error>');
+            return Command::FAILURE;
+        }
+        if ($password === '') {
+            $output->writeln('<error>The password must not be empty.</error>');
+            return Command::FAILURE;
+        }
+
         $this->detectMagento($output);
         if ($this->initMagento()) {
             $email = $this->getHelper('parameter')->askEmail($input, $output);
 
             // Password
-            $password = $input->getArgument('password');
             if ($password === null) {
-                $password = password('<question>Password:</question>');
+                $password = password('<question>Password:</question>', required: true);
+            }
+            if ($password === '') {
+                $output->writeln('<error>The password must not be empty.</error>');
+                return Command::FAILURE;
             }
 
             $website = $this->getHelper('parameter')->askWebsite($input, $output);
@@ -136,7 +149,6 @@ HELP;
             };
 
             try {
-                $this->state->setAreaCode(Area::AREA_FRONTEND);
                 $this->state->emulateAreaCode(Area::AREA_FRONTEND, $changePassword);
 
                 $output->writeln('<info>Password successfully changed</info>');

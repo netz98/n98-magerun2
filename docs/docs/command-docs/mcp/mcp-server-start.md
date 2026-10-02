@@ -40,6 +40,22 @@ The server runs using stdio transport, meaning it communicates via standard inpu
 - **Argument Handling**: Arguments for commands are passed as a single string.
 - **Output**: The output of the command is returned to the MCP client.
 
+### Passing Arguments
+
+Place options before positional arguments in the tool's `arguments` string.
+For commands with multiple positional arguments, values are assigned in declaration order.
+Use single or double quotes around a value containing spaces, for example:
+
+```json
+{"arguments": "user@example.com \"Secret password 2026!\" 1"}
+```
+
+This passes the email, password, and website separately to `customer:change-password`.
+Array arguments collect the remaining values. Excess values are rejected when no array argument is available.
+For commands with exactly one scalar argument, such as `db:query`, the entire text after leading options
+is passed verbatim, preserving SQL quotes without additional shell quoting.
+Tools run non-interactively, so provide any values that would otherwise require a prompt.
+
 ## Include / Exclude Filters
 
 - `--include`: Registers only commands matching one or more patterns.
