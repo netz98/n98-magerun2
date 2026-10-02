@@ -41,6 +41,7 @@ class AddAddressCommandTest extends TestCase
         $command->inject($repository, $state);
         $application->add($command);
         $parameterHelper = $this->createMock(ParameterHelper::class);
+        $parameterHelper->method('getName')->willReturn('parameter');
         $parameterHelper->method('askEmail')->willReturn('user@example.com');
         $parameterHelper->method('askWebsite')->willReturn($website);
         $command->getHelperSet()->set($parameterHelper, 'parameter');
