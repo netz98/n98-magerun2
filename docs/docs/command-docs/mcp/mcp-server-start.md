@@ -37,7 +37,7 @@ The server runs using stdio transport, meaning it communicates via standard inpu
 ## Features
 
 - **Tool Exposure**: Commands are filtered before registration. Aliases and internal Symfony commands are excluded.
-- **Argument Handling**: Arguments for commands are passed as a single string.
+- **Argument Handling**: Arguments for commands are passed as a single string. Leading `--options` are parsed first; the rest is bound to the command's positional arguments in order, one word each (quotes group words), and the last argument receives everything that remains verbatim. For example, `customer:change-password` takes `user@example.com Secret-123 1`, and `db:query` takes an unquoted SQL statement.
 - **Output**: The output of the command is returned to the MCP client.
 
 ## Include / Exclude Filters

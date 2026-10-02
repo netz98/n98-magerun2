@@ -303,4 +303,85 @@ class CommandToolHandlerTest extends TestCase
         $this->expectException(ToolCallException::class);
         $handler('unexpected extra text');
     }
+
+    public function testInvokeBindsEachPositionalArgumentInOrder()
+    {
+        $command = $this->createCapturingCommand('proxy:password', function (Command $command) {
+            $command->addArgument('email', InputArgument::OPTIONAL);
+            $command->addArgument('password', InputArgument::OPTIONAL);
+            $command->addArgument('website', InputArgument::OPTIONAL);
+        });
+
+        $this->createHandler($command, 'proxy:password')('user@example.com Secret-123 1');
+
+        $this->assertSame('user@example.com', $command->capturedInput->getArgument('email'));
+        $this->assertSame('Secret-123', $command->capturedInput->getArgument('password'));
+        $this->assertSame('1', $command->capturedInput->getArgument('website'));
+    }
+
+    public function testInvokeLeavesTrailingArgumentsUnsetWhenFewerWordsGiven()
+    {
+        $command = $this->createCapturingCommand('proxy:info', function (Command $command) {
+            $command->addArgument('email', InputArgument::OPTIONAL);
+            $command->addArgument('website', InputArgument::OPTIONAL);
+        });
+
+        $this->createHandler($command, 'proxy:info')('user@example.com');
+
+        $this->assertSame('user@example.com', $command->capturedInput->getArgument('email'));
+        $this->assertNull($command->capturedInput->getArgument('website'));
+    }
+
+    public function testInvokeUnquotesEarlierArgumentsAndPassesTheLastOneVerbatim()
+    {
+        $command = $this->createCapturingCommand('proxy:note', function (Command $command) {
+            $command->addArgument('name', InputArgument::OPTIONAL);
+            $command->addArgument('note', InputArgument::OPTIONAL);
+        });
+
+        $this->createHandler($command, 'proxy:note')('"John Doe" it\'s a "multi-word" note');
+
+        $this->assertSame('John Doe', $command->capturedInput->getArgument('name'));
+        $this->assertSame('it\'s a "multi-word" note', $command->capturedInput->getArgument('note'));
+    }
+
+    public function testInvokeSplitsTrailingArrayArgumentAfterScalarArgument()
+    {
+        $command = $this->createCapturingCommand('proxy:tags', function (Command $command) {
+            $command->addArgument('email', InputArgument::OPTIONAL);
+            $command->addArgument('tags', InputArgument::IS_ARRAY | InputArgument::OPTIONAL);
+        });
+
+        $this->createHandler($command, 'proxy:tags')('user@example.com vip wholesale');
+
+        $this->assertSame('user@example.com', $command->capturedInput->getArgument('email'));
+        $this->assertSame(['vip', 'wholesale'], $command->capturedInput->getArgument('tags'));
+    }
+
+    private function createCapturingCommand(string $name, callable $configure): Command
+    {
+        $command = new class($name) extends Command {
+            /** @var InputInterface|null */
+            public $capturedInput;
+
+            protected function execute(InputInterface $input, OutputInterface $output): int
+            {
+                $this->capturedInput = $input;
+
+                return 0;
+            }
+        };
+        $configure($command);
+
+        return $command;
+    }
+
+    private function createHandler(Command $command, string $name): CommandToolHandler
+    {
+        $application = new Application();
+        $application->setAutoExit(false);
+        $application->add($command);
+
+        return new CommandToolHandler($application, $name);
+    }
 }

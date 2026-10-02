@@ -120,18 +120,54 @@ class CommandToolHandler
                 ));
             }
 
-            $argumentName = $argumentNames[0];
-            $argument = $definition->getArgument($argumentName);
-
-            $parameters[$argumentName] = $argument->isArray()
-                ? $this->tokenizeWords($remainder)
-                : $remainder;
+            $parameters += $this->bindArguments($definition, $argumentNames, $remainder);
         }
 
         $input = new ArrayInput($parameters);
         $input->setInteractive(false);
 
         return $input;
+    }
+
+    /**
+     * Binds the positional part of the argument string to the command's arguments in order,
+     * like a CLI invocation would. Every argument but the last takes one (optionally quoted)
+     * word. The last argument takes everything that is left: split into words if it is an
+     * array argument, otherwise verbatim, so a free-form multi-word value (db:query's SQL,
+     * see #2072) still arrives intact without the caller having to shell-quote it. For a
+     * command with a single argument this is exactly the previous behaviour.
+     *
+     * @param string[] $argumentNames
+     * @return array<string, string|string[]>
+     */
+    private function bindArguments(InputDefinition $definition, array $argumentNames, string $remainder): array
+    {
+        $parameters = [];
+        $lastIndex = count($argumentNames) - 1;
+
+        foreach ($argumentNames as $index => $argumentName) {
+            if ($remainder === '') {
+                break;
+            }
+
+            $argument = $definition->getArgument($argumentName);
+
+            if ($argument->isArray()) {
+                $parameters[$argumentName] = $this->tokenizeWords($remainder);
+                break;
+            }
+
+            if ($index === $lastIndex) {
+                $parameters[$argumentName] = $remainder;
+                break;
+            }
+
+            [$word, $consumed] = $this->readWord($remainder);
+            $parameters[$argumentName] = $word;
+            $remainder = ltrim(substr($remainder, $consumed));
+        }
+
+        return $parameters;
     }
 
     /**
