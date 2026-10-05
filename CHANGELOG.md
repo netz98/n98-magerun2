@@ -1,7 +1,7 @@
 RECENT CHANGES
 ==============
 
-10.1.0 (unreleased)
+10.1.0 (2026-10-07)
 -------------------
 
 - Add: `fast-di-compile:download-binary` command to download a checksum-verified Rust DI compiler binary for the selected release and platform
