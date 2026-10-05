@@ -87,6 +87,8 @@ class CommandToolHandler
      * completely verbatim, quotes and all, instead of requiring the MCP caller to shell-quote
      * it correctly (which is not a reliable contract for an LLM client, and still can't
      * survive quote characters embedded in the value itself).
+     * Commands with multiple positional arguments bind quote-aware words in declaration
+     * order, with a trailing array argument collecting any remaining words.
      */
     private function buildInput(Command $command, string $arguments): ArrayInput
     {
@@ -123,9 +125,30 @@ class CommandToolHandler
             $argumentName = $argumentNames[0];
             $argument = $definition->getArgument($argumentName);
 
-            $parameters[$argumentName] = $argument->isArray()
-                ? $this->tokenizeWords($remainder)
-                : $remainder;
+            if (count($argumentNames) === 1 && !$argument->isArray()) {
+                $parameters[$argumentName] = $remainder;
+            } else {
+                $words = $this->tokenizeWords($remainder);
+                foreach ($argumentNames as $argumentName) {
+                    if ($words === []) {
+                        break;
+                    }
+
+                    if ($definition->getArgument($argumentName)->isArray()) {
+                        $parameters[$argumentName] = $words;
+                        $words = [];
+                    } else {
+                        $parameters[$argumentName] = array_shift($words);
+                    }
+                }
+
+                if ($words !== []) {
+                    throw new ToolCallException(sprintf(
+                        'Command "%s" received too many positional arguments.',
+                        $this->commandName
+                    ));
+                }
+            }
         }
 
         $input = new ArrayInput($parameters);
@@ -234,7 +257,7 @@ class CommandToolHandler
     }
 
     /**
-     * Splits a string into words for IS_ARRAY arguments, respecting simple quoting.
+     * Splits a string into positional argument values, respecting simple quoting.
      *
      * @return string[]
      */

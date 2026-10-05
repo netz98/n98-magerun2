@@ -16,6 +16,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Throwable;
 
 /**
  * Class InfoCommand
@@ -93,7 +94,7 @@ class InfoCommand extends AbstractCustomerCommand
                     }
                 }
                 $table[] = [$key, $tableLabel, $tableValue];
-            } catch (Exception $e) {
+            } catch (Throwable $e) {
                 $table[] = [$key, $key, $value];
             }
         }
