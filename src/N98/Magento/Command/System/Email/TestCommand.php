@@ -21,6 +21,7 @@ use Magento\Store\Model\ScopeInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use N98\Magento\Command\AbstractMagentoCommand;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -72,6 +73,7 @@ class TestCommand extends AbstractMagentoCommand
     {
         $this
             ->setName('sys:email:test')
+            ->addArgument('email', InputArgument::OPTIONAL, 'Recipient email address')
             ->addOption('to', null, InputOption::VALUE_REQUIRED, 'Recipient email address (prompted for if omitted)')
             ->addOption(
                 'from',
@@ -99,11 +101,12 @@ settings are correctly configured for a given store view.
 The email re-uses the "Contact Form" template shipped with Magento, since it does
 not require any additional data to be set up.
 
-If --to is omitted, you will be prompted for it interactively.
+If the email argument and --to are omitted, you will be prompted for the recipient interactively.
 
 Usage:
 
-    n98-magerun2 sys:email:test
+    n98-magerun2 sys:email:test [<email>]
+    n98-magerun2 sys:email:test you@example.com
     n98-magerun2 sys:email:test --to=you@example.com
     n98-magerun2 sys:email:test --to=you@example.com --store=2
     n98-magerun2 sys:email:test --to=you@example.com --from=sender@example.com --cc=cc1@example.com --cc=cc2@example.com
@@ -118,7 +121,7 @@ HELP
             return Command::FAILURE;
         }
 
-        $to = $input->getOption('to');
+        $to = $input->getArgument('email') ?: $input->getOption('to');
         if ($to === null || $to === '') {
             $to = text(
                 '<question>Recipient email address:</question>',

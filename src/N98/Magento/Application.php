@@ -64,7 +64,7 @@ class Application extends BaseApplication
     /**
      * @var string
      */
-    const APP_VERSION = '10.0.2';
+    const APP_VERSION = '10.1.0';
 
     /**
      * @var int
@@ -795,15 +795,43 @@ class Application extends BaseApplication
      *
      * @param Command $command
      *
-     * @return Command
+     * @return Command|null
      */
     public function add(Command $command)
     {
         if ($this->config) {
+            $config = $this->config->getConfig();
+            $disabledCommands = (array) ($config['commands']['disabled'] ?? []);
+            if ($this->matchesDisabledCommand($command->getName(), $disabledCommands)) {
+                return null;
+            }
+
             $this->config->registerConfigCommandAlias($command);
+            $command->setAliases(array_values(array_filter(
+                $command->getAliases(),
+                fn (string $alias): bool => !$this->matchesDisabledCommand($alias, $disabledCommands)
+            )));
         }
 
         return parent::add($command);
+    }
+
+    /**
+     * @param string[] $patterns
+     */
+    private function matchesDisabledCommand(?string $commandName, array $patterns): bool
+    {
+        if ($commandName === null) {
+            return false;
+        }
+
+        foreach ($patterns as $pattern) {
+            if (is_string($pattern) && fnmatch($pattern, $commandName)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

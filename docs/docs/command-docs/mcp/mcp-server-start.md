@@ -40,6 +40,22 @@ The server runs using stdio transport, meaning it communicates via standard inpu
 - **Argument Handling**: Arguments for commands are passed as a single string.
 - **Output**: The output of the command is returned to the MCP client.
 
+### Passing Arguments
+
+Place options before positional arguments in the tool's `arguments` string.
+For commands with multiple positional arguments, values are assigned in declaration order.
+Use single or double quotes around a value containing spaces, for example:
+
+```json
+{"arguments": "user@example.com \"Secret password 2026!\" 1"}
+```
+
+This passes the email, password, and website separately to `customer:change-password`.
+Array arguments collect the remaining values. Excess values are rejected when no array argument is available.
+For commands with exactly one scalar argument, such as `db:query`, the entire text after leading options
+is passed verbatim, preserving SQL quotes without additional shell quoting.
+Tools run non-interactively, so provide any values that would otherwise require a prompt.
+
 ## Include / Exclude Filters
 
 - `--include`: Registers only commands matching one or more patterns.
@@ -65,6 +81,48 @@ Run the command help to see all configured groups and their patterns:
 ```bash
 n98-magerun2.phar mcp:server:start --help
 ```
+
+## Disabling MCP Tools in Configuration
+
+To permanently exclude commands from MCP while keeping them available in the CLI, add a `disabled` list to the server's command configuration in your project, user, or system config:
+
+```yaml
+commands:
+  N98\Magento\Command\Mcp\Server\StartCommand:
+    disabled:
+      - db:dump
+      - db:import
+```
+
+Use CLI command names (`db:dump`), rather than MCP tool names (`db_dump`). These exclusions always apply, even with `--include`; `--exclude` can exclude additional commands.
+
+Wildcard matching is case-sensitive. `*` matches zero or more characters (including `:`), `?` matches one character, and `[abc]` matches one character from a set. The MCP-specific list also supports `@group` references:
+
+```yaml
+commands:
+  N98\Magento\Command\Mcp\Server\StartCommand:
+    disabled:
+      - 'db:*'
+      - 'sys:cron:ru?'
+      - '@unsafe'
+```
+
+This excludes all database commands, `sys:cron:run`, and commands in the unsafe group from MCP. Quote wildcard patterns in YAML and use one pattern per list entry. Aliases are never registered as separate MCP tools.
+
+Commands disabled globally through `commands.disabled` are also unavailable as MCP tools. To disable the MCP server itself, add `mcp:server:start` to that global list. See [Disabling Commands](../../extending/configuration.md#disabling-commands) for examples.
+
+The global list supports wildcards too:
+
+```yaml
+commands:
+  disabled:
+    - 'mcp:*'
+    - 'db:*'
+```
+
+This disables all matching commands in both the CLI and MCP, including their aliases. `@group` references are supported only in the MCP-specific list.
+
+Both lists default to empty. To re-enable a command, remove all matching exclusions from the configuration files that added them. Configuration lists are merged, so an empty list in a later config does not clear earlier exclusions. Restart the MCP server after changing configuration to update the tool list.
 
 ## Predefined Command Groups
 
@@ -109,3 +167,40 @@ To use n98-magerun2 as an MCP server in Claude Desktop, add the following to you
 ```
 
 Make sure to replace `/path/to/php` and `/path/to/n98-magerun2.phar` with your actual paths.
+
+## Example Configuration (ddev)
+
+[ddev](https://ddev.com/) ships `magerun2` out of the box for Magento 2 projects, so you don't have to install anything to run the MCP server. Note that the bundled version may not be the latest — see [ddev Integration](../../extending/development/install-in-ddev.md) if you need to update it.
+
+Since the command must run inside the web container, add it as an MCP server via `ddev exec`.
+
+:::info
+`--root-dir` is resolved **inside the web container**, not on the host. Use the container path to your Magento installation (usually `/var/www/html` unless your project uses a different docroot).
+:::
+
+### Claude Code
+
+```bash
+claude mcp add n98-magerun -- ddev exec magerun2 --root-dir=/var/www/html mcp:server:start
+```
+
+Once added, restart Claude Code (or run `claude mcp list`) to confirm the server is available, then verify the exposed tools with `mcp:server:start --help`.
+
+### OpenCode
+
+Add an entry to `opencode.jsonc` (or `opencode.json`) in your project root:
+
+```jsonc
+{
+  "$schema": "https://opencode.ai/config.json",
+  "mcp": {
+    "n98-magerun": {
+      "type": "local",
+      "command": ["ddev", "exec", "magerun2", "--root-dir=/var/www/html", "mcp:server:start"],
+      "enabled": true
+    }
+  }
+}
+```
+
+Restart OpenCode to pick up the new server.

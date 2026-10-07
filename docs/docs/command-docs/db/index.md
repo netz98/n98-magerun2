@@ -19,6 +19,7 @@ Commands for database operations such as dumps, imports, and queries.
 - [db:info](./db-info.md) - Dumps database informations
 - [db:status](./db-status.md) - Shows important server status information
 - [db:variables](./db-variables.md) - Shows important variables
+- [db:compatibility](./db-compatibility.md) - Assess database version compatibility
 
 ### Database Maintenance
 - [db:dump](./db-dump.md) - Dump database

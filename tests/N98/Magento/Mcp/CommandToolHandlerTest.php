@@ -74,6 +74,94 @@ class CommandToolHandlerTest extends TestCase
         );
     }
 
+    /**
+     * @dataProvider multipleArgumentsProvider
+     */
+    public function testInvokeBindsMultipleArguments(string $arguments, array $expected)
+    {
+        $command = new class('proxy:customer') extends Command {
+            public $capturedInput;
+
+            protected function configure(): void
+            {
+                $this->addArgument('email', InputArgument::REQUIRED)
+                    ->addArgument('password', InputArgument::OPTIONAL)
+                    ->addArgument('website', InputArgument::OPTIONAL, '', '1')
+                    ->addOption('enabled', null, InputOption::VALUE_NONE);
+            }
+
+            protected function execute(InputInterface $input, OutputInterface $output): int
+            {
+                $this->capturedInput = $input;
+
+                return 0;
+            }
+        };
+        $application = new Application();
+        $application->add($command);
+        $handler = new CommandToolHandler($application, 'proxy:customer');
+
+        for ($run = 0; $run < 2; $run++) {
+            $handler('--enabled ' . $arguments);
+            $this->assertSame($expected, [
+                $command->capturedInput->getArgument('email'),
+                $command->capturedInput->getArgument('password'),
+                $command->capturedInput->getArgument('website'),
+            ]);
+            $this->assertTrue($command->capturedInput->getOption('enabled'));
+        }
+    }
+
+    public static function multipleArgumentsProvider(): array
+    {
+        return [
+            ['user@example.com secret 2', ['user@example.com', 'secret', '2']],
+            ['user@example.com "secret with spaces" 2', ['user@example.com', 'secret with spaces', '2']],
+            ["user@example.com '' 2", ['user@example.com', '', '2']],
+            ['user@example.com', ['user@example.com', null, '1']],
+        ];
+    }
+
+    public function testInvokeBindsTrailingArrayArgument()
+    {
+        $command = new class('proxy:array') extends Command {
+            public $capturedInput;
+
+            protected function configure(): void
+            {
+                $this->addArgument('name', InputArgument::REQUIRED)
+                    ->addArgument('values', InputArgument::IS_ARRAY);
+            }
+
+            protected function execute(InputInterface $input, OutputInterface $output): int
+            {
+                $this->capturedInput = $input;
+
+                return 0;
+            }
+        };
+        $application = new Application();
+        $application->add($command);
+        $handler = new CommandToolHandler($application, 'proxy:array');
+        $handler('name first "second value"');
+
+        $this->assertSame('name', $command->capturedInput->getArgument('name'));
+        $this->assertSame(['first', 'second value'], $command->capturedInput->getArgument('values'));
+    }
+
+    public function testInvokeRejectsExcessPositionalArguments()
+    {
+        $command = new Command('proxy:customer');
+        $command->addArgument('email')->addArgument('website');
+        $application = new Application();
+        $application->add($command);
+        $handler = new CommandToolHandler($application, 'proxy:customer');
+
+        $this->expectException(ToolCallException::class);
+        $this->expectExceptionMessage('too many positional arguments');
+        $handler('user@example.com 1 unexpected');
+    }
+
     public function testInvokeParsesLeadingOptionsBeforeArgument()
     {
         $command = new class('proxy:query') extends Command {

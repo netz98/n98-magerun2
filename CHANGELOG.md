@@ -1,6 +1,38 @@
 RECENT CHANGES
 ==============
 
+10.1.0 (2026-10-07)
+-------------------
+
+- Add: `fast-di-compile:download-binary` command to download a checksum-verified Rust DI compiler binary for the selected release and platform
+- Add: `fast-di-compile:install` command to install and enable the companion Magento module and verified compiler binary, with an optional `--no-setup-upgrade` flag
+- Add: disable commands globally or only as MCP tools through configuration, with wildcard pattern support
+- Add: `db:compatibility` command to assess Magento/Adobe Commerce and MySQL/MariaDB version compatibility against a versioned dataset (`./res/db-compatibility.json`), with `--target-version`, `--target-db`, `--target-db-version` and `--format=json` support (#2141)
+- Add: `db:compatibility` detects Mage-OS installations as their own product (with their own version numbering) instead of evaluating them as plain Magento (#2141)
+- Add: `db:compatibility --online` checks the current/target application version live against magento.watch instead of relying solely on the bundled dataset (#2141)
+- Add: `/issue` and `/pr` slash commands for Claude Code and OpenCode to file issues and pull requests against the project
+- Imp: `sys:email:test` accepts the recipient as a positional argument while retaining the `--to` option
+- Change: `db:compatibility` standard output trimmed to the essentials (verdict and reason); the full evaluated-configuration and database lifecycle tables, dataset metadata, finding IDs, and source citations now require `-v` (`--format=json` is unaffected and always complete) (#2141)
+- Remove: `db:compatibility --dataset-url` - there is no remote endpoint to point it at; use `--online` for live data instead (#2141)
+- Fix: bind multiple MCP positional arguments in declaration order, supporting quoted values and trailing arrays while preserving verbatim input for single scalar arguments (#2178)
+- Fix: `customer:change-password` reject missing or empty passwords without changing the stored password hash (#2173, #2178)
+- Fix: preserve the previous area during repeated `customer:change-password` and `customer:add-address` calls (#2174, #2175, #2178)
+- Fix: `customer:info` catch attribute-rendering errors and consistently render fallback output on repeated calls (#2176, #2178)
+- Fix: limit the interactive cron job selector height
+- Fix: `db:compatibility`'s bundled dataset regenerated from real, per-release MySQL/MariaDB requirements data (via a new `scripts/import-db-compatibility-dataset.php` importer sourced from magento.watch) instead of hand-authored, unverified entries (#2141)
+- Test: add regression coverage for MCP argument binding, repeated customer command calls, rejected passwords, area preservation, and attribute-rendering failures (#2178)
+- Test: tolerate temporary GitHub outages in BATS tests
+- Docs: clarify MCP positional argument handling and customer password requirements (#2178)
+- Docs: document fast DI compiler commands, positional email recipients, global and MCP command disabling, MCP usage in ddev, and AI-assisted contributor workflows
+- Chore: allow committing shared `.claude` project config (commands, skills)
+- Chore: configure local development tooling
+- Build: `build.sh` refreshes and schema-validates the `db:compatibility` dataset before packaging a release, with a `--skip-dataset-fetch` opt-out (#2141)
+- Build: update mcp/sdk to 0.8.1
+- Build: update twig/twig to 3.30.0 and rmccue/requests to 2.0.20
+- Build: update phpstan/phpstan to 2.2.16 and friendsofphp/php-cs-fixer to 3.95.27
+- Build: update github-community-projects/contributors to 2.0.20 (#2136)
+- Build: update npm/yarn documentation dependencies, including postcss-selector-parser, and resolve npm security advisories
+
 10.0.2 (2026-08-27)
 ------------------
 

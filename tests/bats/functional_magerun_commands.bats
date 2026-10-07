@@ -50,6 +50,14 @@ function create_test_admin_user() {
   fi
 }
 
+function github_platform_outage() {
+  if [[ "$output" != *"The server is unavailable at this time. Please wait a few minutes before you try again."* ]]; then
+    return 1
+  fi
+
+  printf '%s\n' "GitHub platform had an outage during the test run; skipping GitHub response assertions." >&3
+}
+
 teardown() {
   if [ -n "${store_id:-}" ]; then
     $BIN "sys:store:delete" "$store_id" --force >/dev/null 2>&1 || true
@@ -702,6 +710,48 @@ teardown() {
 }
 
 # ============================================
+# Command: db:compatibility
+# ============================================
+
+@test "Command: db:compatibility" {
+  run $BIN "db:compatibility"
+  assert_success
+  assert_output --partial "Database compatibility"
+  assert_output --partial "Support status"
+
+  # Mage-OS has its own version numbering (e.g. "3.0.0"), distinct from magento-community's
+  # "2.4.x" - it must be detected as its own product, not silently evaluated as plain "magento".
+  if is_mage_os_distribution; then
+    assert_output --regexp "mage-os [0-9]"
+  else
+    assert_output --regexp "magento [0-9]"
+  fi
+}
+
+@test "Command: db:compatibility -v shows the full evaluated-configuration table" {
+  run $BIN "db:compatibility" -v
+  assert_success
+  assert_output --partial "Evaluated configuration"
+  assert_output --partial "Database lifecycle"
+  assert_output --regexp "Product +m"
+}
+
+@test "Command: db:compatibility --format=json" {
+  run $BIN "db:compatibility" --format=json
+  assert_success
+  assert_output --partial "\"status\""
+  assert_output --partial "\"findingId\""
+}
+
+@test "Command: db:compatibility --online" {
+  run $BIN "db:compatibility" --online --format=json
+  assert_success
+  # Either a live magento.watch check succeeded, or it gracefully fell back to the bundled
+  # dataset - both are valid outcomes here (this must never hang or error out).
+  assert_output --regexp "\"dataSource\": ?\"(magento-watch-live|bundled)\""
+}
+
+# ============================================
 # Command: db:status
 # ============================================
 
@@ -939,31 +989,37 @@ teardown() {
 
 @test "Command: github:pr 21787" {
   run $BIN "github:pr" 21787
+  github_platform_outage && return 0
   assert_output --partial "x_forwarded_for"
 }
 
 @test "Command: github:pr --patch 21787" {
   run $BIN "github:pr" --patch 21787
+  github_platform_outage && return 0
   assert_output --partial "PR-21787-magento-magento2.patch"
 }
 
 @test "Command: github:pr --diff 21787" {
   run $BIN "github:pr" --diff 21787
+  github_platform_outage && return 0
   assert_output --partial "setXForwardedFor"
 }
 
 @test "Command: github:pr --mage-os 1" {
   run $BIN "github:pr" --mage-os 1
+  github_platform_outage && return 0
   assert_output --partial "automatically"
 }
 
 @test "Command: github:pr --mage-os --patch 1" {
   run $BIN "github:pr" --mage-os --patch 1
+  github_platform_outage && return 0
   assert_output --partial "PR-1-mage-os-mageos-magento2.patch"
 }
 
 @test "Command: github:pr --mage-os --diff 1" {
   run $BIN "github:pr" --mage-os --diff 1
+  github_platform_outage && return 0
   assert_output --partial "server_url"
 }
 

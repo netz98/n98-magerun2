@@ -446,6 +446,9 @@ jobs:
         env:
           N98_MAGERUN2_TEST_MAGENTO_ROOT: "${{ github.workspace }}/magento"
 
+      - name: build.sh dataset refresh tests
+        run: bats tests/bats/build_dataset.bats
+
       # --- Build and Test Phar ---
       - name: Setup PHP for phar build (Use a consistent, modern PHP version)
         uses: shivammathur/setup-php@v2

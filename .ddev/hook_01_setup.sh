@@ -72,8 +72,20 @@ function setup_bats() {
     echo -e "==========================================================${txtrst}"
 
     echo "You can now login to your dev environment by using 'ddev ssh'"
-    echo "Then you can run:"
-    echo "  bin/n98-magerun2 --root-dir=/opt/magento-test-environments/magento_<version>"
+    echo "Available test environments:"
+
+    local environment
+    local environments_found=false
+    for environment in /opt/magento-test-environments/*; do
+      if [ -d "$environment" ]; then
+        echo "  bin/n98-magerun2 --root-dir=\"$environment\""
+        environments_found=true
+      fi
+    done
+
+    if [ "$environments_found" = false ]; then
+      echo "  No test environments available."
+    fi
 }
 
 function setup_success() {

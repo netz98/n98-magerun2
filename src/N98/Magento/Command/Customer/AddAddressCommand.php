@@ -130,7 +130,6 @@ class AddAddressCommand extends AbstractCustomerCommand
                 return $this->createAddress($data, $customer, $output, $email);
             };
 
-            $this->state->setAreaCode(Area::AREA_FRONTEND);
             $isError = $this->state->emulateAreaCode(Area::AREA_FRONTEND, $createAddress);
         } catch (Exception $e) {
             $output->writeln('<error>' . $e->getMessage() . '</error>');

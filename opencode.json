@@ -1,6 +1,11 @@
 {
   "$schema": "https://opencode.ai/config.json",
     "mcp": {
+        "n98-magerun-dev": {
+            "type": "local",
+            "command": ["ddev", "exec", "bin/n98-magerun2", "--root-dir=/opt/magento-test-environments/mageos_3_0_0", "mcp:server:start", "--include", "@unsafe"],
+            "enabled": false
+        },
         "github": {
             "type": "local",
             "command": ["npx", "-y", "@modelcontextprotocol/server-github"],
