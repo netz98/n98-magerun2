@@ -48,7 +48,7 @@ jobs:
       # Run Linter against code base #
       ################################
       - name: Lint Code Base
-        uses: super-linter/super-linter/slim@4ce20838b8ab83717e78138c5b3a1407148e0918
+        uses: super-linter/super-linter/slim@2da136927bd4a73596db63044b504547c62cb854
         env:
           VALIDATE_ALL_CODEBASE: false
           VALIDATE_BASH: false
