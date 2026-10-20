@@ -90,6 +90,10 @@ verify the exact candidate commit before reporting completion.
 
 ## What the Orchestrator does
 
+The steps below describe the current agent profiles, which use a separate QA
+branch and cherry-picked commits. See [Branch and worktree strategy](#branch-and-worktree-strategy)
+for the recommended simpler handoff and its implementation status.
+
 1. Checks Herdr, repository state, acceptance criteria, and commit permissions.
 2. Creates two worktrees using `herdr worktree create --no-focus` with explicit
    branches, paths, and a recorded base SHA. Herdr opens linked workspaces with
@@ -176,7 +180,8 @@ Report the candidate SHA, QA evidence, environment identities, and next steps.
 For a feature without an issue, replace the first paragraph with the feature
 description and acceptance criteria. The same isolation and QA process applies.
 
-An illustrative task inventory looks like this; actual IDs come from Herdr:
+An illustrative task inventory for the current separate-branch workflow looks
+like this; actual IDs come from Herdr:
 
 | Role | Git branch | Worktree | Runtime identity |
 | --- | --- | --- | --- |
@@ -208,6 +213,87 @@ Only explicitly approved shared-service operation may relax this isolation.
 After QA passes, the result is a verified local candidate. Publishing a PR,
 posting an issue comment, merging, and removing containers/volumes/worktrees
 are separate actions requiring approval.
+
+## Branch and worktree strategy
+
+**Separate worktrees protect the QA snapshot; a separate QA branch is optional.**
+A branch is a movable Git reference, while a worktree is a directory containing
+checked-out files. Neither provides database or service isolation by itself.
+
+### Why not use the same branch and checkout?
+
+| Setup | Benefit | Trade-off |
+| --- | --- | --- |
+| Same branch and same worktree | Simple; QA immediately sees Developer's changes | Files can change during review or a test run |
+| Same branch in separate worktrees | Appears to offer independent directories | Git normally prevents the same branch from being checked out in multiple worktrees; do not bypass that guard |
+| Separate worktrees at independent refs | QA tests a stable snapshot while Developer continues | Requires an explicit candidate handoff |
+
+For example, Developer finishes candidate A and QA starts testing it. If
+Developer begins B in the same directory, QA may test a mixture of A and B.
+With separate worktrees, QA's files stay at A even as the feature branch advances.
+Separate worktrees also keep QA's generated files and test experiments out of
+Developer's working directory.
+
+### Recommended: one feature branch, QA at the exact candidate commit
+
+For review and testing without committed QA changes, prefer this model:
+
+```text
+Developer worktree: feature/issue-123
+                       |
+                       +-- candidate commit abc123
+                                      |
+                                      v
+QA worktree: detached HEAD at abc123
+```
+
+The handoff should work as follows:
+
+1. Developer commits a candidate on the issue's feature/bugfix branch and reports
+   its exact SHA. Do not amend or rewrite a candidate already handed to QA.
+2. The Orchestrator records that SHA and prepares a separate QA worktree at
+   **that same commit**, rather than copying changes or cherry-picking them.
+3. QA verifies that its HEAD equals the candidate SHA, runs checks in its own
+   environment, and ties its verdict to that SHA. Detached HEAD is intentional:
+   QA does not need a writable branch just to inspect and test the candidate.
+4. Developer can continue independently. A new candidate requires another QA
+   round; an earlier PASS does not cover a later branch tip.
+5. Before moving QA to a new candidate, wait for its active checks to finish and
+   inspect its status. Preserve or explicitly resolve QA-local changes; never
+   reset or discard them merely to advance the snapshot.
+
+This avoids duplicate implementation commits, differing cherry-picked SHAs,
+and cherry-pick conflicts. A dedicated QA branch pointing directly at the
+candidate commit is also valid when the tooling requires a named branch; it
+does not need to recreate the candidate's commits.
+
+If QA is explicitly assigned to commit regression tests, create a dedicated QA
+branch from the tested candidate before committing. Report the original
+candidate verdict and test-only commits separately. The Orchestrator coordinates
+their integration into the feature branch, followed by verification of the new
+combined candidate. QA must not silently fix production code.
+
+**Implementation status:** this is the recommended strategy, not yet the behavior
+encoded in the agent profiles. The current Orchestrator/QA instructions still
+require a separate QA branch and cherry-pick handoff. Adopting detached QA needs
+a coordinated update to those profiles and verification of the installed Herdr
+worktree capabilities. Do not assume Herdr supports an unverified detached-HEAD
+creation flag, bypass Herdr to create worktrees, or silently mix both workflows.
+
+### Simpler alternative: sequential QA in one worktree
+
+For a small supervised task, sharing one worktree is reasonable if the plan
+explicitly trades parallel verification for lower setup cost:
+
+1. Developer finishes, commits, and stops editing.
+2. QA checks the candidate SHA and tests in that same worktree.
+3. Developer resumes only after QA has finished and handed back ownership.
+
+This avoids a second runtime environment, but requires exclusive ownership
+during QA. Do not run concurrent edits or processes that change the tested state.
+It is an alternative requiring an explicit workflow/profile change, not the
+current default. Regardless of strategy, never treat branches as isolation for
+Magento databases, DDEV services, ports, or other mutable external resources.
 
 ## Parallelism and limits
 
