@@ -215,9 +215,6 @@ class DatabaseHelperTest extends TestCase
 
         // Manually set dbSettings as it's used directly
         $reflection = new ReflectionProperty(DatabaseHelper::class, 'dbSettings');
-        if (\PHP_VERSION_ID < 80100) {
-            $reflection->setAccessible(true);
-        }
         $reflection->setValue($helper, ['dbname' => 'test_db']);
 
         $this->assertEquals([], $helper->getViews());
@@ -252,9 +249,6 @@ class DatabaseHelperTest extends TestCase
             ->method('getConnection')
             ->willReturn($pdoMock);
         $reflection = new ReflectionProperty(DatabaseHelper::class, 'dbSettings');
-        if (\PHP_VERSION_ID < 80100) {
-            $reflection->setAccessible(true);
-        }
         $reflection->setValue($helper, ['dbname' => 'test_db']);
         $this->assertEquals($expectedViews, $helper->getViews());
     }
@@ -288,9 +282,6 @@ class DatabaseHelperTest extends TestCase
             ->method('getConnection')
             ->willReturn($pdoMock);
         $reflection = new ReflectionProperty(DatabaseHelper::class, 'dbSettings');
-        if (\PHP_VERSION_ID < 80100) {
-            $reflection->setAccessible(true);
-        }
         $reflection->setValue($helper, ['dbname' => 'test_db']);
         $this->assertEquals($expectedViews, $helper->getViews());
     }
