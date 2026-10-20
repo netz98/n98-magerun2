@@ -138,10 +138,10 @@ class InteractionTest extends TestCase
         return [
             'empty answer cancels' => [[''], [], 'cancelled'],
             'EOF cancels' => [[], [], 'cancelled'],
-            'explicit cancellation' => [['cancel'], [], 'cancelled'],
+            'explicit cancellation' => [['0'], [], 'cancelled'],
             'invalid supplied entity is not replaced' => [[], ['entityType' => 'n98_missing_entity'], 'Invalid entity_type'],
             'invalid supplied set is not replaced' => [[], ['entityType' => 'catalog_product', 'attributeSetId' => '2147483647'], 'not found'],
-            'index is not a set ID' => [['0'], ['entityType' => 'catalog_product'], 'invalid'],
+            'out of range ordinal' => [['99999'], ['entityType' => 'catalog_product'], 'displayed choice number'],
         ];
     }
 
@@ -180,7 +180,7 @@ class InteractionTest extends TestCase
             $this->assertSame('Prompted label', $attribute->getFrontendLabel());
             $this->assertSame('boolean', $attribute->getFrontendInput());
             $this->assertSame('0', $attribute->getDefaultValue());
-            $this->assertStringNotContainsString('Entity type (enter', $tester->getDisplay());
+            $this->assertStringNotContainsString('Please select an entity type', $tester->getDisplay());
             $this->assertStringNotContainsString('Attribute code (required', $tester->getDisplay());
         } finally {
             $setup->removeAttribute('catalog_product', $code);
@@ -219,34 +219,37 @@ class InteractionTest extends TestCase
         $setup->addAttributeSet('catalog_product', $setName);
         $setId = (string) $setup->getAttributeSetId('catalog_product', $setName);
         try {
-            $create = $this->tester('eav:attribute-group:create', ['catalog_product', $setId, $groupName]);
+            $entityChoice = $this->entityChoice();
+            $setChoice = $this->setChoice($setId);
+            $create = $this->tester('eav:attribute-group:create', [$entityChoice, $setChoice, $groupName]);
             $this->assertSame(0, $create->execute([], ['interactive' => true]));
             $groupId = (string) $setup->getAttributeGroupByCode('catalog_product', $setId, $setup->convertToAttributeGroupCode($groupName), 'attribute_group_id');
             $this->assertGreaterThan(0, (int) $groupId);
+            $groupChoice = $this->groupChoice($setId, $groupId);
             $this->assertStringNotContainsString('Sort order', $create->getDisplay());
 
-            $attribute = $this->tester('eav:attribute:create', ['catalog_product', $code, 'Interactive label']);
+            $attribute = $this->tester('eav:attribute:create', [$entityChoice, $code, 'Interactive label']);
             $this->assertSame(0, $attribute->execute(['--attribute-set' => $setId, '--attribute-group' => $groupId], ['interactive' => true]));
             $this->assertStringNotContainsString('Scope', $attribute->getDisplay());
             $this->assertStringNotContainsString('Sort order', $attribute->getDisplay());
 
-            $list = $this->tester('eav:attribute-group:list', [$setId]);
+            $list = $this->tester('eav:attribute-group:list', [$setChoice]);
             $this->assertSame(0, $list->execute(['entityType' => 'catalog_product'], ['interactive' => true]));
             $this->assertStringContainsString($groupName, $list->getDisplay());
-            $this->assertStringNotContainsString('Entity type (enter', $list->getDisplay());
+            $this->assertStringNotContainsString('Please select an entity type', $list->getDisplay());
 
             $context = ['entityType' => 'catalog_product', 'attributeSetId' => $setId];
-            $view = $this->tester('eav:attribute-group:view', [$groupId]);
+            $view = $this->tester('eav:attribute-group:view', [$groupChoice]);
             $this->assertSame(0, $view->execute($context, ['interactive' => true]));
             $this->assertStringContainsString($code, $view->getDisplay());
-            $this->assertStringNotContainsString('Attribute set (enter', $view->getDisplay());
+            $this->assertStringNotContainsString('Please select an attribute set', $view->getDisplay());
             $setup->removeAttribute('catalog_product', $code);
             $setup->cleanCache();
 
-            $cancel = $this->tester('eav:attribute-group:delete', ['catalog_product', $setId, $groupId, 'no']);
+            $cancel = $this->tester('eav:attribute-group:delete', [$entityChoice, $setChoice, $groupChoice, 'no']);
             $this->assertSame(1, $cancel->execute([], ['interactive' => true]));
             $this->assertStringContainsString('Deletion cancelled', $cancel->getDisplay());
-            $delete = $this->tester('eav:attribute-group:delete', [$groupId, 'yes']);
+            $delete = $this->tester('eav:attribute-group:delete', [$groupChoice, 'yes']);
             $this->assertSame(0, $delete->execute($context, ['interactive' => true]));
         } finally {
             $setup->removeAttribute('catalog_product', $code);
@@ -261,6 +264,62 @@ class InteractionTest extends TestCase
         $tester = new CommandTester($this->getApplication()->find($command));
         $tester->setInputs($answers);
         return $tester;
+    }
+
+    private function entityChoice(): string
+    {
+        $resource = $this->getApplication()->getObjectManager()->get(ResourceConnection::class);
+        $codes = $resource->getConnection()->fetchCol($resource->getConnection()->select()
+            ->from($resource->getTableName('eav_entity_type'), 'entity_type_code')->order('entity_type_code ASC'));
+        return (string) (array_search('catalog_product', $codes, true) + 1);
+    }
+
+    private function setChoice(string $setId): string
+    {
+        $resource = $this->getApplication()->getObjectManager()->get(ResourceConnection::class);
+        $entityId = $this->getApplication()->getObjectManager()->get(Config::class)->getEntityType('catalog_product')->getId();
+        $ids = $resource->getConnection()->fetchCol($resource->getConnection()->select()
+            ->from($resource->getTableName('eav_attribute_set'), 'attribute_set_id')
+            ->where('entity_type_id = ?', $entityId)->order('attribute_set_id ASC'));
+        return (string) (array_search($setId, array_map('strval', $ids), true) + 1);
+    }
+
+    private function groupChoice(string $setId, string $groupId): string
+    {
+        $resource = $this->getApplication()->getObjectManager()->get(ResourceConnection::class);
+        $ids = $resource->getConnection()->fetchCol($resource->getConnection()->select()
+            ->from($resource->getTableName('eav_attribute_group'), 'attribute_group_id')
+            ->where('attribute_set_id = ?', $setId)->order(['sort_order ASC', 'attribute_group_id ASC']));
+        return (string) (array_search($groupId, array_map('strval', $ids), true) + 1);
+    }
+
+    /** @dataProvider numberedChoices */
+    public function testNumbersMapToRecordsNotLabelsOrIds(string $answer, ?string $expected): void
+    {
+        $command = new AttributeGroup\ListCommand();
+        $input = new ArrayInput([]);
+        $input->setInteractive(true);
+        $stream = fopen('php://memory', 'r+');
+        fwrite($stream, $answer);
+        rewind($stream);
+        $input->setStream($stream);
+        $output = new BufferedOutput();
+        $method = new \ReflectionMethod(AbstractManagementCommand::class, 'askContext');
+        if ($expected === null) {
+            $this->expectException(\Exception::class);
+        }
+        try {
+            $actual = $method->invoke($command, $input, $output, 'Attribute set', [42 => 'Duplicate label', 107 => 'Duplicate label']);
+            $this->assertSame($expected, $actual);
+            $this->assertStringContainsString('[1]', $output->fetch());
+        } finally {
+            fclose($stream);
+        }
+    }
+
+    public static function numberedChoices(): array
+    {
+        return [["1\n", '42'], ["2\n", '107'], ["42\n", null], ["107\n", null], ["customer\n", null], ["0\n", null], ["\n", null], ['', null]];
     }
 
     private function skipProductionMutations(): void

@@ -13,6 +13,7 @@ use Magento\Eav\Setup\EavSetup;
 use Magento\Eav\Setup\EavSetupFactory;
 use Magento\Framework\App\ResourceConnection;
 use N98\Magento\Command\AbstractMagentoCommand;
+use Symfony\Component\Console\Formatter\OutputFormatter;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
@@ -110,15 +111,26 @@ abstract class AbstractManagementCommand extends AbstractMagentoCommand
         if (!$choices) {
             throw new \InvalidArgumentException('No choices available for ' . strtolower($label) . ' in this context.');
         }
-        // An empty answer cancels; no entity, set or group is implicitly selected.
-        $choices = ['cancel' => 'Cancel (no changes)'] + $choices;
-        $question = new ChoiceQuestion($label . ' (enter its code/ID; Enter cancels)', $choices, 'cancel');
+        // Match the one-based menus used by the DI/observer commands. Ordinals are
+        // never record IDs, and mapping by key keeps duplicate labels unambiguous.
+        $keys = array_keys($choices);
+        $menu = [0 => 'Cancel (no changes)'];
+        foreach (array_values($choices) as $index => $choice) {
+            $menu[$index + 1] = OutputFormatter::escape($choice);
+        }
+        $question = new ChoiceQuestion('Please select an ' . strtolower($label) . ' (number; Enter cancels)', $menu, 0);
         $question->setMaxAttempts(1);
-        $answer = $this->getHelper('question')->ask($input, $output, $question);
-        if ($answer === 'cancel' || !array_key_exists($answer, $choices)) {
+        $question->setValidator(function ($answer) use ($menu): int {
+            if (!preg_match('/^[0-9]+$/D', (string) $answer) || !array_key_exists((string) $answer, $menu)) {
+                throw new \InvalidArgumentException('Please enter a displayed choice number.');
+            }
+            return (int) $answer;
+        });
+        $answer = $this->io($input, $output)->getErrorStyle()->askQuestion($question);
+        if ($answer === 0) {
             throw new \RuntimeException('EAV input cancelled; no changes were made.');
         }
-        return (string) $answer;
+        return (string) $keys[$answer - 1];
     }
 
     private function askRequiredText(InputInterface $input, OutputInterface $output, string $label, bool $attributeCode = false): string
@@ -135,7 +147,7 @@ abstract class AbstractManagementCommand extends AbstractMagentoCommand
             }
             return $value;
         });
-        return $this->getHelper('question')->ask($input, $output, $question);
+        return $this->io($input, $output)->getErrorStyle()->askQuestion($question);
     }
 
     protected function initializeManagement(InputInterface $input, OutputInterface $output, bool $mutation): bool
