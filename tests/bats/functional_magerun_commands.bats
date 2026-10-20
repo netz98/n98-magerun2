@@ -483,6 +483,28 @@ teardown() {
   assert_output --partial "myStore2value"
 }
 
+@test "Command: config:store:get includes XML defaults and trailing slash searches" {
+  run $BIN config:store:get --scope=default --format=json web/secure/
+  assert_success
+  assert_output --partial 'use_in_frontend'
+  assert_output --partial '"Updated At": ""'
+}
+
+@test "Command: config:store:get inherits scoped values and preserves wildcard searches" {
+  config_test_path="n98/magerun/issue_712_fallback"
+  run $BIN config:store:set "$config_test_path" issue712default
+  assert_success
+  run $BIN config:store:get --scope=stores --scope-id=default --magerun-script "$config_test_path"
+  assert_success
+  assert_output --partial "'issue712default'"
+  assert_output --partial '--scope=stores'
+  run $BIN config:store:get --magerun-script '%/issue_712_fallbac_'
+  assert_success
+  assert_output "config:store:set --scope-id=0 --scope=default -- '$config_test_path' 'issue712default'"
+  run $BIN config:store:get --scope=default 'n98/magerun/issue_712_missing'
+  assert_failure
+}
+
 @test "Command: config:store:get decrypted magerun script round-trips encrypted values" {
   config_test_path="n98/magerun/issue_2184_encrypted"
   local value="synthetic 'secret' \$; --value"

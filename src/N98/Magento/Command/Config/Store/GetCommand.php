@@ -8,7 +8,8 @@
 
 namespace N98\Magento\Command\Config\Store;
 
-use Magento\Config\Model\ResourceModel\Config\Data\Collection;
+use Magento\Config\App\Config\Type\System\Reader;
+use Magento\Store\Model\Config\Processor\Placeholder;
 use N98\Magento\Command\Config\AbstractConfigCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -19,11 +20,6 @@ use UnexpectedValueException;
 
 class GetCommand extends AbstractConfigCommand
 {
-    /**
-     * @var Collection
-     */
-    private $collection;
-
     /**
      * @var array
      */
@@ -37,16 +33,22 @@ class GetCommand extends AbstractConfigCommand
     {
         $this
             ->setName('config:store:get')
-            ->setDescription('Get a store config item')
+            ->setDescription('Get effective store configuration values')
             ->setHelp(
                 <<<EOT
                 If <info>path</info> is not set, all available config items will be listed.
-The <info>path</info> may contain wildcards (*).
+The <info>path</info> may contain wildcards (*, %, _).
 If <info>path</info> ends with a trailing slash, all child items will be listed. E.g.
 
     config:store:get web/
 is the same as
     config:store:get web/*
+
+Values use Magento's native precedence and scope inheritance, including XML defaults,
+config.php and env.php. Without --scope, list merged default paths and explicitly
+configured website/store paths only. With --scope, include inherited paths.
+Updated At is blank because effective configuration has no merged modification time.
+Script exports contain effective values, not only database overrides.
 EOT
             )
             ->addArgument('path', InputArgument::OPTIONAL, 'The config path')
@@ -66,19 +68,6 @@ EOT
             ->addOption('update-script', null, InputOption::VALUE_NONE, 'Output as update script lines')
             ->addOption('magerun-script', null, InputOption::VALUE_NONE, 'Output for usage with config:store:set')
             ->addFormatOption();
-
-        $help = <<<HELP
-If path is not set, all available config items will be listed. path may contain wildcards (*)
-HELP;
-        $this->setHelp($help);
-    }
-
-    /**
-     * @param Collection $collection
-     */
-    public function inject(Collection $collection)
-    {
-        $this->collection = $collection;
     }
 
     /**
@@ -86,66 +75,31 @@ HELP;
      * @param OutputInterface $output
      * @return int
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $table = [];
-        $collection = $this->collection;
-
-        $searchPath = $input->getArgument('path');
-
-        if (substr($input->getArgument('path'), -1, 1) === '/') {
+        $searchPath = (string) $input->getArgument('path');
+        if (substr($searchPath, -1) === '/') {
             $searchPath .= '*';
         }
-
-        $collection->addFieldToFilter('path', [
-            'like' => str_replace('*', '%', $searchPath),
-        ]);
-
         $scope = $input->getOption('scope');
-        if ($input->hasParameterOption('--scope') && $scope !== null && $scope !== false && $scope !== '') {
+        if ($scope !== null && $scope !== '') {
             $this->_validateScopeParam($scope);
-            $collection->addFieldToFilter('scope', ['eq' => $scope]);
         }
-
         $scopeId = $input->getOption('scope-id');
-        if ($input->hasParameterOption('--scope-id') && $scopeId !== null && $scopeId !== false && $scopeId !== '') {
-            if ($scope !== null) {
-                $scopeId = $this->_convertScopeIdParam($scope, $scopeId);
-            }
-            $collection->addFieldToFilter(
-                'scope_id',
-                ['eq' => $scopeId]
-            );
+        if ($scope !== null && $scopeId !== null && $scopeId !== '') {
+            $scopeId = $this->_convertScopeIdParam($scope, $scopeId);
         }
-
-        $collection->addOrder('path', 'ASC');
-
-        // sort according to the config overwrite order
-        // trick to force order default -> (f)website -> store , because f comes after d and before s
-        $collection->addOrder('REPLACE(scope, "website", "fwebsite")', 'ASC');
-
-        $collection->addOrder('scope_id', 'ASC');
-
-        if ($collection->count() == 0) {
+        $table = $this->getEffectiveRows($scope, $scopeId, $searchPath);
+        if (!$table) {
             $output->writeln(sprintf("Couldn't find a config value for \"%s\"", $input->getArgument('path')));
 
             return Command::FAILURE;
         }
 
-        foreach ($collection as $item) {
-            $table[] = [
-                'path'     => $item->getPath(),
-                'scope'    => $item->getScope(),
-                'scope_id' => $item->getScopeId(),
-                'value'    => $this->_formatValue(
-                    $item->getValue(),
-                    $input->getOption('decrypt') ? 'decrypt' : ''
-                ),
-                'updated_at' => $item->getUpdatedAt()
-            ];
+        foreach ($table as &$row) {
+            $row['value'] = $this->_formatValue($row['value'], $input->getOption('decrypt') ? 'decrypt' : '');
         }
-
-        ksort($table);
+        unset($row);
 
         if ($input->hasParameterOption('--update-script')) {
             $this->renderAsUpdateScript($output, $table);
@@ -156,6 +110,91 @@ HELP;
         }
 
         return Command::SUCCESS;
+    }
+
+    /**
+     * Only use source data to discover explicit paths. Magento resolves all values,
+     * including deployment overrides, placeholders and scope inheritance.
+     */
+    protected function getExplicitConfiguration()
+    {
+        return $this->getConfigurationSource()->get();
+    }
+
+    protected function getConfigurationSource()
+    {
+        return $this->getObjectManager()->get('systemConfigSourceAggregated');
+    }
+
+    protected function getEffectiveConfiguration()
+    {
+        // Read fresh source data without invalidating or warming the application's
+        // shared config cache. Keep backend values raw: metadata processors can
+        // decrypt secrets, which this command must only do with --decrypt.
+        return $this->getObjectManager()->get(Placeholder::class)->process(
+            $this->getObjectManager()->create(Reader::class, ['source' => $this->getConfigurationSource()])->read()
+        );
+    }
+
+    protected function getEffectiveRows($scope, $scopeId, $searchPath)
+    {
+        $explicit = $this->getExplicitConfiguration();
+        $configuration = $this->getEffectiveConfiguration();
+        $contexts = [['default', 0, '']];
+        foreach ($this->_getStoreManager()->getWebsites(true) as $website) {
+            $contexts[] = ['websites', $website->getId(), $website->getCode()];
+        }
+        foreach ($this->_getStoreManager()->getStores(true) as $store) {
+            $contexts[] = ['stores', $store->getId(), $store->getCode()];
+        }
+
+        $pattern = '~^' . str_replace(['\\*', '%', '_'], ['.*', '.*', '.'], preg_quote($searchPath, '~')) . '$~iD';
+        $rows = [];
+        foreach ($contexts as [$type, $id, $code]) {
+            if (($scope !== null && $scope !== '' && $scope !== $type)
+                || ($scopeId !== null && $scopeId !== '' && (string) $scopeId !== (string) $id)) {
+                continue;
+            }
+            $effective = $this->flattenConfiguration(
+                $type === 'default' ? ($configuration['default'] ?? []) : ($configuration[$type][$code] ?? [])
+            );
+            $paths = ($scope !== null && $scope !== '') || $type === 'default'
+                ? $effective
+                : $this->flattenConfiguration($explicit[$type][$code] ?? []);
+            foreach ($paths as $path => $unused) {
+                if (($searchPath !== '' && !preg_match($pattern, $path)) || !array_key_exists($path, $effective)) {
+                    continue;
+                }
+                $rows[] = [
+                    'path' => $path,
+                    'scope' => $type,
+                    'scope_id' => $id,
+                    'value' => $effective[$path],
+                    'updated_at' => '',
+                ];
+            }
+        }
+        usort($rows, function ($left, $right) {
+            return [$left['path'], array_search($left['scope'], $this->_scopes), (int) $left['scope_id']]
+                <=> [$right['path'], array_search($right['scope'], $this->_scopes), (int) $right['scope_id']];
+        });
+
+        return $rows;
+    }
+
+    private function flattenConfiguration(array $configuration, $prefix = '')
+    {
+        $result = [];
+        foreach ($configuration as $key => $value) {
+            $path = $prefix . $key;
+            if (is_array($value)) {
+                $result += $this->flattenConfiguration($value, $path . '/');
+            } else {
+                $result[$path] = $value;
+            }
+        }
+
+        return $result;
     }
 
     /**
