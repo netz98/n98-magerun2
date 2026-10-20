@@ -44,7 +44,6 @@ class StartCommandTest extends TestCase
             ],
         ]);
         $property = new \ReflectionProperty(Application::class, 'config');
-        $property->setAccessible(true);
         $property->setValue($application, $configuration);
         $application->setIsInitialized(true);
 
@@ -56,7 +55,6 @@ class StartCommandTest extends TestCase
 
         $input = new ArrayInput(['--include' => ['db:*'], '--exclude' => ['db:status']], $command->getDefinition());
         $method = new \ReflectionMethod(StartCommand::class, 'getExposedCommands');
-        $method->setAccessible(true);
         $exposed = $method->invoke($command, $input);
 
         $this->assertSame($expected, array_keys($exposed));

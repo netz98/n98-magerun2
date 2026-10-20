@@ -70,4 +70,45 @@ class CsvRendererTest extends TestCase
         $expectedOutput = "col1,col2\nval1,val2\nval3,val4\n";
         $this->assertEquals($expectedOutput, str_replace("\r\n", "\n", $csvOutput));
     }
+
+    /** @dataProvider delimitedRenderers */
+    public function testQuotedHeadersAndValuesRoundTrip(string $class, string $delimiter): void
+    {
+        $rows = [
+            ['Header, "quoted"' => "Value, \"quoted\"\twith tabs\nand newline", 'plain' => '<info> & Unicode ä'],
+            ['Header, "quoted"' => '', 'plain' => "Backslash \\\" and quote \""],
+        ];
+        $stream = fopen('php://memory', 'r+');
+        try {
+            (new $class())->render(new StreamOutput($stream), $rows);
+            rewind($stream);
+            $this->assertStringContainsString('""quoted""', stream_get_contents($stream));
+            rewind($stream);
+            $this->assertSame(array_keys($rows[0]), fgetcsv($stream, 0, $delimiter, '"', ''));
+            foreach ($rows as $row) {
+                $this->assertSame(array_values($row), fgetcsv($stream, 0, $delimiter, '"', ''));
+            }
+            $this->assertFalse(fgetcsv($stream, 0, $delimiter, '"', ''));
+        } finally {
+            fclose($stream);
+        }
+    }
+
+    /** @dataProvider delimitedRenderers */
+    public function testEmptyDelimitedOutputStillHasNoHeader(string $class, string $delimiter): void
+    {
+        $stream = fopen('php://memory', 'r+');
+        try {
+            (new $class())->render(new StreamOutput($stream), []);
+            rewind($stream);
+            $this->assertSame('', stream_get_contents($stream));
+        } finally {
+            fclose($stream);
+        }
+    }
+
+    public static function delimitedRenderers(): array
+    {
+        return [[CsvRenderer::class, ','], [TsvRenderer::class, "\t"]];
+    }
 }
