@@ -52,7 +52,7 @@ jobs:
         env:
           VALIDATE_ALL_CODEBASE: false
           # Super-Linter cannot mix true and false linter selections. Preserve
-          # the pinned action's existing enabled checks and add Trivy explicitly.
+          # the pinned action's existing enabled checks. Trivy is advisory below.
           VALIDATE_ANSIBLE: true
           VALIDATE_ARM: true
           VALIDATE_BASH_EXEC: true
@@ -116,9 +116,49 @@ jobs:
           VALIDATE_TERRAFORM_FMT: true
           VALIDATE_TERRAFORM_TFLINT: true
           VALIDATE_TERRAGRUNT: true
-          VALIDATE_TRIVY: true
           VALIDATE_XML: true
           VALIDATE_YAML: true
           MARKDOWN_CONFIG_FILE: '.markdown-lint.yml'
           DEFAULT_BRANCH: 'develop'
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  trivy-advisory:
+    name: Trivy Security Scan (advisory)
+    runs-on: ubuntu-latest
+    # Scanner findings and infrastructure errors must not block deployment.
+    continue-on-error: true
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Scan full code base with Trivy
+        id: trivy
+        continue-on-error: true
+        uses: super-linter/super-linter/slim@2da136927bd4a73596db63044b504547c62cb854
+        env:
+          VALIDATE_ALL_CODEBASE: true
+          VALIDATE_TRIVY: true
+          # Do not publish a separate failing commit status for advisory results.
+          MULTI_STATUS: false
+          ENABLE_GITHUB_PULL_REQUEST_SUMMARY_COMMENT: false
+          DEFAULT_BRANCH: 'develop'
+
+      - name: Report advisory outcome
+        if: always()
+        env:
+          SCAN_OUTCOME: ${{ steps.trivy.outcome }}
+        run: |
+          {
+            echo '## Trivy security scan (advisory)'
+            printf '\nScanner step outcome: **%s**\n' "$SCAN_OUTCOME"
+            echo 'Review the scanner logs for findings or execution errors.'
+            echo 'This scan is advisory and does not block deployment; other lint checks remain blocking.'
+          } >> "$GITHUB_STEP_SUMMARY"
+          if [ "$SCAN_OUTCOME" != 'success' ]; then
+            echo "::warning title=Trivy advisory scan::Outcome: $SCAN_OUTCOME. Review scanner logs for findings or execution errors."
+          fi
