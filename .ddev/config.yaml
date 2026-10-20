@@ -1,4 +1,5 @@
-name: n98-magerun2
+# Keep name omitted so Git worktrees use their directory name as the DDEV project name.
+# Preserve this with: ddev config global --omit-project-name-by-default=true
 type: php
 docroot: ""
 php_version: "8.4"
