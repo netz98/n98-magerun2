@@ -24,7 +24,7 @@ class CreateCommand extends AbstractGroupCommand
             ->addOption('sort-order', null, InputOption::VALUE_REQUIRED, 'Sort order, 0-32767', '0');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         if (!$this->initializeManagement($input, $output, true)) {
             return Command::FAILURE;

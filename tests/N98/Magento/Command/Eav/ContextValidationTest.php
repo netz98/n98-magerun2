@@ -10,10 +10,16 @@ namespace N98\Magento\Command\Eav;
 
 use Magento\Eav\Setup\EavSetup;
 use N98\Magento\Command\Eav\AttributeGroup\ListCommand;
-use PHPUnit\Framework\TestCase;
+use N98\Magento\Command\TestCase;
 
 class ContextValidationTest extends TestCase
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->getApplication();
+    }
+
     /** @dataProvider invalidIds */
     public function testRejectsInvalidIdsBeforeLookup($id): void
     {

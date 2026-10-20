@@ -26,7 +26,7 @@ class DeleteCommand extends AbstractGroupCommand
             ->addOption('force', 'f', InputOption::VALUE_NONE, 'Skip confirmation (not safety checks)');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         if (!$this->initializeManagement($input, $output, true)) {
             return Command::FAILURE;

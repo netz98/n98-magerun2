@@ -23,7 +23,7 @@ class ViewCommand extends AbstractGroupCommand
             ->addFormatOption();
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         if (!$this->initializeManagement($input, $output, false)) {
             return Command::FAILURE;

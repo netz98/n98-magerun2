@@ -9,7 +9,7 @@
 namespace N98\Magento\Command\Eav\AttributeGroup;
 
 use Magento\Eav\Setup\EavSetup;
-use PHPUnit\Framework\TestCase;
+use N98\Magento\Command\TestCase;
 use Symfony\Component\Console\Helper\HelperSet;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\ArrayInput;
@@ -17,6 +17,12 @@ use Symfony\Component\Console\Output\BufferedOutput;
 
 class DeleteCommandTest extends TestCase
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->getApplication();
+    }
+
     /** @dataProvider deletionCases */
     public function testDeletionSafety(bool $force, bool $default, bool $populated, bool $deleted, bool $effectiveDefault = false): void
     {

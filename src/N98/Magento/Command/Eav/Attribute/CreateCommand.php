@@ -35,7 +35,7 @@ class CreateCommand extends AbstractManagementCommand
             ->addOption('attribute-group', null, InputOption::VALUE_REQUIRED, 'Assign to this group ID within --attribute-set');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         if (!$this->initializeManagement($input, $output, true)) {
             return Command::FAILURE;

@@ -9,12 +9,18 @@
 namespace N98\Magento\Command\Eav\AttributeGroup;
 
 use Magento\Eav\Setup\EavSetup;
-use PHPUnit\Framework\TestCase;
+use N98\Magento\Command\TestCase;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
 
 class CreateCommandTest extends TestCase
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->getApplication();
+    }
+
     /** @dataProvider sortOrders */
     public function testSortOrderBoundsBeforeMutation(string $sortOrder, bool $accepted): void
     {

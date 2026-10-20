@@ -14,12 +14,18 @@ use Magento\Eav\Setup\EavSetup;
 use Magento\Eav\Setup\EavSetupFactory;
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\DB\Adapter\AdapterInterface;
-use PHPUnit\Framework\TestCase;
+use N98\Magento\Command\TestCase;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
 
 class CreateCommandTest extends TestCase
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->getApplication();
+    }
+
     private function executeCommand(CreateCommand $command, array $options): int
     {
         $input = new ArrayInput(array_replace([
