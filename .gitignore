@@ -16,6 +16,9 @@
 
 .env
 
+# DDEV generates this host-specific SSH-agent image build context.
+/.ddev/.sshimageBuild/
+
 # Magento Source
 /magento-src.phar
 /magento-src
