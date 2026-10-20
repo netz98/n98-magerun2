@@ -96,7 +96,6 @@ class ApplicationCommandRegistrationTest extends TestCase
         $configuration = new Config();
         $configuration->setConfig(['commands' => $commandsConfig]);
         $property = new \ReflectionProperty(Application::class, 'config');
-        $property->setAccessible(true);
         $property->setValue($application, $configuration);
         $application->setIsInitialized(true);
 

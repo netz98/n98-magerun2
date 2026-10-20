@@ -45,7 +45,6 @@ class DeleteCommandTest extends TestCase
             $this->expectExceptionMessage(($default || $effectiveDefault) ? 'Cannot delete a default' : 'Cannot delete a populated');
         }
         $method = new \ReflectionMethod($command, 'execute');
-        $method->setAccessible(true);
         $status = $method->invoke($command, $input, new BufferedOutput());
         $this->assertSame($deleted ? 0 : 1, $status);
     }
@@ -86,7 +85,6 @@ class DeleteCommandTest extends TestCase
         $input->setStream($stream);
         try {
             $method = new \ReflectionMethod($command, 'execute');
-            $method->setAccessible(true);
             $this->assertSame($deleted ? 0 : 1, $method->invoke($command, $input, new BufferedOutput()));
         } finally {
             fclose($stream);
@@ -110,7 +108,6 @@ class DeleteCommandTest extends TestCase
         $input = new ArrayInput(['entityType' => 'catalog_product', 'attributeSetId' => '8', 'attributeGroupId' => '11', '--force' => true]);
         $input->bind($command->getDefinition());
         $method = new \ReflectionMethod($command, 'execute');
-        $method->setAccessible(true);
         $this->expectException(\InvalidArgumentException::class);
         $method->invoke($command, $input, new BufferedOutput());
     }

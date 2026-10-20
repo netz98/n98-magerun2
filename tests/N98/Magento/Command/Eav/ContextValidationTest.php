@@ -26,7 +26,6 @@ class ContextValidationTest extends TestCase
         $setup = $this->createMock(EavSetup::class);
         $setup->expects($this->never())->method('getAttributeSet');
         $method = new \ReflectionMethod(ListCommand::class, 'attributeSet');
-        $method->setAccessible(true);
         $this->expectException(\InvalidArgumentException::class);
         $method->invoke(new ListCommand(), $setup, 4, $id);
     }
@@ -42,7 +41,6 @@ class ContextValidationTest extends TestCase
         $setup = $this->createMock(EavSetup::class);
         $setup->method('getAttributeSet')->with(4, 8)->willReturn($set);
         $method = new \ReflectionMethod(ListCommand::class, 'attributeSet');
-        $method->setAccessible(true);
         $this->expectException(\InvalidArgumentException::class);
         $method->invoke(new ListCommand(), $setup, 4, '8');
     }
@@ -58,7 +56,6 @@ class ContextValidationTest extends TestCase
         $setup = $this->createMock(EavSetup::class);
         $setup->method('getAttributeGroup')->with(4, 8, 11)->willReturn($group);
         $method = new \ReflectionMethod(ListCommand::class, 'attributeGroup');
-        $method->setAccessible(true);
         $this->expectException(\InvalidArgumentException::class);
         $method->invoke(new ListCommand(), $setup, 4, 8, '11');
     }

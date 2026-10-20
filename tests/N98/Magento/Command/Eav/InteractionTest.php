@@ -62,7 +62,6 @@ class InteractionTest extends TestCase
         $input->setInteractive($interactive);
         $before = [$input->getArguments(), $input->getOptions()];
         $method = new \ReflectionMethod($command, 'interact');
-        $method->setAccessible(true);
         $method->invoke($command, $input, new BufferedOutput());
         $this->assertSame($before, [$input->getArguments(), $input->getOptions()]);
     }
@@ -106,7 +105,6 @@ class InteractionTest extends TestCase
         $input = new ArrayInput($arguments);
         $input->bind($command->getDefinition());
         $method = new \ReflectionMethod($command, 'interact');
-        $method->setAccessible(true);
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('No choices available for ' . $context);
         $method->invoke($command, $input, new BufferedOutput());

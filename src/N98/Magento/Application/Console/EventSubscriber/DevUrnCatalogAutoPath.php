@@ -139,9 +139,6 @@ class DevUrnCatalogAutoPath implements EventSubscriberInterface
     {
         $refl = new ReflectionObject($arg);
         $prop = $refl->getProperty('tokens');
-        if (\PHP_VERSION_ID < 80100) {
-            $prop->setAccessible(true);
-        }
         $tokens = $prop->getValue($arg);
         $tokens[] = $file;
         $prop->setValue($arg, $tokens);

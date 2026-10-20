@@ -45,7 +45,6 @@ class CreateCommandTest extends TestCase
             $this->expectExceptionMessage('between 0 and 32767');
         }
         $method = new \ReflectionMethod($command, 'execute');
-        $method->setAccessible(true);
         $this->assertSame(0, $method->invoke($command, $input, new BufferedOutput()));
     }
 

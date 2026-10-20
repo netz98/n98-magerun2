@@ -33,7 +33,6 @@ class CreateCommandTest extends TestCase
         ], $options));
         $input->bind($command->getDefinition());
         $method = new \ReflectionMethod($command, 'execute');
-        $method->setAccessible(true);
         return $method->invoke($command, $input, new BufferedOutput());
     }
 
