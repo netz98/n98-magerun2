@@ -20,6 +20,9 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Validator\Constraints\Email;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Validation;
 
 class ConfirmCommand extends AbstractCustomerCommand
 {
@@ -55,9 +58,17 @@ class ConfirmCommand extends AbstractCustomerCommand
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        if (!$input->isInteractive() && !$input->getArgument('email')) {
-            $output->writeln('<error>An email is required in non-interactive mode.</error>');
-            return Command::FAILURE;
+        $email = $input->getArgument('email');
+        if (!$input->isInteractive()) {
+            if (!$email) {
+                $output->writeln('<error>An email is required in non-interactive mode.</error>');
+                return Command::FAILURE;
+            }
+            $errors = Validation::createValidator()->validate($email, [new NotBlank(), new Email()]);
+            if (count($errors) > 0) {
+                $output->writeln('<error>A valid email address is required in non-interactive mode.</error>');
+                return Command::FAILURE;
+            }
         }
 
         $this->detectMagento($output);
@@ -66,7 +77,9 @@ class ConfirmCommand extends AbstractCustomerCommand
         }
 
         try {
-            $email = $this->getHelper('parameter')->askEmail($input, $output);
+            if ($input->isInteractive()) {
+                $email = $this->getHelper('parameter')->askEmail($input, $output);
+            }
             // Do not let askWebsite silently replace an explicitly invalid website.
             if ($input->getArgument('website') !== null) {
                 $website = $this->storeManager->getWebsite($input->getArgument('website'));

@@ -22,6 +22,56 @@ use Symfony\Component\Console\Tester\CommandTester;
 class ConfirmCommandTest extends TestCase
 {
     /**
+     * @dataProvider invalidEmailProvider
+     */
+    public function testInvalidNonInteractiveEmailDoesNotCallCustomerServices(string $email, bool $resend)
+    {
+        $application = $this->getApplication();
+        $accountManagement = $this->createMock(AccountManagementInterface::class);
+        $accountManagement->expects($this->never())->method($this->anything());
+        $repository = $this->createMock(CustomerRepositoryInterface::class);
+        $repository->expects($this->never())->method($this->anything());
+        $command = new class($accountManagement, $repository) extends ConfirmCommand {
+            private AccountManagementInterface $testAccountManagement;
+            private CustomerRepositoryInterface $testRepository;
+
+            public function __construct(AccountManagementInterface $accountManagement, CustomerRepositoryInterface $repository)
+            {
+                $this->testAccountManagement = $accountManagement;
+                $this->testRepository = $repository;
+                parent::__construct();
+            }
+
+            public function inject(
+                AccountManagementInterface $accountManagement,
+                CustomerRepositoryInterface $customerRepository,
+                StoreManagerInterface $storeManager,
+                State $state,
+                Emulation $emulation
+            ) {
+                parent::inject($this->testAccountManagement, $this->testRepository, $storeManager, $state, $emulation);
+            }
+        };
+        $application->add($command);
+        $tester = new CommandTester($command);
+        $this->assertSame(1, $tester->execute([
+            'email' => $email, 'website' => 'base', '--resend' => $resend,
+        ], ['interactive' => false]));
+        $this->assertStringContainsString('A valid email address is required', $tester->getDisplay());
+        $this->assertStringNotContainsString('Email:', $tester->getDisplay());
+    }
+
+    public static function invalidEmailProvider(): array
+    {
+        return [
+            'malformed confirm' => ['malformed-email', false],
+            'malformed resend' => ['malformed-email', true],
+            'whitespace confirm' => ['   ', false],
+            'whitespace resend' => ["\t\n", true],
+        ];
+    }
+
+    /**
      * @dataProvider resendFailureProvider
      */
     public function testResendFailurePreservesAccountAndContext(bool $throws)

@@ -26,6 +26,18 @@ teardown() {
     assert_output --partial 'An email is required'
 }
 
+@test "customer:confirm rejects malformed and whitespace emails without prompting in either mode" {
+    for email_value in 'malformed-email' '   '; do
+        for option in '' '--resend'; do
+            # Bound the process so a regression to an interactive prompt cannot hang BATS.
+            run timeout --foreground -k 2s 5s $BIN customer:confirm "$email_value" base $option
+            assert_equal "$status" 1
+            assert_output --partial 'A valid email address is required'
+            refute_output --partial 'Email:'
+        done
+    done
+}
+
 @test "customer:confirm rejects missing customers in both modes" {
     for option in '' '--resend'; do
         run $BIN customer:confirm "missing-confirm-${BATS_TEST_NUMBER}-$$@example.invalid" base $option
