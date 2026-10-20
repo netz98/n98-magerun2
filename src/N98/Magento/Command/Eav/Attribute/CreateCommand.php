@@ -30,7 +30,7 @@ class CreateCommand extends AbstractManagementCommand
             ->addOption('scope', null, InputOption::VALUE_REQUIRED, 'Catalog scope: global, website or store', 'global')
             ->addOption('default', null, InputOption::VALUE_REQUIRED, 'Default for text, textarea or boolean')
             ->addOption('option', null, InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'Admin option label for select/multiselect (repeatable)')
-            ->addOption('sort-order', null, InputOption::VALUE_REQUIRED, 'Sort order, 0-65535', '0')
+            ->addOption('sort-order', null, InputOption::VALUE_REQUIRED, 'Sort order, 0-32767', '0')
             ->addOption('attribute-set', null, InputOption::VALUE_REQUIRED, 'Assign to this attribute set ID (requires --attribute-group)')
             ->addOption('attribute-group', null, InputOption::VALUE_REQUIRED, 'Assign to this group ID within --attribute-set');
     }

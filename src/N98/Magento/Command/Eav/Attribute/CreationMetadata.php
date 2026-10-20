@@ -37,8 +37,8 @@ class CreationMetadata
             throw new \InvalidArgumentException('Scope must be global, website or store.');
         }
         $data['global'] = $scopes[$options['scope']];
-        if (!preg_match('/^[0-9]+$/D', $options['sort-order']) || (float) $options['sort-order'] > 65535) {
-            throw new \InvalidArgumentException('Sort order must be an integer between 0 and 65535.');
+        if (!preg_match('/^[0-9]+$/D', $options['sort-order']) || (float) $options['sort-order'] > 32767) {
+            throw new \InvalidArgumentException('Sort order must be an integer between 0 and 32767.');
         }
         $data['sort_order'] = (int) $options['sort-order'];
         $labels = $options['option'];

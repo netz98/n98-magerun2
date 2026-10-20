@@ -40,6 +40,12 @@ class CreationMetadataTest extends TestCase
         $this->assertSame(0, $data['global']);
     }
 
+    public function testAcceptsMaximumSignedSmallintSortOrder(): void
+    {
+        $data = (new CreationMetadata())->build('example', $this->options(['sort-order' => '32767']));
+        $this->assertSame(32767, $data['sort_order']);
+    }
+
     /** @dataProvider invalidMetadata */
     public function testRejectsInvalidMetadataBeforeMutation(string $code, array $options): void
     {
@@ -55,7 +61,8 @@ class CreationMetadataTest extends TestCase
             ['valid', ['input' => 'arbitrary_class']], ['valid', ['required' => 'yes']],
             ['valid', ['unique' => '-1']], ['valid', ['visible' => 'true']],
             ['valid', ['scope' => 'invalid']], ['valid', ['sort-order' => '-1']],
-            ['valid', ['sort-order' => '65536']], ['valid', ['input' => 'select']],
+            ['valid', ['sort-order' => '32768']], ['valid', ['sort-order' => '65536']],
+            ['valid', ['input' => 'select']],
             ['valid', ['input' => 'select', 'option' => ['Red', 'Red']]],
             ['valid', ['input' => 'select', 'option' => [' ']]],
             ['valid', ['option' => ['Red']]], ['valid', ['input' => 'boolean', 'default' => '2']],

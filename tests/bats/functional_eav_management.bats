@@ -40,13 +40,21 @@ teardown() {
     attribute_code="n98_bats_${suffix}"
     group_name="Magerun BATS ${suffix}"
 
-    run $BIN eav:attribute-group:create catalog_product "$set_id" "$group_name" --sort-order=99
+    run $BIN eav:attribute-group:create catalog_product "$set_id" "$group_name" --sort-order=32768
+    group_id=$(printf '%s\n' "$output" | sed -n 's/.*Created attribute group ID: \([0-9][0-9]*\).*/\1/p')
+    assert_failure
+    assert_output --partial 'between 0 and 32767'
+    run $BIN eav:attribute-group:list catalog_product "$set_id" --format=csv
+    assert_success
+    refute_output --partial "$group_name"
+    run $BIN eav:attribute-group:create catalog_product "$set_id" "$group_name" --sort-order=32767
     assert_success
     group_id=$(printf '%s\n' "$output" | sed -n 's/.*Created attribute group ID: \([0-9][0-9]*\).*/\1/p')
     [[ "$group_id" =~ ^[1-9][0-9]*$ ]]
     run $BIN eav:attribute-group:list catalog_product "$set_id" --format=csv
     assert_success
     assert_output --partial "$group_name"
+    assert_output --partial '32767'
     run $BIN eav:attribute-group:create catalog_product "$set_id" "$group_name"
     assert_failure
     assert_output --partial 'already exists'
@@ -54,8 +62,14 @@ teardown() {
     run $BIN eav:attribute-group:delete catalog_product "$set_id" "$group_id"
     assert_failure
     assert_output --partial 'cancelled'
+    run $BIN eav:attribute:create catalog_product "$attribute_code" --label='BATS example' --sort-order=32768
+    assert_failure
+    assert_output --partial 'between 0 and 32767'
+    run $BIN eav:attribute:view catalog_product "$attribute_code"
+    assert_failure
+    assert_output --partial 'not found'
     run $BIN eav:attribute:create catalog_product "$attribute_code" --label='BATS example' \
-        --input=boolean --default=0 --attribute-set="$set_id" --attribute-group="$group_id"
+        --input=boolean --default=0 --sort-order=32767 --attribute-set="$set_id" --attribute-group="$group_id"
     assert_success
     run $BIN eav:attribute:view catalog_product "$attribute_code"
     assert_success
@@ -63,6 +77,7 @@ teardown() {
     run $BIN eav:attribute-group:view catalog_product "$set_id" "$group_id" --format=json
     assert_success
     assert_output --partial "$attribute_code"
+    assert_output --partial 'sort order: 32767'
     run $BIN eav:attribute-group:delete catalog_product "$set_id" "$group_id" --force
     assert_failure
     assert_output --partial 'populated'

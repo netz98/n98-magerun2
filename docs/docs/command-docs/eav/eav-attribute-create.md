@@ -25,7 +25,7 @@ Use entity type codes such as `catalog_product`, `catalog_category`, `customer` 
 | `--scope` | `global` | `global`, `website`, `store`; non-global scopes are catalog-only |
 | `--default` | None | Default value for text, textarea or boolean; boolean accepts only `0` or `1` |
 | `--option` | None | Repeatable admin label; required for select/multiselect, forbidden for other inputs |
-| `--sort-order` | `0` | Assignment order, integer from 0 to 65535 |
+| `--sort-order` | `0` | Assignment order, integer from 0 to 32767 (signed SMALLINT storage) |
 | `--attribute-set` | None | Existing attribute set **ID**, requires `--attribute-group` |
 | `--attribute-group` | None | Existing group **ID** in that set, requires `--attribute-set` |
 

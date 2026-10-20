@@ -21,7 +21,7 @@ class CreateCommand extends AbstractGroupCommand
         $this->setName('eav:attribute-group:create')->setDescription('Create an EAV attribute group');
         $this->configureContext();
         $this->addArgument('name', InputArgument::REQUIRED, 'New group name')
-            ->addOption('sort-order', null, InputOption::VALUE_REQUIRED, 'Non-negative sort order', '0');
+            ->addOption('sort-order', null, InputOption::VALUE_REQUIRED, 'Sort order, 0-32767', '0');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -35,8 +35,8 @@ class CreateCommand extends AbstractGroupCommand
         if ($name === '' || strlen($name) > 255 || preg_match('/[\x00-\x1f\x7f]/', $name)) {
             throw new \InvalidArgumentException('Group name must contain 1-255 bytes without control characters.');
         }
-        if (!preg_match('/^[0-9]+$/D', $sortOrder) || (float) $sortOrder > 2147483647) {
-            throw new \InvalidArgumentException('Sort order must be a non-negative 32-bit integer.');
+        if (!preg_match('/^[0-9]+$/D', $sortOrder) || (float) $sortOrder > 32767) {
+            throw new \InvalidArgumentException('Sort order must be an integer between 0 and 32767.');
         }
         // Magento derives a group code from the name; reject code collisions too.
         $code = $setup->convertToAttributeGroupCode($name);
