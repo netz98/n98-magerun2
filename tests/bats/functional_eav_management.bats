@@ -7,6 +7,7 @@ setup() {
     : "${N98_MAGERUN2_BIN:?Set N98_MAGERUN2_BIN}"
     : "${N98_MAGERUN2_TEST_MAGENTO_ROOT:?Set an isolated Magento root}"
     export BIN="$(command -v php) -f ${N98_MAGERUN2_BIN} -- --no-interaction --root-dir=${N98_MAGERUN2_TEST_MAGENTO_ROOT}"
+    export BIN_INTERACTION="$(command -v php) -f ${N98_MAGERUN2_BIN} -- --root-dir=${N98_MAGERUN2_TEST_MAGENTO_ROOT}"
 }
 
 teardown() {
@@ -18,15 +19,19 @@ teardown() {
     fi
 }
 
-@test "Product attribute and group lifecycle preserves default and populated groups" {
-    # Discover the actual installation-specific default set through Magento, not a hardcoded ID.
-    context=$(php -r '
+product_context() {
+    php -r '
         require getenv("N98_MAGERUN2_TEST_MAGENTO_ROOT") . "/app/bootstrap.php";
         $bootstrap = \Magento\Framework\App\Bootstrap::create(BP, $_SERVER);
         $setup = $bootstrap->getObjectManager()->get(\Magento\Eav\Setup\EavSetupFactory::class)->create();
         $setId = $setup->getDefaultAttributeSetId("catalog_product");
         echo $setId . " " . $setup->getDefaultAttributeGroupId("catalog_product", $setId);
-    ')
+    '
+}
+
+@test "Product attribute and group lifecycle preserves default and populated groups" {
+    # Discover the actual installation-specific default set through Magento, not a hardcoded ID.
+    context=$(product_context)
     read -r set_id default_group_id <<< "$context"
     [[ "$set_id" =~ ^[1-9][0-9]*$ ]]
     [[ "$default_group_id" =~ ^[1-9][0-9]*$ ]]
@@ -129,4 +134,69 @@ teardown() {
     run $BIN eav:attribute:create catalog_product n98_invalid_metadata --label Example --backend 'Arbitrary\Class'
     assert_failure
     assert_output --partial 'does not exist'
+}
+
+@test "All EAV management commands fail clearly for missing noninteractive inputs" {
+    for command in eav:attribute:create eav:attribute-group:create eav:attribute-group:list eav:attribute-group:delete eav:attribute-group:view; do
+        run $BIN "$command"
+        assert_failure
+        assert_output --partial 'Not enough arguments'
+        refute_output --partial 'Entity type (enter'
+    done
+    attribute_code="n98_missing_${RANDOM}"
+    run $BIN eav:attribute:create catalog_product "$attribute_code"
+    assert_failure
+    assert_output --partial 'Missing required option --label'
+    run $BIN eav:attribute:view catalog_product "$attribute_code"
+    assert_failure
+    assert_output --partial 'not found'
+}
+
+@test "Interactive EAV selection cancellation, EOF and invalid supplied context are safe" {
+    run bash -c 'printf "\n" | $BIN_INTERACTION eav:attribute-group:create'
+    assert_failure
+    assert_output --partial 'cancelled'
+    refute_output --partial 'Created attribute group'
+    run bash -c '$BIN_INTERACTION eav:attribute-group:create </dev/null'
+    assert_failure
+    assert_output --partial 'cancelled'
+    run bash -c '$BIN_INTERACTION eav:attribute-group:view catalog_product 2147483647 </dev/null'
+    assert_failure
+    assert_output --partial 'not found'
+    refute_output --partial 'Attribute group (enter'
+}
+
+@test "All five EAV management commands collect only missing required inputs" {
+    read -r set_id default_group_id <<< "$(product_context)"
+    suffix="$(date +%s)_${RANDOM}"
+    attribute_code="n98_bats_${suffix}"
+    group_name="Magerun BATS interactive ${suffix}"
+    run bash -c 'printf "%s\n" catalog_product "$1" "$2" | $BIN_INTERACTION eav:attribute-group:create' _ "$set_id" "$group_name"
+    assert_success
+    group_id=$(printf '%s\n' "$output" | sed -n 's/.*Created attribute group ID: \([0-9][0-9]*\).*/\1/p')
+    [[ "$group_id" =~ ^[1-9][0-9]*$ ]]
+    refute_output --partial 'Sort order'
+
+    run bash -c 'printf "%s\n" "$1" "Interactive BATS label" | $BIN_INTERACTION eav:attribute:create catalog_product --attribute-set="$2" --attribute-group="$3" --input=boolean --default=0' _ "$attribute_code" "$set_id" "$group_id"
+    assert_success
+    refute_output --partial 'Entity type (enter'
+    refute_output --partial 'Scope'
+    run bash -c 'printf "%s\n" "$1" | $BIN_INTERACTION eav:attribute-group:list catalog_product' _ "$set_id"
+    assert_success
+    assert_output --partial "$group_name"
+    refute_output --partial 'Entity type (enter'
+    run bash -c 'printf "%s\n" "$2" | $BIN_INTERACTION eav:attribute-group:view catalog_product "$1"' _ "$set_id" "$group_id"
+    assert_success
+    assert_output --partial "$attribute_code"
+    refute_output --partial 'Attribute set (enter'
+    run $BIN eav:attribute:remove catalog_product "$attribute_code"
+    assert_success
+
+    run bash -c 'printf "%s\n" "$2" no | $BIN_INTERACTION eav:attribute-group:delete catalog_product "$1"' _ "$set_id" "$group_id"
+    assert_failure
+    assert_output --partial 'Deletion cancelled'
+    run bash -c 'printf "%s\n" "$2" yes | $BIN_INTERACTION eav:attribute-group:delete catalog_product "$1"' _ "$set_id" "$group_id"
+    assert_success
+    group_id=''
+    attribute_code=''
 }

@@ -7,6 +7,12 @@ sidebar_position: 15
 
 List groups in one explicit EAV entity type and attribute set.
 
+## Interactive use
+
+Without required arguments, select an entity type and then one of its attribute sets. `eav:attribute-group:list catalog_product` prompts only for the set. Selections use displayed entity codes and record IDs, not row numbers; Enter cancels instead of selecting a default.
+
+Fully supplied invocations do not prompt. With `--no-interaction`, missing arguments fail clearly. See [interactive input safety](./index.md#interactive-required-inputs).
+
 ```sh
 n98-magerun2.phar eav:attribute-group:list <entityType> <attributeSetId> [--format=FORMAT]
 n98-magerun2.phar eav:attribute-group:list catalog_product 4 --format=csv

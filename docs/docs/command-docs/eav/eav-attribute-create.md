@@ -7,6 +7,12 @@ sidebar_position: 13
 
 Create a **new user-defined** attribute for an explicit EAV entity type code. Existing attributes are never updated.
 
+## Interactive use
+
+Run `eav:attribute:create` without positional arguments to select the entity type and enter the attribute code and required admin label. For example, `eav:attribute:create catalog_product care_note` asks only for the missing label. Supplied values are preserved. No optional metadata wizard is shown: continue to use flags for options such as input type, scope and assignment.
+
+With `--no-interaction`, both positional arguments and `--label` are required; missing values fail without mutation. See [interactive input safety](./index.md#interactive-required-inputs) for cancellation and selection behavior.
+
 ```sh
 n98-magerun2.phar eav:attribute:create <entityType> <attributeCode> --label="Admin label" [options]
 ```

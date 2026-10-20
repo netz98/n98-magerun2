@@ -7,6 +7,12 @@ sidebar_position: 16
 
 View group metadata and the attributes assigned to that group in one attribute set.
 
+## Interactive use
+
+Missing required context is selected in order: entity type, one of its sets, then one of that set's groups. For example, `eav:attribute-group:view catalog_product 4` asks only for a group ID within set 4. Supplied context is validated, not silently replaced. Enter at a selection cancels without choosing a default record.
+
+With `--no-interaction`, all three arguments must be supplied. See [interactive input safety](./index.md#interactive-required-inputs).
+
 ```sh
 n98-magerun2.phar eav:attribute-group:view <entityType> <attributeSetId> <attributeGroupId> [--format=FORMAT]
 n98-magerun2.phar eav:attribute-group:view catalog_product 4 27

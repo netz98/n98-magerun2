@@ -15,6 +15,8 @@ use Magento\Framework\App\ResourceConnection;
 use N98\Magento\Command\AbstractMagentoCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\ChoiceQuestion;
+use Symfony\Component\Console\Question\Question;
 
 abstract class AbstractManagementCommand extends AbstractMagentoCommand
 {
@@ -27,6 +29,113 @@ abstract class AbstractManagementCommand extends AbstractMagentoCommand
         $this->eavConfig = $eavConfig;
         $this->setupFactory = $setupFactory;
         $this->resource = $resource;
+    }
+
+    protected function interact(InputInterface $input, OutputInterface $output): void
+    {
+        $missing = [];
+        foreach ($this->getDefinition()->getArguments() as $argument) {
+            if ($argument->isRequired() && $input->getArgument($argument->getName()) === null) {
+                $missing[] = $argument->getName();
+            }
+        }
+        $missingLabel = $this->getDefinition()->hasOption('label') && $input->getOption('label') === null;
+        if (!$input->isInteractive() || (!$missing && !$missingLabel)) {
+            return;
+        }
+        if (!$this->initializeManagement($input, $output, false)) {
+            throw new \RuntimeException('Cannot collect required EAV inputs without Magento.');
+        }
+        if ($input->getArgument('entityType') === null) {
+            $input->setArgument('entityType', $this->askContext($input, $output, 'Entity type', $this->entityChoices()));
+        }
+        // Validate supplied context before offering any dependent choices. Never replace it.
+        $entityId = $this->entityId($input->getArgument('entityType'));
+        if ($this->getDefinition()->hasArgument('attributeSetId')) {
+            if ($input->getArgument('attributeSetId') === null) {
+                $input->setArgument('attributeSetId', $this->askContext($input, $output, 'Attribute set', $this->setChoices($entityId)));
+            }
+            $setup = $this->setupFactory->create();
+            $set = $this->attributeSet($setup, $entityId, $input->getArgument('attributeSetId'));
+            if ($this->getDefinition()->hasArgument('attributeGroupId')) {
+                $setId = (int) $set['attribute_set_id'];
+                if ($input->getArgument('attributeGroupId') === null) {
+                    $choices = [];
+                    foreach ($this->groupRows($setId) as $group) {
+                        $choices[$group['attribute_group_id']] = $group['attribute_group_name'] . ' (#' . $group['attribute_group_id'] . ')';
+                    }
+                    $input->setArgument('attributeGroupId', $this->askContext($input, $output, 'Attribute group', $choices));
+                }
+                $this->attributeGroup($setup, $entityId, $setId, $input->getArgument('attributeGroupId'));
+            }
+        }
+        foreach (['attributeCode' => 'Attribute code', 'name' => 'Group name'] as $argument => $label) {
+            if ($this->getDefinition()->hasArgument($argument) && $input->getArgument($argument) === null) {
+                $input->setArgument($argument, $this->askRequiredText($input, $output, $label, $argument === 'attributeCode'));
+            }
+        }
+        if ($missingLabel) {
+            $input->setOption('label', $this->askRequiredText($input, $output, 'Admin label'));
+        }
+    }
+
+    protected function entityChoices(): array
+    {
+        $connection = $this->resource->getConnection();
+        $rows = $connection->fetchAll($connection->select()
+            ->from($this->resource->getTableName('eav_entity_type'), ['entity_type_code', 'entity_type_id'])
+            ->order('entity_type_code ASC'));
+        $choices = [];
+        foreach ($rows as $row) {
+            $choices[$row['entity_type_code']] = $row['entity_type_code'] . ' (#' . $row['entity_type_id'] . ')';
+        }
+        return $choices;
+    }
+
+    protected function setChoices(int $entityId): array
+    {
+        $connection = $this->resource->getConnection();
+        $rows = $connection->fetchAll($connection->select()
+            ->from($this->resource->getTableName('eav_attribute_set'), ['attribute_set_id', 'attribute_set_name'])
+            ->where('entity_type_id = ?', $entityId)->order('attribute_set_id ASC'));
+        $choices = [];
+        foreach ($rows as $row) {
+            $choices[$row['attribute_set_id']] = $row['attribute_set_name'] . ' (#' . $row['attribute_set_id'] . ')';
+        }
+        return $choices;
+    }
+
+    private function askContext(InputInterface $input, OutputInterface $output, string $label, array $choices): string
+    {
+        if (!$choices) {
+            throw new \InvalidArgumentException('No choices available for ' . strtolower($label) . ' in this context.');
+        }
+        // An empty answer cancels; no entity, set or group is implicitly selected.
+        $choices = ['cancel' => 'Cancel (no changes)'] + $choices;
+        $question = new ChoiceQuestion($label . ' (enter its code/ID; Enter cancels)', $choices, 'cancel');
+        $question->setMaxAttempts(1);
+        $answer = $this->getHelper('question')->ask($input, $output, $question);
+        if ($answer === 'cancel' || !array_key_exists($answer, $choices)) {
+            throw new \RuntimeException('EAV input cancelled; no changes were made.');
+        }
+        return (string) $answer;
+    }
+
+    private function askRequiredText(InputInterface $input, OutputInterface $output, string $label, bool $attributeCode = false): string
+    {
+        $question = new Question($label . ' (required; Ctrl+C cancels): ');
+        $question->setMaxAttempts(1);
+        $question->setValidator(function ($value) use ($label, $attributeCode): string {
+            $value = trim((string) $value);
+            if ($attributeCode && !preg_match('/^[a-z][a-z0-9_]{0,29}$/D', $value)) {
+                throw new \InvalidArgumentException('Attribute code must start with a lowercase letter and contain at most 30 lowercase letters, digits or underscores.');
+            }
+            if ($value === '' || strlen($value) > 255 || preg_match('/[\x00-\x1f\x7f]/', $value)) {
+                throw new \InvalidArgumentException($label . ' must contain 1-255 bytes without control characters.');
+            }
+            return $value;
+        });
+        return $this->getHelper('question')->ask($input, $output, $question);
     }
 
     protected function initializeManagement(InputInterface $input, OutputInterface $output, bool $mutation): bool

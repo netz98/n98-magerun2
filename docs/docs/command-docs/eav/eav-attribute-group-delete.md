@@ -7,6 +7,12 @@ sidebar_position: 17
 
 Delete an **empty, non-default** attribute group in an explicit entity type and attribute set.
 
+## Interactive use
+
+Missing entity/set/group inputs are selected in dependency order, with sets scoped to the entity and groups scoped to the set. `eav:attribute-group:delete catalog_product 4` asks only for a group in set 4, then retains the existing deletion confirmation. Enter at a context selection cancels instead of selecting a record. Supplied values are never replaced.
+
+`--force` skips only the existing destructive confirmation, not context selection or safety checks. With `--no-interaction`, supply all three arguments **and** `--force` to delete an eligible group. See [interactive input safety](./index.md#interactive-required-inputs).
+
 ```sh
 n98-magerun2.phar eav:attribute-group:delete <entityType> <attributeSetId> <attributeGroupId> [--force|-f]
 n98-magerun2.phar eav:attribute-group:delete catalog_product 4 27 --force

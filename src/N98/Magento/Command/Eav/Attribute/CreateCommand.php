@@ -40,6 +40,9 @@ class CreateCommand extends AbstractManagementCommand
         if (!$this->initializeManagement($input, $output, true)) {
             return Command::FAILURE;
         }
+        if ($input->getOption('label') === null) {
+            throw new \InvalidArgumentException('Missing required option --label. Supply it explicitly when using --no-interaction.');
+        }
         $code = $input->getArgument('attributeCode');
         $data = (new CreationMetadata())->build($code, $input->getOptions());
         $entityCode = $input->getArgument('entityType');
