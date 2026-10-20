@@ -59,6 +59,9 @@ function github_platform_outage() {
 }
 
 teardown() {
+  if [ -n "${config_test_path:-}" ]; then
+    $BIN "config:store:delete" --all "$config_test_path" >/dev/null 2>&1 || true
+  fi
   if [ -n "${store_id:-}" ]; then
     $BIN "sys:store:delete" "$store_id" --force >/dev/null 2>&1 || true
   fi
@@ -478,6 +481,53 @@ teardown() {
   assert_output --partial "n98/magerun/example"
   assert_output --partial "defaultValue"
   assert_output --partial "myStore2value"
+}
+
+@test "Command: config:store:get decrypted magerun script round-trips encrypted values" {
+  config_test_path="n98/magerun/issue_2184_encrypted"
+  local value="synthetic 'secret' \$; --value"
+  run $BIN config:store:set --encrypt --scope=stores --scope-id=1 -- "$config_test_path" "$value"
+  assert_success
+
+  run $BIN config:store:get --decrypt --magerun-script "$config_test_path"
+  assert_success
+  assert_output --partial "config:store:set --encrypt --scope-id=1 --scope=stores -- "
+  local script="$output"
+  run bash -c "$BIN $script"
+  assert_success
+
+  run $BIN config:store:get --magerun-script "$config_test_path"
+  assert_success
+  refute_output --partial -- "--encrypt"
+  refute_output --partial "synthetic"
+  run $BIN config:store:get --decrypt --magerun-script "$config_test_path"
+  assert_success
+  assert_output "$script"
+}
+
+@test "Command: config:store:get decrypted magerun script preserves NULL semantics" {
+  config_test_path="n98/magerun/issue_2184_null"
+  run $BIN config:store:set --encrypt --no-null "$config_test_path" NULL
+  assert_success
+  run $BIN config:store:get --decrypt --magerun-script "$config_test_path"
+  assert_success
+  assert_output "config:store:set --encrypt --no-null --scope-id=0 --scope=default -- '$config_test_path' 'NULL'"
+  run bash -c "$BIN $output"
+  assert_success
+  run $BIN config:store:get --decrypt --magerun-script "$config_test_path"
+  assert_success
+  assert_output --partial "--encrypt --no-null"
+
+  run $BIN config:store:set "$config_test_path" NULL
+  assert_success
+  run $BIN config:store:get --decrypt --magerun-script "$config_test_path"
+  assert_success
+  assert_output "config:store:set --scope-id=0 --scope=default -- '$config_test_path' NULL"
+  run bash -c "$BIN $output"
+  assert_success
+  run $BIN config:store:get --format=json "$config_test_path"
+  assert_success
+  assert_output --partial '"Value": null'
 }
 
 @test "Command: config:store:get with scope-id=1" {
