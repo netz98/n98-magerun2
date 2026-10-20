@@ -48,7 +48,7 @@
         "symfony/finder": "^6.4",
         "symfony/process": "^6.4",
         "symfony/validator": "^6.4",
-        "symfony/yaml": "^6.4",
+        "symfony/yaml": "^6.4.45",
         "twig/twig": "~3.4"
     },
     "require-dev": {
