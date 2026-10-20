@@ -35,9 +35,9 @@ class CsvRenderer implements RendererInterface
         $i = 0;
         foreach ($rows as $row) {
             if ($i++ == 0) {
-                fputcsv($stream, array_keys($row), $this->delimiter, '"', escape: '"');
+                fputcsv($stream, array_keys($row), $this->delimiter, '"', escape: '');
             }
-            fputcsv($stream, $row, $this->delimiter, '"', escape: '"');
+            fputcsv($stream, $row, $this->delimiter, '"', escape: '');
         }
     }
 }
