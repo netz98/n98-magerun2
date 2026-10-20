@@ -134,6 +134,7 @@ commands:
     - N98\Magento\Command\Developer\Module\CreateCommand
     - N98\Magento\Command\Developer\Module\DetectComposerDependenciesCommand
     - N98\Magento\Command\Developer\Module\ListCommand
+    - N98\Magento\Command\Developer\Module\SequenceCommand
     - N98\Magento\Command\Developer\Module\Observer\ListCommand
     - N98\Magento\Command\Developer\Module\Routes\ListAllRoutesCommand
     - N98\Magento\Command\Developer\Report\CountCommand

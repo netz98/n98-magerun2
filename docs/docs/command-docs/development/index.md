@@ -14,6 +14,7 @@ Commands tailored for Magento developers, including code generation and debuggin
 - [dev:module:detect-composer-dependencies](./dev-module-detect-composer-dependencies.md) - Detect Composer Dependencies in Module
 - [dev:module:observer:list](./dev-module-observer-list.md) - List Observers
 - [dev:module:list](./dev-module-list.md) - List Modules
+- [dev:module:sequence](./dev-module-sequence.md) - Regenerate Module Sequence
 
 ### Theme and Asset Development
 - [dev:asset:clear](./dev-asset-clear.md) - Clear static view files
@@ -37,4 +38,3 @@ Commands tailored for Magento developers, including code generation and debuggin
 - [dev:encrypt](./dev-encrypt.md) - Encrypt a string using Magento's crypt key
 - [dev:decrypt](./dev-decrypt.md) - Decrypt a string using Magento's crypt key
 - [dev:keep-calm](./dev-keep-calm.md) - Run common maintenance commands
-
