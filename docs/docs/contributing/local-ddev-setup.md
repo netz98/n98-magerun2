@@ -61,28 +61,27 @@ You can customize the environment by editing or adding files in the `.ddev` dire
 
 ### Automated Magento Installation and Test Environments
 
-When you start the DDEV environment for this project, a Magento installation is automatically set up for testing purposes. This process is handled by DDEV post-start hooks and supporting scripts.
+When you start the DDEV environment for this project, Mage-OS 3.6.0 is automatically installed for testing purposes. This process is handled by DDEV post-start hooks and supporting scripts.
 
 - **Persistent Test Environments:**
   All test Magento installations are created inside the container at `/opt/magento-test-environments`. This directory is mounted as a persistent Docker volume, ensuring that your test environments and data are preserved across container restarts and rebuilds.
 
-- **Default Magento Version:**
-  The version of Magento used for the default test installation is controlled by the `MAGERUN_SETUP_TEST_DEFAULT_MAGENTO_VERSION` environment variable, which is defined in the `.ddev/config.yaml` file:
+- **Default Mage-OS Version:**
+  The version of Mage-OS used for the default test installation is controlled by the `MAGERUN_SETUP_TEST_DEFAULT_MAGEOS_VERSION` environment variable, which is defined in the `.ddev/config.yaml` file:
   
   ```yaml
   web_environment:
-    - MAGERUN_SETUP_TEST_DEFAULT_MAGENTO_VERSION=2.4.7-p4
+    - MAGERUN_SETUP_TEST_DEFAULT_MAGEOS_VERSION=3.6.0
+    - N98_MAGERUN2_TEST_MAGENTO_ROOT=/opt/magento-test-environments/mageos_3_6_0/
   ```
 
-(check your `.ddev/config.yaml` for the exact version).
-  
-  You can change this value to install a different Magento version for testing. The setup scripts will automatically use the specified version when creating the default test environment.
+  You can change this value to install a different Mage-OS version for testing. Update `N98_MAGERUN2_TEST_MAGENTO_ROOT` to match the installation directory. To additionally install Magento Open Source, set `MAGERUN_SETUP_TEST_DEFAULT_MAGENTO_VERSION` to the desired version.
 
 - **Test Installation Location:**
   All test installations are located in `/opt/magento-test-environments` inside the container. This folder is a persistent volume mount, so your test environments remain available even after restarting or rebuilding the containers.
 
 - **Automatic Setup:**
-  Magento is installed automatically on `ddev start`.
+  Mage-OS is installed automatically on `ddev start`.
 
 ### Locally Installed DDEV Commands
 
