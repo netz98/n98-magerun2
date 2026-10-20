@@ -36,3 +36,8 @@ If path is not set, all available config items will be listed. path may contain 
 ```sh
 n98-magerun2.phar config:store:get web/* --magerun-script
 ```
+
+Combine `--decrypt` with `--magerun-script` to export decrypted values as
+`config:store:set --encrypt` commands, so they are encrypted again on import.
+SQL `NULL` values remain unencrypted NULL values. The exported script contains
+plaintext secrets; store and handle it securely.

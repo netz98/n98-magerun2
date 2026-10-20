@@ -12,6 +12,68 @@ use N98\Magento\Command\TestCase;
 
 class GetCommandTest extends TestCase
 {
+    public function provideDecryptedMagerunScriptValues()
+    {
+        return [
+            'default scope and shell quoting' => ["synthetic 'secret' $; --value\\nsecond\\rline", 'default', '0', false],
+            'website scope' => ['synthetic website secret', 'websites', '1', false],
+            'store scope' => ['synthetic store secret', 'stores', '1', false],
+            'encrypted literal NULL' => ['NULL', 'default', '0', false],
+            'SQL NULL' => ['NULL', 'default', '0', true],
+        ];
+    }
+
+    /**
+     * @dataProvider provideDecryptedMagerunScriptValues
+     */
+    public function testDecryptedMagerunScriptPreservesEncryptionAndNullSemantics($value, $scope, $scopeId, $isNull)
+    {
+        $path = 'n98_magerun/issue_2184/' . md5($value . $scope . $isNull);
+        $setInput = [
+            'command' => 'config:store:set',
+            'path' => $path,
+            'value' => $value,
+            '--scope' => $scope,
+            '--scope-id' => $scopeId,
+        ];
+        if (!$isNull) {
+            $setInput['--encrypt'] = true;
+            $setInput['--no-null'] = true;
+        }
+
+        try {
+            $this->assertExecute($setInput);
+            $tester = $this->assertExecute([
+                'command' => 'config:store:get',
+                'path' => $path,
+                '--decrypt' => true,
+                '--magerun-script' => true,
+            ]);
+            $options = $isNull ? '' : '--encrypt ';
+            if (!$isNull && $value === 'NULL') {
+                $options .= '--no-null ';
+            }
+            $expectedValue = $isNull ? 'NULL' : escapeshellarg($value);
+            $this->assertSame(
+                sprintf(
+                    'config:store:set %s--scope-id=%s --scope=%s -- %s %s',
+                    $options,
+                    $scopeId,
+                    $scope,
+                    escapeshellarg($path),
+                    $expectedValue
+                ),
+                trim($tester->getDisplay())
+            );
+        } finally {
+            $this->assertExecute([
+                'command' => 'config:store:delete',
+                'path' => $path,
+                '--all' => true,
+            ]);
+        }
+    }
+
     /**
      * @test
      */

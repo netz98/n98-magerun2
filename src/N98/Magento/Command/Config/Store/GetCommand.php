@@ -150,7 +150,7 @@ HELP;
         if ($input->hasParameterOption('--update-script')) {
             $this->renderAsUpdateScript($output, $table);
         } elseif ($input->hasParameterOption('--magerun-script')) {
-            $this->renderAsMagerunScript($output, $table);
+            $this->renderAsMagerunScript($output, $table, $input->getOption('decrypt'));
         } else {
             $this->renderAsTable($output, $table, $input->getOption('format'));
         }
@@ -244,8 +244,9 @@ HELP;
     /**
      * @param OutputInterface $output
      * @param array $table
+     * @param bool $encrypt
      */
-    protected function renderAsMagerunScript(OutputInterface $output, $table)
+    protected function renderAsMagerunScript(OutputInterface $output, $table, $encrypt = false)
     {
         foreach ($table as $row) {
             $value = $row['value'];
@@ -255,9 +256,11 @@ HELP;
 
             $disaplayValue = $value === null ? 'NULL' : escapeshellarg($value);
             $protectNullString = $value === 'NULL' ? '--no-null ' : '';
+            $encryptOption = $encrypt && $value !== null ? '--encrypt ' : '';
 
             $line = sprintf(
-                'config:store:set %s--scope-id=%s --scope=%s -- %s %s',
+                'config:store:set %s%s--scope-id=%s --scope=%s -- %s %s',
+                $encryptOption,
                 $protectNullString,
                 $row['scope_id'],
                 $row['scope'],
