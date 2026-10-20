@@ -24,7 +24,44 @@ the Orchestrator controls workers with the Herdr CLI and `herdr` skill.
 - Supply a concrete task. Setup alone does not authorize changes, pushes, or
   merges. Authorize local handoff commits when you want commit-based QA.
 
-## Start the Orchestrator
+## Quick start: guided supervised task
+
+From an OpenCode session inside a Herdr pane at this repository, invoke:
+
+```text
+/supervised-task
+```
+
+The command selects the `orchestrator` profile in the current session, not an
+OpenCode subagent. It asks for a GitHub issue number/URL or a feature description,
+confirms the base ref, environment mode, and local-commit permission, then shows
+a plan for approval. It does not create worktrees or start workers/containers
+until you explicitly approve that plan.
+
+You can prefill the task:
+
+```text
+/supervised-task 123
+/supervised-task https://github.com/netz98/n98-magerun2/issues/123
+/supervised-task Add a cache report with JSON output
+```
+
+The issue identifiers above are examples, not recommended tickets. Bare numbers
+are resolved against the actual repository remotes; ambiguous fork/upstream
+identities trigger a question. Already supplied answers are not asked again.
+The command reads an existing issue; unlike `/issue`, it does not create one.
+
+Choose isolated DDEV runtimes for a full implementation-and-test run. Code-only
+mode skips provisioning and cannot yield PASS when required runtime checks are
+missing. Local task commits enable immutable QA handoff; permission to create
+them is separate from permission to push or open a PR.
+
+Commit the agent profiles before launching worktrees from the chosen base.
+The command is a guided prompt workflow, not a sandbox or an automatic grant of
+tool permissions. Your ordinary permission prompts still apply. Invoking it
+outside Herdr stops with instructions rather than controlling another session.
+
+## Start the Orchestrator manually
 
 In a Herdr shell pane at this repository's root:
 
@@ -60,8 +97,8 @@ verify the exact candidate commit before reporting completion.
 3. Parses returned JSON/live state for the actual pane IDs and starts workers:
 
    ```sh
-   herdr agent start dev-<run> --kind opencode --pane <dev-pane-id> -- mini --agent developer
-   herdr agent start qa-<run> --kind opencode --pane <qa-pane-id> -- mini --agent qa
+    herdr agent start dev-<run> --kind opencode --pane <dev-pane-id> -- mini --agent developer --model '<resolved-developer-model>'
+    herdr agent start qa-<run> --kind opencode --pane <qa-pane-id> -- mini --agent qa --model '<resolved-qa-model>'
    ```
 
    These commands are templates, not copy-and-run commands. Profile IDs
@@ -79,6 +116,38 @@ verify the exact candidate commit before reporting completion.
 Herdr's `agent start` needs an existing available shell pane; it does not create
 the pane. To add an extra pane, the Orchestrator first inspects layout, then uses
 `herdr pane split` with explicit target/cwd and `--no-focus`.
+
+## Subscription account and model reuse
+
+By default, both workers reuse your existing OpenCode subscription sign-in and
+the Orchestrator's selected provider/model/variant. No API key is required by
+this workflow, and no credentials are copied into worktrees or DDEV containers.
+
+Account reuse and model selection are separate:
+
+- OpenCode connections belong to its server/authentication context, not the Git
+  branch. Workers run on the same host and OS user with the same OpenCode context.
+- Each Herdr worker is a new primary session, so it does not automatically inherit
+  the parent's model. The Orchestrator resolves the active selector and explicitly
+  passes `--model` at worker startup. No model is pinned in the agent profiles.
+- If session metadata cannot establish that selector, the Orchestrator asks for
+  the exact ID from `/models`; it does not guess. Explicit worker overrides are
+  supported but must use the existing connection unless you approve otherwise.
+- The provider ID matters: the same underlying model through a gateway or another
+  provider may have different authentication and billing. Project configuration
+  may also affect availability and routing. Startup must verify the intended
+  provider/model and subscription connection, or stop for your confirmation.
+- Workers must not silently switch to API-key billing or another account when
+  subscription access fails. Concurrent sessions share subscription usage limits.
+
+The simplest way to preserve the model you are already using is to run
+`/supervised-task` in that existing session. Starting
+`opencode mini --agent orchestrator` creates a separate session and does not copy
+the current conversation's model; use `--model '<provider/model>'` when launching
+manually if you want an explicit choice.
+
+This is an agent instruction and launch policy, not a billing enforcement layer.
+No live worker/account verification has occurred just by installing these files.
 
 ## Develop a GitHub issue or feature in its own environment
 
