@@ -6,6 +6,12 @@ import { configDotenv } from 'dotenv'
 
 configDotenv()
 
+// Docusaurus 3.10 renamed this flag; keep the locked 3.9 build working too.
+const [docusaurusMajor, docusaurusMinor] = require('@docusaurus/core/package.json').version.split('.').map(Number)
+const fasterFlag = docusaurusMajor > 3 || (docusaurusMajor === 3 && docusaurusMinor >= 10)
+  ? 'faster'
+  : 'experimental_faster'
+
 // Node 25 exposes a throwing localStorage getter unless a storage file path is provided.
 // Remove it to keep SSR evaluation from failing during the static build.
 const localStorageDescriptor = Object.getOwnPropertyDescriptor(globalThis, 'localStorage')
@@ -52,7 +58,7 @@ const config = {
   organizationName: 'netz98',
   projectName: 'n98-magerun2',
   future: {
-    experimental_faster: true,
+    [fasterFlag]: true,
     v4: true
   },
   markdown: {
