@@ -129,6 +129,42 @@ For this repository's DDEV setup:
    environments without specific user authorization. Leave a task inventory so
    the user can resume or approve cleanup later.
 
+## Reuse the subscription account and inherit the session model
+
+- By default, reuse the Orchestrator's existing provider connection and active
+  subscription/OAuth account. Do not ask for an API key, add a connection, switch
+  accounts, or change authentication as part of worker startup.
+- These workers are independent primary sessions, not OpenCode subagents; model
+  inheritance is a workflow rule we implement explicitly, not automatic behavior.
+  Unless the user requests a worker-model override, resolve the Orchestrator's
+  current exact `provider/model` selector and variant (when selected) from
+  trustworthy current-session metadata. Do not use the catalog default, a model
+  display name, or a hard-coded model as a substitute. If the selector is not
+  exposed reliably, ask the user for the exact selector shown in `/models`.
+- Pass that resolved selector explicitly with Mini's `--model` for both workers.
+  Preserve its provider ID, not just the underlying model name: another provider
+  can route the same model through a different account or billing path.
+  User-requested role overrides take precedence, but must be available through
+  the existing subscription connection unless a different account is approved.
+- Start OpenCode on the same host, OS user, release channel, and shared OpenCode
+  server/authentication context as the Orchestrator. Only cwd/worktree changes.
+  If the Orchestrator uses an explicit server, preserve that server context using
+  verified installed options. Do not introduce `--standalone`, change HOME/XDG
+  paths or `OPENCODE_DB`, or start OpenCode inside DDEV containers. DDEV isolates
+  application runtime; it does not need a copy of OpenCode's login.
+- Inspect non-secret connection metadata using supported OpenCode auth/status
+  surfaces as needed; never read raw credential storage or copy tokens. Confirm
+  the selected provider/account is the intended subscription connection in the
+  worker location. Project/ancestor config, endpoint overrides, or unavailable
+  models can change routing despite a shared login. If identity or authentication
+  cannot be confirmed, stop for user confirmation rather than silently falling
+  back to API-key billing, another provider, account, or model.
+- Include the resolved provider/model/variant and non-secret account label/type
+  (if available) in the approval plan and worker inventory. Verify startup shows
+  the intended model before assigning work; ask the user to verify the account
+  if the available tooling cannot establish it. Never promise unlimited usage:
+  all sessions share the account's subscription limits and provider policies.
+
 ## Start the two workers
 
 Verify the installed OpenCode launch syntax. OpenCode V2 Mini supports explicit
@@ -136,8 +172,8 @@ profile selection; the main TUI may not support `--agent`.
 
 ```sh
 opencode mini --help
-herdr agent start dev-<run> --kind opencode --pane <developer-pane-id> -- mini --agent developer
-herdr agent start qa-<run> --kind opencode --pane <qa-pane-id> -- mini --agent qa
+herdr agent start dev-<run> --kind opencode --pane <developer-pane-id> -- mini --agent developer --model '<resolved-developer-model>'
+herdr agent start qa-<run> --kind opencode --pane <qa-pane-id> -- mini --agent qa --model '<resolved-qa-model>'
 ```
 
 These are templates: replace placeholders using live results. Do not pass
@@ -152,6 +188,7 @@ Give each worker a self-contained assignment through `herdr agent prompt`:
 - GitHub issue URL or feature task key, and the task's environment readiness.
 - Base SHA, branch, candidate SHA when applicable, and allowed Git operations.
 - Relevant project instructions, environment constraints, and test commands.
+- Resolved model/variant and the existing subscription account context to retain.
 - Shared resource ownership (Magento database, DDEV project, ports, services).
 - Required result format and when to stop for approval.
 
