@@ -13,6 +13,7 @@ Commands tailored for Magento developers, including code generation and debuggin
 - [dev:module:create](./dev-module-create.md) - Create Module Skeleton
 - [dev:module:detect-composer-dependencies](./dev-module-detect-composer-dependencies.md) - Detect Composer Dependencies in Module
 - [dev:module:observer:list](./dev-module-observer-list.md) - List Observers
+- [dev:module:preference:conflicts](./dev-module-preference-conflicts.md) - Find Potential DI Preference Conflicts
 - [dev:module:list](./dev-module-list.md) - List Modules
 - [dev:module:sequence](./dev-module-sequence.md) - Regenerate Module Sequence
 

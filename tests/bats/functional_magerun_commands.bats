@@ -30,6 +30,30 @@ function cleanup_files_in_magento() {
   rm -Rf "${N98_MAGERUN2_TEST_MAGENTO_ROOT:?}/$1"
 }
 
+@test "Command: dev:module:preference:conflicts all scopes" {
+  run $BIN "dev:module:preference:conflicts"
+  assert_success
+  assert_output --regexp "Potential preference conflicts|No preference conflicts found"
+}
+
+@test "Command: dev:module:preference:conflicts clean scope" {
+  run $BIN "dev:module:preference:conflicts" --area=n98_bats_empty_scope
+  assert_success
+  assert_output --partial "No preference conflicts found."
+}
+
+@test "Command: dev:module:preference:conflicts structured clean scope" {
+  run $BIN "dev:module:preference:conflicts" --area=n98_bats_empty_scope --format=json
+  assert_success
+  [ "$(printf '%s' "$output" | tr -d '[:space:]')" = "{}" ]
+}
+
+@test "Command: dev:module:preference:conflicts invalid scope" {
+  run $BIN "dev:module:preference:conflicts" --area=../outside
+  assert_failure
+  assert_output --partial "Invalid area name"
+}
+
 function extract_store_id() {
   sed -n 's/.*ID: \([0-9][0-9]*\).*/\1/p' | sed -n '$p'
 }
