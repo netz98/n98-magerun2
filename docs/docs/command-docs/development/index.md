@@ -28,6 +28,7 @@ Commands tailored for Magento developers, including code generation and debuggin
 - [dev:translate:export](./dev-translate-export.md) - Export inline translations
 
 ### Development Utilities
+- [dev:flush](./dev-flush.md) - Clean integration test sandbox var directories
 - [dev:console](./dev-console.md) - Run the interactive PHP console
 - [dev:log:size](./dev-log-size.md) - Get size of log files
 - [dev:report:count](./dev-report-count.md) - Get count of report files
