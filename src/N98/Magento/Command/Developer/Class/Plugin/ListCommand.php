@@ -17,19 +17,29 @@ use Symfony\Component\Console\Formatter\OutputFormatter;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class ListCommand extends AbstractMagentoCommand
 {
+    private const AREAS = ['global', 'adminhtml', 'frontend', 'crontab', 'webapi_rest', 'webapi_soap', 'graphql', 'doc', 'admin'];
+
     protected function configure()
     {
         $this->setName('dev:class:plugin:list')
-            ->setDescription('Lists configured global plugins for a class or Class::method()')
+            ->setDescription('Lists configured plugins for a class or Class::method()')
+            ->addOption('area', null, InputOption::VALUE_REQUIRED, 'Configuration area: ' . implode(', ', self::AREAS), 'global')
             ->addArgument('class', InputArgument::REQUIRED, 'Class name or Class::method()');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        $area = $input->getOption('area');
+        if (!in_array($area, self::AREAS, true)) {
+            $output->writeln('<error>Invalid area. Expected one of: ' . implode(', ', self::AREAS) . '.</error>');
+
+            return Command::INVALID;
+        }
         $this->detectMagento($output, true);
         if (!$this->initMagento()) {
             return Command::FAILURE;
@@ -46,13 +56,15 @@ class ListCommand extends AbstractMagentoCommand
 
         $objectManager = $this->getObjectManager();
         $reader = $objectManager->get(Dom::class);
-        $config = array_replace_recursive($reader->read('primary'), $reader->read('global'));
+        $config = $inspector->readConfiguration(static function (string $scope) use ($reader): array {
+            return $reader->read($scope);
+        }, $area);
         $omConfig = $objectManager->get(ConfigInterface::class);
         $rows = $inspector->inspect($class, $method, $config, static function (string $type) use ($omConfig): string {
             return $omConfig->getOriginalInstanceType($type);
         });
         $target = $class->getName() . ($method !== null ? '::' . $method . '()' : '');
-        $output->writeln('Plugins on: ' . OutputFormatter::escape($target) . ' (global configuration)');
+        $output->writeln('Plugins on: ' . OutputFormatter::escape($target) . ' (' . $area . ' configuration)');
         if ($rows === []) {
             $output->writeln('No plugins found.');
 

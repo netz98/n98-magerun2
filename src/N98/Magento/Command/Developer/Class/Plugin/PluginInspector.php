@@ -14,6 +14,17 @@ use ReflectionMethod;
 
 class PluginInspector
 {
+    /** Merge XML scopes in the same precedence order as Magento's plugin configuration. */
+    public function readConfiguration(callable $read, string $area = 'global'): array
+    {
+        $config = array_replace_recursive($read('primary'), $read('global'));
+        if ($area !== 'global') {
+            $config = array_replace_recursive($config, $read($area));
+        }
+
+        return $config;
+    }
+
     /** @return array{0: ReflectionClass, 1: ?string} */
     public function parseTarget(string $target): array
     {
@@ -49,16 +60,16 @@ class PluginInspector
             $instance = $plugin['instance'] ?? '';
             $order = (int) ($plugin['sortOrder'] ?? 0);
             $status = !empty($plugin['disabled']) ? 'disabled' : 'active';
-            $pluginClass = $instance !== '' ? $resolveType($instance) : '';
+            $pluginClass = $this->resolvePluginClass($instance, $config, $resolveType);
             if ($pluginClass === '' || !class_exists($pluginClass)) {
-                // Disabled declarations may have no instance, or reference an unavailable class.
+                // Disabled declarations can reference an unavailable class.
                 if ($method === null) {
                     $rows[] = [(string) $name, $instance, '-', '-', $order, $status];
                 }
                 continue;
             }
             foreach ((new ReflectionClass($pluginClass))->getMethods(ReflectionMethod::IS_PUBLIC) as $pluginMethod) {
-                if ($pluginMethod->isStatic() || !preg_match('/^(before|around|after)(.+)$/D', $pluginMethod->getName(), $matches)) {
+                if (!preg_match('/^(before|around|after)(.+)$/D', $pluginMethod->getName(), $matches)) {
                     continue;
                 }
                 $observed = lcfirst($matches[2]);
@@ -86,6 +97,22 @@ class PluginInspector
             && !$method->isConstructor() && !$method->isDestructor();
     }
 
+    private function resolvePluginClass(string $instance, array $config, callable $resolveType): string
+    {
+        $seen = [];
+        // Area XML is inspected without changing the live object manager's scope.
+        // Resolve virtual types from that merged XML before falling back to it.
+        while (isset($config[$instance]['type'])) {
+            if (isset($seen[$instance])) {
+                throw new InvalidArgumentException('Circular virtual plugin type: ' . $instance);
+            }
+            $seen[$instance] = true;
+            $instance = $config[$instance]['type'];
+        }
+
+        return $instance !== '' ? $resolveType($instance) : '';
+    }
+
     private function inheritPlugins(ReflectionClass $class, array $config): array
     {
         $plugins = [];
@@ -93,13 +120,20 @@ class PluginInspector
         if ($parent !== false) {
             $plugins = $this->inheritPlugins($parent, $config);
         }
-        foreach ($class->getInterfaces() as $interface) {
+        // Magento's runtime relations have no parents for interfaces. For classes,
+        // only interfaces not already implemented by the parent are new relations.
+        foreach ($class->isInterface() ? [] : $class->getInterfaces() as $interface) {
             if ($parent !== false && $parent->implementsInterface($interface->getName())) {
                 continue;
             }
-            $plugins = array_replace_recursive($plugins, $config[$interface->getName()]['plugins'] ?? []);
+            $plugins = array_replace_recursive($plugins, $this->inheritPlugins($interface, $config));
         }
 
-        return array_replace_recursive($plugins, $config[$class->getName()]['plugins'] ?? []);
+        $plugins = array_replace_recursive($plugins, $config[$class->getName()]['plugins'] ?? []);
+        // Filter at each relation boundary, not only after all relations are merged:
+        // an undeclared interface reference must not disable a parent's valid plugin.
+        return array_filter($plugins, static function (array $plugin): bool {
+            return isset($plugin['instance']);
+        });
     }
 }

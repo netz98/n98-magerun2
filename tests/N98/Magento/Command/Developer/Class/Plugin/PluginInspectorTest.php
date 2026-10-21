@@ -14,6 +14,65 @@ use ReflectionClass;
 
 class PluginInspectorTest extends TestCase
 {
+    public function testAreaDefaultAndXmlMergePrecedence(): void
+    {
+        $this->assertSame('global', (new ListCommand())->getDefinition()->getOption('area')->getDefault());
+        $calls = [];
+        $scopes = [
+            'primary' => [InspectorSubject::class => ['plugins' => ['shared' => ['instance' => InspectorPlugin::class, 'sortOrder' => 5]]]],
+            'global' => [InspectorSubject::class => ['plugins' => ['shared' => ['sortOrder' => 10]]]],
+            'frontend' => ['AreaPlugin' => ['type' => InspectorPlugin::class], InspectorSubject::class => ['plugins' => [
+                'shared' => ['disabled' => true, 'sortOrder' => 20],
+                'area-only' => ['instance' => 'AreaPlugin'],
+            ]]],
+        ];
+        $read = static function (string $scope) use (&$calls, $scopes): array {
+            $calls[] = $scope;
+
+            return $scopes[$scope];
+        };
+        $inspector = new PluginInspector();
+        $global = $inspector->readConfiguration($read);
+        $this->assertSame(['primary', 'global'], $calls);
+        $this->assertSame(['shared'], array_keys($global[InspectorSubject::class]['plugins']));
+        $this->assertSame(10, $global[InspectorSubject::class]['plugins']['shared']['sortOrder']);
+        $calls = [];
+        $frontend = $inspector->readConfiguration($read, 'frontend');
+        $this->assertSame(['primary', 'global', 'frontend'], $calls);
+        $rows = $inspector->inspect(new ReflectionClass(InspectorSubject::class), 'run', $frontend, static function (string $type): string {
+            return $type;
+        });
+        $this->assertCount(6, $rows);
+        $this->assertSame('area-only', $rows[0][0]);
+        $this->assertSame(['shared', InspectorPlugin::class, 'run', 'after', 20, 'disabled'], $rows[3]);
+    }
+
+    public function testUndeclaredInterfaceReferenceDoesNotOverrideParentPlugin(): void
+    {
+        $config = [
+            InspectorContract::class => ['plugins' => ['qa' => ['instance' => InspectorPlugin::class, 'sortOrder' => 10]]],
+            InspectorParent::class => ['plugins' => ['qa' => ['sortOrder' => 20]]],
+            InspectorSpecific::class => ['plugins' => ['qa' => ['disabled' => true]]],
+        ];
+        $rows = (new PluginInspector())->inspect(new ReflectionClass(InspectorSpecificSubject::class), 'run', $config, static function (string $type): string {
+            return $type;
+        });
+        $this->assertCount(3, $rows);
+        foreach ($rows as $row) {
+            $this->assertSame(20, $row[4]);
+            $this->assertSame('active', $row[5]);
+        }
+    }
+
+    public function testPublicStaticPluginMethodsAreIncluded(): void
+    {
+        $config = [InspectorSubject::class => ['plugins' => ['static' => ['instance' => InspectorStaticPlugin::class]]]];
+        $rows = (new PluginInspector())->inspect(new ReflectionClass(InspectorSubject::class), 'run', $config, static function (string $type): string {
+            return $type;
+        });
+        $this->assertSame([['static', InspectorStaticPlugin::class, 'run', 'before', 0, 'active']], $rows);
+    }
+
     public function testClassAndMethodTargets(): void
     {
         $inspector = new PluginInspector();
@@ -49,7 +108,7 @@ class PluginInspectorTest extends TestCase
                 'b-tie' => ['instance' => 'VirtualPlugin', 'sortOrder' => 20],
                 'a-default' => ['instance' => InspectorPlugin::class],
                 'negative' => ['instance' => InspectorPlugin::class, 'sortOrder' => -5],
-                'unavailable' => ['disabled' => true],
+                'unavailable' => ['instance' => 'UnavailablePluginClass', 'disabled' => true],
             ]],
         ];
         $inspector = new PluginInspector();
@@ -81,11 +140,26 @@ interface InspectorContract
     public function run();
 }
 
+interface InspectorSpecific extends InspectorContract
+{
+}
+
+class InspectorStaticPlugin
+{
+    public static function beforeRun()
+    {
+    }
+}
+
 class InspectorParent implements InspectorContract
 {
     public function run()
     {
     }
+}
+
+class InspectorSpecificSubject extends InspectorParent implements InspectorSpecific
+{
 }
 
 class InspectorSubject extends InspectorParent

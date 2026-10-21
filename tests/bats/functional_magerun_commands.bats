@@ -106,6 +106,7 @@ teardown() {
   assert_output --partial 'Plugin name'
   assert_output --partial 'Method observed'
   assert_output --partial 'Status'
+  assert_output --partial '(global configuration)'
 
   run $BIN dev:class:plugin:list 'Magento\Catalog\Model\Product::getName()'
   assert_success
@@ -126,6 +127,21 @@ teardown() {
   run $BIN dev:class:plugin:list 'Magento\Catalog\Model\Product::getName'
   assert_failure
   assert_output --partial 'Expected a class name or Class::method()'
+}
+
+@test "dev:class:plugin:list selects and validates configuration areas" {
+  run $BIN dev:class:plugin:list 'Magento\Framework\App\FrontController' --area=global
+  assert_success
+  refute_output --partial 'requestPreprocessor'
+
+  run $BIN dev:class:plugin:list 'Magento\Framework\App\FrontController' --area=frontend
+  assert_success
+  assert_output --partial '(frontend configuration)'
+  assert_output --partial 'requestPreprocessor'
+
+  run $BIN dev:class:plugin:list 'Magento\Framework\App\FrontController' --area=invalid
+  assert_failure
+  assert_output --partial 'Invalid area. Expected one of:'
 }
 
 @test "Issue: 1414" {
