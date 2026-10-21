@@ -44,7 +44,6 @@ class SequenceCommandTest extends TestCase
         $command = new SequenceCommand();
         $command->inject($loader, $reader, $writer);
         $execute = new \ReflectionMethod($command, 'execute');
-        $execute->setAccessible(true);
         $output = new BufferedOutput();
         $this->assertSame(0, $execute->invoke($command, new ArrayInput([]), $output));
         $this->assertStringContainsString($write ? 'regenerated' : 'already up to date', $output->fetch());
