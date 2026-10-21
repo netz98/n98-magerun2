@@ -59,6 +59,10 @@ function github_platform_outage() {
 }
 
 teardown() {
+  if [ -n "${sequence_config_backup:-}" ]; then
+    cp "$sequence_config_backup" "${N98_MAGERUN2_TEST_MAGENTO_ROOT}/app/etc/config.php"
+    rm -f "$sequence_config_backup"
+  fi
   if [ -n "${config_test_path:-}" ]; then
     $BIN "config:store:delete" --all "$config_test_path" >/dev/null 2>&1 || true
   fi
@@ -68,6 +72,27 @@ teardown() {
   if [ -n "${admin_test_username:-}" ]; then
     $BIN "db:query" "DELETE FROM admin_user WHERE username = '${admin_test_username}'" >/dev/null 2>&1 || true
   fi
+}
+
+@test "dev:module:sequence regenerates config without the setup Installer and is idempotent" {
+  sequence_config_backup=$(mktemp)
+  cp "${N98_MAGERUN2_TEST_MAGENTO_ROOT}/app/etc/config.php" "$sequence_config_backup"
+  run $BIN help dev:module:sequence
+  assert_success
+  assert_output --partial "without running setup:upgrade or database migrations"
+
+  php -r '$f = $argv[1]; $c = include $f; $c["modules"] = array_reverse($c["modules"], true); $c["sequence_regression"] = ["value" => "unchanged"]; file_put_contents($f, "<?php return " . var_export($c, true) . ";");' "${N98_MAGERUN2_TEST_MAGENTO_ROOT}/app/etc/config.php"
+  run $BIN dev:module:sequence
+  assert_success
+  assert_output --partial "Module sequence regenerated"
+  run php -r '$c = include $argv[1]; exit(($c["sequence_regression"] ?? null) === ["value" => "unchanged"] ? 0 : 1);' "${N98_MAGERUN2_TEST_MAGENTO_ROOT}/app/etc/config.php"
+  assert_success
+  local checksum
+  checksum=$(sha256sum "${N98_MAGERUN2_TEST_MAGENTO_ROOT}/app/etc/config.php")
+  run $BIN dev:module:sequence
+  assert_success
+  assert_output --partial "already up to date"
+  [ "$checksum" = "$(sha256sum "${N98_MAGERUN2_TEST_MAGENTO_ROOT}/app/etc/config.php")" ]
 }
 
 @test "Issue: 1414" {

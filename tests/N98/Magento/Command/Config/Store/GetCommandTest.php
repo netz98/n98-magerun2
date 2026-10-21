@@ -69,7 +69,6 @@ class GetCommandTest extends TestCase
             $command->setApplication($application);
             $command->method('getConfigurationSource')->willReturn($source);
             $read = new \ReflectionMethod(GetCommand::class, 'getEffectiveRows');
-            $read->setAccessible(true);
             $rows = $read->invoke($command, null, null, 'n98_issue712/test/*');
             $values = array_column(array_filter($rows, function ($row) {
                 return $row['scope'] === 'default';
