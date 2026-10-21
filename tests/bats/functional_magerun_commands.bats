@@ -95,6 +95,39 @@ teardown() {
   [ "$checksum" = "$(sha256sum "${N98_MAGERUN2_TEST_MAGENTO_ROOT}/app/etc/config.php")" ]
 }
 
+@test "dev:class:plugin:list is registered and handles class, method and invalid targets" {
+  run $BIN help dev:class:plugin:list
+  assert_success
+  assert_output --partial 'Class::method()'
+
+  run $BIN dev:class:plugin:list 'Magento\Catalog\Model\Product'
+  assert_success
+  assert_output --partial 'Plugins on: Magento\Catalog\Model\Product'
+  assert_output --partial 'Plugin name'
+  assert_output --partial 'Method observed'
+  assert_output --partial 'Status'
+
+  run $BIN dev:class:plugin:list 'Magento\Catalog\Model\Product::getName()'
+  assert_success
+  assert_output --partial 'Plugins on: Magento\Catalog\Model\Product::getName()'
+
+  run $BIN dev:class:plugin:list 'Magento\Framework\DataObject'
+  assert_success
+  assert_output --partial 'No plugins found.'
+
+  run $BIN dev:class:plugin:list 'N98\Missing\PluginSubject'
+  assert_failure
+  assert_output --partial 'Unknown class or interface'
+
+  run $BIN dev:class:plugin:list 'Magento\Catalog\Model\Product::missingMethod()'
+  assert_failure
+  assert_output --partial 'Method must exist'
+
+  run $BIN dev:class:plugin:list 'Magento\Catalog\Model\Product::getName'
+  assert_failure
+  assert_output --partial 'Expected a class name or Class::method()'
+}
+
 @test "Issue: 1414" {
   tempfilename=$(mktemp)
   # Generate random numbers for email uniqueness
