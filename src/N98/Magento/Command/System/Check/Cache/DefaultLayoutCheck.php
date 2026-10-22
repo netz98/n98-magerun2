@@ -34,10 +34,13 @@ class DefaultLayoutCheck implements SimpleCheck
     {
         $issues = 0;
         foreach ($this->getLayoutFiles() as $file) {
+            // Discovery does not guarantee the file is still present or readable.
+            // Keep filesystem warnings out of machine-readable command output.
+            $xml = @file_get_contents($file);
             $previous = libxml_use_internal_errors(true);
             try {
                 $document = new DOMDocument();
-                $loaded = $document->load($file, LIBXML_NONET);
+                $loaded = $xml !== false && $xml !== '' && $document->loadXML($xml, LIBXML_NONET);
             } finally {
                 libxml_clear_errors();
                 libxml_use_internal_errors($previous);

@@ -14,7 +14,9 @@ use Magento\Framework\Module\ModuleListInterface;
 use N98\Magento\Command\System\Check\Result;
 use N98\Magento\Command\System\Check\ResultCollection;
 use N98\Magento\Command\TestCase;
+use N98\Util\Console\Helper\TableHelper;
 use org\bovigo\vfs\vfsStream;
+use Symfony\Component\Console\Output\BufferedOutput;
 
 class DefaultLayoutCheckTest extends TestCase
 {
@@ -99,13 +101,44 @@ class DefaultLayoutCheckTest extends TestCase
         $this->assertCount(1, $results);
         $this->assertSame(Result::STATUS_OK, $results[0]->getStatus());
 
-        foreach (['<page>', '<!DOCTYPE page [<!ENTITY example "false">]><page/>'] as $xml) {
+        foreach (['', '<page>', '<!DOCTYPE page [<!ENTITY example "false">]><page/>'] as $xml) {
             $this->write('module/view/frontend/layout/default.xml', $xml);
             $results = $this->runCheck();
             $this->assertCount(1, $results);
             $this->assertSame(Result::STATUS_WARNING, $results[0]->getStatus());
             $this->assertStringContainsString('default.xml', $results[0]->getMessage());
         }
+    }
+
+    public function testUnreadableLayoutProducesWarningWithoutCorruptingJsonOutput(): void
+    {
+        $path = 'module/view/frontend/layout/default.xml';
+        $this->write($path, '<page><body><block name="unreadable" cacheable="false"/></body></page>');
+        chmod(vfsStream::url('layouts/' . $path), 0000);
+        $this->assertFalse(is_readable(vfsStream::url('layouts/' . $path)));
+        $this->expectOutputString('');
+
+        $previous = libxml_use_internal_errors(false);
+        try {
+            $results = $this->runCheck();
+            $this->assertFalse(libxml_use_internal_errors());
+        } finally {
+            libxml_use_internal_errors($previous);
+        }
+        $this->assertCount(1, $results);
+        $this->assertSame(Result::STATUS_WARNING, $results[0]->getStatus());
+        $this->assertStringContainsString($path, $results[0]->getMessage());
+
+        $output = new BufferedOutput();
+        $table = new TableHelper();
+        $table->setHeaders(['Group', 'Message', 'Result']);
+        $table->renderByFormat($output, [[
+            $results[0]->getResultGroup(),
+            $results[0]->getMessage(),
+            $results[0]->getStatus(),
+        ]], 'json');
+        $decoded = json_decode($output->fetch(), true, 512, JSON_THROW_ON_ERROR);
+        $this->assertSame(Result::STATUS_WARNING, $decoded[0]['Result']);
     }
 
     private function write(string $path, string $xml): void
