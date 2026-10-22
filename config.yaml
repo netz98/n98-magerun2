@@ -131,6 +131,7 @@ commands:
     - N98\Magento\Command\Developer\Di\Preference\ListCommand
     - N98\Magento\Command\Developer\DecryptCommand
     - N98\Magento\Command\Developer\EncryptCommand
+    - N98\Magento\Command\Developer\FlushCommand
     - N98\Magento\Command\Developer\KeepCalmCommand
     - N98\Magento\Command\Developer\Log\SizeCommand
     - N98\Magento\Command\Developer\Module\CreateCommand
