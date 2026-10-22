@@ -1280,7 +1280,9 @@ teardown() {
 
 @test "Command: sys:check" {
   run $BIN "sys:check"
+  assert_success
   assert_output --partial "Env"
+  assert_output --partial "CACHE"
 }
 
 # ============================================
