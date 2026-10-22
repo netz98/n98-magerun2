@@ -8,6 +8,7 @@
 
 namespace N98\Magento\Command\System\Check\Cache;
 
+use Composer\Autoload\ClassLoader;
 use Magento\Framework\Component\ComponentRegistrar;
 use Magento\Framework\Module\ModuleListInterface;
 use N98\Magento\Command\System\Check\Result;
@@ -17,10 +18,21 @@ use org\bovigo\vfs\vfsStream;
 
 class DefaultLayoutCheckTest extends TestCase
 {
+    private ClassLoader $frameworkLoader;
+
     protected function setUp(): void
     {
-        require_once $this->getTestMagentoRoot() . '/vendor/autoload.php';
+        // Do not load Magento's dev dependencies over the running PHPUnit version.
+        $this->frameworkLoader = new ClassLoader();
+        $prefixes = require $this->getTestMagentoRoot() . '/vendor/composer/autoload_psr4.php';
+        $this->frameworkLoader->addPsr4('Magento\\Framework\\', $prefixes['Magento\\Framework\\']);
+        $this->frameworkLoader->register();
         vfsStream::setup('layouts');
+    }
+
+    protected function tearDown(): void
+    {
+        $this->frameworkLoader->unregister();
     }
 
     public function testReportsOnlyFalseBlockDeclarations(): void
