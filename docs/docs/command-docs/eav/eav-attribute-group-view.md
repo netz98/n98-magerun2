@@ -9,7 +9,7 @@ View group metadata and the attributes assigned to that group in one attribute s
 
 ## Interactive use
 
-Missing required context is selected in order: entity type, one of its sets, then one of that set's groups. Enter the displayed one-based menu number, not the record ID in the label. For example, `eav:attribute-group:view catalog_product 4` asks only for a group choice within set 4. Supplied context uses actual codes/IDs and is validated, not silently replaced. 0/Enter at a selection cancels without choosing a default record.
+Missing required context is selected in order: entity type, one of its sets, then one of that set's groups. Enter the displayed one-based menu number, an unambiguous code/name, or an autocompleted label. Numeric selections are menu positions, not record IDs. For example, `eav:attribute-group:view catalog_product 4` asks only for a group choice within set 4. Supplied context uses actual codes/IDs and is validated, not silently replaced. 0/Enter at a selection cancels without choosing a default record.
 
 With `--no-interaction`, all three arguments must be supplied. See [interactive input safety](./index.md#interactive-required-inputs).
 

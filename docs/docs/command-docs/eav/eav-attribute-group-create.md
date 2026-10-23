@@ -9,7 +9,7 @@ Create an empty attribute group in an existing attribute set using Magento's EAV
 
 ## Interactive use
 
-Omit required inputs to select an entity type, select an existing set scoped to it, and enter a group name. Choose by the displayed menu number (starting at 1), not the code/ID in the label; 0/Enter cancels. `eav:attribute-group:create catalog_product` asks only for the missing set and name. Optional sort order remains a flag, not a wizard question. Supplied arguments/options are never replaced.
+Omit required inputs to select an entity type, select an existing set scoped to it, and enter a group name. Choose by the displayed menu number (starting at 1), an unambiguous code/name, or an autocompleted label; 0/Enter cancels. Numeric selections are menu positions, not record IDs. `eav:attribute-group:create catalog_product` asks only for the missing set and name. Optional sort order remains a flag, not a wizard question. Supplied arguments/options are never replaced.
 
 With `--no-interaction`, provide entity type, set ID and name explicitly. Missing inputs fail without mutation. Context selection has no record default; Enter cancels. See [interactive input safety](./index.md#interactive-required-inputs).
 
