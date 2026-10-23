@@ -30,6 +30,20 @@ function cleanup_files_in_magento() {
   rm -Rf "${N98_MAGERUN2_TEST_MAGENTO_ROOT:?}/$1"
 }
 
+function setup_dev_flush() {
+  local tmp="${N98_MAGERUN2_TEST_MAGENTO_ROOT%/}/dev/tests/integration/tmp"
+  # dev:flush acts on all sandboxes. Never touch an existing test sandbox.
+  if compgen -G "$tmp/sandbox-*" >/dev/null; then
+    skip 'Requires an idle integration tmp directory without existing sandboxes'
+  fi
+  flush_fixture="$tmp/sandbox-magerun-bats-$$"
+  flush_outside=$(mktemp -d)
+  mkdir -p "$flush_fixture/var/cache" "$flush_fixture/app"
+  printf keep > "$flush_fixture/app/keep"
+  printf remove > "$flush_fixture/var/cache/.hidden"
+  printf keep > "$flush_outside/keep"
+}
+
 @test "Command: dev:module:preference:conflicts all scopes" {
   run $BIN "dev:module:preference:conflicts"
   assert_success
@@ -83,6 +97,12 @@ function github_platform_outage() {
 }
 
 teardown() {
+  if [ -n "${flush_fixture:-}" ]; then
+    rm -rf -- "$flush_fixture"
+  fi
+  if [ -n "${flush_outside:-}" ]; then
+    rm -rf -- "$flush_outside"
+  fi
   if [ -n "${sequence_config_backup:-}" ]; then
     cp "$sequence_config_backup" "${N98_MAGERUN2_TEST_MAGENTO_ROOT}/app/etc/config.php"
     rm -f "$sequence_config_backup"
@@ -96,6 +116,36 @@ teardown() {
   if [ -n "${admin_test_username:-}" ]; then
     $BIN "db:query" "DELETE FROM admin_user WHERE username = '${admin_test_username}'" >/dev/null 2>&1 || true
   fi
+}
+
+@test "dev:flush cleans sandbox var by default and entire sandboxes only with --force" {
+  setup_dev_flush
+  run $BIN help dev:flush
+  assert_success
+  assert_output --partial '--force'
+
+  ln -s "$flush_outside" "$flush_fixture/var/cache/link"
+  run $BIN dev:flush
+  assert_success
+  [ ! -e "$flush_fixture/var" ]
+  [ -f "$flush_fixture/app/keep" ]
+  [ -f "$flush_outside/keep" ]
+
+  run $BIN dev:flush --force
+  assert_success
+  [ ! -e "$flush_fixture" ]
+  [ -f "$flush_outside/keep" ]
+}
+
+@test "dev:flush refuses a linked var boundary without deleting external data" {
+  setup_dev_flush
+  rm -rf -- "$flush_fixture/var"
+  ln -s "$flush_outside" "$flush_fixture/var"
+  run $BIN dev:flush
+  assert_failure
+  assert_output --partial 'Refusing symbolic link'
+  [ -L "$flush_fixture/var" ]
+  [ -f "$flush_outside/keep" ]
 }
 
 @test "dev:module:sequence regenerates config without the setup Installer and is idempotent" {
@@ -117,6 +167,55 @@ teardown() {
   assert_success
   assert_output --partial "already up to date"
   [ "$checksum" = "$(sha256sum "${N98_MAGERUN2_TEST_MAGENTO_ROOT}/app/etc/config.php")" ]
+}
+
+@test "dev:class:plugin:list is registered and handles class, method and invalid targets" {
+  run $BIN help dev:class:plugin:list
+  assert_success
+  assert_output --partial 'Class::method()'
+
+  run $BIN dev:class:plugin:list 'Magento\Catalog\Model\Product'
+  assert_success
+  assert_output --partial 'Plugins on: Magento\Catalog\Model\Product'
+  assert_output --partial 'Plugin name'
+  assert_output --partial 'Method observed'
+  assert_output --partial 'Status'
+  assert_output --partial '(global configuration)'
+
+  run $BIN dev:class:plugin:list 'Magento\Catalog\Model\Product::getName()'
+  assert_success
+  assert_output --partial 'Plugins on: Magento\Catalog\Model\Product::getName()'
+
+  run $BIN dev:class:plugin:list 'Magento\Framework\DataObject'
+  assert_success
+  assert_output --partial 'No plugins found.'
+
+  run $BIN dev:class:plugin:list 'N98\Missing\PluginSubject'
+  assert_failure
+  assert_output --partial 'Unknown class or interface'
+
+  run $BIN dev:class:plugin:list 'Magento\Catalog\Model\Product::missingMethod()'
+  assert_failure
+  assert_output --partial 'Method must exist'
+
+  run $BIN dev:class:plugin:list 'Magento\Catalog\Model\Product::getName'
+  assert_failure
+  assert_output --partial 'Expected a class name or Class::method()'
+}
+
+@test "dev:class:plugin:list selects and validates configuration areas" {
+  run $BIN dev:class:plugin:list 'Magento\Framework\App\FrontController' --area=global
+  assert_success
+  refute_output --partial 'requestPreprocessor'
+
+  run $BIN dev:class:plugin:list 'Magento\Framework\App\FrontController' --area=frontend
+  assert_success
+  assert_output --partial '(frontend configuration)'
+  assert_output --partial 'requestPreprocessor'
+
+  run $BIN dev:class:plugin:list 'Magento\Framework\App\FrontController' --area=invalid
+  assert_failure
+  assert_output --partial 'Invalid area. Expected one of:'
 }
 
 @test "Issue: 1414" {

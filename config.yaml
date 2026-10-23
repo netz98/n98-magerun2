@@ -127,9 +127,11 @@ commands:
     - N98\Magento\Command\Design\DemoNoticeCommand
     - N98\Magento\Command\Developer\Asset\ClearCommand
     - N98\Magento\Command\Developer\ConsoleCommand
+    - N98\Magento\Command\Developer\Class\Plugin\ListCommand
     - N98\Magento\Command\Developer\Di\Preference\ListCommand
     - N98\Magento\Command\Developer\DecryptCommand
     - N98\Magento\Command\Developer\EncryptCommand
+    - N98\Magento\Command\Developer\FlushCommand
     - N98\Magento\Command\Developer\KeepCalmCommand
     - N98\Magento\Command\Developer\Log\SizeCommand
     - N98\Magento\Command\Developer\Module\CreateCommand
