@@ -9,7 +9,7 @@ List groups in one explicit EAV entity type and attribute set.
 
 ## Interactive use
 
-Without required arguments, select an entity type and then one of its attribute sets. `eav:attribute-group:list catalog_product` prompts only for the set. Enter the displayed one-based menu number, not the code/ID in its label; 0/Enter cancels instead of selecting a default. Supplied CLI arguments continue to use real entity codes and set IDs.
+Without required arguments, select an entity type and then one of its attribute sets. `eav:attribute-group:list catalog_product` prompts only for the set. Enter the displayed one-based menu number, an unambiguous code/name, or an autocompleted label; 0/Enter cancels instead of selecting a default. Numeric selections are menu positions, not record IDs. Supplied CLI arguments continue to use real entity codes and set IDs.
 
 Fully supplied invocations do not prompt. With `--no-interaction`, missing arguments fail clearly. See [interactive input safety](./index.md#interactive-required-inputs).
 

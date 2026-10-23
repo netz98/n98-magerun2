@@ -9,7 +9,7 @@ Create a **new user-defined** attribute for an explicit EAV entity type code. Ex
 
 ## Interactive use
 
-Run `eav:attribute:create` without positional arguments to select the entity type by its displayed menu number and enter the attribute code and required admin label. Menu choices start at 1; 0/Enter cancels. For example, `eav:attribute:create catalog_product care_note` asks only for the missing label. Supplied values are preserved. No optional metadata wizard is shown: continue to use flags for options such as input type, scope and assignment.
+Run `eav:attribute:create` without positional arguments to select the entity type by its displayed menu number, code, or autocompleted label and enter the attribute code and required admin label. Menu choices start at 1; 0/Enter cancels. For example, `eav:attribute:create catalog_product care_note` asks only for the missing label. Supplied values are preserved. No optional metadata wizard is shown: continue to use flags for options such as input type, scope and assignment.
 
 With `--no-interaction`, both positional arguments and `--label` are required; missing values fail without mutation. See [interactive input safety](./index.md#interactive-required-inputs) for cancellation and selection behavior.
 

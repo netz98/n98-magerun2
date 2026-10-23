@@ -118,13 +118,31 @@ abstract class AbstractManagementCommand extends AbstractMagentoCommand
         foreach (array_values($choices) as $index => $choice) {
             $menu[$index + 1] = OutputFormatter::escape($choice);
         }
-        $question = new ChoiceQuestion('Please select an ' . strtolower($label) . ' (number; Enter cancels)', $menu, 0);
+        $labels = [0 => 'Cancel (no changes)', ...array_values($choices)];
+        $question = new ChoiceQuestion('Please select an ' . strtolower($label) . ' (number or name; Enter cancels)', $menu, 0);
+        $question->setAutocompleterValues($labels);
         $question->setMaxAttempts(1);
-        $question->setValidator(function ($answer) use ($menu): int {
-            if (!preg_match('/^[0-9]+$/D', (string) $answer) || !array_key_exists((string) $answer, $menu)) {
-                throw new \InvalidArgumentException('Please enter a displayed choice number.');
+        $question->setValidator(function ($answer) use ($labels): int {
+            $answer = (string) $answer;
+            if (preg_match('/^[0-9]+$/D', $answer)) {
+                if (array_key_exists($answer, $labels)) {
+                    return (int) $answer;
+                }
+            } else {
+                $matches = [];
+                foreach ($labels as $index => $choice) {
+                    if ($answer === $choice || $answer === preg_replace('/ \(#[0-9]+\)$/D', '', $choice)) {
+                        $matches[] = $index;
+                    }
+                }
+                if (count($matches) === 1) {
+                    return $matches[0];
+                }
+                if (count($matches) > 1) {
+                    throw new \InvalidArgumentException('Ambiguous choice name; please enter a displayed choice number.');
+                }
             }
-            return (int) $answer;
+            throw new \InvalidArgumentException('Please enter a displayed choice number or an unambiguous name.');
         });
         $answer = $this->io($input, $output)->getErrorStyle()->askQuestion($question);
         if ($answer === 0) {

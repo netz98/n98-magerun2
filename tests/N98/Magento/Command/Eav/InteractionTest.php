@@ -207,7 +207,8 @@ class InteractionTest extends TestCase
         return [[['invalid-code']], [['']], [[]]];
     }
 
-    public function testInteractiveProductLifecycleWithPartialInputs(): void
+    /** @dataProvider selectionModes */
+    public function testInteractiveProductLifecycleWithPartialInputs(string $mode): void
     {
         $this->skipProductionMutations();
         $om = $this->getApplication()->getObjectManager();
@@ -219,13 +220,14 @@ class InteractionTest extends TestCase
         $setup->addAttributeSet('catalog_product', $setName);
         $setId = (string) $setup->getAttributeSetId('catalog_product', $setName);
         try {
-            $entityChoice = $this->entityChoice();
-            $setChoice = $this->setChoice($setId);
+            $entityId = $om->get(Config::class)->getEntityType('catalog_product')->getId();
+            $entityChoice = $mode === 'number' ? $this->entityChoice() : 'catalog_product' . ($mode === 'label' ? ' (#' . $entityId . ')' : '');
+            $setChoice = $mode === 'number' ? $this->setChoice($setId) : $setName . ($mode === 'label' ? ' (#' . $setId . ')' : '');
             $create = $this->tester('eav:attribute-group:create', [$entityChoice, $setChoice, $groupName]);
             $this->assertSame(0, $create->execute([], ['interactive' => true]));
             $groupId = (string) $setup->getAttributeGroupByCode('catalog_product', $setId, $setup->convertToAttributeGroupCode($groupName), 'attribute_group_id');
             $this->assertGreaterThan(0, (int) $groupId);
-            $groupChoice = $this->groupChoice($setId, $groupId);
+            $groupChoice = $mode === 'number' ? $this->groupChoice($setId, $groupId) : $groupName . ($mode === 'label' ? ' (#' . $groupId . ')' : '');
             $this->assertStringNotContainsString('Sort order', $create->getDisplay());
 
             $attribute = $this->tester('eav:attribute:create', [$entityChoice, $code, 'Interactive label']);
@@ -257,6 +259,11 @@ class InteractionTest extends TestCase
             $setup->cleanCache();
             $om->get(Config::class)->clear();
         }
+    }
+
+    public static function selectionModes(): array
+    {
+        return [['number'], ['name'], ['label']];
     }
 
     private function tester(string $command, array $answers): CommandTester
