@@ -528,6 +528,8 @@ commands:
 
   N98\Magento\Command\System\CheckCommand:
     checks:
+      cache:
+        - N98\Magento\Command\System\Check\Cache\DefaultLayoutCheck
       settings:
         - N98\Magento\Command\System\Check\Settings\SecureBaseUrlCheck
         - N98\Magento\Command\System\Check\Settings\UnsecureBaseUrlCheck

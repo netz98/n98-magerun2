@@ -18,5 +18,7 @@ class CheckCommandTest extends TestCase
         $this->assertDisplayContains('sys:check', 'FILESYSTEM');
         $this->assertDisplayContains('sys:check', 'PHP');
         $this->assertDisplayContains('sys:check', 'MYSQL');
+        $this->assertDisplayContains('sys:check', 'CACHE');
+        $this->assertExecute('sys:check');
     }
 }

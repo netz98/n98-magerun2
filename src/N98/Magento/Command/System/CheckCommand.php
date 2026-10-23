@@ -64,6 +64,7 @@ class CheckCommand extends AbstractMagentoCommand
 - Security
 - PHP Extensions (Required and Bytecode Cache)
 - MySQL InnoDB Engine
+- Uncacheable block declarations in frontend default.xml layouts (static scan)
 HELP;
         $this->setHelp($help);
     }
